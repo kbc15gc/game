@@ -1,0 +1,2 @@
+﻿  stdafx.cpp
+d:\_users\desktop\decide1\fbengine\fbengine\stdafx.h(26): fatal error C1083: include ファイルを開けません。'd3dx9.h':No such file or directory
