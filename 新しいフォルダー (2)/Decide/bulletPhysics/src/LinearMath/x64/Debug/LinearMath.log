@@ -1,0 +1,17 @@
+﻿cl : コマンド ライン warning D9002: 不明なオプション '/arch:SSE' を無視します
+  btAlignedAllocator.cpp
+  btConvexHull.cpp
+  btConvexHullComputer.cpp
+  btGeometryUtil.cpp
+  btPolarDecomposition.cpp
+  btQuickprof.cpp
+  btSerializer.cpp
+  btVector3.cpp
+btVector3.cpp(179): warning C4267: '=': 'size_t' から 'long' に変換しました。データが失われているかもしれません。
+btVector3.cpp(184): warning C4267: '-=': 'size_t' から 'unsigned long' に変換しました。データが失われているかもしれません。
+btVector3.cpp(427): warning C4267: '=': 'size_t' から 'long' に変換しました。データが失われているかもしれません。
+btVector3.cpp(564): warning C4267: '=': 'size_t' から 'long' に変換しました。データが失われているかもしれません。
+btVector3.cpp(569): warning C4267: '-=': 'size_t' から 'unsigned long' に変換しました。データが失われているかもしれません。
+btVector3.cpp(815): warning C4267: '=': 'size_t' から 'long' に変換しました。データが失われているかもしれません。
+  コードを生成中...
+  LinearMath.vcxproj -> D:\_Users\Desktop\Decide1\Decide\x64\Debug\LinearMath_Debug.lib
