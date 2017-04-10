@@ -1,5 +1,6 @@
 #include "Physics.h"
 #include "RigidBody.h"
+#include "Rigid.h"
 #include "Collision.h"
 
 PhysicsWorld* PhysicsWorld::_Instance;
@@ -64,6 +65,15 @@ void PhysicsWorld::RemoveRigidBody(RigidBody* rb)
 {
 	dynamicWorld->removeRigidBody((btRigidBody*)rb->GetCollisonObj());
 }
+//リジッド
+void PhysicsWorld::AddRigid(Rigid* rb)
+{
+	dynamicWorld->addRigidBody((btRigidBody*)rb->GetBody());
+}
+void PhysicsWorld::RemoveRigid(Rigid* rb)
+{
+	dynamicWorld->removeRigidBody((btRigidBody*)rb->GetBody());
+}
 
 void PhysicsWorld::AddCollision(Collision * coll)
 {
@@ -91,6 +101,23 @@ const Collision * PhysicsWorld::FindOverlappedDamageCollision(btCollisionObject 
 const SweepResultGround PhysicsWorld::FindOverlappedStage(btCollisionObject * colliObject,const Vector3& s,const Vector3& e) const
 {
 	SweepResultGround callback;
+	btTransform start, end;
+	//初期化
+	start.setIdentity();
+	end.setIdentity();
+	//ポジション設定
+	start.setOrigin(btVector3(s.x, s.y, s.z));
+	end.setOrigin(btVector3(e.x, e.y, e.z));
+
+	callback.me = colliObject;
+	callback.startPos.Set(s);
+	dynamicWorld->convexSweepTest((const btConvexShape*)colliObject->getCollisionShape(), start, end, callback);
+	return callback;
+}
+
+const SweepResultWall PhysicsWorld::FindOverlappedWall(btCollisionObject * colliObject, const Vector3& s, const Vector3& e) const
+{
+	SweepResultWall callback;
 	btTransform start, end;
 	//初期化
 	start.setIdentity();

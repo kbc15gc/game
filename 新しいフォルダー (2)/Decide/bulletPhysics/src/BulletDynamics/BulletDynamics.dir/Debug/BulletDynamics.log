@@ -1,10 +1,16 @@
 ﻿  btKinematicCharacterController.cpp
   btConeTwistConstraint.cpp
+ConstraintSolver\btConeTwistConstraint.cpp(868): warning C4244: '=': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
+ConstraintSolver\btConeTwistConstraint.cpp(913): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+ConstraintSolver\btConeTwistConstraint.cpp(973): warning C4244: '=': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
+ConstraintSolver\btConeTwistConstraint.cpp(975): warning C4244: '=': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
   btContactConstraint.cpp
+c:\github\taisyou\game\新しいフォルダー (2)\decide\bulletphysics\src\bulletdynamics\constraintsolver\btContactConstraint.h(25): warning C4359: 'btContactConstraint': アライメント指定子は実際のアラインメント (128) より小さいため、無視されます。
   btFixedConstraint.cpp
   btGearConstraint.cpp
   btGeneric6DofConstraint.cpp
   btGeneric6DofSpring2Constraint.cpp
+ConstraintSolver\btGeneric6DofSpring2Constraint.cpp(786): warning C4244: '初期化中': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
   btGeneric6DofSpringConstraint.cpp
   btHinge2Constraint.cpp
   btHingeConstraint.cpp
@@ -16,6 +22,7 @@
   btTypedConstraint.cpp
   btUniversalConstraint.cpp
   btDiscreteDynamicsWorld.cpp
+C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\BulletPhysics\src\BulletDynamics/ConstraintSolver/btContactConstraint.h(25): warning C4359: 'btContactConstraint': アライメント指定子は実際のアラインメント (128) より小さいため、無視されます。
   btRigidBody.cpp
   btSimpleDynamicsWorld.cpp
   コードを生成中...
@@ -25,13 +32,17 @@
   btMultiBodyConstraintSolver.cpp
   btMultiBodyDynamicsWorld.cpp
   btMultiBodyJointLimitConstraint.cpp
-Featherstone\btMultiBodyJointLimitConstraint.cpp(114): warning C4244: '初期化中' : 'int' から 'btScalar' への変換です。データが失われる可能性があります。
+Featherstone\btMultiBodyJointLimitConstraint.cpp(114): warning C4244: '初期化中': 'int' から 'btScalar' への変換です。データが失われる可能性があります。
   btMultiBodyJointMotor.cpp
   btMultiBodyPoint2Point.cpp
   btDantzigLCP.cpp
+MLCPSolvers\btDantzigLCP.cpp(1568): warning C4473: 'printf': 書式文字列として渡された引数が不足しています
+  MLCPSolvers\btDantzigLCP.cpp(1568): note: プレースホルダーとそのパラメーターには 2 の可変個引数が必要ですが、1 が指定されています。
+  MLCPSolvers\btDantzigLCP.cpp(1568): note: 不足している可変個引数 2 が書式文字列 '% s' に必要です
   btLemkeAlgorithm.cpp
   btMLCPSolver.cpp
   btRaycastVehicle.cpp
+C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\BulletPhysics\src\BulletDynamics/ConstraintSolver/btContactConstraint.h(25): warning C4359: 'btContactConstraint': アライメント指定子は実際のアラインメント (128) より小さいため、無視されます。
   btWheelInfo.cpp
   コードを生成中...
-  BulletDynamics.vcxproj -> D:\_Users\Desktop\Decide1\Decide\\bulletPhysics\lib\Debug\BulletDynamics_Debug.lib
+  BulletDynamics.vcxproj -> C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\\bulletPhysics\lib\Debug\BulletDynamics_Debug.lib

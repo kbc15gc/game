@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -154,12 +154,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
+    <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GameLight.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
+    <ClInclude Include="Ground.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Decide.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameLight.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="GameShadowCamera.cpp" />
+    <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>

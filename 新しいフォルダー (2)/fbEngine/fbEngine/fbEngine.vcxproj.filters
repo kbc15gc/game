@@ -220,6 +220,9 @@
     <ClInclude Include="SpriteAnimation.h">
       <Filter>Object\Component\2D</Filter>
     </ClInclude>
+    <ClInclude Include="Rigid.h">
+      <Filter>Object\Component\3D\Physics\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Object.cpp">
@@ -404,6 +407,9 @@
     </ClCompile>
     <ClCompile Include="SpriteAnimation.cpp">
       <Filter>Object\Component\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Rigid.cpp">
+      <Filter>Object\Component\3D\Physics\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

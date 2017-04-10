@@ -196,7 +196,7 @@ void SkinModel::DrawMeshContainer(
 			//バッファー
 			LPD3DXBONECOMBINATION pBoneComb = LPD3DXBONECOMBINATION(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
 			//各マテリアル
-			for (iAttrib = 0; iAttrib < pMeshContainer->NumAttributeGroups; iAttrib++)
+			for (iAttrib = 0; iAttrib < pMeshContainer->NumMaterials; iAttrib++)
 			{
 				//ボーン
 				for (DWORD iPaletteEntry = 0; iPaletteEntry < pMeshContainer->NumPaletteEntries; ++iPaletteEntry)

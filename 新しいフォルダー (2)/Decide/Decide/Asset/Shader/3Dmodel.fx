@@ -36,8 +36,8 @@ sampler_state
     MipFilter = NONE;
     MinFilter = NONE;
     MagFilter = NONE;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 			
 samplerCUBE g_cubeSampler =

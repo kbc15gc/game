@@ -3,6 +3,7 @@
 
 class Collision;
 class RigidBody;
+class Rigid;
 
 class PhysicsWorld
 {
@@ -21,6 +22,8 @@ public:
 	}
 	void AddRigidBody(RigidBody* rb);
 	void RemoveRigidBody(RigidBody* rb);
+	void AddRigid(Rigid* rb);
+	void RemoveRigid(Rigid* rb);
 	void ConvexSweepTest(
 		const btConvexShape* castShape,
 		const btTransform& convexFromWorld,
@@ -35,6 +38,7 @@ public:
 	void RemoveCollision(Collision* coll);
 	const Collision* FindOverlappedDamageCollision(btCollisionObject * colliObject,const int& id) const;
 	const SweepResultGround FindOverlappedStage(btCollisionObject * colliObject,const Vector3& start,const Vector3& end) const;
+	const SweepResultWall FindOverlappedWall(btCollisionObject * colliObject, const Vector3& start, const Vector3& end) const;
 
 	static PhysicsWorld* Instance();
 private:

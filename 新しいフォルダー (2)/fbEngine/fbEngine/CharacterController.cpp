@@ -5,8 +5,9 @@
 #include "CharacterController.h"
 #include "CollisionAttr.h"
 #include "Physics.h"
-
-		//衝突したときに呼ばれる関数オブジェクト(地面用)
+#include "Rigid.h"
+//
+//		//衝突したときに呼ばれる関数オブジェクト(地面用)
 //struct SweepResultGround : public btCollisionWorld::ConvexResultCallback
 //{
 //	bool isHit = false;									//衝突フラグ。
@@ -50,49 +51,49 @@
 //		return 0.0f;
 //	}
 //};
-//		//衝突したときに呼ばれる関数オブジェクト(壁用)
-struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
-{
-	bool isHit = false;						//衝突フラグ。
-	Vector3 hitPos = Vector3::zero;		//衝突点。
-	Vector3 startPos = Vector3::zero;		//レイの始点。
-	float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
-	Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
-	btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
-											//衝突したときに呼ばれるコールバック関数。
-	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
-	{
-		if (convexResult.m_hitCollisionObject == me) {
-			//自分に衝突した。or 地面に衝突した。
-			return 0.0f;
-		}
-		//衝突点の法線を引っ張ってくる。
-		Vector3 hitNormalTmp;
-		hitNormalTmp.Set(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
-		//上方向と衝突点の法線のなす角度を求める。
-		float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
-		if (angle >= 3.1415 * 0.3f		//地面の傾斜が54度以上なので壁とみなす。
-			|| convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Character	//もしくはコリジョン属性がキャラクタなので壁とみなす。
-			) {
-			isHit = true;
-			Vector3 hitPosTmp;
-			hitPosTmp.Set(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
-			//交点との距離を調べる。
-			Vector3 vDist;
-			vDist.Subtract(hitPosTmp, startPos);
-			vDist.y = 0.0f;
-			float distTmp = vDist.Length();
-			if (distTmp < dist) {
-				//この衝突点の方が近いので、最近傍の衝突点を更新する。
-				hitPos = hitPosTmp;
-				dist = distTmp;
-				hitNormal = hitNormalTmp;
-			}
-		}
-		return 0.0f;
-	}
-};
-	
+////		//衝突したときに呼ばれる関数オブジェクト(壁用)
+//struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
+//{
+//	bool isHit = false;						//衝突フラグ。
+//	Vector3 hitPos = Vector3::zero;		//衝突点。
+//	Vector3 startPos = Vector3::zero;		//レイの始点。
+//	float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
+//	Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
+//	btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
+//											//衝突したときに呼ばれるコールバック関数。
+//	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
+//	{
+//		if (convexResult.m_hitCollisionObject == me) {
+//			//自分に衝突した。or 地面に衝突した。
+//			return 0.0f;
+//		}
+//		//衝突点の法線を引っ張ってくる。
+//		Vector3 hitNormalTmp;
+//		hitNormalTmp.Set(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
+//		//上方向と衝突点の法線のなす角度を求める。
+//		float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
+//		if (angle >= 3.1415 * 0.3f		//地面の傾斜が54度以上なので壁とみなす。
+//			|| convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Character	//もしくはコリジョン属性がキャラクタなので壁とみなす。
+//			) {
+//			isHit = true;
+//			Vector3 hitPosTmp;
+//			hitPosTmp.Set(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
+//			//交点との距離を調べる。
+//			Vector3 vDist;
+//			vDist.Subtract(hitPosTmp, startPos);
+//			vDist.y = 0.0f;
+//			float distTmp = vDist.Length();
+//			if (distTmp < dist) {
+//				//この衝突点の方が近いので、最近傍の衝突点を更新する。
+//				hitPos = hitPosTmp;
+//				dist = distTmp;
+//				hitNormal = hitNormalTmp;
+//			}
+//		}
+//		return 0.0f;
+//	}
+//};
+//	
 
 
 void CCharacterController::Init(float radius, float height)
@@ -103,17 +104,17 @@ void CCharacterController::Init(float radius, float height)
 	m_collider->Create(radius, height);
 
 	//剛体を初期化。
-	//RigidBodyInfo rbInfo;
-	//rbInfo.collider = m_collider;
-	//rbInfo.mass = 0.0f;
-	m_rigidBody->Create(0.0f,m_collider,5);
-	btTransform& trans = m_rigidBody->GetCollisonObj()->getWorldTransform();
+	RigidBodyInfo rbInfo;
+	rbInfo.collider = m_collider;
+	rbInfo.mass = 0.0f;
+	m_rigidBody.Create(rbInfo);
+	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
 	//剛体の位置を更新。
 	trans.setOrigin(btVector3(transform->position.x, transform->position.y, transform->position.z));
 	//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-	m_rigidBody->GetCollisonObj()->setUserIndex(enCollisionAttr_Character);
-	m_rigidBody->GetCollisonObj()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	PhysicsWorld::Instance()->AddRigidBody(m_rigidBody);
+	m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Character);
+	m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	PhysicsWorld::Instance()->AddRigid(&m_rigidBody);
 }
 void CCharacterController::Execute()
 {
@@ -154,7 +155,7 @@ void CCharacterController::Execute()
 			end.setOrigin(btVector3(nextPosition.x, posTmp.y, nextPosition.z));
 
 			SweepResultWall callback;
-			callback.me = m_rigidBody->GetCollisonObj();
+			callback.me = m_rigidBody.GetBody();
 			callback.startPos = posTmp;
 			//衝突検出。
 			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
@@ -229,7 +230,7 @@ void CCharacterController::Execute()
 		}
 		end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 		SweepResultGround callback;
-		callback.me = m_rigidBody->GetCollisonObj();
+		callback.me = m_rigidBody.GetBody();
 		callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 		//衝突検出。
 		PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
@@ -260,7 +261,7 @@ void CCharacterController::Execute()
 	}
 	//移動確定。
 	transform->position = nextPosition;
-	btRigidBody* btBody = (btRigidBody*)m_rigidBody->GetCollisonObj();
+	btRigidBody* btBody = m_rigidBody.GetBody();
 	//剛体を動かす。
 	btBody->setActivationState(DISABLE_DEACTIVATION);
 	btTransform& trans = btBody->getWorldTransform();
@@ -273,5 +274,5 @@ void CCharacterController::Execute()
 	*/
 void CCharacterController::RemoveRigidBoby()
 {
-	PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody);
+	PhysicsWorld::Instance()->RemoveRigid(&m_rigidBody);
 }

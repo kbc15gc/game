@@ -145,11 +145,13 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 #include "TitleScene.h"
+#include "GameScene.h"
 
 void InitializeGame()
 {
 	INSTANCE(SoundEngine)->Init();
 
 	INSTANCE(SceneManager)->Add<TitleScene>();
+	INSTANCE(SceneManager)->Add<GameScene>();
 	INSTANCE(SceneManager)->ChangeScene("TitleScene");
 }

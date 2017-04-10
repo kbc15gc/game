@@ -6,7 +6,7 @@
 
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
-#include "RigidBody.h"
+#include "Rigid.h"
 #include "Component.h"
 #include "GameObject.h"
 
@@ -14,7 +14,7 @@
 	/*!
 	* @brief	キャラクタコントローラー。
 	*/
-class CCharacterController :Component{
+class CCharacterController :public Component{
 public:
 	CCharacterController(GameObject* g, Transform* t):
 		Component(g,t, typeid(this).name())
@@ -34,6 +34,15 @@ public:
 	*/
 	void Execute();
 	
+	void SetPosition(const Vector3& pos)
+	{
+		transform->position = pos;
+	}
+
+	Vector3 GetPosition()
+	{
+		return transform->position;
+	}
 	/*!
 	* @brief	移動速度を設定。
 	*/
@@ -87,9 +96,9 @@ public:
 	/*!
 	* @brief	剛体を取得。
 	*/
-	RigidBody* GetRigidBody()
+	Rigid* GetRigidBody()
 	{
-		return m_rigidBody;
+		return& m_rigidBody;
 	}
 	/*!
 	* @brief	剛体を物理エンジンから削除。。
@@ -102,6 +111,6 @@ private:
 	CCapsuleCollider*	m_collider;						//コライダー。
 	float				m_radius = 0.0f;
 	float				m_height = 0.0f;
-	RigidBody*			m_rigidBody;					//剛体。
+	Rigid				m_rigidBody;					//剛体。
 	float				m_gravity = -9.8f;				//重力。
 };
