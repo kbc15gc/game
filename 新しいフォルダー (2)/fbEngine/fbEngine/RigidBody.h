@@ -2,6 +2,22 @@
 #include "Collision.h"
 class Collider;
 
+//剛体情報。
+struct RigidBodyInfo {
+	RigidBodyInfo() :
+		collider(NULL),
+		mass(0.0f)
+	{
+		pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					//初期化
+		rot = D3DXQUATERNION{ 0.0f, 0.0f, 0.0f, 1.0f };		//初期化
+	}
+	D3DXVECTOR3 pos;				//座標。
+	D3DXQUATERNION rot;			//回転。
+	Collider* collider;		//コライダー。
+	float mass;					//質量。
+
+};
+
 //剛体クラス。
 class RigidBody:public Collision
 {

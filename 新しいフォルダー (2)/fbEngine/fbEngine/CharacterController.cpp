@@ -5,9 +5,8 @@
 #include "CharacterController.h"
 #include "CollisionAttr.h"
 #include "Physics.h"
-#include "Rigid.h"
-//
-//		//衝突したときに呼ばれる関数オブジェクト(地面用)
+
+//衝突したときに呼ばれる関数オブジェクト(地面用)
 //struct SweepResultGround : public btCollisionWorld::ConvexResultCallback
 //{
 //	bool isHit = false;									//衝突フラグ。
@@ -51,7 +50,7 @@
 //		return 0.0f;
 //	}
 //};
-////		//衝突したときに呼ばれる関数オブジェクト(壁用)
+//		//衝突したときに呼ばれる関数オブジェクト(壁用)
 //struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
 //{
 //	bool isHit = false;						//衝突フラグ。
@@ -93,38 +92,40 @@
 //		return 0.0f;
 //	}
 //};
-//	
 
 
-void CCharacterController::Init(float radius, float height)
+
+void CCharacterController::Init(float radius, float height,RigidBody* rigid,CCapsuleCollider* capsule)
 {
 	//コリジョン作成。
 	m_radius = radius;
 	m_height = height;
-	m_collider->Create(radius, height);
+	//m_collider->Create(radius, height);
 
+	m_rigidBody = rigid;
+	m_collider = capsule;
 	//剛体を初期化。
-	RigidBodyInfo rbInfo;
-	rbInfo.collider = m_collider;
-	rbInfo.mass = 0.0f;
-	m_rigidBody.Create(rbInfo);
-	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
-	//剛体の位置を更新。
-	trans.setOrigin(btVector3(transform->position.x, transform->position.y, transform->position.z));
-	//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-	m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Character);
-	m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	PhysicsWorld::Instance()->AddRigid(&m_rigidBody);
+	//RigidBodyInfo rbInfo;
+	//rbInfo.collider = m_collider;
+	//rbInfo.mass = 0.0f;
+	//m_rigidBody->Create(0.0f, m_collider, 5);
+	//btTransform& trans = m_rigidBody->GetCollisonObj()->getWorldTransform();
+	////剛体の位置を更新。
+	//trans.setOrigin(btVector3(transform->position.x, transform->position.y, transform->position.z));
+	////@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
+	//m_rigidBody->GetCollisonObj()->setUserIndex(enCollisionAttr_Character);
+	m_rigidBody->GetCollisonObj()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	//PhysicsWorld::Instance()->AddRigidBody(m_rigidBody);
 }
 void CCharacterController::Execute()
 {
 	//速度に重力加速度を加える。
 	m_moveSpeed.y += m_gravity * 1.0f / 60.0f;
 	//次の移動先となる座標を計算する。
-	Vector3 nextPosition = transform->position;
+	Vector3 nextPosition = transform->localPosition;
 	//速度からこのフレームでの移動量を求める。オイラー積分。
 	Vector3 addPos = m_moveSpeed;
-	addPos.Scale(1.0f/60.0f);
+	addPos.Scale(1.0f / 60.0f);
 	nextPosition.Add(addPos);
 
 	//XZ平面での衝突検出と衝突解決を行う。
@@ -133,7 +134,7 @@ void CCharacterController::Execute()
 		while (true) {
 			//現在の座標から次の移動先へ向かうベクトルを求める。
 			Vector3 addPos;
-			addPos.Subtract(nextPosition, transform->position);
+			addPos.Subtract(nextPosition, transform->localPosition);
 			Vector3 addPosXZ = addPos;
 			addPosXZ.y = 0.0f;
 			if (addPosXZ.Length() < FLT_EPSILON) {
@@ -155,7 +156,7 @@ void CCharacterController::Execute()
 			end.setOrigin(btVector3(nextPosition.x, posTmp.y, nextPosition.z));
 
 			SweepResultWall callback;
-			callback.me = m_rigidBody.GetBody();
+			callback.me = m_rigidBody->GetCollisonObj();
 			callback.startPos = posTmp;
 			//衝突検出。
 			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
@@ -194,20 +195,20 @@ void CCharacterController::Execute()
 		}
 	}
 	//XZの移動は確定。
-	transform->position.x = nextPosition.x;
-	transform->position.z = nextPosition.z;
+	transform->localPosition.x = nextPosition.x;
+	transform->localPosition.z = nextPosition.z;
 	//下方向を調べる。
 	{
 		Vector3 addPos;
-		addPos.Subtract(nextPosition, transform->position);
+		addPos.Subtract(nextPosition, transform->localPosition);
 
-		transform->position = nextPosition;	//移動の仮確定。
-									//レイを作成する。
+		transform->localPosition = nextPosition;	//移動の仮確定。
+											//レイを作成する。
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
 		//始点はカプセルコライダーの中心。
-		start.setOrigin(btVector3(transform->position.x, transform->position.y + m_height * 0.5f + m_radius, transform->position.z));
+		start.setOrigin(btVector3(transform->localPosition.x, transform->localPosition.y + m_height * 0.5f + m_radius, transform->localPosition.z));
 		//終点は地面上にいない場合は1m下を見る。
 		//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 		//地面上にいなくて降下中の場合はそのまま落下先を調べる。
@@ -230,29 +231,17 @@ void CCharacterController::Execute()
 		}
 		end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 		SweepResultGround callback;
-		callback.me = m_rigidBody.GetBody();
+		callback.me = m_rigidBody->GetCollisonObj();
 		callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 		//衝突検出。
 		PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 		if (callback.isHit) {
 			//当たった。
-			Vector3 Circle;
-			float x = 0.0f;
-			float offset = 0.0f;	//押し戻す量。
-			Circle = Vector3::zero;
-
-			Circle = transform->position;
-			Circle.y = callback.hitPos.y;//円の中心
-			Vector3 v;
-			v.Subtract(Circle, callback.hitPos);
-			x = v.Length();//物体の角とプレイヤーの間の横幅の距離が求まる。
-
-			offset = sqrt(max(0.0f, m_radius*m_radius - x*x));//yの平方根を求める。
-
+			//当たった。
 			m_moveSpeed.y = 0.0f;
 			m_isJump = false;
 			m_isOnGround = true;
-			nextPosition.y = callback.hitPos.y + offset - m_radius;
+			nextPosition.y = callback.hitPos.y;
 		}
 		else {
 			//地面上にいない。
@@ -260,19 +249,19 @@ void CCharacterController::Execute()
 		}
 	}
 	//移動確定。
-	transform->position = nextPosition;
-	btRigidBody* btBody = m_rigidBody.GetBody();
+	transform->localPosition = nextPosition;
+	btRigidBody* btBody = (btRigidBody*)m_rigidBody->GetCollisonObj();
 	//剛体を動かす。
 	btBody->setActivationState(DISABLE_DEACTIVATION);
 	btTransform& trans = btBody->getWorldTransform();
 	//剛体の位置を更新。
-	trans.setOrigin(btVector3(transform->position.x, transform->position.y, transform->position.z));
+	trans.setOrigin(btVector3(transform->localPosition.x, transform->localPosition.y, transform->localPosition.z));
 	//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
 }
-	/*!
-	* @brief	死亡したことを通知。
-	*/
+/*!
+* @brief	死亡したことを通知。
+*/
 void CCharacterController::RemoveRigidBoby()
 {
-	PhysicsWorld::Instance()->RemoveRigid(&m_rigidBody);
+	PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody);
 }

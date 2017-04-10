@@ -6,20 +6,20 @@
 
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
-#include "Rigid.h"
+#include "RigidBody.h"
 #include "Component.h"
 #include "GameObject.h"
 
 
-	/*!
-	* @brief	キャラクタコントローラー。
-	*/
-class CCharacterController :public Component{
+/*!
+* @brief	キャラクタコントローラー。
+*/
+class CCharacterController : public Component {
 public:
-	CCharacterController(GameObject* g, Transform* t):
-		Component(g,t, typeid(this).name())
+	CCharacterController(GameObject* g, Transform* t) :
+		Component(g, t, typeid(this).name())
 	{
-			m_collider = g->AddComponent<CCapsuleCollider>();
+		m_collider = g->AddComponent<CCapsuleCollider>();
 	}
 	~CCharacterController()
 	{
@@ -28,20 +28,24 @@ public:
 	/*!
 	* @brief	初期化。
 	*/
-	void Init(float radius, float height);
+	void Init(float radius, float height, RigidBody* rigid, CCapsuleCollider* capsule);
 	/*!
 	* @brief	実行。
 	*/
 	void Execute();
-	
+	/*!
+	* @brief	座標を取得。
+	*/
+	const Vector3& GetPosition() const
+	{
+		return transform->localPosition;
+	}
+	/*!
+	* @brief	座標を設定。
+	*/
 	void SetPosition(const Vector3& pos)
 	{
-		transform->position = pos;
-	}
-
-	Vector3 GetPosition()
-	{
-		return transform->position;
+		transform->localPosition = pos;
 	}
 	/*!
 	* @brief	移動速度を設定。
@@ -96,9 +100,9 @@ public:
 	/*!
 	* @brief	剛体を取得。
 	*/
-	Rigid* GetRigidBody()
+	RigidBody* GetRigidBody()
 	{
-		return& m_rigidBody;
+		return m_rigidBody;
 	}
 	/*!
 	* @brief	剛体を物理エンジンから削除。。
@@ -111,6 +115,6 @@ private:
 	CCapsuleCollider*	m_collider;						//コライダー。
 	float				m_radius = 0.0f;
 	float				m_height = 0.0f;
-	Rigid				m_rigidBody;					//剛体。
+	RigidBody*			m_rigidBody;					//剛体。
 	float				m_gravity = -9.8f;				//重力。
 };

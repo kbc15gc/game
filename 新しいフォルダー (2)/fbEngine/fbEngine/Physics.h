@@ -3,7 +3,6 @@
 
 class Collision;
 class RigidBody;
-class Rigid;
 
 class PhysicsWorld
 {
@@ -22,8 +21,6 @@ public:
 	}
 	void AddRigidBody(RigidBody* rb);
 	void RemoveRigidBody(RigidBody* rb);
-	void AddRigid(Rigid* rb);
-	void RemoveRigid(Rigid* rb);
 	void ConvexSweepTest(
 		const btConvexShape* castShape,
 		const btTransform& convexFromWorld,

@@ -8,8 +8,8 @@
 
 namespace 
 {
-	const float SPEED = 1.0f;
-	const float JUMP_POWER = 15.0f;
+	const float SPEED = 30.0f;
+	const float JUMP_POWER = 5.0f;
 }
 
 Player::Player(const char * name) :
@@ -24,26 +24,25 @@ void Player::Awake()
 {
 	_Model = AddComponent<SkinModel>();
 	_Anim = AddComponent<Animation>();
-	//_Rigid = AddComponent<RigidBody>();
+	_Rigid = AddComponent<RigidBody>();
 	_CharacterController = AddComponent<CCharacterController>();
-	//CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
-	_Height = 100.0f;
-	_Radius = 50.0f;
-	//coll->Create(Vector3(25, _Height, 25));
-	//coll->Create(_Radius, _Height);
-	//_Rigid->Create(1, coll, Collision_ID::PLAYER, Vector3::zero, Vector3(0, _Height, 0));
-	//_RB = (btRigidBody*)_Rigid->GetCollisonObj();
+	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
+	_Height = 1.5f;
+	_Radius = 0.5f;
+	coll->Create(_Radius, _Height);
+	_Rigid->Create(0.0f, coll, Collision_ID::PLAYER, Vector3::zero, Vector3(0, _Height/2, 0));
+	_RB = (btRigidBody*)_Rigid->GetCollisonObj();
 	//RigidBodyの上下の移動量を消す
-	//_RB->setGravity(btVector3(0.0f, 0.0f, 0.0f));
+	//_Rigid->SetGravity(btVector3(0.0f, 0.0f, 0.0f));
 	//スリープさせない(必要かどうかわからない。)
-	//_RB->setSleepingThresholds(0, 0);
+	_RB->setSleepingThresholds(0, 0);
 
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Unity.X"), _Anim);
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, false);
 
-	_CharacterController->Init(_Radius,_Height);
+	_CharacterController->Init(_Radius,_Height,_Rigid,coll);
 	_CharacterController->SetGravity(_Gravity);
 }
 
@@ -78,25 +77,34 @@ void Player::Update()
 	}
 	Move();
 	Jump();
+	//Y軸の移動量保存
+	//Vector3 move = _MoveSpeed;
 	//キャラクターコントローラー更新
 	_CharacterController->SetMoveSpeed(_MoveSpeed);
 	_CharacterController->Execute();
-	_MoveSpeed = _CharacterController->GetMoveSpeed();	//移動速度代入
-	transform->position = _CharacterController->GetPosition();	//座標代入
-	_CharacterController->SetPosition(transform->position);
-
+	/*transform->position = _CharacterController->GetPosition();	//座標代入
+	_CharacterController->SetPosition(transform->position);*/
 	//XZ軸の移動
-	transform->localPosition.Add(_MoveSpeed);
+//	transform->localPosition.Add(_MoveSpeed);
 	transform->UpdateTransform();
 	//if (_MoveSpeed.Length() > 0)
 	//{
 	//	
 	//}
+	//Y軸移動はしない
+	//_MoveSpeed.y = 0.0f;
+	//壁チェック
+	//_WallCheck(move);
+	//重力チェック
+	//_GravityCheck(move.y);
 }
 
 void Player::Move()
 {
 	//初期化
+	_MoveSpeed = _CharacterController->GetMoveSpeed();
+	_MoveSpeed.x = 0.0f;
+	_MoveSpeed.z = 0.0f;
 	//方向
 	_Dir = Vector3::zero;
 	static Vector3 dirX = Vector3::axisX;

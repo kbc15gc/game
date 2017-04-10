@@ -1,6 +1,5 @@
 #include "Physics.h"
 #include "RigidBody.h"
-#include "Rigid.h"
 #include "Collision.h"
 
 PhysicsWorld* PhysicsWorld::_Instance;
@@ -46,7 +45,7 @@ void PhysicsWorld::Start()
 		collisionConfig.get()
 		));
 	//
-	dynamicWorld->setGravity(btVector3(0, -980.8, 0));
+	dynamicWorld->setGravity(btVector3(0, -9.8, 0));
 }
 void PhysicsWorld::Update()
 {
@@ -64,15 +63,6 @@ void PhysicsWorld::AddRigidBody(RigidBody* rb)
 void PhysicsWorld::RemoveRigidBody(RigidBody* rb)
 {
 	dynamicWorld->removeRigidBody((btRigidBody*)rb->GetCollisonObj());
-}
-//ƒŠƒWƒbƒh
-void PhysicsWorld::AddRigid(Rigid* rb)
-{
-	dynamicWorld->addRigidBody((btRigidBody*)rb->GetBody());
-}
-void PhysicsWorld::RemoveRigid(Rigid* rb)
-{
-	dynamicWorld->removeRigidBody((btRigidBody*)rb->GetBody());
 }
 
 void PhysicsWorld::AddCollision(Collision * coll)
