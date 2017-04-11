@@ -32,8 +32,6 @@ void Player::Awake()
 	coll->Create(_Radius, _Height);
 	_Rigid->Create(0.0f, coll, Collision_ID::PLAYER, Vector3::zero, Vector3(0, _Height/2, 0));
 	_RB = (btRigidBody*)_Rigid->GetCollisonObj();
-	//RigidBodyの上下の移動量を消す
-	//_Rigid->SetGravity(btVector3(0.0f, 0.0f, 0.0f));
 	//スリープさせない(必要かどうかわからない。)
 	_RB->setSleepingThresholds(0, 0);
 

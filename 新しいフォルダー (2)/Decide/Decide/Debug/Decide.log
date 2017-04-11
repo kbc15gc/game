@@ -1,3 +1,6 @@
-﻿  Player.cpp
+﻿  TitleScene.cpp
+c:\github\taisyou\game\新しいフォルダー (2)\decide\decide\titlescene.cpp(1): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
+  GameScene.cpp
+  コードを生成中...
   Decide.vcxproj -> C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\Debug\Decide.exe
   Decide.vcxproj -> C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\Debug\Decide.pdb (Full PDB)

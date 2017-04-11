@@ -5,6 +5,8 @@ static const float WindowH = 720.0f;
 
 enum Collision_ID
 {
-	PLAYER,
 	GROUND,
+	PLAYER,
+	ENEMY,
+	BOSS,
 };
