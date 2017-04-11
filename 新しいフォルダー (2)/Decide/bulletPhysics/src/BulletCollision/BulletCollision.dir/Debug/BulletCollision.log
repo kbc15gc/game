@@ -103,4 +103,4 @@
   btVoronoiSimplexSolver.cpp
   コードを生成中...
 btBroadphaseProxy.obj : warning LNK4221: このオブジェクト ファイルは、以前に未定義であったパブリック シンボルを定義していないため、このライブラリを使用するリンク操作では使用されません
-  BulletCollision.vcxproj -> C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\\bulletPhysics\lib\Debug\BulletCollision_Debug.lib
+  BulletCollision.vcxproj -> C:\GitHub\game\新しいフォルダー (2)\Decide\\bulletPhysics\lib\Debug\BulletCollision_Debug.lib

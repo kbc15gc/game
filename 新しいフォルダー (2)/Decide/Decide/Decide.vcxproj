@@ -154,6 +154,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
+    <ClInclude Include="EnemyCharacter.h" />
+    <ClInclude Include="EnemyState.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameScene.h" />
@@ -167,6 +169,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Decide.cpp" />
+    <ClCompile Include="EnemyCharacter.cpp" />
+    <ClCompile Include="EnemyState.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameScene.cpp" />
