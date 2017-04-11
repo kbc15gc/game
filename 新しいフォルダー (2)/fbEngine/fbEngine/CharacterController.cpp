@@ -95,14 +95,20 @@
 
 
 
-void CCharacterController::Init(float radius, float height,RigidBody* rigid,CCapsuleCollider* capsule)
+void CCharacterController::Init(GameObject* Object, Transform* tramsform,float radius, float height, Collision_ID type,Collider* capsule)
 {
 	//コリジョン作成。
 	m_radius = radius;
 	m_height = height;
 	//m_collider->Create(radius, height);
 
-	m_rigidBody = rigid;
+	m_rigidBody.reset(new RigidBody(Object, tramsform));
+	//リジッドボディ作成
+	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, Vector3(0, height /2, 0));
+	//スリープさせない(必要かどうかわからない。)
+	static_cast<btRigidBody*>(m_rigidBody->GetCollisonObj())->setSleepingThresholds(0, 0);
+
+
 	m_collider = capsule;
 	//剛体を初期化。
 	//RigidBodyInfo rbInfo;
@@ -262,5 +268,5 @@ void CCharacterController::Execute()
 */
 void CCharacterController::RemoveRigidBoby()
 {
-	PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody);
+	PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
 }

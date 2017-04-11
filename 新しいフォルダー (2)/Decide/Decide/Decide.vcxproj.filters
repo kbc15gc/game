@@ -20,8 +20,11 @@
     <Filter Include="Object\GameObject\Player">
       <UniqueIdentifier>{7bb9c7ae-50ea-4b2b-908f-89d06d8287ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\GameObject\Player\State">
-      <UniqueIdentifier>{59fec6f6-f883-40e8-bb9c-2ed4175f2f27}</UniqueIdentifier>
+    <Filter Include="Object\GameObject\Enemy">
+      <UniqueIdentifier>{3a9981de-6ade-4d8b-a91b-cb293836348f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\GameObject\Enemy\HFSM">
+      <UniqueIdentifier>{733b9d53-8cd0-42af-a23d-12253d32e114}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,8 +55,11 @@
     <ClInclude Include="Sky.h">
       <Filter>Object\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerState.h">
-      <Filter>Object\GameObject\Player\State</Filter>
+    <ClInclude Include="EnemyCharacter.h">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="Sky.cpp">
       <Filter>Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCharacter.cpp">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

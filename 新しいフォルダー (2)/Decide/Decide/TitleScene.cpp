@@ -5,9 +5,9 @@
 
 void TitleScene::Start()
 {
-	ImageObject* test = GameObjectManager::AddNew<ImageObject>("title",0);
-	test->SetTexture(LOADTEXTURE("title.png"));
-	test->SetPivot(0.0f, 0.0f);
+	ImageObject* title = GameObjectManager::AddNew<ImageObject>("title",0);
+	title->SetTexture(LOADTEXTURE("title.png"));
+	title->SetPivot(0.0f, 0.0f);
 }
 
 void TitleScene::Update()
@@ -17,8 +17,9 @@ void TitleScene::Update()
 	//エンターキー
 	if ((flag || KeyBoardInput->isPush(DIK_RETURN)) && !_ChangeScene)
 	{
-		//シーンチェンジフラグ
+		//シーンチェンジフラグtrue
 		_ChangeScene = true;
+		//フェード開始
 		SetFade(true);
 	}
 	if (_ChangeScene &&	//エンターキーが押された
@@ -26,6 +27,7 @@ void TitleScene::Update()
 	{
 		//ゲームシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("GameScene");
+		//シーンチェンジ完了
 		_ChangeScene = false;
 		return;
 	}

@@ -12,8 +12,11 @@
 
 void GameScene::Start()
 {
+	//ゲームカメラ生成
 	GameObjectManager::AddNew<GameCamera>("GameCamera", 2);
+	//ゲームライト生成
 	GameObjectManager::AddNew<GameLight>("GameLight", 0);
+	//影カメラ生成
 	GameObjectManager::AddNew<GameShadowCamera>("GameShadowCamera", 0);
 	//プレイヤー生成
 	GameObjectManager::AddNew<Player>("Player", 1);
