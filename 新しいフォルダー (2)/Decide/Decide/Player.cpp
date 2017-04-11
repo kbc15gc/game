@@ -117,22 +117,9 @@ void Player::Move()
 	//方向
 	_Dir = Vector3::zero;
 
-	//キーボードのJ　or　パッドのAボタンでジャンプ
-	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-	{
-		//地面上にいる場合
-		if (_CharacterController->IsOnGround())
-		{
-			//ジャンプパワーを設定
-			_MoveSpeed.y = JUMP_POWER;
-			//キャラクターコントローラーをジャンプに
-			_CharacterController->Jump();
-		}
-	}
-
 	//コントローラー移動
-	_Dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f);
-	_Dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f);
+	_Dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f) * SPEED;
+	_Dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f) * SPEED;
 #ifdef _DEBUG
 	//キーボード(デバッグ用)
 	if (KeyBoardInput->isPressed(DIK_W))
@@ -160,7 +147,7 @@ void Player::Move()
 		Camera* c = GameObjectManager::mainCamera;
 		//_Dir = c->transform->Direction(_Dir)*Time::DeltaTime();
 		//Yの移動量を消す
-		_MoveSpeed = Vector3(_Dir.x, 0.0f, _Dir.z);
+		_MoveSpeed = Vector3(_Dir.x, _MoveSpeed.y, _Dir.z);
 
 		Vector3 vec = _MoveSpeed;
 		//正規化
@@ -174,7 +161,18 @@ void Player::Move()
 
 void Player::Jump()
 {
-	
+	//キーボードのJ　or　パッドのAボタンでジャンプ
+	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+	{
+		//地面上にいる場合
+		if (_CharacterController->IsOnGround())
+		{
+			//ジャンプパワーを設定
+			_MoveSpeed.y = JUMP_POWER;
+			//キャラクターコントローラーをジャンプに
+			_CharacterController->Jump();
+		}
+	}
 }
 
 void Player::Attack()

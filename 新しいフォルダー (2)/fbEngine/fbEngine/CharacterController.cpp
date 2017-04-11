@@ -238,19 +238,25 @@ void CCharacterController::Execute()
 		SweepResultGround callback;
 		callback.me = m_rigidBody->GetCollisonObj();
 		callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
-		//衝突検出。
-		PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
-		if (callback.isHit) {
-			//当たった。
-			//当たった。
-			m_moveSpeed.y = 0.0f;
-			m_isJump = false;
-			m_isOnGround = true;
-			nextPosition.y = callback.hitPos.y;
-		}
-		else {
-			//地面上にいない。
-			m_isOnGround = false;
+		//スタートとエンドの差
+		btVector3 Sub = start.getOrigin() - end.getOrigin();
+		//差が0.0001以上なら衝突検出します
+		if (fabs(Sub.length()) > 0.0001f)
+		{
+			//衝突検出。
+			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
+			if (callback.isHit) {
+				//当たった。
+				//当たった。
+				m_moveSpeed.y = 0.0f;
+				m_isJump = false;
+				m_isOnGround = true;
+				nextPosition.y = callback.hitPos.y;
+			}
+			else {
+				//地面上にいない。
+				m_isOnGround = false;
+			}
 		}
 	}
 	//移動確定。

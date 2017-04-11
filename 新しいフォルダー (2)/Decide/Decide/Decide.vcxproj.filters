@@ -26,6 +26,9 @@
     <Filter Include="Object\GameObject\Enemy\HFSM">
       <UniqueIdentifier>{733b9d53-8cd0-42af-a23d-12253d32e114}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\GameObject\Player\PlayerState">
+      <UniqueIdentifier>{2a0ebc1d-7cd5-449f-8181-a17ab1534458}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -55,11 +58,11 @@
     <ClInclude Include="Sky.h">
       <Filter>Object\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyCharacter.h">
-      <Filter>Object\GameObject\Enemy</Filter>
+    <ClInclude Include="PlayerState.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyState.h">
-      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    <ClInclude Include="PlayerStateRun.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,11 +104,8 @@
     <ClCompile Include="Sky.cpp">
       <Filter>Object\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyCharacter.cpp">
-      <Filter>Object\GameObject\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyState.cpp">
-      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    <ClCompile Include="PlayerStateRun.cpp">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
