@@ -1,6 +1,6 @@
 #pragma once
 #include "Collision.h"
-
+#include "../../Decide/Decide/GameSystem.h"
 struct MyContactResultCallback : public btCollisionWorld::ContactResultCallback
 {
 public:
@@ -56,7 +56,7 @@ struct SweepResultGround : public btCollisionWorld::ConvexResultCallback
 	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 	{
 		if (convexResult.m_hitCollisionObject == me
-			|| convexResult.m_hitCollisionObject->getUserIndex() == 5
+			|| convexResult.m_hitCollisionObject->getUserIndex() == Collision_ID::PLAYER
 			) {
 			//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 			return 0.0f;
@@ -67,7 +67,7 @@ struct SweepResultGround : public btCollisionWorld::ConvexResultCallback
 		float angle = hitNormalTmp.Dot(Vector3::up);
 		angle = fabsf(acosf(angle));
 		if (angle < D3DX_PI * 0.2f		//地面の傾斜が54度より小さいので地面とみなす。
-			|| convexResult.m_hitCollisionObject->getUserIndex() == 999 //もしくはコリジョン属性が地面と指定されている。
+			|| convexResult.m_hitCollisionObject->getUserIndex() == Collision_ID::GROUND //もしくはコリジョン属性が地面と指定されている。
 			) {
 			//衝突している。
 			isHit = true;
@@ -109,7 +109,7 @@ struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
 		//上方向と衝突点の法線のなす角度を求める。
 		float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
 		if (angle >= 3.1415 * 0.3f		//地面の傾斜が54度以上なので壁とみなす。
-			|| convexResult.m_hitCollisionObject->getUserIndex() == 5	//もしくはコリジョン属性がキャラクタなので壁とみなす。
+			|| convexResult.m_hitCollisionObject->getUserIndex() == Collision_ID::PLAYER	//もしくはコリジョン属性がキャラクタなので壁とみなす。
 			) {
 			isHit = true;
 			Vector3 hitPosTmp;

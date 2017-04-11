@@ -32,13 +32,11 @@ void Player::Awake()
 	coll->Create(_Radius, _Height);
 	_Rigid->Create(0.0f, coll, Collision_ID::PLAYER, Vector3::zero, Vector3(0, _Height/2, 0));
 	_RB = (btRigidBody*)_Rigid->GetCollisonObj();
-	//RigidBodyの上下の移動量を消す
-	//_Rigid->SetGravity(btVector3(0.0f, 0.0f, 0.0f));
 	//スリープさせない(必要かどうかわからない。)
 	_RB->setSleepingThresholds(0, 0);
 
 	SkinModelData* modeldata = new SkinModelData();
-	modeldata->CloneModelData(SkinModelManager::LoadModel("Unity.X"), _Anim);
+	modeldata->CloneModelData(SkinModelManager::LoadModel("Player.X"), _Anim);
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, false);
 
@@ -51,7 +49,7 @@ void Player::Start()
 	_Model->SetCamera(GameObjectManager::mainCamera);
 	_Model->SetLight(GameObjectManager::mainLight);
 
-	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+	transform->localPosition = Vector3(0.0f, 10.0f, 0.0f);
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
 	_State = PlayerState::Wait;
@@ -77,26 +75,10 @@ void Player::Update()
 	}
 	Move();
 	Jump();
-	//Y軸の移動量保存
-	//Vector3 move = _MoveSpeed;
 	//キャラクターコントローラー更新
 	_CharacterController->SetMoveSpeed(_MoveSpeed);
 	_CharacterController->Execute();
-	/*transform->position = _CharacterController->GetPosition();	//座標代入
-	_CharacterController->SetPosition(transform->position);*/
-	//XZ軸の移動
-//	transform->localPosition.Add(_MoveSpeed);
 	transform->UpdateTransform();
-	//if (_MoveSpeed.Length() > 0)
-	//{
-	//	
-	//}
-	//Y軸移動はしない
-	//_MoveSpeed.y = 0.0f;
-	//壁チェック
-	//_WallCheck(move);
-	//重力チェック
-	//_GravityCheck(move.y);
 }
 
 void Player::Move()
@@ -147,10 +129,7 @@ void Player::Move()
 		//ベクトルから角度を求める
 		float rot = D3DXToRadian(360) - atan2f(vec.z, vec.x);
 		//回転
-		Vector3 ang = transform->GetLocalAngle();
-		ang.y = D3DXToDegree(rot + D3DXToRadian(90));
-		//回転
-		transform->SetLocalAngle(ang);
+		transform->localAngle.y = D3DXToDegree(rot + D3DXToRadian(-90));
 	}
 }
 

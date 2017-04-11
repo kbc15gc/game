@@ -161,6 +161,7 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="TitleScene.h" />
