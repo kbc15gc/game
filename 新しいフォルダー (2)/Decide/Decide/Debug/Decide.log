@@ -1,6 +1,20 @@
 ﻿  TitleScene.cpp
-c:\github\taisyou\game\新しいフォルダー (2)\decide\decide\titlescene.cpp(1): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
+d:\_users\desktop\game\新しいフォルダー (2)\decide\decide\titlescene.cpp(1): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
+  Player.cpp
+d:\_users\desktop\game\新しいフォルダー (2)\decide\decide\player.cpp(52): error C2039: 'localPosition': 'Transform' のメンバーではありません。
+  d:\_users\desktop\game\新しいフォルダー (2)\fbengine\fbengine\transform.h(7): note: 'Transform' の宣言を確認してください
+d:\_users\desktop\game\新しいフォルダー (2)\decide\decide\player.cpp(132): error C2039: 'localAngle': 'Transform' のメンバーではありません。
+  d:\_users\desktop\game\新しいフォルダー (2)\fbengine\fbengine\transform.h(7): note: 'Transform' の宣言を確認してください
+d:\_users\desktop\game\新しいフォルダー (2)\decide\decide\player.cpp(132): error C2228: '.y' の左側はクラス、構造体、共用体でなければなりません
+  Ground.cpp
   GameScene.cpp
+  GameCamera.cpp
   コードを生成中...
-  Decide.vcxproj -> C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\Debug\Decide.exe
-  Decide.vcxproj -> C:\GitHub\taisyou\game\新しいフォルダー (2)\Decide\Debug\Decide.pdb (Full PDB)
+  コンパイル中...
+  Sky.cpp
+  GameShadowCamera.cpp
+  GameLight.cpp
+  Decide.cpp
+d:\_users\desktop\game\新しいフォルダー (2)\decide\decide\decide.cpp(47): warning C4244: '引数': 'const float' から 'int' への変換です。データが失われる可能性があります。
+d:\_users\desktop\game\新しいフォルダー (2)\decide\decide\decide.cpp(66): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  コードを生成中...
