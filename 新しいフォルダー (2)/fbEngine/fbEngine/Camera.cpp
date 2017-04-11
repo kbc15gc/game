@@ -1,12 +1,18 @@
 #include "Camera.h"
 #include "EffectManager.h"
 
+Camera::~Camera()
+{
+	SetViewPoint(nullptr);
+}
+
 void Camera::Awake()
 {
 	//行列初期化
 	D3DXMatrixIdentity(&_View);
 	D3DXMatrixIdentity(&_Projection);
 
+	_ViewPoint = nullptr;
 	_ViewAngle = 45;
 	_Aspect = (16.0f / 9.0f);
 	_near = 1.0f;
@@ -26,8 +32,16 @@ void Camera::Update()
 
 void Camera::ViewMatrixUpdate()
 {
-	//逆行列取得
-	D3DXMatrixInverse(&_View, NULL, &transform->GetWorldMatrix());
+	if (_ViewPoint)
+	{
+		//注視点を使う
+		D3DXMatrixLookAtLH(&_View, (D3DXVECTOR3*)&transform->GetPosition(), (D3DXVECTOR3*)_ViewPoint, (D3DXVECTOR3*)&transform->Direction(Vector3::up));
+	}
+	else
+	{
+		//逆行列を使う
+		D3DXMatrixInverse(&_View, NULL, &transform->GetWorldMatrix());
+	}
 }
 
 void Camera::ProjectionMatrixUpdate()
