@@ -7,10 +7,10 @@ void GameCamera::Awake()
 	Camera* camera = AddComponent<Camera>();
 	GameObjectManager::mainCamera = camera;
 	//transform->localPosition = Vector3(200, 500, 500);
-	transform->localPosition = Vector3(0, 0, -10);
+	transform->SetLocalPosition(Vector3(0, 0, -10));
 	//transform->localAngle = Vector3(40, 0, 0);
-	camera->Near(1);
-	camera->Far(1000);
+	camera->SetNear(1);
+	camera->SetFar(1000);
 	_ToPos = D3DXVECTOR3(0.0f, 3.0f, -10.0f);
 }
 
@@ -95,15 +95,16 @@ void GameCamera::Update()
 	
 	Player* player = (Player*)GameObjectManager::FindObject("Player");
 	//transform->SetParent(player->transform);
-	transform->localPosition = player->transform->localPosition + (Vector3)_ToPos;
+	transform->SetLocalPosition(player->transform->GetLocalPosition() + (Vector3)_ToPos);
 	dir = (Vector3)_ToPos;
 	dir.Normalize();
 	//transform->localPosition.Add(transform->Direction(dir));
+	//transform->LockAt(player);
 }
 
 void GameCamera::LateUpdate()
 {
-	transform->LockAt(this);
+	
 }
 
 void GameCamera::RotTransversal(float roty)

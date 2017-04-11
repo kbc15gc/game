@@ -38,14 +38,14 @@ public:
 	*/
 	const Vector3& GetPosition() const
 	{
-		return transform->localPosition;
+		return transform->GetLocalPosition();
 	}
 	/*!
 	* @brief	座標を設定。
 	*/
 	void SetPosition(const Vector3& pos)
 	{
-		transform->localPosition = pos;
+		transform->SetLocalPosition(pos);
 	}
 	/*!
 	* @brief	移動速度を設定。

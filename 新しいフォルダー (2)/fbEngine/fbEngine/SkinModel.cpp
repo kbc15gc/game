@@ -156,16 +156,16 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(0.4, 0.4, 0.4, 1.0f));
 
 		//カメラのポジションセット(スペキュラライト用)
-		Vector3 campos = GameObjectManager::mainCamera->transform->position;
+		Vector3 campos = GameObjectManager::mainCamera->transform->GetPosition();
 		_Effect->SetValue("g_cameraPos", &D3DXVECTOR4(campos.x, campos.y, campos.z, 1.0f), sizeof(D3DXVECTOR4));
 		
 		//各行列を送信
-		_Effect->SetMatrix("g_rotationMatrix", transform->RotateMatrixAddress());
-		_Effect->SetMatrix("g_viewMatrix", &_Camera->View());
-		_Effect->SetMatrix("g_projectionMatrix", &_Camera->Projection());
+		_Effect->SetMatrix("g_rotationMatrix", transform->GetRotateMatrixAddress());
+		_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)_Camera->GetViewMat());
+		_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)_Camera->GetProjectionMat());
 		
 		//影カメラのビュープロジェクション行列を作って送信
-		D3DXMATRIX LVP = GameObjectManager::mainShadowCamera->View() * GameObjectManager::mainShadowCamera->Projection();
+		D3DXMATRIX LVP = GameObjectManager::mainShadowCamera->GetViewMat() * GameObjectManager::mainShadowCamera->GetProjectionMat();
 		_Effect->SetMatrix("g_LVP", &LVP);
 
 		//深度テクスチャ
@@ -328,8 +328,8 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	_Effect->BeginPass(0);
 
 	//影カメラのビュープロジェクション行列を送る
-	_Effect->SetMatrix("g_viewMatrix", &GameObjectManager::mainShadowCamera->View());
-	_Effect->SetMatrix("g_projectionMatrix", &GameObjectManager::mainShadowCamera->Projection());
+	_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)GameObjectManager::mainShadowCamera->GetViewMat());
+	_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)GameObjectManager::mainShadowCamera->GetProjectionMat());
 
 	//アニメーションの有無で分岐
 	if (pMeshContainer->pSkinInfo != NULL)
@@ -338,7 +338,7 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 		//バッファー
 		LPD3DXBONECOMBINATION pBoneComb = LPD3DXBONECOMBINATION(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
 		//各マテリアル
-		for (iAttrib = 0; iAttrib < pMeshContainer->NumAttributeGroups; iAttrib++)
+		for (iAttrib = 0; iAttrib < pMeshContainer->NumMaterials; iAttrib++)
 		{
 			//ボーン
 			for (DWORD iPaletteEntry = 0; iPaletteEntry < pMeshContainer->NumPaletteEntries; ++iPaletteEntry)

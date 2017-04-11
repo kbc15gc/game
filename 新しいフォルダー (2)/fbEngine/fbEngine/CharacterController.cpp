@@ -122,7 +122,7 @@ void CCharacterController::Execute()
 	//速度に重力加速度を加える。
 	m_moveSpeed.y += m_gravity * 1.0f / 60.0f;
 	//次の移動先となる座標を計算する。
-	Vector3 nextPosition = transform->localPosition;
+	Vector3 nextPosition = transform->GetLocalPosition();
 	//速度からこのフレームでの移動量を求める。オイラー積分。
 	Vector3 addPos = m_moveSpeed;
 	addPos.Scale(1.0f / 60.0f);
@@ -134,7 +134,7 @@ void CCharacterController::Execute()
 		while (true) {
 			//現在の座標から次の移動先へ向かうベクトルを求める。
 			Vector3 addPos;
-			addPos.Subtract(nextPosition, transform->localPosition);
+			addPos.Subtract(nextPosition, transform->GetLocalPosition());
 			Vector3 addPosXZ = addPos;
 			addPosXZ.y = 0.0f;
 			if (addPosXZ.Length() < FLT_EPSILON) {
@@ -144,7 +144,7 @@ void CCharacterController::Execute()
 				break;
 			}
 			//カプセルコライダーの中心座標 + 0.2の座標をposTmpに求める。
-			Vector3 posTmp = transform->position;
+			Vector3 posTmp = transform->GetPosition();
 			posTmp.y += m_height * 0.5f + m_radius + 0.2f;
 			//レイを作成。
 			btTransform start, end;
@@ -195,20 +195,19 @@ void CCharacterController::Execute()
 		}
 	}
 	//XZの移動は確定。
-	transform->localPosition.x = nextPosition.x;
-	transform->localPosition.z = nextPosition.z;
+	transform->SetLocalPosition(Vector3(nextPosition.x, transform->GetLocalPosition().y, nextPosition.x));
 	//下方向を調べる。
 	{
 		Vector3 addPos;
-		addPos.Subtract(nextPosition, transform->localPosition);
+		addPos.Subtract(nextPosition, transform->GetLocalPosition());
 
-		transform->localPosition = nextPosition;	//移動の仮確定。
+		transform->SetLocalPosition(nextPosition);	//移動の仮確定。
 											//レイを作成する。
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
 		//始点はカプセルコライダーの中心。
-		start.setOrigin(btVector3(transform->localPosition.x, transform->localPosition.y + m_height * 0.5f + m_radius, transform->localPosition.z));
+		start.setOrigin(btVector3(transform->GetLocalPosition().x, transform->GetLocalPosition().y + m_height * 0.5f + m_radius, transform->GetLocalPosition().z));
 		//終点は地面上にいない場合は1m下を見る。
 		//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 		//地面上にいなくて降下中の場合はそのまま落下先を調べる。
@@ -249,13 +248,13 @@ void CCharacterController::Execute()
 		}
 	}
 	//移動確定。
-	transform->localPosition = nextPosition;
+	transform->SetLocalPosition(nextPosition);
 	btRigidBody* btBody = (btRigidBody*)m_rigidBody->GetCollisonObj();
 	//剛体を動かす。
 	btBody->setActivationState(DISABLE_DEACTIVATION);
 	btTransform& trans = btBody->getWorldTransform();
 	//剛体の位置を更新。
-	trans.setOrigin(btVector3(transform->localPosition.x, transform->localPosition.y, transform->localPosition.z));
+	trans.setOrigin(btVector3(transform->GetLocalPosition().x, transform->GetLocalPosition().y, transform->GetLocalPosition().z));
 	//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
 }
 /*!

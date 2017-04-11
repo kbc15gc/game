@@ -17,6 +17,7 @@ void GameScene::Start()
 	GameObjectManager::AddNew<GameShadowCamera>("GameShadowCamera", 0);
 	//プレイヤー生成
 	GameObjectManager::AddNew<Player>("Player", 1);
+
 	//地面生成
 	GameObjectManager::AddNew<Ground>("Ground", 1);
 	//空生成

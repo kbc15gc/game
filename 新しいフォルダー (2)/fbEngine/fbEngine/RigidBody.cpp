@@ -37,8 +37,7 @@ void RigidBody::LateUpdate()
 
 		btVector3 pos = trans.getOrigin();
 		btQuaternion rot = trans.getRotation();
-		transform->localPosition = Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z);
-		transform->Update();
+		transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
 	}
 	else {
 		printf("hoge");
@@ -55,8 +54,8 @@ void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia,Vecto
 	//‰ñ“]‚ÆˆÚ“®Ý’è
 	btTransform StartTrans;
 	StartTrans.setIdentity();
-	StartTrans.setOrigin(btVector3(transform->position.x + _Offset.x, transform->position.y + _Offset.y, transform->position.z + _Offset.z));
-	StartTrans.setRotation(btQuaternion(transform->rotation.x, transform->rotation.y, transform->rotation.z, transform->rotation.w));
+	StartTrans.setOrigin(btVector3(transform->GetPosition().x + _Offset.x, transform->GetPosition().y + _Offset.y, transform->GetPosition().z + _Offset.z));
+	StartTrans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 	myMotionState = new btDefaultMotionState(StartTrans);
 	//„‘Ì‚ðì¬B
 	btRigidBody::btRigidBodyConstructionInfo btRbInfo(mass, myMotionState, coll->GetBody(), btVector3(inertia.x, inertia.y, inertia.z));

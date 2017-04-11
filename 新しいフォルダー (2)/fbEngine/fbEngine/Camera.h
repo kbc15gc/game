@@ -19,38 +19,38 @@ public:
 	void ViewMatrixUpdate();
 	void ProjectionMatrixUpdate();
 
-	D3DXMATRIX View(){ return view; }
-	D3DXMATRIX Projection(){ return projection; }
+	const D3DXMATRIX& GetViewMat(){ return _View; }
+	const D3DXMATRIX& GetProjectionMat(){ return _Projection; }
 
 	//画角設定
-	void ViewAngle(float theta)
+	void SetViewAngle(const float& theta)
 	{
-		viewAngle = theta;
+		_ViewAngle = theta;
 	}
 	//近平面設定
-	void Near(float n)
+	void SetNear(const float& n)
 	{
 		_near = n;
 	}
 	//遠平面設定
-	void Far(float f)
+	void SetFar(const float& f)
 	{
 		_far = f;
 	}
 	//アスペクト比率設定
-	void Aspect(float asp)
+	void SetAspect(const float& asp)
 	{
-		aspect = asp;
+		_Aspect = asp;
 	}
 
 protected:
 	//ビュー行列
-	D3DXMATRIX view;
+	D3DXMATRIX _View;
 	//プロジェクション行列
-	D3DXMATRIX projection;
+	D3DXMATRIX _Projection;
 
-	float viewAngle;	//画角
+	float _ViewAngle;	//画角
 	float _near;		//近平面
 	float _far;		//遠平面
-	float aspect;		//アスペクト比
+	float _Aspect;		//アスペクト比
 };
