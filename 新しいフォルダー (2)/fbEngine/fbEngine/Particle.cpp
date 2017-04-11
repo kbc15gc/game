@@ -63,37 +63,38 @@ void Particle::Update()
 	addPos.Scale(deltaTime);
 	_ApplyForce = Vector3::zero;
 
-	transform->localPosition.Add(addPos);
+	transform->SetLocalPosition(transform->GetLocalPosition() + addPos);
 	transform->Update();
 	if (_IsBillboard) {
 		//ビルボード処理を行う。
 		//カメラの回転行列取得
-		const D3DXMATRIX& mCameraRot = _Camera->transform->RotateMatrix();
-		Quaternion qRot;
-		qRot.SetRotation(Vector3(mCameraRot.m[2][0], mCameraRot.m[2][1], mCameraRot.m[2][2]), _RotateZ);
-		D3DXMATRIX rot;
-		//クウォータニオンから行列作成
-		D3DXMatrixRotationQuaternion(&rot,(D3DXQUATERNION*)&qRot);
-		
-		D3DXMATRIX world,trans;
-		D3DXMatrixIdentity(&trans);
-		//移動行列作成
-		Vector3 pos = transform->position;
-		trans.m[3][0] = pos.x;
-		trans.m[3][1] = pos.y;
-		trans.m[3][2] = pos.z;
-		//回転行列？
-		D3DXMatrixMultiply(
-			&world,
-			&mCameraRot,
-			&rot);
-		//移動行列をかける
-		D3DXMatrixMultiply(
-			&world,
-			&world,
-			&rot);
+		//const D3DXMATRIX& mCameraRot = _Camera->transform->GetRotateMatrix();
+		//Quaternion qRot;
+		//qRot.SetRotation(Vector3(mCameraRot.m[2][0], mCameraRot.m[2][1], mCameraRot.m[2][2]), _RotateZ);
+		//D3DXMATRIX rot;
+		////クォータニオンから行列作成
+		//D3DXMatrixRotationQuaternion(&rot,(D3DXQUATERNION*)&qRot);
+		//
+		//D3DXMATRIX world,trans;
+		//D3DXMatrixIdentity(&trans);
+		////移動行列作成
+		//Vector3 pos = transform->GetPosition();
+		//trans.m[3][0] = pos.x;
+		//trans.m[3][1] = pos.y;
+		//trans.m[3][2] = pos.z;
+		////回転行列？
+		//D3DXMatrixMultiply(
+		//	&world,
+		//	&mCameraRot,
+		//	&rot);
+		////移動行列をかける
+		//D3DXMatrixMultiply(
+		//	&world,
+		//	&world,
+		//	&rot);
 
-		//transform->WorldMatrix(world);
+		//transform->SetWorldMatrix(world);
+		transform->LockAt(_Camera->gameObject);
 	}
 	
 
@@ -129,7 +130,7 @@ void Particle::Render()
 {
 	D3DXMATRIX wvp;
 	
-	wvp = transform->GetWorldMatrix() * _Camera->View() * _Camera->Projection();
+	wvp = transform->GetWorldMatrix() * _Camera->GetViewMat() * _Camera->GetProjectionMat();
 
 	//シェーダー適用開始。
 	//αブレンド許可
@@ -175,22 +176,23 @@ void Particle::Render()
 	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
-void Particle::Init(const ParicleParameter & param,Vector3 & emitPosition)
+void Particle::Init(const ParicleParameter & param,const Vector3 & emitPosition)
 {
 	_Texture = LOADTEXTURE((char*)param.texturePath);
 	_Effect = EffectManager::LoadEffect("Particle.fx");
 	this->_Camera = GameObjectManager::mainCamera;
-	transform->localScale = Vector3(param.size.x, param.size.y, 1.0f);
+	transform->SetLocalScale(Vector3(param.size.x, param.size.y, 1.0f));
 	_Life = param.life;
 	_Velocity = param.initVelocity;
 	//初速度に乱数を加える。
 	_Velocity.x += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initVelocityVelocityRandomMargin.x;
 	_Velocity.y += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initVelocityVelocityRandomMargin.y;
 	_Velocity.z += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initVelocityVelocityRandomMargin.z;
-	transform->localPosition = emitPosition;
-	transform->localPosition.x += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.x;
-	transform->localPosition.y += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.y;
-	transform->localPosition.z += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.z;
+	Vector3 lpos = emitPosition;
+	lpos.x += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.x;
+	lpos.y += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.y;
+	lpos.z += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.z;
+	transform->SetLocalPosition(lpos);
 	_AddVelocityRandomMargih = param.addVelocityRandomMargih;
 	_Gravity = param.gravity;
 	_IsFade = param.isFade;

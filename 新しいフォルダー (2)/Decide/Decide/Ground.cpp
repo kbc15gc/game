@@ -25,8 +25,8 @@ void Ground::Awake()
 	mesh->Create(model);
 	rigid->Create(0, mesh, Collision_ID::GROUND);
 
-	transform->localPosition = Vector3::zero;
-	transform->localScale = Vector3::one;
+	transform->SetLocalPosition(Vector3::zero);
+	transform->SetLocalScale(Vector3::one);
 }
 
 void Ground::Update()
