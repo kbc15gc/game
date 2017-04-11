@@ -67,7 +67,7 @@ void Player::Start()
 	//モデルにライト設定
 	_Model->SetLight(GameObjectManager::mainLight);
 	//ポジション
-	transform->localPosition = Vector3(0.0f, 10.0f, 0.0f);
+	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -168,7 +168,7 @@ void Player::Move()
 		//ベクトルから角度を求める
 		float rot = D3DXToRadian(360) - atan2f(vec.z, vec.x);
 		//回転
-		transform->localAngle.y = D3DXToDegree(rot + D3DXToRadian(-90));
+		transform->SetLocalAngle(Vector3(0.0f, D3DXToDegree(rot + D3DXToRadian(-90)), 0.0f));
 	}
 }
 
