@@ -4,14 +4,17 @@
 class Camera :public Component
 {
 public:
-	Camera(GameObject* g, Transform* t) :Component(g, t, typeid(this).name())
+	Camera(GameObject* g, Transform* t) :
+		Component(g, t, typeid(this).name())
 	{
 		
 	}
-	Camera(GameObject* g, Transform* t,const char* classname) :Component(g, t, classname)
+	Camera(GameObject* g, Transform* t,const char* classname) :
+		Component(g, t, classname)
 	{
 
 	}
+	~Camera();
 	void Awake();
 	void Start();
 	virtual void Update();
@@ -42,13 +45,42 @@ public:
 	{
 		_Aspect = asp;
 	}
-
+	//注視点設定
+	void SetViewPoint(const Vector3& pos)
+	{
+		//アドレス確保されていない
+		if (_ViewPoint == nullptr)
+		{
+			_ViewPoint = new Vector3();
+		}
+		*_ViewPoint = pos;
+	}
+	//注視点のポインタを渡す。
+	void SetViewPoint(Vector3* point)
+	{
+		if (_ViewPoint != nullptr)
+		{
+			//前のアドレス削除
+			SAFE_DELETE(_ViewPoint);
+		}
+		_ViewPoint = point;
+	}
+	Vector3 GetViewPoint()
+	{
+		if (_ViewPoint == nullptr)
+		{
+			_ViewPoint = new Vector3();
+		}
+		return *_ViewPoint;
+	}
 protected:
 	//ビュー行列
 	D3DXMATRIX _View;
 	//プロジェクション行列
 	D3DXMATRIX _Projection;
 
+	//注視点使うならnewで確保してね
+	Vector3* _ViewPoint;
 	float _ViewAngle;	//画角
 	float _near;		//近平面
 	float _far;		//遠平面
