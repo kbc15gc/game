@@ -163,6 +163,8 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PlayerStateRun.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="TitleScene.h" />
@@ -177,6 +179,7 @@
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerStateRun.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
