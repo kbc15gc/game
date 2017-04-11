@@ -23,7 +23,7 @@ void Ground::Awake()
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
 	mesh->Create(model);
-	rigid->Create(0, mesh, 999);
+	rigid->Create(0, mesh, Collision_ID::GROUND);
 
 	transform->localPosition = Vector3::zero;
 	transform->localScale = Vector3::one;
