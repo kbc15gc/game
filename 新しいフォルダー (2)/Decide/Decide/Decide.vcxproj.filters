@@ -55,6 +55,9 @@
     <ClInclude Include="PlayerState.h">
       <Filter>Object\GameObject\Player\State</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerStateRun.h">
+      <Filter>Object\GameObject\Player\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -94,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="Sky.cpp">
       <Filter>Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStateRun.cpp">
+      <Filter>Object\GameObject\Player\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

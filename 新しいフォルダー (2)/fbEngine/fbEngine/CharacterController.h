@@ -19,7 +19,7 @@ public:
 	CCharacterController(GameObject* g, Transform* t) :
 		Component(g, t, typeid(this).name())
 	{
-		m_collider = g->AddComponent<CCapsuleCollider>();
+		//m_collider = g->AddComponent<CCapsuleCollider>();
 	}
 	~CCharacterController()
 	{
@@ -27,26 +27,16 @@ public:
 	}
 	/*!
 	* @brief	初期化。
+	* param		半径。
+	*			高さ。
+	*			コリジョンの属性。
+	*			コリジョン形状。
 	*/
-	void Init(float radius, float height, RigidBody* rigid, CCapsuleCollider* capsule);
+	void Init(GameObject* Object,Transform* tramsform,float radius, float height, Collision_ID, Collider* capsule);
 	/*!
 	* @brief	実行。
 	*/
 	void Execute();
-	/*!
-	* @brief	座標を取得。
-	*/
-	const Vector3& GetPosition() const
-	{
-		return transform->localPosition;
-	}
-	/*!
-	* @brief	座標を設定。
-	*/
-	void SetPosition(const Vector3& pos)
-	{
-		transform->localPosition = pos;
-	}
 	/*!
 	* @brief	移動速度を設定。
 	*/
@@ -86,7 +76,7 @@ public:
 	/*!
 	* @brief	コライダーを取得。
 	*/
-	CCapsuleCollider* GetCollider()
+	Collider* GetCollider() const
 	{
 		return m_collider;
 	}
@@ -102,7 +92,7 @@ public:
 	*/
 	RigidBody* GetRigidBody()
 	{
-		return m_rigidBody;
+		return m_rigidBody.get();
 	}
 	/*!
 	* @brief	剛体を物理エンジンから削除。。
@@ -112,9 +102,9 @@ private:
 	Vector3 			m_moveSpeed = Vector3::zero;	//移動速度。 
 	bool 				m_isJump = false;				//ジャンプ中？
 	bool				m_isOnGround = true;			//地面の上にいる？
-	CCapsuleCollider*	m_collider;						//コライダー。
+	Collider*	m_collider = nullptr;						//コライダー。
 	float				m_radius = 0.0f;
 	float				m_height = 0.0f;
-	RigidBody*			m_rigidBody;					//剛体。
+	unique_ptr<RigidBody>	m_rigidBody = nullptr;			//剛体。
 	float				m_gravity = -9.8f;				//重力。
 };
