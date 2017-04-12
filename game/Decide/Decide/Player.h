@@ -1,6 +1,7 @@
 #pragma once
 #include "fbEngine/GameObject.h"
 #include "fbEngine/CharacterController.h"
+#include "PlayerStateRun.h"
 
 class SkinModel;
 class Animation;
@@ -9,7 +10,7 @@ class Animation;
 class Player : public GameObject
 {
 public:
-	enum class PlayerState
+	enum class State
 	{
 		Wait,
 		Run,
@@ -26,6 +27,14 @@ public:
 	void Jump();
 	//攻撃
 	void Attack();
+	//状態変更
+	//次のステート
+	void ChangeState(State nextstate);
+	//キャラクターコントローラーゲット
+	CCharacterController& GetCharaCon() const
+	{
+		return* _CharacterController;
+	}
 private:
 	//重力処理
 	void _GravityCheck(const float& movey);
@@ -35,14 +44,10 @@ private:
 	//コンポーネントとかアドレスの保持が必要なものたち
 	SkinModel* _Model;
 	Animation* _Anim;
-	RigidBody* _Rigid;
-	btRigidBody* _RB;
-	//リジットボディの高さ
+	//高さ
 	float _Height;
-	//リジットボディの幅
+	//半径
 	float _Radius;
-	//プレイヤーの色
-	Color _PlayerColor;
 	//最終的な移動量
 	Vector3 _MoveSpeed;
 	//進行
@@ -50,11 +55,15 @@ private:
 	//重力
 	float _Gravity;
 	//プレイヤーの状態
-	PlayerState _State;
+	State _State;
 	//プレイヤーのレベル
 	int _Level;
 	//ジャンプフラグ true=ジャンプ中 , false=ジャンプしてない
 	bool _Jump;
 	//キャラクターコントローラー
 	CCharacterController* _CharacterController;
+	//現在のプレイヤーのステート
+	PlayerState*	_CurrentState;
+	//プレイヤーステートラン
+	PlayerStateRun	_RunState;
 };

@@ -25,9 +25,9 @@ void GameScene::Start()
 	//ãÛê∂ê¨
 	GameObjectManager::AddNew<Sky>("Sky", 1);
 
-	ImageObject* showDepth = GameObjectManager::AddNew<ImageObject>("ShowDepth", 4);
+	/*ImageObject* showDepth = GameObjectManager::AddNew<ImageObject>("ShowDepth", 4);
 	showDepth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
-	showDepth->SetPivot(Vector2(0.0f, 0.0f));
+	showDepth->SetPivot(Vector2(0.0f, 0.0f));*/
 
 }
 

@@ -27,12 +27,16 @@ public:
 	}
 	/*!
 	* @brief	初期化。
-	* param		半径。
+	* param		ゲームオブジェクト
+	*			トランスフォーム
+	*			半径。
 	*			高さ。
+	*			モデルの中心とコリジョンの中心の差分
 	*			コリジョンの属性。
 	*			コリジョン形状。
+	*			重力
 	*/
-	void Init(GameObject* Object,Transform* tramsform,float radius, float height, Collision_ID, Collider* capsule);
+	void Init(GameObject* Object,Transform* tramsform,float radius, float height, Vector3 off , Collision_ID, Collider* capsule , float gravity);
 	/*!
 	* @brief	実行。
 	*/
@@ -99,12 +103,12 @@ public:
 	*/
 	void RemoveRigidBoby();
 private:
-	Vector3 			m_moveSpeed = Vector3::zero;	//移動速度。 
-	bool 				m_isJump = false;				//ジャンプ中？
-	bool				m_isOnGround = true;			//地面の上にいる？
-	Collider*	m_collider = nullptr;						//コライダー。
-	float				m_radius = 0.0f;
-	float				m_height = 0.0f;
+	Vector3 				m_moveSpeed = Vector3::zero;	//移動速度。 
+	bool 					m_isJump = false;				//ジャンプ中？
+	bool					m_isOnGround = true;			//地面の上にいる？
+	Collider*				m_collider = nullptr;			//コライダー。
+	float					m_radius = 0.0f;				//半径。
+	float					m_height = 0.0f;				//高さ。
 	unique_ptr<RigidBody>	m_rigidBody = nullptr;			//剛体。
-	float				m_gravity = -9.8f;				//重力。
+	float					m_gravity = -9.8f;				//重力。
 };

@@ -18,6 +18,6 @@ public:
 	virtual void Enter() = 0;
 	//”²‚¯‚é
 	virtual void Leave() = 0;
-private:
+protected:
 	Player* player;
 };

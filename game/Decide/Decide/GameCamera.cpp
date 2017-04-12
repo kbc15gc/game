@@ -2,16 +2,22 @@
 #include "fbEngine/Camera.h"
 #include "Player.h"
 
+namespace
+{
+	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
+}
+
 void GameCamera::Awake()
 {
 	Camera* camera = AddComponent<Camera>();
 	GameObjectManager::mainCamera = camera;
-	//transform->localPosition = Vector3(200, 500, 500);
+	//プレイヤーを検索
+	_Player = (Player*)GameObjectManager::FindObject("Player");
 	transform->SetLocalPosition(Vector3(0, 0, -10));
-	//transform->localAngle = Vector3(40, 0, 0);
+	//transform->SetLocalAngle(Vector3(-50, 0, 0));
 	camera->SetNear(1);
 	camera->SetFar(1000);
-	_ToPos = D3DXVECTOR3(0.0f, 1.0f, -5.0f);
+	_ToPos = D3DXVECTOR3(0.0f, 2.0f, -3.0f);
 }
 
 void GameCamera::Update()
@@ -93,9 +99,10 @@ void GameCamera::Update()
 		
 	}
 	
-	Player* player = (Player*)GameObjectManager::FindObject("Player");
-	transform->SetLocalPosition(player->transform->GetLocalPosition() + (Vector3)_ToPos);
-	camera->SetViewPoint(player->transform->GetLocalPosition());
+	
+	transform->SetLocalPosition(_Player->transform->GetLocalPosition() + (Vector3)_ToPos);
+	//プレイヤーの高さ分を足す
+	camera->SetViewPoint(_Player->transform->GetLocalPosition() + PLAYER_HEIGHT);
 	dir = (Vector3)_ToPos;
 	dir.Normalize();
 	//transform->localPosition.Add(transform->Direction(dir));
@@ -112,7 +119,7 @@ void GameCamera::RotTransversal(float roty)
 	D3DXQUATERNION mAxisY;
 	D3DXVECTOR4 v;
 	D3DXMATRIX rot;
-	D3DXQuaternionRotationAxis(&mAxisY, &D3DXVECTOR3{0.0f,1.0f,0.0f}, roty);
+	D3DXQuaternionRotationAxis(&mAxisY, &(const D3DXVECTOR3&)Vector3::up, roty);
 	D3DXMatrixRotationQuaternion(&rot, &mAxisY);
 	D3DXVec3Transform(&v, &_ToPos, &rot);
 	_ToPos.x = v.x;

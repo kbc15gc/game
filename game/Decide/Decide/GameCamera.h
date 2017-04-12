@@ -1,5 +1,7 @@
 #pragma once
 #include "fbEngine/GameObject.h"
+
+class Player;
 //ƒQ[ƒ€ƒJƒƒ‰
 class GameCamera :public GameObject
 {
@@ -11,5 +13,6 @@ public:
 	//ƒJƒƒ‰‰¡‰ñ“]
 	void RotTransversal(float roty);
 private:
+	Player*		_Player;
 	D3DXVECTOR3 _ToPos;
 };

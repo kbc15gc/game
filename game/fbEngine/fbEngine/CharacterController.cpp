@@ -95,16 +95,18 @@
 
 
 
-void CCharacterController::Init(GameObject* Object, Transform* tramsform,float radius, float height, Collision_ID type,Collider* capsule)
+void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, Collision_ID type, Collider* capsule, float gravity)
 {
 	//コリジョン作成。
 	m_radius = radius;
 	m_height = height;
+	//重力設定
+	SetGravity(gravity);
 	//m_collider->Create(radius, height);
 
 	m_rigidBody.reset(new RigidBody(Object, tramsform));
 	//リジッドボディ作成
-	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, Vector3(0, height /2, 0));
+	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off);
 	//スリープさせない(必要かどうかわからない。)
 	static_cast<btRigidBody*>(m_rigidBody->GetCollisonObj())->setSleepingThresholds(0, 0);
 

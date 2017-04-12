@@ -19,7 +19,9 @@ Player::Player(const char * name) :
 	//重力設定
 	_Gravity(-30.0f),
 	//ジャンプフラグ設定
-	_Jump(false)
+	_Jump(false),
+	_CurrentState(NULL),
+	_RunState(this)
 {
 }
 
@@ -55,7 +57,7 @@ void Player::Awake()
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, false);
 	//キャラクターコントローラー初期化
-	_CharacterController->Init(this,transform,_Radius,_Height, Collision_ID::PLAYER,coll);
+	_CharacterController->Init(this,transform,_Radius,_Height, Vector3(0.0f,_Height / 2, 0.0f) , Collision_ID::PLAYER,coll, _Gravity);
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
 }
@@ -71,7 +73,7 @@ void Player::Start()
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
-	_State = PlayerState::Wait;
+	_State = State::Wait;
 	//プレイヤーのレベル初期化
 	//最初は１から
 	_Level = 1;
@@ -79,102 +81,40 @@ void Player::Start()
 #include "fbEngine/Camera.h"
 void Player::Update()
 {
-	switch (_State)
-	{
-	//待機状態
-	case PlayerState::Wait:
-		break;
-	//走る状態
-	case PlayerState::Run:
-		break;
-	//ジャンプ状態
-	case PlayerState::Jump:
-		break;
-	//攻撃状態
-	case PlayerState::Attack:
-		break;
-	default:
-		break;
-	}
-	//移動
-	Move();
-	//ジャンプ
-	Jump();
-	//キャラクターコントローラー更新
-	_CharacterController->SetMoveSpeed(_MoveSpeed);
-	_CharacterController->Execute();
+	
+	_CurrentState = &_RunState;
+	_CurrentState->Update();
+	
 	//トランスフォーム更新
 	transform->UpdateTransform();
 }
 
-void Player::Move()
+void Player::ChangeState(State nextstate)
 {
-	//初期化
-	//移動速度
-	_MoveSpeed = _CharacterController->GetMoveSpeed();
-	_MoveSpeed.x = 0.0f;
-	_MoveSpeed.z = 0.0f;
-	//方向
-	_Dir = Vector3::zero;
-
-	//コントローラー移動
-	_Dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f) * SPEED;
-	_Dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f) * SPEED;
-#ifdef _DEBUG
-	//キーボード(デバッグ用)
-	if (KeyBoardInput->isPressed(DIK_W))
-	{
-		_Dir.z += SPEED;
+	if (_CurrentState != NULL) {
+		//現在のステートを抜ける。
+		_CurrentState->Leave();
 	}
-	if (KeyBoardInput->isPressed(DIK_S))
+	switch (_State)
 	{
-		_Dir.z -= SPEED;
+		//待機状態
+	case State::Wait:
+		break;
+		//走る状態
+	case State::Run:
+		
+		break;
+		//ジャンプ状態
+	case State::Jump:
+		break;
+		//攻撃状態
+	case State::Attack:
+		break;
+	default:
+		break;
 	}
-	if (KeyBoardInput->isPressed(DIK_A))
-	{
-		_Dir.x -= SPEED;
-	}
-	if (KeyBoardInput->isPressed(DIK_D))
-	{
-		_Dir.x += SPEED;
-	}
-#endif
-
-	//移動したか
-	if (_Dir.Length() != 0)
-	{
-		//カメラからみた向きに変換
-		Camera* c = GameObjectManager::mainCamera;
-		//_Dir = c->transform->Direction(Vector3::front);
-		//_Dir = _Dir * SPEED;
-		//_Dir = c->transform->Direction(_Dir)*Time::DeltaTime();
-		//Yの移動量を消す
-		_MoveSpeed = Vector3(_Dir.x, _MoveSpeed.y, _Dir.z);
-
-		Vector3 vec = _MoveSpeed;
-		//正規化
-		vec.Normalize();
-		//ベクトルから角度を求める
-		float rot = D3DXToRadian(360) - atan2f(vec.z, vec.x);
-		//回転
-		transform->SetLocalAngle(Vector3(0.0f, D3DXToDegree(rot + D3DXToRadian(-90)), 0.0f));
-	}
-}
-
-void Player::Jump()
-{
-	//キーボードのJ　or　パッドのAボタンでジャンプ
-	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-	{
-		//地面上にいる場合
-		if (_CharacterController->IsOnGround())
-		{
-			//ジャンプパワーを設定
-			_MoveSpeed.y = JUMP_POWER;
-			//キャラクターコントローラーをジャンプに
-			_CharacterController->Jump();
-		}
-	}
+	_State = nextstate;
+	_CurrentState->Enter();
 }
 
 void Player::Attack()
