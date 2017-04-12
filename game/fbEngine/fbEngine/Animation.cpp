@@ -110,7 +110,7 @@ void Animation::Update()
 
 		//アニメーションの時間加算
 		//_AnimController->AdvanceTime(delta, NULL);
-		_AnimController->AdvanceTime(1.0f/60.0f, NULL);
+		_AnimController->AdvanceTime(Time::DeltaTime(), NULL);
 
 		if (_IsInterpolate) {
 			//補間中。

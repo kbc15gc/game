@@ -61,7 +61,6 @@ void PlayerStateRun::Update()
 		dir.x += SPEED;
 	}
 #endif
-
 	//移動したか
 	if (dir.Length() != 0)
 	{
@@ -81,6 +80,12 @@ void PlayerStateRun::Update()
 		//回転
 		player->transform->SetLocalAngle(Vector3(0.0f, D3DXToDegree(rot + D3DXToRadian(-90)), 0.0f));
 	}
+	//移動していない
+	if (player->GetCharaCon().GetMoveSpeed().Length() < 0.0001f)
+	{
+		player->ChangeState(Player::State::Idol);
+	}
+
 	//キャラクターコントローラー更新
 	player->GetCharaCon().SetMoveSpeed(movespeed);
 	player->GetCharaCon().Execute();

@@ -2,6 +2,7 @@
 #include "fbEngine/GameObject.h"
 #include "fbEngine/CharacterController.h"
 #include "PlayerStateRun.h"
+#include "PlayerStateIdol.h"
 
 class SkinModel;
 class Animation;
@@ -10,36 +11,53 @@ class Animation;
 class Player : public GameObject
 {
 public:
+	//プレイヤーのステート
 	enum class State
 	{
-		Wait,
+		Idol,
 		Run,
-		Jump,
 		Attack,
+	};
+	//アニメーションのナンバー
+	enum class AnimationNo
+	{
+		AnimationInvalid = -1,		//無効
+		AnimationDeath,				//死亡
+		AnimationAttack02,			//攻撃02
+		AnimationAttack01,			//攻撃01
+		AnimationJump,				//ジャンプ
+		AnimationRun,				//走る
+		AnimationWalk,				//歩き
+		AnimationIdol,				//アイドル	
 	};
 	Player(const char* name);
 	void Awake()override;
 	void Start()override;
 	void Update()override;
-	//移動
-	void Move();
-	//ジャンプ
-	void Jump();
-	//攻撃
-	void Attack();
 	//状態変更
 	//次のステート
 	void ChangeState(State nextstate);
+	//アニメーション再生
+	//アニメーションのナンバー
+	//補間時間
+	void PlayAnimation(AnimationNo animno, float interpolatetime);
+	//アニメーションコントロール
+	void AnimationControl();
+	//セットステート
+	void SetState(State state)
+	{
+		_State = state;
+	}
+	//ゲットステート
+	State GetState()
+	{
+		return _State;
+	}
 	//キャラクターコントローラーゲット
 	CCharacterController& GetCharaCon() const
 	{
 		return* _CharacterController;
 	}
-private:
-	//重力処理
-	void _GravityCheck(const float& movey);
-	//横のあたり判定
-	void _WallCheck(const Vector3& move);
 private:
 	//コンポーネントとかアドレスの保持が必要なものたち
 	SkinModel* _Model;
@@ -66,4 +84,6 @@ private:
 	PlayerState*	_CurrentState;
 	//プレイヤーステートラン
 	PlayerStateRun	_RunState;
+	//プレイヤーステートアイドル
+	PlayerStateIdol	_IdolState;
 };
