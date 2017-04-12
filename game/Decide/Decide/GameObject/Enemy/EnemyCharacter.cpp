@@ -36,6 +36,8 @@ void EnemyCharacter::Start() {
 void EnemyCharacter::Update() {
 	// 現在のステートを更新。
 	_NowState->Update();
+	// キャラクターコントローラで実際にキャラクターを制御。
+	_MyComponent.CharacterController->Execute();
 }
 
 
@@ -61,11 +63,13 @@ void EnemyCharacter::_BuildCollision() {
 		abort();
 	}
 
-	float gravity = -30.0f;
+	float gravity = -50.0f;
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
 	_MyComponent.CharacterController->Init(this, transform, _Radius, _Height, Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, gravity);
+	//キャラクターコントローラーの重力設定
+	_MyComponent.CharacterController->SetGravity(gravity);
 }
 
 void EnemyCharacter::_BuildModelData() {

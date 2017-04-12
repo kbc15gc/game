@@ -9,6 +9,7 @@
 #include "fbEngine/TextObject.h"
 #include "fbEngine/Sprite.h"
 #include "fbEngine/SoundSource.h"
+#include "GameObject\Enemy\Enemy.h"
 
 void GameScene::Start()
 {
@@ -24,6 +25,9 @@ void GameScene::Start()
 	GameObjectManager::AddNew<Ground>("Ground", 1);
 	//空生成
 	GameObjectManager::AddNew<Sky>("Sky", 1);
+	// 雑魚エネミープロト生成。
+	GameObjectManager::AddNew<Enemy>("EnemyProt",1);
+
 
 	/*ImageObject* showDepth = GameObjectManager::AddNew<ImageObject>("ShowDepth", 4);
 	showDepth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
