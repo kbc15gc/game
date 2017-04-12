@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "fbEngine\SkinModel.h"
 #include "fbEngine\CapsuleCollider.h"
 
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
@@ -18,6 +19,10 @@ void Enemy::Awake() {
 }
 
 void Enemy::Start(){
+	//モデルにライト設定
+	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
+	// 位置情報設定。
+	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
 	EnemyCharacter::Start();
 }
 
