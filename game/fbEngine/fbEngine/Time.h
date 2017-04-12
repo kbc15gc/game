@@ -12,6 +12,10 @@ public:
 	//デルタタイム取得
 	static const double& DeltaTime()
 	{
+		if (deltaTime > (1.0 / 30.0))
+		{
+			return (1.0 / 30.0);
+		}
 		return deltaTime;
 	}
 	//FPS(仮)取得

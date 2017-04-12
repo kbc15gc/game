@@ -9,9 +9,9 @@ void GameShadowCamera::Awake()
 
 	_Player = (Player*)GameObjectManager::FindObject("Player");
 	transform->SetLocalAngle(Vector3(-90.0f, 0.0f, 0.0f));
-	transform->SetLocalPosition(_Player->transform->LocalPos(Vector3(0.0f, 2000, 0.0f)));
-	camera->SetNear(10.0f);
-	camera->SetFar(5000.0f);
+	transform->SetLocalPosition(_Player->transform->LocalPos(Vector3(0.0f, 5.0f, 0.0f)));
+	camera->SetNear(1.0f);
+	camera->SetFar(1000.0f);
 }
 
 void GameShadowCamera::Update()

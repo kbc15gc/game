@@ -128,12 +128,12 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 void CCharacterController::Execute()
 {
 	//速度に重力加速度を加える。
-	m_moveSpeed.y += m_gravity * 1.0f / 60.0f;
+	m_moveSpeed.y += m_gravity * Time::DeltaTime();
 	//次の移動先となる座標を計算する。
 	Vector3 nextPosition = transform->GetLocalPosition();
 	//速度からこのフレームでの移動量を求める。オイラー積分。
 	Vector3 addPos = m_moveSpeed;
-	addPos.Scale(1.0f / 60.0f);
+	addPos.Scale(Time::DeltaTime());
 	nextPosition.Add(addPos);
 
 	//XZ平面での衝突検出と衝突解決を行う。

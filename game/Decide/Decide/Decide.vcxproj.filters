@@ -64,16 +64,8 @@
     <ClInclude Include="PlayerStateRun.h">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerState.h" />
-    <ClInclude Include="PlayerStateRun.h" />
-    <ClInclude Include="GameObject\Enemy\EnemyCharacter.h">
-      <Filter>Object\GameObject\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Enemy\Enemy.h">
-      <Filter>Object\GameObject\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h">
-      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    <ClInclude Include="PlayerStateIdol.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,15 +110,8 @@
     <ClCompile Include="GameCamera.cpp">
       <Filter>Object\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerStateRun.cpp" />
-    <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp">
-      <Filter>Object\GameObject\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Enemy\Enemy.cpp">
-      <Filter>Object\GameObject\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp">
-      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    <ClCompile Include="PlayerStateIdol.cpp">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

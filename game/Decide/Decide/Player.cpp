@@ -17,11 +17,12 @@ Player::Player(const char * name) :
 	//キャラクターコントローラーNULL
 	_CharacterController(NULL),
 	//重力設定
-	_Gravity(-30.0f),
+	_Gravity(-50.0f),
 	//ジャンプフラグ設定
 	_Jump(false),
 	_CurrentState(NULL),
-	_RunState(this)
+	_RunState(this),
+	_IdolState(this)
 {
 }
 
@@ -68,12 +69,16 @@ void Player::Start()
 	_Model->SetCamera(GameObjectManager::mainCamera);
 	//モデルにライト設定
 	_Model->SetLight(GameObjectManager::mainLight);
+	//アニメーション
+	PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+	//初期ステート設定
+	ChangeState(State::Idol);
 	//ポジション
 	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
-	_State = State::Wait;
+	_State = State::Idol;
 	//プレイヤーのレベル初期化
 	//最初は１から
 	_Level = 1;
@@ -81,10 +86,13 @@ void Player::Start()
 #include "fbEngine/Camera.h"
 void Player::Update()
 {
-	
-	_CurrentState = &_RunState;
-	_CurrentState->Update();
-	
+	if (_CurrentState != NULL)
+	{
+		//ステートアップデート
+		_CurrentState->Update();
+	}
+	//アニメーションコントロール
+	AnimationControl();
 	//トランスフォーム更新
 	transform->UpdateTransform();
 }
@@ -98,14 +106,12 @@ void Player::ChangeState(State nextstate)
 	switch (_State)
 	{
 		//待機状態
-	case State::Wait:
+	case State::Idol:
+		_CurrentState = &_IdolState;
 		break;
 		//走る状態
 	case State::Run:
-		
-		break;
-		//ジャンプ状態
-	case State::Jump:
+		_CurrentState = &_RunState;
 		break;
 		//攻撃状態
 	case State::Attack:
@@ -117,7 +123,31 @@ void Player::ChangeState(State nextstate)
 	_CurrentState->Enter();
 }
 
-void Player::Attack()
+void Player::PlayAnimation(AnimationNo animno, float interpolatetime)
 {
+	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない
+	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationNo::AnimationInvalid)
+	{
+		_Anim->PlayAnimation((int)animno, interpolatetime);
+	}
+}
 
+void Player::AnimationControl()
+{
+	if (_CharacterController->IsJump())
+	{
+		PlayAnimation(AnimationNo::AnimationJump, 0.2f);
+	}
+	else
+	{
+		if (_State == State::Run)
+		{
+			//_Anim->SetAnimationEndTime(0.33);
+			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
+		}
+		else if(_State == State::Idol)
+		{
+			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+		}
+	}
 }
