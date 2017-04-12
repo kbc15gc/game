@@ -61,6 +61,11 @@
     <ClInclude Include="EnemyState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PlayerStateRun.h" />
+    <ClInclude Include="Enemy.h">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -106,6 +111,10 @@
     </ClCompile>
     <ClCompile Include="EnemyState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStateRun.cpp" />
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Object\GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
