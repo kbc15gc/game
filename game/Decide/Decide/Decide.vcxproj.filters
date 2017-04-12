@@ -67,6 +67,15 @@
     <ClInclude Include="PlayerStateIdol.h">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Enemy\Enemy.h">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemyCharacter.h">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -112,6 +121,15 @@
     </ClCompile>
     <ClCompile Include="PlayerStateIdol.cpp">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\Enemy.cpp">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
