@@ -76,6 +76,11 @@ public:
 		_PlaySpeed = sp;
 		_AnimController->SetTrackSpeed(_CurrentTrackNo, sp);
 	}
+	//アニメーション終了時間設定
+	void SetAnimationEndTime(double endtime)
+	{
+		_EndTime = endtime;
+	}
 private:
 	ID3DXAnimationController*				_AnimController;		//!<アニメーションコントローラ。
 	int										_NumAnimSet;				//!<アニメーションセットの数。

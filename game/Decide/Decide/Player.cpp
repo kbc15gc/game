@@ -18,11 +18,14 @@ Player::Player(const char * name) :
 	_CharacterController(NULL),
 	//重力設定
 	_Gravity(-50.0f),
-	//ジャンプフラグ設定
-	_Jump(false),
+	//現在のステート
 	_CurrentState(NULL),
+	//走るステート
 	_RunState(this),
-	_IdolState(this)
+	//アイドルステート
+	_IdolState(this),
+	//攻撃ステート
+	_AttackState(this)
 {
 }
 
@@ -82,6 +85,14 @@ void Player::Start()
 	//プレイヤーのレベル初期化
 	//最初は１から
 	_Level = 1;
+	//アニメーションの終了時間設定
+	//基本は-1.0fで
+	FOR((int)AnimationNo::AnimationNum)
+	{
+		_AnimationEndTime[i] = -1.0f;
+	}
+	//走るアニメーション
+	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.88;
 }
 #include "fbEngine/Camera.h"
 void Player::Update()
@@ -100,10 +111,10 @@ void Player::Update()
 void Player::ChangeState(State nextstate)
 {
 	if (_CurrentState != NULL) {
-		//現在のステートを抜ける。
+		//現在のステートを抜けるときの処理
 		_CurrentState->Leave();
 	}
-	switch (_State)
+	switch (nextstate)
 	{
 		//待機状態
 	case State::Idol:
@@ -115,39 +126,55 @@ void Player::ChangeState(State nextstate)
 		break;
 		//攻撃状態
 	case State::Attack:
+		_CurrentState = &_AttackState;
 		break;
 	default:
 		break;
 	}
 	_State = nextstate;
+	//各ステートの入りに呼ばれる処理
 	_CurrentState->Enter();
 }
 
-void Player::PlayAnimation(AnimationNo animno, float interpolatetime)
+void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopnum)
 {
 	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない
 	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationNo::AnimationInvalid)
 	{
-		_Anim->PlayAnimation((int)animno, interpolatetime);
+		_Anim->SetAnimationEndTime(_AnimationEndTime[(int)animno]);
+		_Anim->PlayAnimation((int)animno, interpolatetime , loopnum);
 	}
 }
 
 void Player::AnimationControl()
 {
+	//ジャンプアニメーション
 	if (_CharacterController->IsJump())
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.2f);
 	}
 	else
 	{
+		//走るアニメーション
 		if (_State == State::Run)
 		{
 			//_Anim->SetAnimationEndTime(0.33);
 			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
+		//アイドルアニメーション
 		else if(_State == State::Idol)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 		}
+		//アタックアニメーション
+		else if (_State == State::Attack)
+		{
+			PlayAnimation(AnimationNo::AnimationAttack01, 0.2, 1);
+		}
 	}
+}
+
+const bool Player::GetAnimIsPlay() const 
+{
+	return _Anim->GetPlaying();
 }

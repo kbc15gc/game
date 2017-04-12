@@ -7,4 +7,4 @@
   btSerializer.cpp
   btVector3.cpp
   コードを生成中...
-  LinearMath.vcxproj -> C:\GitHub\game\game\Decide\\bulletPhysics\lib\Debug\LinearMath_Debug.lib
+  LinearMath.vcxproj -> C:\GitHub\taisyou\game\game\Decide\\bulletPhysics\lib\Debug\LinearMath_Debug.lib
