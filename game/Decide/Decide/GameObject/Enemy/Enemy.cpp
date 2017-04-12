@@ -13,7 +13,7 @@ Enemy::~Enemy()
 
 void Enemy::Awake() {
 	// 使用するモデルファイルのパスを設定。
-	SetFileName("");
+	SetFileName("enemy_00.X");
 	EnemyCharacter::Awake();
 }
 

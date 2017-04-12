@@ -1,3 +1,4 @@
-﻿  Player.cpp
-  Decide.vcxproj -> C:\GitHub\taisyou\game\game\Decide\Debug\Decide.exe
-  Decide.vcxproj -> C:\GitHub\taisyou\game\game\Decide\Debug\Decide.pdb (Full PDB)
+﻿  EnemyCharacter.cpp
+c:\github\game\game\decide\decide\gameobject\enemy\enemycharacter.cpp(87): warning C4018: '>=': signed と unsigned の数値を比較しようとしました。
+  Decide.vcxproj -> C:\GitHub\game\game\Decide\Debug\Decide.exe
+  Decide.vcxproj -> C:\GitHub\game\game\Decide\Debug\Decide.pdb (Full PDB)

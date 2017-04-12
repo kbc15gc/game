@@ -66,8 +66,14 @@
     </ClInclude>
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerStateRun.h" />
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="GameObject\Enemy\EnemyCharacter.h">
       <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\Enemy.h">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,8 +119,14 @@
       <Filter>Object\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="PlayerStateRun.cpp" />
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp">
       <Filter>Object\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\Enemy.cpp">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,136 +1,74 @@
-d:\_users\desktop\decide1\fbengine\fbengine\debug\fbengine.pch
-d:\_users\desktop\decide1\fbengine\fbengine\debug\vc120.pdb
-d:\_users\desktop\decide1\fbengine\fbengine\debug\vc120.idb
-d:\_users\desktop\decide1\fbengine\fbengine\debug\stdafx.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\skinmodeldata.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\skinmodelmanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\soundengine.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\soundsource.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\spherecollider.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\sprite.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\spriteanimation.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\squarecollision.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\support.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\text.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\textobject.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\texturemanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\time.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\particleemitter.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\transform.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\vector.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\vertex.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\wavefile.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\wavefilebank.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\xinput.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\keyboard .obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\light.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\material.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\meshcollider.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\modeloject.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\mouse.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\movie.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\object.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\game.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\gameobjectmanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\particle.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\physics.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\plateprimitive.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\random.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\rendertargetmanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\rigidbody.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\scene.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\scenemanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\shadowcamera.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\skinmodel.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\animation.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\bloom.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\boxcollider.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\camera.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\capsulecollider.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\charactercontroller.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\circlecollision.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\collision.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\collisionobject.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\color.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\component.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\componentmanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\effectmanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\fontmanager.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\fps.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\gameobject.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\gostcollision.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\graphicsdevice.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\imageobject.obj
-d:\_users\desktop\decide1\fbengine\fbengine\debug\inputmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.pch
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\vc120.pdb
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\vc120.idb
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\stdafx.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\skinmodeldata.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\skinmodelmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\soundengine.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\soundsource.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\spherecollider.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\sprite.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\spriteanimation.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\squarecollision.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\support.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\text.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\textobject.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\texturemanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\time.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\particleemitter.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\transform.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\vector.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\vertex.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\wavefile.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\wavefilebank.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\xinput.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\keyboard .obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\light.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\material.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\meshcollider.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\modeloject.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\mouse.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\movie.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\object.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\game.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\gameobjectmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\particle.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\physics.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\plateprimitive.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\random.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\rendertargetmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\rigidbody.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\scene.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\scenemanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\shadowcamera.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\skinmodel.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\animation.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\bloom.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\boxcollider.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\camera.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\capsulecollider.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\charactercontroller.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\circlecollision.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\collision.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\collisionobject.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\color.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\component.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\componentmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\effectmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fontmanager.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fps.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\gameobject.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\gostcollision.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\graphicsdevice.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\imageobject.obj
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\inputmanager.obj
-d:\_users\desktop\decide1\decide\debug\fbengine.lib
-d:\_users\desktop\新しいフォルダー (2)\decide\debug\fbengine.lib
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.tlog\cl.command.1.tlog
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.tlog\cl.read.1.tlog
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.tlog\cl.write.1.tlog
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.tlog\lib-link.read.1.tlog
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.tlog\lib-link.write.1.tlog
-d:\_users\desktop\新しいフォルダー (2)\fbengine\fbengine\debug\fbengine.tlog\lib.command.1.tlog
+c:\github\game\game\fbengine\fbengine\debug\fbengine.pch
+c:\github\game\game\fbengine\fbengine\debug\fbengine.pdb
+c:\github\game\game\fbengine\fbengine\debug\fbengine.idb
+c:\github\game\game\fbengine\fbengine\debug\stdafx.obj
+c:\github\game\game\fbengine\fbengine\debug\skinmodeldata.obj
+c:\github\game\game\fbengine\fbengine\debug\skinmodelmanager.obj
+c:\github\game\game\fbengine\fbengine\debug\soundengine.obj
+c:\github\game\game\fbengine\fbengine\debug\soundsource.obj
+c:\github\game\game\fbengine\fbengine\debug\spherecollider.obj
+c:\github\game\game\fbengine\fbengine\debug\sprite.obj
+c:\github\game\game\fbengine\fbengine\debug\spriteanimation.obj
+c:\github\game\game\fbengine\fbengine\debug\squarecollision.obj
+c:\github\game\game\fbengine\fbengine\debug\support.obj
+c:\github\game\game\fbengine\fbengine\debug\text.obj
+c:\github\game\game\fbengine\fbengine\debug\textobject.obj
+c:\github\game\game\fbengine\fbengine\debug\texturemanager.obj
+c:\github\game\game\fbengine\fbengine\debug\time.obj
+c:\github\game\game\fbengine\fbengine\debug\particleemitter.obj
+c:\github\game\game\fbengine\fbengine\debug\transform.obj
+c:\github\game\game\fbengine\fbengine\debug\vector.obj
+c:\github\game\game\fbengine\fbengine\debug\vertex.obj
+c:\github\game\game\fbengine\fbengine\debug\wavefile.obj
+c:\github\game\game\fbengine\fbengine\debug\wavefilebank.obj
+c:\github\game\game\fbengine\fbengine\debug\xinput.obj
+c:\github\game\game\fbengine\fbengine\debug\keyboard .obj
+c:\github\game\game\fbengine\fbengine\debug\light.obj
+c:\github\game\game\fbengine\fbengine\debug\material.obj
+c:\github\game\game\fbengine\fbengine\debug\meshcollider.obj
+c:\github\game\game\fbengine\fbengine\debug\modeloject.obj
+c:\github\game\game\fbengine\fbengine\debug\mouse.obj
+c:\github\game\game\fbengine\fbengine\debug\movie.obj
+c:\github\game\game\fbengine\fbengine\debug\object.obj
+c:\github\game\game\fbengine\fbengine\debug\game.obj
+c:\github\game\game\fbengine\fbengine\debug\gameobjectmanager.obj
+c:\github\game\game\fbengine\fbengine\debug\particle.obj
+c:\github\game\game\fbengine\fbengine\debug\physics.obj
+c:\github\game\game\fbengine\fbengine\debug\plateprimitive.obj
+c:\github\game\game\fbengine\fbengine\debug\random.obj
+c:\github\game\game\fbengine\fbengine\debug\rendertargetmanager.obj
+c:\github\game\game\fbengine\fbengine\debug\rigidbody.obj
+c:\github\game\game\fbengine\fbengine\debug\scene.obj
+c:\github\game\game\fbengine\fbengine\debug\scenemanager.obj
+c:\github\game\game\fbengine\fbengine\debug\shadowcamera.obj
+c:\github\game\game\fbengine\fbengine\debug\skinmodel.obj
+c:\github\game\game\fbengine\fbengine\debug\animation.obj
+c:\github\game\game\fbengine\fbengine\debug\bloom.obj
+c:\github\game\game\fbengine\fbengine\debug\boxcollider.obj
+c:\github\game\game\fbengine\fbengine\debug\camera.obj
+c:\github\game\game\fbengine\fbengine\debug\capsulecollider.obj
+c:\github\game\game\fbengine\fbengine\debug\charactercontroller.obj
+c:\github\game\game\fbengine\fbengine\debug\circlecollision.obj
+c:\github\game\game\fbengine\fbengine\debug\collision.obj
+c:\github\game\game\fbengine\fbengine\debug\collisionobject.obj
+c:\github\game\game\fbengine\fbengine\debug\color.obj
+c:\github\game\game\fbengine\fbengine\debug\component.obj
+c:\github\game\game\fbengine\fbengine\debug\componentmanager.obj
+c:\github\game\game\fbengine\fbengine\debug\effectmanager.obj
+c:\github\game\game\fbengine\fbengine\debug\fontmanager.obj
+c:\github\game\game\fbengine\fbengine\debug\fps.obj
+c:\github\game\game\fbengine\fbengine\debug\gameobject.obj
+c:\github\game\game\fbengine\fbengine\debug\gostcollision.obj
+c:\github\game\game\fbengine\fbengine\debug\graphicsdevice.obj
+c:\github\game\game\fbengine\fbengine\debug\imageobject.obj
+c:\github\game\game\fbengine\fbengine\debug\inputmanager.obj
+c:\github\game\game\decide\debug\fbengine.lib
+c:\github\game\game\fbengine\fbengine\debug\fontmanager.obj.enc
+c:\github\game\game\fbengine\fbengine\debug\skinmodel.obj.enc
+c:\github\game\game\decide\debug\fbengine.pdb
+c:\github\game\game\fbengine\fbengine\debug\fbengine.tlog\cl.command.1.tlog
+c:\github\game\game\fbengine\fbengine\debug\fbengine.tlog\cl.read.1.tlog
+c:\github\game\game\fbengine\fbengine\debug\fbengine.tlog\cl.write.1.tlog
+c:\github\game\game\fbengine\fbengine\debug\fbengine.tlog\lib-link.read.1.tlog
+c:\github\game\game\fbengine\fbengine\debug\fbengine.tlog\lib-link.write.1.tlog
+c:\github\game\game\fbengine\fbengine\debug\fbengine.tlog\lib.command.1.tlog
