@@ -142,6 +142,7 @@ void Player::AnimationControl()
 	{
 		if (_State == State::Run)
 		{
+			//_Anim->SetAnimationEndTime(0.33);
 			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
 		else if(_State == State::Idol)
