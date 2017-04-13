@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fbEngine\Animation.h"
+#include "SearchViewAngle.h"
 
 class CCharacterController;
 class SkinModel;
@@ -103,6 +104,16 @@ public:
 	inline void AddMoveSpeed(const Vector3& speed) {
 		_MoveSpeed = _MoveSpeed + speed;
 	}
+
+	// 視野角設定(度)。
+	inline void SetViewAngle(float angle) {
+		_ViewAngle = angle;
+	}
+
+	// 見える距離設定。
+	inline void SetViewRange(float range) {
+		_ViewRange = range;
+	}
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -166,6 +177,10 @@ protected:
 	float _Height = 0.0f;	// コリジョンサイズ(高さ)。
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
+
+	SearchViewAngle _SearchView;	// 視野角判定。
+	float _ViewAngle = 0.0f;		// 視野角(度)。
+	float _ViewRange = 0.0f;		// 見える距離。
 private:
 	State _NowStateIdx;		// 現在のステートの添え字。
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。

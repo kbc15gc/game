@@ -23,6 +23,19 @@ public:
 	// ※次のステートに移行する前に呼ばれる。
 	virtual void Exit(EnemyCharacter::State next) {};
 
+	// このステートから移行できるステートを選別する関数。
+	// ※デフォルトではすべてのステートに移行できる。
+	// ※継承先で上書きして実装。
+	inline virtual bool IsPossibleChangeState(EnemyCharacter::State next) {
+		return true;
+	}
+
+
+	// このステートの処理が終了しているかのフラグを返却。
+	inline bool GetIsEnd() const {
+		return _IsEndState;
+	}
+
 protected:
 	// ローカルステート切り替え関数。
 	void _ChangeLocalState(EnemyCharacter::State next);

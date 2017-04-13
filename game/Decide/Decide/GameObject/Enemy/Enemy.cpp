@@ -3,6 +3,7 @@
 #include "fbEngine\CapsuleCollider.h"
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWaitState.h"
+#include "fbEngine\CharacterController.h"
 
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
@@ -20,10 +21,15 @@ void Enemy::_AwakeSubClass() {
 }
 
 void Enemy::_StartSubClass(){
+	// 視野角生成。
+	_ViewAngle = 45.0f;
+	_ViewRange = 5.0f;
+
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
 	// 位置情報設定。
 	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Translation);
@@ -34,6 +40,24 @@ void Enemy::_StartSubClass(){
 }
 
 void Enemy::_UpdateSubClass() {
+	if (!(_MyComponent.CharacterController->IsOnGround())) {
+		// エネミーが地面から離れている。
+		// 落下ステートを作成してここで切り替え
+		
+	}
+
+	// 視野角判定。
+	if (_SearchView.IsDiscovery(
+		transform->GetPosition(),
+		GameObjectManager::FindObject("Player")->transform->GetPosition(),
+		transform->GetForward(),
+		_ViewAngle,
+		_ViewRange))
+	{
+		// 視線に入っている。
+
+		// ここで発見ステートに切り替え。
+	}
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {

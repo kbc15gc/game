@@ -128,8 +128,15 @@ void EnemyCharacter::_ChangeState(State next) {
 
 	if (_NowState) {
 		// 現在のステートがnullでない。
-		// 現在のステートを後片付け。
-		_NowState->Exit(next);
+		if (_NowState->GetIsEnd() || _NowState->IsPossibleChangeState(next)) {
+			// 現在のステートから次のステートへの移行が許可されている、または現在のステートが終了している。
+			// 現在のステートを後片付け。
+			_NowState->Exit(next);
+		}
+		else {
+			// 現在のステートから次のステートへの移行が許可されていない。
+			return;
+		}
 	}
 
 	// 新しいステートに切り替え。

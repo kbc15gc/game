@@ -88,6 +88,10 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="AttackCollision.h" />
+    <ClInclude Include="GameObject\Enemy\SearchViewAngle.h">
+      <Filter>Object\GameObject\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -154,6 +158,10 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackCollision.cpp" />
+    <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp">
+      <Filter>Object\GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

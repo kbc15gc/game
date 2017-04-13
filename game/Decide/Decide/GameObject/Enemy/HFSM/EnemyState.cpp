@@ -13,6 +13,7 @@ EnemyState::~EnemyState()
 }
 
 void EnemyState::Entry() {
+	_NowLocalState = nullptr;
 	_IsEndState = false;
 	_IsFirstUpdate = true;
 	// Œp³æ‚É‚æ‚Á‚ÄˆÙ‚È‚éˆ—B
