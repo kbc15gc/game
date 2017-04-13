@@ -11,16 +11,19 @@ EnemyTranslationState::~EnemyTranslationState()
 {
 }
 
-void EnemyTranslationState::Entry() {
+void EnemyTranslationState::_EntrySubClass() {
+}
+
+void EnemyTranslationState::_Start() {
 	float InterpolateTime = 0.1f;	// 補間時間。
 	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Walk, InterpolateTime);
 }
 
-void EnemyTranslationState::Exit(EnemyCharacter::State next) {
-
+void EnemyTranslationState::_UpdateSubClass() {
+	OutputDebugString(_T("トランスステートなう。\n"));
 }
 
-void EnemyTranslationState::_UpdateSubClass() {
+void EnemyTranslationState::Exit(EnemyCharacter::State next) {
 
 }
 

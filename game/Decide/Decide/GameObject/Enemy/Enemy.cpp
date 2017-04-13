@@ -53,12 +53,16 @@ void Enemy::_BuildAnimation() {
 		unique_ptr<AnimationData> data(new AnimationData);
 		data->No = idx;
 		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
-		Datas.push_back(move(data));
-		// ここにアニメーション終了時間設定関数を記述。
+		// 各アニメーションの終了時間を設定していく。
+		//_MyComponent.Animation->SetAnimationEndTime(data->No, data->Time);
 
+		// 配列に追加。
+		Datas.push_back(move(data));
 	}
 
 	// アニメーションタイプにデータを関連づけ。
+	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
+	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationProt::Stand)].get());

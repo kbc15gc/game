@@ -9,12 +9,12 @@ class Enemy :
 private:
 	// エネミー(プロト)のアニメーション番号。
 	enum class AnimationProt {
-		Stand = 0,
-		Walk,
-		Attack,
+		Death = 0,
 		Damage,
-		Death,
-		Anim
+		Attack,
+		Walk,
+		Stand,
+		Max
 	};
 public:
 	Enemy(const char* name);

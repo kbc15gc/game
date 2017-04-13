@@ -11,14 +11,18 @@ EnemyWanderingState::~EnemyWanderingState()
 {
 }
 
-void EnemyWanderingState::Entry() {
+void EnemyWanderingState::_EntrySubClass() {
 }
 
-void EnemyWanderingState::Exit(EnemyCharacter::State next) {
+void EnemyWanderingState::_Start() {
 
 }
 
 void EnemyWanderingState::_UpdateSubClass() {
+
+}
+
+void EnemyWanderingState::Exit(EnemyCharacter::State next) {
 
 }
 

@@ -11,8 +11,6 @@ public:
 	~EnemyTranslationState();
 
 
-	void Entry()override;
-
 	void Exit(EnemyCharacter::State next)override;
 
 
@@ -38,6 +36,10 @@ public:
 		_MoveTime = time;
 	}
 private:
+	void _EntrySubClass()override;
+
+	void _Start()override;
+
 	void _UpdateSubClass()override;
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State now);

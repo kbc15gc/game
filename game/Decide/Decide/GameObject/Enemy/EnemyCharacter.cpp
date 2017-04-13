@@ -22,15 +22,16 @@ void EnemyCharacter::Awake() {
 	_BuildMyComponents();
 	// 使用するステートを列挙。
 	_BuildState();
-}
-
-void EnemyCharacter::Start() {
 	// 剛体生成。
 	_BuildCollision();
 	// モデル生成。
 	_BuildModelData();
 	// アニメーションテーブル作成。
 	_BuildAnimation();
+}
+
+void EnemyCharacter::Start() {
+
 }
 
 void EnemyCharacter::Update() {
