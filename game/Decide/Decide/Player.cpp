@@ -61,7 +61,7 @@ void Player::Start()
 	//アニメーションの終了時間設定
 	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0;			//アイドル
 	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0;			//歩く
-	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.33;			//走る
+	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.68;			//走る
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = 0.9;		//攻撃１
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//攻撃２
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0;			//死亡
