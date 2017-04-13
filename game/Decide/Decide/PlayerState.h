@@ -20,4 +20,6 @@ public:
 	virtual void Leave() = 0;
 protected:
 	Player* player;
+	const float _Speed = 20.0f;
+	const float _JumpSpeed = 15.0f;
 };
