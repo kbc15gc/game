@@ -1,12 +1,6 @@
 #include "Player.h"
 #include "PlayerStateIdol.h"
 
-namespace
-{
-	const float SPEED = 30.0f;
-	const float JUMP_POWER = 20.0f;
-}
-
 PlayerStateIdol::PlayerStateIdol(Player* player) :
 	PlayerState(player)
 {
@@ -52,10 +46,10 @@ void PlayerStateIdol::Update()
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (player->GetCharaCon().IsOnGround())
+		if (player->GetCharaCon().IsOnGround() == true)
 		{
 			//ジャンプパワーを設定
-			movespeed.y = JUMP_POWER;
+			movespeed.y = _JumpSpeed;
 			//キャラクターコントローラーをジャンプに
 			player->GetCharaCon().Jump();
 		}
@@ -65,13 +59,13 @@ void PlayerStateIdol::Update()
 		player->ChangeState(Player::State::Run);
 	}
 
-	movespeed.x = dir.x * SPEED;
-	movespeed.z = dir.z * SPEED;
+	movespeed.x = dir.x * _Speed;
+	movespeed.z = dir.z * _Speed;
 	
 	player->GetCharaCon().SetMoveSpeed(movespeed);
 	player->GetCharaCon().Execute();
 	//攻撃へ移動
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) /*|| KeyBoardInput->isPush(DIK_SPACE)*/)
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE))
 	{
 		player->ChangeState(Player::State::Attack);
 	}

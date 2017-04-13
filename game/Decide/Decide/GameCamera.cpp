@@ -5,6 +5,7 @@
 namespace
 {
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
+	const float CAMERA_SPEED = 0.05f;
 }
 
 void GameCamera::Awake()
@@ -90,15 +91,22 @@ void GameCamera::Update()
 	}*/
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		RotTransversal(0.1f);
+		RotTransversal(CAMERA_SPEED);
 		
 	}
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		RotTransversal(-0.1f);
+		RotTransversal(-CAMERA_SPEED);
 		
 	}
-	
+	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
+	{
+		RotLongitudinal(CAMERA_SPEED);
+	}
+	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
+	{
+		RotLongitudinal(-CAMERA_SPEED);
+	}
 	
 	transform->SetLocalPosition(_Player->transform->GetLocalPosition() + (Vector3)_ToPos);
 	//プレイヤーの高さ分を足す
@@ -125,4 +133,32 @@ void GameCamera::RotTransversal(float roty)
 	_ToPos.x = v.x;
 	_ToPos.y = v.y;
 	_ToPos.z = v.z;
+}
+
+void GameCamera::RotLongitudinal(float rotx)
+{
+	D3DXVECTOR3 Cross;
+	D3DXQUATERNION zAxis;
+	D3DXVECTOR4 v;
+	D3DXMATRIX rot;
+	D3DXVec3Cross(&Cross, &(const D3DXVECTOR3&)Vector3::up, &_ToPos);
+	D3DXQuaternionRotationAxis(&zAxis, &Cross, rotx);
+	D3DXMatrixRotationQuaternion(&rot, &zAxis);
+	D3DXVec3Transform(&v, &_ToPos, &rot);
+	D3DXVECTOR3 toPosOld = _ToPos;
+	_ToPos.x = v.x;
+	_ToPos.y = v.y;
+	_ToPos.z = v.z;
+	D3DXVECTOR3 toPosDir;
+	D3DXVec3Normalize(&toPosDir, &_ToPos);
+	//カメラの上下の上限
+	if (toPosDir.y < -0.5f)
+	{
+		_ToPos = toPosOld;
+	}
+	else if (toPosDir.y > 0.8f)
+	{
+		_ToPos = toPosOld;
+	}
+
 }

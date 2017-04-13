@@ -6,12 +6,6 @@
 #include "fbEngine/BoxCollider.h"
 #include "fbEngine/CapsuleCollider.h"
 
-namespace 
-{
-	const float SPEED = 30.0f;
-	const float JUMP_POWER = 15.0f;
-}
-
 Player::Player(const char * name) :
 	GameObject(name),
 	//キャラクターコントローラーNULL
@@ -64,11 +58,18 @@ void Player::Start()
 	_Model->SetCamera(GameObjectManager::mainCamera);
 	//モデルにライト設定
 	_Model->SetLight(GameObjectManager::mainLight);
-	//アニメーション
 	//アニメーションの終了時間設定
-	//走るアニメーション
-	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.88;
-	_Anim->SetAnimationEndTime((int)AnimationNo::AnimationRun, 0.33);
+	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0;			//アイドル
+	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0;			//歩く
+	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.68;			//走る
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = 0.9;		//攻撃１
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//攻撃２
+	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0;			//死亡
+	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
+	{
+		_Anim->SetAnimationEndTime(i, _AnimationEndTime[i]);
+	}
+	//初期アニメーションとしてアイドルを再生
 	PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 	//初期ステート設定
 	ChangeState(State::Idol);
@@ -155,7 +156,7 @@ void Player::AnimationControl()
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
-			PlayAnimation(AnimationNo::AnimationAttack01, 0.2, 1);
+			PlayAnimation(AnimationNo::AnimationAttack01, 0.1f, 1);
 		}
 	}
 }

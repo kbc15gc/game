@@ -12,6 +12,8 @@ public:
 	void LateUpdate()override;
 	//ƒJƒƒ‰‰¡‰ñ“]
 	void RotTransversal(float roty);
+	//ƒJƒƒ‰‚ªc‚É‰ñ“]B
+	void RotLongitudinal(float rotx);
 private:
 	Player*		_Player;
 	D3DXVECTOR3 _ToPos;

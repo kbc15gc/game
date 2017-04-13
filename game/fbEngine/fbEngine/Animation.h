@@ -74,7 +74,7 @@ public:
 	void SetAnimeSpeed(float sp)
 	{
 		_PlaySpeed = sp;
-		_AnimController->SetTrackSpeed(_CurrentTrackNo, sp);
+		//_AnimController->SetTrackSpeed(_CurrentTrackNo, sp);
 	}
 	/*!
 	*@brief	アニメーション終了時間設定
@@ -101,12 +101,12 @@ private:
 	float									_InterpolateEndTime;		//!<補間終了時間。
 	float									_InterpolateTime;		//!<補間時間。
 
-	std::unique_ptr<double[]> _EndTime;	//アニメーション終了時間
-	double _TimeRatio;	//正規化された時間の割合。
-	double _NowTime;	//現在のアニメーションの時間
-	int _CurrentFrame;		//現在のフレーム数
-	float _PlaySpeed;//再生速度
-	int _LoopNum;//指定したループ数
-	int _LoopCount;//ループのカウント
-	bool _IsPlaying;//アニメーション再生中
+	std::unique_ptr<double[]> _EndTime;	//各アニメーションの終了時間を格納した配列
+	double _TimeRatio;					//正規化された時間の割合。
+	double _NowTime;					//現在のアニメーションの時間
+	int _CurrentFrame;					//アニメーションが再生されて現在何フレーム目か。
+	float _PlaySpeed;					//再生速度
+	int _LoopNum;						//アニメーションをループさせる数。
+	int _LoopCount;						//ループ数をカウントする。
+	bool _IsPlaying;					//アニメーション再生中であることを示す。
 };
