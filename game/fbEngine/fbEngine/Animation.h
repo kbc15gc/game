@@ -83,6 +83,9 @@ public:
 	*/
 	void SetAnimationEndTime(int idx,double endtime)
 	{
+		if (idx == 4) {
+			OutputDebugString(_T("ƒvƒŒƒCƒ„[‘–‚é\n"));
+		}
 		_EndTime[idx] = endtime;
 	}
 private:

@@ -79,8 +79,11 @@
     <ClInclude Include="PlayerStateAttack.h">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="AttackCollision.h">
-      <Filter>Object\Component</Filter>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,8 +143,11 @@
     <ClCompile Include="PlayerStateAttack.cpp">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="AttackCollision.cpp">
-      <Filter>Object\Component</Filter>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

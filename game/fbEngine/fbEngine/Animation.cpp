@@ -106,8 +106,16 @@ void Animation::Update()
 		//現在のトラックのアニメーションセット取得
 		LPD3DXANIMATIONSET aniset;
 		_AnimController->GetTrackAnimationSet(_CurrentTrackNo, &aniset);
+		double maxtime;
 		//そのアニメーションを再生しきるまでの時間
-		double maxtime = aniset->GetPeriod();
+		if (_EndTime[_CurrentAnimationSetNo] < 0.0f) {
+			// アニメーションの終了時間が外部から設定されていない。
+			 maxtime = aniset->GetPeriod();
+		}
+		else {
+			// アニメーションの終了時間が外部から設定されている。
+			maxtime = _EndTime[_CurrentAnimationSetNo];
+		}
 		//現在のアニメーションの時間を取得
 		_NowTime = aniset->GetPeriodicPosition(_AnimController->GetTime());
 		double delta = Time::DeltaTime() * (double)_PlaySpeed;
@@ -150,20 +158,8 @@ void Animation::Update()
 			}
 		}
 
-		//エンドタイム
-		if (0.0f < _EndTime[_CurrentTrackNo] && _EndTime[_CurrentTrackNo] < _NowTime)
-		{
-			_CurrentFrame = 0;
-			_LoopCount++;
-
-			//時間を0に戻す
-			_AnimController->SetTrackPosition(_CurrentTrackNo, 0.0f);
-			_AnimController->AdvanceTime(0, NULL);
-		}
-
 		//再生時間を超えた
-		if (maxtime <= _NowTime + delta)
-		{
+		if (maxtime <= _NowTime + delta) {
 			_CurrentFrame = 0;
 			_LoopCount++;
 			//無限ループではない
@@ -173,11 +169,26 @@ void Animation::Update()
 			{
 				//アニメーション終了
 				_IsPlaying = false;
-				//最後の方で止めておく
-				_AnimController->SetTrackPosition(_CurrentTrackNo, maxtime - 0.001f);
-				_AnimController->AdvanceTime(0,NULL);
+			}
+
+			if (0.0f < _EndTime[_CurrentAnimationSetNo])
+			{
+				//時間を0に戻す
+				_AnimController->SetTrackPosition(_CurrentTrackNo, 0.0f);
+				_AnimController->AdvanceTime(0, NULL);
+			}
+			else
+			{
+				//無限ループではない
+				//カウントが指定した数以上になった
+				if (_LoopNum != -1 &&
+					_LoopCount >= _LoopNum)
+				{
+					//最後の方で止めておく
+					_AnimController->SetTrackPosition(_CurrentTrackNo, maxtime - 0.001f);
+					_AnimController->AdvanceTime(0, NULL);
+				}
 			}
 		}
-
 	}
 }

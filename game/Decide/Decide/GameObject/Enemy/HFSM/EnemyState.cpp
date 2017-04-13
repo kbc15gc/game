@@ -13,10 +13,22 @@ EnemyState::~EnemyState()
 }
 
 void EnemyState::Entry() {
-	_IsEndState = true;
+	_IsFirstUpdate = true;
+	// 継承先によって異なる処理。
+	_EntrySubClass();
 }
 
 bool EnemyState::Update() {
+	if (_IsFirstUpdate) {
+		// ステートが切り替わってから最初の更新。	
+		_Start();
+		_IsFirstUpdate = false;
+	}
+
+	// 継承先によって異なる処理。
+	// ※純粋仮想関数。
+	_UpdateSubClass();
+
 	if (_NowLocalState) {
 		// 現在のローカルステートが設定されている。
 		if (_NowLocalState->Update()) {
@@ -28,10 +40,6 @@ bool EnemyState::Update() {
 		}
 	}
 	return _IsEndState;
-}
-
-void EnemyState::Exit(EnemyCharacter::State next) {
-
 }
 
 void EnemyState::_ChangeLocalState(EnemyCharacter::State next) {

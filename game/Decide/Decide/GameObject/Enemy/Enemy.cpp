@@ -23,6 +23,9 @@ void Enemy::Start(){
 	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
 	// 位置情報設定。
 	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+	// 初期ステートに移行。
+	// ※暫定処理。
+	_ChangeState(State::Translation);
 	EnemyCharacter::Start();
 }
 
@@ -41,4 +44,29 @@ void Enemy::_ConfigCollision() {
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius,_Height);
+}
+
+void Enemy::_BuildAnimation() {
+	vector<unique_ptr<AnimationData>> Datas;
+	for (int idx = 0; idx < _MyComponent.Animation->GetNumAnimationSet(); idx++) {
+		// アニメーションセットの番号と再生時間をセットにしたデータを作成。
+		unique_ptr<AnimationData> data(new AnimationData);
+		data->No = idx;
+		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
+		// 各アニメーションの終了時間を設定していく。
+		//_MyComponent.Animation->SetAnimationEndTime(data->No, data->Time);
+
+		// 配列に追加。
+		Datas.push_back(move(data));
+	}
+
+	// アニメーションタイプにデータを関連づけ。
+	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
+	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
+	{
+		// 待機状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// 歩行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
+	}
 }
