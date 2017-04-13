@@ -5,6 +5,7 @@
 #include "fbEngine\CharacterController.h"
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWanderingState.h"
+#include "HFSM\EnemyWaitState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -17,6 +18,9 @@ EnemyCharacter::~EnemyCharacter()
 
 
 void EnemyCharacter::Awake() {
+	// 継承先により変わる処理。
+	_AwakeSubClass();
+
 	// このクラスで使用するコンポーネントを追加。
 	// ※下記の関数を継承先のクラスで上書きしている場合はそちらが呼ばれる。
 	_BuildMyComponents();
@@ -31,18 +35,38 @@ void EnemyCharacter::Awake() {
 }
 
 void EnemyCharacter::Start() {
+	_MoveSpeed = Vector3::zero;	// 初期化。
 
+	// 継承先により変わる処理。
+	_StartSubClass();
 }
 
 void EnemyCharacter::Update() {
+	// 継承先により変わる処理。
+	_UpdateSubClass();
+
 	if (_NowState == nullptr) {
 		// ステートを継承先で指定した？。
 		abort();
 	}
 	// 現在のステートを更新。
-	_NowState->Update();
+	if (_NowState->Update()) {
+		// ステート処理終了。
+
+		// ステートが終了したことを通知。
+		_EndNowStateCallback(_NowStateIdx);
+	}
+
+	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
 	_MyComponent.CharacterController->Execute();
+}
+
+void EnemyCharacter::LateUpdate() {
+	// 継承先により変わる処理。
+	_LateUpdateSubClass();
+
+	_MoveSpeed = Vector3::zero;	// 使い終わったので初期化。
 }
 
 
@@ -90,8 +114,10 @@ void EnemyCharacter::_BuildModelData() {
 void EnemyCharacter::_BuildState() {
 	// 徘徊ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
+	// 待機ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyWaitState>(new EnemyWaitState(this)));
 	// 直進ステートを追加。
-	_MyState.push_back(unique_ptr<EnemyState>(new EnemyTranslationState(this)));
+	_MyState.push_back(unique_ptr<EnemyTranslationState>(new EnemyTranslationState(this)));
 }
 
 void EnemyCharacter::_ChangeState(State next) {

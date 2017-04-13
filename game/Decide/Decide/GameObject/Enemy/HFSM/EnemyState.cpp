@@ -13,14 +13,17 @@ EnemyState::~EnemyState()
 }
 
 void EnemyState::Entry() {
+	_IsEndState = false;
 	_IsFirstUpdate = true;
 	// 継承先によって異なる処理。
+	// ※純粋仮想関数。
 	_EntrySubClass();
 }
 
 bool EnemyState::Update() {
 	if (_IsFirstUpdate) {
 		// ステートが切り替わってから最初の更新。	
+		// ※仮想関数。
 		_Start();
 		_IsFirstUpdate = false;
 	}

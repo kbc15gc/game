@@ -31,10 +31,6 @@ public:
 		_MoveSpeed = speed;
 	}
 
-	// 移動時間設定(秒)。
-	inline void SetMoveTime(const float time) {
-		_MoveTime = time;
-	}
 private:
 	void _EntrySubClass()override;
 
@@ -48,5 +44,7 @@ private:
 	Vector3 _Direction;	// 進む方向。
 	float _MoveLength;	// 移動量。
 	float _MoveSpeed;	// 移動するスピード(毎秒)。
-	float _MoveTime;	// 移動時間(秒)。
+
+	// 以下作業用。
+	Vector3 _InitPos;	// 初期位置。
 };

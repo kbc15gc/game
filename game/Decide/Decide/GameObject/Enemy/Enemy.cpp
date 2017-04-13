@@ -1,6 +1,8 @@
 #include "Enemy.h"
 #include "fbEngine\SkinModel.h"
 #include "fbEngine\CapsuleCollider.h"
+#include "HFSM\EnemyTranslationState.h"
+#include "HFSM\EnemyWaitState.h"
 
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
@@ -12,13 +14,12 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::Awake() {
+void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
-	EnemyCharacter::Awake();
 }
 
-void Enemy::Start(){
+void Enemy::_StartSubClass(){
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
 	// 位置情報設定。
@@ -26,11 +27,32 @@ void Enemy::Start(){
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Translation);
-	EnemyCharacter::Start();
+	// パラメータ設定。
+	static_cast<EnemyTranslationState*>(_NowState)->SetDir(transform->GetForward());
+	static_cast<EnemyTranslationState*>(_NowState)->SetLength(5.0f);
+	static_cast<EnemyTranslationState*>(_NowState)->SetMoveSpeed(1.0f);
 }
 
-void Enemy::Update() {
-	EnemyCharacter::Update();
+void Enemy::_UpdateSubClass() {
+}
+
+void Enemy::_EndNowStateCallback(State EndStateType) {
+	if (EndStateType == State::Translation) {
+		// 移動ステート終了。
+
+		_ChangeState(State::Wait);		// 待機ステートに移行。
+		// パラメータ設定。
+		static_cast<EnemyWaitState*>(_NowState)->SetInterval(4.5f);
+	}
+	else if (EndStateType == State::Wait) {
+		// 待機ステート終了。
+
+		_ChangeState(State::Translation);	// 移動ステートに移行。
+		// パラメータ設定。
+		static_cast<EnemyTranslationState*>(_NowState)->SetDir(transform->GetForward());
+		static_cast<EnemyTranslationState*>(_NowState)->SetLength(5.0f);
+		static_cast<EnemyTranslationState*>(_NowState)->SetMoveSpeed(1.0f);
+	}
 }
 
 void Enemy::_ConfigCollision() {
@@ -70,3 +92,4 @@ void Enemy::_BuildAnimation() {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 	}
 }
+

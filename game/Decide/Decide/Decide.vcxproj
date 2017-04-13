@@ -160,6 +160,7 @@
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
