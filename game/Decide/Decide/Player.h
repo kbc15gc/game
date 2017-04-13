@@ -63,6 +63,8 @@ public:
 	//アニメーション再生中フラグゲット
 	const bool GetAnimIsPlay() const;
 private:
+	friend class PlayerStateAttack;
+
 	//コンポーネントとかアドレスの保持が必要なものたち
 	SkinModel* _Model;
 	Animation* _Anim;
@@ -81,7 +83,7 @@ private:
 	//プレイヤーのレベル
 	int _Level;
 	//アニメーションの終了時間
-	float _AnimationEndTime[(int)AnimationNo::AnimationNum];
+	double _AnimationEndTime[(int)AnimationNo::AnimationNum];
 	//キャラクターコントローラー
 	CCharacterController* _CharacterController;
 	//現在のプレイヤーのステート

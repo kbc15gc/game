@@ -79,6 +79,9 @@
     <ClInclude Include="PlayerStateAttack.h">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="AttackCollision.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="PlayerStateAttack.cpp">
       <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackCollision.cpp">
+      <Filter>Object\Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

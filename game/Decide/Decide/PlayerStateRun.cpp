@@ -2,12 +2,6 @@
 #include "Player.h"
 #include "fbEngine\Camera.h"
 
-namespace
-{
-	const float SPEED = 30.0f;
-	const float JUMP_POWER = 20.0f;
-}
-
 PlayerStateRun::PlayerStateRun(Player* player) :
 	PlayerState(player)
 {
@@ -29,10 +23,10 @@ void PlayerStateRun::Update()
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (player->GetCharaCon().IsOnGround())
+		if (player->GetCharaCon().IsOnGround() == true)
 		{
 			//ジャンプパワーを設定
-			movespeed.y = JUMP_POWER;
+			movespeed.y = _JumpSpeed;
 			//キャラクターコントローラーをジャンプに
 			player->GetCharaCon().Jump();
 		}
@@ -87,11 +81,11 @@ void PlayerStateRun::Update()
 
 		//カメラからみた方向
 		movespeed.x = cameraX.x * dir.x + cameraZ.x * dir.z;
-		movespeed.y = 0.0f;	//Y軸はいらない。
+		movespeed.y = movespeed.y;	//Y軸はいらない。
 		movespeed.z = cameraX.z * dir.x + cameraZ.z * dir.z;
-		//移動速度を代入
-		movespeed.x *= SPEED;
-		movespeed.z *= SPEED;
+		//移動速度にスピードをかける
+		movespeed.x *= _Speed;
+		movespeed.z *= _Speed;
 		//移動したい方向のベクトル
 		Vector3 vec = movespeed;
 		//正規化
@@ -111,7 +105,7 @@ void PlayerStateRun::Update()
 	player->GetCharaCon().SetMoveSpeed(movespeed);
 	player->GetCharaCon().Execute();
 	//攻撃へ移動
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X)/* || KeyBoardInput->isPush(DIK_SPACE)*/)
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE))
 	{
 		player->ChangeState(Player::State::Attack);
 	}
