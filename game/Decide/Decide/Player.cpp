@@ -35,8 +35,6 @@ void Player::Awake()
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
 	_Anim = AddComponent<Animation>();
-	////リジッドボディ
-	//_Rigid = AddComponent<RigidBody>();
 	//カプセルコライダー
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
 	//キャラクターコントローラー
@@ -47,12 +45,6 @@ void Player::Awake()
 	_Radius = 0.5f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
-	////リジッドボディ作成
-	//_Rigid->Create(0.0f, coll, Collision_ID::PLAYER, Vector3::zero, Vector3(0, _Height/2, 0));
-	//_RB = (btRigidBody*)_Rigid->GetCollisonObj();
-	////スリープさせない(必要かどうかわからない。)
-	//_RB->setSleepingThresholds(0, 0);
-
 	//スキンモデル作成
 	SkinModelData* modeldata = new SkinModelData();
 	//モデルデータ作成
@@ -73,6 +65,10 @@ void Player::Start()
 	//モデルにライト設定
 	_Model->SetLight(GameObjectManager::mainLight);
 	//アニメーション
+	//アニメーションの終了時間設定
+	//走るアニメーション
+	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.88;
+	_Anim->SetAnimationEndTime((int)AnimationNo::AnimationRun, 0.33);
 	PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 	//初期ステート設定
 	ChangeState(State::Idol);
@@ -85,14 +81,6 @@ void Player::Start()
 	//プレイヤーのレベル初期化
 	//最初は１から
 	_Level = 1;
-	//アニメーションの終了時間設定
-	//基本は-1.0fで
-	FOR((int)AnimationNo::AnimationNum)
-	{
-		_AnimationEndTime[i] = -1.0f;
-	}
-	//走るアニメーション
-	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.88;
 }
 #include "fbEngine/Camera.h"
 void Player::Update()
@@ -141,7 +129,6 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない
 	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationNo::AnimationInvalid)
 	{
-		_Anim->SetAnimationEndTime(_AnimationEndTime[(int)animno]);
 		_Anim->PlayAnimation((int)animno, interpolatetime , loopnum);
 	}
 }
@@ -158,7 +145,6 @@ void Player::AnimationControl()
 		//走るアニメーション
 		if (_State == State::Run)
 		{
-			//_Anim->SetAnimationEndTime(0.33);
 			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
 		//アイドルアニメーション

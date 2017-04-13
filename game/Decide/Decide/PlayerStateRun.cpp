@@ -86,12 +86,12 @@ void PlayerStateRun::Update()
 		cameraX.Normalize();	//Y軸を打ち消しているので正規化する。
 
 		//カメラからみた方向
-		dir.x = cameraX.x * dir.x + cameraZ.x * dir.z;
-		dir.y = 0.0f;	//Y軸はいらない。
-		dir.z = cameraX.z * dir.x + cameraZ.z * dir.z;
+		movespeed.x = cameraX.x * dir.x + cameraZ.x * dir.z;
+		movespeed.y = 0.0f;	//Y軸はいらない。
+		movespeed.z = cameraX.z * dir.x + cameraZ.z * dir.z;
 		//移動速度を代入
-		movespeed.x = dir.x * SPEED;
-		movespeed.z = dir.z * SPEED;
+		movespeed.x *= SPEED;
+		movespeed.z *= SPEED;
 		//移動したい方向のベクトル
 		Vector3 vec = movespeed;
 		//正規化
