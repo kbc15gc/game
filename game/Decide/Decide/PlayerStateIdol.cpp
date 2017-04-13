@@ -4,7 +4,7 @@
 namespace
 {
 	const float SPEED = 30.0f;
-	const float JUMP_POWER = 15.0f;
+	const float JUMP_POWER = 20.0f;
 }
 
 PlayerStateIdol::PlayerStateIdol(Player* player) :
@@ -45,10 +45,6 @@ void PlayerStateIdol::Update()
 		dir.x += 1.0f;
 	}
 #endif
-	if (dir.Length() >= 0.0001f)
-	{
-		player->ChangeState(Player::State::Run);
-	}
 	Vector3 movespeed = player->GetCharaCon().GetMoveSpeed();
 	movespeed.x = 0.0f;
 	movespeed.z = 0.0f;
@@ -64,11 +60,21 @@ void PlayerStateIdol::Update()
 			player->GetCharaCon().Jump();
 		}
 	}
+	if (dir.Length() >= 0.0001f)
+	{
+		player->ChangeState(Player::State::Run);
+	}
 
-	movespeed = Vector3(dir.x, movespeed.y, dir.z);
+	movespeed.x = dir.x * SPEED;
+	movespeed.z = dir.z * SPEED;
 	
 	player->GetCharaCon().SetMoveSpeed(movespeed);
 	player->GetCharaCon().Execute();
+	//UŒ‚‚ÖˆÚ“®
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) /*|| KeyBoardInput->isPush(DIK_SPACE)*/)
+	{
+		player->ChangeState(Player::State::Attack);
+	}
 }
 
 void PlayerStateIdol::Enter()

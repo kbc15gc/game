@@ -7,6 +7,11 @@ void Animation::Initialize(ID3DXAnimationController* anim)
 	_NumMaxTracks = _AnimController->GetMaxNumTracks();
 	_BlendRateTable.reset(new float[_NumMaxTracks]);
 	_AnimationSets.reset(new ID3DXAnimationSet*[_NumAnimSet]);
+	_EndTime.reset(new double[_NumAnimSet]);
+	for(int i=0; i<_NumAnimSet;i++)
+	{
+		_EndTime[i] = -1.0f;
+	}
 	for (int i = 0; i < _NumMaxTracks; i++){
 		_BlendRateTable[i] = 1.0f;
 	}
@@ -28,7 +33,6 @@ void Animation::Awake()
 	_InterpolateTime = 0.0f;
 	_InterpolateEndTime = 0.0f;
 	_CurrentTrackNo = 0;
-	_EndTime = -1.0f;
 }
 
 void Animation::PlayAnimation(const int& animationSetIndex)
@@ -147,7 +151,7 @@ void Animation::Update()
 		}
 
 		//エンドタイム
-		if (0.0f < _EndTime && _EndTime < _NowTime)
+		if (0.0f < _EndTime[_CurrentTrackNo] && _EndTime[_CurrentTrackNo] < _NowTime)
 		{
 			_CurrentFrame = 0;
 			_LoopCount++;

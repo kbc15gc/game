@@ -88,14 +88,14 @@ void GameCamera::Update()
 	{
 		dir.y -= 1;
 	}*/
-	if (KeyBoardInput->isPressed(DIK_RIGHT))
-	{
-		RotTransversal(-0.1f);
-		
-	}
-	if (KeyBoardInput->isPressed(DIK_LEFT))
+	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
 	{
 		RotTransversal(0.1f);
+		
+	}
+	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
+	{
+		RotTransversal(-0.1f);
 		
 	}
 	

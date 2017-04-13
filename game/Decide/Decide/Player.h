@@ -3,6 +3,7 @@
 #include "fbEngine/CharacterController.h"
 #include "PlayerStateRun.h"
 #include "PlayerStateIdol.h"
+#include "PlayerStateAttack.h"
 
 class SkinModel;
 class Animation;
@@ -14,9 +15,9 @@ public:
 	//プレイヤーのステート
 	enum class State
 	{
-		Idol,
-		Run,
-		Attack,
+		Idol = 0,			//アイドル
+		Run,				//走る
+		Attack,				//攻撃
 	};
 	//アニメーションのナンバー
 	enum class AnimationNo
@@ -29,6 +30,7 @@ public:
 		AnimationRun,				//走る
 		AnimationWalk,				//歩き
 		AnimationIdol,				//アイドル	
+		AnimationNum,				//アニメーションの数
 	};
 	Player(const char* name);
 	void Awake()override;
@@ -40,7 +42,7 @@ public:
 	//アニメーション再生
 	//アニメーションのナンバー
 	//補間時間
-	void PlayAnimation(AnimationNo animno, float interpolatetime);
+	void PlayAnimation(AnimationNo animno, float interpolatetime , int loopnum = -1);
 	//アニメーションコントロール
 	void AnimationControl();
 	//セットステート
@@ -58,6 +60,8 @@ public:
 	{
 		return* _CharacterController;
 	}
+	//アニメーション再生中フラグゲット
+	const bool GetAnimIsPlay() const;
 private:
 	//コンポーネントとかアドレスの保持が必要なものたち
 	SkinModel* _Model;
@@ -76,8 +80,8 @@ private:
 	State _State;
 	//プレイヤーのレベル
 	int _Level;
-	//ジャンプフラグ true=ジャンプ中 , false=ジャンプしてない
-	bool _Jump;
+	//アニメーションの終了時間
+	float _AnimationEndTime[(int)AnimationNo::AnimationNum];
 	//キャラクターコントローラー
 	CCharacterController* _CharacterController;
 	//現在のプレイヤーのステート
@@ -86,4 +90,6 @@ private:
 	PlayerStateRun	_RunState;
 	//プレイヤーステートアイドル
 	PlayerStateIdol	_IdolState;
+	//プレイヤーステートアタック
+	PlayerStateAttack _AttackState;
 };

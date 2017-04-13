@@ -18,11 +18,14 @@ Player::Player(const char * name) :
 	_CharacterController(NULL),
 	//重力設定
 	_Gravity(-50.0f),
-	//ジャンプフラグ設定
-	_Jump(false),
+	//現在のステート
 	_CurrentState(NULL),
+	//走るステート
 	_RunState(this),
-	_IdolState(this)
+	//アイドルステート
+	_IdolState(this),
+	//攻撃ステート
+	_AttackState(this)
 {
 }
 
@@ -32,8 +35,6 @@ void Player::Awake()
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
 	_Anim = AddComponent<Animation>();
-	////リジッドボディ
-	//_Rigid = AddComponent<RigidBody>();
 	//カプセルコライダー
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
 	//キャラクターコントローラー
@@ -44,12 +45,6 @@ void Player::Awake()
 	_Radius = 0.5f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
-	////リジッドボディ作成
-	//_Rigid->Create(0.0f, coll, Collision_ID::PLAYER, Vector3::zero, Vector3(0, _Height/2, 0));
-	//_RB = (btRigidBody*)_Rigid->GetCollisonObj();
-	////スリープさせない(必要かどうかわからない。)
-	//_RB->setSleepingThresholds(0, 0);
-
 	//スキンモデル作成
 	SkinModelData* modeldata = new SkinModelData();
 	//モデルデータ作成
@@ -70,6 +65,10 @@ void Player::Start()
 	//モデルにライト設定
 	_Model->SetLight(GameObjectManager::mainLight);
 	//アニメーション
+	//アニメーションの終了時間設定
+	//走るアニメーション
+	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.88;
+	_Anim->SetAnimationEndTime((int)AnimationNo::AnimationRun, 0.33);
 	PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 	//初期ステート設定
 	ChangeState(State::Idol);
@@ -100,10 +99,10 @@ void Player::Update()
 void Player::ChangeState(State nextstate)
 {
 	if (_CurrentState != NULL) {
-		//現在のステートを抜ける。
+		//現在のステートを抜けるときの処理
 		_CurrentState->Leave();
 	}
-	switch (_State)
+	switch (nextstate)
 	{
 		//待機状態
 	case State::Idol:
@@ -115,39 +114,53 @@ void Player::ChangeState(State nextstate)
 		break;
 		//攻撃状態
 	case State::Attack:
+		_CurrentState = &_AttackState;
 		break;
 	default:
 		break;
 	}
 	_State = nextstate;
+	//各ステートの入りに呼ばれる処理
 	_CurrentState->Enter();
 }
 
-void Player::PlayAnimation(AnimationNo animno, float interpolatetime)
+void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopnum)
 {
 	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない
 	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationNo::AnimationInvalid)
 	{
-		_Anim->PlayAnimation((int)animno, interpolatetime);
+		_Anim->PlayAnimation((int)animno, interpolatetime , loopnum);
 	}
 }
 
 void Player::AnimationControl()
 {
+	//ジャンプアニメーション
 	if (_CharacterController->IsJump())
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.2f);
 	}
 	else
 	{
+		//走るアニメーション
 		if (_State == State::Run)
 		{
-			//_Anim->SetAnimationEndTime(0.33);
 			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
+		//アイドルアニメーション
 		else if(_State == State::Idol)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 		}
+		//アタックアニメーション
+		else if (_State == State::Attack)
+		{
+			PlayAnimation(AnimationNo::AnimationAttack01, 0.2, 1);
+		}
 	}
+}
+
+const bool Player::GetAnimIsPlay() const 
+{
+	return _Anim->GetPlaying();
 }
