@@ -68,7 +68,7 @@ void Player::Start()
 	//アニメーションの終了時間設定
 	//走るアニメーション
 	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.88;
-	_Anim->SetAnimationEndTime((int)AnimationNo::AnimationRun, 0.33);
+	_Anim->SetAnimationEndTime((int)AnimationNo::AnimationRun, 0.716);
 	PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 	//初期ステート設定
 	ChangeState(State::Idol);

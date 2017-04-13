@@ -99,33 +99,33 @@ void Animation::Update()
 	//指定されたループ数ないかどうか
 	if (_IsPlaying)
 	{
-		//フレームを増加させる
-		_CurrentFrame++;
+		//nullチェック
 		if (_AnimController == nullptr)
 			return;
+
+		//フレームを増加させる
+		_CurrentFrame++;
 		//現在のトラックのアニメーションセット取得
 		LPD3DXANIMATIONSET aniset;
+		//設定されているトラックからアニメーションセット取得
 		_AnimController->GetTrackAnimationSet(_CurrentTrackNo, &aniset);
-		double maxtime;
-		//そのアニメーションを再生しきるまでの時間
-		if (_EndTime[_CurrentAnimationSetNo] < 0.0f) {
-			// アニメーションの終了時間が外部から設定されていない。
-			 maxtime = aniset->GetPeriod();
-		}
-		else {
-			// アニメーションの終了時間が外部から設定されている。
-			maxtime = _EndTime[_CurrentAnimationSetNo];
-		}
-		//現在のアニメーションの時間を取得
-		_NowTime = aniset->GetPeriodicPosition(_AnimController->GetTime());
-		double delta = Time::DeltaTime() * (double)_PlaySpeed;
 
+		//アニメーションの終了時間設定
+		//エンドタイムが指定されているのならそちらを優先
+		double endtime = _EndTime.get()[_CurrentAnimationSetNo] > 0.0f ? _EndTime[_CurrentAnimationSetNo] : aniset->GetPeriod();
+		//時間を進める前に現在のアニメーションの時間を取得
+		double nowtime = aniset->GetPeriodicPosition(_AnimController->GetTime());
+
+		//前フレームからの差分を計算
+		double delta = Time::DeltaTime() * (double)_PlaySpeed;
+		//直接取得すると最大値を超えていた場合0に戻されるので自前で計算。
+		_NowTime = nowtime + delta;
 		//アニメーションの時間加算
 		_AnimController->AdvanceTime(delta, NULL);
-
 		//割合を計算
-		_TimeRatio = min(1.0f, (_NowTime + delta) / maxtime);
+		_TimeRatio = min(1.0f, _NowTime / endtime);
 
+		//補完するよ。
 		if (_IsInterpolate) {
 			//補間中。
 			_InterpolateTime += delta;
@@ -158,36 +158,25 @@ void Animation::Update()
 			}
 		}
 
-		//再生時間を超えた
-		if (maxtime <= _NowTime + delta) {
+		//アニメーション終了時間を超えた。
+		if (endtime <= _NowTime) {
+			//経過したフレーム初期化
 			_CurrentFrame = 0;
+			//ループ数増加
 			_LoopCount++;
-			//無限ループではない
-			//カウントが指定した数以上になった
-			if (_LoopNum != -1 &&
-				_LoopCount >= _LoopNum)
+
+			//グローバルタイムリセット
+			_AnimController->ResetTime();
+			//アニメーション時間をリセット
+			_AnimController->SetTrackPosition(_CurrentTrackNo, 0);
+			//超過分を足す
+			_AnimController->AdvanceTime(_NowTime - endtime, NULL);
+
+			if (_LoopNum != -1 &&		//無限ループではない
+				_LoopCount >= _LoopNum)	//カウントが指定した数以上になった
 			{
 				//アニメーション終了
 				_IsPlaying = false;
-			}
-
-			if (0.0f < _EndTime[_CurrentAnimationSetNo])
-			{
-				//時間を0に戻す
-				_AnimController->SetTrackPosition(_CurrentTrackNo, 0.0f);
-				_AnimController->AdvanceTime(0, NULL);
-			}
-			else
-			{
-				//無限ループではない
-				//カウントが指定した数以上になった
-				if (_LoopNum != -1 &&
-					_LoopCount >= _LoopNum)
-				{
-					//最後の方で止めておく
-					_AnimController->SetTrackPosition(_CurrentTrackNo, maxtime - 0.001f);
-					_AnimController->AdvanceTime(0, NULL);
-				}
 			}
 		}
 	}
