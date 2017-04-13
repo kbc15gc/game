@@ -17,6 +17,10 @@ void EnemyState::Entry() {
 }
 
 bool EnemyState::Update() {
+	// 継承先によって異なる処理。
+	// ※純粋仮想関数。
+	_UpdateSubClass();
+
 	if (_NowLocalState) {
 		// 現在のローカルステートが設定されている。
 		if (_NowLocalState->Update()) {

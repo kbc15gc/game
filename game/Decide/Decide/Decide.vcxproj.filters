@@ -76,6 +76,12 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -129,6 +135,12 @@
       <Filter>Object\GameObject\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>

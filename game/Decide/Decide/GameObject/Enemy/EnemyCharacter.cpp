@@ -2,8 +2,9 @@
 #include "HFSM\EnemyState.h"
 #include "fbEngine\SkinModel.h"
 #include "fbEngine\SkinModelData.h"
-#include "fbEngine\Animation.h"
 #include "fbEngine\CharacterController.h"
+#include "HFSM\EnemyTranslationState.h"
+#include "HFSM\EnemyWanderingState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -21,9 +22,6 @@ void EnemyCharacter::Awake() {
 	_BuildMyComponents();
 	// 使用するステートを列挙。
 	_BuildState();
-	// とりあえず何もしないステートに移行。
-	// ※ステートを使用する場合は継承先のStart関数でステートを切り替える。
-	_ChangeState(State::NotAction);
 }
 
 void EnemyCharacter::Start() {
@@ -31,9 +29,15 @@ void EnemyCharacter::Start() {
 	_BuildCollision();
 	// モデル生成。
 	_BuildModelData();
+	// アニメーションテーブル作成。
+	_BuildAnimation();
 }
 
 void EnemyCharacter::Update() {
+	if (_NowState == nullptr) {
+		// ステートを継承先で指定した？。
+		abort();
+	}
 	// 現在のステートを更新。
 	_NowState->Update();
 	// キャラクターコントローラで実際にキャラクターを制御。
@@ -83,8 +87,10 @@ void EnemyCharacter::_BuildModelData() {
 }
 
 void EnemyCharacter::_BuildState() {
-	// 何もしないステートを追加。
-	_MyState.push_back(unique_ptr<EnemyState>(new EnemyState(this)));
+	// 徘徊ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
+	// 直進ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyState>(new EnemyTranslationState(this)));
 }
 
 void EnemyCharacter::_ChangeState(State next) {
