@@ -92,6 +92,9 @@
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h">
       <Filter>Object\GameObject\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -162,6 +165,9 @@
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp">
       <Filter>Object\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -25,18 +25,19 @@ void Enemy::_StartSubClass(){
 	_ViewAngle = 45.0f;
 	_ViewRange = 5.0f;
 
+	// 攻撃可能範囲設定。
+	_AttackRange = 1.0f;
+
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
+
 	// 位置情報設定。
-	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+	_InitPos = Vector3(0.0f, 10.0f, 0.0f);
+	transform->SetLocalPosition(_InitPos);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Translation);
-	// パラメータ設定。
-	static_cast<EnemyTranslationState*>(_NowState)->SetDir(transform->GetForward());
-	static_cast<EnemyTranslationState*>(_NowState)->SetLength(5.0f);
-	static_cast<EnemyTranslationState*>(_NowState)->SetMoveSpeed(1.0f);
+	_ChangeState(State::Wandering);
 }
 
 void Enemy::_UpdateSubClass() {
@@ -45,38 +46,10 @@ void Enemy::_UpdateSubClass() {
 		// 落下ステートを作成してここで切り替え
 		
 	}
-
-	// 視野角判定。
-	if (_SearchView.IsDiscovery(
-		transform->GetPosition(),
-		GameObjectManager::FindObject("Player")->transform->GetPosition(),
-		transform->GetForward(),
-		_ViewAngle,
-		_ViewRange))
-	{
-		// 視線に入っている。
-
-		// ここで発見ステートに切り替え。
-	}
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Translation) {
-		// 移動ステート終了。
 
-		_ChangeState(State::Wait);		// 待機ステートに移行。
-		// パラメータ設定。
-		static_cast<EnemyWaitState*>(_NowState)->SetInterval(4.5f);
-	}
-	else if (EndStateType == State::Wait) {
-		// 待機ステート終了。
-
-		_ChangeState(State::Translation);	// 移動ステートに移行。
-		// パラメータ設定。
-		static_cast<EnemyTranslationState*>(_NowState)->SetDir(transform->GetForward());
-		static_cast<EnemyTranslationState*>(_NowState)->SetLength(5.0f);
-		static_cast<EnemyTranslationState*>(_NowState)->SetMoveSpeed(1.0f);
-	}
 }
 
 void Enemy::_ConfigCollision() {
@@ -114,6 +87,9 @@ void Enemy::_BuildAnimation() {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationProt::Stand)].get());
 		// 歩行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
+		// 走行状態。
+		// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 	}
 }
 

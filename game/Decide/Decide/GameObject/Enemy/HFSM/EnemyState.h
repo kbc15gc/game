@@ -65,8 +65,8 @@ private:
 protected:
 	bool _IsEndState = false;		// ステートの処理が終了したかのフラグ(trueで終了)。
 	EnemyCharacter* _EnemyObject = nullptr;	// このステートを持つエネミーのポインタ。
-private:
 	EnemyState* _NowLocalState = nullptr;	// 現在のローカルステート。
+private:
 	EnemyCharacter::State _NowLocalStateIdx;		// 現在のローカルステートの添え字。
 	bool _IsFirstUpdate = true;	// ステートが切り替わってから最初の更新か。
 };
