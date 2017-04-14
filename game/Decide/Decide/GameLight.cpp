@@ -7,7 +7,7 @@ void GameLight::Awake()
 	GameObjectManager::mainLight = light;
 	int num = 4;
 	DirectionalLight* Dl[4];
-	FOR(num)
+	FOR(i,num)
 		Dl[i] = new DirectionalLight();
 	Dl[0]->SetEulerAngles(Vector3(45, 45, 180));	//‰œ
 	Dl[1]->SetEulerAngles(Vector3(0, 0, 180));	//‰œ
@@ -18,7 +18,7 @@ void GameLight::Awake()
 	Dl[1]->SetColor(Color(0.3f, 0.3f, 0.3f, 1.0f));	//‰E
 	Dl[2]->SetColor(Color(0.3f, 0.3f, 0.3f, 1.0f));	//¶
 	Dl[3]->SetColor(Color(0.3f, 0.3f, 0.3f, 1.0f));	//‰º
-	FOR(num)
+	FOR(i,num)
 		light->AddLight(Dl[i]);
 }
 

@@ -39,8 +39,6 @@ public:
 	Vector3 Local(const Vector3& v);
 	//ローカルな位置に変換(回転抜き)
 	Vector3 LocalPos(const Vector3& v);
-	//受け取ったカメラからみたスクリーン座標を返す
-	Vector2 WorldToScreen(Camera* camera);
 	//受け取ったオブジェクトの向きを見る
 	void LockAt(GameObject* obj);
 
@@ -85,7 +83,7 @@ public:
 	void SetRotation(const Quaternion& q);
 	void SetWorldMatrix(D3DXMATRIX w);
 
-	const Vector3&	GetLocalPosition();
+	Vector3&	GetLocalPosition();
 	const Vector3& GetPosition();
 	const Vector3& GetLocalScale();
 	const Vector3& GetScale();

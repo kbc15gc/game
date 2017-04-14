@@ -22,6 +22,11 @@ public:
 	void ViewMatrixUpdate();
 	void ProjectionMatrixUpdate();
 
+	//受け取ったワールドポジションをスクリーン座標に変換
+	Vector2 WorldToScreen(Vector3 wpos);
+	//受け取ったスクリーン座標をワールドポジションに変換(zは0になる。)
+	Vector3 ScreenToWorld(Vector2 spos);
+
 	const D3DXMATRIX& GetViewMat(){ return _View; }
 	const D3DXMATRIX& GetProjectionMat(){ return _Projection; }
 
@@ -51,6 +56,7 @@ public:
 		//アドレス確保されていない
 		if (_ViewPoint == nullptr)
 		{
+			//確保するよ。
 			_ViewPoint = new Vector3();
 		}
 		*_ViewPoint = pos;
@@ -79,7 +85,7 @@ protected:
 	//プロジェクション行列
 	D3DXMATRIX _Projection;
 
-	//注視点使うならnewで確保してね
+	//注視点
 	Vector3* _ViewPoint;
 	float _ViewAngle;	//画角
 	float _near;		//近平面
