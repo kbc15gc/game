@@ -60,8 +60,9 @@ private:
 
 	// 現在のローカルステートが終了した際に呼ばれるコールバック関数。
 	// 引数は現在のローカルステートの添え字。
+	// ※この関数は各ステートが自発的に終了した場合にのみ呼び出される。
 	// ※処理自体は継承先に委譲。
-	virtual void _EndNowLocalState_CallBack(EnemyCharacter::State now) {};
+	virtual void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {};
 protected:
 	bool _IsEndState = false;		// ステートの処理が終了したかのフラグ(trueで終了)。
 	EnemyCharacter* _EnemyObject = nullptr;	// このステートを持つエネミーのポインタ。

@@ -32,6 +32,9 @@
     <Filter Include="Object\GameObject\HistoryChip">
       <UniqueIdentifier>{63c73dbe-0b9b-4ff5-a530-e80258d41769}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\GameObject\Component">
+      <UniqueIdentifier>{3baa3172-92f9-4cda-80c2-971cd765a60a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -100,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="GameObject\HistoryChip\FireChip.h">
       <Filter>Object\GameObject\HistoryChip</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\ObjectRotation.h">
+      <Filter>Object\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +189,15 @@
     </ClCompile>
     <ClCompile Include="GameObject\HistoryChip\FireChip.cpp">
       <Filter>Object\GameObject\HistoryChip</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
+      <Filter>Object\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

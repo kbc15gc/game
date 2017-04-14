@@ -2,6 +2,7 @@
 
 #include "fbEngine\Animation.h"
 #include "SearchViewAngle.h"
+#include "../Component/ObjectRotation.h"
 
 class CCharacterController;
 class SkinModel;
@@ -19,12 +20,12 @@ public:
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
 
-	enum class State { Wandering = 0,Discovery, Wait ,Translation };
+	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { Idle = 0, Walk, Dash, Max };
+	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
@@ -41,6 +42,7 @@ private:
 		Animation* Animation = nullptr;	// このオブジェクトのアニメーション。
 		Collider* Collider = nullptr;	// コリジョン形状。
 		CCharacterController* CharacterController = nullptr;		// キャラクターコントローラ。
+		ObjectRotation* RotationAction = nullptr;	// オブジェクトを回転させるクラス。
 	};
 
 public:
@@ -65,6 +67,17 @@ public:
 	void LateUpdate()override;
 	
 
+	// エネミーを指定したオブジェクトに向かせる処理(補間なし)。
+	// 引数：	見たいオブジェクト。
+	inline void LookAtObject(const GameObject& Object) {
+		_MyComponent.RotationAction->RotationToObject_XZ(Object);
+	}
+
+	// 攻撃処理を決定する関数。
+	// ※継承先で実装。
+	// ※複数攻撃パターンがある場合はここでローカルステートに遷移する際に分岐させる。
+	virtual EnemyCharacter::State AttackSelect() = 0;
+
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
@@ -80,7 +93,8 @@ public:
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime, LoopCount);
 	}
 
-	// 外部からステート切り替えを行おうとする場合はこちらを呼ぶ。
+	// ステート処理中にステートを割り込みで切り替える関数。
+	// ※外部やステート内からステート切り替えを行おうとする場合はこちらを呼ぶ。
 	inline void ChangeStateRequest(State next) {
 		_ChangeState(next);
 	}
@@ -88,6 +102,7 @@ public:
 	// 視野角判定関数。
 	// 視野角判定を行うステートから呼び出す。
 	void SearchView();
+
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -150,6 +165,9 @@ protected:
 
 	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
 	// 引数は終了したステートのタイプ。
+	// ※この関数は各ステートが自発的に終了した場合にのみ呼び出される。
+	// ※このクラスのChangeStateRequestで終了した場合は呼ばれない。
+	// ※ローカルステートの終了時にも呼ばれない。
 	virtual void _EndNowStateCallback(State EndStateType) {};
 
 private:

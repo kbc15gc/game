@@ -54,11 +54,19 @@ public:
 	{
 		return x * in.y - y * in.x;
 	}
-	//角度＋回転方向を求める（単位はラジアン）
+	//上方向との角度＋回転方向を求める（単位はラジアン）
 	float Rot()
 	{
 		//上向きのベクトルとの角度をとる。
 		return atan2f(this->Cross(Vector2(0, 1)), this->Dot(Vector2(0, 1)));
+	}
+	//角度＋回転方向を求める（単位はラジアン）
+	//引数：	比較したいベクトル。
+	__inline float Rot(const Vector2& in) {
+		Vector2 work = in;
+		work.Normalize();
+		//角度をとる。
+		return atan2f(this->Cross(work), this->Dot(work));
 	}
 	//正規化
 	void Normalize()

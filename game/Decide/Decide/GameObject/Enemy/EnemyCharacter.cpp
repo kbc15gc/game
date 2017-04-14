@@ -7,6 +7,8 @@
 #include "HFSM\EnemyWanderingState.h"
 #include "HFSM\EnemyWaitState.h"
 #include "HFSM\EnemyDiscoveryState.h"
+#include "HFSM\EnemyAttackState.h"
+#include "HFSM\EnemyStartAttackState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -95,6 +97,8 @@ void EnemyCharacter::_BuildMyComponents() {
 	_MyComponent.Animation = AddComponent<Animation>();
 	// キャラクターコントローラを追加。
 	_MyComponent.CharacterController = AddComponent<CCharacterController>();
+	// 回転クラスを追加。
+	_MyComponent.RotationAction = AddComponent<ObjectRotation>();
 }
 
 void EnemyCharacter::_BuildCollision() {
@@ -134,6 +138,10 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
 	// 発見ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
+	// 攻撃開始ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyStartAttackState>(new EnemyStartAttackState(this)));
+	// 攻撃ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyAttackState>(new EnemyAttackState(this)));
 	// 待機ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyWaitState>(new EnemyWaitState(this)));
 	// 直進ステートを追加。

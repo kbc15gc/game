@@ -47,7 +47,7 @@ void EnemyTranslationState::Exit(EnemyCharacter::State next) {
 
 }
 
-void EnemyTranslationState::_EndNowLocalState_CallBack(EnemyCharacter::State now) {
+void EnemyTranslationState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
 	// 現在のローカルステートの処理が終了した。
 
 }

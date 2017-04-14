@@ -18,7 +18,7 @@ private:
 
 	void _UpdateSubClass()override;
 
-	void _EndNowLocalState_CallBack(EnemyCharacter::State now);
+	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 	bool IsPossibleChangeState(EnemyCharacter::State next)override;
 

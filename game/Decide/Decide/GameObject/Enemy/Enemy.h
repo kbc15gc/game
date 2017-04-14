@@ -27,6 +27,9 @@ private:
 	void _StartSubClass()override;
 	void _UpdateSubClass()override;
 
+
+	EnemyCharacter::State AttackSelect()override;
+
 	// コリジョン定義関数。
 	// コリジョンの形状やパラメータを設定する関数。
 	void _ConfigCollision()override;

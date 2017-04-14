@@ -26,7 +26,7 @@ void Enemy::_StartSubClass(){
 	_ViewRange = 5.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 1.0f;
+	_AttackRange = 1.3f;
 
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
@@ -43,16 +43,30 @@ void Enemy::_StartSubClass(){
 void Enemy::_UpdateSubClass() {
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
-		// 落下ステートを作成してここで切り替え
+		// 落下ステートを作成してここで切り替え。
 		
 	}
+}
+
+
+EnemyCharacter::State Enemy::AttackSelect() {
+	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
+
+	// ※とりあえず暫定処理。
+	return State::Attack;
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {
 	if (EndStateType == State::Discovery) {
 		// 発見ステートの処理完了。
 
-		//_ChangeState(State::Attack);
+		_ChangeState(State::StartAttack);
+	}
+	else if (EndStateType == State::StartAttack) {
+		// 一度攻撃が終了した。
+
+		// 次の攻撃に移行。
+		_ChangeState(State::StartAttack);
 	}
 }
 
@@ -94,6 +108,8 @@ void Enemy::_BuildAnimation() {
 		// 走行状態。
 		// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
+		// 攻撃状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
 	}
 }
 

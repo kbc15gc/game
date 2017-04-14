@@ -38,7 +38,7 @@ private:
 
 	void _UpdateSubClass()override;
 
-	void _EndNowLocalState_CallBack(EnemyCharacter::State now);
+	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 private:
 	Vector3 _Direction;	// i‚Ş•ûŒüB

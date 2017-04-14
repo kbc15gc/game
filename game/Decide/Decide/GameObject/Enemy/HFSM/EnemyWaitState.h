@@ -24,7 +24,7 @@ private:
 
 	void _UpdateSubClass()override;
 
-	void _EndNowLocalState_CallBack(EnemyCharacter::State now);
+	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 private:
 	float _TimeCounter;	// 作業用。
 	float _Interval;	// 待機時間。

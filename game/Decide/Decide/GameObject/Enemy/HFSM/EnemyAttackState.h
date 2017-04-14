@@ -1,13 +1,14 @@
 #pragma once
+
 #include "EnemyState.h"
 
 class EnemyCharacter;
 
-// エネミー徘徊ステート。
-class EnemyWanderingState : public EnemyState {
+// エネミー攻撃ステート。
+class EnemyAttackState : public EnemyState {
 public:
-	EnemyWanderingState(EnemyCharacter* Object);
-	~EnemyWanderingState();
+	EnemyAttackState(EnemyCharacter* Object);
+	~EnemyAttackState();
 	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
