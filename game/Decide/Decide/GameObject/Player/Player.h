@@ -37,11 +37,12 @@ public:
 	void Start()override;
 	void Update()override;
 	//状態変更
-	//次のステート
+	// nextstate 次のステート
 	void ChangeState(State nextstate);
 	//アニメーション再生
-	//アニメーションのナンバー
-	//補間時間
+	// animno アニメーションのナンバー
+	// interpolatetime 補間時間
+	// loopnum ループ回数 (デフォルトは-1)
 	void PlayAnimation(AnimationNo animno, float interpolatetime , int loopnum = -1);
 	//アニメーションコントロール
 	void AnimationControl();

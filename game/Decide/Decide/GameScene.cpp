@@ -32,9 +32,9 @@ void GameScene::Start()
 	GameObjectManager::AddNew<FireChip>("FireChip", 1);
 
 
-	/*ImageObject* showDepth = GameObjectManager::AddNew<ImageObject>("ShowDepth", 4);
-	showDepth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
-	showDepth->SetPivot(Vector2(0.0f, 0.0f));*/
+	//ImageObject* showDepth = GameObjectManager::AddNew<ImageObject>("ShowDepth", 4);
+	//showDepth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
+	//showDepth->SetPivot(Vector2(0.0f, 0.0f));
 
 }
 

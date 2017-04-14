@@ -45,7 +45,8 @@ void Player::Awake()
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Player.X"), _Anim);
 	//モデル設定
 	_Model->SetModelData(modeldata);
-	_Model->SetModelEffect(ModelEffectE::SPECULAR, false);
+	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
+	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(this,transform,_Radius,_Height, Vector3(0.0f,_Height / 2, 0.0f) , Collision_ID::PLAYER,coll, _Gravity);
 	//キャラクターコントローラーの重力設定
@@ -65,6 +66,7 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//攻撃１
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//攻撃２
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0;			//死亡
+	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
 	{
 		_Anim->SetAnimationEndTime(i, _AnimationEndTime[i]);
@@ -117,9 +119,11 @@ void Player::ChangeState(State nextstate)
 	case State::Attack:
 		_CurrentState = &_AttackState;
 		break;
+		//デフォルト
 	default:
 		break;
 	}
+	//次のステートに変更
 	_State = nextstate;
 	//各ステートの入りに呼ばれる処理
 	_CurrentState->Enter();

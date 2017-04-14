@@ -1,6 +1,7 @@
 #include "FireChip.h"
 #include "fbEngine/Skinmodel.h"
 #include "fbEngine/SkinmodelData.h"
+#include "fbEngine/Light.h"
 
 FireChip::FireChip(const char * name) :
 	GameObject(name)
