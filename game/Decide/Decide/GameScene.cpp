@@ -2,7 +2,7 @@
 #include "GameCamera.h"
 #include "GameLight.h"
 #include "GameShadowCamera.h"
-#include "Player.h"
+#include "GameObject/Player/Player.h"
 #include "Ground.h"
 #include "Sky.h"
 #include "fbEngine/ImageObject.h"

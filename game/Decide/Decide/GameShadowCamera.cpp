@@ -1,6 +1,6 @@
 #include "GameShadowCamera.h"
 #include "fbEngine/ShadowCamera.h"
-#include "Player.h"
+#include "GameObject/Player/Player.h"
 
 void GameShadowCamera::Awake()
 {
