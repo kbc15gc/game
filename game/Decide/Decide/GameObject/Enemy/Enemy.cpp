@@ -22,7 +22,7 @@ void Enemy::_AwakeSubClass() {
 
 void Enemy::_StartSubClass(){
 	// 視野角生成。
-	_ViewAngle = 45.0f;
+	_ViewAngle = 90.0f;
 	_ViewRange = 5.0f;
 
 	// 攻撃可能範囲設定。
@@ -49,7 +49,11 @@ void Enemy::_UpdateSubClass() {
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {
+	if (EndStateType == State::Discovery) {
+		// 発見ステートの処理完了。
 
+		//_ChangeState(State::Attack);
+	}
 }
 
 void Enemy::_ConfigCollision() {

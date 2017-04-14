@@ -19,6 +19,9 @@ private:
 	void _UpdateSubClass()override;
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State now);
+
+	bool IsPossibleChangeState(EnemyCharacter::State next)override;
+
 private:
 	GameObject* _Player = nullptr;
 	float _Speed = 0.0f;	// ˆÚ“®‘¬“xB
