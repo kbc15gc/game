@@ -1,6 +1,9 @@
 #include "Enemy.h"
 #include "fbEngine\SkinModel.h"
 #include "fbEngine\CapsuleCollider.h"
+#include "HFSM\EnemyTranslationState.h"
+#include "HFSM\EnemyWaitState.h"
+#include "fbEngine\CharacterController.h"
 
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
@@ -12,25 +15,68 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::Awake() {
+void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
-	EnemyCharacter::Awake();
 }
 
-void Enemy::Start(){
+void Enemy::_StartSubClass(){
+	// 視野角生成。
+	_ViewAngle = 45.0f;
+	_ViewRange = 5.0f;
+
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
 	// 位置情報設定。
 	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Translation);
-	EnemyCharacter::Start();
+	// パラメータ設定。
+	static_cast<EnemyTranslationState*>(_NowState)->SetDir(transform->GetForward());
+	static_cast<EnemyTranslationState*>(_NowState)->SetLength(5.0f);
+	static_cast<EnemyTranslationState*>(_NowState)->SetMoveSpeed(1.0f);
 }
 
-void Enemy::Update() {
-	EnemyCharacter::Update();
+void Enemy::_UpdateSubClass() {
+	if (!(_MyComponent.CharacterController->IsOnGround())) {
+		// エネミーが地面から離れている。
+		// 落下ステートを作成してここで切り替え
+		
+	}
+
+	// 視野角判定。
+	if (_SearchView.IsDiscovery(
+		transform->GetPosition(),
+		GameObjectManager::FindObject("Player")->transform->GetPosition(),
+		transform->GetForward(),
+		_ViewAngle,
+		_ViewRange))
+	{
+		// 視線に入っている。
+
+		// ここで発見ステートに切り替え。
+	}
+}
+
+void Enemy::_EndNowStateCallback(State EndStateType) {
+	if (EndStateType == State::Translation) {
+		// 移動ステート終了。
+
+		_ChangeState(State::Wait);		// 待機ステートに移行。
+		// パラメータ設定。
+		static_cast<EnemyWaitState*>(_NowState)->SetInterval(4.5f);
+	}
+	else if (EndStateType == State::Wait) {
+		// 待機ステート終了。
+
+		_ChangeState(State::Translation);	// 移動ステートに移行。
+		// パラメータ設定。
+		static_cast<EnemyTranslationState*>(_NowState)->SetDir(transform->GetForward());
+		static_cast<EnemyTranslationState*>(_NowState)->SetLength(5.0f);
+		static_cast<EnemyTranslationState*>(_NowState)->SetMoveSpeed(1.0f);
+	}
 }
 
 void Enemy::_ConfigCollision() {
@@ -70,3 +116,4 @@ void Enemy::_BuildAnimation() {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 	}
 }
+

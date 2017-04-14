@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fbEngine\Animation.h"
+#include "SearchViewAngle.h"
 
 class CCharacterController;
 class SkinModel;
@@ -15,7 +16,10 @@ class EnemyCharacter :
 public:
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
-	enum class State { Wandering = 0, Translation };
+	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
+	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
+
+	enum class State { Wandering = 0, Wait ,Translation };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
@@ -23,7 +27,7 @@ public:
 	enum class AnimationType { Idle = 0, Walk, Max };
 
 	// アニメーションデータ構造体。
-	struct AnimationData{
+	struct AnimationData {
 		unsigned int No;	// アニメーション番号。
 		float Time;	// 再生時間。
 	};
@@ -44,18 +48,27 @@ public:
 	EnemyCharacter(const char* name);
 	~EnemyCharacter();
 
+	// こちらは基本的に継承しない。
+	// ※継承先独自の実装は、privateにある_AwakeSubClass関数を継承して実装すること。
+	void Awake()override;
 
-	virtual void Awake()override;
+	// こちらは基本的に継承しない。
+	// ※継承先独自の実装は、privateにある_StartSubClass関数を継承して実装すること。
+	void Start()override;
 
-	virtual void Start()override;
+	// こちらは基本的に継承しない。
+	// ※継承先独自の実装は、privateにある_UpdateSubClass関数を継承して実装すること。
+	void Update()override;
 
-	virtual void Update()override;
-
+	// こちらは基本的に継承しない。
+	// ※継承先独自の実装は、privateにある_LateUpdateSubClass関数を継承して実装すること。
+	void LateUpdate()override;
+	
 
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
-	inline void PlayAnimation_Loop(const AnimationType AnimationType,const float InterpolateTime) {
+	inline void PlayAnimation_Loop(const AnimationType AnimationType, const float InterpolateTime) {
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime);
 	}
 
@@ -63,8 +76,8 @@ public:
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
 	//			ループ回数。
-	inline void PlayAnimation(const AnimationType AnimationType,const float InterpolateTime,const unsigned int LoopCount) {
-		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No,InterpolateTime, LoopCount);
+	inline void PlayAnimation(const AnimationType AnimationType, const float InterpolateTime, const unsigned int LoopCount) {
+		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime, LoopCount);
 	}
 
 
@@ -78,10 +91,29 @@ public:
 	}
 
 	// ステート配列を読み取り専用で返す関数。
-	inline const vector<unique_ptr<EnemyState>>& GetMyState() const{
+	inline const vector<unique_ptr<EnemyState>>& GetMyState() const {
 		return _MyState;
 	}
 
+	// 移動量を設定。
+	inline void SetMoveSpeed(const Vector3& speed) {
+		_MoveSpeed = speed;
+	}
+
+	// 移動量加算。
+	inline void AddMoveSpeed(const Vector3& speed) {
+		_MoveSpeed = _MoveSpeed + speed;
+	}
+
+	// 視野角設定(度)。
+	inline void SetViewAngle(float angle) {
+		_ViewAngle = angle;
+	}
+
+	// 見える距離設定。
+	inline void SetViewRange(float range) {
+		_ViewRange = range;
+	}
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -92,7 +124,30 @@ protected:
 	inline void _ConfigAnimationType(AnimationType Type, const AnimationData& Data) {
 		_AnimationData[static_cast<unsigned int>(Type)] = Data;
 	}
+
+	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
+	// 引数は終了したステートのタイプ。
+	virtual void _EndNowStateCallback(State EndStateType) {};
+
 private:
+
+	// 継承先での更新処理。
+	// ※継承先で上書きして使用。
+	virtual void _AwakeSubClass() = 0;
+
+	// 継承先でのシーン切り替えによる初期化処理。
+	// ※継承先で上書きして使用。
+	virtual void _StartSubClass() {};
+
+	// 継承先での更新処理。
+	// ※継承先で上書きして使用。
+	virtual void _UpdateSubClass() = 0;
+
+	// 継承先での更新処理終了後に呼ばれる処理。
+	// ※継承先で上書きして使用。
+	virtual void _LateUpdateSubClass() {};
+
+
 	// このクラスが使用するコンポーネントを追加する関数。
 	virtual void _BuildMyComponents();
 
@@ -108,6 +163,9 @@ private:
 	void _BuildModelData();
 
 	// 継承先で使用するすべてのステートを登録する関数。
+	// ※ステートを追加したら必ずこの関数内に記述を追加する
+	// ※追加する際はこのクラスのState列挙体に対応する順番になっているかをしっかり確認すること。
+	// ※ステートを追加した際はここだけでなくこのクラス内のState列挙体も更新すること。
 	void _BuildState();
 
 	// 継承先でアニメーション番号のテーブルを作成。
@@ -118,10 +176,16 @@ protected:
 	float _Radius = 0.0f;	// コリジョンサイズ(幅)。
 	float _Height = 0.0f;	// コリジョンサイズ(高さ)。
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
-private:
 	EnemyState* _NowState = nullptr;	// 現在のステート。
+
+	SearchViewAngle _SearchView;	// 視野角判定。
+	float _ViewAngle = 0.0f;		// 視野角(度)。
+	float _ViewRange = 0.0f;		// 見える距離。
+private:
 	State _NowStateIdx;		// 現在のステートの添え字。
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
+
+	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
 };

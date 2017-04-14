@@ -19,10 +19,14 @@ private:
 public:
 	Enemy(const char* name);
 	~Enemy();
-	void Awake()override;
-	void Start()override;
-	void Update()override;
+protected:
+	void _EndNowStateCallback(State EndStateType)override;
+
 private:
+	void _AwakeSubClass()override;
+	void _StartSubClass()override;
+	void _UpdateSubClass()override;
+
 	// コリジョン定義関数。
 	// コリジョンの形状やパラメータを設定する関数。
 	void _ConfigCollision()override;
