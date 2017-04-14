@@ -1,5 +1,5 @@
-#include "TitleScene.h",
-#include"fbEngine/ImageObject.h"
+#include "TitleScene.h"
+#include "fbEngine/ImageObject.h"
 #include "GameCamera.h"
 #include "GameLight.h"
 
