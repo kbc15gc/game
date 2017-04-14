@@ -6,6 +6,7 @@
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWanderingState.h"
 #include "HFSM\EnemyWaitState.h"
+#include "HFSM\EnemyDiscoveryState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -70,6 +71,23 @@ void EnemyCharacter::LateUpdate() {
 }
 
 
+void EnemyCharacter::SearchView() {
+	// 視野角判定。
+	if (_SearchView.IsDiscovery(
+		transform->GetPosition(),
+		GameObjectManager::FindObject("Player")->transform->GetPosition(),
+		transform->GetForward(),
+		_ViewAngle,
+		_ViewRange))
+	{
+		// 視線に入っている。
+
+		// 発見ステートに移行。
+		_ChangeState(State::Discovery);
+	}
+}
+
+
 void EnemyCharacter::_BuildMyComponents() {
 	// モデル情報を追加。
 	_MyComponent.Model = AddComponent<SkinModel>();
@@ -114,6 +132,8 @@ void EnemyCharacter::_BuildModelData() {
 void EnemyCharacter::_BuildState() {
 	// 徘徊ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
+	// 発見ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
 	// 待機ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyWaitState>(new EnemyWaitState(this)));
 	// 直進ステートを追加。

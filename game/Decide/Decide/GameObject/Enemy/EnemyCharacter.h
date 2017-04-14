@@ -19,12 +19,12 @@ public:
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
 
-	enum class State { Wandering = 0, Wait ,Translation };
+	enum class State { Wandering = 0,Discovery, Wait ,Translation };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { Idle = 0, Walk, Max };
+	enum class AnimationType { Idle = 0, Walk, Dash, Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
@@ -80,6 +80,14 @@ public:
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime, LoopCount);
 	}
 
+	// 外部からステート切り替えを行おうとする場合はこちらを呼ぶ。
+	inline void ChangeStateRequest(State next) {
+		_ChangeState(next);
+	}
+
+	// 視野角判定関数。
+	// 視野角判定を行うステートから呼び出す。
+	void SearchView();
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -113,6 +121,21 @@ public:
 	// 見える距離設定。
 	inline void SetViewRange(float range) {
 		_ViewRange = range;
+	}
+
+	// 攻撃可能範囲取得。
+	inline float GetAttackRange()const {
+		return _AttackRange;
+	}
+
+	// 初期位置取得。
+	inline const Vector3& GetInitPos()const {
+		return _InitPos;
+	}
+
+	// 現在のステートを取得。
+	inline EnemyState* GetNowState()const {
+		return _NowState;
 	}
 protected:
 	// ステート切り替え関数。
@@ -178,9 +201,13 @@ protected:
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
 
+	Vector3 _InitPos;	// 初期位置。
+
 	SearchViewAngle _SearchView;	// 視野角判定。
 	float _ViewAngle = 0.0f;		// 視野角(度)。
 	float _ViewRange = 0.0f;		// 見える距離。
+
+	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 private:
 	State _NowStateIdx;		// 現在のステートの添え字。
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
@@ -188,4 +215,5 @@ private:
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
+
 };

@@ -26,7 +26,8 @@ void EnemyWanderingState::_Start() {
 }
 
 void EnemyWanderingState::_UpdateSubClass() {
-
+	// õ“G’†‚È‚Ì‚ÅŽ‹–ìŠp”»’è‚ðs‚¤B
+	_EnemyObject->SearchView();
 }
 
 void EnemyWanderingState::Exit(EnemyCharacter::State next) {

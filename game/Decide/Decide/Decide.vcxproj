@@ -159,6 +159,7 @@
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
