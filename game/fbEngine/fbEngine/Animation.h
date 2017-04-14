@@ -3,6 +3,7 @@
  */
 #include <memory>
 #include "Component.h"
+#include "TextObject.h"
 
 /*!
  * @brief	アニメーションクラス。
@@ -34,10 +35,10 @@ public:
 	/*!
 	*@brief	アニメーションの再生。アニメーションの補完が行われます。
 	*@param[in]		animationSetIndex	再生したいアニメーションのインデックス。
-	*@param[in]		_InterpolateTime		補間時間。
+	*@param[in]		_InterpolateTimer		補間時間。
 	//第三引数　ループ数
 	*/
-	void PlayAnimation(int animationSetIndex, float _InterpolateTime,int loopnum = -1);
+	void PlayAnimation(int animationSetIndex, float _InterpolateTimer,int loopnum = -1);
 	/*!
 	*@brief	アニメーションセットの取得。
 	*/
@@ -56,9 +57,9 @@ public:
 		return _IsPlaying;
 	}
 
-	double GetNowTime()
+	double GetLocalAnimationTime()
 	{
-		return _NowTime;
+		return _LocalAnimationTime;
 	}
 
 	int NowFrame()
@@ -88,6 +89,15 @@ public:
 		}
 		_EndTime[idx] = endtime;
 	}
+	//アニメーションのローカルタイム設定
+	void SetLocalAnimationTime(UINT track,double t)
+	{
+		_LocalAnimationTime = t;
+		//時間設定。
+		_AnimController->SetTrackPosition(track, _LocalAnimationTime);
+		//ポジションを更新するために呼ばなければいけない
+		_AnimController->AdvanceTime(0.0, NULL);
+	}
 private:
 	ID3DXAnimationController*				_AnimController;		//!<アニメーションコントローラ。
 	int										_NumAnimSet;				//!<アニメーションセットの数。
@@ -99,11 +109,11 @@ private:
 	bool									_IsBlending;				//!<アニメーションブレンディング中？
 	bool									_IsInterpolate;			//!<補間中？
 	float									_InterpolateEndTime;		//!<補間終了時間。
-	float									_InterpolateTime;		//!<補間時間。
+	float									_InterpolateTimer;		//!<補間時間。
 
 	std::unique_ptr<double[]> _EndTime;	//各アニメーションの終了時間を格納した配列
 	double _TimeRatio;					//正規化された時間の割合。
-	double _NowTime;					//現在のアニメーションの時間
+	double _LocalAnimationTime;			//ローカルなアニメーションの経過時間
 	int _CurrentFrame;					//アニメーションが再生されて現在何フレーム目か。
 	float _PlaySpeed;					//再生速度
 	int _LoopNum;						//アニメーションをループさせる数。

@@ -17,7 +17,7 @@ void Sky::Awake()
 	model->SetSky(true);
 	transform->SetLocalAngle(Vector3(15, 0, 0));
 }
-#include "Player.h"
+#include "GameObject/Player/Player.h"
 void Sky::Update()
 {
 

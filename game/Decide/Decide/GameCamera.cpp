@@ -1,23 +1,23 @@
 #include "GameCamera.h"
 #include "fbEngine/Camera.h"
-#include "Player.h"
+#include "GameObject\Player\Player.h"
 
 namespace
 {
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
-	const float CAMERA_SPEED = 0.05f;
+	const float CAMERA_SPEED = 1.0f;
 }
 
 void GameCamera::Awake()
 {
 	Camera* camera = AddComponent<Camera>();
 	GameObjectManager::mainCamera = camera;
-	//プレイヤーを検索
-	_Player = (Player*)GameObjectManager::FindObject("Player");
-	transform->SetLocalPosition(Vector3(0, 0, -10));
-	//transform->SetLocalAngle(Vector3(-50, 0, 0));
 	camera->SetNear(1);
 	camera->SetFar(1000);
+	//プレイヤーを検索
+	_Player = (Player*)GameObjectManager::FindObject("Player");
+	//プレイヤーの少し後ろにカメラのポジションをセット。
+	transform->SetLocalPosition(Vector3(0, 0, -10));
 	_ToPos = D3DXVECTOR3(0.0f, 2.0f, -3.0f);
 }
 
@@ -89,30 +89,32 @@ void GameCamera::Update()
 	{
 		dir.y -= 1;
 	}*/
+	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		RotTransversal(CAMERA_SPEED);
+		RotTransversal(CAMERA_SPEED * Time::DeltaTime());
 		
 	}
+	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		RotTransversal(-CAMERA_SPEED);
+		RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
 		
 	}
+	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
 	{
-		RotLongitudinal(CAMERA_SPEED);
+		RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
 	}
+	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
 	{
-		RotLongitudinal(-CAMERA_SPEED);
+		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
 	}
 	
 	transform->SetLocalPosition(_Player->transform->GetLocalPosition() + (Vector3)_ToPos);
 	//プレイヤーの高さ分を足す
 	camera->SetViewPoint(_Player->transform->GetLocalPosition() + PLAYER_HEIGHT);
-	dir = (Vector3)_ToPos;
-	dir.Normalize();
 	//transform->localPosition.Add(transform->Direction(dir));
 	//transform->LockAt(player);
 }

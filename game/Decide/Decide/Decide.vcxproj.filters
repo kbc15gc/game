@@ -29,6 +29,9 @@
     <Filter Include="Object\GameObject\Player\PlayerState">
       <UniqueIdentifier>{2a0ebc1d-7cd5-449f-8181-a17ab1534458}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\GameObject\HistoryChip">
+      <UniqueIdentifier>{63c73dbe-0b9b-4ff5-a530-e80258d41769}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -36,9 +39,6 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="TitleScene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Object\GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameCamera.h">
       <Filter>Object\GameObject</Filter>
@@ -58,15 +58,6 @@
     <ClInclude Include="Sky.h">
       <Filter>Object\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerState.h">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerStateRun.h">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerStateIdol.h">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Enemy\Enemy.h">
       <Filter>Object\GameObject\Enemy</Filter>
     </ClInclude>
@@ -75,9 +66,6 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerStateAttack.h">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
@@ -94,6 +82,24 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\Player.h">
+      <Filter>Object\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\FireChip.h">
+      <Filter>Object\GameObject\HistoryChip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,9 +120,6 @@
     <ClCompile Include="TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Object\GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameLight.cpp">
       <Filter>Object\GameObject</Filter>
     </ClCompile>
@@ -132,14 +135,8 @@
     <ClCompile Include="Sky.cpp">
       <Filter>Object\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerStateRun.cpp">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
-    </ClCompile>
     <ClCompile Include="GameCamera.cpp">
       <Filter>Object\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerStateIdol.cpp">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\Enemy.cpp">
       <Filter>Object\GameObject\Enemy</Filter>
@@ -149,9 +146,6 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerStateAttack.cpp">
-      <Filter>Object\GameObject\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
@@ -168,6 +162,21 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>Object\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp">
+      <Filter>Object\GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp">
+      <Filter>Object\GameObject\HistoryChip</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

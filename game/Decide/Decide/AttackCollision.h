@@ -12,4 +12,5 @@ public:
 	void Create(Vector3& size);
 private:
 	BoxCollider* _BoxColl;
+	float time;				//ボックスコリジョン削除用時間（仮）
 };

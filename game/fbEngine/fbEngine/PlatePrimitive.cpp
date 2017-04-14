@@ -110,10 +110,10 @@ void PlatePrimitive::Render()
 	Vector4 dir[System::MAX_LIGHTNUM];
 	Color color[System::MAX_LIGHTNUM];
 	const vector<DirectionalLight*>& vec = _Light->GetLight();
-	FOR(num)
+	FOR(idx,num)
 	{
-		dir[i] = vec[i]->Direction();
-		color[i] = vec[i]->GetColor();
+		dir[idx] = vec[idx]->Direction();
+		color[idx] = vec[idx]->GetColor();
 	}
 	//ƒ‰ƒCƒg‚ÌŒü‚«‚ð“]‘—B
 	_Effect->SetValue("g_diffuseLightDirection", &dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
