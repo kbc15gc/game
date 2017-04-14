@@ -1,7 +1,7 @@
-#include "Player.h"
+#include "../Player.h"
 #include "PlayerStateAttack.h"
 #include "fbEngine\Animation.h"
-#include "AttackCollision.h"
+#include "../Decide/Decide/AttackCollision.h"
 
 PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)

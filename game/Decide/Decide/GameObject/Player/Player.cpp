@@ -62,7 +62,7 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0;			//ÉAÉCÉhÉã
 	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0;			//ï‡Ç≠
 	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.68;			//ëñÇÈ
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = 0.9;		//çUåÇÇP
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//çUåÇÇP
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//çUåÇÇQ
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0;			//éÄñS
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -139,7 +139,7 @@ void Player::AnimationControl()
 	//ÉWÉÉÉìÉvÉAÉjÉÅÅ[ÉVÉáÉì
 	if (_CharacterController->IsJump())
 	{
-		PlayAnimation(AnimationNo::AnimationJump, 0.2f);
+		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
 	}
 	else
 	{

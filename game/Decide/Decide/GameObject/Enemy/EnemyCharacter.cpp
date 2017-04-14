@@ -6,6 +6,7 @@
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWanderingState.h"
 #include "HFSM\EnemyWaitState.h"
+#include "HFSM\EnemyDiscoveryState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -70,6 +71,23 @@ void EnemyCharacter::LateUpdate() {
 }
 
 
+void EnemyCharacter::SearchView() {
+	// 視野角判定。
+	if (_SearchView.IsDiscovery(
+		transform->GetPosition(),
+		GameObjectManager::FindObject("Player")->transform->GetPosition(),
+		transform->GetForward(),
+		_ViewAngle,
+		_ViewRange))
+	{
+		// 視線に入っている。
+
+		// 発見ステートに移行。
+		_ChangeState(State::Discovery);
+	}
+}
+
+
 void EnemyCharacter::_BuildMyComponents() {
 	// モデル情報を追加。
 	_MyComponent.Model = AddComponent<SkinModel>();
@@ -114,6 +132,8 @@ void EnemyCharacter::_BuildModelData() {
 void EnemyCharacter::_BuildState() {
 	// 徘徊ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
+	// 発見ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
 	// 待機ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyWaitState>(new EnemyWaitState(this)));
 	// 直進ステートを追加。
@@ -128,8 +148,15 @@ void EnemyCharacter::_ChangeState(State next) {
 
 	if (_NowState) {
 		// 現在のステートがnullでない。
-		// 現在のステートを後片付け。
-		_NowState->Exit(next);
+		if (_NowState->GetIsEnd() || _NowState->IsPossibleChangeState(next)) {
+			// 現在のステートから次のステートへの移行が許可されている、または現在のステートが終了している。
+			// 現在のステートを後片付け。
+			_NowState->Exit(next);
+		}
+		else {
+			// 現在のステートから次のステートへの移行が許可されていない。
+			return;
+		}
 	}
 
 	// 新しいステートに切り替え。

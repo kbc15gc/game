@@ -23,6 +23,19 @@ public:
 	// ※次のステートに移行する前に呼ばれる。
 	virtual void Exit(EnemyCharacter::State next) {};
 
+	// このステートから移行できるステートを選別する関数。
+	// ※デフォルトではすべてのステートに移行できる。
+	// ※継承先で上書きして実装。
+	inline virtual bool IsPossibleChangeState(EnemyCharacter::State next) {
+		return true;
+	}
+
+
+	// このステートの処理が終了しているかのフラグを返却。
+	inline bool GetIsEnd() const {
+		return _IsEndState;
+	}
+
 protected:
 	// ローカルステート切り替え関数。
 	void _ChangeLocalState(EnemyCharacter::State next);
@@ -52,8 +65,8 @@ private:
 protected:
 	bool _IsEndState = false;		// ステートの処理が終了したかのフラグ(trueで終了)。
 	EnemyCharacter* _EnemyObject = nullptr;	// このステートを持つエネミーのポインタ。
-private:
 	EnemyState* _NowLocalState = nullptr;	// 現在のローカルステート。
+private:
 	EnemyCharacter::State _NowLocalStateIdx;		// 現在のローカルステートの添え字。
 	bool _IsFirstUpdate = true;	// ステートが切り替わってから最初の更新か。
 };

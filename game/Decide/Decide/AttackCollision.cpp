@@ -8,7 +8,11 @@ void AttackCollision::Awake()
 
 void AttackCollision::Update()
 {
-
+	time += Time::DeltaTime();
+	if (time > 3)
+	{
+		GameObjectManager::AddRemoveList(this);
+	}
 }
 
 void AttackCollision::Create(Vector3& size)

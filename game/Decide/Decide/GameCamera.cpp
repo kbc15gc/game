@@ -1,6 +1,6 @@
 #include "GameCamera.h"
 #include "fbEngine/Camera.h"
-#include "Player.h"
+#include "GameObject\Player\Player.h"
 
 namespace
 {

@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "../Player.h"
 #include "PlayerStateIdol.h"
 
 PlayerStateIdol::PlayerStateIdol(Player* player) :
@@ -67,7 +67,10 @@ void PlayerStateIdol::Update()
 	//UŒ‚‚ÖˆÚ“®
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE))
 	{
-		player->ChangeState(Player::State::Attack);
+		if (player->GetCharaCon().IsOnGround() == true)
+		{
+			player->ChangeState(Player::State::Attack);
+		}
 	}
 }
 

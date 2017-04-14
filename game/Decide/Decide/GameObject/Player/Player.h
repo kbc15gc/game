@@ -1,9 +1,9 @@
 #pragma once
 #include "fbEngine/GameObject.h"
 #include "fbEngine/CharacterController.h"
-#include "PlayerStateRun.h"
-#include "PlayerStateIdol.h"
-#include "PlayerStateAttack.h"
+#include "PlayerState/PlayerStateRun.h"
+#include "PlayerState/PlayerStateIdol.h"
+#include "PlayerState/PlayerStateAttack.h"
 
 class SkinModel;
 class Animation;
