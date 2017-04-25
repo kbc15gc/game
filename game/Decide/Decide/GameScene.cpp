@@ -5,34 +5,33 @@
 #include "GameObject/Player/Player.h"
 #include "Ground.h"
 #include "Sky.h"
-#include "fbEngine/ImageObject.h"
-#include "fbEngine/TextObject.h"
-#include "fbEngine/Sprite.h"
-#include "fbEngine/SoundSource.h"
+#include "fbEngine/_Object/_GameObject/ImageObject.h"
+#include "fbEngine/_Object/_GameObject/TextObject.h"
+#include "fbEngine/_Object/_GameObject/SoundSource.h"
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
 
 void GameScene::Start()
 {
 	//プレイヤー生成
-	GameObjectManager::AddNew<Player>("Player", 1);
+	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	//ゲームカメラ生成
-	GameObjectManager::AddNew<GameCamera>("GameCamera", 2);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 2);
 	//ゲームライト生成
-	GameObjectManager::AddNew<GameLight>("GameLight", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
 	//影カメラ生成
-	GameObjectManager::AddNew<GameShadowCamera>("GameShadowCamera", 2);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 2);
 	//地面生成
-	GameObjectManager::AddNew<Ground>("Ground", 1);
+	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//空生成
-	GameObjectManager::AddNew<Sky>("Sky", 1);
+	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 1);
 	// 雑魚エネミープロト生成。
-	GameObjectManager::AddNew<Enemy>("EnemyProt",1);
+	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt",1);
 	//火の歴史チップ
-	GameObjectManager::AddNew<FireChip>("FireChip", 1);
+	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
 
 
-	//ImageObject* showDepth = GameObjectManager::AddNew<ImageObject>("ShowDepth", 4);
+	//ImageObject* showDepth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ShowDepth", 4);
 	//showDepth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
 	//showDepth->SetPivot(Vector2(0.0f, 0.0f));
 

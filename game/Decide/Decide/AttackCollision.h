@@ -1,7 +1,5 @@
 #pragma once
-#include "fbEngine\GameObject.h"
-
-class BoxCollider;
+#include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class AttackCollision : public GameObject
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fbEngine\Animation.h"
+#include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "SearchViewAngle.h"
 #include "../Component/ObjectRotation.h"
 
@@ -89,7 +89,7 @@ public:
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
 	//			ループ回数。
-	inline void PlayAnimation(const AnimationType AnimationType, const float InterpolateTime, const unsigned int LoopCount) {
+	inline void PlayAnimation(const AnimationType AnimationType, const float InterpolateTime, const int LoopCount) {
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime, LoopCount);
 	}
 

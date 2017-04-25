@@ -1,5 +1,5 @@
 #pragma once
-#include "fbEngine\Component.h"
+#include "fbEngine\_Object\_Component\Component.h"
 
 class ObjectRotation :public Component {
 public:

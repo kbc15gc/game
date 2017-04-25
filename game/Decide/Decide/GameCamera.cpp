@@ -1,5 +1,5 @@
 #include "GameCamera.h"
-#include "fbEngine/Camera.h"
+#include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
 
 namespace
@@ -11,11 +11,11 @@ namespace
 void GameCamera::Awake()
 {
 	Camera* camera = AddComponent<Camera>();
-	GameObjectManager::mainCamera = camera;
+	INSTANCE(GameObjectManager)->mainCamera = camera;
 	camera->SetNear(1);
 	camera->SetFar(1000);
 	//プレイヤーを検索
-	_Player = (Player*)GameObjectManager::FindObject("Player");
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	//プレイヤーの少し後ろにカメラのポジションをセット。
 	transform->SetLocalPosition(Vector3(0, 0, -10));
 	_ToPos = D3DXVECTOR3(0.0f, 2.0f, -3.0f);

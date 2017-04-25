@@ -1,11 +1,11 @@
 #include "TitleScene.h"
-#include "fbEngine/ImageObject.h"
+#include "fbEngine/_Object/_GameObject/ImageObject.h"
 #include "GameCamera.h"
 #include "GameLight.h"
 
 void TitleScene::Start()
 {
-	ImageObject* title = GameObjectManager::AddNew<ImageObject>("title",0);
+	ImageObject* title = INSTANCE(GameObjectManager)->AddNew<ImageObject>("title",0);
 	title->SetTexture(LOADTEXTURE("title.png"));
 	title->SetPivot(0.0f, 0.0f);
 }

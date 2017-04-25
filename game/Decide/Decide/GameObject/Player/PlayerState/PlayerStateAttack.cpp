@@ -1,6 +1,6 @@
 #include "../Player.h"
 #include "PlayerStateAttack.h"
-#include "fbEngine\Animation.h"
+#include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "../Decide/Decide/AttackCollision.h"
 
 PlayerStateAttack::PlayerStateAttack(Player* player) :
@@ -31,7 +31,7 @@ void PlayerStateAttack::Update()
 	if (nowFrame == 10)
 	{
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
-		AttackCollision* attack = GameObjectManager::AddNew<AttackCollision>("attack01", 1);
+		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 		Transform* trans = attack->GetComponent<Transform>();
 		trans->SetLocalPosition(player->transform->Local(Vector3(0.0f, 0.0f, 1.0f)));
 		trans->SetLocalAngle(player->transform->GetLocalAngle());

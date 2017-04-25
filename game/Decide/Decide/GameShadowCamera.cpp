@@ -1,13 +1,13 @@
 #include "GameShadowCamera.h"
-#include "fbEngine/ShadowCamera.h"
+#include "fbEngine\_Object\_Component\_3D\ShadowCamera.h"
 #include "GameObject/Player/Player.h"
 
 void GameShadowCamera::Awake()
 {
 	ShadowCamera* camera = AddComponent<ShadowCamera>();
-	GameObjectManager::mainShadowCamera = camera;
+	INSTANCE(GameObjectManager)->mainShadowCamera = camera;
 
-	_Player = (Player*)GameObjectManager::FindObject("Player");
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	transform->SetLocalAngle(Vector3(-90.0f, 0.0f, 0.0f));
 	transform->SetLocalPosition(_Player->transform->LocalPos(Vector3(0.0f, 5.0f, 0.0f)));
 	camera->SetNear(1.0f);

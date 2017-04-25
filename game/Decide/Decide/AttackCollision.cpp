@@ -1,5 +1,4 @@
 #include "AttackCollision.h"
-#include "fbEngine\BoxCollider.h"
 
 void AttackCollision::Awake()
 {
@@ -11,7 +10,7 @@ void AttackCollision::Update()
 	time += Time::DeltaTime();
 	if (time > 3)
 	{
-		GameObjectManager::AddRemoveList(this);
+		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 }
 

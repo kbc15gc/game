@@ -1,9 +1,8 @@
 #include "Ground.h"
-#include "fbEngine/Skinmodel.h"
-#include "fbEngine/SkinmodelData.h"
-#include "fbEngine/Animation.h"
-#include "fbEngine/RigidBody.h"
-#include "fbEngine/MeshCollider.h"
+#include "fbEngine\_Object\_Component\_3D\SkinModel.h"
+
+#include "fbEngine\_Object\_Component\_3D\Animation.h"
+
 
 Ground::Ground(const char * name) :
 GameObject(name)

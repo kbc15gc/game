@@ -1,7 +1,6 @@
 #include "EnemyCharacter.h"
 #include "HFSM\EnemyState.h"
-#include "fbEngine\SkinModel.h"
-#include "fbEngine\SkinModelData.h"
+#include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\CharacterController.h"
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWanderingState.h"
@@ -77,7 +76,7 @@ void EnemyCharacter::SearchView() {
 	// Ž‹–ìŠp”»’èB
 	if (_SearchView.IsDiscovery(
 		transform->GetPosition(),
-		GameObjectManager::FindObject("Player")->transform->GetPosition(),
+		INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition(),
 		transform->GetForward(),
 		_ViewAngle,
 		_ViewRange))

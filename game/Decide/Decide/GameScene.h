@@ -1,9 +1,5 @@
 #pragma once
-#include "fbEngine/Scene.h"
-class ImageObject;
-class TextObject;
-class Player;
-class SoundSource;
+#include "fbEngine\_Scene\Scene.h"
 
 class GameScene : public Scene
 {

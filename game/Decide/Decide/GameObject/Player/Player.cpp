@@ -1,10 +1,7 @@
 #include "Player.h"
-#include "fbEngine/Skinmodel.h"
-#include "fbEngine/SkinmodelData.h"
-#include "fbEngine/Animation.h"
-#include "fbEngine/RigidBody.h"
-#include "fbEngine/BoxCollider.h"
-#include "fbEngine/CapsuleCollider.h"
+#include "fbEngine\_Object\_Component\_3D\SkinModel.h"
+#include "fbEngine\_Object\_Component\_3D\Animation.h"
+#include "fbEngine\_Object\_Component\_3D\Camera.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -56,9 +53,9 @@ void Player::Awake()
 void Player::Start()
 {
 	//モデルにカメラ設定
-	_Model->SetCamera(GameObjectManager::mainCamera);
+	_Model->SetCamera(INSTANCE(GameObjectManager)->mainCamera);
 	//モデルにライト設定
-	_Model->SetLight(GameObjectManager::mainLight);
+	_Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//アニメーションの終了時間設定
 	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0;			//アイドル
 	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0;			//歩く
@@ -85,7 +82,7 @@ void Player::Start()
 	//最初は１から
 	_Level = 1;
 }
-#include "fbEngine/Camera.h"
+
 void Player::Update()
 {
 	if (_CurrentState != NULL)

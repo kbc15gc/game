@@ -1,6 +1,5 @@
 #include "Enemy.h"
-#include "fbEngine\SkinModel.h"
-#include "fbEngine\CapsuleCollider.h"
+#include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
@@ -29,7 +28,7 @@ void Enemy::_StartSubClass(){
 	_AttackRange = 1.3f;
 
 	//モデルにライト設定
-	_MyComponent.Model->SetLight(GameObjectManager::mainLight);
+	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 位置情報設定。
 	_InitPos = Vector3(0.0f, 10.0f, 0.0f);

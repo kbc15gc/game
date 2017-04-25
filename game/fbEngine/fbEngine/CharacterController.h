@@ -3,13 +3,7 @@
 */
 
 #pragma once
-
-#include "SphereCollider.h"
-#include "CapsuleCollider.h"
-#include "RigidBody.h"
-#include "Component.h"
-#include "GameObject.h"
-
+#include "_Object\_Component\Component.h"
 
 /*!
 * @brief	キャラクタコントローラー。
@@ -36,7 +30,7 @@ public:
 	*			コリジョン形状。
 	*			重力
 	*/
-	void Init(GameObject* Object,Transform* tramsform,float radius, float height, Vector3 off , Collision_ID, Collider* capsule , float gravity);
+	void Init(GameObject* Object,Transform* tramsform,float radius, float height, Vector3 off , int, Collider* capsule , float gravity);
 	/*!
 	* @brief	実行。
 	*/

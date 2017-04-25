@@ -1,6 +1,6 @@
 #include "PlayerStateRun.h"
 #include "../Player.h"
-#include "fbEngine\Camera.h"
+#include "fbEngine\_Object\_Component\_3D\Camera.h"
 
 PlayerStateRun::PlayerStateRun(Player* player) :
 	PlayerState(player)
@@ -60,7 +60,7 @@ void PlayerStateRun::Update()
 	if (dir.Length() != 0)
 	{
 		//カメラからみた向きに変換
-		Camera* camera = GameObjectManager::mainCamera;
+		Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 		//カメラのビュー行列をゲット
 		D3DXMATRIX view = camera->GetViewMat();
 		//ビュー行列の逆行列

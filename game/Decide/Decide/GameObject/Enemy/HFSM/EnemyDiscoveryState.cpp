@@ -13,7 +13,7 @@ EnemyDiscoveryState::~EnemyDiscoveryState()
 }
 
 void EnemyDiscoveryState::_EntrySubClass() {
-	_Player = GameObjectManager::FindObject("Player");
+	_Player = INSTANCE(GameObjectManager)->FindObject("Player");
 	_Speed = 5.0f;	// ˆÚ“®‘¬“x‚ğİ’èB
 }
 
