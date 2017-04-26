@@ -13,28 +13,22 @@
 
 void GameScene::Start()
 {
-	//プレイヤー生成
-	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
-	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 2);
 	//ゲームライト生成
 	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
+	//ゲームカメラ生成
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
 	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 2);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
+	//空生成
+	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
-	//空生成
-	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 1);
+	//プレイヤー生成
+	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt",1);
 	//火の歴史チップ
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
-
-
-	//ImageObject* showDepth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ShowDepth", 4);
-	//showDepth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
-	//showDepth->SetPivot(Vector2(0.0f, 0.0f));
-
 }
 
 void GameScene::Update()

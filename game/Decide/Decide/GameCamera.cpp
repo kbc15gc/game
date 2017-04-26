@@ -14,6 +14,11 @@ void GameCamera::Awake()
 	INSTANCE(GameObjectManager)->mainCamera = camera;
 	camera->SetNear(1);
 	camera->SetFar(1000);
+	
+}
+
+void GameCamera::Start()
+{
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	//プレイヤーの少し後ろにカメラのポジションをセット。

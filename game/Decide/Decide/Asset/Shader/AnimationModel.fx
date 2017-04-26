@@ -233,7 +233,7 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 				shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
 				float depth = min(posInLVP.z, 1.0f);
 				//バリアンスシャドウマップのフラグ
-				if (true) {
+				if (false) {
 					if (depth > shadow_val.r) {
 						// σ^2
 						float depth_sq = shadow_val.r * shadow_val.r;
@@ -323,6 +323,7 @@ float4 PSShadow(VS_ShadowOUT In) : COLOR0	//レンダーターゲット0に出力
 	//深度は射影変換済みの頂点の Z / W で算出できる
 	depth = In.shadow.z / In.shadow.w;
 
+	//return float4(1.0, 0.0, 0.0, 1.0f);
 	return float4(depth.xyz, 1.0f);
 }
 

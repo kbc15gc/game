@@ -47,8 +47,8 @@ sampler_state
 	MipFilter = NONE;
 	MinFilter = NONE;
 	MagFilter = NONE;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 texture g_Shadow;				//深度テクスチャ

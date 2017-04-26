@@ -17,7 +17,7 @@ void Ground::Awake()
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Ground.X"));
 	model->SetModelData(modeldata);
 	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
-	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+	//model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();

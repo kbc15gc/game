@@ -463,7 +463,6 @@
     <ClInclude Include="_Object\_GameObject\AnimationPlate.h">
       <Filter>Object\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsCallback.h" />
     <ClInclude Include="CharacterController.h" />
   </ItemGroup>
 </Project>

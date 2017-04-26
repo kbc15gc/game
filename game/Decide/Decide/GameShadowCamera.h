@@ -8,7 +8,9 @@ class GameShadowCamera :public GameObject
 public:
 	GameShadowCamera(const char* name) :GameObject(name) {}
 	void Awake()override;
+	void Start()override;
 	void Update()override;
 private:
 	Player* _Player;
+	Vector3 _Dist;	//ƒvƒŒƒCƒ„[‚Æ‚Ì‹——£
 };
