@@ -227,18 +227,15 @@ void SkinModel::DrawMeshContainer(
 
 				//ディフューズカラー取得
 				D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&pMeshContainer->pMaterials[pBoneComb[iAttrib].AttribId].MatD3D.Diffuse;
-				//テクスチャー
-				LPDIRECT3DTEXTURE9 texture = pMeshContainer->ppTextures[pBoneComb[iAttrib].AttribId];
+				//マテリアル
+				Material* material = pMeshContainer->material[pBoneComb[iAttrib].AttribId];
+				
 				//テクスチャが格納されていればセット
-				if (texture != NULL)
+				if (material != NULL)
 				{
 					// ディフューズテクスチャ。
-					_Effect->SetTexture("g_diffuseTexture", texture);
-					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&Color::white);
-					//とりあえず、今回はテクスチャの名前を見る
-					
-					if (strcmp(pMeshContainer->pMaterials[pBoneComb[iAttrib].AttribId].pTextureFilename, "TV_Head.png") == 0)
-						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&_TextureBlend);
+					_Effect->SetTexture("g_diffuseTexture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 					_Effect->SetBool("Texflg", true);
 				}
 				//テクスチャがないならカラーセット
@@ -267,25 +264,17 @@ void SkinModel::DrawMeshContainer(
 			//モデル描画
 			for (DWORD i = 0; i < MaterialNum; i++)
 			{
+				_Effect->SetBool("SkyBox", _SkyBox);
 				//ディフューズカラー
 				D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
-				//テクスチャー
-				LPDIRECT3DBASETEXTURE9 texture;
-				_Effect->SetBool("SkyBox", _SkyBox);
-				if(_SkyBox)
-				{
-					texture = pMeshContainer->ppCubeTextures[i];
-				}
-				else
-				{
-					texture = pMeshContainer->ppTextures[i];
-				}
-
+				//マテリアル
+				Material* material = pMeshContainer->material[i];
+				
 				//テクスチャが格納されていればセット
-				if (texture != NULL)
+				if (material != NULL)
 				{
-					_Effect->SetTexture("g_Texture", texture);
-					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&Color::white);
+					_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 					_Effect->SetBool("Texflg", true);
 				}
 				//テクスチャがないならカラーセット

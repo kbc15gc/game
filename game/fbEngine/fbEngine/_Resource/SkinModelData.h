@@ -9,10 +9,8 @@ struct D3DXFRAME_DERIVED : public D3DXFRAME {
 };
 //メッシュコンテナを継承した拡張メッシュコンテナ
 struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER {
-	//テクスチャ
-	LPDIRECT3DTEXTURE9* ppTextures;
-	//キューブ
-	LPDIRECT3DCUBETEXTURE9* ppCubeTextures;
+	//マテリアル
+	Material** material;
 	//
 	LPD3DXMESH pOrigMesh;
 	//

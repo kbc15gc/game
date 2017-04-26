@@ -398,8 +398,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 	//マテリアルの数設定
 	pMeshContainer->NumMaterials = max(1, NumMaterials);
 	pMeshContainer->pMaterials = new D3DXMATERIAL[pMeshContainer->NumMaterials];
-	pMeshContainer->ppTextures = new LPDIRECT3DTEXTURE9[pMeshContainer->NumMaterials];
-	pMeshContainer->ppCubeTextures = new LPDIRECT3DCUBETEXTURE9[pMeshContainer->NumMaterials];
+	pMeshContainer->material = new Material*[pMeshContainer->NumMaterials];
 	pMeshContainer->pAdjacency = new DWORD[NumFaces * 3];
 	if ((pMeshContainer->pAdjacency == NULL) || (pMeshContainer->pMaterials == NULL))
 	{
@@ -409,8 +408,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 
 	memcpy(pMeshContainer->pAdjacency, pAdjacency, sizeof(DWORD)* NumFaces * 3);
 	//テクスチャーを0で初期化
-	memset(pMeshContainer->ppTextures, 0, sizeof(LPDIRECT3DTEXTURE9)* pMeshContainer->NumMaterials);
-	memset(pMeshContainer->ppCubeTextures, 0, sizeof(LPDIRECT3DCUBETEXTURE9)* pMeshContainer->NumMaterials);
+	//memset(pMeshContainer->ppTextures, 0, sizeof(LPDIRECT3DTEXTURE9)* pMeshContainer->NumMaterials);
 
 	//マテリアルの数だけ画像を読み込み、コピー
 	if (NumMaterials > 0)
@@ -430,23 +428,57 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 				char filePath[64];
 				strcpy_s(filePath, baseDir);
 				strcat_s(filePath, pMeshContainer->pMaterials[iMaterial].pTextureFilename);
-				if (FAILED(D3DXCreateTextureFromFile(
-					pd3dDevice,
-					filePath,
-					&pMeshContainer->ppTextures[iMaterial]))
-					) 
+
+				pMeshContainer->material[iMaterial] = new Material();
+
+				//画像の情報を取得
+				D3DXIMAGE_INFO info;
+				D3DXGetImageInfoFromFile(
+					filePath,	//テクスチャパス
+					&info	//情報格納先
+				);
+				LPDIRECT3DBASETEXTURE9 texture;
+				//テクスチャのタイプに合った読み込み方法
+				switch (info.ResourceType)
 				{
-					//なかった
-					pMeshContainer->ppTextures[iMaterial] = NULL;
+				case _D3DRESOURCETYPE::D3DRTYPE_TEXTURE:
+					//通常テクスチャ読み込み
+					if (FAILED(D3DXCreateTextureFromFile(
+						pd3dDevice,
+						filePath,
+						(LPDIRECT3DTEXTURE9*)&texture)))
+					{
+						//なかった
+						pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::DiffuseMap,nullptr);
+					}
+					else
+					{
+						//あった
+						pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::DiffuseMap, texture);
+					}
+					break;
+				case _D3DRESOURCETYPE::D3DRTYPE_CUBETEXTURE:
+					//キューブテクスチャ読み込み
+					if (FAILED(D3DXCreateCubeTextureFromFile(
+						pd3dDevice,
+						filePath,
+						(LPDIRECT3DCUBETEXTURE9*)&texture)))
+					{
+						//なかった
+						pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::DiffuseMap, nullptr);
+					}
+					else
+					{
+						//あった
+						pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::DiffuseMap, texture);
+					}
+					break;
+				default:
+					break;
 				}
-				//キューブテクスチャ
-				if( FAILED(D3DXCreateCubeTextureFromFile(
-					pd3dDevice,
-					filePath,
-					&pMeshContainer->ppCubeTextures[iMaterial])))
-				{
-					pMeshContainer->ppCubeTextures[iMaterial] = NULL;
-				}
+				
+				
+				
 					// don't remember a pointer into the dynamic memory, just forget the name after loading
 					//よくわからんがファイルパスを消している。
 					//pMeshContainer->pMaterials[iMaterial].pTextureFilename = NULL;
@@ -537,19 +569,17 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
 	SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
 
 	// release all the allocated textures
-	if (pMeshContainer->ppTextures != NULL)
+	if (pMeshContainer->material != NULL)
 	{
 		for (iMaterial = 0; iMaterial < pMeshContainer->NumMaterials; iMaterial++)
 		{
-			SAFE_RELEASE(pMeshContainer->ppTextures[iMaterial]);
+			//SAFE_RELEASE(pMeshContainer->material[iMaterial]);
 			SAFE_DELETE_ARRAY(pMeshContainer->pMaterials[iMaterial].pTextureFilename);
-			SAFE_RELEASE(pMeshContainer->ppCubeTextures[iMaterial]);
 		}
 	}
 
 	SAFE_DELETE_ARRAY(pMeshContainer->pMaterials);
-	SAFE_DELETE_ARRAY(pMeshContainer->ppTextures);
-	SAFE_DELETE_ARRAY(pMeshContainer->ppCubeTextures);
+	SAFE_DELETE_ARRAY(pMeshContainer->material);
 	SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
 	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
 	SAFE_RELEASE(pMeshContainer->MeshData.pMesh);

@@ -80,6 +80,7 @@ static const float FontSize = 300.0f;
 
 //Resource
 #include "_Resource\TextureManager.h"
+#include "_Resource\Material.h"
 #include "_Object\_Component\_3D\Animation.h"
 #include "_Resource\SkinModelData.h"
 #include "_Resource\SkinModelManager.h"

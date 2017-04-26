@@ -1,23 +1,39 @@
 #include "Material.h"
 
-Material::Material():
-	_Diffuse(nullptr),
-	_BlendDiffuse(Color::white),
-	_Specular(nullptr),
-	_Normal(nullptr),
-	_Height(nullptr),
-	_Occlusion(nullptr),
-	_Luminance(nullptr),
-	_Emission(Color::black)
+Material::Material()
 {
+	_BlendColor = Color::white;
+	FOR(i, TextureHandleE::TextureNum)
+	{
+		_Textures[i] = nullptr;
+	}
 }
 
 Material::~Material()
 {
+	FOR(i, TextureHandleE::TextureNum)
+	{
 
+		SAFE_DELETE(_Textures[i]);
+	}
 }
 
-Material * Material::CloneMaterial()
+void Material::SetTexture(const TextureHandleE & handle, IDirect3DBaseTexture9 * tex)
 {
-	return nullptr;
+	_Textures[handle] = tex;
+}
+
+IDirect3DBaseTexture9 * Material::GetTexture(const TextureHandleE & handle)
+{
+	return _Textures[handle];
+}
+
+void Material::SetColor(Color color)
+{
+	_BlendColor = color;
+}
+
+const Color & Material::GetBlendColor()
+{
+	return _BlendColor;
 }
