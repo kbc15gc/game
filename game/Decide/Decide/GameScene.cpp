@@ -29,6 +29,11 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt",1);
 	//‰Î‚Ì—ðŽjƒ`ƒbƒv
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
+
+	ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
+	depth->SetPivot(Vector2(0, 0));
+	depth->SetActive(false);
 }
 
 void GameScene::Update()

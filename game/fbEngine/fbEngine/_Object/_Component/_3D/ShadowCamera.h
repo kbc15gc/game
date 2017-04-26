@@ -14,8 +14,8 @@ public:
 	//•½s“Š‰e
 	void ParallelProjectionMatrixUpdate()
 	{
-		float w = 3000.0f;// _near * tan(D3DXToRadian(_ViewAngle) / 2) * 2;
-		float h = 3000.0f;// w * _Aspect;
+		//float w = 3000.0f;// _near * tan(D3DXToRadian(_ViewAngle) / 2) * 2;
+		//float h = 3000.0f;// w * _Aspect;
 		//•½s“Š‰e‚ğ‚·‚é‚Æ‰e‚ªL‚Ñ‚È‚­‚È‚é
 		D3DXMatrixOrthoLH(
 			&_Projection,

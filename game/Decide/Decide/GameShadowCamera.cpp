@@ -8,15 +8,15 @@ void GameShadowCamera::Awake()
 	INSTANCE(GameObjectManager)->mainShadowCamera = camera;
 	
 	camera->SetNear(1.0f);
-	camera->SetFar(100.0f);
+	camera->SetFar(50.0f);
 
-	camera->SetViewVolume(Vector2(100, 100));
+	camera->SetViewVolume(Vector2(20, 20));
 }
 
 void GameShadowCamera::Start()
 {
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
-	_Dist = Vector3(0.0f, 5.0f, -5.0f);
+	_Dist = Vector3(0.0f, 10.0f, -10.0f);
 }
 
 void GameShadowCamera::Update()

@@ -198,7 +198,7 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 	}
 
 	//スペキュラーライト
-	if(true)
+	if(Spec)
 	{
 		float3 spec = 0.0f;
 		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World);

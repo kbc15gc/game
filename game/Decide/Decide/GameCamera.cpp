@@ -23,7 +23,7 @@ void GameCamera::Start()
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	//プレイヤーの少し後ろにカメラのポジションをセット。
 	transform->SetLocalPosition(Vector3(0, 0, -10));
-	_ToPos = D3DXVECTOR3(0.0f, 2.0f, -3.0f);
+	_ToPos = D3DXVECTOR3(0.0f, 3.0f, -4.0f);
 }
 
 void GameCamera::Update()

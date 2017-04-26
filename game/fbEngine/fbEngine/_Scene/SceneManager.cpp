@@ -59,7 +59,7 @@ void SceneManager::UpdateScene()
 void SceneManager::DrawScene()
 {
 	//0”Ô–Ú‚ÉÝ’è(‰e‚Ì[“x‘‚«ž‚Ý—pƒoƒbƒtƒ@)
-	INSTANCE(RenderTargetManager)->ReSetRT(0, INSTANCE(RenderTargetManager)->GetRTFromList(RTIdxE::SHADOWDEPTH),Color::zero);
+	INSTANCE(RenderTargetManager)->ReSetRT(0, INSTANCE(RenderTargetManager)->GetRTFromList(RTIdxE::SHADOWDEPTH));
 	//Ž–‘O•`‰æ(‰e‚Æ‚©[“x‚Æ‚©‹P“x‚Æ‚©)
 	INSTANCE(GameObjectManager)->PreRenderObject();
 
