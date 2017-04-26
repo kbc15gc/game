@@ -43,6 +43,7 @@ TEXTURE* TextureManager::LoadTexture(char* filename)
 			string error = "画像パス：" + p + " の画像の読み込みに失敗しました。";
 			
 			MessageBoxA(NULL, error.c_str(), "error:画像読み込みエラー", MB_OK);
+			tex = nullptr;
 		}
 	}
 	else
@@ -58,24 +59,30 @@ HRESULT SetTexture(TEXTURE& tex,char* path)
 	//テクスチャの情報
 	D3DXIMAGE_INFO info;
 	D3DXGetImageInfoFromFileA(path,&info);
-	D3DCAPS9 cap;
-	(*graphicsDevice()).GetDeviceCaps(&cap);
-	PALETTEENTRY palette[256];
 	
-	////情報取得
-	//D3DXGetImageInfoFromFile(
-	//	path,	//テクスチャパス
-	//	&info	//情報格納先
-	//);
-	////読み込み
-	//hr = D3DXCreateTextureFromFile(
-	//	graphicsDevice(),	//グラフィックデバイス
-	//	path,				//テクスチャパス
-	//	&tex.pTexture		//テクスチャの格納先
-	//);
+	//情報取得
+	D3DXGetImageInfoFromFile(
+		path,	//テクスチャパス
+		&info	//情報格納先
+	);
+	HRESULT hr;
+	////テクスチャのタイプに合った読み込み方法
+	//switch (info.ResourceType)
+	//{
+	//case _D3DRESOURCETYPE::D3DRTYPE_TEXTURE:
+	//	//通常テクスチャ読み込み
+	//	hr = D3DXCreateTextureFromFile(graphicsDevice(), path, (LPDIRECT3DTEXTURE9*)&tex.pTexture);
+	//	break;
+	//case _D3DRESOURCETYPE::D3DRTYPE_CUBETEXTURE:
+	//	//キューブテクスチャ読み込み
+	//	hr = D3DXCreateCubeTextureFromFile(graphicsDevice(), path, (LPDIRECT3DCUBETEXTURE9*)&tex.pTexture);
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	//テクスチャ読込　各情報をセット(画像のサイズとか)
-	HRESULT hr = D3DXCreateTextureFromFileEx(
+	hr = D3DXCreateTextureFromFileEx(
 		graphicsDevice(),			//グラフィックデバイスへのポインタ
 		path,						//ファイルパス
 		D3DX_DEFAULT,				//幅、D3DX_DEFAULT ならファイルから取得
@@ -88,8 +95,8 @@ HRESULT SetTexture(TEXTURE& tex,char* path)
 		D3DX_DEFAULT,				//ミップフィルター？
 		0x00000000,					//透明にする色(透明な黒を指定)
 		&info,						//ファイルのデータを格納するポインタ
-		palette,					//パレット？？？
-		&tex.pTexture);				//作成されたテクスチャへのポインタ
+		NULL,					//パレット？？？
+		(LPDIRECT3DTEXTURE9*)&tex.pTexture);				//作成されたテクスチャへのポインタ
 
 	// テクスチャサイズの取得
 	tex.Size = Vector2((float)info.Width, (float)info.Height);
