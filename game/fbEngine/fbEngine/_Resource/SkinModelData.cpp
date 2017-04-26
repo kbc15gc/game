@@ -431,7 +431,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 				strcpy_s(filePath, baseDir);
 				strcat_s(filePath, pMeshContainer->pMaterials[iMaterial].pTextureFilename);
 
-				pMeshContainer->material[iMaterial] = new Material();
+				pMeshContainer->material[iMaterial] = new Material(pMeshContainer->pMaterials[iMaterial].pTextureFilename);
 
 				//‰æ‘œ‚Ìî•ñ‚ğæ“¾
 				D3DXIMAGE_INFO info;
