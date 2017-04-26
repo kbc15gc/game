@@ -1,6 +1,7 @@
 #include "Material.h"
 
-Material::Material()
+Material::Material(char* name):
+	_Name(name)
 {
 	_BlendColor = Color::white;
 	FOR(i, TextureHandleE::TextureNum)
@@ -36,4 +37,14 @@ void Material::SetColor(Color color)
 const Color & Material::GetBlendColor()
 {
 	return _BlendColor;
+}
+
+void Material::SetName(char * name)
+{
+	_Name = name;
+}
+
+const char * Material::GetName()
+{
+	return _Name;
 }

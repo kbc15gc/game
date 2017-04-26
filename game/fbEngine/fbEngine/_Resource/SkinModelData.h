@@ -69,6 +69,12 @@ public:
 	{
 		return m_pAnimationController;
 	}
+	//マテリアルの追加(エンジン専用)
+	void AddMaterial(Material* mat)
+	{
+		_Materials.push_back(mat);
+	}
+	Material* FindMaterial(const char* matName);
 
 	//引数として受け取った行列を親として,骨の行列を更新
 	//第一引数：D3DXMATRIX&　ワールド行列
@@ -76,6 +82,7 @@ public:
 	LPD3DXMESH GetOrgMeshFirst() const;
 private:
 	LPD3DXFRAME					m_frameRoot;		//フレームルート。
+	std::vector<Material*>		_Materials;			//マテリアル
 	//アニメーションコントローラー
 	ID3DXAnimationController* m_pAnimationController;
 

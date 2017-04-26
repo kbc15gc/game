@@ -262,10 +262,12 @@ public:
 	//メッシュコンテナを削除
 	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerBase);
 
-	CAllocateHierarchy()
+	CAllocateHierarchy(SkinModelData* data):
+		_SkinModelData(data)
 	{
 	}
-	
+private:
+	SkinModelData* _SkinModelData;
 };
 
 //--------------------------------------------------------------------------------------
@@ -455,6 +457,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 					{
 						//あった
 						pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::DiffuseMap, texture);
+						_SkinModelData->AddMaterial(pMeshContainer->material[iMaterial]);
 					}
 					break;
 				case _D3DRESOURCETYPE::D3DRTYPE_CUBETEXTURE:
@@ -471,6 +474,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 					{
 						//あった
 						pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::DiffuseMap, texture);
+						_SkinModelData->AddMaterial(pMeshContainer->material[iMaterial]);
 					}
 					break;
 				default:
@@ -626,7 +630,7 @@ void SkinModelData::Release()
  */
 void SkinModelData::LoadModelData(const char* filePath)
 {
-	CAllocateHierarchy alloc;
+	CAllocateHierarchy alloc(this);
 	HRESULT hr = D3DXLoadMeshHierarchyFromXA(
 		filePath,
 		D3DXMESH_VB_MANAGED,
@@ -742,6 +746,16 @@ void SkinModelData::SetupOutputAnimationRegist(LPD3DXFRAME frame, ID3DXAnimation
 	{
 		SetupOutputAnimationRegist(frame->pFrameFirstChild, animCtr);
 	}
+}
+
+Material * SkinModelData::FindMaterial(const char * matName)
+{
+	for (Material* mat : _Materials) {
+		if (strcmp(mat->GetName(), matName) == 0) {
+			return mat;
+		}
+	}
+	return nullptr;
 }
 
 /*!
