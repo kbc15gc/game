@@ -1,6 +1,8 @@
 #pragma once
 
 #include "_Effect\Bloom.h"
+/** シャドウマップクラス. */
+#include"_Effect\PreRender\ShadowMap.h"
 
 class Scene;
 struct TEXTURE;
@@ -56,6 +58,15 @@ public:
 		return _Instance;
 	}
 	TEXTURE* GetOffScreenTexture();
+
+	/**
+	* シャドウマップクラスの取得.
+	*/
+	ShadowMap* GetShadowMap()
+	{
+		return &_ShadowMap;
+	}
+
 private:
 	int _NowScene;	//現在のシーンの添え字
 	vector<Scene*> _Scenes;
@@ -65,4 +76,5 @@ private:
 	static SceneManager* _Instance;
 
 	Bloom _Bloom;
+	ShadowMap  _ShadowMap;
 };

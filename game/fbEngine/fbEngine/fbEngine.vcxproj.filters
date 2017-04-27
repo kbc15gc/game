@@ -46,6 +46,9 @@
     <Filter Include="Object\Component\Physics">
       <UniqueIdentifier>{4ff4e741-106d-4228-b10a-4cba63e89cae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PreRender">
+      <UniqueIdentifier>{f8f6420d-0891-451a-8156-ce13ccb86c71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -235,6 +238,12 @@
       <Filter>Object\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="CharacterController.cpp" />
+    <ClCompile Include="_Effect\PreRender\ShadowMap.cpp">
+      <Filter>Effect\PreRender</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\Blur.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -464,5 +473,11 @@
       <Filter>Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="CharacterController.h" />
+    <ClInclude Include="_Effect\PreRender\ShadowMap.h">
+      <Filter>Effect\PreRender</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\Blur.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

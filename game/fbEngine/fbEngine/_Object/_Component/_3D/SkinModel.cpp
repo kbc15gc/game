@@ -7,7 +7,12 @@
 
 //extern UINT                 g_NumBoneMatricesMax;
 //extern D3DXMATRIXA16*       g_pBoneMatrices ;
-bool g_PreRender = false;
+
+namespace
+{
+	/** シャドウマップ描画フラグ. */
+	bool g_ShadowRender = false;
+}
 
 SkinModel::SkinModel(GameObject * g, Transform * t) :
 	Component(g, t, typeid(this).name(),100),
@@ -15,7 +20,6 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_ModelDate(nullptr),
 	_Camera(nullptr),
 	_Light(nullptr),
-	_ShadowCamera(nullptr),
 	_TextureBlend(Color::white),
 	_AllBlend(Color::white),
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW)),
@@ -71,7 +75,6 @@ void SkinModel::Start()
 	//mainのものが設定されているならセットされる。
 	_Camera = INSTANCE(GameObjectManager)->mainCamera;
 	_Light = INSTANCE(GameObjectManager)->mainLight;
-	_ShadowCamera = INSTANCE(GameObjectManager)->mainShadowCamera;
 }
 
 //モデルデータの行列更新
@@ -87,11 +90,21 @@ void SkinModel::LateUpdate()
 		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 	}
+
+	if (_ModelEffect & ModelEffectE::CAST_SHADOW)
+	{
+		INSTANCE(SceneManager)->GetShadowMap()->EntryModel(this);
+	}
 }
 
 void SkinModel::PreRender()
 {
-	g_PreRender = true;
+	
+}
+
+void SkinModel::Render()
+{
+	g_ShadowRender = false;
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -100,9 +113,13 @@ void SkinModel::PreRender()
 	}
 }
 
-void SkinModel::Render()
+/**
+* シャドウマップに深度を書き込む.
+* シャドウマップクラスから呼ばれている.
+*/
+void SkinModel::RenderToShadowMap()
 {
-	g_PreRender = false;
+	g_ShadowRender = true;
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -118,12 +135,13 @@ void SkinModel::DrawMeshContainer(
 {
 	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
 	
-	//事前描画
-	if(g_PreRender)
+	//影描画
+	if (g_ShadowRender)
 	{
-		//影描画
 		if (_ModelEffect & ModelEffectE::CAST_SHADOW)
+		{
 			CreateShadow(pMeshContainer, pFrame);
+		}
 	}
 	//モデル描画
 	else
@@ -169,17 +187,22 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetViewMat());
 		_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetProjectionMat());
 		
-		//影カメラのビュープロジェクション行列を作って送信
-		D3DXMATRIX LVP = INSTANCE(GameObjectManager)->mainShadowCamera->GetViewMat() * INSTANCE(GameObjectManager)->mainShadowCamera->GetProjectionMat();
-		_Effect->SetMatrix("g_LVP", &LVP);
+		{
+			//レシーバー用パラメータを設定.
+			ShadowMap::ShadowReceiverParam* shadowParam = INSTANCE(SceneManager)->GetShadowMap()->GetShadowReceiverParam();
+			_Effect->SetValue("g_ShadowReceiverParam", shadowParam, sizeof(ShadowMap::ShadowReceiverParam));
+			//深度テクスチャ
+			_Effect->SetTexture("g_ShadowMap_0", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(0));
+			_Effect->SetTexture("g_ShadowMap_1", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(1));
+			_Effect->SetTexture("g_ShadowMap_2", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(2));
+			//影を映すかどうかのフラグセット
+			_Effect->SetBool("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
+		}
 
-		//深度テクスチャ
-		TEXTURE* shadow = INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH);
-		_Effect->SetTexture("g_Shadow", shadow->pTexture);
-		Vector2 texel = Vector2(1.0f / shadow->Size.x, 1.0f / shadow->Size.y);
-		_Effect->SetValue("g_TexelSize", &texel,sizeof(Vector2));
-		//影を映すかどうかのフラグセット
-		_Effect->SetBool("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
+		Vector2 size = INSTANCE(SceneManager)->GetShadowMap()->GetSize();
+		Vector2 texel = Vector2(1.0f / size.x, 1.0f / size.y);
+		_Effect->SetValue("g_TexelSize", &texel, sizeof(Vector2));
+
 		//スペキュラフラグセット
 		_Effect->SetBool("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
 
@@ -320,8 +343,8 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	_Effect->BeginPass(0);
 
 	//影カメラのビュープロジェクション行列を送る
-	_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainShadowCamera->GetViewMat());
-	_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainShadowCamera->GetProjectionMat());
+	_Effect->SetMatrix("g_viewMatrix", INSTANCE(SceneManager)->GetShadowMap()->GetLVMatrix());
+	_Effect->SetMatrix("g_projectionMatrix", INSTANCE(SceneManager)->GetShadowMap()->GetLPMatrix());
 
 	//アニメーションの有無で分岐
 	if (pMeshContainer->pSkinInfo != NULL)

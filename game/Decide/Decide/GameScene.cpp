@@ -11,6 +11,8 @@
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
 
+ImageObject* depth;
+
 void GameScene::Start()
 {
 	//ゲームライト生成
@@ -30,8 +32,8 @@ void GameScene::Start()
 	//火の歴史チップ
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
 
-	ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
+	depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(1));
 	depth->SetPivot(Vector2(0, 0));
 	depth->SetActive(false);
 }

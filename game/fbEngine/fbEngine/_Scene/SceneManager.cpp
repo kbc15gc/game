@@ -27,6 +27,9 @@ SceneManager::SceneManager()
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 	//ブルームの準備
 	_Bloom.Create();
+
+	//シャドウマップの初期化.
+	_ShadowMap.Create();
 }
 
 SceneManager::~SceneManager()
@@ -54,12 +57,17 @@ void SceneManager::UpdateScene()
 	INSTANCE(GameObjectManager)->UpdateObject();
 	PhysicsWorld::Instance()->Update();
 	INSTANCE(GameObjectManager)->LateUpdateObject();
+
+	//シャドウマップの更新.
+	_ShadowMap.Update();
 }
 
 void SceneManager::DrawScene()
 {
-	//0番目に設定(影の深度書き込み用バッファ)
-	INSTANCE(RenderTargetManager)->ReSetRT(0, INSTANCE(RenderTargetManager)->GetRTFromList(RTIdxE::SHADOWDEPTH));
+
+	//シャドウマップの描画.
+	_ShadowMap.Render();
+	
 	//事前描画(影とか深度とか輝度とか)
 	INSTANCE(GameObjectManager)->PreRenderObject();
 
