@@ -27,9 +27,9 @@ public:
 	Material(char* name);
 	~Material();
 	//テクスチャを設定
-	void SetTexture(const TextureHandleE& handle, IDirect3DBaseTexture9* tex);
+	void SetTexture(const UINT& handle, IDirect3DBaseTexture9* tex);
 	//テクスチャ取得
-	IDirect3DBaseTexture9* GetTexture(const TextureHandleE& handle);
+	IDirect3DBaseTexture9* GetTexture(const UINT& handle);
 	//混ぜる色を設定
 	void SetColor(Color color);
 	const Color& GetBlendColor();

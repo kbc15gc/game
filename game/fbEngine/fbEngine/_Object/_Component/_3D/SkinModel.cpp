@@ -135,7 +135,14 @@ void SkinModel::DrawMeshContainer(
 			_Effect = EffectManager::LoadEffect("3Dmodel.fx");
 
 		//テクニックをセット
-		_Effect->SetTechnique("NormalRender");
+		if(terain)
+		{
+			_Effect->SetTechnique("TerrainRender");
+		}
+		else
+		{
+			_Effect->SetTechnique("NormalRender");
+		}
 		//開始（必ず終了すること）
 		_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 		_Effect->BeginPass(0);
@@ -178,6 +185,12 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetTexture("g_Shadow", shadow->pTexture);
 		Vector2 texel = Vector2(1.0f / shadow->Size.x, 1.0f / shadow->Size.y);
 		_Effect->SetValue("g_TexelSize", &texel,sizeof(Vector2));
+
+		//フラグ設定
+		Vector4 flg;
+		flg.x = (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0;
+
+		_Effect->SetValue("g_EffectFlg", &flg, sizeof(Vector4));
 		//影を映すかどうかのフラグセット
 		_Effect->SetBool("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
 		//スペキュラフラグセット
@@ -276,6 +289,27 @@ void SkinModel::DrawMeshContainer(
 					_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 					_Effect->SetBool("Texflg", true);
+
+					//スプラットマップ
+					IDirect3DBaseTexture9* splat = material->GetTexture(Material::TextureHandleE::SplatMap);
+					if (splat)
+					{
+						_Effect->SetValue("g_terrainRect", &_ModelDate->GetTerrainSize(), sizeof(Vector4));
+						
+						_Effect->SetTexture("g_splatMap", splat);
+						FOR(i, 4)
+						{
+							IDirect3DBaseTexture9* tex = material->GetTexture(Material::TextureHandleE::TerrainTex0 + i);
+							if (tex)
+							{
+								char param[20] = "g_terrainTex";
+								char idx[2] = { i + 48, 0 };
+								strcat(param, idx);
+								_Effect->SetTexture(param, tex);
+							}
+						}
+					}
+
 				}
 				//テクスチャがないならカラーセット
 				else

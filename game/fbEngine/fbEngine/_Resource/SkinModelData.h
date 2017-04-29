@@ -62,7 +62,7 @@ public:
 	//最初(根元？)のフレーム取得
 	LPD3DXFRAME GetFrameRoot()
 	{
-		return m_frameRoot;
+		return _FrameRoot;
 	}
 
 	ID3DXAnimationController* GetAnimationController()
@@ -79,16 +79,41 @@ public:
 	//引数として受け取った行列を親として,骨の行列を更新
 	//第一引数：D3DXMATRIX&　ワールド行列
 	void UpdateBoneMatrix(const D3DXMATRIX& matWorld);
+	//一番最初のメッシュを取得
 	LPD3DXMESH GetOrgMeshFirst() const;
+
+	//テラインのXZ軸の縦幅と横幅を求める関数
+	//いつか消す
+	void CalcWidthAndHeight();
+	
+	//スキンモデルのメッシュのリストを取得。
+	const std::vector<LPD3DXMESH>& GetMeshList() const
+	{
+		return _MeshList;
+	}
+	const Vector4& GetTerrainSize()
+	{
+		return _TerrainSize;
+	}
 private:
-	LPD3DXFRAME					m_frameRoot;		//フレームルート。
-	std::vector<Material*>		_Materials;			//マテリアル
+	//最初のメッシュを返す？
+	LPD3DXMESH GetOrgMesh(LPD3DXFRAME frame) const;
+	//クローン作製
+	void CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame);
+	//クローン削除
+	void DeleteCloneSkeleton(LPD3DXFRAME frame);
+	//アニメーションのなにかを設定(行列のやつとかだと思う)
+	void SetupOutputAnimationRegist(LPD3DXFRAME frame, ID3DXAnimationController* animCtr);
+	//メッシュのリストを作成
+	void _CreateMeshList();
+	//メッシュのリストを作成に使う再帰関数
+	void _QueryMeshes(LPD3DXFRAME frame);
+private:
+	LPD3DXFRAME					_FrameRoot;		//フレームルート(大本)。
+	std::vector<Material*>		_Materials;		//マテリアルのリスト
+	std::vector<LPD3DXMESH>		_MeshList;		//メッシュのリスト。
 	//アニメーションコントローラー
 	ID3DXAnimationController* m_pAnimationController;
-
-	LPD3DXMESH GetOrgMesh(LPD3DXFRAME frame) const;
-
-	void CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame);
-	void DeleteCloneSkeleton(LPD3DXFRAME frame);
-	void SetupOutputAnimationRegist(LPD3DXFRAME frame, ID3DXAnimationController* animCtr);
+	//とりあえずほじさせたかった。いつか消す。
+	Vector4 _TerrainSize;
 };

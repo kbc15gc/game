@@ -597,7 +597,7 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
  *@brief	コンストラクタ。
  */
 SkinModelData::SkinModelData():
-m_frameRoot(nullptr),
+_FrameRoot(nullptr),
 m_pAnimationController(nullptr)
 {
 	
@@ -616,10 +616,10 @@ SkinModelData::~SkinModelData()
 */
 void SkinModelData::Release()
 {
-	if (m_frameRoot) {
+	if (_FrameRoot) {
 		//クローン
-		DeleteCloneSkeleton(m_frameRoot);
-		m_frameRoot = nullptr;
+		DeleteCloneSkeleton(_FrameRoot);
+		_FrameRoot = nullptr;
 	}
 	SAFE_RELEASE(m_pAnimationController);
 }
@@ -637,12 +637,16 @@ void SkinModelData::LoadModelData(const char* filePath)
 		graphicsDevice(),
 		&alloc,
 		nullptr,
-		&m_frameRoot,
+		&_FrameRoot,
 		&m_pAnimationController
 		);
 	
 	//骨に行列をセットする
-	SetupBoneMatrixPointers(m_frameRoot, m_frameRoot);
+	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
+
+	//メッシュリストを作成。
+	_CreateMeshList();
+	CalcWidthAndHeight();
 }
 
 //モデルデータのクローンを作成
@@ -650,12 +654,12 @@ void SkinModelData::LoadModelData(const char* filePath)
 void SkinModelData::CloneModelData(const SkinModelData* modelData, Animation* anim)
 {
 	//フレームを新しく作成
-	m_frameRoot = new D3DXFRAME_DERIVED;
-	m_frameRoot->pFrameFirstChild = nullptr;
-	m_frameRoot->pFrameSibling = nullptr;
-	m_frameRoot->pMeshContainer = nullptr;
+	_FrameRoot = new D3DXFRAME_DERIVED;
+	_FrameRoot->pFrameFirstChild = nullptr;
+	_FrameRoot->pFrameSibling = nullptr;
+	_FrameRoot->pMeshContainer = nullptr;
 	//骨のクローン作製
-	CloneSkeleton(m_frameRoot, modelData->m_frameRoot);
+	CloneSkeleton(_FrameRoot, modelData->_FrameRoot);
 	//アニメーションコントローラを作成して、スケルトンと関連付けを行う。
 	if (modelData->m_pAnimationController) {
 		modelData->m_pAnimationController->CloneAnimationController(
@@ -666,14 +670,21 @@ void SkinModelData::CloneModelData(const SkinModelData* modelData, Animation* an
 			&m_pAnimationController
 		);
 		//ウェイト設定？
-		SetupOutputAnimationRegist(m_frameRoot, m_pAnimationController);
+		SetupOutputAnimationRegist(_FrameRoot, m_pAnimationController);
 
 		//両方があるなら初期化する
 		if (anim && m_pAnimationController) {
 			anim->Initialize(m_pAnimationController);
 		}
 	}
-	SetupBoneMatrixPointers(m_frameRoot, m_frameRoot);
+	//マテリアルコピー
+	this->_Materials = modelData->_Materials;
+	//メッシュリストコピー
+	this->_MeshList = modelData->_MeshList;
+	//
+	this->_TerrainSize = modelData->_TerrainSize;
+	
+	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 }
 
 //骨をコピー
@@ -763,7 +774,7 @@ Material * SkinModelData::FindMaterial(const char * matName)
 */
 void SkinModelData::UpdateBoneMatrix(const D3DXMATRIX& matWorld)
 {
-	UpdateFrameMatrices(m_frameRoot, (const D3DXMATRIX*)&matWorld);
+	UpdateFrameMatrices(_FrameRoot, (const D3DXMATRIX*)&matWorld);
 }
 
 LPD3DXMESH SkinModelData::GetOrgMesh(LPD3DXFRAME frame) const
@@ -796,5 +807,73 @@ LPD3DXMESH SkinModelData::GetOrgMesh(LPD3DXFRAME frame) const
 }
 LPD3DXMESH SkinModelData::GetOrgMeshFirst() const
 {
-	return GetOrgMesh(m_frameRoot);
+	return GetOrgMesh(_FrameRoot);
+}
+
+void SkinModelData::CalcWidthAndHeight()
+{
+	const std::vector<LPD3DXMESH>& meshList = GetMeshList();
+	//番兵設定
+	double minX = FLT_MAX;
+	double minZ = FLT_MAX;
+	double maxX = -FLT_MAX;
+	double maxZ = -FLT_MAX;
+	for (auto& mesh : meshList) {
+		//頂点バッファを取得。
+		LPDIRECT3DVERTEXBUFFER9 vb;
+		mesh->GetVertexBuffer(&vb);
+		//頂点定義を取得。
+		D3DVERTEXBUFFER_DESC desc;
+		vb->GetDesc(&desc);
+		//頂点ストライドを取得。
+		int stride = mesh->GetNumBytesPerVertex();
+		D3DXVECTOR3* vertexPos;
+		vb->Lock(0, desc.Size, (void**)&vertexPos, D3DLOCK_READONLY);
+		//頂点数ループ
+		for (unsigned int i = 0; i < mesh->GetNumVertices(); i++) {
+			minX = min(minX, vertexPos->x);
+			minZ = min(minZ, vertexPos->z);
+			maxX = max(maxX, vertexPos->x);
+			maxZ = max(maxZ, vertexPos->z);
+			//次の頂点へ。
+			char* p = (char*)vertexPos;
+			p += stride;
+			vertexPos = (D3DXVECTOR3*)p;
+		}
+		vb->Unlock();
+		vb->Release();
+	}
+	_TerrainSize.x = minX;
+	_TerrainSize.y = maxX;
+	_TerrainSize.z = minZ;
+	_TerrainSize.w = maxZ;
+}
+
+void SkinModelData::_CreateMeshList()
+{
+	//再帰関数呼び出し
+	_QueryMeshes(_FrameRoot);
+}
+
+void SkinModelData::_QueryMeshes(LPD3DXFRAME frame)
+{
+	LPD3DXMESHCONTAINER pMeshContainer;
+	pMeshContainer = frame->pMeshContainer;
+	//全てのメッシュコンテナを見る
+	while (pMeshContainer != NULL)
+	{
+		//メッシュを追加
+		_MeshList.push_back(pMeshContainer->MeshData.pMesh);
+		//次のメッシュコンテナを取得
+		pMeshContainer = pMeshContainer->pNextMeshContainer;
+	}
+	//再帰処理
+	if (frame->pFrameSibling != NULL)
+	{
+		_QueryMeshes(frame->pFrameSibling);
+	}
+	if (frame->pFrameFirstChild != NULL)
+	{
+		_QueryMeshes(frame->pFrameFirstChild);
+	}
 }

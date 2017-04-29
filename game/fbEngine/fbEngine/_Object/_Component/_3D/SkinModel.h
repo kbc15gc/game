@@ -11,9 +11,10 @@ enum ModelEffectE
 {
 	NONE = BIT(0),				//なし
 	CAST_SHADOW = BIT(1),		//影を作る
-	RECEIVE_SHADOW = BIT(2),		//影を落とす
+	RECEIVE_SHADOW = BIT(2),	//影を落とす
 	SPECULAR = BIT(3),			//鏡面反射
 	TOON = BIT(4),				//トゥーン
+	LIMLIGHT = BIT(5),			//リムライト
 };
 
 //モデルの描画を行うクラス
@@ -80,6 +81,7 @@ public:
 			_ModelEffect = ModelEffectE(_ModelEffect + e);
 		}
 	}
+	bool terain = false;
 private:
 	//子とか兄弟も一括で描画するための再帰関数
 	void DrawFrame(LPD3DXFRAME pFrame);

@@ -1,12 +1,10 @@
 /*!
  * @brief	スキンモデルシェーダー。(4ボーンスキニング)
  */
-#define MAX_LIGHTNUM 4
+#include "LightingFunction.h"
 bool Texflg;							//テクスチャ
 bool Spec;								//スペキュラ
 bool ReceiveShadow;						//影を写す
-
-float4 g_cameraPos;						//カメラの位置
 
 //スキン行列。
 #define MAX_MATRICES  50
@@ -18,11 +16,6 @@ float4x4 g_projectionMatrix;			//プロジェクション行列。
 float4x4 g_rotationMatrix;				//回転行列。法線を回転させるために必要になる。ライティングするなら必須。
 
 float	g_numBone;			//骨の数。
-
-int g_LightNum;									//ライトの数
-float4	g_diffuseLightDirection[MAX_LIGHTNUM];	//ディフューズライトの方向。
-float4	g_diffuseLightColor[MAX_LIGHTNUM];		//ディフューズライトのカラー。
-float4	g_ambientLight;								//環境光。
 
 float4  g_diffuseMaterial : COLOR0;					//マテリアルカラー
 float4  g_blendcolor;//混ぜる色
@@ -132,6 +125,7 @@ VS_OUTPUT VSMain( VS_INPUT In )
 	pos = mul(float4(pos.xyz, 1.0f), g_viewMatrix);
 	//プロジェクション行列
 	o._WVP = o._Pos = mul(float4(pos.xyz, 1.0f), g_projectionMatrix);
+	o._World.w = o._WVP.w;
 
 	//法線
 	//o._Normal = mul(normal, g_rotationMatrix);	//法線を回す。
@@ -190,12 +184,7 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 	}
 
 	//デフューズライトを計算。
-	for (int i = 0; i < g_LightNum; i++)
-	{
-		//0.0f未満なら0.0fを返す
-		light.xyz += max(0.0f, -dot(normal, g_diffuseLightDirection[i].xyz))* g_diffuseLightColor[i].xyz;
-		light.a = 1.0f;
-	}
+	light = DiffuseLight(normal);
 
 	//スペキュラーライト
 	if(Spec)
@@ -254,8 +243,10 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 			}
 		}
 	}
-	//
-	color.rgb *= light.rgb + g_ambientLight.rgb;
+	//ライトをかける
+	color.rgb *= light.rgb;
+	//アンビエントライトを加算。
+	color.rgb += diff.rgb * g_ambientLight.rgb;
 	return color;
 }
 
@@ -323,7 +314,6 @@ float4 PSShadow(VS_ShadowOUT In) : COLOR0	//レンダーターゲット0に出力
 	//深度は射影変換済みの頂点の Z / W で算出できる
 	depth = In.shadow.z / In.shadow.w;
 
-	//return float4(1.0, 0.0, 0.0, 1.0f);
 	return float4(depth.xyz, 1.0f);
 }
 
