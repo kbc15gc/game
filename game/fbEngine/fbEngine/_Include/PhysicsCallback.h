@@ -159,55 +159,74 @@ namespace fbPhysicsCallback
 	struct	ClosestRayResultCallback : public btCollisionWorld::RayResultCallback
 	{
 	public:
-		ClosestRayResultCallback()
+		ClosestRayResultCallback(const btVector3& from,const btVector3& to,const int& attr)
 		{
+			_fromPos = from;
+			_toPos = to;
+			_attribute = attr;
+
+			m_hitPointWorld = btVector3(0, 0, 0);
 		}
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace)
 		{
-			if ((attribute & rayResult.m_collisionObject->getUserIndex()) == 0)
+			if ((_attribute & rayResult.m_collisionObject->getUserIndex()) == 0)
 			{
 				return 0.0f;
 			}
-
-			//始点から終点を0～1にした時のヒットした位置の割合。
-			m_closestHitFraction = rayResult.m_hitFraction;
-			//ヒットしたコリジョン
-			m_collisionObject = rayResult.m_collisionObject;
-			if (normalInWorldSpace)
+			//一時的に
+			float fracTmp = rayResult.m_hitFraction;
+			//近いなら
+			if (fracTmp < _Fraction)
 			{
-				m_hitNormalWorld = rayResult.m_hitNormalLocal;
+				//始点から終点を0～1にした時のヒットした位置の割合。
+				_Fraction = m_closestHitFraction = fracTmp;
+				//ヒットしたコリジョン
+				m_collisionObject = rayResult.m_collisionObject;
+				if (normalInWorldSpace)
+				{
+					m_hitNormalWorld = rayResult.m_hitNormalLocal;
+				}
+				else
+				{
+					///need to Transform normal into worldspace
+					m_hitNormalWorld = m_collisionObject->getWorldTransform().getBasis()*rayResult.m_hitNormalLocal;
+				}
+				//ヒットした位置を取得
+				m_hitPointWorld.setInterpolate3(_fromPos, _toPos, rayResult.m_hitFraction);
+				//ヒットしたコリジョン取得
+				hitObject = (Collision*)m_collisionObject->getUserPointer();
 			}
-			else
-			{
-				///need to Transform normal into worldspace
-				m_hitNormalWorld = m_collisionObject->getWorldTransform().getBasis()*rayResult.m_hitNormalLocal;
-			}
-			//ヒットした位置を取得
-			m_hitPointWorld.setInterpolate3(fromPos, toPos, rayResult.m_hitFraction);
 			return rayResult.m_hitFraction;
 		}
+	private:
+		btVector3	_fromPos;				//レイの始点
+		btVector3	_toPos;					//レイの終点
+		int _attribute;						//指定したコリジョン属性とのみ当たり判定をとる
+		float _Fraction = FLT_MAX;			//比較用に保持
 	public:
-		int attribute;						//指定したコリジョン属性とのみ当たり判定をとる
-		btVector3	fromPos;				//レイの始点
-		btVector3	toPos;					//レイの終点
-
 		btVector3	m_hitNormalWorld;		//衝突点の法線
 		btVector3	m_hitPointWorld;		//レイがヒットした位置
-		Collision* hitObject = nullptr;						//ヒットしたオブジェクト
+		Collision* hitObject = nullptr;		//ヒットしたオブジェクト
 	};
 
 	//コリジョンを飛ばして最初にヒットしたコリジョンを返すコールバック
 	struct ClosestConvexResultCallback : public btCollisionWorld::ConvexResultCallback
 	{
 	public:
+		ClosestConvexResultCallback(const Vector3& start,const int& attr,const btCollisionObject* me)
+		{
+			_startPos = start;
+			_attribute = attr;
+			_me = me;
+		}
 		//衝突したときに呼ばれる関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			//自身と衝突したか？ &&
 			//属性が合わなかった
-			if (convexResult.m_hitCollisionObject == me &&
-				(attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0)
+			if (convexResult.m_hitCollisionObject == _me &&
+				(_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0)
 			{
 				//ヒットしなかった。
 				return 0.0f;
@@ -217,23 +236,28 @@ namespace fbPhysicsCallback
 			Vector3 hitPosTmp = *(Vector3*)&convexResult.m_hitPointLocal;
 			//衝突点の距離を求める
 			Vector3 vDist;
-			vDist.Subtract(hitPosTmp, startPos);
+			vDist.Subtract(hitPosTmp, _startPos);
 			float distTmp = vDist.Length();
 			//距離比較
-			if (dist > distTmp) {
+			if (_dist > distTmp) {
+				m_closestHitFraction = convexResult.m_hitFraction;
 				//更新
 				hitPos = hitPosTmp;
-				dist = distTmp;
+				//法線更新
+				hitNormal = *(Vector3*)&convexResult.m_hitNormalLocal;
+				_dist = distTmp;
 				hitObject = (Collision*)convexResult.m_hitCollisionObject->getUserPointer();
 			}
 			return 0.0f;
 		}
+	private:
+		int _attribute;										//指定したコリジョン属性とのみ当たり判定をとる。
+		float _dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
+		Vector3 _startPos = Vector3::zero;					//レイの始点。
+		const btCollisionObject* _me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 	public:
-		int attribute;										//指定したコリジョン属性とのみ当たり判定をとる。
-		float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
-		Vector3 startPos = Vector3::zero;					//レイの始点。
 		Vector3 hitPos = Vector3(0.0f, -FLT_MAX, 0.0f);		//衝突点。
-		btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
+		Vector3 hitNormal = Vector3::zero;					//衝突点の法線。
 		Collision* hitObject = nullptr;						//ヒットしたオブジェクト
 	};
 

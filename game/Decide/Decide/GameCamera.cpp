@@ -10,101 +10,41 @@ namespace
 
 void GameCamera::Awake()
 {
-	Camera* camera = AddComponent<Camera>();
-	INSTANCE(GameObjectManager)->mainCamera = camera;
-	camera->SetNear(1);
-	camera->SetFar(1000);
-	
+	//カメラコンポーネント
+	_Camera = AddComponent<Camera>();
+	_Camera->SetNear(1);
+	_Camera->SetFar(1000);
+	INSTANCE(GameObjectManager)->mainCamera = _Camera;
+
+	//カメラのコリジョンの半径設定
+	_Radius = 0.5f;
+	_Sphere = AddComponent<SphereCollider>();
+	_Sphere->Create(_Radius);
+	//距離の下限と上限
+	_Dist = 7.0f;
 }
 
 void GameCamera::Start()
 {
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
-	//プレイヤーの少し後ろにカメラのポジションをセット。
-	transform->SetLocalPosition(Vector3(0, 0, -10));
-	_ToPos = D3DXVECTOR3(0.0f, 3.0f, -4.0f);
+	//プレイヤーのポジションへの参照を取得
+	_PlayerPos = &_Player->transform->GetPosition();
+	//正規化した方向を入れる
+	D3DXVec3Normalize(&_ToPlayerDir, &D3DXVECTOR3(0.0f, 3.0f, -4.0f));
 }
 
 void GameCamera::Update()
 {
-	//調整用
-	Camera* camera = GetComponent<Camera>();
-	//static Vector2 nf = { 1, 1000 };
-	//if (KeyBoardInput->isPressed(DIK_N))
-	//{
-	//	nf.x++;
-	//}
-	//if (KeyBoardInput->isPressed(DIK_M))
-	//{
-	//	nf.x--;
-	//}
-	//if (KeyBoardInput->isPressed(DIK_F))
-	//{
-	//	nf.y++;
-	//}
-	//if (KeyBoardInput->isPressed(DIK_G))
-	//{
-	//	nf.y--;
-	//}
-
-	//camera->Near(nf.x);
-	//camera->Far(nf.y);
-	
-
-	/*if (KeyBoardInput->isPressed(DIK_LEFT))
-	{
-	transform->localAngle.y -= 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_RIGHT))
-	{
-	transform->localAngle.y += 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_UP))
-	{
-	transform->localAngle.x -= 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_DOWN))
-	{
-	transform->localAngle.x += 1;
-	}*/
-
-	Vector3 dir = Vector3::zero;
-	/*if (KeyBoardInput->isPressed(DIK_W))
-	{
-		dir.z += 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_S))
-	{
-		dir.z -= 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_A))
-	{
-		dir.x -= 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_D))
-	{
-		dir.x += 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_O))
-	{
-		dir.y += 1;
-	}
-	if (KeyBoardInput->isPressed(DIK_L))
-	{
-		dir.y -= 1;
-	}*/
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		RotTransversal(CAMERA_SPEED * Time::DeltaTime());
-		
+		RotTransversal(CAMERA_SPEED * Time::DeltaTime());	
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
 	{
 		RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
-		
 	}
 	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
@@ -117,16 +57,9 @@ void GameCamera::Update()
 		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
 	}
 	
-	transform->SetLocalPosition(_Player->transform->GetLocalPosition() + (Vector3)_ToPos);
-	//プレイヤーの高さ分を足す
-	camera->SetViewPoint(_Player->transform->GetLocalPosition() + PLAYER_HEIGHT);
-	//transform->localPosition.Add(transform->Direction(dir));
-	//transform->LockAt(player);
-}
-
-void GameCamera::LateUpdate()
-{
-	
+	_Move();
+	//プレイヤーの方を向く
+	_Camera->SetViewPoint((*_PlayerPos) + PLAYER_HEIGHT);
 }
 
 void GameCamera::RotTransversal(float roty)
@@ -136,10 +69,10 @@ void GameCamera::RotTransversal(float roty)
 	D3DXMATRIX rot;
 	D3DXQuaternionRotationAxis(&mAxisY, &(const D3DXVECTOR3&)Vector3::up, roty);
 	D3DXMatrixRotationQuaternion(&rot, &mAxisY);
-	D3DXVec3Transform(&v, &_ToPos, &rot);
-	_ToPos.x = v.x;
-	_ToPos.y = v.y;
-	_ToPos.z = v.z;
+	D3DXVec3Transform(&v, &_ToPlayerDir, &rot);
+	_ToPlayerDir.x = v.x;
+	_ToPlayerDir.y = v.y;
+	_ToPlayerDir.z = v.z;
 }
 
 void GameCamera::RotLongitudinal(float rotx)
@@ -148,24 +81,57 @@ void GameCamera::RotLongitudinal(float rotx)
 	D3DXQUATERNION zAxis;
 	D3DXVECTOR4 v;
 	D3DXMATRIX rot;
-	D3DXVec3Cross(&Cross, &(const D3DXVECTOR3&)Vector3::up, &_ToPos);
+	//外積で直交するベクトルを取得
+	D3DXVec3Cross(&Cross, &(const D3DXVECTOR3&)Vector3::up, &_ToPlayerDir);
+	//
 	D3DXQuaternionRotationAxis(&zAxis, &Cross, rotx);
 	D3DXMatrixRotationQuaternion(&rot, &zAxis);
-	D3DXVec3Transform(&v, &_ToPos, &rot);
-	D3DXVECTOR3 toPosOld = _ToPos;
-	_ToPos.x = v.x;
-	_ToPos.y = v.y;
-	_ToPos.z = v.z;
+	D3DXVec3Transform(&v, &_ToPlayerDir, &rot);
+	D3DXVECTOR3 oldDir = _ToPlayerDir;
+	_ToPlayerDir.x = v.x;
+	_ToPlayerDir.y = v.y;
+	_ToPlayerDir.z = v.z;
+
 	D3DXVECTOR3 toPosDir;
-	D3DXVec3Normalize(&toPosDir, &_ToPos);
+	D3DXVec3Normalize(&toPosDir, &_ToPlayerDir);
 	//カメラの上下の上限
 	if (toPosDir.y < -0.5f)
 	{
-		_ToPos = toPosOld;
+		_ToPlayerDir = oldDir;
 	}
 	else if (toPosDir.y > 0.8f)
 	{
-		_ToPos = toPosOld;
+		_ToPlayerDir = oldDir;
 	}
+}
 
+void GameCamera::_Move()
+{
+	//プレイヤーとカメラの距離
+	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
+	Vector3 from, to;
+	//注視点
+	from = (*_PlayerPos) + PLAYER_HEIGHT;
+	//カメラの移動先
+	to = from + dist;
+	//レイを飛ばす
+	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere,from, to);
+	//移動先ポジション
+	Vector3 next;
+	//レイが何かに当たったかどうか？
+	if(ray.hitObject)
+	{
+		//衝突点の法線方向に半径分移動するベクトル。
+		Vector3 normal = ray.hitNormal;
+		normal.Scale(_Radius);
+		//衝突点から法線の方向に押し出し、移動先を算出。
+		next = ray.hitPos + normal;
+	}
+	else
+	{
+		//どこにも当たらなかったので、レイの終点に移動する。
+		next = to;
+	}
+	//移動
+	transform->SetPosition(next);
 }

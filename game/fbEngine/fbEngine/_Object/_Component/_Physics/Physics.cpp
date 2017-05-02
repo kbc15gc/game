@@ -75,19 +75,31 @@ void PhysicsWorld::RemoveCollision(Collision * coll)
 	dynamicWorld->removeCollisionObject(coll->GetCollisonObj());
 }
 
-const Vector3 PhysicsWorld::ClosestRayTest(const Vector3& f, const Vector3& t, const int& attr)
+fbPhysicsCallback::ClosestRayResultCallback PhysicsWorld::ClosestRayTest(const Vector3& f, const Vector3& t, const int& attr)
 {
 	//始点と終点を設定
 	btVector3 from(f.x, f.y, f.z), to(t.x, t.y, t.z);
 	//最も近かったを返すコールバック作成
-	fbPhysicsCallback::ClosestRayResultCallback callback;
-	callback.attribute = attr;
-	callback.fromPos = from;
-	callback.toPos = to;
-	callback.m_hitPointWorld = btVector3(0, 0, 0);
+	fbPhysicsCallback::ClosestRayResultCallback callback(from,to,attr);
 	//レイを飛ばす
 	dynamicWorld->rayTest(from, to, callback);
-	return Vector3(callback.m_hitPointWorld.x(), callback.m_hitPointWorld.y(), callback.m_hitPointWorld.z());
+	return callback;
+}
+
+fbPhysicsCallback::ClosestConvexResultCallback PhysicsWorld::ClosestRayShape(Collider * shape, const Vector3 & from, const Vector3 & to, const int & attr)
+{
+	fbPhysicsCallback::ClosestConvexResultCallback callback(from, attr, nullptr);
+
+	btTransform start, end;
+	//初期化
+	start.setIdentity();
+	end.setIdentity();
+	//ポジション設定
+	start.setOrigin(btVector3(from.x, from.y, from.z));
+	end.setOrigin(btVector3(to.x, to.y, to.z));
+
+	dynamicWorld->convexSweepTest((const btConvexShape*)shape->GetBody(), start, end, callback);
+	return callback;
 }
 
 const Collision * PhysicsWorld::ClosestContactTest(Collision * coll,const int& attr) const
@@ -112,10 +124,7 @@ vector<Collision*> PhysicsWorld::AllHitsContactTest(Collision * coll, const int 
 
 const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const Vector3 & s, const Vector3 & e, const int & attr) const
 {
-	fbPhysicsCallback::ClosestConvexResultCallback callback;
-	callback.attribute = attr;
-	callback.me = coll->GetCollisonObj();
-	callback.startPos = s;
+	fbPhysicsCallback::ClosestConvexResultCallback callback(s, attr, coll->GetCollisonObj());
 
 	btTransform start, end;
 	//初期化
@@ -126,7 +135,7 @@ const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const V
 	end.setOrigin(btVector3(e.x, e.y, e.z));
 
 	dynamicWorld->convexSweepTest((const btConvexShape*)coll->GetCollisonObj()->getCollisionShape(), start, end, callback);
-	return nullptr;
+	return callback.hitObject;
 }
 
 const fbPhysicsCallback::SweepResultGround PhysicsWorld::FindOverlappedStage(btCollisionObject * colliObject,const Vector3& s,const Vector3& e) const

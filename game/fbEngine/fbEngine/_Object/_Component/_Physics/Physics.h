@@ -41,7 +41,9 @@ public:
 	//Vector3　レイの始点
 	//Vector3　レイの終点
 	//int　指定したコリジョンの属性とのみ当たりをとる
-	const Vector3 ClosestRayTest(const Vector3& from, const Vector3& to, const int& attr = (const int)fbCollisionAttributeE::ALL);
+	fbPhysicsCallback::ClosestRayResultCallback ClosestRayTest(const Vector3& from, const Vector3& to, const int& attr = (const int)fbCollisionAttributeE::ALL);
+	//形のある例を飛ばす
+	fbPhysicsCallback::ClosestConvexResultCallback ClosestRayShape(Collider* shape,const Vector3& from, const Vector3& to, const int& attr = (const int)fbCollisionAttributeE::ALL);
 	//受け取ったコリジョンを始点から終点まで飛ばしてヒットした中で最も近かったものを取得
 	//Collison* 飛ばすコリジョン
 	//Vector3　始点
