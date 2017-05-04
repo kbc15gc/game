@@ -20,11 +20,6 @@ Sprite::Sprite(GameObject * g, Transform * t) :
 	
 }
 
-void Sprite::Awake()
-{
-	
-}
-
 void Sprite::Start()
 {
 	//頂点バッファ作成
@@ -39,14 +34,6 @@ void Sprite::Start()
 			{ 0.0f, 1.0f, 0.0f, 1.0f },//左上
 			{ 1.0f, 1.0f, 0.0f, 1.0f },//右上
 		};
-
-		//ポジション定義
-		//VERTEX_POSITION position[] = {
-		//	{ 0.0f, 0.0f, 0.0f, 1.0f },//左下
-		//	{ 0.0f, 1.0f, 0.0f, 1.0f },//左上
-		//	{ 1.0f, 0.0f, 0.0f, 1.0f },//右下
-		//	{ 1.0f, 1.0f, 0.0f, 1.0f },//右上
-		//};
 		//UV定義
 		VERTEX_TEXCOORD texcoord[] = {
 			{ 0.0f, 0.0f },//左上
@@ -76,8 +63,8 @@ void Sprite::Update()
 
 void Sprite::ImageRender()
 {
-	//テクスチャがないなら描画しない。
-	if (_Texture == nullptr)
+	//テクスチャがないのなら描画しない
+	if (_Texture->pTexture == nullptr)
 		return;
 	//各エフェクト
 	{

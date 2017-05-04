@@ -15,30 +15,7 @@ namespace
 			iterator = i;
 			priority = p;
 		}
-		
-		//	//sortに使う
-		//bool operator<(const RemoveObj& left) const
-		//{
-		//	//アドレスが異なるなら交換
-		//	if (left.addres != this->addres)
-		//	{
-		//		return true;
-		//	}
-		//	//並び替えしない
-		//	return false;
-		//}
-		//
-		////比較演算子 uniqueに使う
-		//bool operator==(const RemoveObj& left)
-		//{
-		//	//アドレス比較
-		//	if (left.addres == this->addres)
-		//	{
-		//		return true;
-		//	}
-		//	return false;
-		//}
-		
+
 		int priority;								//優先度
 		list<GameObject*>::iterator iterator;		//イテレータ
 	};

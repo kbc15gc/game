@@ -11,5 +11,11 @@ const bool CircleCollision::Judgment(const Vector2& point)
 
 const bool CircleCollision::Judgment(const CircleCollision * circle)
 {
-	return false;
+	Vector2 posA, posB;
+	posA = { transform->GetPosition().x,transform->GetPosition().y };
+	posB = { circle->transform->GetPosition().x,circle->transform->GetPosition().y };
+	Vector2 vec = posB - posA;
+	float SumRadius = this->_Radius + circle->_Radius;
+	//ƒxƒNƒgƒ‹‚Ì’·‚³‚ª‚¨Œİ‚¢‚Ì”¼Œa‚Ì˜aˆÈã‚È‚çÕ“Ë
+	return (vec.Length() <= SumRadius);
 }

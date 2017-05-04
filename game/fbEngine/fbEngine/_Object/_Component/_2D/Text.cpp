@@ -19,6 +19,9 @@ void Text::Awake()
 	//íœ‚·‚éF
 	_Sprite->SetClipColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
+	//Ž©“®•`‰æ‚µ‚È‚¢‚æ‚¤‚É‚·‚é
+	_Sprite->Start();
+	_Sprite->enable = false;
 	strcpy_s(_FontStyle, 32, "‚l‚r –¾’©");
 }
 
@@ -84,8 +87,7 @@ void Text::ImageRender()
 		}
 		
 	}
-	//nullptr‚ðÝ’è‚µ‚Ä•`‰æ‚µ‚È‚¢‚æ‚¤‚É‚·‚é
-	_Sprite->SetTexture(nullptr);
+	//Œ³‚É–ß‚·
 	transform->SetPosition(base);
 	transform->SetScale(buf);
 }

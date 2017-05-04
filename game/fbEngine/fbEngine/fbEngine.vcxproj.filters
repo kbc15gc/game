@@ -235,6 +235,7 @@
       <Filter>Object\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="CharacterController.cpp" />
+    <ClCompile Include="_Object\_GameObject\Button.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -464,5 +465,8 @@
       <Filter>Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="CharacterController.h" />
+    <ClInclude Include="_Object\_GameObject\Button.h">
+      <Filter>Object\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

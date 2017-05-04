@@ -22,7 +22,6 @@ class Sprite:public Component
 {
 public:
 	Sprite(GameObject* g, Transform* t);
-	void Awake()override;
 	void Start()override;
 	void Update()override;
 	void ImageRender()override;

@@ -108,38 +108,54 @@ namespace Support
 		s[i] = '\0';
 	}
 
-	void ReadCSV(char * filename)
+	double StringToDouble(const char * string)
 	{
-		std::ifstream ifs("Asset//Data//tets.csv");
-		string buf;
-		vector<vector<string>> Vec;
-		int line = 0;
-		//読み込み
-		while (ifs && getline(ifs, buf))
-		{
-			string moji = "";
-			vector<string> Vs;
-			//コンマを探す
-			for (short idx = 0, i = 0; idx < (int)buf.length(); idx++)
-			{
-				if (buf[idx] == ',')
-				{
-					Vs.push_back(moji);
-					i++;
-					moji = "";
-				}
-				else
-				{
-					moji += buf[idx];
-				}
+		char copy[256];
+		ZeroMemory(copy, sizeof(char) * 256);
+		strcpy(copy, string);
 
-			}
-			//文字列追加
-			Vec.push_back(Vs);
-			line++;
+		//整数部の文字列
+		char* intS = strtok(copy, ".");
+		//小数部分の文字列
+		char decS[256];
+		strcpy(decS, copy + (strlen(intS) + 1));
+		
+
+		//整数部分と小数部分
+		double integer = 0,decimal = 0.0f;
+		//長さを調べる
+		int intL = strlen(intS), decL = strlen(decS);
+		//整数部ループ
+		for(short i = 0;i < intL;i++)
+		{
+			double val = *(intS + i) - '0';
+			integer = (integer * 10) + val;
 		}
 
-		return;
+		//小数部ループ
+		for (short i = decL-1; i >= 0; i--)
+		{
+			double val = (*(decS + i) - '0') / 10.0f;
+			decimal = (decimal / 10.0f) + val;
+		}
+
+		//整数部と小数部を加算する
+		double out = integer + decimal;
+		//四捨五入する
+		Round(out, decL);
+		return out;
+	}
+
+	void Round(double & num, const int & decimal)
+	{
+		//べき乗計算
+		double multi = 1.0f;
+		FOR(i, decimal)
+			multi *= 10.0f;
+
+		int integer = (num * multi) + 0.5f;
+		//flotaに戻す
+		num = integer / multi;
 	}
 }
 

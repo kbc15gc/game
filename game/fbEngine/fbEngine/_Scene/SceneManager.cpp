@@ -85,7 +85,7 @@ void SceneManager::DrawScene()
 Scene* SceneManager::ChangeScene(int key)
 {
 	//フェードが明ける
-	Scene::SetFade(false);
+	Scene::StartFade(false);
 	//シーンの添え字切り替え
 	_NowScene = key;
 	//オブジェクトリリース
