@@ -49,7 +49,7 @@ public:
 private:
 
 	/** 頂点を扱うクラス. */
-	Vertex* _Vertex;
+	Vertex* _Vertex = nullptr;
 
 	/** ブラー結果を書き込むレンダリングターゲット. */
 	RenderTarget _BlurRT[2];

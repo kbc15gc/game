@@ -55,8 +55,10 @@ struct ShadowReceiverParam
 ShadowReceiverParam g_ShadowReceiverParam : register(c0);
 
 //影の計算
-float CalcShadow(float3 worldPos)
+float CalcShadow(float3 worldPos,out float3 color)
 {
+	color = float3(1, 1, 1);
+
 	sampler texSampler[SHADOWMAP_NUM];
 	texSampler[0] = g_ShadowMapSampler_0;
 	texSampler[1] = g_ShadowMapSampler_1;
@@ -99,6 +101,20 @@ float CalcShadow(float3 worldPos)
 					result = 0.0f;
 				}
 			}
+
+			if (i == 0)
+			{
+				color = float3(0.5f, 0, 0);
+			}
+			else if (i == 1)
+			{
+				color = float3(0, 0.5f, 0);
+			}
+			else
+			{
+				color = float3(0, 0, 0.5f);
+			}
+
 			//一枚にヒットしたらループを終わる
 			break;
 		}

@@ -179,8 +179,10 @@ private:
 	/** シャドウレシーバー用のパラメータ. */
 	ShadowReceiverParam _ShadowReceiverParam;
 
+	/** ブラークラス. */
 	Blur _Blur[SHADOWMAP_NUM];
 
+	/** バリアンスシャドウマップのフラグ. */
 	bool _isVSM = true;
 
 };

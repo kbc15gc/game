@@ -90,7 +90,30 @@ void ShadowMap::Update()
 	FOR(count, SHADOWMAP_NUM)
 	{
 		//平行投影プロジェクション行列を計算
-		D3DXMatrixOrthoLH(&_LPMatrix[count], _ShadowArea[count].x * _Aspect, _ShadowArea[count].y, _Near, _Far);
+#ifdef NEKOMATA
+		if (count == 0)
+		{
+			D3DXMatrixOrthoOffCenterLH(&_LPMatrix[count],
+				0,
+				_ShadowArea[count].x * _Aspect,
+				_ShadowArea[count].y,
+				0,
+				_Near,
+				_Far);
+		}
+		else
+		{
+			D3DXMatrixOrthoOffCenterLH(&_LPMatrix[count],
+				_ShadowArea[count - 1].x * _Aspect,
+				_ShadowArea[count].x * _Aspect,
+				_ShadowArea[count].y,
+				_ShadowArea[count - 1].y,
+				_Near,
+				_Far);
+		}
+#else
+		D3DXMatrixOrthoLH(&_LPMatrix[count], ShadowAreaTable[count][0] * _Aspect, ShadowAreaTable[count][1], _Near, _Far);
+#endif
 		_ShadowReceiverParam._LPMatrix[count] = _LPMatrix[count];
 	}
 }

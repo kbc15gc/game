@@ -14,17 +14,24 @@ SceneManager::SceneManager()
 	_OffScreen->Awake();
 	_Sprite = _OffScreen->GetComponent<Sprite>();
 	_Sprite->Start();
-	//レンダーターゲット作成
-	_RT = new RenderTarget();
-	//大きさ二倍で作って高画質に
-	//浮動小数点バッファで作成
-	_RT->Create(g_WindowSize, D3DFMT_A16B16G16R16F);
-	//掛ける倍率は0.5ｆ
-	_RT->texture->Size = _RT->texture->Size;
 
+	FOR(count, 2)
+	{
+		//レンダーターゲット作成
+		_MainRT[count] = new RenderTarget();
+		//大きさ二倍で作って高画質に
+		//浮動小数点バッファで作成
+		_MainRT[count]->Create(g_WindowSize, D3DFMT_A16B16G16R16F);
+		//掛ける倍率は0.5ｆ
+		_MainRT[count]->texture->Size = _MainRT[count]->texture->Size;
+	}
 	//レンダーターゲットのテクスチャを取得
-	_Sprite->SetTexture(_RT->texture);
+	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
+
+	//アンチエイリアスの削除.
+	_AntiAliasing.Create();
+
 	//ブルームの準備
 	_Bloom.Create();
 
@@ -72,12 +79,16 @@ void SceneManager::DrawScene()
 	INSTANCE(GameObjectManager)->PreRenderObject();
 
 	//0番目に設定(オフスクリーンレンダリング用)
-	INSTANCE(RenderTargetManager)->ReSetRT(0, _RT);
+	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
 	INSTANCE(GameObjectManager)->RenderObject();
+
+	_AntiAliasing.Render();
+
 	//レンダーターゲットを元に戻す
 	INSTANCE(RenderTargetManager)->BeforeRT();
-	
+
 	//オフスクリーンのやつ描画
+	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
 	_Bloom.Render();
 	INSTANCE(GameObjectManager)->PostRenderObject();
@@ -125,5 +136,5 @@ Scene* SceneManager::ChangeScene(char * Scenename)
 
 TEXTURE* SceneManager::GetOffScreenTexture()
 {
-	return _RT->texture;
+	return _MainRT[CurrentMainRT_]->texture;
 }

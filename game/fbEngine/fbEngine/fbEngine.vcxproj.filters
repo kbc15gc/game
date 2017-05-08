@@ -49,6 +49,9 @@
     <Filter Include="Effect\PreRender">
       <UniqueIdentifier>{f8f6420d-0891-451a-8156-ce13ccb86c71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect">
+      <UniqueIdentifier>{add49f4e-ae4d-4ae9-a8db-b0d3d01616da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -74,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="_Scene\SceneManager.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="_Effect\Bloom.cpp">
-      <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="_Effect\EffectManager.cpp">
       <Filter>Effect</Filter>
@@ -244,6 +244,15 @@
     <ClCompile Include="_Effect\Blur.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
+    <ClCompile Include="_Effect\PostEffect\Bloom.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\PostEffect\AntiAliasing.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\PostEffect\DepthofField.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -272,9 +281,6 @@
     </ClInclude>
     <ClInclude Include="_Scene\SceneManager.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="_Effect\Bloom.h">
-      <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="_Effect\Effect.h">
       <Filter>Effect</Filter>
@@ -478,6 +484,15 @@
     </ClInclude>
     <ClInclude Include="_Effect\Blur.h">
       <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\Bloom.h">
+      <Filter>Effect\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\AntiAliasing.h">
+      <Filter>Effect\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\DepthofField.h">
+      <Filter>Effect\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

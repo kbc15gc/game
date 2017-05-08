@@ -199,14 +199,17 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 		light.xyz += spec.xyz;
 	}
 
+	float3 cascadeColor = 0;
+
 	//‰e
 	if (ReceiveShadow)
 	{
 		//‰e‚É‚È‚Á‚Ä‚¢‚é.
-		light.rgb *= CalcShadow(In._World.xyz);
+		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
 	}
 	//
 	color.rgb *= light.rgb + g_ambientLight.rgb;
+	color.rgb *= cascadeColor;
 	return color;
 }
 

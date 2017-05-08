@@ -33,9 +33,9 @@ sampler g_TextureSampler =
 sampler_state
 {
 	Texture = <g_Texture>;
-    MipFilter = NONE;
-    MinFilter = NONE;
-    MagFilter = NONE;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
@@ -44,9 +44,9 @@ samplerCUBE g_cubeSampler =
 sampler_state
 {
 	Texture = <g_Texture>;
-	MipFilter = NONE;
-	MinFilter = NONE;
-	MagFilter = NONE;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
@@ -151,14 +151,17 @@ float4 PSMain(VS_OUTPUT In):COLOR0
 		light.rgb += spec.xyz;
 	}
 
+	float3 cascadeColor = 0;
+
 	if (ReceiveShadow)
 	{
 		//âeÇ…Ç»Ç¡ÇƒÇ¢ÇÈ.
-		light.rgb *= CalcShadow(In._World.xyz);
+		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
 	}
 
 	color.rgb *= light.rgb + g_ambientLight.rgb;
-	
+	color.rgb *= cascadeColor;
+
 	return color;
 }
 
@@ -235,14 +238,17 @@ PS_PreOUTPUT PSPre(VS_OUTPUT In)
 		light.rgb += spec.xyz;
 	}
 
+	float3 cascadeColor = 0;
+
 	if (ReceiveShadow)
 	{
 		//âeÇ…Ç»Ç¡ÇƒÇ¢ÇÈ.
-		light.rgb *= CalcShadow(In._World.xyz);
+		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
 	}
 	//âeÇ…Ç»Ç¡ÇƒÇ¢Ç»Ç¢ÅB
 
 	o._Color.rgb *= light.rgb + g_ambientLight.rgb;
+	o._Color.rgb *= cascadeColor;
 
 	return o;
 }
