@@ -18,9 +18,9 @@ void GameScene::Start()
 	//ゲームライト生成
 	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 10);
 	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 10);
 	//空生成
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成

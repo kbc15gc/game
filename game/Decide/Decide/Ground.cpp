@@ -15,7 +15,15 @@ void Ground::Awake()
 	SkinModel* model = AddComponent<SkinModel>();
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Ground.X"));
+	//マテリアル取得
+	Material* material = modeldata->FindMaterial("ground4_Diffuse.tga");
+	//スプラットマップセット
+	material->SetTexture(Material::TextureHandleE::SplatMap, TextureManager::LoadBaseTexture("Xfile/groundSplatmap.png"));
+	material->SetTexture(Material::TextureHandleE::TerrainTex0, TextureManager::LoadBaseTexture("Xfile/Grass.tga"));
+	material->SetTexture(Material::TextureHandleE::TerrainTex1, TextureManager::LoadBaseTexture("Xfile/snow.png"));
+	material->SetTexture(Material::TextureHandleE::TerrainTex2, TextureManager::LoadBaseTexture("Xfile/Sand_Albedo.tga"));
 	model->SetModelData(modeldata);
+	model->terain = true;
 	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
 	//model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 

@@ -32,6 +32,10 @@ public:
 	//画像ファイルはImageフォルダに入っている物のみ読み込める
 	//引数:char* 画像ファイルの名前(拡張子含む)
 	static TEXTURE* LoadTexture(char* filename);
+	//テクスチャを読み取る
+	//読み込むだけでマップには登録されない
+	//ファイルパスは"Asset/"からのパスを書く
+	static IDirect3DBaseTexture9* LoadBaseTexture(char* filepath);
 private:
 	//テクスチャを格納するmap
 	static map<UINT64,TEXTURE*> _TextureMap;

@@ -136,7 +136,7 @@ public:
 	static const Vector3 axisZ;
 	static const Vector3 one;
 public:
-	operator D3DXVECTOR3() { return static_cast<D3DXVECTOR3>(*this); }
+	operator D3DXVECTOR3() { return (*this); }
 	operator LPVOID() { return static_cast<LPVOID>(this); }
 	
 	Vector3() 
@@ -229,9 +229,9 @@ public:
 	 */
 	Vector3 Cross(const Vector3& in)
 	{
-		float _x = (y * in.z) - (in.y * z);
-		float _y = (z * in.x) - (in.z * x);
-		float _z = (x * in.y) - (in.x * y);
+		float _x = (y * in.z) - (z * in.y);
+		float _y = (z * in.x) - (x * in.z);
+		float _z = (x * in.y) - (y * in.x);
 		return Vector3(_x, _y, _z);
 	}
 	/*!

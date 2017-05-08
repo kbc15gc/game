@@ -19,12 +19,12 @@ Material::~Material()
 	}
 }
 
-void Material::SetTexture(const TextureHandleE & handle, IDirect3DBaseTexture9 * tex)
+void Material::SetTexture(const UINT & handle, IDirect3DBaseTexture9 * tex)
 {
 	_Textures[handle] = tex;
 }
 
-IDirect3DBaseTexture9 * Material::GetTexture(const TextureHandleE & handle)
+IDirect3DBaseTexture9 * Material::GetTexture(const UINT & handle)
 {
 	return _Textures[handle];
 }

@@ -54,6 +54,39 @@ TEXTURE* TextureManager::LoadTexture(char* filename)
 	return tex;
 }
 
+IDirect3DBaseTexture9 * TextureManager::LoadBaseTexture(char * filepath)
+{
+	char path[128] = "Asset/";
+	//パスの作成
+	strcat(path, filepath);
+
+	//テクスチャの情報
+	D3DXIMAGE_INFO info;
+	D3DXGetImageInfoFromFileA(path, &info);
+
+	//情報取得
+	D3DXGetImageInfoFromFile(
+		path,	//テクスチャパス
+		&info	//情報格納先
+	);
+	IDirect3DBaseTexture9* texture;
+	//テクスチャのタイプに合った読み込み方法
+	switch (info.ResourceType)
+	{
+	case _D3DRESOURCETYPE::D3DRTYPE_TEXTURE:
+		//通常テクスチャ読み込み
+		D3DXCreateTextureFromFile(graphicsDevice(), path, (LPDIRECT3DTEXTURE9*)&texture);
+		break;
+	case _D3DRESOURCETYPE::D3DRTYPE_CUBETEXTURE:
+		//キューブテクスチャ読み込み
+		D3DXCreateCubeTextureFromFile(graphicsDevice(), path, (LPDIRECT3DCUBETEXTURE9*)&texture);
+		break;
+	default:
+		break;
+	}
+	return texture;
+}
+
 HRESULT SetTexture(TEXTURE& tex,char* path)
 {
 	//テクスチャの情報

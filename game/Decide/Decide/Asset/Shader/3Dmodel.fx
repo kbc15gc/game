@@ -4,23 +4,18 @@
 #include"ShadowFunction.h"
 
 #define MAX_LIGHTNUM 4
+#include "LightingFunction.h"
+
 bool Texflg;							//テクスチャ
 bool Spec;								//スペキュラ
 bool ReceiveShadow;						//影を写す
 
 bool SkyBox;
 
-float4 g_cameraPos;						//カメラの位置
-
 float4x4 g_rotationMatrix;				//回転行列。法線を回転させるために必要になる。ライティングするなら必須。
 float4x4 g_worldMatrix;					//ワールド行列。
 float4x4 g_viewMatrix;					//ビュー行列。
 float4x4 g_projectionMatrix;			//プロジェクション行列。
-
-int g_LightNum;									//ライトの数
-float4	g_diffuseLightDirection[MAX_LIGHTNUM];	//ディフューズライトの方向。
-float4	g_diffuseLightColor[MAX_LIGHTNUM];		//ディフューズライトのカラー。
-float4	g_ambientLight;							//環境光。
 
 float4  g_diffuseMaterial;		//マテリアルカラー
 float4  g_blendcolor;			//全体に混ぜる色
@@ -65,7 +60,7 @@ struct VS_OUTPUT{
 	float4	_Color	: COLOR0;
 	float3	_Normal	: NORMAL;
 	float2	_UV		: TEXCOORD0;
-	float4  _World	: TEXCOORD1;
+	float4  _World	: TEXCOORD1;	//xyzにワールド座標。wには射影空間でのdepthが格納される。
 };
 
 
@@ -80,13 +75,14 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	pos = mul( In._Pos, g_worldMatrix );		//モデルのローカル空間からワールド空間に変換。
 	
 	Out._World = pos;						//ワールド行列を保持
+
 	//スカイボックスはビュー行列をかけない。
 	if (!SkyBox)
 	{
 		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	}
 	pos = mul( pos, g_projectionMatrix );	//ビュー空間から射影空間に変換。
-
+	Out._World.w = pos.w;
 	Out._Pos = pos;
 	Out._Color = In._Color;
 	Out._UV = In._UV;
@@ -128,17 +124,13 @@ float4 PSMain(VS_OUTPUT In):COLOR0
 	float4 light = (float4)0;
 
 	//デフューズライトを計算。
-	for (int i = 0; i < g_LightNum; i++)
-	{
-		//0.0f未満なら0.0fを返す
-		light.rgb += max(0.0f, -dot(normal, g_diffuseLightDirection[i].xyz)) * g_diffuseLightColor[i].rgb;
-	}
+	light = DiffuseLight(normal);
 
 	//スペキュラーライト
 	if (Spec)
 	{
 		float3 spec = 0.0f;
-		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World);
+		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World.xyz);
 		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
 		for (int i = 0; i < g_LightNum; i++)
 		{
@@ -153,14 +145,20 @@ float4 PSMain(VS_OUTPUT In):COLOR0
 
 	float3 cascadeColor = 0;
 
-	if (ReceiveShadow)
+	if (g_EffectFlg.x)
 	{
 		//影になっている.
 		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
 	}
 
-	color.rgb *= light.rgb + g_ambientLight.rgb;
-	color.rgb *= cascadeColor;
+	//color.rgb *= light.rgb + g_ambientLight.rgb;
+
+	//ライトをかける
+	color.rgb *= light.rgb;
+	//アンビエントライトを加算。
+	color.rgb += diff.rgb * g_ambientLight.rgb;
+	
+	//color.rgb *= cascadeColor;
 
 	return color;
 }
@@ -176,6 +174,170 @@ technique NormalRender
 }
 
 //////////////////////////////////////////////////////////////
+texture g_splatMap;			//Splatmap
+sampler g_splatMapSampler =
+sampler_state
+{
+	Texture = <g_splatMap>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+texture g_terrainTex0;
+texture g_terrainTex1;
+texture g_terrainTex2;
+texture g_terrainTex3;
+float4 g_terrainRect;	//!<地形をXZ平面で見た矩形。
+
+sampler g_terrainTexSampler[4] = {
+	sampler_state
+{
+	Texture = <g_terrainTex0>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+sampler_state
+{
+	Texture = <g_terrainTex1>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+sampler_state
+{
+	Texture = <g_terrainTex2>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+sampler_state
+{
+	Texture = <g_terrainTex3>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+};
+
+texture g_terrainNormalMap0;
+texture g_terrainNormalMap1;
+texture g_terrainNormalMap2;
+texture g_terrainNormalMap3;
+sampler g_terrainNormalMapSampler[4] = {
+	sampler_state
+{
+	Texture = <g_terrainNormalMap0>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+sampler_state
+{
+	Texture = <g_terrainNormalMap1>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+sampler_state
+{
+	Texture = <g_terrainNormalMap2>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+sampler_state
+{
+	Texture = <g_terrainNormalMap3>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+},
+};
+
+float4 PSTerrain(VS_OUTPUT In) : COLOR
+{
+	//スプラットマップのUV座標を求める。
+	float2 splatMapUV;
+	splatMapUV.x = (In._World.x - g_terrainRect.x) / (g_terrainRect.y - g_terrainRect.x);
+	splatMapUV.y = (In._World.z - g_terrainRect.z) / (g_terrainRect.w - g_terrainRect.z);
+	float4 splatMap = tex2D(g_splatMapSampler, splatMapUV);
+	//今回使う枚数は三枚なのでrgbまで使う
+	float t = splatMap.r + splatMap.g + splatMap.b /*+ splatMap.w*/;
+	//割合を計算
+	float4 weights = float4(splatMap.r / t, splatMap.g / t, splatMap.b / t, splatMap.w / t);
+
+	//各テクスチャから色を取得
+	float4 diffuseColor = tex2D(g_terrainTexSampler[0], In._UV) * weights.x;
+	diffuseColor += tex2D(g_terrainTexSampler[1], In._UV) * weights.y;
+	diffuseColor += tex2D(g_terrainTexSampler[2], In._UV) * weights.z;
+	//diffuseColor += tex2D(g_terrainTexSampler[3], In._UV) * weights.w;
+	float4 color = diffuseColor;
+
+	float3 normal = normalize(In._Normal);
+	//ディフューズライト
+	float4 light = DiffuseLight(normal);
+
+	float3 cascadeColor = 0;
+
+	if (g_EffectFlg.x)
+	{
+		//影になっている.
+		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
+	}
+
+	color.rgb *= light.rgb;
+
+	////大気錯乱。
+	////color = In.rayColor + color * In.mieColor;
+
+	////ポイントライト。
+	//color.xyz += diffuseColor.xyz * PointLight(normal, In._World.xyz, 0);
+	////アンビエントライトを加算。
+	color.xyz += diffuseColor.xyz * g_light.ambient.xyz;
+
+	//PSOutput psOut = (PSOutput)0;
+	//psOut.velocity.xy = In.velocity.xy / In.velocity.w - In.screenPos.xy / In.screenPos.w;
+	//psOut.velocity.xy *= 0.5f;
+	//psOut.velocity.xy += 0.5f;
+	//psOut.velocity.zw = 0.0f;
+
+	//psOut.color = color;
+	//psOut.depth = In._World.w;
+
+	//return psOut;
+	return color;
+}
+
+//普通に描画する用
+technique TerrainRender
+{
+	pass p0
+	{
+		VertexShader = compile vs_3_0 VSMain();
+		PixelShader = compile ps_3_0 PSTerrain();
+	}
+}
+
+//////////////////////////////////////////////////////////////
 //事前描画
 
 struct PS_PreOUTPUT {
@@ -187,7 +349,8 @@ struct PS_PreOUTPUT {
 PS_PreOUTPUT PSPre(VS_OUTPUT In)
 {
 	PS_PreOUTPUT o = (PS_PreOUTPUT)0;	//最終的に出力するカラー
-	float4 diff = (float4)0;	//メッシュのマテリアル
+	float4 diff = (float4)0;			//メッシュのマテリアル
+	float4 color = (float4)0;
 	float3 normal = normalize(In._Normal.xyz);
 	//カラー
 	if (Texflg)
@@ -210,22 +373,18 @@ PS_PreOUTPUT PSPre(VS_OUTPUT In)
 		diff = g_diffuseMaterial;
 	}
 	diff *= g_blendcolor;
-	o._Color = diff;
+	color = diff;
 
 	float4 light = (float4)0;
 
 	//デフューズライトを計算。
-	for (int i = 0; i < g_LightNum; i++)
-	{
-		//0.0f未満なら0.0fを返す
-		light.rgb += max(0.0f, -dot(normal, g_diffuseLightDirection[i].xyz)) * g_diffuseLightColor[i].rgb;
-	}
+	light = DiffuseLight(normal);
 
 	//スペキュラーライト
 	if (Spec)
 	{
 		float3 spec = 0.0f;
-		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World);
+		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World.xyz);
 		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
 		for (int i = 0; i < g_LightNum; i++)
 		{
@@ -240,7 +399,7 @@ PS_PreOUTPUT PSPre(VS_OUTPUT In)
 
 	float3 cascadeColor = 0;
 
-	if (ReceiveShadow)
+	if (g_EffectFlg.x)
 	{
 		//影になっている.
 		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
@@ -249,6 +408,11 @@ PS_PreOUTPUT PSPre(VS_OUTPUT In)
 
 	o._Color.rgb *= light.rgb + g_ambientLight.rgb;
 	o._Color.rgb *= cascadeColor;
+
+	//ライトをかける
+	//color.rgb *= light.rgb;
+	//アンビエントライトを加算。
+	//color.rgb += diff.rgb * g_ambientLight.rgb;
 
 	return o;
 }
