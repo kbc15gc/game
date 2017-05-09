@@ -227,13 +227,13 @@ FontData * FontManager::_CreateOutLineFontTexture(const wchar_t & wc, const int 
 	D3DLOCKED_RECT lockR;
 	//テクスチャロック
 	if (SUCCEEDED(tex->pTexture->LockRect(0, &lockR, 0, 0))) {
-		//ビット取得
+		//テクスチャのピクセルの先頭アドレス
 		char *d = (char*)lockR.pBits;
 		unsigned BMPPitch = (charWH.right * 3 + 3) / 4 * 4;
 		//テクスチャに書き込むループ
 		for (int y = 0; y < texH; y++) {
 			for (int x = 0; x < texW; x++) {
-				//ここに書き込めばいい？
+				//ピクセルのアドレス(ここに書き込んで色を変える)。
 				unsigned &v = *((unsigned*)d + x + y * texW);   // テクスチャのピクセル位置
 				unsigned alph = 0;
 				unsigned edge = 0;

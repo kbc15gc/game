@@ -6,7 +6,7 @@ void FPS::Start()
 	
 	_Text->SetSize(40.0f);
 	_Text->SetString(L"FPS:0");
-	_Text->SetFormat(fbText::TextFormatE::LEFT);
+	_Text->SetFormat((int)fbText::TextFormatE::LEFT);
 }
 
 void FPS::Update()

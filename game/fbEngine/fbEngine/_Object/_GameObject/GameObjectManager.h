@@ -41,7 +41,7 @@ public:
 	GameObject* Add(GameObject* pAdd,int priority);
 
 	template<class T>
-	T* AddNew(char* name, UINT priority)
+	T* AddNew(char* name, unsigned int priority)
 	{
 		//優先度が超えてる
 		if(priority > System::MAX_PRIORITY)
@@ -49,6 +49,8 @@ public:
 			priority = System::MAX_PRIORITY - 1;
 		}
 		T* obj = new T(name);
+		//優先度セット
+		obj->SetPriority(priority);
 		_GameObjects.at(priority).push_back(obj);
 		obj->Awake();
 

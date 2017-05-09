@@ -18,6 +18,11 @@ namespace Support
 	extern double StringToDouble(const char* string);
 	//小数を四捨五入する
 	extern void Round(double& num, const int& decimal = 1);
+	//文字列中の指定文字列を別の文字列に置換
+	//変換を行う文字列 in.out
+	//置き換えたい文字列
+	//置き換える文字列
+	extern void StrReplace(char* sorce, const char* find, const char* place);
 
 	//変数の型を指定。
 	enum DataTypeE
@@ -37,7 +42,7 @@ namespace Support
 
 	//CSVファイルから情報を読み取り、テンプレートクラスに格納する。
 	template<class T>
-	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<T>& output)
+	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<T*>& output)
 	{
 		//ファイル入力用
 		std::ifstream fin(filepath, std::ios::in);
@@ -58,16 +63,24 @@ namespace Support
 		//スキップする処理(要改善)
 		fin.getline(line, 256);
 
-		//初期化してから、ファイルから一列読み込む
-		ZeroMemory(line, sizeof(char) * 256);
-		fin.getline(line, 256);
-		//ファイルの終端までループ
-		while (!fin.eof())
+		while (true)
 		{
+			//初期化してから新しい行を読み込む
+			ZeroMemory(line, sizeof(char) * 256);
+			fin.getline(line, 256);
+
+			//csvの"\n"が"//n"と認識される問題(根本的な解決ではないかも)。
+			StrReplace(line, "\\n", "\n");
+
+			//ファイルの終端になったなら抜ける。
+			if (fin.eof())
+				break;
+
 			int idx = 0;		//何番目の要素か？
 			int offset = 0;		//先頭からのoffset量
 			memcpy(copy, line, sizeof(char) * 256);
-			T tmp;
+			//アドレス確保
+			T* tmp = new T();
 			//1行の終端までループ
 			//範囲チェック
 			while (*(line + offset) != '\0' && idx < datanum)
@@ -99,7 +112,7 @@ namespace Support
 				}
 
 				//変数の先頭アドレスを求める。char*型(1byte)にキャストすることで1づつずらすことができる。
-				auto addres = ((char*)(&tmp)) + datas[idx].offset;
+				auto addres = ((char*)(tmp)) + datas[idx].offset;
 				//アドレスに値をコピー
 				memcpy(addres, val, datas[idx].size);
 
@@ -108,9 +121,6 @@ namespace Support
 				idx++;
 			}
 			output.push_back(tmp);
-			//初期化してから新しい行を読み込む
-			ZeroMemory(line, sizeof(char) * 256);
-			fin.getline(line, 256);
 		}
 		//読み込み終了
 		return true;
@@ -118,7 +128,7 @@ namespace Support
 
 	//テンプレートクラスから情報を読み取り、CSVファイルに出力する。
 	template<class T>
-	extern bool OutputCSV(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<T>& output)
+	extern bool OutputCSV(const char* filepath, const Support::DATARECORD* datas, const int& datanum,const vector<T*>& output)
 	{
 		//ファイル入力用
 		std::ofstream fout(filepath, std::ios::out);
@@ -146,7 +156,7 @@ namespace Support
 		fout << std::endl;
 
 		//書き出すオブジェクトの分ループ
-		for each (T out in output)
+		for each (T* out in output)
 		{
 			//書き出す変数の数ループ
 			FOR(idx,datanum)
@@ -155,7 +165,7 @@ namespace Support
 				char* word = new char[256];
 				ZeroMemory(word, sizeof(char) * 256);
 				//変数の先頭アドレスを求める。char*型(1byte)にキャストすることで1づつずらすことができる。
-				auto addres = ((char*)(&out)) + datas[idx].offset;
+				auto addres = ((char*)(out)) + datas[idx].offset;
 
 				int i = 0;
 				float f = 0;

@@ -3,7 +3,6 @@
 #include "_Effect\Bloom.h"
 
 class Scene;
-struct TEXTURE;
 class Sprite;
 class ImageObject;
 

@@ -64,7 +64,7 @@ void Sprite::Update()
 void Sprite::ImageRender()
 {
 	//テクスチャがないのなら描画しない
-	if (_Texture->pTexture == nullptr)
+	if (_Texture == nullptr)
 		return;
 	//各エフェクト
 	{

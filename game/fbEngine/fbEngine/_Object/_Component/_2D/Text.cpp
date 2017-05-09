@@ -7,6 +7,8 @@ Text::Text(GameObject* g, Transform* t) :
 	_Size(1.0f),
 	_Spacing(0),
 	_Kerning(true),
+	_DisplayCharNum(UINT_MAX),
+	_MaxCharNum(0),
 	_TextFormat(fbText::TextFormatE::CENTER)
 {
 	
@@ -18,7 +20,7 @@ void Text::Awake()
 	_Sprite = gameObject->AddComponent<Sprite>();
 	//削除する色
 	_Sprite->SetClipColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
-	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
+	//_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 	//自動描画しないようにする
 	_Sprite->Start();
 	_Sprite->enable = false;
@@ -32,67 +34,25 @@ void Text::PreRender()
 
 void Text::ImageRender()
 {
-	Vector3 buf = transform->GetScale();
-	Vector3 base = transform->GetPosition();
-	transform->SetScale(Vector3(_Size, _Size, _Size));
+	//バッファに保持
+	Vector3 bufS = transform->GetScale();
+	Vector3 bufP = transform->GetPosition();
+	//テキストのサイズに変更
+	transform->SetScale(Vector3(bufS.x * _Size, bufS.y * _Size, bufS.z * _Size));
 
-	Vector3 pos = base;
-	switch (_TextFormat)
-	{
-	case fbText::TextFormatE::LEFT:
-		pos.x -= _Length * 0.0f;
-		break;
-	case fbText::TextFormatE::CENTER:
-		pos.x -= _Length * 0.5f;
-		break;
-	case fbText::TextFormatE::RIGHT:
-		pos.x -= _Length * 1.0f;
-		break;
-	default:
-		break;
-	}
-
-
-	//一つ前の文字のオフセット量セット
-	float offset = 0;
-	//フォントをセットして文字数分描画するっていうのは重い！
-	for (short i = 0;_WString[i] != '\0';i++)
-	{
-		//文字のデータ取得
-		FontData* data = INSTANCE(FontManager)->Findfont(_WString[i], _FontStyle);
-		//前の文字のoffset分ずらす
-		if (_Kerning)
-		{
-			pos.x += (offset)* _Size;
-		}
-		else
-		{
-			pos.x += (offset + data->gm.gmptGlyphOrigin.x) * _Size;
-		}
-		//フォントの左上の座標を引く
-		pos.y = base.y - (data->gm.gmptGlyphOrigin.y * _Size);
-		transform->SetPosition(pos);
-		//テクスチャセット
-		_Sprite->SetTexture(data->texture);
-		//描画
-		_Sprite->ImageRender();
-		//次の文字の開始位置
-		if(_Kerning)
-		{
-			offset = (float)data->gm.gmBlackBoxX;
-		}
-		else
-		{
-			offset = (float)data->gm.gmCellIncX + _Spacing;
-		}
-		
-	}
+	Vector3 baseP = bufP;
+	//フォーマットから基点を計算
+	_CalcFormat(baseP);
+	
+	//テキスト描画
+	_RenderText(baseP);
+	
 	//元に戻す
-	transform->SetPosition(base);
-	transform->SetScale(buf);
+	transform->SetPosition(bufP);
+	transform->SetScale(bufS);
 }
 
-void Text::Initialize(const wchar_t * string, const float& _Size, const Color& color, const fbSprite::SpriteEffectE& flg, const char * style, fbText::TextFormatE format)
+void Text::Initialize(const wchar_t * string, const float& _Size, const Color& color, const fbSprite::SpriteEffectE& flg, const char * style, const unsigned int& format)
 {
 	SetStyle((char*)style);
 	SetSize(_Size);
@@ -116,6 +76,16 @@ void Text::SetString(const wchar_t * s)
 	INSTANCE(FontManager)->Createfont(_WString, _FontStyle);
 
 	_UpdateLength();
+}
+
+void Text::SetString(const char * s)
+{
+	//wcharに変換
+	wchar_t w[256];
+	setlocale(LC_CTYPE, "jpn");
+
+	mbstowcs(w, s, 256);
+	SetString(w);
 }
 
 void Text::SetStyle(const char* s)
@@ -160,9 +130,40 @@ void Text::SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f)
 	_Sprite->SetEffectFlg((DWORD)e,f);
 }
 
-void Text::SetFormat(fbText::TextFormatE format)
+void Text::SetFormat(const unsigned int& format)
 {
-	_TextFormat = format;
+	_TextFormat = (fbText::TextFormatE)format;
+}
+
+void Text::SetKerning(const bool & kerning)
+{
+	_Kerning = kerning;
+}
+
+void Text::_CalcFormat(Vector3 & pos)
+{
+	//フォーマット
+	const unsigned int& format = (unsigned int)_TextFormat;
+	//移動量
+	Vector2 offset(_Length.x * 0.5f, -_Length.y * 0.5f);
+	if (format & (unsigned int)fbText::TextFormatE::CENTER)
+	{
+		pos.x -= offset.x;
+	}
+	else if (format & (unsigned int)fbText::TextFormatE::RIGHT)
+	{
+		pos.x -= offset.x * 2;
+	}
+
+	//上下の移動
+	if (format & (unsigned int)fbText::TextFormatE::UP)
+	{
+		pos.y += offset.y;
+	}
+	else if (format & (unsigned int)fbText::TextFormatE::DOWN)
+	{
+		pos.y -= offset.y;
+	}
 }
 
 void Text::_UpdateLength()
@@ -171,23 +172,102 @@ void Text::_UpdateLength()
 	if (!_WString)
 		return;
 	//初期化
-	_Length = 0.0f;
+	float width = 0;
+	//最大値保持(xとyで扱いが違うので注意されたし)
+	Vector2 MaxLength(0, 0);
+	_MostHeight = 0.0f;
+	_MaxCharNum = 0;
 	//横の長さ計算
 	for (short i = 0; _WString[i] != '\0'; i++)
 	{
-		//文字のデータ取得
-		FontData* data = INSTANCE(FontManager)->Findfont(_WString[i], _FontStyle);
-
-		//文字の横幅を足していく
-		if (_Kerning)
+		//文字数カウント
+		_MaxCharNum++;
+		//改行文字ではない。
+		if (_WString[i] != '\n')
 		{
-			_Length += data->gm.gmBlackBoxX;
+			//文字のデータ取得
+			FontData* data = INSTANCE(FontManager)->Findfont(_WString[i], _FontStyle);
+			GLYPHMETRICS gm = data->gm;
+			//文字の横幅を足していく
+			width += _Kerning ? gm.gmBlackBoxX : (gm.gmCellIncX + _Spacing);
+
+			//横幅更新
+			MaxLength.x = max(MaxLength.x, width);
+			MaxLength.y = max(MaxLength.y, max(gm.gmBlackBoxY, gm.gmptGlyphOrigin.y));
+			//最も大きいものを保持
+			_MostHeight = max(_MostHeight, gm.gmptGlyphOrigin.y);
 		}
 		else
 		{
-			_Length += (data->gm.gmCellIncX + data->gm.gmptGlyphOrigin.x + _Spacing);
+			//改行文字だった。
+			width = 0.0f;
+			_Length.y += MaxLength.y;
+			//次の改行も使いまわすか？
+			if (_WString[i + 1] != '\n')
+				MaxLength.y = 0.0f;
 		}
 	}
+	//横幅は最大のものに
+	_Length.x = MaxLength.x;
+	//縦幅は最大のものを足す
+	_Length.y += MaxLength.y;
 	//サイズをかける
 	_Length *= _Size;
+	_MostHeight *= _Size;
+}
+
+void Text::_RenderText(const Vector3 & base)
+{
+	//一つ前の文字のオフセット量セット
+	Vector3 offset(0, 0, 0);
+	//高さ
+	float maxHeight = 0;
+	//フォントをセットして文字数分描画するっていうのは重い！
+	for (short i = 0; _WString[i] != '\0'; i++)
+	{
+		//文字数以上になったなら描画止め。
+		if (_DisplayCharNum <= i)
+			break;
+
+		//この文字のスケール
+		float scale = _Size;
+		//改行文字ではない
+		if (_WString[i] != '\n')
+		{
+			//文字のデータ取得
+			FontData* data = INSTANCE(FontManager)->Findfont(_WString[i], _FontStyle);
+			GLYPHMETRICS gm = data->gm;
+			//画像の左上の座標
+			Vector3 origin(0, -gm.gmptGlyphOrigin.y, 0);
+			origin.Scale(scale);
+			origin.y += _MostHeight;
+			//基点　+　移動量　+　各文字の微調整
+			Vector3 pos = base + offset + origin;
+			pos.x += (gm.gmBlackBoxX / 2)*scale;
+			pos.y += (gm.gmBlackBoxY / 2)*scale;
+
+			transform->SetPosition(pos);
+			//テクスチャセット
+			_Sprite->SetTexture(data->texture);
+			//描画
+			_Sprite->ImageRender();
+
+			//文字の幅
+			float width = _Kerning ? gm.gmBlackBoxX : gm.gmCellIncX + _Spacing;
+			//文字の幅分移動量をプラス
+			offset.x += width * scale;
+			//その行の文字の最大の高さ
+			maxHeight = max(maxHeight, gm.gmBlackBoxY * scale);
+		}
+		else
+		{
+			//高さ分下にずらす
+			offset.y += maxHeight;
+			//移動量初期化
+			offset.x = 0;
+			//次が改行でないなら初期化
+			if (_WString[i + 1] != '\n')
+				maxHeight = 0;
+		}
+	}
 }

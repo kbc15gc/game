@@ -157,6 +157,37 @@ namespace Support
 		//flotaに戻す
 		num = integer / multi;
 	}
+	void StrReplace(char * sorce, const char * find, const char * place)
+	{
+		while (true)
+		{
+			//文字列検索
+			char* addres = strstr(sorce, find);
+
+			if(addres)
+			{
+				const int slen = strlen(sorce);
+				const int plen = strlen(place);
+				//退避用バッファ
+				char* buff = new char[slen];
+				strcpy(buff, addres);
+				//置換場所の次の場所
+				char* next = buff + (plen + 1);
+				//見つかった
+				//置換
+				memcpy(addres, place, sizeof(char) * plen);
+				//詰める
+				memcpy(addres + plen, next, sizeof(char) * strlen(addres + plen));
+				SAFE_DELETE(buff);
+				next = nullptr;
+			}
+			else
+			{
+				//見つからなかったので置換終了
+				return;
+			}
+		}
+	}
 }
 
 
