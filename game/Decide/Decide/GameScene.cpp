@@ -10,6 +10,7 @@
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
+#include "GameObject/HistoryBook/HistoryBook.h"
 
 void GameScene::Start()
 {
@@ -29,6 +30,8 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt",1);
 	//‰Î‚Ì—ðŽjƒ`ƒbƒv
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
+	//—ðŽj‘B
+	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
 	ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));

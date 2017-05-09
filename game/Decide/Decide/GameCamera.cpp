@@ -39,7 +39,7 @@ void GameCamera::Update()
 	//‰E‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		RotTransversal(CAMERA_SPEED * Time::DeltaTime());	
+		RotTransversal(CAMERA_SPEED * Time::DeltaTime());
 	}
 	//¶‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
@@ -56,7 +56,7 @@ void GameCamera::Update()
 	{
 		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
 	}
-	
+
 	_Move();
 	//ƒvƒŒƒCƒ„[‚Ì•û‚ðŒü‚­
 	_Camera->SetViewPoint((*_PlayerPos) + PLAYER_HEIGHT);

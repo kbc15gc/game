@@ -2,6 +2,7 @@
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class Player;
+
 //ƒQ[ƒ€ƒJƒƒ‰
 class GameCamera :public GameObject
 {

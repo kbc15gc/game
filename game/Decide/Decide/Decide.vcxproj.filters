@@ -35,6 +35,9 @@
     <Filter Include="Object\GameObject\Component">
       <UniqueIdentifier>{3baa3172-92f9-4cda-80c2-971cd765a60a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\GameObject\HistoryBook">
+      <UniqueIdentifier>{39ad487e-0a8d-4647-9c5a-cdf1e1723c58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
+      <Filter>Object\GameObject\HistoryBook</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +204,9 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
+      <Filter>Object\GameObject\HistoryBook</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
