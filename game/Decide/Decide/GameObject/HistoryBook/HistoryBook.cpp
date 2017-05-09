@@ -38,12 +38,6 @@ void HistoryBook::Start()
 	//	_Anim->SetAnimationEndTime(i, _AnimationEndTime[i]);
 	//}
 
-	//プレイヤーを検索。
-	_Player = INSTANCE(GameObjectManager)->FindObject("Player");
-
-	//カメラを検索。
-	_GameCamera = INSTANCE(GameObjectManager)->FindObject("_GameCamera");
-
 	//ステートの初期化。
 	HistoryBookState = State::Open;
 	//初期アニメーションとしてアイドルを再生。
@@ -53,22 +47,6 @@ void HistoryBook::Start()
 
 void HistoryBook::Update()
 {
-
-	//プレイヤーのポジションを取得。
-	Vector3 PlayerPos = _Player->transform->GetPosition();
-
-	//プレイヤーの高さ分を足して顔の位置に調整。
-	{
-		float PlayerHeight = 1.4f;
-		PlayerPos.y = PlayerPos.y + PlayerHeight;
-	}
-
-	//カメラの位置をプレイヤーの顔ぐらいに設定。
-	_GameCamera->transform->SetLocalPosition(PlayerPos);
-
-	//カメラの注視点をHistoryBookのモデルに設定。
-	_GameCamera->transform->LockAt(this);
-
 	//トランスフォーム更新
 	transform->UpdateTransform();
 }

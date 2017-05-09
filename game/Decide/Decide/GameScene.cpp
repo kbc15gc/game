@@ -11,6 +11,7 @@
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
 #include "GameObject\Village\HistoryManager.h"
+#include "GameObject\HistoryBook\HistoryBook.h"
 
 void GameScene::Start()
 {
@@ -32,6 +33,8 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
 	//—ðŽjŠÇ—
 	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 0);
+	//—ðŽj‘
+	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
 	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));

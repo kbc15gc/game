@@ -1,6 +1,7 @@
 #include "GameCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
+#include "GameObject\HistoryBook\HistoryBook.h"
 
 namespace
 {
@@ -32,6 +33,9 @@ void GameCamera::Start()
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を入れる
 	D3DXVec3Normalize(&_ToPlayerDir, &D3DXVECTOR3(0.0f, 3.0f, -4.0f));
+
+	//歴史書を検索。
+	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 }
 
 void GameCamera::Update()
@@ -151,4 +155,12 @@ void GameCamera::_StandardBehavior()
 
 void GameCamera::_HistoryBehavior()
 {
+
+	//カメラの位置をプレイヤーの顔ぐらいに設定。
+	transform->SetLocalPosition((*_PlayerPos) + PLAYER_HEIGHT);
+
+	_HistoryBookPos = &_HistoryBook->transform->GetPosition();
+
+	//カメラの注視点をHistoryBookのモデルに設定。
+	transform->LockAt((*_HistoryBookPos));
 }

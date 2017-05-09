@@ -34,6 +34,4 @@ private:
 	Animation* _Anim;											//アニメーションのコンポーネントのアドレス保持用。
 	double _AnimationEndTime[(int)AnimationNo::AnimationNum];	//アニメーションの終了時間
 	State HistoryBookState;
-	GameObject* _Player = nullptr;
-	GameObject* _GameCamera = nullptr;
 };

@@ -2,6 +2,7 @@
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class Player;
+class HistoryBook;
 
 //ゲームカメラ
 class GameCamera :public GameObject
@@ -37,4 +38,7 @@ private:
 	float _Dist;
 	//当たり判定の半径
 	float _Radius;
+	HistoryBook* _HistoryBook;
+	//プレイヤーのポジションへの参照
+	const Vector3* _HistoryBookPos;
 };
