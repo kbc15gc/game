@@ -69,7 +69,7 @@ IDirect3DBaseTexture9 * TextureManager::LoadBaseTexture(char * filepath)
 		path,	//テクスチャパス
 		&info	//情報格納先
 	);
-	IDirect3DBaseTexture9* texture;
+	IDirect3DBaseTexture9* texture = nullptr;
 	//テクスチャのタイプに合った読み込み方法
 	switch (info.ResourceType)
 	{

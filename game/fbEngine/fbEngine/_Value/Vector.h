@@ -19,7 +19,12 @@ public:
 		this->x = this->y = 0;
 	}
 
-	Vector2(float x, float y)
+	Vector2(float xy)
+	{
+		Set(xy, xy);
+	}
+
+	Vector2(const float x,const float y)
 	{
 		Set(x, y);
 	}
@@ -115,6 +120,13 @@ public:
 		vec.y = this->y / in;
 		return vec;
 	}
+
+	Vector2 operator *= (const float& in)
+	{
+		this->x *= in;
+		this->y *= in;
+		return *this;
+	}
 };
 
 //三次元ベクトル
@@ -143,20 +155,24 @@ public:
 	{
 		this->x = this->y = this->z = 0;
 	}
-	//D3DXVECTOR3をVector3に変換
+	//コンストラクタ
+	Vector3(float x, float y, float z)
+	{
+		Set(x, y, z);
+	}
+	Vector3(Vector2& v2,float z)
+	{
+		this->x = v2.x;
+		this->y = v2.y;
+		this->z = z;
+	}
 	Vector3(D3DXVECTOR3& in)
 	{
 		this->x = in.x;
 		this->y = in.y;
 		this->z = in.z;
 	}
-	/*!
-	* @brief	コンストラクタ。
-	*/
-	Vector3(float x, float y, float z)
-	{
-		Set(x, y, z);
-	}
+
 	//Vector3をD3DXVECTOR3に変換コピーする
 	void CopyFrom(D3DXVECTOR3& in) const
 	{
@@ -280,12 +296,18 @@ public:
 	//補完先、割合(0.0f~1.0f)
 	void Lerp(const Vector3& in,float wariai)
 	{
-		Vector3 a, b;
-		//割り
-		a = (*this) * (1.0f - wariai);
-		b = in * wariai;
+		wariai = min(1.0f, max(0.0f, wariai));
+		//ベクトルを求める
+		Vector3 ToI = in - *this;
+		*this += (ToI * wariai);
+	}
 
-		*this = a + b;
+	static Vector3& Lerp(const Vector3& a, const Vector3& b,float wariai)
+	{
+		wariai = min(1.0f, max(0.0f, wariai));
+		//ベクトルを求める
+		Vector3 To = b - a;
+		return a + (To * wariai);
 	}
 
 	void operator += (Vector3 in)

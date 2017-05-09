@@ -10,16 +10,16 @@
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
-#include "GameObject/HistoryBook/HistoryBook.h"
+#include "GameObject\Village\HistoryManager.h"
 
 void GameScene::Start()
 {
 	//ゲームライト生成
 	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
 	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
 	//空生成
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成
@@ -27,16 +27,16 @@ void GameScene::Start()
 	//プレイヤー生成
 	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
-	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt",1);
+	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//火の歴史チップ
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
-	//歴史書。
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	//歴史管理
+	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 0);
 
-	ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
 	depth->SetPivot(Vector2(0, 0));
-	depth->SetActive(false);
+	depth->SetActive(false);*/
 }
 
 void GameScene::Update()
@@ -44,20 +44,16 @@ void GameScene::Update()
 	//スタートボタンの押下確認
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
 	//エンターキー
-	if ((flag || KeyBoardInput->isPush(DIK_RETURN)) && !_ChangeScene)
+	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
-		//チェンジシーンフラグをtrue
-		_ChangeScene = true;
-		//フェード開始
-		SetFade(true);
+		//フェードイン開始
+		StartFade(true);
 	}
-	if (_ChangeScene &&	//エンターキーが押された
-		!_IsFade)		//フェード終了
+	//フェードイン完了
+	if (_FadeState == fbScene::FadeStateE::INEND)
 	{
 		//タイトルシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("TitleScene");
-		//シーンチェンジ完了
-		_ChangeScene = false;
 		return;
 	}
 }

@@ -5,25 +5,25 @@ HRESULT Mouse::Initialize(LPDIRECTINPUT8 Dinput)
 	//デバイス作成
 	if (FAILED(Dinput->CreateDevice(
 		GUID_SysMouse,	// マウスを受け付ける
-		&mouseDevice,	// IDirectInputDevice8ポインタ
+		&_MouseDevice,	// IDirectInputDevice8ポインタ
 		NULL)))			// 使わない
 	{
 		return false;
 	}
 
 	//受け取る構造体のフォーマットを設定
-	if (FAILED(mouseDevice->SetDataFormat(&c_dfDIMouse2)))
+	if (FAILED(_MouseDevice->SetDataFormat(&c_dfDIMouse2)))
 	{
 		return false;
 	}
 
 
 	// 入力デバイスへのアクセス権を取得
-	mouseDevice->Acquire();
+	_MouseDevice->Acquire();
 
 	HWND hWnd = FindWindow("DECIDE", NULL);
 	g_MainWindow;
-	mouseDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	_MouseDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	// デバイスの設定    
 	DIPROPDWORD diprop;
@@ -35,24 +35,26 @@ HRESULT Mouse::Initialize(LPDIRECTINPUT8 Dinput)
 	//相対値は前フレームからの相対値(移動量？)
 	//絶対値は相対値の累計
 	diprop.dwData = DIPROPAXISMODE_REL;
-	mouseDevice->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+	_MouseDevice->SetProperty(DIPROP_AXISMODE, &diprop.diph);
 
 	// 入力制御開始
-	mouseDevice->Acquire();
+	_MouseDevice->Acquire();
 			
 	return D3D_OK;
 }
 
 void Mouse::Update()
 {
+	//前フレームのやつにコピー
+	memcpy(&_Old, &_State, sizeof(DIMOUSESTATE2));
 	// 値の初期化    
-	ZeroMemory(&mouseState, sizeof(mouseState));
+	ZeroMemory(&_State, sizeof(DIMOUSESTATE2));
 	// 値の更新 
-	if (FAILED(mouseDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &mouseState)))
+	if (FAILED(_MouseDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &_State)))
 	{
 		//失敗したのでもう一度受け取れるようにする
-		mouseDevice->Acquire();
-		mouseDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &mouseState);
+		_MouseDevice->Acquire();
+		_MouseDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &_State);
 	}
 }
 
@@ -62,27 +64,85 @@ int Mouse::GetValue(MouseInE m)
 	switch (m)
 	{
 	case L_CLICK:
-		value = (mouseState.rgbButtons[0] & 0x80);
+		value = (_State.rgbButtons[0] & 0x80);
 		break;
 	case R_CLICK:
-		value = (mouseState.rgbButtons[1] & 0x80);
+		value = (_State.rgbButtons[1] & 0x80);
 		break;
 	case WHEEL_PUSH:
-		value = (mouseState.rgbButtons[2] & 0x80);
+		value = (_State.rgbButtons[2] & 0x80);
 		break;
 	case X:
-		value = mouseState.lX;
+		value = _State.lX;
 		break;
 	case Y:
-		value = mouseState.lY;
+		value = _State.lY;
 		break;
 	case WHEEL_ROLL:
-		value = mouseState.lZ;
+		value = _State.lZ;
 		break;
 	default:
 		break;
 	}
 	return value;
+}
+
+int Mouse::GetUp(MouseInE m)
+{
+	bool click = false;
+	switch (m)
+	{
+	case L_CLICK:
+		click = ((_Old.rgbButtons[0] & 0x80) > 0) && ((_State.rgbButtons[0] & 0x80) == 0);
+		break;
+	case R_CLICK:
+		click = ((_Old.rgbButtons[1] & 0x80) > 0) && ((_State.rgbButtons[1] & 0x80) == 0);
+		break;
+	case WHEEL_PUSH:
+		click = ((_Old.rgbButtons[2] & 0x80) > 0) && ((_State.rgbButtons[2] & 0x80) == 0);
+		break;
+	case X:
+		click = (_Old.lX != 0.0f) && (_State.lX == 0.0f);
+		break;
+	case Y:
+		click = (_Old.lY != 0.0f) && (_State.lY == 0.0f);
+		break;
+	case WHEEL_ROLL:
+		click = (_Old.lZ != 0.0f) && (_State.lZ == 0.0f);
+		break;
+	default:
+		break;
+	}
+	return click;
+}
+
+int Mouse::GetDown(MouseInE m)
+{
+	bool click = false;
+	switch (m)
+	{
+	case L_CLICK:
+		click = ((_Old.rgbButtons[0] & 0x80) == 0) && ((_State.rgbButtons[0] & 0x80) > 0);
+		break;
+	case R_CLICK:
+		click = ((_Old.rgbButtons[1] & 0x80) == 0) && ((_State.rgbButtons[1] & 0x80) > 0);
+		break;
+	case WHEEL_PUSH:
+		click = ((_Old.rgbButtons[2] & 0x80) == 0) && ((_State.rgbButtons[2] & 0x80) > 0);
+		break;
+	case X:
+		click = (_Old.lX == 0.0f) && (_State.lX != 0.0f);
+		break;
+	case Y:
+		click = (_Old.lY == 0.0f) && (_State.lY != 0.0f);
+		break;
+	case WHEEL_ROLL:
+		click = (_Old.lZ == 0.0f) && (_State.lZ != 0.0f);
+		break;
+	default:
+		break;
+	}
+	return click;
 }
 
 Vector2 Mouse::GetCursorPosOnScreen()

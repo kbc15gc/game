@@ -11,7 +11,7 @@ public:
 	}
 	//円と点のあたり判定
 	const bool Judgment(const Vector2& point);
-	//未実装
+	//サークル同士のあたり判定
 	const bool Judgment(const CircleCollision* circle);
 	//半径設定
 	void SetRadius(float r)

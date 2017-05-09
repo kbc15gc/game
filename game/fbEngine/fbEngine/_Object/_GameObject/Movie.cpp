@@ -101,7 +101,7 @@ void Movie::Awake()
 
 	// 待機時間の設定(ミリ秒)
 	long pEvCode;
-	hRes = _MediaEvent->WaitForCompletion(length*1000, &pEvCode);
+	hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
 
 	//グラフフィルタ停止
 	_MediaControl->Stop();

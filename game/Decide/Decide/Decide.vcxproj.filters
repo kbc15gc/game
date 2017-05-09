@@ -35,8 +35,8 @@
     <Filter Include="Object\GameObject\Component">
       <UniqueIdentifier>{3baa3172-92f9-4cda-80c2-971cd765a60a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\GameObject\HistoryBook">
-      <UniqueIdentifier>{39ad487e-0a8d-4647-9c5a-cdf1e1723c58}</UniqueIdentifier>
+    <Filter Include="Object\GameObject\Village">
+      <UniqueIdentifier>{f4c69b1e-892f-494c-ba6a-74302f6bb511}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -116,8 +116,14 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
-      <Filter>Object\GameObject\HistoryBook</Filter>
+    <ClInclude Include="GameObject\Village\HistoryManager.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\MessageManager.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\TextBox.h">
+      <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -205,8 +211,14 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
-      <Filter>Object\GameObject\HistoryBook</Filter>
+    <ClCompile Include="GameObject\Village\HistoryManager.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\MessageManager.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\TextBox.cpp">
+      <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

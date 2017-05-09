@@ -18,6 +18,10 @@ public:
 private:
 	//移動関数
 	void _Move();
+	//通常時のカメラ挙動
+	void _StandardBehavior();
+	//本を見ている時の挙動
+	void _HistoryBehavior();
 private:
 	//レイの形状
 	SphereCollider* _Sphere;

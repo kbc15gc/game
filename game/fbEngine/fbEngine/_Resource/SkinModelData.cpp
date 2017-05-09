@@ -646,7 +646,6 @@ void SkinModelData::LoadModelData(const char* filePath)
 
 	//メッシュリストを作成。
 	_CreateMeshList();
-	CalcWidthAndHeight();
 }
 
 //モデルデータのクローンを作成
@@ -814,10 +813,10 @@ void SkinModelData::CalcWidthAndHeight()
 {
 	const std::vector<LPD3DXMESH>& meshList = GetMeshList();
 	//番兵設定
-	double minX = FLT_MAX;
-	double minZ = FLT_MAX;
-	double maxX = -FLT_MAX;
-	double maxZ = -FLT_MAX;
+	float minX = FLT_MAX;
+	float minZ = FLT_MAX;
+	float maxX = -FLT_MAX;
+	float maxZ = -FLT_MAX;
 	for (auto& mesh : meshList) {
 		//頂点バッファを取得。
 		LPDIRECT3DVERTEXBUFFER9 vb;

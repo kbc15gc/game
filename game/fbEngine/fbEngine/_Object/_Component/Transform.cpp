@@ -217,24 +217,21 @@ Vector3 Transform::LocalPos(const Vector3& v)
 	return Vector3(pos.x, pos.y, pos.z);
 }
 
-void Transform::LockAt(GameObject * obj)
+void Transform::LockAt(const Vector3 & wpos)
 {
 	//注視点と視点
 	D3DXVECTOR3 target, eye;
 	D3DXMATRIX view;
-	obj->transform->_Position.CopyFrom(target);
+	wpos.CopyFrom(target);
 	this->_Position.CopyFrom(eye);
-	//回転行列初期化
+	//ビュー行列初期化
 	D3DXMatrixIdentity(&view);
-	//視点から見た上方向取得
-	Vector3 vup = this->Direction(Vector3::up);
-	//ターゲットから見た自分
-	//第四引数は視点の上方向
-	D3DXMatrixLookAtLH(&view, &target, &eye, (D3DXVECTOR3*)&Vector3::up);
+	//ビュー行列を作成
+	D3DXMatrixLookAtLH(&view, &eye, &target, (D3DXVECTOR3*)&Vector3::up);
 	//ビュー行列を逆行列にしてワールド行列に
 	D3DXMatrixInverse(&_RotateMatrix, NULL, &view);
 	// オフセットを切って回転行列だけにしてしまう
-	_RotateMatrix._41 = 0.0f;   
+	_RotateMatrix._41 = 0.0f;
 	_RotateMatrix._42 = 0.0f;
 	_RotateMatrix._43 = 0.0f;
 
@@ -248,6 +245,11 @@ void Transform::LockAt(GameObject * obj)
 	//SetAngle(_Rotation.GetAngle());
 	//ワールド行列を求める。
 	UpdateWolrdMatrix();
+}
+
+void Transform::LockAt(GameObject * obj)
+{
+	LockAt(obj->transform->_Position);
 }
 
 //トランスフォーム解放

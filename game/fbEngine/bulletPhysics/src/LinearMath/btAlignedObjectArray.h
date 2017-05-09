@@ -234,7 +234,7 @@ protected:
 #ifdef BT_USE_PLACEMENT_NEW
 				for (int i=curSize;i<newsize;i++)
 				{
-					new ( &m_data[i]) T(fillData);
+new ( &m_data[i]) T(fillData);
 				}
 #endif //BT_USE_PLACEMENT_NEW
 

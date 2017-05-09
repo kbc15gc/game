@@ -3,6 +3,20 @@
 class Vertex;
 class Effect;
 
+namespace fbScene
+{
+	//フェードのステート
+	enum class FadeStateE
+	{
+		WAIT,		//待機
+		START,		//開始
+		RUNNING,	//実行中
+		END	=100,	//終了
+		INEND,		//フェードインの終了
+		OUTEND,		//フェードアウトの終了
+	};
+}
+
 //シーンの基底クラス
 class Scene
 {
@@ -19,9 +33,18 @@ public:
 	//フェード
 	//フェード中はtrueが帰る。
 	void Fade();
+	//フェードの実行
 	//第一引数はフェードインかフェードアウトか指定
 	//第二引数はフェードにかかる時間(秒)
-	static void SetFade(bool inout,float fadetime = 2.0f);
+	static void StartFade(const bool& fade,const float& fadetime = 2.0f);
+	//待機状態へ移行する
+	static void WaitFade()
+	{
+		_FadeState = fbScene::FadeStateE::WAIT;
+	}
+private:
+	//フェード描画
+	void _DrawFade();
 private:
 	//全てのシーンで共有したいのでstatic
 	//頂点
@@ -30,13 +53,9 @@ private:
 	static Effect *_Effect;
 	//フェードのα
 	static float _FadeAlpha;
-	//足すα値
-	static float _AddAlpha;
+	//1秒間あたりに加算されるα値
+	static float _AddPerSecA;
 protected:
 	//フェード中
-	static bool _IsFade;
-	//シーン切り替えフラグ
-	bool _ChangeScene;
-	//シーン切り替えの処理を書く
-	//virtual void _ChangeScene() = 0;
+	static fbScene::FadeStateE _FadeState;
 };

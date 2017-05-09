@@ -10,7 +10,7 @@ public:
 	Time(){};
 	static void Update();
 	//デルタタイム取得
-	static const double& DeltaTime()
+	static double DeltaTime()
 	{
 		if (deltaTime > (1.0 / 30.0))
 		{
