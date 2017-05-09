@@ -36,30 +36,14 @@ void GameCamera::Start()
 
 void GameCamera::Update()
 {
-	//‰E‰ñ“]
-	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
+	if (true)
 	{
-		RotTransversal(CAMERA_SPEED * Time::DeltaTime());	
+		_StandardBehavior();
 	}
-	//¶‰ñ“]
-	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
+	else
 	{
-		RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
+		_HistoryBehavior();
 	}
-	//ã
-	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
-	{
-		RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
-	}
-	//‰º
-	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
-	{
-		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
-	}
-	
-	_Move();
-	//ƒvƒŒƒCƒ„[‚Ì•û‚ðŒü‚­
-	_Camera->SetViewPoint((*_PlayerPos) + PLAYER_HEIGHT);
 }
 
 void GameCamera::RotTransversal(float roty)
@@ -134,4 +118,37 @@ void GameCamera::_Move()
 	}
 	//ˆÚ“®
 	transform->SetPosition(next);
+}
+
+void GameCamera::_StandardBehavior()
+{
+	//‰E‰ñ“]
+	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
+	{
+		RotTransversal(CAMERA_SPEED * Time::DeltaTime());
+	}
+	//¶‰ñ“]
+	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
+	{
+		RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
+	}
+	//ã
+	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
+	{
+		RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
+	}
+	//‰º
+	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
+	{
+		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
+	}
+
+	//ˆÚ“®
+	_Move();
+	//ƒvƒŒƒCƒ„[‚Ì•û‚ðŒü‚­
+	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
+}
+
+void GameCamera::_HistoryBehavior()
+{
 }

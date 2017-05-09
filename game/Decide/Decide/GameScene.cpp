@@ -17,9 +17,9 @@ void GameScene::Start()
 	//ゲームライト生成
 	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
 	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
 	//空生成
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成
@@ -27,16 +27,16 @@ void GameScene::Start()
 	//プレイヤー生成
 	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
-	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt",1);
+	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//火の歴史チップ
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
 	//歴史管理
-	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 10);
+	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 0);
 
-	ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
 	depth->SetPivot(Vector2(0, 0));
-	depth->SetActive(false);
+	depth->SetActive(false);*/
 }
 
 void GameScene::Update()

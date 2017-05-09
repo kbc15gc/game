@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
-#include "fbEngine\_Object\_Component\_3D\Camera.h"
 
 Player::Player(const char * name) :
 	GameObject(name),

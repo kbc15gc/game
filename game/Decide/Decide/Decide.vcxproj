@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ForcedIncludeFiles>$(SolutionDir)../fbEngine\fbEngine\_Include\stdafx.h;$(SolutionDir)Decide\GameSystem.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)../fbEngine/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../fbEngine/;$(SolutionDir)Decide\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -175,6 +175,8 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
+    <ClInclude Include="GameObject\Village\MessageManager.h" />
+    <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
@@ -205,6 +207,8 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
+    <ClCompile Include="GameObject\Village\MessageManager.cpp" />
+    <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />

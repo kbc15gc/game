@@ -119,6 +119,12 @@
     <ClInclude Include="GameObject\Village\HistoryManager.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Village\MessageManager.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\TextBox.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -206,6 +212,12 @@
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\HistoryManager.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\MessageManager.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\TextBox.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
   </ItemGroup>
