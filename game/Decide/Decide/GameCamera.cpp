@@ -23,6 +23,11 @@ void GameCamera::Awake()
 	_Sphere->Create(_Radius);
 	//距離の下限と上限
 	_Dist = 7.0f;
+
+	//線形補間の比率を初期化。
+	_LerpRate = 1.0f;
+	//プレイヤーを見るように補間。
+	_LerpState = State::LookAtPlayer;
 }
 
 void GameCamera::Start()
@@ -40,7 +45,7 @@ void GameCamera::Start()
 
 void GameCamera::Update()
 {
-	if (true)
+	if (_HistoryBook->GetIsLookAtHistoryFlag() == false)
 	{
 		_StandardBehavior();
 	}
@@ -146,21 +151,67 @@ void GameCamera::_StandardBehavior()
 	{
 		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
 	}
-
 	//移動
 	_Move();
 	//プレイヤーの方を向く
 	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
+
+	//_PrevGameCameraPos = &this->transform->GetLocalPosition();
+
 }
 
 void GameCamera::_HistoryBehavior()
 {
+	//補間状態のチェック。
+	switch (_LerpState)
+	{
+		//プレイヤーを見ているので歴史書を見るように状態を遷移。
+	case State::LookAtPlayer:
 
-	//カメラの位置をプレイヤーの顔ぐらいに設定。
-	transform->SetLocalPosition((*_PlayerPos) + PLAYER_HEIGHT);
+		//歴史書を見始めた。
+		_LerpState = State::LookAtHistoryBookStart;
 
-	_HistoryBookPos = &_HistoryBook->transform->GetPosition();
+		break;
+		//補間開始。
+	case State::LookAtHistoryBookStart:
 
-	//カメラの注視点をHistoryBookのモデルに設定。
-	transform->LockAt((*_HistoryBookPos));
+		//状態を補間計算中に遷移。
+		_LerpState = State::DoingLerpMath;
+		break;
+
+		//歴史書を見ている。
+	case State::LookAtHistoryBook:
+
+		//歴史書の位置を参照。
+		_HistoryBookPos = &_HistoryBook->transform->GetPosition();
+
+		//カメラの注視点をHistoryBookのモデルの位置に設定。
+		transform->LockAt((*_HistoryBookPos));
+
+		break;
+
+		//補間計算中。
+	case State::DoingLerpMath:
+		
+
+		//線形補間を行う(ゲームカメラの位置からプレイヤーの位置に向けて補間)。
+		_LerpPos = &((*_PlayerPos)+PLAYER_HEIGHT * (1.0f - _LerpRate) + this->transform->GetLocalPosition() * _LerpRate);
+
+		//補間の比率を減算。
+		if (_LerpRate > 0.0f)
+		{
+			_LerpRate -= 0.01f;
+		}
+		else
+		{
+			_LerpState = State::LookAtHistoryBook;
+		}
+
+		//計算位置をカメラの位置に反映。。
+		transform->SetLocalPosition((*_LerpPos));
+		break;
+	default:
+		break;
+	}
+
 }

@@ -47,6 +47,13 @@ void HistoryBook::Start()
 
 void HistoryBook::Update()
 {
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
+	{
+		//今_IsLookAtHistoryFlagに設定されている反対のフラグを設定。
+		_IsLookAtHistoryFlag = !_IsLookAtHistoryFlag;
+	}
+
+	
 	//トランスフォーム更新
 	transform->UpdateTransform();
 }

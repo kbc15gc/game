@@ -45,7 +45,7 @@ void GameScene::Start()
 void GameScene::Update()
 {
 	//スタートボタンの押下確認
-	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
+	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
 	//エンターキー
 	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
