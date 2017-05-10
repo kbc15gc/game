@@ -1,6 +1,9 @@
 #pragma once
 
-#include "_Effect\Bloom.h"
+#include"_Effect\PostEffect\AntiAliasing.h"
+#include "_Effect\PostEffect\Bloom.h"
+/** シャドウマップクラス. */
+#include"_Effect\PreRender\ShadowMap.h"
 
 class Scene;
 class Sprite;
@@ -55,13 +58,45 @@ public:
 		return _Instance;
 	}
 	TEXTURE* GetOffScreenTexture();
+
+	/**
+	* シャドウマップクラスの取得.
+	*/
+	ShadowMap* GetShadowMap()
+	{
+		return &_ShadowMap;
+	}
+
+	/**
+	* メインレンダリングターゲットを切り替え.
+	*/
+	void ToggleMainRenderTarget()
+	{
+		CurrentMainRT_ ^= 1;
+	}
+
+	/**
+	* メインレンダリングターゲットの取得.
+	*/
+	RenderTarget* GetMainRenderTarget()
+	{
+		return _MainRT[CurrentMainRT_];
+	}
+
 private:
 	int _NowScene;	//現在のシーンの添え字
 	vector<Scene*> _Scenes;
 	ImageObject* _OffScreen;
 	Sprite* _Sprite;
-	RenderTarget* _RT;
+
+	/**	レンダリングターゲット. */
+	RenderTarget* _MainRT[2];
+	/** 現在使用されているメインレンダーターゲット. */
+	unsigned char CurrentMainRT_ = 0;
+
 	static SceneManager* _Instance;
 
+	AntiAliasing _AntiAliasing;
 	Bloom _Bloom;
+	ShadowMap  _ShadowMap;
 };

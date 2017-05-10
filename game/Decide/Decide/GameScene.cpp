@@ -13,6 +13,8 @@
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
 
+ImageObject* depth;
+
 void GameScene::Start()
 {
 	//ƒQ[ƒ€ƒ‰ƒCƒg¶¬
@@ -36,6 +38,8 @@ void GameScene::Start()
 	//—ðŽj‘
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
+	//depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	//depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(1));
 	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
 	depth->SetPivot(Vector2(0, 0));

@@ -20,8 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CharacterController.cpp" />
-    <ClCompile Include="_Effect\Bloom.cpp" />
+    <ClCompile Include="_Effect\Blur.cpp" />
     <ClCompile Include="_Effect\EffectManager.cpp" />
+    <ClCompile Include="_Effect\PostEffect\AntiAliasing.cpp" />
+    <ClCompile Include="_Effect\PostEffect\Bloom.cpp" />
+    <ClCompile Include="_Effect\PostEffect\DepthofField.cpp" />
+    <ClCompile Include="_Effect\PreRender\ShadowMap.cpp" />
     <ClCompile Include="_Include\stdafx.cpp" />
     <ClCompile Include="_Inputs\InputManager.cpp" />
     <ClCompile Include="_Inputs\KeyBoard .cpp" />
@@ -87,9 +91,13 @@
   <ItemGroup>
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="_Effect\Bloom.h" />
+    <ClInclude Include="_Effect\Blur.h" />
     <ClInclude Include="_Effect\Effect.h" />
     <ClInclude Include="_Effect\EffectManager.h" />
+    <ClInclude Include="_Effect\PostEffect\AntiAliasing.h" />
+    <ClInclude Include="_Effect\PostEffect\Bloom.h" />
+    <ClInclude Include="_Effect\PostEffect\DepthofField.h" />
+    <ClInclude Include="_Effect\PreRender\ShadowMap.h" />
     <ClInclude Include="_Include\CollisionInclude.h" />
     <ClInclude Include="_Include\CollisionEnum.h" />
     <ClInclude Include="_Include\Definition.h" />

@@ -1,7 +1,11 @@
 /*!
  * @brief	スキンモデルシェーダー。(4ボーンスキニング)
  */
+#include"ShadowFunction.h"
+
+#define MAX_LIGHTNUM 4
 #include "LightingFunction.h"
+
 bool Texflg;							//テクスチャ
 bool Spec;								//スペキュラ
 bool ReceiveShadow;						//影を写す
@@ -19,8 +23,6 @@ float	g_numBone;			//骨の数。
 
 float4  g_diffuseMaterial : COLOR0;					//マテリアルカラー
 float4  g_blendcolor;//混ぜる色
-
-float4x4 g_LVP;					//ライトからみたビュープロジェクション行列
 
 float2 g_TexelSize;				//テクセルサイズ(深度バッファの)
 
@@ -49,19 +51,6 @@ sampler_state
 	AddressV = CLAMP;
 };
 
-texture g_Shadow;				//影テクスチャ
-sampler g_ShadowSampler_0 =
-sampler_state
-{
-	Texture = <g_Shadow>;
-	MipFilter = NONE;
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
-};
-
-
 /*!
  * @brief	入力頂点
  */
@@ -85,8 +74,7 @@ struct VS_OUTPUT
     float3  _Normal	: TEXCOORD0;
     float2  _UV		: TEXCOORD1;
 	float4  _World	: TEXCOORD2;	//ワールド座標
-	float4  _LVP	: TEXCOORD3;	//ライト(影用カメラ)からみた行列
-	float4  _WVP	: TEXCOORD4;	//カメラから見た行列
+	float4  _WVP	: TEXCOORD3;	//カメラから見た行列
 };
 
 VS_OUTPUT VSMain( VS_INPUT In )
@@ -117,7 +105,6 @@ VS_OUTPUT VSMain( VS_INPUT In )
     normal += (mul(In._Normal, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
 
 	o._World = float4(pos.xyz, 1.0f);
-	o._LVP = mul(o._World, g_LVP);				//ライトの目線によるワールドビュー射影変換をする
 
 	//ワールド行列
 	//_Pos = mul(float4(_Pos.xyz, 1.0f), g_worldMatrix);
@@ -167,11 +154,11 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 		float2 shadowMapUV = float2(0.5f, -0.5f) * WVP.xy + float2(0.5f, 0.5f);
 		//近傍4ピクセルの色
 		float4 depth,depth1, depth2, depth3, depth4;
-		depth = tex2D(g_ShadowSampler_0, shadowMapUV);	//元
-		depth1 = tex2D(g_ShadowSampler_0, float2(shadowMapUV.x + g_TexelSize.x, shadowMapUV.y));	//右
-		depth2 = tex2D(g_ShadowSampler_0, float2(shadowMapUV.x - g_TexelSize.x, shadowMapUV.y));	//左
-		depth3 = tex2D(g_ShadowSampler_0, float2(shadowMapUV.x, shadowMapUV.y + g_TexelSize.y));	//下
-		depth4 = tex2D(g_ShadowSampler_0, float2(shadowMapUV.x, shadowMapUV.y - g_TexelSize.y));	//上
+		depth = tex2D(g_ShadowMapSampler_0, shadowMapUV);	//元
+		depth1 = tex2D(g_ShadowMapSampler_0, float2(shadowMapUV.x + g_TexelSize.x, shadowMapUV.y));	//右
+		depth2 = tex2D(g_ShadowMapSampler_0, float2(shadowMapUV.x - g_TexelSize.x, shadowMapUV.y));	//左
+		depth3 = tex2D(g_ShadowMapSampler_0, float2(shadowMapUV.x, shadowMapUV.y + g_TexelSize.y));	//下
+		depth4 = tex2D(g_ShadowMapSampler_0, float2(shadowMapUV.x, shadowMapUV.y - g_TexelSize.y));	//上
 
 		//差異がしきい値を超えたなら
 		if (abs(depth.x - depth1.x) > 0.15f ||
@@ -203,50 +190,22 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 		light.xyz += spec.xyz;
 	}
 
+	float3 cascadeColor = 0;
+
 	//影
 	if (ReceiveShadow)
 	{
-		sampler texSampler[3];
-		texSampler[0] = g_ShadowSampler_0;
-		texSampler[1] = g_ShadowSampler_0;
-		texSampler[2] = g_ShadowSampler_0;
-
-		for (int i = 0; i < 1; i++) {
-			float4 posInLVP = In._LVP;
-			posInLVP.xyz /= posInLVP.w;
-			//uv座標に変換。
-			float2 shadowMapUV = float2(0.5f, -0.5f) * posInLVP.xy + float2(0.5f, 0.5f);
-			float2 shadow_val = 1.0f;
-
-			if (shadowMapUV.x < 0.99f && shadowMapUV.y < 0.99f && shadowMapUV.x > 0.01f && shadowMapUV.y > 0.01f) {
-				shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
-				float depth = min(posInLVP.z, 1.0f);
-				//バリアンスシャドウマップのフラグ
-				if (false) {
-					if (depth > shadow_val.r) {
-						// σ^2
-						float depth_sq = shadow_val.r * shadow_val.r;
-						float variance = max(shadow_val.g - depth_sq, 0.0006f);
-						float md = depth - shadow_val.r;
-						float P = variance / (variance + md * md);
-						light.rgb *= pow(P, 5.0f);
-					}
-				}
-				else {
-					//影なら
-					if (depth > shadow_val.r + 0.006f) {
-						//色半減
-						light.rgb *= 0.5f;
-					}
-				}
-				break;
-			}
-		}
+		//影になっている.
+		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
 	}
+
 	//ライトをかける
 	color.rgb *= light.rgb;
 	//アンビエントライトを加算。
 	color.rgb += diff.rgb * g_ambientLight.rgb;
+
+	//color.rgb *= cascadeColor;
+
 	return color;
 }
 
@@ -309,19 +268,27 @@ VS_ShadowOUT VSShadow(VS_ShadowIN In)
 float4 PSShadow(VS_ShadowOUT In) : COLOR0	//レンダーターゲット0に出力
 {
 	//深度
-	float4 depth = (float4)0;
+	float depth = 0.0f;
 
 	//深度は射影変換済みの頂点の Z / W で算出できる
 	depth = In.shadow.z / In.shadow.w;
 
-	return float4(depth.xyz, 1.0f);
+	float dx = ddx(depth);
+	float dy = ddy(depth);
+
+	float4 ret = (float4)0;
+	ret.x = depth;
+	ret.y = depth * depth + 0.25f * (dx * dx + dy * dy);
+	ret.z = 0.0f;
+	ret.w = 1.0f;
+	return ret;
 }
 
 technique Shadow
 {
 	pass p0
 	{
-		VertexShader = compile vs_2_0 VSShadow();
-		PixelShader = compile ps_2_0 PSShadow();
+		VertexShader = compile vs_3_0 VSShadow();
+		PixelShader = compile ps_3_0 PSShadow();
 	}
 }
