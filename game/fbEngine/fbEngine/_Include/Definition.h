@@ -8,6 +8,8 @@
 //インスタンス配列削除
 #define SAFE_DELETE_ARRAY(p)	{ if(p!=nullptr) { delete[] (p);   (p) = nullptr; } }
 
+//配列の要素数を調べる
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 //変数countを使ってnum回繰り返す
 #define FOR(count,num) for(int count = 0;count < (int)num;count++)
 //1をnビットずらしたものを返す(マスクとかで使うといいかも)

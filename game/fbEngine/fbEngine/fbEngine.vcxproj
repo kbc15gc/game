@@ -60,6 +60,7 @@
     <ClCompile Include="_Object\_Component\_Sound\WaveFile.cpp" />
     <ClCompile Include="_Object\_Component\_Sound\WaveFileBank.cpp" />
     <ClCompile Include="_Object\_GameObject\AnimationPlate.cpp" />
+    <ClCompile Include="_Object\_GameObject\Button.cpp" />
     <ClCompile Include="_Object\_GameObject\CollisionObject.cpp" />
     <ClCompile Include="_Object\_GameObject\FPS.cpp" />
     <ClCompile Include="_Object\_GameObject\GameObject.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="_Object\_Component\_Sound\WaveFile.h" />
     <ClInclude Include="_Object\_Component\_Sound\WaveFileBank.h" />
     <ClInclude Include="_Object\_GameObject\AnimationPlate.h" />
+    <ClInclude Include="_Object\_GameObject\Button.h" />
     <ClInclude Include="_Object\_GameObject\CollisionObject.h" />
     <ClInclude Include="_Object\_GameObject\FPS.h" />
     <ClInclude Include="_Object\_GameObject\GameObject.h" />

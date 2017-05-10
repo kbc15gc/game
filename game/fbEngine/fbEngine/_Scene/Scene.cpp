@@ -5,11 +5,10 @@
 Vertex* Scene::_Vertex = nullptr;
 Effect* Scene::_Effect = nullptr;
 float Scene::_FadeAlpha = 0.0f;
-float Scene::_AddAlpha = 0.0f;
-bool Scene::_IsFade = false;
+float Scene::_AddPerSecA = 0.0f;
+fbScene::FadeStateE Scene::_FadeState = fbScene::FadeStateE::WAIT;
 
-Scene::Scene():
-	_ChangeScene(false)
+Scene::Scene()
 {
 	if (_Vertex == nullptr)
 	{
@@ -55,20 +54,61 @@ Scene::~Scene()
 
 void Scene::Fade()
 {
-	//1フレーム当たりの加算量
-	float add = _AddAlpha * Time::DeltaTime();
-	//0.0f~1.0fの間に収める
-	if(_AddAlpha > 0)
-	{
-		//+
-		_FadeAlpha = min(1.0f, _FadeAlpha + add);
-	}
-	else if(_AddAlpha < 0)
-	{
-		//-
-		_FadeAlpha = max(0.0f, _FadeAlpha + add);
-	}
+	if (_FadeState == fbScene::FadeStateE::START)
+		_FadeState = fbScene::FadeStateE::RUNNING;
 
+	if (_FadeState == fbScene::FadeStateE::RUNNING)
+	{
+		//1フレーム当たりの加算量を計算
+		_FadeAlpha += _AddPerSecA * Time::DeltaTime();
+		//0.0f~1.0fの間に収める
+		_FadeAlpha = min(1.0f, max(0.0f, _FadeAlpha));
+
+		//フェードの板ポリゴン描画
+		_DrawFade();
+
+		//状態のチェック
+		if(0.0f < _FadeAlpha && _FadeAlpha < 1.0f)
+		{
+			_FadeState = fbScene::FadeStateE::RUNNING;
+		}
+		else
+		{
+			//フェードインかアウトか？
+			if(0 < _AddPerSecA)
+			{
+				//IN
+				_FadeState = fbScene::FadeStateE::INEND;
+			}
+			else
+			{
+				//OUT
+				_FadeState = fbScene::FadeStateE::OUTEND;
+			}
+		}
+	}
+	else if(_FadeState > fbScene::FadeStateE::END)
+	{
+		//次のframeには待機状態に戻る。
+		_FadeState = fbScene::FadeStateE::WAIT;
+	}
+}
+
+void Scene::StartFade(const bool & fade, const float & fadetime)
+{
+	//待機状態の時のみ開始できる
+	if (_FadeState == fbScene::FadeStateE::WAIT)
+	{
+		//正か負か？inは+、outは-
+		int NegaPosi = (fade) ? 1 : -1;
+		//1秒当たりの加算量
+		_AddPerSecA = (1.0f / fadetime) * NegaPosi;
+		_FadeState = fbScene::FadeStateE::START;
+	}
+}
+
+void Scene::_DrawFade()
+{
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -96,15 +136,4 @@ void Scene::Fade()
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-
-	_IsFade = (0.0f < _FadeAlpha && _FadeAlpha < 1.0f);
-}
-
-void Scene::SetFade(bool inout, float fadetime)
-{
-	//正か負か？
-	int NegaPosi = (inout) ? 1 : -1;
-	//1秒当たりの加算量
-	_AddAlpha = (1.0f / fadetime) * NegaPosi;
-	_IsFade = true;
 }

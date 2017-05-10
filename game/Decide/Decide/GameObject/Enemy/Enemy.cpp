@@ -4,6 +4,10 @@
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
 
+//テスト
+#include "GameObject\Village\TextBox.h"
+#include "fbEngine\_Object\_Component\_3D\Camera.h"
+
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
 
@@ -17,6 +21,11 @@ Enemy::~Enemy()
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
+
+	//テキストボックスを出す。
+	text = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox", 8);
+	text->SetTextSpeed(8.0f);
+	text->OpenMessage(2);
 }
 
 void Enemy::_StartSubClass(){
@@ -40,6 +49,11 @@ void Enemy::_StartSubClass(){
 }
 
 void Enemy::_UpdateSubClass() {
+	Vector3 headPos = transform->GetPosition();
+	headPos.y += 1.5f;
+	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
+	text->transform->SetPosition(Vector3(screemPos, 0));
+
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
 		// 落下ステートを作成してここで切り替え。

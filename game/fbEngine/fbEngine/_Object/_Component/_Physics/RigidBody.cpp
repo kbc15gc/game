@@ -40,7 +40,7 @@ void RigidBody::LateUpdate()
 	//ポジションはずらされているので戻す。
 	transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
 	//クォータニオンを各軸の回転量に変換
-	//Transform->localAngle = Vector3(D3DXToDegree(asin(rot.x())*2.0f), D3DXToDegree(asin(rot.y())*2.0f), D3DXToDegree(asin(rot.z())*2.0f));
+	transform->SetRotation(Quaternion(rot.x(), rot.y(), rot.z(), rot.w()));
 }
 
 //void RigidBody::Create(RigidBodyInfo& rbInfo)

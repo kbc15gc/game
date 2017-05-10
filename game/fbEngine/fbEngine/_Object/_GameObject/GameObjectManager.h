@@ -16,30 +16,7 @@ namespace
 			iterator = i;
 			priority = p;
 		}
-		
-		//	//sortに使う
-		//bool operator<(const RemoveObj& left) const
-		//{
-		//	//アドレスが異なるなら交換
-		//	if (left.addres != this->addres)
-		//	{
-		//		return true;
-		//	}
-		//	//並び替えしない
-		//	return false;
-		//}
-		//
-		////比較演算子 uniqueに使う
-		//bool operator==(const RemoveObj& left)
-		//{
-		//	//アドレス比較
-		//	if (left.addres == this->addres)
-		//	{
-		//		return true;
-		//	}
-		//	return false;
-		//}
-		
+
 		int priority;								//優先度
 		list<GameObject*>::iterator iterator;		//イテレータ
 	};
@@ -65,7 +42,7 @@ public:
 	GameObject* Add(GameObject* pAdd,int priority);
 
 	template<class T>
-	T* AddNew(char* name, UINT priority)
+	T* AddNew(char* name, unsigned int priority)
 	{
 		//優先度が超えてる
 		if(priority > System::MAX_PRIORITY)
@@ -73,6 +50,8 @@ public:
 			priority = System::MAX_PRIORITY - 1;
 		}
 		T* obj = new T(name);
+		//優先度セット
+		obj->SetPriority(priority);
 		_GameObjects.at(priority).push_back(obj);
 		obj->Awake();
 

@@ -10,16 +10,32 @@ public:
 	void Awake()override;
 	//ˆêŠ‡‚ÅÝ’è
 	void Initialize(const wchar_t* string, const float& size,const Color& color = Color::white,
-		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "‚l‚r –¾’©", fbText::TextFormatE format = fbText::TextFormatE::CENTER);
+		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "‚l‚r –¾’©", const unsigned int& format = (int)fbText::TextFormatE::CENTER);
 
 	void SetString(const wchar_t* ws);
+	void SetString(const char* s);
 	void SetFontSize(const float& size);
 	void SetFontStyle(const char* style);
 	void SetBlendColor(const Color& c);
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e);
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f);
 	//‘Ž®Ý’è
-	void SetFormat(fbText::TextFormatE format);
+	void SetFormat(const unsigned int& format);
+	//ƒJ[ƒjƒ“ƒOÝ’è
+	void SetKerning(const bool& kerning);
+	void SetCharNum(const unsigned int& num)
+	{
+		_Text->SetCharNum(num);
+	}
+	const Vector2& GetLength();
+	const unsigned int& GetMaxCharNum()
+	{
+		return _Text->GetMaxCharNum();
+	}
+	Text* GetText()
+	{
+		return _Text;
+	}
 private:
 	Text* _Text;
 };

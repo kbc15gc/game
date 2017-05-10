@@ -17,7 +17,7 @@ void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt, _D3DFORMAT depthfmt
 	}
 	//テクスチャ作成
 	HRESULT hr = (*graphicsDevice()).CreateTexture(
-		size.x, size.y,
+		(UINT)size.x, (UINT)size.y,
 		1,
 		D3DUSAGE_RENDERTARGET,
 		colorfmt,

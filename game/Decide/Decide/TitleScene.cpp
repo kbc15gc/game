@@ -15,20 +15,16 @@ void TitleScene::Update()
 	//スタートボタンの押下確認
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
 	//エンターキー
-	if ((flag || KeyBoardInput->isPush(DIK_RETURN)) && !_ChangeScene)
+	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
-		//シーンチェンジフラグtrue
-		_ChangeScene = true;
-		//フェード開始
-		SetFade(true);
+		//フェードイン開始
+		StartFade(true);
 	}
-	if (_ChangeScene &&	//エンターキーが押された
-		!_IsFade)		//フェード終了
+	//フェードイン完了
+	if (_FadeState == fbScene::FadeStateE::INEND)
 	{
 		//ゲームシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("GameScene");
-		//シーンチェンジ完了
-		_ChangeScene = false;
 		return;
 	}
 }

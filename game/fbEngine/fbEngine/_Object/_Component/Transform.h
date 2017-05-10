@@ -40,6 +40,7 @@ public:
 	//ローカルな位置に変換(回転抜き)
 	Vector3 LocalPos(const Vector3& v);
 	//受け取ったオブジェクトの向きを見る
+	void LockAt(const Vector3& wpos);
 	void LockAt(GameObject* obj);
 
 	//解放

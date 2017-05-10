@@ -238,6 +238,7 @@
       <Filter>Object\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="CharacterController.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="_Effect\PreRender\ShadowMap.cpp">
       <Filter>Effect\PreRender</Filter>
     </ClCompile>
@@ -252,6 +253,10 @@
     </ClCompile>
     <ClCompile Include="_Effect\PostEffect\DepthofField.cpp">
       <Filter>Effect\PostEffect</Filter>
+=======
+    <ClCompile Include="_Object\_GameObject\Button.cpp">
+      <Filter>Object\GameObject</Filter>
+>>>>>>> dd7a2c9e81bcd8f508980138da51aa677a7ec3c0
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -479,6 +484,7 @@
       <Filter>Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="CharacterController.h" />
+<<<<<<< HEAD
     <ClInclude Include="_Effect\PreRender\ShadowMap.h">
       <Filter>Effect\PreRender</Filter>
     </ClInclude>
@@ -493,6 +499,10 @@
     </ClInclude>
     <ClInclude Include="_Effect\PostEffect\DepthofField.h">
       <Filter>Effect\PostEffect</Filter>
+=======
+    <ClInclude Include="_Object\_GameObject\Button.h">
+      <Filter>Object\GameObject</Filter>
+>>>>>>> dd7a2c9e81bcd8f508980138da51aa677a7ec3c0
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,7 +6,6 @@
 #include"_Effect\PreRender\ShadowMap.h"
 
 class Scene;
-struct TEXTURE;
 class Sprite;
 class ImageObject;
 

@@ -17,13 +17,17 @@ public:
 	void Update();
 	//値を取得
 	int GetValue(MouseInE m);
+	//離した瞬間を取得
+	int GetUp(MouseInE m);
+	//瞬間的な押下を取得
+	int GetDown(MouseInE m);
 	//スクリーン上のマウスカーソルの位置を取得
 	Vector2 GetCursorPosOnScreen();
 	//ウィンドウの左上を基準とした相対的なマウスのポジション取得
 	Vector2 GetCursorPosOnWindow(HWND hwnd);
 private:
 	// DirectInputデバイス
-	LPDIRECTINPUTDEVICE8 mouseDevice;
+	LPDIRECTINPUTDEVICE8 _MouseDevice;
 	//マウスの情報
-	DIMOUSESTATE2 mouseState;
+	DIMOUSESTATE2 _State, _Old;
 };

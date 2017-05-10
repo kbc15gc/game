@@ -49,9 +49,16 @@ public:
 	}
 
 	//オブジェクトのアクティブフラグを設定する　セッター
-	virtual void SetActive(const bool& act)
+	virtual void SetActive(const bool& act,const bool& children = false)
 	{
 		_Active = act;
+		if(children)
+		{
+			for each (Transform* chaild in transform->GetChildren())
+			{
+				chaild->gameObject->SetActive(act, children);
+			}
+		}
 	}
 
 	//アクティブかどうか取得　ゲッター
@@ -80,12 +87,20 @@ public:
 	{
 		return _Discard;
 	}
+
+	//優先度をセット(基本使用するな)
+	void SetPriority(const unsigned int& pri)
+	{
+		_Priority = pri;
+	}
 public:
 	//トランスフォーム(簡単にアクセスしたかった。)
 	Transform* transform;	
 protected:
 	//コンポーネントたち
 	ComponentManager _Components;
+	//優先度
+	unsigned int _Priority;
 	//アクティブでないオブジェクトは描画もアップデートもされない
 	bool _Active;
 	//オブジェクトを破棄する

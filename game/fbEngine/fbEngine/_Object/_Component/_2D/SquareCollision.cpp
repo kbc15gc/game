@@ -3,10 +3,15 @@
 const bool SquareCollision::Judgment(const Vector2& point)
 {
 	Vector2 pos = Vector2(transform->GetPosition().x, transform->GetPosition().y);
-	RECT rect = { pos.x - _Size.x / 2,pos.y + _Size.y / 2,pos.x + _Size.x / 2,pos.y - _Size.y / 2 };
+	RECT rect = { 
+		pos.x - _Size.x / 2,	//¶
+		pos.y - _Size.y / 2,	//ã
+		pos.x + _Size.x / 2,	//‰E
+		pos.y + _Size.y / 2		//‰º
+	};
 	
-	return (rect.top > point.y || rect.bottom < point.y ||
-		rect.left > point.x || rect.right < point.x);
+	return (rect.top < point.y && point.y < rect.bottom &&
+		rect.left < point.x && point.x < rect.right);
 }
 
 const bool SquareCollision::Judgment(const SquareCollision * Square)
