@@ -4,6 +4,7 @@
 class Light;
 class Camera;
 class ShadowCamera;
+
 namespace
 {
 	//削除するときに使う
@@ -104,8 +105,6 @@ public:
 	Camera* mainCamera;
 	//使用するライト
 	Light* mainLight;
-	//影を作るためのカメラ
-	ShadowCamera* mainShadowCamera;
 private:
 	//リストに重複がないかチェックする。
 	bool _CheckUniqueRemoveList(GameObject* obj);

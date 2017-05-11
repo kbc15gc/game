@@ -13,7 +13,7 @@ struct RenderTarget:Noncopyable
 	//
 	TEXTURE *texture;
 	RenderTarget();
-	void Create(Vector2 size,_D3DFORMAT colorfmt = D3DFMT_A8R8G8B8);
+	void Create(Vector2 size,_D3DFORMAT colorfmt = D3DFMT_A8R8G8B8, _D3DFORMAT depthfmt = D3DFMT_D24S8);
 };
 
 //レンダーターゲットの添え字

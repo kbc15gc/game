@@ -29,6 +29,12 @@ public:
 	void PreRender()override;
 	void Render()override;
 
+	/**
+	* シャドウマップに深度を書き込む.
+	* シャドウマップクラスから呼ばれている.
+	*/
+	void RenderToShadowMap();
+
 	void SetCamera(Camera* c) 
 	{
 		_Camera = c;
@@ -101,7 +107,6 @@ private:
 	SkinModelData* _ModelDate;
 	Camera* _Camera;
 	Light* _Light;
-	ShadowCamera* _ShadowCamera;
 	//ブレンドする色
 	Color _TextureBlend, _AllBlend;
 

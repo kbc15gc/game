@@ -168,6 +168,7 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
+    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
     <ClInclude Include="GameObject\HistoryChip\FireChip.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
     <ClCompile Include="GameObject\HistoryChip\FireChip.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />

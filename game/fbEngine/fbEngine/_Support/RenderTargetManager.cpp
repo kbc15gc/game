@@ -7,7 +7,7 @@ RenderTarget::RenderTarget()
 	texture = new TEXTURE();
 }
 
-void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt)
+void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt, _D3DFORMAT depthfmt)
 {
 	//前のテクスチャがあるなら
 	if(texture->pTexture)
@@ -37,7 +37,7 @@ void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt)
 	//深度バッファ作成
 	hr = (*graphicsDevice()).CreateDepthStencilSurface(
 		size.x, size.y,
-		D3DFMT_D24S8,
+		depthfmt,
 		D3DMULTISAMPLE_NONE,
 		0,
 		TRUE,

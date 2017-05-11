@@ -1,29 +1,28 @@
 #include "GameScene.h"
-
+#include "GameCamera.h"
+#include "GameLight.h"
+#include "GameShadowCamera.h"
+#include "GameObject/Player/Player.h"
+#include "Ground.h"
+#include "Sky.h"
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
 #include "fbEngine/_Object/_GameObject/TextObject.h"
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
-
-#include "GameLight.h"
-#include "GameCamera.h"
-#include "GameShadowCamera.h"
-
-#include "Ground.h"
-#include "Sky.h"
-
-#include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
-#include "GameObject\Village\HistoryMenu.h"
+#include "GameObject\Village\HistoryManager.h"
+#include "GameObject\HistoryBook\HistoryBook.h"
+
+ImageObject* depth;
 
 void GameScene::Start()
 {
 	//ゲームライト生成
-	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
 	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 10);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
 	//空生成
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成
@@ -34,9 +33,13 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//火の歴史チップ
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
-	//メニュー
-	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
+	//歴史管理
+	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 0);
+	//歴史書
+	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
+	//depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	//depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(1));
 	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
 	depth->SetPivot(Vector2(0, 0));
@@ -46,7 +49,7 @@ void GameScene::Start()
 void GameScene::Update()
 {
 	//スタートボタンの押下確認
-	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
+	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
 	//エンターキー
 	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
