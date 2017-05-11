@@ -29,8 +29,11 @@ SceneManager::SceneManager()
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
-	//アンチエイリアスの削除.
+	//アンチエイリアスの作成.
 	_AntiAliasing.Create();
+
+	//被写界深度の作成
+	_DepthofField.Create();
 
 	//ブルームの準備
 	_Bloom.Create();
@@ -71,17 +74,29 @@ void SceneManager::UpdateScene()
 
 void SceneManager::DrawScene()
 {
-
-	//シャドウマップの描画.
-	_ShadowMap.Render();
 	
 	//事前描画(影とか深度とか輝度とか)
 	INSTANCE(GameObjectManager)->PreRenderObject();
 
+	//シャドウマップの描画.
+	_ShadowMap.Render();
+
 	//0番目に設定(オフスクリーンレンダリング用)
 	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
+	(*graphicsDevice()).SetRenderTarget(1, _DepthofField.GetDepthRenderTarget()->buffer);
+	(*graphicsDevice()).Clear(
+		1,
+		NULL,
+		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+		D3DCOLOR_RGBA(1, 1,1,1),
+		1.0f,
+		0);
+
 	INSTANCE(GameObjectManager)->RenderObject();
 
+	(*graphicsDevice()).SetRenderTarget(1, nullptr);
+
+	_DepthofField.Render();
 	_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
@@ -90,7 +105,7 @@ void SceneManager::DrawScene()
 	//オフスクリーンのやつ描画
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
-	_Bloom.Render();
+	//_Bloom.Render();
 	INSTANCE(GameObjectManager)->PostRenderObject();
 	
 	//2Dとか？

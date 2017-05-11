@@ -40,37 +40,32 @@ void Blur::Create(int w, int h,TEXTURE* tex)
 	//エフェクトのロード
 	_Effect = EffectManager::LoadEffect("Blur.fx");
 
-	if (_Vertex == nullptr)
+	InitVertex();
+}
+
+void Blur::Create(int w, int h, _D3DFORMAT fmt)
+{
+	//サイズをコピー
+	_SrcTextureSize[0] = w;
+	_SrcTextureSize[1] = h;
+
+	//ブラーサイズを作成
+	int  size[2][2]
 	{
-		_Vertex = new Vertex();
+		{ w >> 1, h },
+		{ w >> 1, h >> 1 },
+	};
 
-		//ポジション定義
-		VERTEX_POSITION position[] = {
-			{ -1.0f, -1.0f, 0.0f, 1.0f },//左下
-			{ -1.0f, 1.0f, 0.0f, 1.0f },//左上
-			{ 1.0f, -1.0f, 0.0f, 1.0f },//右下
-			{ 1.0f, 1.0f, 0.0f, 1.0f },//右上
-		};
-		//UV定義
-		VERTEX_TEXCOORD texcoord[] = {
-			{ 0.0f, 1.0f },//左下
-			{ 0.0f, 0.0f },//左上
-			{ 1.0f, 1.0f },//右下
-			{ 1.0f, 0.0f },//右上
-		};
-
-		//頂点宣言(頂点がどのように構成されているか)
-		D3DVERTEXELEMENT9 elements[] = {
-			{ 0, 0              , D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 }, // 頂点座標
-			{ 1, 0              , D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD   , 0 }, // UV
-			D3DDECL_END()
-		};
-
-		_Vertex->Initialize(fbEngine::PRIMITIVETYPE::TRIANGLESTRIP, 4);
-		_Vertex->CreateVertexBuffer(position, 4, sizeof(VERTEX_POSITION), elements[0]);
-		_Vertex->CreateVertexBuffer(texcoord, 4, sizeof(VERTEX_TEXCOORD), elements[1]);
-		_Vertex->CreateDeclaration();
+	//レンダリングターゲットの作成
+	for (int i = 0; i < 2; i++)
+	{
+		_BlurRT[i].Create(Vector2(size[i][0], size[i][1]), fmt, D3DFMT_D16);
 	}
+
+	//エフェクトのロード
+	_Effect = EffectManager::LoadEffect("Blur.fx");
+
+	InitVertex();
 }
 
 /**
@@ -134,5 +129,40 @@ void Blur::Render()
 		_Effect->EndPass();
 		_Effect->End();
 
+	}
+}
+
+void Blur::InitVertex()
+{
+	if (_Vertex == nullptr)
+	{
+		_Vertex = new Vertex();
+
+		//ポジション定義
+		VERTEX_POSITION position[] = {
+			{ -1.0f, -1.0f, 0.0f, 1.0f },//左下
+			{ -1.0f, 1.0f, 0.0f, 1.0f },//左上
+			{ 1.0f, -1.0f, 0.0f, 1.0f },//右下
+			{ 1.0f, 1.0f, 0.0f, 1.0f },//右上
+		};
+		//UV定義
+		VERTEX_TEXCOORD texcoord[] = {
+			{ 0.0f, 1.0f },//左下
+			{ 0.0f, 0.0f },//左上
+			{ 1.0f, 1.0f },//右下
+			{ 1.0f, 0.0f },//右上
+		};
+
+		//頂点宣言(頂点がどのように構成されているか)
+		D3DVERTEXELEMENT9 elements[] = {
+			{ 0, 0              , D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 }, // 頂点座標
+			{ 1, 0              , D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD   , 0 }, // UV
+			D3DDECL_END()
+		};
+
+		_Vertex->Initialize(fbEngine::PRIMITIVETYPE::TRIANGLESTRIP, 4);
+		_Vertex->CreateVertexBuffer(position, 4, sizeof(VERTEX_POSITION), elements[0]);
+		_Vertex->CreateVertexBuffer(texcoord, 4, sizeof(VERTEX_TEXCOORD), elements[1]);
+		_Vertex->CreateDeclaration();
 	}
 }

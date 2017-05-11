@@ -60,4 +60,6 @@ private:
 	State _LerpState;
 	//ゲームカメラから歴史書に向かうベクトル。
 	const Vector3* _ToHisoryBookVec;
+
+	Vector3 _toPosition = Vector3::zero;
 };

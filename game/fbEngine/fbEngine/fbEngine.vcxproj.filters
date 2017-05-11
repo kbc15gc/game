@@ -46,6 +46,12 @@
     <Filter Include="Object\Component\Physics">
       <UniqueIdentifier>{4ff4e741-106d-4228-b10a-4cba63e89cae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\PostEffect">
+      <UniqueIdentifier>{82f9bb39-1c9e-46a2-8c39-7e046a137fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\PreRender">
+      <UniqueIdentifier>{183c2c2d-99e3-406e-ad6e-2a52ece085dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -71,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="_Scene\SceneManager.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="_Effect\Bloom.cpp">
-      <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="_Effect\EffectManager.cpp">
       <Filter>Effect</Filter>
@@ -236,6 +239,21 @@
     </ClCompile>
     <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="_Object\_GameObject\Button.cpp" />
+    <ClCompile Include="_Effect\PostEffect\Bloom.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\PostEffect\AntiAliasing.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\PostEffect\DepthofField.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\Blur.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\PreRender\ShadowMap.cpp">
+      <Filter>Effect\PreRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -264,9 +282,6 @@
     </ClInclude>
     <ClInclude Include="_Scene\SceneManager.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="_Effect\Bloom.h">
-      <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="_Effect\Effect.h">
       <Filter>Effect</Filter>
@@ -467,6 +482,21 @@
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="_Object\_GameObject\Button.h">
       <Filter>Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\AntiAliasing.h">
+      <Filter>Effect\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\Bloom.h">
+      <Filter>Effect\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\DepthofField.h">
+      <Filter>Effect\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\Blur.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PreRender\ShadowMap.h">
+      <Filter>Effect\PreRender</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

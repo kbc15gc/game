@@ -124,10 +124,16 @@ VS_OUTPUT VSMain( VS_INPUT In )
 	return o;
 }
 
+struct PSOutput
+{
+	float4 Color : COLOR0;
+	float4 Depth : COLOR1;
+};
+
 /*!
  * @brief	ピクセルシェーダー。
  */
-float4 PSMain( VS_OUTPUT In ):COLOR0
+PSOutput PSMain( VS_OUTPUT In )
 {
 	float4 color = (float4)0;	//最終的に出力するカラー
 	float4 diff = (float4)0;	//メッシュのマテリアル
@@ -166,7 +172,7 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 			abs(depth.x - depth3.x) > 0.15f ||
 			abs(depth.x - depth4.x) > 0.15f)
 		{
-			return 1;
+			//return 1;
 		}
 	}
 
@@ -206,7 +212,12 @@ float4 PSMain( VS_OUTPUT In ):COLOR0
 
 	//color.rgb *= cascadeColor;
 
-	return color;
+	PSOutput Out = (PSOutput)0;
+
+	Out.Color = color;
+	Out.Depth = In._World.w;
+
+	return Out;
 }
 
 //本描画

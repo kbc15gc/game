@@ -91,15 +91,14 @@ void SkinModel::LateUpdate()
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 	}
 
-	if (_ModelEffect & ModelEffectE::CAST_SHADOW)
-	{
-		INSTANCE(SceneManager)->GetShadowMap()->EntryModel(this);
-	}
 }
 
 void SkinModel::PreRender()
 {
-	
+	if (_ModelEffect & ModelEffectE::CAST_SHADOW)
+	{
+		INSTANCE(SceneManager)->GetShadowMap()->EntryModel(this);
+	}
 }
 
 void SkinModel::Render()

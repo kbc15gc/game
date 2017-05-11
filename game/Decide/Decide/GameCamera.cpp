@@ -53,6 +53,12 @@ void GameCamera::Update()
 	{
 		_HistoryBehavior();
 	}
+
+	_toPosition.Subtract(transform->GetPosition(), _Camera->GetViewPoint());
+
+	INSTANCE(SceneManager)->GetDepthofField().SetPint(_toPosition.Length() * 1000);
+	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
+	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(26.0f);
 }
 
 void GameCamera::RotTransversal(float roty)
@@ -157,6 +163,7 @@ void GameCamera::_StandardBehavior()
 	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
 
 	//_PrevGameCameraPos = &this->transform->GetLocalPosition();
+
 
 }
 

@@ -31,7 +31,8 @@ public:
 	* @param h		縦幅.
 	* @param tex	テクスチャー.	.
 	*/
-	void Create(int w,int h,TEXTURE* tex);
+	void Create(int w, int h, TEXTURE* tex);
+	void Create(int w,int h, _D3DFORMAT fmt);
 
 	/**
 	* 描画.
@@ -45,6 +46,18 @@ public:
 	{
 		return _BlurRT[1].texture;
 	}
+
+	/**
+	* テクスチャの設定.
+	*/
+	void SetTexture(TEXTURE* tex)
+	{
+		_SrcTexture = tex;
+	}
+
+private:
+
+	void InitVertex();
 
 private:
 
