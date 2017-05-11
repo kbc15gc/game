@@ -18,10 +18,6 @@ private:
 	void _SetMenuEnabel(const bool& enabel);
 	//メニューを開く処理
 	void _OpenMenu();
-	//メニューを開いている時の処理
-	void _MenuUpdate();
-	//歴史の変更を更新
-	void _UpdateHistory();
 private:
 	//メニューの有効フラグ
 	bool _MenuEnabel;

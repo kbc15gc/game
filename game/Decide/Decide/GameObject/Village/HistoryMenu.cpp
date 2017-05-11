@@ -48,13 +48,6 @@ void HistoryMenu::Start()
 		}
 	}
 
-	//OKボタン
-	_OK = INSTANCE(GameObjectManager)->AddNew<Button>("HistoryMenuButton", _Priority);
-	_OK->Initialize(LOADTEXTURE("SAVE.png"), nullptr, LOADTEXTURE("ON.png")->Size, fbButton::ButtonTypeE::PRESS);
-
-	_OK->transform->SetLocalPosition(Vector3(interval.x * (CONTINENT_NUM + 1), interval.y * HISTORY_CHIP_NUM, 0.0));
-	_MenuObjects.push_back(_OK);
-
 	_SetMenuEnabel(false);
 }
 
@@ -71,13 +64,6 @@ void HistoryMenu::Update()
 			_OpenMenu();
 		}
 	}
-
-	//メニューが開かれている
-	if (_MenuEnabel)
-	{
-		//更新
-		_MenuUpdate();
-	}
 }
 
 void HistoryMenu::_SetMenuEnabel(const bool & enabel)
@@ -92,38 +78,15 @@ void HistoryMenu::_SetMenuEnabel(const bool & enabel)
 
 void HistoryMenu::_OpenMenu()
 {
-	//歴史情報取得
-
 	//歴史ボタン全部分ループ
 	FOR(conti, CONTINENT_NUM)
 	{
+		//大陸の歴史情報取得
 		HistoryInfo* h = INSTANCE(HistoryManager)->GetHistory(conti);
 		FOR(chip, HISTORY_CHIP_NUM)
 		{
 			//ボタンに読み込んだ情報割り当て。
 			_Buttons[conti][chip]->SetChipID(h->Chips[chip]);
-		}
-	}
-}
-
-void HistoryMenu::_MenuUpdate()
-{
-	//OKボタンが押された
-	if(_OK->GetIsOn())
-	{
-		//ボタンの状況を反映
-		_UpdateHistory();
-	}
-}
-
-void HistoryMenu::_UpdateHistory()
-{
-	//ボタンの状況を歴史に反映
-	FOR(conti, CONTINENT_NUM)
-	{
-		FOR(chip, HISTORY_CHIP_NUM)
-		{
-			//INSTANCE(HistoryManager)->SetHistoryChip(conti, chip, (ChipID)-1);
 		}
 	}
 }

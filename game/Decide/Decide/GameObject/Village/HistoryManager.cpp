@@ -7,25 +7,36 @@ HistoryManager* HistoryManager::_Instance = nullptr;
 HistoryManager::HistoryManager()
 {
 	Support::LoadCSVData<HistoryInfo>("Asset/Data/VillageHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _HistoryList);
+
 	FOR(i, _HistoryList.size())
 	{
+		//vectorを追加
 		vector<GameObject*> list;
 		_GameObjects.push_back(list);
 	}
 }
 
+void HistoryManager::CreateObject()
+{
+	FOR(i, _HistoryList.size())
+	{
+		_ChangeContinent(i);
+	}
+}
+
 const bool HistoryManager::SetHistoryChip(const unsigned int & continent, const unsigned int & idx, const int & chip)
 {
-	bool f;
+	//成功したかどうか？
+	bool success = false;
 	//歴史のチップセット
-	if(f =_HistoryList[continent]->SetChip(idx, (ChipID)chip))
+	if(success =_HistoryList[continent]->SetChip(idx, (ChipID)chip))
 	{
 		//無事にセットされたなら大陸を変化させる。
 		_ChangeContinent(continent);
 		//csv保存処理
 		Support::OutputCSV<HistoryInfo>("Asset/Data/VillageHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _HistoryList);
 	}
-	return f;
+	return success;
 }
 
 void HistoryManager::_ChangeContinent(const unsigned int& continent)
@@ -38,7 +49,8 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	char group[2] = { 'A' + pattern,0 };
 	strcat(path, group);
 	strcat(path, ".csv");
-	//CSVから情報読み込み
+
+	//CSVからオブジェクトの情報読み込み
 	vector<ObjectInfo*> _InfoList;
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), _InfoList);
 
