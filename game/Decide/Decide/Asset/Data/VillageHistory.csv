@@ -1,5 +1,5 @@
-ContinentID,IsSetting[0],IsSetting[1],IsSetting[2]
-0,1,0,1
-1,1,0,1
-2,1,1,0
-3,0,1,0
+ContinentID,Chips[0],Chips[1],Chips[2]
+0,0,0,0
+1,0,0,0
+2,0,0,0
+3,0,0,0

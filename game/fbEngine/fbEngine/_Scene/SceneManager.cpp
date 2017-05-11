@@ -70,13 +70,12 @@ void SceneManager::UpdateScene()
 }
 
 void SceneManager::DrawScene()
-{
+{	
+	//事前描画(影とか深度とか輝度とか)
+	INSTANCE(GameObjectManager)->PreRenderObject();
 
 	//シャドウマップの描画.
 	_ShadowMap.Render();
-	
-	//事前描画(影とか深度とか輝度とか)
-	INSTANCE(GameObjectManager)->PreRenderObject();
 
 	//0番目に設定(オフスクリーンレンダリング用)
 	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
