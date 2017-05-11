@@ -45,11 +45,11 @@ public:
 	 *@brief	デストラクタ。
 	 */
 	~SkinModelData();
-	/*!
-	 * @brief	モデルデータをロード。
-	 *@param[in]	filePath	ファイルパス。
-	 */
-	void LoadModelData(const char* filePath);
+	
+	//モデルデータをロード。
+	//[in]	filePath	ファイルパス。
+	//[out] ロードが成功したかどうか？ 
+	bool LoadModelData(const char* filePath);
 	//モデルデータのクローン作製
 	void CloneModelData(const SkinModelData* modelData, Animation* anim = nullptr);
 	

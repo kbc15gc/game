@@ -29,7 +29,8 @@ namespace Support
 	{
 		INT,	//整数
 		FLOAT,	//浮動小数
-		STRING	//文字
+		VECTOR3,//Vector3
+		STRING,	//文字
 	};
 	//メンバ変数の情報。
 	struct DATARECORD
@@ -69,12 +70,12 @@ namespace Support
 			ZeroMemory(line, sizeof(char) * 256);
 			fin.getline(line, 256);
 
-			//csvの"\n"が"//n"と認識される問題(根本的な解決ではないかも)。
-			StrReplace(line, "\\n", "\n");
-
 			//ファイルの終端になったなら抜ける。
 			if (fin.eof())
 				break;
+
+			//csvの"\n"が"//n"と認識される問題(根本的な解決ではないかも)。
+			StrReplace(line, "\\n", "\n");
 
 			int idx = 0;		//何番目の要素か？
 			int offset = 0;		//先頭からのoffset量
@@ -92,24 +93,44 @@ namespace Support
 				void* val = nullptr;
 				int i = 0;
 				float f = 0;
+				Vector3 v3 = Vector3::zero;
 				//型にあった変換をする
-				switch (datas[idx].type)
+				DataTypeE type = datas[idx].type;
+				if (type == Support::DataTypeE::INT)
 				{
-				case Support::DataTypeE::INT:
 					i = Support::StringToDouble(word);
 					val = &i;
-					break;
-				case Support::DataTypeE::FLOAT:
+				}
+				else if (type == Support::DataTypeE::FLOAT)
+				{
 					f = Support::StringToDouble(word);
 					val = &f;
-					break;
-				case Support::DataTypeE::STRING:
-					val = word;
-					break;
-				default:
-					val = nullptr;
-					break;
 				}
+				else if (type == Support::DataTypeE::VECTOR3)
+				{
+					int offset2 = 0;
+					char wordC[256];
+					strcpy(wordC, word);
+					FOR(i, 3)
+					{
+						//数字の部分を取り出す
+						char* num = strtok(wordC + offset2, "/");
+						//アドレスに値コピー
+						float value = Support::StringToDouble(num);
+						memcpy((char*)(&v3) + (sizeof(float) * i), &value, sizeof(float));
+						offset2 += strlen(num) + 1;
+					}
+					val = &v3;
+				}
+				else if (type == Support::DataTypeE::STRING)
+				{
+					val = word;
+				}
+				else
+				{
+					val = nullptr;
+				}
+				
 
 				//変数の先頭アドレスを求める。char*型(1byte)にキャストすることで1づつずらすことができる。
 				auto addres = ((char*)(tmp)) + datas[idx].offset;
@@ -120,6 +141,7 @@ namespace Support
 				offset += strlen(word) + 1;
 				idx++;
 			}
+			//要素追加
 			output.push_back(tmp);
 		}
 		//読み込み終了

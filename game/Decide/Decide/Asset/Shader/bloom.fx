@@ -29,7 +29,9 @@ VS_OUTPUT VSMain( VS_INPUT In )
 {
 	VS_OUTPUT Out;
 	Out.pos = In.pos;		//トランスフォーム済み頂点なのでそのまま//-1.0f~1.0fの間ってことっぽい
+	//0.0f~1.0fの間に収める
 	Out.tex = (In.pos * 0.5f) + 0.5f;
+	//yは反転？
 	Out.tex.y = 1.0f - Out.tex.y;
 	return Out;
 }

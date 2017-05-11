@@ -1,25 +1,29 @@
 #include "GameScene.h"
-#include "GameCamera.h"
-#include "GameLight.h"
-#include "GameShadowCamera.h"
-#include "GameObject/Player/Player.h"
-#include "Ground.h"
-#include "Sky.h"
+
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
 #include "fbEngine/_Object/_GameObject/TextObject.h"
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
+
+#include "GameLight.h"
+#include "GameCamera.h"
+#include "GameShadowCamera.h"
+
+#include "Ground.h"
+#include "Sky.h"
+
+#include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
-#include "GameObject\Village\HistoryManager.h"
+#include "GameObject\Village\HistoryMenu.h"
 
 void GameScene::Start()
 {
 	//ゲームライト生成
-	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 10);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 10);
 	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 10);
 	//空生成
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成
@@ -30,8 +34,8 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//火の歴史チップ
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
-	//歴史管理
-	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 0);
+	//メニュー
+	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 
 	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
