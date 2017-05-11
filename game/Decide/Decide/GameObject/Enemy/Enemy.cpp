@@ -49,16 +49,20 @@ void Enemy::_StartSubClass(){
 }
 
 void Enemy::_UpdateSubClass() {
-	Vector3 headPos = transform->GetPosition();
-	headPos.y += 1.5f;
-	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
-	text->transform->SetPosition(Vector3(screemPos, 0));
-
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
 		// 落下ステートを作成してここで切り替え。
 		
 	}
+}
+
+void Enemy::_LateUpdateSubClass()
+{
+	//テキストの場所設定。
+	Vector3 headPos = transform->GetPosition();
+	headPos.y += 1.5f;
+	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
+	text->transform->SetPosition(Vector3(screemPos, 0));
 }
 
 

@@ -110,9 +110,13 @@ namespace Support
 
 	double StringToDouble(const char * string)
 	{
+		//符号チェック
+		bool isminus = string[0] == '-';
+		int sign = isminus ? -1 : 1;
 		char copy[256];
 		ZeroMemory(copy, sizeof(char) * 256);
-		strcpy(copy, string);
+		//1文字ずらす。
+		strcpy(copy, string + (isminus));
 
 		//整数部の文字列
 		char* intS = strtok(copy, ".");
@@ -143,7 +147,7 @@ namespace Support
 		double out = integer + decimal;
 		//四捨五入する
 		Round(out, decL);
-		return out;
+		return out * sign;
 	}
 
 	void Round(double & num, const int & decimal)

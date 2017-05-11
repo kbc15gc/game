@@ -119,13 +119,25 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\HistoryManager.h">
-      <Filter>Object\GameObject\Village</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Village\MessageManager.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\TextBox.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryManager.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryInfo.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\ContinentObject.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryMenu.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryButton.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
@@ -217,13 +229,22 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp">
       <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Village\HistoryManager.cpp">
-      <Filter>Object\GameObject\Village</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Village\MessageManager.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\TextBox.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryManager.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\ContinentObject.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryMenu.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryButton.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
