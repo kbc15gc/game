@@ -1,15 +1,21 @@
 #include "GameScene.h"
-#include "GameCamera.h"
-#include "GameLight.h"
-#include "GameShadowCamera.h"
-#include "GameObject/Player/Player.h"
-#include "Ground.h"
-#include "Sky.h"
+
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
 #include "fbEngine/_Object/_GameObject/TextObject.h"
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
+
+#include "GameLight.h"
+#include "GameCamera.h"
+#include "GameShadowCamera.h"
+
+#include "Ground.h"
+#include "Sky.h"
+
+#include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject/HistoryChip/FireChip.h"
+
+#include "GameObject\Village\HistoryMenu.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
 
@@ -18,11 +24,11 @@ ImageObject* g_depth;
 void GameScene::Start()
 {
 	//ƒQ[ƒ€ƒ‰ƒCƒg¶¬
-	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 	//ƒQ[ƒ€ƒJƒƒ‰¶¬
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
 	//‰eƒJƒƒ‰¶¬
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 0);
+	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 8);
 	//‹ó¶¬
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//’n–Ê¶¬
@@ -33,8 +39,8 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//‰Î‚Ì—ðŽjƒ`ƒbƒv
 	INSTANCE(GameObjectManager)->AddNew<FireChip>("FireChip", 1);
-	//—ðŽjŠÇ—
-	INSTANCE(GameObjectManager)->AddNew<HistoryManager>("HistoryManager", 0);
+	//ƒƒjƒ…[
+	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//—ðŽj‘
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
@@ -43,6 +49,9 @@ void GameScene::Start()
 	g_depth->SetPivot(Vector2(0, 0));
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
 	g_depth->SetActive(false);
+
+	INSTANCE(HistoryManager)->CreateObject();
+
 }
 
 void GameScene::Update()

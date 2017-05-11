@@ -7,6 +7,8 @@ class HistoryManager
 {
 public:
 	HistoryManager();
+	//歴史オブジェクト生成。
+	void CreateObject();
 	//歴史を変える。
 	//[in] unsigned int 変更したい大陸のID
 	//[in] unsigned int セットする場所
