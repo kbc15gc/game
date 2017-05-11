@@ -418,7 +418,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		memcpy(pMeshContainer->pMaterials, pMaterials, sizeof(D3DXMATERIAL)* NumMaterials);
 		for (iMaterial = 0; iMaterial < NumMaterials; iMaterial++)
 		{
-			
+			pMeshContainer->material[iMaterial] = nullptr;
 			//ファイル指定があるなら
 			if (pMeshContainer->pMaterials[iMaterial].pTextureFilename != NULL)
 			{
@@ -628,7 +628,7 @@ void SkinModelData::Release()
  * @brief	モデルデータをロード。
  *@param[in]	filePath	ファイルパス。
  */
-void SkinModelData::LoadModelData(const char* filePath)
+bool SkinModelData::LoadModelData(const char* filePath)
 {
 	CAllocateHierarchy alloc(this);
 	HRESULT hr = D3DXLoadMeshHierarchyFromXA(
@@ -641,11 +641,16 @@ void SkinModelData::LoadModelData(const char* filePath)
 		&m_pAnimationController
 		);
 	
-	//骨に行列をセットする
-	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
+	if (_FrameRoot)
+	{
+		//骨に行列をセットする
+		SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 
-	//メッシュリストを作成。
-	_CreateMeshList();
+		//メッシュリストを作成。
+		_CreateMeshList();
+		return true;
+	}
+	return false;
 }
 
 //モデルデータのクローンを作成

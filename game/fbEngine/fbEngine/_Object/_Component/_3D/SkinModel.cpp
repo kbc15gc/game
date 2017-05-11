@@ -306,7 +306,7 @@ void SkinModel::DrawMeshContainer(
 				Material* material = pMeshContainer->material[i];
 				
 				//テクスチャが格納されていればセット
-				if (material != NULL)
+				if (material != nullptr)
 				{
 					_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
@@ -317,7 +317,7 @@ void SkinModel::DrawMeshContainer(
 					if (splat)
 					{
 						_Effect->SetValue("g_terrainRect", &_ModelDate->GetTerrainSize(), sizeof(Vector4));
-						
+
 						_Effect->SetTexture("g_splatMap", splat);
 						FOR(i, 4)
 						{
@@ -333,9 +333,9 @@ void SkinModel::DrawMeshContainer(
 					}
 
 				}
-				//テクスチャがないならカラーセット
 				else
 				{
+					//テクスチャがないならカラーセット
 					_Effect->SetVector("g_diffuseMaterial", Diffuse);
 					_Effect->SetBool("Texflg", false);
 				}

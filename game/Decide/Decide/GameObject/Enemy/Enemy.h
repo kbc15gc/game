@@ -28,6 +28,7 @@ private:
 	void _AwakeSubClass()override;
 	void _StartSubClass()override;
 	void _UpdateSubClass()override;
+	void _LateUpdateSubClass()override;
 
 
 	EnemyCharacter::State AttackSelect()override;
