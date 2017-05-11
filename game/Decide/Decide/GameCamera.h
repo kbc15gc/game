@@ -58,6 +58,4 @@ private:
 	const Vector3* _PrevGameCameraPos;
 	//補間の状態。
 	State _LerpState;
-	//ゲームカメラから歴史書に向かうベクトル。
-	const Vector3* _ToHisoryBookVec;
 };
