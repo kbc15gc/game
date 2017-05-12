@@ -32,10 +32,10 @@ void HistoryBook::Start()
 
 	//アニメーションの終了時間設定。
 	//-1.0fを設定しているのはアニメーションの再生時間が1秒未満。
-	_AnimationEndTime[(int)AnimationNo::AnimationCloseIdol] = 3.0f;	//本が閉じた状態のアニメーション。
-	_AnimationEndTime[(int)AnimationNo::AnimationOpen] = 3.0f;			//本が開くアニメーション。
-	_AnimationEndTime[(int)AnimationNo::AnimationOpenIdol] = 3.0f;		//本が開いた状態のアニメーション。
-	_AnimationEndTime[(int)AnimationNo::AnimationClose] = 3.0f;		//本が閉じるアニメーション。
+	_AnimationEndTime[(int)AnimationNo::AnimationCloseIdol] = 3.33f;		//本が閉じた状態のアニメーション。
+	_AnimationEndTime[(int)AnimationNo::AnimationOpen] = 3.33f;				//本が開くアニメーション。
+	_AnimationEndTime[(int)AnimationNo::AnimationOpenIdol] = 3.33f;			//本が開いた状態のアニメーション。
+	_AnimationEndTime[(int)AnimationNo::AnimationClose] = 3.33f;			//本が閉じるアニメーション。
 
 	//各エンドタイムを設定。
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
