@@ -1,7 +1,6 @@
 #include "HistoryMenu.h"
 #include "fbEngine\_Object\_GameObject\Button.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
-#include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\Village\HistoryButton.h"
 
@@ -39,6 +38,7 @@ void HistoryMenu::Start()
 			{
 				//ボタン
 				HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
+				b->SetMenuButtonFlag(true);//メニューボタンだよ。
 				_Buttons[continent][history] = b;
 				b->SetInfo(continent, history);
 				Vector3 pos = Vector3(interval.x * (history + 1) + hasi.x / 2, height, 0.0f);
@@ -87,6 +87,41 @@ void HistoryMenu::_OpenMenu()
 		{
 			//ボタンに読み込んだ情報割り当て。
 			_Buttons[conti][chip]->SetChipID(h->Chips[chip]);
+		}
+	}
+}
+
+void HistoryMenu::SetMenuSelectChip(ChipID chipid)
+{
+	static int chip = 0;		//チップ
+	static int continent = 0;	//大陸
+	
+	//ボタンに読み込んだ情報割り当て。
+	//セットできたなら。
+	INSTANCE(HistoryManager)->SetHistoryChip(continent, chip, (const int)chipid);
+	_Buttons[continent][chip]->SetChipID(chipid);
+	//チップが最大値より小さい場合
+	if (chip < HISTORY_CHIP_NUM)
+	{
+		//次のチップの場所へ
+		chip++;
+	}
+	else
+	{
+		//チップを０の場所に
+		chip = 0;
+		//大陸の数が最大値より小さい場合
+		if (continent < CONTINENT_NUM)
+		{
+			//次の大陸へ
+			continent++;
+			//次のチップの場所へ
+			chip++;
+		}
+		else
+		{
+			//最初の大陸へ
+			continent = 0;
 		}
 	}
 }

@@ -18,7 +18,8 @@ namespace
 
 HistoryMenuButton::HistoryMenuButton(const char * name):
 	GameObject(name),
-	_ChipID(ChipID::NONE)
+	_ChipID(ChipID::NONE),
+	_MenuButtonFlag(true)
 {
 }
 
@@ -26,6 +27,7 @@ void HistoryMenuButton::Awake()
 {
 	_Sprite = AddComponent<Sprite>();
 	_Circle = AddComponent<CircleCollision>();
+	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 }
 
 void HistoryMenuButton::Update()
@@ -33,7 +35,17 @@ void HistoryMenuButton::Update()
 	if(MouseInput->GetUp(MouseInE::L_CLICK) &&		//左クリック
 		_Circle->Judgment(MouseInput->GetCursorPosOnWindow(g_MainWindow)))	//重なっている。
 	{
-		_NextChip();
+		//メニューフラグがTRUEなら次のチップを設定。
+		if (_MenuButtonFlag)
+		{
+			_NextChip();
+		}
+		//メニューフラグがFALSEなら選択したチップを設定。
+		else
+		{
+			_SetChip();
+		}
+		
 	}
 }
 
@@ -64,4 +76,10 @@ void HistoryMenuButton::_NextChip()
 			break;
 		}
 	}
+}
+
+void HistoryMenuButton::_SetChip()
+{
+	//チップをセットする
+	_HistoryMenu->SetMenuSelectChip(_ChipID);
 }

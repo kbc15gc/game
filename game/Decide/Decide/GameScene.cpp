@@ -18,6 +18,7 @@
 #include "GameObject\Village\HistoryMenu.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
+#include "GameObject\Village\HistoryMenuSelect.h"
 
 ImageObject* depth;
 
@@ -43,6 +44,8 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	//メニューセレクト
+	INSTANCE(GameObjectManager)->AddNew<HistoryMenuSelect>("HistoryMenuSelect", 9);
 
 	INSTANCE(HistoryManager)->CreateObject();
 

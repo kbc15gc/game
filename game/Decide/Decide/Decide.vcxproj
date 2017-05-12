@@ -180,6 +180,7 @@
     <ClInclude Include="GameObject\Village\HistoryInfo.h" />
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
+    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameScene.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
+    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameScene.cpp" />

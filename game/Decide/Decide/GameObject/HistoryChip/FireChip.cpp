@@ -2,6 +2,8 @@
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Light.h"
 #include "GameObject\Player\Player.h"
+#include "GameObject\Village\HistoryManager.h"
+#include "GameObject\Village\HistoryInfo.h"
 
 FireChip::FireChip(const char * name) :
 	GameObject(name)
@@ -38,6 +40,7 @@ void FireChip::Update()
 	//一定の距離内だとオブジェクト削除
 	if (toLenght <= 0.2f)
 	{
+		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)ChipID::FIRE);
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 	
