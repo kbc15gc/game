@@ -1,6 +1,7 @@
 /*!
  * @brief	‰¹Œ¹ƒNƒ‰ƒXB
  */
+#include"fbstdafx.h"
 #include "_Object\_Component\_Sound\SoundEngine.h"
 #include "SoundSource.h"
 

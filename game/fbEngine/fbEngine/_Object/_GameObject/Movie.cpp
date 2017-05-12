@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Movie.h"
 
 void Movie::Awake()

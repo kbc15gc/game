@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "CollisionObject.h"
 
 void CollisionObject::Initialize(int ID, float Life, Vector3 size)

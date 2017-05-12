@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "HistoryButton.h"
 
 #include "fbEngine\_Object\_Component\_2D\Sprite.h"

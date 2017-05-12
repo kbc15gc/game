@@ -1,7 +1,7 @@
 /*!
  *@brief	スキンモデルデータ。
  */
-
+#include"fbstdafx.h"
 #include "SkinModelData.h"
 
 //UINT                        g_NumBoneMatricesMax = 0;

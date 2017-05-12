@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "TextureAnimator.h"
 
 TextureAnimator::TextureAnimator(GameObject * g, Transform * t):

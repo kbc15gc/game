@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "Sky.h"
 #include "fbEngine\/_Object\_Component\_3D\SkinModel.h"
 

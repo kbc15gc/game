@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Transform.h"
 
 Transform::Transform(GameObject * g, Transform * t) :

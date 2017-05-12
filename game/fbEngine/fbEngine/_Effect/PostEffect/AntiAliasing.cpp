@@ -1,6 +1,7 @@
 /**
 * アンチエイリアスクラスの実装.
 */
+#include"fbstdafx.h"
 #include"AntiAliasing.h"
 #include"_Object\Vertex.h"
 #include"..\EffectManager.h"

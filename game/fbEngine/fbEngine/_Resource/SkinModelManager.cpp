@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "SkinModelManager.h"
 
 map<UINT64, SkinModelData*> SkinModelManager::modelDataMap;

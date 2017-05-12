@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "RigidBody.h"
 
 RigidBody::RigidBody(GameObject* g, Transform* t) :

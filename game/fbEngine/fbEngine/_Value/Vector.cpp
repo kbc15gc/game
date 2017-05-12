@@ -1,7 +1,7 @@
 /*!
  * @brief	ベクトルクラス。
  */
-
+#include"fbstdafx.h"
 #include "Vector.h"
 
 

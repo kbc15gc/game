@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Text.h"
 #include "FontManager.h"
 

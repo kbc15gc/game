@@ -72,18 +72,19 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	VS_OUTPUT Out = (VS_OUTPUT)0;
 
 	float4 pos;
-	pos = mul( In._Pos, g_worldMatrix );		//モデルのローカル空間からワールド空間に変換。
+	pos = mul( float4(In._Pos.xyz,1.0f), g_worldMatrix );		//モデルのローカル空間からワールド空間に変換。
 	
 	Out._World = pos;						//ワールド行列を保持
 
 	//スカイボックスはビュー行列をかけない。
 	if (!SkyBox)
 	{
-		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
+		pos = mul(float4(pos.xyz, 1.0f), g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	}
-	pos = mul( pos, g_projectionMatrix );	//ビュー空間から射影空間に変換。
-	Out._World.w = pos.w;
+	pos = mul(float4(pos.xyz, 1.0f), g_projectionMatrix );	//ビュー空間から射影空間に変換。
 	Out._Pos = pos;
+	Out._World.w = pos.w;
+
 	Out._Color = In._Color;
 	Out._UV = In._UV;
 	Out._Normal = mul(In._Normal, g_rotationMatrix);	//法線を回す。
@@ -91,10 +92,16 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	return Out;
 }
 
+struct PSOutput
+{
+	float4 Color : COLOR0;
+	float4 Depth : COLOR1;
+};
+
 /*!
  *@brief	ピクセルシェーダー。
  */
-float4 PSMain(VS_OUTPUT In):COLOR0
+PSOutput PSMain(VS_OUTPUT In)
 {
 	float4 color = (float4)0;	//最終的に出力するカラー
 	float4 diff = (float4)0;	//メッシュのマテリアル
@@ -107,7 +114,13 @@ float4 PSMain(VS_OUTPUT In):COLOR0
 			
 			//反転しているので-1をかけて法線をもどす
 			diff = texCUBE(g_cubeSampler, In._Normal * -1.0f);
-			return diff;
+
+			PSOutput Out = (PSOutput)0;
+
+			Out.Color = diff;
+			Out.Depth = 0;
+
+			return Out;
 		}
 		else
 		{
@@ -160,7 +173,12 @@ float4 PSMain(VS_OUTPUT In):COLOR0
 	
 	//color.rgb *= cascadeColor;
 
-	return color;
+	PSOutput Out = (PSOutput)0;
+
+	Out.Color = color;
+	Out.Depth = In._World.w;
+
+	return Out;
 }
 
 //普通に描画する用
@@ -273,7 +291,7 @@ sampler_state
 },
 };
 
-float4 PSTerrain(VS_OUTPUT In) : COLOR
+PSOutput PSTerrain(VS_OUTPUT In)
 {
 	//スプラットマップのUV座標を求める。
 	float2 splatMapUV;
@@ -324,7 +342,13 @@ float4 PSTerrain(VS_OUTPUT In) : COLOR
 	//psOut.depth = In._World.w;
 
 	//return psOut;
-	return color;
+
+	PSOutput Out = (PSOutput)0;
+
+	Out.Color = color;
+	Out.Depth = In._World.w;
+
+	return Out;
 }
 
 //普通に描画する用

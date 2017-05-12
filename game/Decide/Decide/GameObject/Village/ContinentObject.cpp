@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "ContinentObject.h"
 
 ContinentObject::ContinentObject(const char * name):
