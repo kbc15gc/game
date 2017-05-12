@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Vertex.h"
 
 Vertex::~Vertex()

@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "EffectManager.h"
 
 

@@ -1,7 +1,7 @@
 /*!
  *@brief	波形データバンク。
  */
-
+#include"fbstdafx.h"
 #include "WaveFile.h"
 #include "WaveFileBank.h"
 

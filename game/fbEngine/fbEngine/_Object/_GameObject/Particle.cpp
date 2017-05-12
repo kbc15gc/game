@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Particle.h"
 
 #include "_Object\_Component\_3D\Camera.h"

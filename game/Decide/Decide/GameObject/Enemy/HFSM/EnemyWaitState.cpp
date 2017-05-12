@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "../EnemyCharacter.h"
 #include "EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"

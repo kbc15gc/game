@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Button.h"
 #include "_Inputs\Mouse.h"
 void Button::Awake()

@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "ImageObject.h"
 
 void ImageObject::Awake()

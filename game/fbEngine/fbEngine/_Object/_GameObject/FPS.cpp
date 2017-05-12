@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "FPS.h"
 
 void FPS::Start()

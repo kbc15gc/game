@@ -49,7 +49,14 @@ private:
 	Vector3 _LerpCameraLookAtPos;
 	//線形補間に使う補間比率。
 	float _LerpRate;
-	//歴史書を見始めた直前のカメラの位置を格納する用。
-	Vector3 _PrevGameCameraPos;
+
+	//歴史書を見る前のカメラの位置を格納する用。
+	const Vector3* _PrevGameCameraPos;
+	//補間の状態。
+	State _LerpState;
+	//ゲームカメラから歴史書に向かうベクトル。
+	const Vector3* _ToHisoryBookVec;
+
+	Vector3 _toPosition = Vector3::zero;
 
 };

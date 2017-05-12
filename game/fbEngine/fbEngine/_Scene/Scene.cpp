@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Scene.h"
 #include "_Object\Vertex.h"
 #include "_Effect\EffectManager.h"

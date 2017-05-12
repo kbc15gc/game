@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "KeyBoard .h"
 
 HRESULT KeyBoard::Initialize(LPDIRECTINPUT8 Dinput)

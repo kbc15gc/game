@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "MeshCollider.h"
 
 MeshCollider::MeshCollider(GameObject* g, Transform* t) :

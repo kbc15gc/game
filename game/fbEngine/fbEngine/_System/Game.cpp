@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Game.h"
 
 CGraphicsDevice g_graphicsDevice;

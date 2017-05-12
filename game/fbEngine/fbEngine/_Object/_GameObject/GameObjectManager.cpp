@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "GameObjectManager.h"
 
 GameObjectManager*  GameObjectManager::_Instance = nullptr;
@@ -226,7 +227,7 @@ bool GameObjectManager::_CheckUniqueRemoveList(GameObject * obj)
 
 void GameObjectManager::_RemoveObject()
 {
-	list<RemoveObj>::iterator removeIt = _RemoveList.begin();
+	auto& removeIt = _RemoveList.begin();
 	while (removeIt != _RemoveList.end())
 	{
 		//オブジェクトのメモリ解放

@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "XInput.h"
 
 XInput::XInput()

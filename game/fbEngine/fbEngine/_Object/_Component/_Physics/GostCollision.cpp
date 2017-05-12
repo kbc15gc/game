@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "GostCollision.h"
 
 GostCollision::~GostCollision()

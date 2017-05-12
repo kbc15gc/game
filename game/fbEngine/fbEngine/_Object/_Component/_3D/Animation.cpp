@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Animation.h"
 
 void Animation::Initialize(ID3DXAnimationController* anim)
