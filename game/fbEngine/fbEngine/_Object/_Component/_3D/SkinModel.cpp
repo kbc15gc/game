@@ -91,7 +91,6 @@ void SkinModel::LateUpdate()
 		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 	}
-
 }
 
 void SkinModel::PreRender()

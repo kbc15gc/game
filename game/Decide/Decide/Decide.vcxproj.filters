@@ -38,6 +38,9 @@
     <Filter Include="Object\GameObject\Village">
       <UniqueIdentifier>{f4c69b1e-892f-494c-ba6a-74302f6bb511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\GameObject\HistoryBook">
+      <UniqueIdentifier>{6c73d237-7a73-40fe-abd6-658616eb5e61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -137,8 +140,9 @@
     <ClInclude Include="GameObject\Village\HistoryButton.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
+      <Filter>Object\GameObject\HistoryBook</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -243,7 +247,8 @@
     <ClCompile Include="GameObject\Village\HistoryButton.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
+      <Filter>Object\GameObject\HistoryBook</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

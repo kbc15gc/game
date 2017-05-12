@@ -75,7 +75,6 @@ void SceneManager::UpdateScene()
 
 void SceneManager::DrawScene()
 {
-	
 	//Ž–‘O•`‰æ(‰e‚Æ‚©[“x‚Æ‚©‹P“x‚Æ‚©)
 	INSTANCE(GameObjectManager)->PreRenderObject();
 

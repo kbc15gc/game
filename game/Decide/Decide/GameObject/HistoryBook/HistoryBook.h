@@ -9,15 +9,18 @@ public:
 	enum class State
 	{
 		IdolClose = 0,		//閉じた状態。
-		Open = 0,				//本が開いている。
+		Open,				//本が開いている。
 		IdolOpen,			//開いた状態。
 		Close,				//本が閉じている。
 	};
 	//歴史書のアニメーションナンバー。
 	enum class AnimationNo
 	{
-		AnimationInvalid = -1,		//無効。
-		AnimationOpen,				//本が開くアニメーション。
+		AnimationInvalid = -1,	//無効。
+		AnimationCloseIdol,		//本が閉じた状態。
+		AnimationOpen,			//本が開いている状態。
+		AnimationOpenIdol,		//本が開いたままの状態。
+		AnimationClose,			//本が閉じている状態。
 		AnimationNum,
 		
 	};
@@ -39,6 +42,6 @@ public:
 private:
 	Animation* _Anim;											//アニメーションのコンポーネントのアドレス保持用。
 	double _AnimationEndTime[(int)AnimationNo::AnimationNum];	//アニメーションの終了時間
-	State HistoryBookState;										//歴史書の状態。
+	State _HistoryBookState;										//歴史書の状態。
 	bool _IsLookAtHistoryFlag = false;							//歴史書を見ているかどうかのフラグ。
 };
