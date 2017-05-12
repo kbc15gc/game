@@ -55,7 +55,7 @@ void GameCamera::Update()
 		_HistoryBehavior();
 	}
 
-	_toPosition.Subtract(transform->GetPosition(), _Camera->GetViewPoint());
+	_toPosition.Subtract(transform->GetPosition(),(*_PlayerPos) + PLAYER_HEIGHT );
 
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(_toPosition.Length() * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);

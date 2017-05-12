@@ -96,7 +96,7 @@ void SceneManager::DrawScene()
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
-	_DepthofField.Render();
+	//_DepthofField.Render();
 	_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
@@ -105,7 +105,7 @@ void SceneManager::DrawScene()
 	//オフスクリーンのやつ描画
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
-	//_Bloom.Render();
+	_Bloom.Render();
 	INSTANCE(GameObjectManager)->PostRenderObject();
 	
 	//2Dとか？
