@@ -1,6 +1,7 @@
 /**
 * DOF(”íÊŠE[“x)ƒNƒ‰ƒX‚ÌÀ‘•.
 */
+#include"fbstdafx.h"
 #include"DepthofField.h"
 #include"_Effect\EffectManager.h"
 #include "_Object\Vertex.h"

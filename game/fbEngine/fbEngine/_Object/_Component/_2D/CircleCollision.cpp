@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "CircleCollision.h"
 
 const bool CircleCollision::Judgment(const Vector2& point)

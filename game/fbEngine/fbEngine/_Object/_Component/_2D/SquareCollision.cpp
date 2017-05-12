@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "SquareCollision.h"
 
 const bool SquareCollision::Judgment(const Vector2& point)

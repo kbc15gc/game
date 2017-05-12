@@ -1,6 +1,7 @@
 /**
 * ブラークラスの実装.
 */
+#include"fbstdafx.h"
 #include"Blur.h"
 #include "_Object\Vertex.h"
 #include "EffectManager.h"

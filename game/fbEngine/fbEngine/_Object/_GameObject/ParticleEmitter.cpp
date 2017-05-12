@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "ParticleEmitter.h"
 #include "Particle.h"
 

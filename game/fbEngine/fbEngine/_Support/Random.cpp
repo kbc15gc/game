@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Random.h"
 
 int Random::Range(int min,int max) {

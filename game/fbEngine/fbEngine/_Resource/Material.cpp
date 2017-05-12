@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Material.h"
 
 Material::Material(char* name):

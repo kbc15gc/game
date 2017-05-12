@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "FireChip.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Light.h"

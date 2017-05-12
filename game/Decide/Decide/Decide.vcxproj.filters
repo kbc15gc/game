@@ -137,6 +137,8 @@
     <ClInclude Include="GameObject\Village\HistoryButton.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -241,5 +243,7 @@
     <ClCompile Include="GameObject\Village\HistoryButton.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
 </Project>

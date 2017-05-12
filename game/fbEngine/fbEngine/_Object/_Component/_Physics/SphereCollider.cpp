@@ -1,7 +1,7 @@
 /*!
  * @brief	球体コライダー。
  */
-
+#include"fbstdafx.h"
 #include "SphereCollider.h"
 
 /*!

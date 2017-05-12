@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "RenderTargetManager.h"
 
 RenderTargetManager*  RenderTargetManager::_Instance = nullptr;

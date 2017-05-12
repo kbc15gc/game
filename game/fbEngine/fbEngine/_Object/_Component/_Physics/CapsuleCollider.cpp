@@ -1,7 +1,7 @@
 /*!
  * @brief	カプセルコライダー。
  */
-
+#include"fbstdafx.h"
 #include "CapsuleCollider.h"
 
 

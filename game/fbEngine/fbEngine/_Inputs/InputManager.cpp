@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "InputManager.h"
 
 InputManager* InputManager::_Instance = nullptr;

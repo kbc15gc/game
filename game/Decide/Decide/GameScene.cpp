@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "GameScene.h"
 
 #include "fbEngine/_Object/_GameObject/ImageObject.h"

@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "FontManager.h"
 
 FontManager*  FontManager::_Instance = nullptr;

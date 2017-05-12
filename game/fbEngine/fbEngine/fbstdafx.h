@@ -1,9 +1,8 @@
-// stdafx.h : 標準のシステム インクルード ファイルのインクルード ファイル、または
-// 参照回数が多く、かつあまり変更されない、プロジェクト専用のインクルード ファイル
-// を記述します。
-//
-
+/**
+* プリコンパイル済みヘッダの定義.
+*/
 #pragma once
+
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "targetver.h"
@@ -67,6 +66,8 @@ static const float FontSize = 300.0f;
 #include "_System\System.h"
 #include "_System\GraphicsDevice.h"
 
+#include"_System\Game.h"
+
 //Value
 #include "_Value/Vector.h"
 #include "_Value/Color.h"
@@ -97,7 +98,7 @@ static const float FontSize = 300.0f;
 
 //GameOject
 #include "_Object\_GameObject\GameObjectManager.h"
-	
+
 //Physics
 #include "../bulletPhysics/src/btBulletDynamicsCommon.h"
 #include "../bulletPhysics/src/BulletCollision/CollisionDispatch/btGhostObject.h"

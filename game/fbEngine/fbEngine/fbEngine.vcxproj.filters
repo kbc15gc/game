@@ -81,9 +81,6 @@
     <ClCompile Include="_Effect\EffectManager.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
-    <ClCompile Include="_Include\stdafx.cpp">
-      <Filter>Include</Filter>
-    </ClCompile>
     <ClCompile Include="_Resource\Material.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
@@ -254,6 +251,7 @@
     <ClCompile Include="_Effect\PreRender\ShadowMap.cpp">
       <Filter>Effect\PreRender</Filter>
     </ClCompile>
+    <ClCompile Include="fbstdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -293,9 +291,6 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="_Include\PhysicsCallback.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="_Include\stdafx.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="_Include\VertexDefinition.h">
@@ -498,5 +493,6 @@
     <ClInclude Include="_Effect\PreRender\ShadowMap.h">
       <Filter>Effect\PreRender</Filter>
     </ClInclude>
+    <ClInclude Include="fbstdafx.h" />
   </ItemGroup>
 </Project>

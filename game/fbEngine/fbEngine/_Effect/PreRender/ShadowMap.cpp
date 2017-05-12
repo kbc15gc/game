@@ -1,6 +1,7 @@
 /**
 * シャドウマップクラスの実装.
 */
+#include"fbstdafx.h"
 #include"ShadowMap.h"
 
 namespace

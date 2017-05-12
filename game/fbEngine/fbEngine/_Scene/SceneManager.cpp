@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "SceneManager.h"
 #include "Scene.h"
 

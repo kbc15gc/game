@@ -1,7 +1,7 @@
 /*!
  * @brief	waveファイル。
  */
-
+#include"fbstdafx.h"
 #include "WaveFile.h"
 
 

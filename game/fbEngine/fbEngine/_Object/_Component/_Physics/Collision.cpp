@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Collision.h"
 
 #ifdef _DEBUG

@@ -1,7 +1,7 @@
 /*!
 * @brief	キャラクタのコリジョンコントロール。
 */
-
+#include"fbstdafx.h"
 #include "CharacterController.h"
 
 void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity)

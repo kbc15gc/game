@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "GameCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"

@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Sprite.h"
 #include "_Effect\EffectManager.h"
 #include "_Object\Vertex.h"

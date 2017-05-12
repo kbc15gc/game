@@ -1,8 +1,7 @@
 // Decide.cpp : アプリケーションのエントリ ポイントを定義します。
 //
-
-#include "Decide.h"
-#include "fbEngine\_System\Game.h"
+#include"stdafx.h"
+#include"Decide.h"
 
 #define MAX_LOADSTRING 100
 

@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "GameShadowCamera.h"
 #include "fbEngine\_Object\_Component\_3D\ShadowCamera.h"
 #include "GameObject/Player/Player.h"

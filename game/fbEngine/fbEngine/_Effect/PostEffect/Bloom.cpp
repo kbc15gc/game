@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Bloom.h"
 #include "_Object\Vertex.h"
 #include "../EffectManager.h"
