@@ -8,9 +8,9 @@ public:
 	//歴史書のステート。
 	enum class State
 	{
-		IdolClose = 0,		//閉じた状態。
+		CloseIdol= 0,		//閉じた状態。
 		Open,				//本が開いている。
-		IdolOpen,			//開いた状態。
+		OpenIdol,			//開いた状態。
 		Close,				//本が閉じている。
 	};
 	//歴史書のアニメーションナンバー。
@@ -39,9 +39,16 @@ public:
 	{
 		return _IsLookAtHistoryFlag;
 	}
+
+	//歴史書の状態を取得。
+	State GetHistoryState()
+	{
+		return _HistoryBookState;
+	}
 private:
+	SkinModel* _Model;
 	Animation* _Anim;											//アニメーションのコンポーネントのアドレス保持用。
-	double _AnimationEndTime[(int)AnimationNo::AnimationNum];	//アニメーションの終了時間
-	State _HistoryBookState;										//歴史書の状態。
-	bool _IsLookAtHistoryFlag = false;							//歴史書を見ているかどうかのフラグ。
+	double	_AnimationEndTime[(int)AnimationNo::AnimationNum];	//アニメーションの終了時間
+	State _HistoryBookState;									//歴史書の状態。
+	bool _IsLookAtHistoryFlag;									//歴史書を見ているかどうかのフラグ(最初は見ていないのでfalse)。
 };
