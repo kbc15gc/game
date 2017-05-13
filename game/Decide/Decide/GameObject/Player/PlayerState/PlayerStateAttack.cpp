@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "../Player.h"
 #include "PlayerStateAttack.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"

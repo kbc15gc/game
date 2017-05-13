@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "ObjectRotation.h"
 
 void ObjectRotation::RotationToObject_XZ(const GameObject& Object) {

@@ -2,6 +2,7 @@
 
 #include"_Effect\PostEffect\AntiAliasing.h"
 #include "_Effect\PostEffect\Bloom.h"
+#include"_Effect\PostEffect\DepthofField.h"
 /** シャドウマップクラス. */
 #include"_Effect\PreRender\ShadowMap.h"
 
@@ -83,6 +84,14 @@ public:
 		return _MainRT[CurrentMainRT_];
 	}
 
+	/**
+	* 被写界深度クラスの取得.
+	*/
+	DepthofField& GetDepthofField()
+	{
+		return _DepthofField;
+	}
+
 private:
 	int _NowScene;	//現在のシーンの添え字
 	vector<Scene*> _Scenes;
@@ -97,6 +106,7 @@ private:
 	static SceneManager* _Instance;
 
 	AntiAliasing _AntiAliasing;
+	DepthofField _DepthofField;
 	Bloom _Bloom;
 	ShadowMap  _ShadowMap;
 };

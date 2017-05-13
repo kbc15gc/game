@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "TextObject.h"
 
 void TextObject::Awake()

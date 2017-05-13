@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Mouse.h"
 
 HRESULT Mouse::Initialize(LPDIRECTINPUT8 Dinput)

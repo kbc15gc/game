@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "TextureManager.h"
 
 map<UINT64, TEXTURE*> TextureManager::_TextureMap;

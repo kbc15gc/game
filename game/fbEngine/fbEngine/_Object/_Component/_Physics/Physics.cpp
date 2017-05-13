@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Physics.h"
 
 PhysicsWorld* PhysicsWorld::_Instance = nullptr;

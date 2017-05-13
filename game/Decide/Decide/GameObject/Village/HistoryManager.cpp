@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "HistoryManager.h"
 
 #include "GameObject\Village\HistoryInfo.h"

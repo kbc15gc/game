@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "SearchViewAngle.h"
 
 bool SearchViewAngle::IsDiscovery(const Vector3& pos1, const Vector3& pos2, const Vector3& Direction, float viewAngle, float range) {

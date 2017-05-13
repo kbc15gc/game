@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "PlatePrimitive.h"
 
 #include "_Effect\EffectManager.h"

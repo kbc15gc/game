@@ -1,8 +1,8 @@
 /*!
 * @brief	キャラクタコントローラー。
 */
-
 #pragma once
+
 #include "_Object\_Component\Component.h"
 
 /*!

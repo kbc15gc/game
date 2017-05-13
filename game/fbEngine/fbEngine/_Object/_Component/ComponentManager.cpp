@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "ComponentManager.h"
 
 ComponentManager::~ComponentManager()

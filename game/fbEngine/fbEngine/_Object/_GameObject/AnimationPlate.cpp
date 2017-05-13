@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "AnimationPlate.h"
 
 AnimationPlate::AnimationPlate(char * name) :

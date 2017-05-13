@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "GameCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
@@ -26,8 +27,6 @@ void GameCamera::Awake()
 
 	//線形補間の比率を初期化。
 	_LerpRate = 1.0f;
-	//プレイヤーを見るように補間。
-	_LerpState = State::LookAtPlayer;
 }
 
 void GameCamera::Start()
@@ -45,6 +44,7 @@ void GameCamera::Start()
 
 void GameCamera::Update()
 {
+	//歴史書を見ているかどうか。
 	if (_HistoryBook->GetIsLookAtHistoryFlag() == false)
 	{
 		_StandardBehavior();
@@ -53,6 +53,13 @@ void GameCamera::Update()
 	{
 		_HistoryBehavior();
 	}
+
+	_toPosition.Subtract(transform->GetPosition(),(*_PlayerPos) + PLAYER_HEIGHT );
+
+	INSTANCE(SceneManager)->GetDepthofField().SetPint(_toPosition.Length() * 1000);
+	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
+	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(26.0f);
+
 }
 
 void GameCamera::RotTransversal(float roty)
@@ -131,87 +138,86 @@ void GameCamera::_Move()
 
 void GameCamera::_StandardBehavior()
 {
-	//右回転
-	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
+
+	//補間の比率を加算。
+	//線形補間中。
+	if (_LerpRate < 1.0f)
 	{
-		RotTransversal(CAMERA_SPEED * Time::DeltaTime());
+		_LerpRate += 0.01f;
+
+		//カメラの注視点の線形補間を行う(歴史書からプレイヤーに向けて補間)。
+		_LerpCameraLookAtPos = (((*_PlayerPos) + PLAYER_HEIGHT) * (1.0f - _LerpRate) + _HistoryBookPos * _LerpRate);
+
+		//線形補間を行う(プレイヤーの位置から歴史書を見始めた時のカメラの位置に向けて補間)。
+		_LerpCameraPos = (_LerpCameraPos * (1.0f - _LerpRate) + _PrevGameCameraPos * _LerpRate);
+
+		//カメラの注視点を線形補間された位置に設定。
+		transform->LockAt((_LerpCameraLookAtPos));
+
+		//カメラの位置を線形補完された位置に設定。。
+		transform->SetPosition((_LerpCameraPos));
 	}
-	//左回転
-	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
+	//線形補間をし終わったので通常のカメラの動きをする。
+	else
 	{
-		RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
+		//右回転
+		if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
+		{
+			RotTransversal(CAMERA_SPEED * Time::DeltaTime());
+		}
+		//左回転
+		if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
+		{
+			RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
+		}
+		//上
+		if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
+		{
+			RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
+		}
+		//下
+		if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
+		{
+			RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
+		}
+
+		//移動
+		_Move();
+
+		//歴史書を見始めた時点でのゲームカメラの位置を確保。
+		_PrevGameCameraPos = this->transform->GetPosition();
+
+		_LerpRate = 1.0f;
 	}
-	//上
-	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
-	{
-		RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
-	}
-	//下
-	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
-	{
-		RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
-	}
-	//移動
-	_Move();
+
 	//プレイヤーの方を向く
 	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
-
-	//_PrevGameCameraPos = &this->transform->GetLocalPosition();
-
 }
 
 void GameCamera::_HistoryBehavior()
 {
-	//補間状態のチェック。
-	switch (_LerpState)
+	//歴史書の位置を取得。
+	_HistoryBookPos = _HistoryBook->transform->GetPosition();
+
+	//補間の比率を減算。
+	if (_LerpRate > 0.0f)
 	{
-		//プレイヤーを見ているので歴史書を見るように状態を遷移。
-	case State::LookAtPlayer:
-
-		//歴史書を見始めた。
-		_LerpState = State::LookAtHistoryBookStart;
-
-		break;
-		//補間開始。
-	case State::LookAtHistoryBookStart:
-
-		//状態を補間計算中に遷移。
-		_LerpState = State::DoingLerpMath;
-		break;
-
-		//歴史書を見ている。
-	case State::LookAtHistoryBook:
-
-		//歴史書の位置を参照。
-		_HistoryBookPos = &_HistoryBook->transform->GetPosition();
-
-		//カメラの注視点をHistoryBookのモデルの位置に設定。
-		transform->LockAt((*_HistoryBookPos));
-
-		break;
-
-		//補間計算中。
-	case State::DoingLerpMath:
-		
-
-		//線形補間を行う(ゲームカメラの位置からプレイヤーの位置に向けて補間)。
-		_LerpPos = &((*_PlayerPos)+PLAYER_HEIGHT * (1.0f - _LerpRate) + this->transform->GetLocalPosition() * _LerpRate);
-
-		//補間の比率を減算。
-		if (_LerpRate > 0.0f)
-		{
-			_LerpRate -= 0.01f;
-		}
-		else
-		{
-			_LerpState = State::LookAtHistoryBook;
-		}
-
-		//計算位置をカメラの位置に反映。。
-		transform->SetLocalPosition((*_LerpPos));
-		break;
-	default:
-		break;
+		_LerpRate -= 0.01f;
+	}
+	else
+	{
+		_LerpRate = 0.0f;
 	}
 
+	//カメラの注視点の線形補間を行う(プレイヤーから歴史書に向けて補間)。
+	_LerpCameraLookAtPos = (_HistoryBookPos * (1.0f - _LerpRate) + ((*_PlayerPos) + PLAYER_HEIGHT) * _LerpRate);
+
+	//カメラの位置の線形補間を行う(ゲームカメラの位置からプレイヤーの位置に向けて補間)。
+	_LerpCameraPos = ((*_PlayerPos) + PLAYER_HEIGHT * (1.0f - _LerpRate) + this->transform->GetLocalPosition() * _LerpRate);
+
+	//カメラの注視点を線形補間された位置に設定。
+	transform->LockAt((_LerpCameraLookAtPos));
+
+	//カメラの位置を線形補完された位置に設定。。
+	transform->SetPosition((_LerpCameraPos));
 }

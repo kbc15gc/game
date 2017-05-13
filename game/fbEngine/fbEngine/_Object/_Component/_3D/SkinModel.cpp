@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "SkinModel.h"
 
 #include "_Effect\EffectManager.h"

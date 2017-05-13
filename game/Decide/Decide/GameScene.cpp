@@ -1,3 +1,4 @@
+#include"stdafx.h"
 #include "GameScene.h"
 
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
@@ -18,8 +19,9 @@
 #include "GameObject\Village\HistoryMenu.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
+#include "GameObject\Village\HistoryMenuSelect.h"
 
-ImageObject* depth;
+ImageObject* g_depth;
 
 void GameScene::Start()
 {
@@ -43,16 +45,18 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	//メニューセレクト
+	INSTANCE(GameObjectManager)->AddNew<HistoryMenuSelect>("HistoryMenuSelect", 9);
+
+	g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
+	g_depth->SetPivot(Vector2(0, 0));
+	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	g_depth->SetActive(false);
 
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
 
-	//depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	//depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(1));
-	/*ImageObject* depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	depth->SetTexture(INSTANCE(RenderTargetManager)->GetRTTextureFromList(RTIdxE::SHADOWDEPTH));
-	depth->SetPivot(Vector2(0, 0));
-	depth->SetActive(false);*/
 }
 
 void GameScene::Update()

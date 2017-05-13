@@ -29,7 +29,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -87,12 +87,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <ForcedIncludeFiles>$(SolutionDir)../fbEngine\fbEngine\_Include\stdafx.h;$(SolutionDir)Decide\GameSystem.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(SolutionDir)../fbEngine/;$(SolutionDir)Decide\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -180,6 +181,7 @@
     <ClInclude Include="GameObject\Village\HistoryInfo.h" />
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
+    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
@@ -189,6 +191,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sky.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +220,7 @@
     <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
+    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
@@ -224,6 +228,9 @@
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>

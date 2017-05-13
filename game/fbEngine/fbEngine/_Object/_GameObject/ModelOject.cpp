@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "ModelOject.h"
 
 void ModelObject::Awake()

@@ -1,3 +1,4 @@
+#include"fbstdafx.h"
 #include "Plate.h"
 
 Plate::Plate(char * name) :
