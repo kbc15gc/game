@@ -156,6 +156,10 @@ public:
 		this->x = this->y = this->z = 0;
 	}
 	//コンストラクタ
+	Vector3(float xyz)
+	{
+		Set(xyz, xyz, xyz);
+	}
 	Vector3(float x, float y, float z)
 	{
 		Set(x, y, z);

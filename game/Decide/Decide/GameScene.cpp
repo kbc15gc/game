@@ -44,6 +44,7 @@ void GameScene::Start()
 	//歴史書
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
+	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
 
 	//depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);

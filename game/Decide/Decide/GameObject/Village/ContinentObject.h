@@ -5,11 +5,12 @@ namespace
 	//オブジェクトの情報
 	struct ObjectInfo
 	{
-		char filename[256];
+		char filename[256];	//モデルファイル名
 		Vector3 pos;	//ポジション
 		Vector3 ang;	//回転
 		Vector3 sca;	//スケール
 	};
+
 	//メンバ変数の情報設定
 	const Support::DATARECORD ObjectInfoData[4] =
 	{
@@ -19,6 +20,7 @@ namespace
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,sca),sizeof(Vector3) },
 	};
 }
+
 //歴史によって出るオブジェクト
 class ContinentObject:public GameObject
 {
@@ -27,7 +29,7 @@ public:
 	void Awake()override;
 	//読み込むモデルのファイル名指定
 	void LoadModel(const char* filename);
-private:
+protected:
 	SkinModel* _Model;
 	Animation* _Anim;
 };

@@ -1,6 +1,9 @@
 #include "HistoryManager.h"
-#include "GameObject\Village\ContinentObject.h"
+
 #include "GameObject\Village\HistoryInfo.h"
+#include "GameObject\Village\ContinentObject.h"
+#include "GameObject\Village\NPC.h"
+
 
 HistoryManager* HistoryManager::_Instance = nullptr;
 
@@ -41,19 +44,6 @@ const bool HistoryManager::SetHistoryChip(const unsigned int & continent, const 
 
 void HistoryManager::_ChangeContinent(const unsigned int& continent)
 {
-	//大陸の変化のパターン計算
-	int pattern = _CalcPattern(_HistoryList[continent]);
-	
-	//パス生成
-	char path[128] = "Asset/Data/HistoryGroup";
-	char group[2] = { 'A' + pattern,0 };
-	strcat(path, group);
-	strcat(path, ".csv");
-
-	//CSVからオブジェクトの情報読み込み
-	vector<ObjectInfo*> _InfoList;
-	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), _InfoList);
-
 	//前のやつ削除してクリア
 	for each (GameObject* obj in _GameObjects[continent])
 	{
@@ -61,22 +51,72 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	}
 	_GameObjects[continent].clear();
 
-	//情報からオブジェクト生成。
-	FOR(i,_InfoList.size())
+	//大陸の変化のパターン計算
+	int pattern = _CalcPattern(_HistoryList[continent]);
+
+	char dirpath[] = "Asset/Data/Group";
+	char group[2] = { 'A' + pattern, 0 };
+	char* type[2] = { "Obj","NPC" };
+	char path[128];
+	
+	//OBJ
 	{
-		//生成
-		ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-		obj->LoadModel(_InfoList[i]->filename);
-		obj->transform->SetLocalPosition(_InfoList[i]->pos + Vector3(0, 10, 0));
-		obj->transform->SetLocalAngle(_InfoList[i]->ang);
-		obj->transform->SetLocalScale(_InfoList[i]->sca);
-		_GameObjects[continent].push_back(obj);
+		//パス生成
+		strcpy(path, dirpath);
+		strcat(path, group);
+		strcat(path, type[0]);
+		strcat(path, ".csv");
+		//CSVからオブジェクトの情報読み込み
+		vector<ObjectInfo*> objInfo;
+		Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
-		//もういらないので解放
-		SAFE_DELETE(_InfoList[i]);
+		//情報からオブジェクト生成。
+		FOR(i, objInfo.size())
+		{
+			//生成
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+			obj->LoadModel(objInfo[i]->filename);
+			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6, 0));
+			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetLocalScale(objInfo[i]->sca);
+			_GameObjects[continent].push_back(obj);
+
+			//もういらないので解放
+			SAFE_DELETE(objInfo[i]);
+		}
+
+		objInfo.clear();
 	}
+	ZeroMemory(path, 128);
+	//NPC
+	{
+		//パス生成
+		strcpy(path, dirpath);
+		strcat(path, group);
+		strcat(path, type[1]);
+		strcat(path, ".csv");
+		//CSVからオブジェクトの情報読み込み
+		vector<NPCInfo*> npcInfo;
+		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
 
-	_InfoList.clear();
+		//情報からオブジェクト生成。
+		FOR(i, npcInfo.size())
+		{
+			//生成
+			NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+			npc->LoadModel(npcInfo[i]->filename);
+			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
+			npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6, 0));
+			npc->transform->SetLocalAngle(npcInfo[i]->ang);
+			npc->transform->SetLocalScale(npcInfo[i]->sca);
+			_GameObjects[continent].push_back(npc);
+
+			//もういらないので解放
+			SAFE_DELETE(npcInfo[i]);
+		}
+
+		npcInfo.clear();
+	}
 }
 
 const int HistoryManager::_CalcPattern(const HistoryInfo * info)

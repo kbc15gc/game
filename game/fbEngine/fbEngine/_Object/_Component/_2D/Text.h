@@ -58,9 +58,9 @@ public:
 	}
 
 
-	const Vector2& GetLength()
+	Vector2 GetLength()
 	{
-		return _Length;
+		return _Length * _Size;
 	}
 	const float& GetSize()
 	{
