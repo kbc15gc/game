@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "HistoryMenuSelect.h"
 #include "fbEngine\_Object\_GameObject\Button.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
