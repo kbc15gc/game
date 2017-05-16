@@ -56,7 +56,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	int pattern = _CalcPattern(_HistoryList[continent]);
 
 	char dirpath[] = "Asset/Data/Group";
-	char group[2] = { 'A' + pattern, 0 };
+	char group[] = { 'A' + pattern,0 };
 	char* type[2] = { "Obj","NPC" };
 	char path[128];
 	
@@ -123,23 +123,34 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 const int HistoryManager::_CalcPattern(const HistoryInfo * info)
 {
 	int pattern = 0;
-	//とりあえず適当
-	switch (info->Chips[0])
+	//大陸に合ったグループシート読み込み
+	char path[256] = { "Asset/Data/Village" }; 
+	char idx[] = { '0' /*+ info->ContinentID*/,0 };
+	char Group[] = { "Group.csv" };
+	strcat(path, idx);
+	strcat(path, Group);
+	vector<VillageGroup*> groupList;
+	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
+	
+	for each (VillageGroup* group in groupList)
 	{
-	case ChipID::NONE:
-		pattern = 0;
+		//各スロットを比較
+		if (group->Slot[0] != info->Chips[0])
+			continue;
+		if (group->Slot[1] != info->Chips[1])
+			continue;
+		if (group->Slot[2] != info->Chips[2])
+			continue;
+
+		//全て一致
+		pattern = group->GroupID;
 		break;
-	case ChipID::FIRE:
-		pattern = 1;
-		break;
-	case ChipID::IRON:
-		pattern = 2;
-		break;
-	case ChipID::OIL:
-		pattern = 3;
-		break;
-	default:
-		break;
+	}
+
+	//不要になったので解放。
+	FOR(i, groupList.size())
+	{
+		SAFE_DELETE(groupList[i]);
 	}
 	return pattern;
 }

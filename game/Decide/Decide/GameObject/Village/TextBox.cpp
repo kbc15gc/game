@@ -14,6 +14,9 @@ TextBox::TextBox(const char * name):
 
 TextBox::~TextBox()
 {
+	INSTANCE(GameObjectManager)->AddRemoveList(_BoxImage[0]);
+	INSTANCE(GameObjectManager)->AddRemoveList(_BoxImage[1]);
+	INSTANCE(GameObjectManager)->AddRemoveList(_Text);
 }
 
 void TextBox::Awake()
