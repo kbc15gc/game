@@ -2,13 +2,14 @@
 #include "EnemyCharacter.h"
 #include "HFSM\EnemyState.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
-#include "fbEngine\CharacterController.h"
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWanderingState.h"
 #include "HFSM\EnemyWaitState.h"
 #include "HFSM\EnemyDiscoveryState.h"
 #include "HFSM\EnemyAttackState.h"
 #include "HFSM\EnemyStartAttackState.h"
+#include "HFSM\EnemyFallState.h"
+#include "AttackCollision.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -72,6 +73,22 @@ void EnemyCharacter::LateUpdate() {
 	_MoveSpeed = Vector3::zero;	// 使い終わったので初期化。
 }
 
+
+void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size) {
+	//現在のフレーム取得
+	const int nowFrame = _MyComponent.Animation->NowFrame();
+	//フレームが10の時あたり判定作成
+	if (nowFrame == eventFrame)
+	{
+		//攻撃コリジョン作成
+		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
+		Transform* trans = attack->GetComponent<Transform>();
+		trans->SetLocalPosition(pos);
+		trans->SetLocalAngle(angle);
+		trans->UpdateTransform();
+		attack->Create(size,AttackCollision::CollisionMaster::Enemy,3.0f);
+	}
+}
 
 void EnemyCharacter::SearchView() {
 	// 視野角判定。
@@ -146,6 +163,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyWaitState>(new EnemyWaitState(this)));
 	// 直進ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyTranslationState>(new EnemyTranslationState(this)));
+	// 落下ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyFallState>(new EnemyFallState(this)));
 }
 
 void EnemyCharacter::_ChangeState(State next) {

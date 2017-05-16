@@ -3,7 +3,7 @@
 
 #include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\ContinentObject.h"
-#include "GameObject\Village\NPC.h"
+//#include "GameObject\Village\NPC.h"
 
 
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -97,26 +97,26 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 		strcat(path, type[1]);
 		strcat(path, ".csv");
 		//CSVからオブジェクトの情報読み込み
-		vector<NPCInfo*> npcInfo;
-		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
+		//vector<NPCInfo*> npcInfo;
+		//Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
 
 		//情報からオブジェクト生成。
-		FOR(i, npcInfo.size())
-		{
-			//生成
-			NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
-			npc->LoadModel(npcInfo[i]->filename);
-			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-			npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6, 0));
-			npc->transform->SetLocalAngle(npcInfo[i]->ang);
-			npc->transform->SetLocalScale(npcInfo[i]->sca);
-			_GameObjects[continent].push_back(npc);
+		//FOR(i, npcInfo.size())
+		//{
+		//	//生成
+		//	NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+		//	npc->LoadModel(npcInfo[i]->filename);
+		//	npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
+		//	npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6, 0));
+		//	npc->transform->SetLocalAngle(npcInfo[i]->ang);
+		//	npc->transform->SetLocalScale(npcInfo[i]->sca);
+		//	_GameObjects[continent].push_back(npc);
 
-			//もういらないので解放
-			SAFE_DELETE(npcInfo[i]);
-		}
+		//	//もういらないので解放
+		//	SAFE_DELETE(npcInfo[i]);
+		//}
 
-		npcInfo.clear();
+		//npcInfo.clear();
 	}
 }
 

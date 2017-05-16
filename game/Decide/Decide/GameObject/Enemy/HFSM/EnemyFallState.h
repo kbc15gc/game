@@ -1,14 +1,13 @@
 #pragma once
-
 #include "EnemyState.h"
 
 class EnemyCharacter;
 
-// エネミー攻撃開始ステート。
-class EnemyStartAttackState : public EnemyState {
+// エネミー落下ステート。
+class EnemyFallState :public EnemyState{
 public:
-	EnemyStartAttackState(EnemyCharacter* Object);
-	~EnemyStartAttackState();
+	EnemyFallState(EnemyCharacter* Object);
+	~EnemyFallState();
 	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
@@ -18,7 +17,4 @@ private:
 	void _UpdateSubClass()override;
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
-
-private:
-	GameObject* _Player = nullptr;
 };

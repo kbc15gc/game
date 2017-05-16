@@ -29,6 +29,9 @@ void EnemyDiscoveryState::_UpdateSubClass() {
 	if (true) {
 		// 行動範囲内。
 
+		// エネミーをプレイヤーに向ける。
+		_EnemyObject->LookAtObject(*_Player);
+
 		Vector3 EnemyToPlayer = _Player->transform->GetPosition() - _EnemyObject->transform->GetPosition();
 		EnemyToPlayer.y = 0.0f;	// Y軸成分は除く。
 		if (EnemyToPlayer.Length() <= _EnemyObject->GetAttackRange()) {
@@ -45,10 +48,6 @@ void EnemyDiscoveryState::_UpdateSubClass() {
 
 		// 算出した移動をエネミーに加算。
 		_EnemyObject->AddMoveSpeed(moveSpeeed);
-
-		// エネミーをプレイヤーに向ける。
-		//_EnemyObject->transform->LockAt(_Player);
-		_EnemyObject->LookAtObject(*_Player);
 	}
 
 	else {

@@ -138,8 +138,10 @@
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\Village\NPC.h">
-      <Filter>Object\GameObject\Village</Filter>
+    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyFallState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +248,10 @@
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\Village\NPC.cpp" />
+    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyFallState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

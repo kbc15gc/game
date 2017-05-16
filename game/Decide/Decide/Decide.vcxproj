@@ -163,6 +163,7 @@
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyFallState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
@@ -183,7 +184,6 @@
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
     <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
-    <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
@@ -204,6 +204,7 @@
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyFallState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
@@ -222,7 +223,6 @@
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
-    <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
