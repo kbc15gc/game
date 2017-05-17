@@ -5,6 +5,7 @@
 class EnemyCharacter;
 
 // エネミー攻撃ステート。
+// ※単攻撃(攻撃モーション一回分攻撃)。
 class EnemyAttackState : public EnemyState {
 public:
 	EnemyAttackState(EnemyCharacter* Object);

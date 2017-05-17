@@ -45,8 +45,12 @@ void Enemy::_StartSubClass(){
 void Enemy::_UpdateSubClass() {
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
-		// 落下ステートを作成してここで切り替え。
-		
+		if (_NowStateIdx != State::Fall) {
+			// 現在のステートタイプを保存。
+			_saveState = _NowStateIdx;
+			// 落下ステートに切り替え。
+			_ChangeState(State::Fall);
+		}
 	}
 }
 
@@ -72,8 +76,14 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
-		// 次の攻撃に移行。
-		_ChangeState(State::StartAttack);
+		// プレイヤーとの位置関係再調整。
+		_ChangeState(State::Discovery);
+	}
+	else if (EndStateType == State::Fall) {
+		// 落下ステート終了。
+		
+		// 直前のステートに切り替え。
+		_ChangeState(_saveState);
 	}
 }
 
@@ -117,6 +127,9 @@ void Enemy::_BuildAnimation() {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 		// 攻撃状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
+		// 落下状態。
+		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
 	}
 }
 
