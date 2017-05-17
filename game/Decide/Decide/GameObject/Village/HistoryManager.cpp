@@ -10,6 +10,7 @@ HistoryManager* HistoryManager::_Instance = nullptr;
 
 HistoryManager::HistoryManager()
 {
+	//CSVから歴史情報読み取り。
 	Support::LoadCSVData<HistoryInfo>("Asset/Data/VillageHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _HistoryList);
 
 	FOR(i, _HistoryList.size())
@@ -24,6 +25,7 @@ void HistoryManager::CreateObject()
 {
 	FOR(i, _HistoryList.size())
 	{
+		//
 		_ChangeContinent(i);
 	}
 }
@@ -45,28 +47,25 @@ const bool HistoryManager::SetHistoryChip(const unsigned int & continent, const 
 
 void HistoryManager::_ChangeContinent(const unsigned int& continent)
 {
-	//前のやつ削除してクリア
-	for each (GameObject* obj in _GameObjects[continent])
+	//前のオブジェクトを削除
 	{
-		INSTANCE(GameObjectManager)->AddRemoveList(obj);
+		for each (GameObject* obj in _GameObjects[continent])
+		{
+			INSTANCE(GameObjectManager)->AddRemoveList(obj);
+		}
+		_GameObjects[continent].clear();
 	}
-	_GameObjects[continent].clear();
 
-	//大陸の変化のパターン計算
-	int pattern = _CalcPattern(_HistoryList[continent]);
+	//チップの状態からグループを計算。
+	int group = _CalcPattern(_HistoryList[continent]);
 
-	char dirpath[] = "Asset/Data/Group";
-	char group[] = { 'A' + pattern,0 };
 	char* type[2] = { "Obj","NPC" };
 	char path[128];
 	
 	//OBJ
 	{
 		//パス生成
-		strcpy(path, dirpath);
-		strcat(path, group);
-		strcat(path, type[0]);
-		strcat(path, ".csv");
+		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[0]);
 		//CSVからオブジェクトの情報読み込み
 		vector<ObjectInfo*> objInfo;
 		Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
@@ -77,7 +76,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 			//生成
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
 			obj->LoadModel(objInfo[i]->filename);
-			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6, 0));
+			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6.5f, 0));
 			obj->transform->SetLocalAngle(objInfo[i]->ang);
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			_GameObjects[continent].push_back(obj);
@@ -92,10 +91,9 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	//NPC
 	{
 		//パス生成
-		strcpy(path, dirpath);
-		strcat(path, group);
-		strcat(path, type[1]);
-		strcat(path, ".csv");
+		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[1]);
+		
+		
 		//CSVからオブジェクトの情報読み込み
 		vector<NPCInfo*> npcInfo;
 		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
@@ -107,7 +105,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 			NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
 			npc->LoadModel(npcInfo[i]->filename);
 			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-			npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6, 0));
+			npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6.5f, 0));
 			npc->transform->SetLocalAngle(npcInfo[i]->ang);
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
 			_GameObjects[continent].push_back(npc);
@@ -122,27 +120,26 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 
 const int HistoryManager::_CalcPattern(const HistoryInfo * info)
 {
-	int pattern = 0;
 	//大陸に合ったグループシート読み込み
-	char path[256] = { "Asset/Data/Village" }; 
-	char idx[] = { '0' /*+ info->ContinentID*/,0 };
-	char Group[] = { "Group.csv" };
-	strcat(path, idx);
-	strcat(path, Group);
+	char path[256];
+	sprintf(path, "Asset/Data/Village%dGroup.csv", 0/*+ info->ContinentID*/);
+	//CSVからグループ情報読み込み
 	vector<VillageGroup*> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
 	
+	int pattern = 0;
+	//一致するものがあるか調べる。
 	for each (VillageGroup* group in groupList)
 	{
 		//各スロットを比較
-		if (group->Slot[0] != info->Chips[0])
+		if (group->Slot[0] != info->Slot[0])
 			continue;
-		if (group->Slot[1] != info->Chips[1])
+		if (group->Slot[1] != info->Slot[1])
 			continue;
-		if (group->Slot[2] != info->Chips[2])
+		if (group->Slot[2] != info->Slot[2])
 			continue;
 
-		//全て一致
+		//パターン一致したのでID設定。
 		pattern = group->GroupID;
 		break;
 	}

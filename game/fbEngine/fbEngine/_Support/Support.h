@@ -23,6 +23,9 @@ namespace Support
 	//置き換えたい文字列
 	//置き換える文字列
 	extern void StrReplace(char* sorce, const char* find, const char* place);
+}
+
+namespace Support {
 
 	//変数の型を指定。
 	enum DataTypeE
@@ -40,7 +43,52 @@ namespace Support
 		int offset;			//メンバ変数のアドレスが構造体の先頭アドレスからどれだけ移動しているか？
 		int size;			//メンバ変数のサイズ。
 	};
+}
 
+namespace
+{
+	//文字列を受け取って値に変換し、アドレスを返す。
+	void* ConvertValueFromString(char* word, Support::DataTypeE type)
+	{
+		if (type == Support::DataTypeE::INT)
+		{
+			int val = Support::StringToDouble(word);
+			return &val;
+		}
+		else if (type == Support::DataTypeE::FLOAT)
+		{
+			float val = Support::StringToDouble(word);
+			return &val;
+		}
+		else if (type == Support::DataTypeE::VECTOR3)
+		{
+			Vector3 v3 = Vector3::zero;
+			int offset = 0;
+			char copy[256];
+			strcpy(copy, word);
+			FOR(i, 3)
+			{
+				//数字の部分を取り出す。
+				char* num = strtok(copy + offset, "/");
+				//数字に変換する。
+				float value = Support::StringToDouble(num);
+				//値セット。
+				memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+				//オフセット量を増やす。
+				offset += strlen(num) + 1;
+			}
+			return &v3;
+		}
+		else if (type == Support::DataTypeE::STRING)
+		{
+			return word;
+		}
+
+		return nullptr;
+	}
+}
+
+namespace Support {
 	//CSVファイルから情報を読み取り、テンプレートクラスに格納する。
 	template<class T>
 	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<T*>& output)
@@ -52,8 +100,7 @@ namespace Support
 		if (fin.fail())
 		{
 			char error[256];
-			strcat(error, filepath);
-			strcat(error, "\nを開けませんでした。");
+			sprintf(error, "%s\nを開けませんでした。", filepath);
 			MessageBoxA(0, error, "ファイル読み込みエラー", MB_ICONWARNING);
 			return fin.fail();
 		}
@@ -82,58 +129,20 @@ namespace Support
 			memcpy(copy, line, sizeof(char) * 256);
 			//アドレス確保
 			T* tmp = new T();
-			//1行の終端までループ
-			//範囲チェック
-			while (*(line + offset) != '\0' && idx < datanum)
+			
+			while (*(line + offset) != '\0' &&	//1行の終端までループ
+				idx < datanum)					//範囲チェック
 			{
-				//","区切りで単語を抽出、","の部分には'\0'が埋め込まれるのでコピーを使う
+				//","区切りで単語を抽出
+				//","の部分には'\0'が埋め込まれるのでコピーを使う
 				char* word = strtok(copy + offset, ",");
 
-				//ファイルから読み取った値を入れる
-				void* val = nullptr;
-				int i = 0;
-				float f = 0;
-				Vector3 v3 = Vector3::zero;
-				//型にあった変換をする
-				DataTypeE type = datas[idx].type;
-				if (type == Support::DataTypeE::INT)
-				{
-					i = Support::StringToDouble(word);
-					val = &i;
-				}
-				else if (type == Support::DataTypeE::FLOAT)
-				{
-					f = Support::StringToDouble(word);
-					val = &f;
-				}
-				else if (type == Support::DataTypeE::VECTOR3)
-				{
-					int offset2 = 0;
-					char wordC[256];
-					strcpy(wordC, word);
-					FOR(i, 3)
-					{
-						//数字の部分を取り出す
-						char* num = strtok(wordC + offset2, "/");
-						//アドレスに値コピー
-						float value = Support::StringToDouble(num);
-						memcpy((char*)(&v3) + (sizeof(float) * i), &value, sizeof(float));
-						offset2 += strlen(num) + 1;
-					}
-					val = &v3;
-				}
-				else if (type == Support::DataTypeE::STRING)
-				{
-					val = word;
-				}
-				else
-				{
-					val = nullptr;
-				}
+				//単語から値(のアドレス)に変換する。
+				void* val = ConvertValueFromString(word, (DataTypeE)datas[idx].type);
 				
-
-				//変数の先頭アドレスを求める。char*型(1byte)にキャストすることで1づつずらすことができる。
-				auto addres = ((char*)(tmp)) + datas[idx].offset;
+				//変数の先頭アドレスを求める。
+				//char*型(1byte)にキャストすることで1づつずらすことができる。
+				auto addres = (char*)tmp + datas[idx].offset;
 				//アドレスに値をコピー
 				memcpy(addres, val, datas[idx].size);
 
@@ -186,8 +195,9 @@ namespace Support
 				//出力する単語
 				char* word = new char[256];
 				ZeroMemory(word, sizeof(char) * 256);
-				//変数の先頭アドレスを求める。char*型(1byte)にキャストすることで1づつずらすことができる。
-				auto addres = ((char*)(out)) + datas[idx].offset;
+				//変数の先頭アドレスを求める。
+				//char*型(1byte)にキャストすることで1づつずらすことができる。
+				auto addres = (char*)out + datas[idx].offset;
 
 				int i = 0;
 				float f = 0;
@@ -200,7 +210,8 @@ namespace Support
 					break;
 				case DataTypeE::FLOAT:
 					memcpy(&f, addres, datas[idx].size);
-					//ToString(f, word);
+					//まだ、floatに対応していない。
+					ToString(f, word);
 					break;
 				case DataTypeE::STRING:
 					memcpy(word, addres, datas[idx].size);

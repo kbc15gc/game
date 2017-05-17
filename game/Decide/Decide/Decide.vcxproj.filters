@@ -138,10 +138,13 @@
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\Village\NPC.h">
-      <Filter>Object\GameObject\Village</Filter>
+    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyFallState.h">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h" />
+<<<<<<< HEAD
     <ClInclude Include="GameObject\Village\HistoryMenuSelect.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
@@ -151,6 +154,11 @@
     <ClInclude Include="GameObject\HistoryChip\AburaChip.h">
       <Filter>Object\GameObject\HistoryChip</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="GameObject\Village\Shop.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+>>>>>>> d10054ecbbbcce5de1af25d99bb3ee01227431e2
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -257,7 +265,15 @@
     </ClCompile>
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
     <ClCompile Include="stdafx.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyFallState.cpp">
+      <Filter>Object\GameObject\Enemy\HFSM</Filter>
+=======
     <ClCompile Include="GameObject\Village\NPC.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+>>>>>>> 7a3006c1b43f228e5b6cfea755a2f8d13cfb3e09
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp">

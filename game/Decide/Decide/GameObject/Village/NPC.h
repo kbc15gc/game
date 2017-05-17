@@ -44,4 +44,6 @@ private:
 	Player* _Player;
 	//プレイヤーと会話可能な距離
 	float _Radius;
+	//タイトル表示するかどうか？
+	bool _ShowTitle;
 };
