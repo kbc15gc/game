@@ -7,8 +7,7 @@ TextBox::TextBox(const char * name):
 	_TextID(-1),
 	_TextSpeed(1.0f),
 	_State(TextBoxStateE::CLOSE),
-	_AnimeTime(0.0f),
-	_ShowTitle(false)
+	_AnimeTime(0.0f)
 {
 }
 
@@ -79,20 +78,30 @@ void TextBox::Speak()
 	}
 }
 
-void TextBox::ShowTitle()
+void TextBox::Title(bool show)
 {
-	_ShowTitle = true;
-	//ステート設定。
-	_State = TextBoxStateE::TITLE;
-	//テキスト設定。
-	_SetText(_Message->Title);
-	_Text->SetCharNum(UINT_MAX);
-	//全てをアクティブにする。
-	for each (Transform* child in transform->GetChildren())
+	if (show)
 	{
-		child->gameObject->SetActive(true, true);
+		if (_State == TextBoxStateE::CLOSE)
+		{
+			//ステート設定。
+			_State = TextBoxStateE::TITLE;
+			//テキスト設定。
+			_SetText(_Message->Title);
+			_Text->SetCharNum(UINT_MAX);
+			//全てをアクティブにする。
+			for each (Transform* child in transform->GetChildren())
+			{
+				child->gameObject->SetActive(true, true);
+			}
+			transform->SetScale(Vector3::one);
+		}
 	}
-	transform->SetScale(Vector3::one);
+	else
+	{
+		//閉じる。
+		CloseMessage();
+	}
 }
 
 void TextBox::_OpenMessage()
@@ -116,7 +125,8 @@ void TextBox::_OpenMessage()
 
 void TextBox::CloseMessage()
 {
-	if (_State & TextBoxStateE::OPEN)
+	if (_State & TextBoxStateE::OPEN ||
+		_State == TextBoxStateE::TITLE)
 	{
 		//最初のメッセージ取得
 		_Message = INSTANCE(MessageManager)->GetMess(_TextID);
@@ -233,14 +243,7 @@ void TextBox::_Animation()
 			{
 				image->SetActive(false);
 			}
-			if (_ShowTitle)
-			{
-				ShowTitle();
-			}
-			else
-			{
-				_State = TextBoxStateE::CLOSE;
-			}
+			_State = TextBoxStateE::CLOSE;
 		}
 		break;
 	default:

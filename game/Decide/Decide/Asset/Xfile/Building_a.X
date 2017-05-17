@@ -99,7 +99,7 @@ template TextureFilename {
 }
 
 
-Frame Building_a {
+Frame Building_A {
  
 
  FrameTransformMatrix relative {
@@ -18239,9 +18239,9 @@ Frame Building_a {
    0;
 
    Material Dflt_Material {
-    0.800000;0.800000;0.800000;1.000000;;
-    0.000000;
-    0.000000;0.000000;0.000000;;
+    0.588235;0.588235;0.588235;1.000000;;
+    9.999999;
+    0.900000;0.900000;0.900000;;
     0.000000;0.000000;0.000000;;
 
     TextureFilename Diffuse {

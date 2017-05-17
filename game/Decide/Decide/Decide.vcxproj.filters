@@ -143,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="GameObject\Village\Shop.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -251,6 +254,9 @@
     <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop.cpp">
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
   </ItemGroup>

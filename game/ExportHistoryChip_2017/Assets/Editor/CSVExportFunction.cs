@@ -8,28 +8,56 @@ using System;
 
 public class CSVExportFunction : Editor
 {
-    //オブジェクトを出力
-    [MenuItem("Export/ExportObject")]
-    static public void ExportObjects()
+    //グループを出力
+    [MenuItem("Export/ExportGroup")]
+    static public void ExportGroup()
     {
         //オブジェクト検索
-        GameObject parent = GameObject.Find("ExportObjects");
-        if (parent == null)
+        string name = "Export";
+        GameObject export = GameObject.Find(name);
+        if (export == null)
         {
-            Debug.Log("ExportObjectsが見つからなかったのでエクスポートできませんでした。");
+            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
             return;
         }
+
+        //グループループ
+        for (int idx = 0; idx < export.transform.childCount; idx++)
+        {
+            //グループ取得
+            Transform group = export.transform.GetChild(idx);
+            //オブジェクト書き出し
+            ExportObject(group);
+            //NPC書き出し
+            ExportNPC(group);
+            Debug.Log(group.name + "の書き出しに成功");
+        }
+        Debug.Log("全てのファイルを正常に書き出せました。");
+    }
+
+    //オブジェクトを出力
+    static public void ExportObject(Transform group)
+    {
+        string name = "ExportObjects";
+        //オブジェクト検索
+        Transform objects = group.FindChild(name);
+        if (objects == null)
+        {
+            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
+            return;
+        }
+
         //子供たちのTransformコンポーネントを取得
-        Transform[] Children = parent.GetComponentsInChildren<Transform>();
+        Transform[] Children = objects.GetComponentsInChildren<Transform>();
         //ファイルパス
-        string path = Application.dataPath + "/Export/Obj/" + SceneManager.GetActiveScene().name + "Obj" + ".csv";
+        string path = Application.dataPath + "/Export/Obj/" + group.name + "Obj" + ".csv";
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
         sw.WriteLine("name,pos,ang,sca");
         foreach (Transform child in Children)
         {
-            if (child.name == parent.name)
+            if (child.name == objects.name)
                 continue;
 
             //名前書き出し
@@ -49,31 +77,39 @@ public class CSVExportFunction : Editor
         fs.Close();
     }
 
-    //オブジェクトを出力
-    [MenuItem("Export/ExportNPC")]
-    static public void ExportNPCs()
+    //NPCを出力
+    static public void ExportNPC(Transform group)
     {
+        string name = "ExportNPCs";
         //オブジェクト検索
-        GameObject parent = GameObject.Find("ExportNPCs");
-        if (parent == null)
+        Transform npcs = group.FindChild(name);
+        if (npcs == null)
         {
-            Debug.Log("ExportObjectsが見つからなかったのでエクスポートできませんでした。");
+            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
             return;
         }
+
         //子供たちのTransformコンポーネントを取得
-        Transform[] Children = parent.GetComponentsInChildren<Transform>();
+        Transform[] Children = npcs.GetComponentsInChildren<Transform>();
         //ファイルパス
-        string path = Application.dataPath + "/Export/NPC/" + SceneManager.GetActiveScene().name + "NPC" + ".csv";
+        string path = Application.dataPath + "/Export/NPC/" + group.name + "NPC" + ".csv";
+
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
         sw.WriteLine("name,pos,ang,sca,messeageid,showtitle");
         foreach (Transform child in Children)
         {
-            if (child.name == parent.name)
+            if (child.name == npcs.name)
                 continue;
 
-            //名前書き出し
+            //メッシュ取得
+            Mesh mesh = child.GetComponent<MeshFilter>().mesh;
+
+            //メッシュ名を書き出し
+            //sw.Write(mesh.name.Replace(" Instance", "") + ".X");
+
+            //名前を書き出し
             sw.Write(child.name + ".X");
             sw.Write(',');
             //ポジション

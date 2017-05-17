@@ -43,6 +43,11 @@ void NPC::Update()
 		//会話可能な距離か？
 		if (len <= _Radius)
 		{
+			//タイトル表示
+			if (_ShowTitle)
+			{
+				_TextBox->Title(true);
+			}
 			//本来は外部から呼び出す。
 			if (KeyBoardInput->isPush(DIK_SPACE))
 			{
@@ -61,10 +66,7 @@ void NPC::Update()
 void NPC::SetMesseage(const int & id, const bool show)
 {
 	_TextBox->SetMessageID(id);
-	if(show)
-	{
-		_TextBox->ShowTitle();
-	}
+	_ShowTitle = show;
 }
 
 void NPC::LateUpdate()

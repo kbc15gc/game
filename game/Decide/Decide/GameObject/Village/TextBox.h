@@ -13,8 +13,8 @@ namespace
 		OPEN = BIT(1),					//開いた
 		ANIMATION = BIT(2),				//アニメーション中
 		TITLE = CLOSE | ANIMATION,		//タイトル
-		OPENING = BIT(3) + ANIMATION,	//開いている
-		CLOSING = BIT(4) + ANIMATION,	//閉じている
+		OPENING = BIT(3) | ANIMATION,	//開いている
+		CLOSING = BIT(4) | ANIMATION,	//閉じている
 	};
 }
 
@@ -30,8 +30,8 @@ public:
 	void SetMessageID(const int& id);
 	//話す
 	void Speak();
-	//タイトルを表示。
-	void ShowTitle();
+	//タイトルを表示するかどうか？
+	void Title(bool show);
 	
 	//メッセージボックスを閉じる。
 	void CloseMessage();
@@ -63,8 +63,6 @@ private:
 	int _TextID;
 	//テキストの情報
 	MessageInfo* _Message;
-	//タイトル表示するかどうか？
-	bool _ShowTitle;
 
 	//表示する文字数。
 	float _CharNum;
