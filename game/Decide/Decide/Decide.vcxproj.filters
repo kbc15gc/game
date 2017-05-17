@@ -141,8 +141,16 @@
     <ClInclude Include="GameObject\Village\NPC.h">
       <Filter>Object\GameObject\Village</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\TetuChip.h">
+      <Filter>Object\GameObject\HistoryChip</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\AburaChip.h">
+      <Filter>Object\GameObject\HistoryChip</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc">
@@ -248,10 +256,18 @@
       <Filter>Object\GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp">
       <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp">
+      <Filter>Object\GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp">
+      <Filter>Object\GameObject\HistoryChip</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp">
+      <Filter>Object\GameObject\HistoryChip</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
