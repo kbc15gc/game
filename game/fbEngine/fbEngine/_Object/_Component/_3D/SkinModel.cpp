@@ -205,7 +205,7 @@ void SkinModel::DrawMeshContainer(
 			_Effect->SetBool("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
 		}
 
-		Vector2 size = INSTANCE(SceneManager)->GetShadowMap()->GetSize();
+		Vector2 size = 20;
 		Vector2 texel = Vector2(1.0f / size.x, 1.0f / size.y);
 		_Effect->SetValue("g_TexelSize", &texel, sizeof(Vector2));
 
