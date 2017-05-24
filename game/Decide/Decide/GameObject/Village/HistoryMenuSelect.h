@@ -13,6 +13,12 @@ public:
 
 	void Start()override;
 	void Update()override;
+	//火のメニューセレクト
+	void FireSelect();
+	//鉄のメニューセレクト
+	void TetuSelect();
+	//油のメニューセレクト
+	void AburaSelect();
 private:
 	//メニューの有効フラグ設定
 	void _SetMenuEnabel(const bool& enabel);
@@ -28,4 +34,7 @@ private:
 	Button* _OK;
 	//メニューに使ってるオブジェクトたち
 	vector<GameObject*> _MenuSelectObjects;
+	GameObject* _MenuSelectFire;
+	GameObject* _MenuSelectTetu;
+	GameObject* _MenuSelectAbura;
 };

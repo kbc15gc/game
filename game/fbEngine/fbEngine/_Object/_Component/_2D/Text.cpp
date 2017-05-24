@@ -21,7 +21,6 @@ void Text::Awake()
 	_Sprite = gameObject->AddComponent<Sprite>();
 	//削除する色
 	_Sprite->SetClipColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
-	//_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 	//自動描画しないようにする
 	_Sprite->Start();
 	_Sprite->enable = false;
@@ -145,8 +144,11 @@ void Text::_CalcFormat(Vector3 & pos)
 {
 	//フォーマット
 	const unsigned int& format = (unsigned int)_TextFormat;
+	Vector3 sca = transform->GetScale();
 	//移動量
-	Vector2 offset(_Length.x * 0.5f, -_Length.y * 0.5f);
+	Vector2 offset(_Length.x * sca.x, -_Length.y * sca.y);
+	//半分に
+	offset *= 0.5f;
 	if (format & (unsigned int)fbText::TextFormatE::CENTER)
 	{
 		pos.x -= offset.x;
@@ -175,6 +177,7 @@ void Text::_UpdateLength()
 	//初期化
 	float width = 0;
 	//最大値保持(xとyで扱いが違うので注意されたし)
+	_Length = Vector2(0, 0);
 	Vector2 MaxLength(0, 0);
 	_MostHeight = 0.0f;
 	_MaxCharNum = 0;
@@ -212,9 +215,6 @@ void Text::_UpdateLength()
 	_Length.x = MaxLength.x;
 	//縦幅は最大のものを足す
 	_Length.y += MaxLength.y;
-	//サイズをかける
-	_Length *= _Size;
-	_MostHeight *= _Size;
 }
 
 void Text::_RenderText(const Vector3 & base)
@@ -231,7 +231,7 @@ void Text::_RenderText(const Vector3 & base)
 			break;
 
 		//この文字のスケール
-		float scale = _Size;
+		float scale = transform->GetScale().x;
 		//改行文字ではない
 		if (_WString[i] != '\n')
 		{
@@ -241,7 +241,7 @@ void Text::_RenderText(const Vector3 & base)
 			//画像の左上の座標
 			Vector3 origin(0, -gm.gmptGlyphOrigin.y, 0);
 			origin.Scale(scale);
-			origin.y += _MostHeight;
+			origin.y += _MostHeight * scale;
 			//基点　+　移動量　+　各文字の微調整
 			Vector3 pos = base + offset + origin;
 			pos.x += (gm.gmBlackBoxX / 2)*scale;

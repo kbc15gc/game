@@ -155,12 +155,8 @@ private:
 		//メモリを多く確保しておく
 		char mess[256];
 
-		strcpy(mess, "シェーダファイル名：\"");
-		strcat(mess, _FileName);
-		strcat(mess, "\"\n");
-		strcat(mess, "パラメータ名：\"");
-		strcat(mess, hParameter);
-		strcat(mess, "\"\nは存在しないまたは無効なパラメータです。\n名前ちゃんと確認してみ？");
+		sprintf(mess, "シェーダファイル名：%s \nパラメータ名：%s\nは存在しないまたは無効なパラメータです。", _FileName, hParameter);
+		strcat(mess, "\n名前ちゃんと確認してみ？");
 		//失敗したらboxを出す。
 		MessageBoxA(NULL, mess, "EffectError", MB_OK);
 	}

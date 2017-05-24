@@ -11,7 +11,7 @@ public:
 	void CreateObject();
 	//歴史を変える。
 	//[in] unsigned int 変更したい大陸のID
-	//[in] unsigned int セットする場所
+	//[in] unsigned int セットするスロット
 	//[in] int セットしたいチップのID
 	const bool SetHistoryChip(const unsigned int& continent,const unsigned int& idx, const int& chip);
 	//歴史情報を取得

@@ -40,6 +40,9 @@ void GameCamera::Start()
 
 	//歴史書を検索。
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+
+	//カメラをシャドウマップに設定.
+	INSTANCE(SceneManager)->GetShadowMap()->SetCamera(_Camera);
 }
 
 void GameCamera::Update()
@@ -153,6 +156,8 @@ void GameCamera::_StandardBehavior()
 
 		//カメラの注視点を線形補間された位置に設定。
 		transform->LockAt((_LerpCameraLookAtPos));
+		_Camera->SetTarget(_LerpCameraLookAtPos);
+
 
 		//カメラの位置を線形補完された位置に設定。。
 		transform->SetPosition((_LerpCameraPos));
@@ -192,6 +197,8 @@ void GameCamera::_StandardBehavior()
 
 	//プレイヤーの方を向く
 	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
+	_Camera->SetTarget((*_PlayerPos) + PLAYER_HEIGHT);
+
 }
 
 void GameCamera::_HistoryBehavior()
@@ -213,6 +220,7 @@ void GameCamera::_HistoryBehavior()
 
 	//カメラの注視点を線形補間された位置に設定。
 	transform->LockAt((_LerpCameraLookAtPos));
+	_Camera->SetTarget(_LerpCameraLookAtPos);
 
 	//カメラの位置を線形補完された位置に設定。。
 	transform->SetPosition((_LerpCameraPos));

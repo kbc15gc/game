@@ -1,12 +1,16 @@
 #include"stdafx.h"
 #include "HistoryManager.h"
-#include "GameObject\Village\ContinentObject.h"
+
 #include "GameObject\Village\HistoryInfo.h"
+#include "GameObject\Village\ContinentObject.h"
+#include "GameObject\Village\NPC.h"
+
 
 HistoryManager* HistoryManager::_Instance = nullptr;
 
 HistoryManager::HistoryManager()
 {
+	//CSVから歴史情報読み取り。
 	Support::LoadCSVData<HistoryInfo>("Asset/Data/VillageHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _HistoryList);
 
 	FOR(i, _HistoryList.size())
@@ -21,6 +25,7 @@ void HistoryManager::CreateObject()
 {
 	FOR(i, _HistoryList.size())
 	{
+		//
 		_ChangeContinent(i);
 	}
 }
@@ -42,64 +47,107 @@ const bool HistoryManager::SetHistoryChip(const unsigned int & continent, const 
 
 void HistoryManager::_ChangeContinent(const unsigned int& continent)
 {
-	//大陸の変化のパターン計算
-	int pattern = _CalcPattern(_HistoryList[continent]);
+	//前のオブジェクトを削除
+	{
+		for each (GameObject* obj in _GameObjects[continent])
+		{
+			INSTANCE(GameObjectManager)->AddRemoveList(obj);
+		}
+		_GameObjects[continent].clear();
+	}
+
+	//チップの状態からグループを計算。
+	int group = _CalcPattern(_HistoryList[continent]);
+
+	char* type[2] = { "Obj","NPC" };
+	char path[128];
 	
-	//パス生成
-	char path[128] = "Asset/Data/HistoryGroup";
-	char group[2] = { 'A' + pattern,0 };
-	strcat(path, group);
-	strcat(path, ".csv");
-
-	//CSVからオブジェクトの情報読み込み
-	vector<ObjectInfo*> _InfoList;
-	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), _InfoList);
-
-	//前のやつ削除してクリア
-	for each (GameObject* obj in _GameObjects[continent])
+	//OBJ
 	{
-		INSTANCE(GameObjectManager)->AddRemoveList(obj);
-	}
-	_GameObjects[continent].clear();
+		//パス生成
+		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[0]);
+		//CSVからオブジェクトの情報読み込み
+		vector<ObjectInfo*> objInfo;
+		Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
-	//情報からオブジェクト生成。
-	FOR(i,_InfoList.size())
+		//情報からオブジェクト生成。
+		FOR(i, objInfo.size())
+		{
+			//生成
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+			obj->LoadModel(objInfo[i]->filename);
+			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6.5f, 0));
+			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetLocalScale(objInfo[i]->sca);
+			_GameObjects[continent].push_back(obj);
+
+			//もういらないので解放
+			SAFE_DELETE(objInfo[i]);
+		}
+
+		objInfo.clear();
+	}
+	ZeroMemory(path, 128);
+	//NPC
 	{
-		//生成
-		ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-		obj->LoadModel(_InfoList[i]->filename);
-		obj->transform->SetLocalPosition(_InfoList[i]->pos + Vector3(0, 10, 0));
-		obj->transform->SetLocalAngle(_InfoList[i]->ang);
-		obj->transform->SetLocalScale(_InfoList[i]->sca);
-		_GameObjects[continent].push_back(obj);
+		//パス生成
+		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[1]);
+		
+		
+		//CSVからオブジェクトの情報読み込み
+		vector<NPCInfo*> npcInfo;
+		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
 
-		//もういらないので解放
-		SAFE_DELETE(_InfoList[i]);
+		//情報からオブジェクト生成。
+		FOR(i, npcInfo.size())
+		{
+			//生成
+			NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+			npc->LoadModel(npcInfo[i]->filename);
+			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
+			npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6.5f, 0));
+			npc->transform->SetLocalAngle(npcInfo[i]->ang);
+			npc->transform->SetLocalScale(npcInfo[i]->sca);
+			_GameObjects[continent].push_back(npc);
+
+			//もういらないので解放
+			SAFE_DELETE(npcInfo[i]);
+		}
+
+		npcInfo.clear();
 	}
-
-	_InfoList.clear();
 }
 
 const int HistoryManager::_CalcPattern(const HistoryInfo * info)
 {
+	//大陸に合ったグループシート読み込み
+	char path[256];
+	sprintf(path, "Asset/Data/Village%dGroup.csv", 0/*+ info->ContinentID*/);
+	//CSVからグループ情報読み込み
+	vector<VillageGroup*> groupList;
+	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
+	
 	int pattern = 0;
-	//とりあえず適当
-	switch (info->Chips[0])
+	//一致するものがあるか調べる。
+	for each (VillageGroup* group in groupList)
 	{
-	case ChipID::NONE:
-		pattern = 0;
+		//各スロットを比較
+		if (group->Slot[0] != info->Slot[0])
+			continue;
+		if (group->Slot[1] != info->Slot[1])
+			continue;
+		if (group->Slot[2] != info->Slot[2])
+			continue;
+
+		//パターン一致したのでID設定。
+		pattern = group->GroupID;
 		break;
-	case ChipID::FIRE:
-		pattern = 1;
-		break;
-	case ChipID::IRON:
-		pattern = 2;
-		break;
-	case ChipID::OIL:
-		pattern = 3;
-		break;
-	default:
-		break;
+	}
+
+	//不要になったので解放。
+	FOR(i, groupList.size())
+	{
+		SAFE_DELETE(groupList[i]);
 	}
 	return pattern;
 }

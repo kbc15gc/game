@@ -2,6 +2,7 @@
 #include "HistoryMenu.h"
 #include "fbEngine\_Object\_GameObject\Button.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\Village\HistoryButton.h"
 
@@ -87,7 +88,7 @@ void HistoryMenu::_OpenMenu()
 		FOR(chip, HISTORY_CHIP_NUM)
 		{
 			//ƒ{ƒ^ƒ“‚É“Ç‚Ýž‚ñ‚¾î•ñŠ„‚è“–‚ÄB
-			_Buttons[conti][chip]->SetChipID(h->Chips[chip]);
+			_Buttons[conti][chip]->SetChipID(h->Slot[chip]);
 		}
 	}
 }

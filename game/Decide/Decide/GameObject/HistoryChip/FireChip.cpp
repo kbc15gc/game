@@ -5,6 +5,7 @@
 #include "GameObject\Player\Player.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\Village\HistoryInfo.h"
+#include "GameObject\Village\HistoryMenuSelect.h"
 
 FireChip::FireChip(const char * name) :
 	GameObject(name)
@@ -28,6 +29,8 @@ void FireChip::Start()
 {
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+	//ヒストリーメニューセレクト検索
+	_HistoryMenuSelect = (HistoryMenuSelect*)INSTANCE(GameObjectManager)->FindObject("HistoryMenuSelect");
 }
 
 void FireChip::Update()
@@ -42,8 +45,8 @@ void FireChip::Update()
 	if (toLenght <= 0.2f)
 	{
 		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)ChipID::FIRE);
+		_HistoryMenuSelect->FireSelect();
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 	
-
 }

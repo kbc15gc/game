@@ -9,14 +9,27 @@ void AttackCollision::Awake()
 void AttackCollision::Update()
 {
 	time += Time::DeltaTime();
-	if (time > 3)
+	if (time > _lifeTime)
 	{
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 }
 
-void AttackCollision::Create(Vector3& size)
+void AttackCollision::Create(const Vector3& size)
 {
 	_BoxColl->Create(size);
 	transform->SetLocalScale(size);
+}
+
+void AttackCollision::Create(const Vector3& size, CollisionMaster master) {
+	_BoxColl->Create(size);
+	transform->SetLocalScale(size);
+	_master = master;
+}
+
+void AttackCollision::Create(const Vector3& size, CollisionMaster master, float lifeTime) {
+	_BoxColl->Create(size);
+	transform->SetLocalScale(size);
+	_master = master;
+	_lifeTime = lifeTime;
 }

@@ -5,9 +5,7 @@
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
 
-//テスト
-#include "GameObject\Village\TextBox.h"
-#include "fbEngine\_Object\_Component\_3D\Camera.h"
+
 
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
@@ -22,11 +20,6 @@ Enemy::~Enemy()
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
-
-	//テキストボックスを出す。
-	text = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox", 8);
-	text->SetTextSpeed(8.0f);
-	text->OpenMessage(2);
 }
 
 void Enemy::_StartSubClass(){
@@ -52,18 +45,18 @@ void Enemy::_StartSubClass(){
 void Enemy::_UpdateSubClass() {
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
-		// 落下ステートを作成してここで切り替え。
-		
+		if (_NowStateIdx != State::Fall) {
+			// 現在のステートタイプを保存。
+			_saveState = _NowStateIdx;
+			// 落下ステートに切り替え。
+			_ChangeState(State::Fall);
+		}
 	}
 }
 
 void Enemy::_LateUpdateSubClass()
 {
-	//テキストの場所設定。
-	Vector3 headPos = transform->GetPosition();
-	headPos.y += 1.5f;
-	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
-	text->transform->SetPosition(Vector3(screemPos, 0));
+	
 }
 
 
@@ -83,8 +76,14 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
-		// 次の攻撃に移行。
-		_ChangeState(State::StartAttack);
+		// プレイヤーとの位置関係再調整。
+		_ChangeState(State::Discovery);
+	}
+	else if (EndStateType == State::Fall) {
+		// 落下ステート終了。
+		
+		// 直前のステートに切り替え。
+		_ChangeState(_saveState);
 	}
 }
 
@@ -128,6 +127,9 @@ void Enemy::_BuildAnimation() {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 		// 攻撃状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
+		// 落下状態。
+		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class Player;
+class HistoryMenuSelect;
 
 class FireChip : public GameObject
 {
@@ -13,4 +14,6 @@ public:
 private:
 	//プレイヤーオブジェクト
 	Player*		_Player;
+	//ヒストリーメニューセレクトオブジェクト
+	HistoryMenuSelect* _HistoryMenuSelect;
 };

@@ -35,6 +35,15 @@ public:
 	{
 		_ViewAngle = theta;
 	}
+
+	/**
+	* 画角を取得.
+	*/
+	float GetViewAngle() const
+	{
+		return _ViewAngle;
+	}
+
 	//近平面設定
 	void SetNear(const float& n)
 	{
@@ -79,7 +88,36 @@ public:
 		}
 		return *_ViewPoint;
 	}
+
+	/**
+	* 注視点を取得.
+	*/
+	const Vector3& GetTarget() const
+	{
+		return _Target;
+	}
+
+	/**
+	* 注視点を設定.
+	*/
+	void SetTarget(const Vector3& tar)
+	{
+		_Target = tar;
+	}
+
+	/**
+	* 視点を取得.
+	*/
+	const Vector3& GetPosition() const
+	{
+		return transform->GetPosition();
+	}
+
 protected:
+
+	/** 注視点. */
+	Vector3 _Target = Vector3::zero;
+
 	//ビュー行列
 	D3DXMATRIX _View;
 	//プロジェクション行列

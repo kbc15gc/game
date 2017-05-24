@@ -156,6 +156,10 @@ public:
 		this->x = this->y = this->z = 0;
 	}
 	//コンストラクタ
+	Vector3(float xyz)
+	{
+		Set(xyz, xyz, xyz);
+	}
 	Vector3(float x, float y, float z)
 	{
 		Set(x, y, z);
@@ -250,6 +254,16 @@ public:
 		float _z = (x * in.y) - (y * in.x);
 		return Vector3(_x, _y, _z);
 	}
+	void Cross(const Vector3& v0, const Vector3& v1)
+	{
+		float _x = (v0.y * v1.z) - (v1.y * v0.z);
+		float _y = (v0.z * v1.x) - (v1.z * v0.x);
+		float _z = (v0.x * v1.y) - (v1.x * v0.y);
+		x = _x;
+		y = _y;
+		z = _z;
+	}
+
 	/*!
 	 * @brief	長さを取得
 	 */

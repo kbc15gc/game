@@ -3,8 +3,8 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "SearchViewAngle.h"
 #include "../Component/ObjectRotation.h"
+#include "fbEngine\CharacterController.h"
 
-class CCharacterController;
 class SkinModel;
 class Animation;
 class EnemyState;
@@ -20,12 +20,12 @@ public:
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
 
-	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation };
+	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Max };
+	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Fall, Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
@@ -78,19 +78,32 @@ public:
 	// ※複数攻撃パターンがある場合はここでローカルステートに遷移する際に分岐させる。
 	virtual EnemyCharacter::State AttackSelect() = 0;
 
+	// 攻撃判定用コリジョン作成関数。
+	// 引数：	コリジョンを発生させるフレーム。
+	//			コリジョン発生位置。
+	//			コリジョン回転。
+	//			コリジョンのサイズ。
+	// ※生成されるコリジョン形状はボックスです。
+	void CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size);
+
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
-	inline void PlayAnimation_Loop(const AnimationType AnimationType, const float InterpolateTime) {
-		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime);
+	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime) {
+		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
 	//			ループ回数。
-	inline void PlayAnimation(const AnimationType AnimationType, const float InterpolateTime, const int LoopCount) {
-		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(AnimationType)].No, InterpolateTime, LoopCount);
+	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount) {
+		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime, loopCount);
+	}
+
+	// エネミーがアニメーションを再生しているか。
+	inline bool GetIsPlaying() {
+		return _MyComponent.Animation->GetPlaying();
 	}
 
 	// ステート処理中にステートを割り込みで切り替える関数。
@@ -152,6 +165,10 @@ public:
 	inline EnemyState* GetNowState()const {
 		return _NowState;
 	}
+
+	inline bool GetIsGround() const {
+		return _MyComponent.CharacterController->IsOnGround();
+	}
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -159,8 +176,11 @@ protected:
 	// アニメーションタイプにアニメーションデータを関連付ける関数。
 	// 引数：	アニメーションタイプの列挙子。
 	//			第1引数に関連付けたいアニメーションデータ。
+	// ※この関数に渡されたアニメーションの終了時間が設定されます。
 	inline void _ConfigAnimationType(AnimationType Type, const AnimationData& Data) {
 		_AnimationData[static_cast<unsigned int>(Type)] = Data;
+		// アニメーションコンポーネントにアニメーションの終了時間設定。
+		_MyComponent.Animation->SetAnimationEndTime(Data.No,Data.Time);
 	}
 
 	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
@@ -217,6 +237,7 @@ protected:
 	float _Radius = 0.0f;	// コリジョンサイズ(幅)。
 	float _Height = 0.0f;	// コリジョンサイズ(高さ)。
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
+	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
 
 	Vector3 _InitPos;	// 初期位置。
@@ -227,11 +248,9 @@ protected:
 
 	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 private:
-	State _NowStateIdx;		// 現在のステートの添え字。
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
-
 };

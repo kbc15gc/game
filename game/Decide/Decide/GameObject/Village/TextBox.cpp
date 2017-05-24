@@ -4,15 +4,18 @@
 TextBox::TextBox(const char * name):
 	GameObject(name),
 	_CharNum(0),
+	_TextID(-1),
 	_TextSpeed(1.0f),
-	_Open(false),
-	_PlayingAnim(false),
-	_Scale(0.0f)
+	_State(TextBoxStateE::CLOSE),
+	_AnimeTime(0.0f)
 {
 }
 
 TextBox::~TextBox()
 {
+	INSTANCE(GameObjectManager)->AddRemoveList(_BoxImage[0]);
+	INSTANCE(GameObjectManager)->AddRemoveList(_BoxImage[1]);
+	INSTANCE(GameObjectManager)->AddRemoveList(_Text);
 }
 
 void TextBox::Awake()
@@ -49,84 +52,144 @@ void TextBox::Update()
 	_Animation();
 	//表示する文字数の増加。
 	_IncreaseChar();
+}
 
-	//アニメーションしていない。
-	if (!_PlayingAnim)
+void TextBox::SetMessageID(const int & id)
+{
+	_TextID = id;
+	//メッセージ情報取得
+	_Message = INSTANCE(MessageManager)->GetMess(_TextID);
+}
+
+void TextBox::Speak()
+{
+	if (_Message)
 	{
-		//メッセージを次へ(デバッグ用)
-		if (KeyBoardInput->isPush(DIK_SPACE))
+		if (_State & TextBoxStateE::CLOSE)
 		{
-			//最大文字数取得
-			int max = _Text->GetMaxCharNum();
-			//テキストの途中なら最後まで出す。
-			if (_CharNum < max)
-			{
-				_CharNum = max;
-				_Text->SetCharNum(_CharNum);
-			}
-			else
-			{
-				//次のメッセージ
-				NextMessage();
-			}
+			//会話開始
+			_OpenMessage();
+		}
+		else if (_State == TextBoxStateE::OPEN)
+		{
+			//次の会話へ
+			_NextMessage();
 		}
 	}
 }
 
-void TextBox::OpenMessage(const int & id)
+void TextBox::Title(bool show)
 {
-	//完全に閉じているときに開くことができる。
-	if (!_Open && !_PlayingAnim)
+	if (show)
 	{
-		_SetMessage(id);
-		_PlayingAnim = true;
-		_Scale = 0.0f;
+		if (_State == TextBoxStateE::CLOSE)
+		{
+			//ステート設定。
+			_State = TextBoxStateE::TITLE;
+			//テキスト設定。
+			_SetText(_Message->Title);
+			_Text->SetCharNum(UINT_MAX);
+			//全てをアクティブにする。
+			for each (Transform* child in transform->GetChildren())
+			{
+				child->gameObject->SetActive(true, true);
+			}
+			transform->SetScale(Vector3::one);
+		}
+	}
+	else
+	{
+		//閉じる。
+		CloseMessage();
+	}
+}
+
+void TextBox::_OpenMessage()
+{
+	//閉じているか
+	if (_State & TextBoxStateE::CLOSE)
+	{
+		//ステート設定。
+		_State = TextBoxStateE::OPENING;
+		//テキスト設定。
+		_SetText(_Message->Text);
+
+		//ボックスを表示する
+		for each (ImageObject* image in _BoxImage)
+		{
+			image->SetActive(true);
+		}
+		_AnimeTime = 0.0f;
 	}
 }
 
 void TextBox::CloseMessage()
 {
-	_Message = nullptr;
-	_Open = false;
-	_PlayingAnim = true;
-	_Scale = 0.0f;
-
-	//テキストを閉じる。
-	_Text->SetActive(_Open);
-}
-
-void TextBox::NextMessage()
-{
-	//次のメッセージを再生
-	if (_Message)
+	if (_State & TextBoxStateE::OPEN ||
+		_State == TextBoxStateE::TITLE)
 	{
-		_SetMessage(_Message->NextID);
+		//最初のメッセージ取得
+		_Message = INSTANCE(MessageManager)->GetMess(_TextID);
+		_State = TextBoxStateE::CLOSING;
+		//テキストを閉じる。
+		_Text->SetString("");
+		_Text->SetActive(false);
+
+		_AnimeTime = 0.0f;
 	}
 }
 
-void TextBox::_SetMessage(const int & id)
+void TextBox::_NextMessage()
+{
+	//開いている時のみ
+	if (_State == TextBoxStateE::OPEN)
+	{
+		//最大文字数取得
+		int max = _Text->GetMaxCharNum();
+		//テキストの途中なら最後まで出す。
+		if (_CharNum < max)
+		{
+			_CharNum = max;
+			_Text->SetCharNum(_CharNum);
+		}
+		else
+		{
+			//次のメッセージを再生
+			_SetMessage(_Message->NextID);
+		}
+	}
+}
+
+void TextBox::_SetText(const char * text)
 {
 	//表示文字数初期化
 	_CharNum = 0;
 	_Text->SetCharNum((unsigned int)_CharNum);
+
+	//テキスト設定。
+	_Text->SetString(text);
+	Vector2 space(_Text->GetText()->GetSize() * FontSize);
+	Vector2 len(_Text->GetLength());
+	//テキストのサイズ+余白分。
+	Vector2 textSize = len + space;
+	//メッセージボックスのサイズ設定。
+	_BoxImage[1]->SetSize(textSize);
+	//ボックスの半分の高さ。
+	float halfHeight = textSize.y / 2;
+	//カーソルの上にくるように移動。
+	_BoxImage[1]->transform->SetLocalPosition(Vector3(0, -(halfHeight + _BoxImage[0]->GetTexture()->Size.y), 0));
+}
+
+void TextBox::_SetMessage(const int & id)
+{
 	if (id >= 0)
 	{
 		//メッセージ情報取得
 		_Message = INSTANCE(MessageManager)->GetMess(id);
 		if (_Message)
 		{
-			_Text->SetString(_Message->Text);
-			Vector2 textSize = _Text->GetLength() + Vector2(_Text->GetText()->GetSize() * FontSize);
-			_BoxImage[1]->SetSize(textSize);
-			float halfHeight = textSize.y / 2;
-			_BoxImage[1]->transform->SetLocalPosition(Vector3(0, -(halfHeight + _BoxImage[0]->GetTexture()->Size.y), 0));
-
-			_Open = true;
-			//全てをアクティブにする。
-			for each (Transform* child in transform->GetChildren())
-			{
-				child->gameObject->SetActive(_Open,true);
-			}
+			//テキストとボックスをセットする。
+			_SetText(_Message->Text);
 		}
 		else
 		{
@@ -143,48 +206,56 @@ void TextBox::_SetMessage(const int & id)
 
 void TextBox::_Animation()
 {
-	//アニメーション再生中なら
-	if (_PlayingAnim)
+	//アニメーションではない
+	if ((_State & TextBoxStateE::ANIMATION) == 0)
+		return;
+	Vector3 sca = Vector3::zero;
+	//アニメーションに掛ける時間
+	float animationTime = 0.5f;
+	_AnimeTime += Time::DeltaTime() / animationTime;
+	switch (_State)
 	{
-		//掛ける時間
-		float time = 1.0f;
-		_Scale += Time::DeltaTime() / time;
-		if (_Open)
-		{
-			//だんだん大きくする。
-			Vector3 sca = Vector3::Lerp(Vector3::zero, Vector3::one, _Scale);
-			transform->SetScale(sca);
+	case TextBoxStateE::TITLE:
+		break;
+	case TextBoxStateE::OPENING:
+		//だんだん大きくする。
+		sca = Vector3::Lerp(Vector3::zero, Vector3::one, _AnimeTime);
+		transform->SetScale(sca);
 
-			//開ききったなら
-			if (sca.Length() >= Vector3::one.Length())
-			{
-				_PlayingAnim = false;
-			}
-		}
-		else
+		//開ききったなら
+		if (sca.Length() >= (Vector3::one.Length()))
 		{
-			//だんだん小さくする。
-			Vector3 sca = Vector3::Lerp(Vector3::one, Vector3::zero, _Scale);
-			transform->SetScale(sca);
-
-			//大きさがなくなったなら
-			if (sca.Length() <= Vector3::zero.Length())
-			{
-				//ボックスを閉じる。
-				for each (ImageObject* image in _BoxImage)
-				{
-					image->SetActive(_Open);
-				}
-				_PlayingAnim = false;
-			}
+			_State = TextBoxStateE::OPEN;
+			//テキスト表示
+			_Text->SetActive(true);
 		}
+		break;
+	case TextBoxStateE::CLOSING:
+		//だんだん小さくする。
+		sca = Vector3::Lerp(Vector3::one, Vector3::zero, _AnimeTime);
+		transform->SetScale(sca);
+
+		//大きさがなくなったなら
+		if (sca.Length() <= Vector3::zero.Length())
+		{
+			//ボックスを閉じる。
+			for each (ImageObject* image in _BoxImage)
+			{
+				image->SetActive(false);
+			}
+			_State = TextBoxStateE::CLOSE;
+		}
+		break;
+	default:
+		break;
 	}
 }
 
+
 void TextBox::_IncreaseChar()
 {
-	//アニメーションしていないときに増加させる。
-	if (!_PlayingAnim)
+	//文字が出ている時に加算
+	if (_State == TextBoxStateE::OPEN)
 	{
 		//最大数以下なら増やす。
 		if (_CharNum < _Text->GetMaxCharNum())

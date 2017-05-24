@@ -105,7 +105,9 @@ void SceneManager::DrawScene()
 	//オフスクリーンのやつ描画
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
-	_Bloom.Render();
+	
+	//_Bloom.Render();
+	
 	INSTANCE(GameObjectManager)->PostRenderObject();
 	
 	//2Dとか？
