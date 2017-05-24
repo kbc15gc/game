@@ -146,7 +146,7 @@ void GameCamera::_StandardBehavior()
 		_LerpRate += 0.01f;
 
 		//カメラの注視点の線形補間を行う(歴史書からプレイヤーに向けて補間)。
-		_LerpCameraLookAtPos = (((*_PlayerPos) + PLAYER_HEIGHT) * (1.0f - _LerpRate) + _HistoryBookPos * _LerpRate);
+		_LerpCameraLookAtPos = (_HistoryBookPos* (1.0f - _LerpRate) + ((*_PlayerPos) + PLAYER_HEIGHT) * _LerpRate);
 
 		//線形補間を行う(プレイヤーの位置から歴史書を見始めた時のカメラの位置に向けて補間)。
 		_LerpCameraPos = (_LerpCameraPos * (1.0f - _LerpRate) + _PrevGameCameraPos * _LerpRate);
@@ -204,16 +204,12 @@ void GameCamera::_HistoryBehavior()
 	{
 		_LerpRate -= 0.01f;
 	}
-	else
-	{
-		_LerpRate = 0.0f;
-	}
-
+	
 	//カメラの注視点の線形補間を行う(プレイヤーから歴史書に向けて補間)。
-	_LerpCameraLookAtPos = (_HistoryBookPos * (1.0f - _LerpRate) + ((*_PlayerPos) + PLAYER_HEIGHT) * _LerpRate);
+	_LerpCameraLookAtPos = (_HistoryBookPos * (1.0f - _LerpRate) + ((*_PlayerPos)) * _LerpRate);
 
 	//カメラの位置の線形補間を行う(ゲームカメラの位置からプレイヤーの位置に向けて補間)。
-	_LerpCameraPos = ((*_PlayerPos) + PLAYER_HEIGHT * (1.0f - _LerpRate) + this->transform->GetLocalPosition() * _LerpRate);
+	_LerpCameraPos = (((*_PlayerPos) + PLAYER_HEIGHT) * (1.0f - _LerpRate) + _PrevGameCameraPos * _LerpRate);
 
 	//カメラの注視点を線形補間された位置に設定。
 	transform->LockAt((_LerpCameraLookAtPos));

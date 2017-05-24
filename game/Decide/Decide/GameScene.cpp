@@ -36,7 +36,7 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//プレイヤー生成
-	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//火の歴史チップ
@@ -44,7 +44,7 @@ void GameScene::Start()
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	HistoryBook* book = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 	//メニューセレクト
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenuSelect>("HistoryMenuSelect", 9);
 
@@ -55,6 +55,9 @@ void GameScene::Start()
 	g_depth->SetActive(false);
 
 	INSTANCE(HistoryManager)->CreateObject();
+
+	//歴史書の親にプレイヤーを設定。
+	book->transform->SetParent(player->transform);
 
 }
 

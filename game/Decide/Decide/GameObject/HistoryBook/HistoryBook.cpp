@@ -4,6 +4,11 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "fbEngine\_Object\_Component\_3D\Light.h"
 
+namespace
+{
+	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.75f, 0.0f);//プレイヤーの半分の高さ。
+}
+
 HistoryBook::HistoryBook(const char * name) :
 	GameObject(name)
 {
@@ -27,7 +32,7 @@ void HistoryBook::Awake()
 
 void HistoryBook::Start()
 {
-	transform->SetLocalPosition(Vector3(0.0f, 6.0f, 0.0f));
+	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 1.5f) + PLAYER_HALFHEIGHT);
 	transform->SetLocalScale(Vector3::one);
 
 	//アニメーションの終了時間設定。
@@ -46,10 +51,12 @@ void HistoryBook::Start()
 	//ステートの初期化。
 	_HistoryBookState = State::CloseIdol;
 	//初期アニメーションとしてアイドルを再生。
-	PlayAnimation(AnimationNo::AnimationCloseIdol, 0.2f);
+	PlayAnimation(AnimationNo::AnimationCloseIdol, 0.2f, 0);
 
 	//フラグの初期化。
 	_IsLookAtHistoryFlag = false;
+
+	_Model->enable = false;
 }
 
 void HistoryBook::Update()
@@ -58,38 +65,40 @@ void HistoryBook::Update()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
 	{
 		//今_IsLookAtHistoryFlagに設定されている反対のフラグを設定。
-		_IsLookAtHistoryFlag = !_IsLookAtHistoryFlag;		
-	}
+		_IsLookAtHistoryFlag = !_IsLookAtHistoryFlag;
 
-	//フラグを見て歴史書の状態を遷移。
-	//trueなら歴史書を開く状態にする。
-	if (_IsLookAtHistoryFlag == true)
-	{
-		_HistoryBookState = State::Open;
-	}
-	//tureの時に押されたらその時歴史書は開いているので閉じる状態に遷移。
-	else if (_IsLookAtHistoryFlag == false)
-	{
-		_HistoryBookState = State::CloseIdol;
+		//フラグを見て歴史書の状態を遷移。
+		//trueなら歴史書を開く状態にする。
+		if (_IsLookAtHistoryFlag == true)
+		{
+			_HistoryBookState = State::Open;
+		}
+		//tureの時に押されたらその時歴史書は開いているので閉じる状態に遷移。
+		else if (_IsLookAtHistoryFlag == false)
+		{
+			_HistoryBookState = State::Close;
+		}
 	}
 
 	switch (_HistoryBookState)
 	{
 	case State::CloseIdol:
-		PlayAnimation(AnimationNo::AnimationCloseIdol, 0.2f);
+		PlayAnimation(AnimationNo::AnimationCloseIdol, 0.2f,1);
+		_Model->enable = false;
 		break;
 	case State::Open:
-		PlayAnimation(AnimationNo::AnimationOpen, 0.2f, 0);
+		PlayAnimation(AnimationNo::AnimationOpen, 0.2f,1);
+		_Model->enable = true;
 		if (_Anim->GetPlaying() == false)
 		{
 			_HistoryBookState = State::OpenIdol;
 		}
 		break;
 	case State::OpenIdol:
-		PlayAnimation(AnimationNo::AnimationOpenIdol, 0.2f);
+		PlayAnimation(AnimationNo::AnimationOpenIdol, 0.2f,1);
 		break;
 	case State::Close:
-		PlayAnimation(AnimationNo::AnimationClose, 0.2f, 0);
+		PlayAnimation(AnimationNo::AnimationClose, 0.2f,1);
 		if (_Anim->GetPlaying() == false)
 		{
 			_HistoryBookState = State::CloseIdol;
