@@ -151,6 +151,16 @@ public:
 		_Camera = camera;
 	}
 
+	void SetNear(float n)
+	{
+		_Near = n;
+	}
+
+	void SetFar(float f)
+	{
+		_Far = f;
+	}
+
 private:
 
 	/**
@@ -179,7 +189,7 @@ private:
 	/** 近平面. */
 	float _Near = 2.0f;
 	/** 遠平面. */
-	float _Far = 40.0f;
+	float _Far = 100.0f;
 	/** アスペクト比. */
 	float _Aspect = 1.0f;
 
