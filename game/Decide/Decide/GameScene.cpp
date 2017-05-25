@@ -23,8 +23,7 @@
 #include "GameObject\HistoryBook\HistoryBook.h"
 #include "GameObject\Village\HistoryMenuSelect.h"
 
-
-ImageObject* g_depth;
+#include "GameObject\Village\Shop.h"ImageObject* g_depth;
 
 void GameScene::Start()
 {
@@ -64,6 +63,7 @@ void GameScene::Start()
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
 
+	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 }
 
 void GameScene::Update()
