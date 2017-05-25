@@ -3,6 +3,7 @@
 */
 #include"fbstdafx.h"
 #include "CharacterController.h"
+#include "_Object\_Component\_Physics\Collider.h"
 
 void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity)
 {
@@ -21,6 +22,9 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 
 
 	m_collider = capsule;
+	// コリジョンを視覚化する処理。
+	m_collider->CreateViewModel(gameObject,m_rigidBody->GetCollisonObj(),Vector3::zero);
+
 	//剛体を初期化。
 	//RigidBodyInfo rbInfo;
 	//rbInfo.collider = m_collider;

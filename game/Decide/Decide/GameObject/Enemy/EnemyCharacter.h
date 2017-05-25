@@ -4,6 +4,7 @@
 #include "SearchViewAngle.h"
 #include "../Component/ObjectRotation.h"
 #include "fbEngine\CharacterController.h"
+#include "AttackCollision.h"
 
 class SkinModel;
 class Animation;
@@ -124,6 +125,13 @@ public:
 
 	// 引数の値を加算した結果、エネミーが徘徊範囲外に出たか判定。
 	bool IsOutsideWandering(const Vector3& Add);
+
+	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollision(AttackCollision* hitCollision) {
+		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
+	}
 
 	// ステート処理中にステートを割り込みで切り替える関数。
 	// ※外部やステート内からステート切り替えを行おうとする場合はこちらを呼ぶ。

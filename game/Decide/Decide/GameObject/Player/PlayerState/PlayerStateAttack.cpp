@@ -37,7 +37,7 @@ void PlayerStateAttack::Update()
 		trans->SetLocalPosition(player->transform->Local(Vector3(0.0f, 0.0f, 1.0f)));
 		trans->SetLocalAngle(player->transform->GetLocalAngle());
 		trans->UpdateTransform();
-		attack->Create(Vector3(1.0f,1.0f,1.0f));
+		attack->Create(Vector3(1.0f,1.0f,1.0f),AttackCollision::CollisionMaster::Player,3.0f);
 	}
 
 	if (player->GetAnimIsPlay() != true)
