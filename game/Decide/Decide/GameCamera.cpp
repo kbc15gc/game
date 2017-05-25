@@ -159,7 +159,7 @@ void GameCamera::_StandardBehavior()
 		_Camera->SetTarget(_LerpCameraLookAtPos);
 
 
-		//カメラの位置を線形補完された位置に設定。。
+		//カメラの位置を線形補完された位置に設定。
 		transform->SetPosition((_LerpCameraPos));
 	}
 	//線形補間をし終わったので通常のカメラの動きをする。
@@ -210,6 +210,10 @@ void GameCamera::_HistoryBehavior()
 	if (_LerpRate > 0.0f)
 	{
 		_LerpRate -= 0.01f;
+	}
+	else
+	{
+		_LerpRate = 0.0f;
 	}
 	
 	//カメラの注視点の線形補間を行う(プレイヤーから歴史書に向けて補間)。
