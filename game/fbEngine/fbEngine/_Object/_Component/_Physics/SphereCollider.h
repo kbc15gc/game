@@ -17,6 +17,12 @@ public:
 	 * @brief	球体コライダーを作成。
 	 */
 	void Create( const float radius );
+
+private:
+//	 形状に応じたモデルデータをロード。
+	void ColliderModelLoad()override;
+
+public:
 	btCollisionShape* GetBody() override
 	{
 		return shape;

@@ -1,5 +1,6 @@
 #include"fbstdafx.h"
 #include "BoxCollider.h"
+#include "_Object\_GameObject\ModelOject.h"
 
 /*!
  * @brief	コンストラクタ。
@@ -22,4 +23,10 @@ BoxCollider::~BoxCollider()
 void BoxCollider::Create( const Vector3& size )
 {
 	_Shape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+}
+
+void BoxCollider::ColliderModelLoad() {
+	//当たり判定を視覚化したオブジェクト生成
+	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
+	_CollisionModel->LoadModel("BoxCollision.X");
 }

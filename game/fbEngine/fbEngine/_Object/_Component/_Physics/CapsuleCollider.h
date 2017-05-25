@@ -20,6 +20,15 @@ public:
 	{
 		shape = new btCapsuleShape(radius, height);
 	}
+
+private:
+	// 形状に応じたモデルデータをロード。
+	void ColliderModelLoad()override {
+		// カプセルはまだないので生成しない。
+	}
+
+
+public:
 	btCollisionShape* GetBody() override
 	{
 		return shape;

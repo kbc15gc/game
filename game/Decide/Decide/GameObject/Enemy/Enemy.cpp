@@ -30,12 +30,12 @@ void Enemy::_StartSubClass(){
 	// 攻撃可能範囲設定。
 	_AttackRange = 1.3f;
 
+	// 徘徊範囲設定。
+	// ※暫定処理。
+	_WanderingRange = 10.0f;
+
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
-
-	// 位置情報設定。
-	_InitPos = Vector3(0.0f, 10.0f, 0.0f);
-	transform->SetLocalPosition(_InitPos);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -68,7 +68,13 @@ EnemyCharacter::State Enemy::AttackSelect() {
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Discovery) {
+	if (EndStateType == State::Wandering) {
+		// 徘徊の挙動いったん終了。
+
+		// 再度徘徊。
+		_ChangeState(State::Wandering);
+	}
+	else if (EndStateType == State::Discovery) {
 		// 発見ステートの処理完了。
 
 		_ChangeState(State::StartAttack);
