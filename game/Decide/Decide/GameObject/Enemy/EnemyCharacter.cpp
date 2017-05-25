@@ -11,6 +11,7 @@
 #include "HFSM\EnemyFallState.h"
 #include "AttackCollision.h"
 
+
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
 }
@@ -40,6 +41,10 @@ void EnemyCharacter::Awake() {
 
 void EnemyCharacter::Start() {
 	_MoveSpeed = Vector3::zero;	// 初期化。
+	
+	// 位置情報設定。
+	_InitPos = Vector3(0.0f, 5.0f, 0.0f);
+	transform->SetLocalPosition(_InitPos);
 
 	// 継承先により変わる処理。
 	_StartSubClass();
@@ -89,6 +94,25 @@ void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& 
 		attack->Create(size,AttackCollision::CollisionMaster::Enemy,3.0f);
 	}
 }
+
+bool EnemyCharacter::IsOutsideWandering() {
+	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
+	if (NowRange > _WanderingRange) {
+		// 徘徊範囲外に出た。
+		return true;
+	}
+	return false;
+}
+
+bool EnemyCharacter::IsOutsideWandering(const Vector3& Add) {
+	float NowRange = Vector3(_InitPos - (transform->GetPosition() + Add)).Length();
+	if (NowRange > _WanderingRange) {
+		// 徘徊範囲外に出た。
+		return true;
+	}
+	return false;
+}
+
 
 void EnemyCharacter::SearchView() {
 	// 視野角判定。

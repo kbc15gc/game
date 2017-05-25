@@ -30,6 +30,12 @@ public:
 		return true;
 	}
 
+	// ステート処理終了要請関数。
+	// ※外部から強制的にステート処理を終了させたい場合はこちらを呼ぶ。
+	inline void _EndStateRequest() {
+		_EndState();
+	}
+
 
 	// このステートの処理が終了しているかのフラグを返却。
 	inline bool GetIsEnd() const {
@@ -67,8 +73,8 @@ protected:
 	bool _IsEndState = false;		// ステートの処理が終了したかのフラグ(trueで終了)。
 	EnemyCharacter* _EnemyObject = nullptr;	// このステートを持つエネミーのポインタ。
 	EnemyState* _NowLocalState = nullptr;	// 現在のローカルステート。
-private:
 	EnemyCharacter::State _NowLocalStateIdx;		// 現在のローカルステートの添え字。
+private:
 	bool _IsFirstUpdate = true;	// ステートが切り替わってから最初の更新か。
 };
 
