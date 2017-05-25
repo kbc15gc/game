@@ -23,7 +23,8 @@
 #include "GameObject\HistoryBook\HistoryBook.h"
 #include "GameObject\Village\HistoryMenuSelect.h"
 
-#include "GameObject\Village\Shop.h"ImageObject* g_depth;
+#include "GameObject\Village\Shop.h"
+ImageObject* g_depth;
 
 void GameScene::Start()
 {
