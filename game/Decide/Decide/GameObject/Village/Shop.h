@@ -37,6 +37,15 @@ namespace
 	};
 }
 
+namespace
+{
+	//仮
+	struct testchar
+	{
+		char name[256];
+	};
+}
+
 //お店。
 class Shop:public GameObject
 {
@@ -65,7 +74,6 @@ private:
 	//ショップのステート
 	ShopStateE _State;
 
-
 	//どうせ全部同じ場所で同じ画像だろうからstatic変数。
 	//カーソルの画像
 	static ImageObject* _Cursor[2];
@@ -73,4 +81,7 @@ private:
 	static ImageObject* _BuySell;
 	//本命のウィンドウ
 	static ImageObject* _MainWindow;
+private:
+	
+	static vector<testchar*> _ShopNameList;
 };

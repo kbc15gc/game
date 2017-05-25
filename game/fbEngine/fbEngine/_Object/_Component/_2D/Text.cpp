@@ -52,14 +52,24 @@ void Text::ImageRender()
 	transform->SetScale(bufS);
 }
 
-void Text::Initialize(const wchar_t * string, const float& _Size, const Color& color, const fbSprite::SpriteEffectE& flg, const char * style, const unsigned int& format)
+void Text::Initialize(const wchar_t * string, const float& size, const Color& color, const fbSprite::SpriteEffectE& flg, const char * style, const unsigned int& format)
 {
-	SetStyle((char*)style);
-	SetSize(_Size);
+	SetStyle(style);
+	SetSize(size);
 	SetString(string);
 	SetFormat(format);
 	SetBlendColor(color);
 	SetEffectFlg(flg,true);
+}
+
+void Text::Initialize(const TextParameter & param)
+{
+	SetStyle(param.Style);
+	SetSize(param.FontSize);
+	SetString(param.String);
+	SetFormat(param.Format);
+	SetBlendColor(param.Color);
+	SetEffectFlg(param.EffectFlg, true);
 }
 
 void Text::SetString(const wchar_t * s)
