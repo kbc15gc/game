@@ -17,6 +17,12 @@ public:
 	 * @brief	ボックスコライダーを作成。
 	 */
 	void Create( const Vector3& size );
+
+private:
+	// 形状に応じたモデルデータをロード。
+	void ColliderModelLoad()override;
+
+public:
 	btCollisionShape* GetBody() override
 	{
 		return _Shape;

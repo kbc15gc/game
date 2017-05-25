@@ -1,5 +1,6 @@
 #include"fbstdafx.h"
 #include "Collision.h"
+#include "Collider.h"
 
 #ifdef _DEBUG
 #include "_Object\_GameObject\ModelOject.h"
@@ -44,47 +45,53 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 	_UpdateCollisionTrans();
 
 #ifdef _DEBUG
-	//前に設定されていたアドレスを削除
-	if (_CollisionModel)
-		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
-
-	//形状取得
-	int type = _Shape->GetBody()->getShapeType();
-	//形に対応したモデル読み込み
-	switch (type)
-	{
-	case 0:	//box
-		//当たり判定を視覚化したオブジェクト生成
-		_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
-		_CollisionModel->LoadModel("Debug/BoxCollision.X");
-		break;
-	case 8:	//sphere
-		//当たり判定を視覚化したオブジェクト生成
-		_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
-		_CollisionModel->LoadModel("Debug/SphereCollision.X");
-		break;
-	default:
-		break;
-	}
-	//モデルがあるのなら
-	if (_CollisionModel)
-	{
-		_CollisionModel->GetSkinModel()->SetModelEffect(ModelEffectE::NONE);
-		//半透明な赤に設定。
-		_CollisionModel->GetSkinModel()->SetAllBlend(Color(1.0f, 0.0f, 0.0f, 0.5f));
-		//子に設定
-		_CollisionModel->transform->SetParent(this->transform);
-		//あたり判定の大きさを調べる。
-		btTransform t = _CollisionObject->getWorldTransform();
-		btVector3 min, max;
-		_Shape->GetBody()->getAabb(t, min, max);
-		Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
-		//当たり判定のサイズを指定
-		_CollisionModel->transform->SetLocalScale(size);
-		//当たり判定をずらす
-		_CollisionModel->transform->SetLocalPosition(_Offset);
-	}
+	// とりあえずここでコライダーの描画をオンにする。
+	_Shape->CreateViewModel(gameObject,collision, offset);
 #endif // _DEBUG
+
+//	// コリジョン形状に応じたモデルをロード。
+//#ifdef _DEBUG
+//	//前に設定されていたアドレスを削除
+//	if (_CollisionModel)
+//		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
+//
+//	//形状取得
+//	int type = _Shape->GetBody()->getShapeType();
+//	//形に対応したモデル読み込み
+//	switch (type)
+//	{
+//	case 0:	//box
+//		//当たり判定を視覚化したオブジェクト生成
+//		_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
+//		_CollisionModel->LoadModel("BoxCollision.X");
+//		break;
+//	case 8:	//sphere
+//		//当たり判定を視覚化したオブジェクト生成
+//		_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
+//		_CollisionModel->LoadModel("SphereCollision.X");
+//		break;
+//	default:
+//		break;
+//	}
+//	//モデルがあるのなら
+//	if (_CollisionModel)
+//	{
+//		_CollisionModel->GetSkinModel()->SetModelEffect(ModelEffectE::NONE);
+//		//半透明な赤に設定。
+//		_CollisionModel->GetSkinModel()->SetAllBlend(Color(1.0f, 0.0f, 0.0f, 0.5f));
+//		//子に設定
+//		_CollisionModel->transform->SetParent(this->transform);
+//		//あたり判定の大きさを調べる。
+//		btTransform t = _CollisionObject->getWorldTransform();
+//		btVector3 min, max;
+//		_Shape->GetBody()->getAabb(t, min, max);
+//		Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
+//		//当たり判定のサイズを指定
+//		_CollisionModel->transform->SetLocalScale(size);
+//		//当たり判定をずらす
+//		_CollisionModel->transform->SetLocalPosition(_Offset);
+//	}
+//#endif // _DEBUG
 }
 
 void Collision::SetFilter(short group, short mask)

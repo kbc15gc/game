@@ -52,6 +52,7 @@
     <ClCompile Include="_Object\_Component\_3D\SkinModel.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\BoxCollider.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\CapsuleCollider.cpp" />
+    <ClCompile Include="_Object\_Component\_Physics\Collider.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\Collision.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\GostCollision.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\MeshCollider.cpp" />

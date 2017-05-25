@@ -23,7 +23,7 @@
 #include "GameObject\HistoryBook\HistoryBook.h"
 #include "GameObject\Village\HistoryMenuSelect.h"
 
-
+#include "GameObject\Village\Shop.h"
 ImageObject* g_depth;
 
 void GameScene::Start()
@@ -66,6 +66,8 @@ void GameScene::Start()
 
 	//歴史書の親にプレイヤーを設定。
 	book->transform->SetParent(player->transform);
+
+	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 
 }
 

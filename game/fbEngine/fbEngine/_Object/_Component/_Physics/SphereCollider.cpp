@@ -2,7 +2,8 @@
  * @brief	球体コライダー。
  */
 #include"fbstdafx.h"
-#include "SphereCollider.h"
+#include "_Object\_Component\_Physics\SphereCollider.h"
+#include "_Object\_GameObject\ModelOject.h"
 
 /*!
  * @brief	コンストラクタ。
@@ -26,4 +27,10 @@ SphereCollider::~SphereCollider()
 void SphereCollider::Create( const float radius )
 {
 	shape = new btSphereShape(radius);
+}
+
+void SphereCollider::ColliderModelLoad() {
+	//当たり判定を視覚化したオブジェクト生成
+	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
+	_CollisionModel->LoadModel("SphereCollision.X");
 }

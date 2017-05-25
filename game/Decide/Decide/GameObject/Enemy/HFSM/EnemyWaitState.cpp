@@ -17,7 +17,7 @@ void EnemyWaitState::_EntrySubClass() {
 }
 
 void EnemyWaitState::_Start() {
-	float InterpolateTime = 0.1f;	// •âŠÔŽžŠÔB
+	float InterpolateTime = 0.5f;	// •âŠÔŽžŠÔB
 	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle, InterpolateTime);
 }
 

@@ -1,5 +1,5 @@
 #include"fbstdafx.h"
-#include "MeshCollider.h"
+#include "_Object\_Component\_Physics\MeshCollider.h"
 
 MeshCollider::MeshCollider(GameObject* g, Transform* t) :
 	Collider(g,t, typeid(this).name()),

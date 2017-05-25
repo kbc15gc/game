@@ -18,6 +18,14 @@ public:
 	 *@param[in]	model		スキンモデル。
 	 */
 	void Create(SkinModel* model);
+
+private:
+	// 形状に応じたモデルデータをロード。
+	void ColliderModelLoad()override {
+		// メッシュの形状なので生成しない。
+	}
+
+public:
 	btCollisionShape* GetBody() override
 	{
 		return meshShape;

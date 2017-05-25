@@ -123,7 +123,8 @@ void Sprite::_RenderSprite()
 
 	RECT rect;
 	//ウィンドウハンドルからクライアントエリアのサイズを取得
-	GetClientRect(g_MainWindow, &rect);
+	HWND hWnd = FindWindow("DECIDE", NULL);
+	GetClientRect(hWnd, &rect);
 	float w = (float)rect.right;
 	float h = (float)rect.bottom;
 
