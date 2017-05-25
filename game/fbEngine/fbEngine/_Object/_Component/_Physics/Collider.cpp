@@ -3,9 +3,11 @@
 #include "_Object\_GameObject\ModelOject.h"
 
 Collider::~Collider(){
+#ifdef _DEBUG
 	if (_CollisionModel) {
 		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
 	}
+#endif //_DEBUG
 };
 
 void Collider::CreateViewModel(GameObject* Parent, btCollisionObject* CollisionObject, const Vector3& Offset){
@@ -13,6 +15,8 @@ void Collider::CreateViewModel(GameObject* Parent, btCollisionObject* CollisionO
 }
 
 void Collider::CreateViewModel(GameObject* Parent, const btTransform& Transform, const Vector3& Offset){
+#ifdef _DEBUG
+
 //前に設定されていたアドレスを削除
 	if (_CollisionModel)
 		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
@@ -39,4 +43,5 @@ void Collider::CreateViewModel(GameObject* Parent, const btTransform& Transform,
 		//当たり判定をずらす
 		_CollisionModel->transform->SetLocalPosition(Offset);
 	}
+#endif //_DEBUG
 }
