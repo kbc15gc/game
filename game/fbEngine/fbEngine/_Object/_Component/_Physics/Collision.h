@@ -52,7 +52,4 @@ protected:
 	Collider *_Shape;
 	//コリジョンオブジェクト。
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
-private:
-	//当たり判定を視覚化した3Dオブジェクト。
-	ModelObject* _CollisionModel;
 };

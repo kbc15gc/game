@@ -13,4 +13,5 @@ enum Collision_ID
 	PLAYER = fbCollisionAttributeE::CHARACTER,
 	ENEMY = BIT(3),
 	BOSS = BIT(4),
+	ATTACK = BIT(5),
 };

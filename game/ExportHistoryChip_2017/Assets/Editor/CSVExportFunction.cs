@@ -108,28 +108,29 @@ public class CSVExportFunction : Editor
 
             //メッシュ名を書き出し
             //sw.Write(mesh.name.Replace(" Instance", "") + ".X");
-
-            //名前を書き出し
-            sw.Write(child.name + ".X");
-            sw.Write(',');
-            //ポジション
-            WriteVector3(sw, child.position);
-            //回転
-            WriteVector3(sw, child.eulerAngles);
-            //スケール
-            WriteVector3(sw, child.lossyScale);
-
+            string filename = child.name + ".X";
+            string pos = Vector3ToString(child.position);
+            string ang = Vector3ToString(child.eulerAngles);
+            string sca = Vector3ToString(child.lossyScale);
             NPC npc = child.GetComponent<NPC>();
-            sw.Write(npc.MesseageID);
-            sw.Write(',');
+            int type = Convert.ToInt32(npc.NPCType);
+            int shopid = npc.ShopID;
+            int textid = npc.MesseageID;
+            string flg = Convert.ToInt32(npc.ShowTitle).ToString();
+            //
+            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7}", filename, pos, ang, sca, type, shopid, textid, flg);
 
-            sw.Write(Convert.ToInt32(npc.ShowTitle));
-
-            //改行
-            sw.Write("\r\n");
+            //列書き出し
+            sw.WriteLine(line);
         }
         sw.Close();
         fs.Close();
+    }
+
+    static public string Vector3ToString(Vector3 val)
+    {
+        //"x/y/z"の形で返す。
+        return String.Format("{0}/{1}/{2}", val.x, val.y, val.z);
     }
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)

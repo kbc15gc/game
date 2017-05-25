@@ -252,6 +252,9 @@
       <Filter>Effect\PreRender</Filter>
     </ClCompile>
     <ClCompile Include="fbstdafx.cpp" />
+    <ClCompile Include="_Object\_Component\_Physics\Collider.cpp">
+      <Filter>Object\Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
