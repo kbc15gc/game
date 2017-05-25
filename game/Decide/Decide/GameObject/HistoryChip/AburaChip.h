@@ -4,10 +4,10 @@
 class Player;
 class HistoryMenuSelect;
 
-class FireChip : public GameObject
+class AburaChip : public GameObject
 {
 public:
-	FireChip(const char* name);
+	AburaChip(const char* name);
 	void Awake()override;
 	void Start()override;
 	void Update()override;
@@ -17,3 +17,4 @@ private:
 	//ヒストリーメニューセレクトオブジェクト
 	HistoryMenuSelect* _HistoryMenuSelect;
 };
+#pragma once

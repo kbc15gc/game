@@ -45,9 +45,8 @@ sampler g_ShadowMapSampler_2 = sampler_state
 struct ShadowReceiverParam
 {
 	/** ライトビュー行列. */
-	float4x4 _LVMatrix;
-	/** ライトプロジェクション行列. */
-	float4x4 _LPMatrix[SHADOWMAP_NUM];
+	float4x4 _LVPMatrix[SHADOWMAP_NUM];
+	
 	/** シャドウマップの数. */
 	int _NumShadowMap;
 };
@@ -70,17 +69,15 @@ float CalcShadow(float3 worldPos,out float3 color)
 	for (int i = 0; i < g_ShadowReceiverParam._NumShadowMap; i++)
 	{
 		//影落とす
-		float4 posInLVP = mul(float4(worldPos, 1.0f), g_ShadowReceiverParam._LVMatrix); 
-		posInLVP = mul(posInLVP, g_ShadowReceiverParam._LPMatrix[i]);
+		float4 posInLVP = mul(float4(worldPos, 1.0f), g_ShadowReceiverParam._LVPMatrix[i]); 
 		posInLVP.xyz /= posInLVP.w;
 
 		//uv座標に変換
 		float2 shadowMapUV = float2(0.5f, -0.5f) * posInLVP.xy + float2(0.5f, 0.5f);
-		float2 shadow_val = 1.0f;
 
 		if (shadowMapUV.x < 0.99f && shadowMapUV.y < 0.99f && shadowMapUV.x > 0.01f && shadowMapUV.y > 0.01f)
 		{
-			shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
+			float2 shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
 			float depth = min(posInLVP.z, 1.0f);
 
 			if (true)

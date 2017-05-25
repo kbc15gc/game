@@ -18,44 +18,6 @@ HistoryMenuSelect::~HistoryMenuSelect()
 
 void HistoryMenuSelect::Start()
 {
-	Vector2 hasi(1000, 200);
-	Vector2 interval(150, 150);
-
-	//チップのセレクトメニュー
-	{
-		//火のチップメニュー
-		{
-			//火のボタン
-			HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
-			b->SetMenuButtonFlag(false);
-			b->SetChipID(ChipID::FIRE);
-			Vector3 pos = Vector3(1000.0f, 200.0f, 0.0f);
-			b->transform->SetLocalPosition(pos);
-			_MenuSelectObjects.push_back(b);
-		}
-		//鉄のチップメニュー
-		{
-			//鉄のボタン
-			HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
-			b->SetMenuButtonFlag(false);
-			b->SetChipID(ChipID::IRON);
-			Vector3 pos = Vector3(1000.0f, 350.0f, 0.0f);
-			b->transform->SetLocalPosition(pos);
-			_MenuSelectObjects.push_back(b);
-		}
-		//油のチップメニュー
-		{
-			//油のボタン
-			HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
-			b->SetMenuButtonFlag(false);
-			b->SetChipID(ChipID::OIL);
-			Vector3 pos = Vector3(1000.0f, 500.0f, 0.0f);
-			b->transform->SetLocalPosition(pos);
-			_MenuSelectObjects.push_back(b);
-		}
-	}
-
-	_SetMenuEnabel(false);
 }
 
 void HistoryMenuSelect::Update()
@@ -77,4 +39,46 @@ void HistoryMenuSelect::_SetMenuEnabel(const bool & enabel)
 	{
 		o->SetActive(_MenuEnabel);
 	}
+}
+
+void HistoryMenuSelect::FireSelect()
+{
+	//火のボタン
+	HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
+	b->SetMenuButtonFlag(false);
+	b->SetChipID(ChipID::FIRE);
+	Vector3 pos = Vector3(1000.0f, 200.0f, 0.0f);
+	b->transform->SetLocalPosition(pos);
+	_MenuSelectObjects.push_back(b);
+
+	//最初は表示しないためFALSE
+	_SetMenuEnabel(false);
+}
+
+void HistoryMenuSelect::TetuSelect()
+{
+	//鉄のボタン
+	HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
+	b->SetMenuButtonFlag(false);
+	b->SetChipID(ChipID::IRON);
+	Vector3 pos = Vector3(1000.0f, 350.0f, 0.0f);
+	b->transform->SetLocalPosition(pos);
+	_MenuSelectObjects.push_back(b);
+
+	//最初は表示しないためFALSE
+	_SetMenuEnabel(false);
+}
+
+void HistoryMenuSelect::AburaSelect()
+{
+	//油のボタン
+	HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
+	b->SetMenuButtonFlag(false);
+	b->SetChipID(ChipID::OIL);
+	Vector3 pos = Vector3(1000.0f, 500.0f, 0.0f);
+	b->transform->SetLocalPosition(pos);
+	_MenuSelectObjects.push_back(b);
+
+	//最初は表示しないためFALSE
+	_SetMenuEnabel(false);
 }

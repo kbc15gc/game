@@ -1,5 +1,5 @@
 #include"stdafx.h"
-#include "FireChip.h"
+#include "AburaChip.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Light.h"
 #include "GameObject\Player\Player.h"
@@ -7,25 +7,25 @@
 #include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\HistoryMenuSelect.h"
 
-FireChip::FireChip(const char * name) :
+AburaChip::AburaChip(const char * name) :
 	GameObject(name)
 {
 
 }
 
-void FireChip::Awake()
+void AburaChip::Awake()
 {
 	SkinModel* model = AddComponent<SkinModel>();
 	SkinModelData* modeldata = new SkinModelData();
-	modeldata->CloneModelData(SkinModelManager::LoadModel("FireChip.X"));
+	modeldata->CloneModelData(SkinModelManager::LoadModel("AburaChip.X"));
 	model->SetModelData(modeldata);
 	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 
-	transform->SetLocalPosition(Vector3(30.0f, 6.0f, 0.0f));
+	transform->SetLocalPosition(Vector3(10.0f, 6.0f, 0.0f));
 	transform->SetLocalScale(Vector3::one);
 }
 
-void FireChip::Start()
+void AburaChip::Start()
 {
 	//ƒvƒŒƒCƒ„[‚ðŒŸõ
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
@@ -33,7 +33,7 @@ void FireChip::Start()
 	_HistoryMenuSelect = (HistoryMenuSelect*)INSTANCE(GameObjectManager)->FindObject("HistoryMenuSelect");
 }
 
-void FireChip::Update()
+void AburaChip::Update()
 {
 	static Vector3 angle(0.0f, 0.0f, 0.0f);
 	angle.y += 2.0f;
@@ -45,8 +45,8 @@ void FireChip::Update()
 	if (toLenght <= 0.2f)
 	{
 		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)ChipID::FIRE);
-		_HistoryMenuSelect->FireSelect();
+		_HistoryMenuSelect->AburaSelect();
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
-	
+
 }

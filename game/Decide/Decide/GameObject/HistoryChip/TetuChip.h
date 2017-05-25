@@ -1,13 +1,14 @@
 #pragma once
+#pragma once
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class Player;
 class HistoryMenuSelect;
 
-class FireChip : public GameObject
+class TetuChip : public GameObject
 {
 public:
-	FireChip(const char* name);
+	TetuChip(const char* name);
 	void Awake()override;
 	void Start()override;
 	void Update()override;
