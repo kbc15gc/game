@@ -45,7 +45,7 @@ public:
 	void AnimationControl();
 
 	//歴史書を見ているかのフラグの変更。
-	void IsLookAtHistoryFlagChange();
+	void ChangeIsLookAtHistoryFlag();
 private:
 	SkinModel* _Model;
 	Animation* _Anim;											//アニメーションのコンポーネントのアドレス保持用。

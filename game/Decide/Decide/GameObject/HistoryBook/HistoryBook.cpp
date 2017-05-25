@@ -25,7 +25,7 @@ void HistoryBook::Awake()
 	//モデルデータ。
 	SkinModelData* modeldata = new SkinModelData();
 	//クローンモデルの作成。
-	modeldata->CloneModelData(SkinModelManager::LoadModel("HistoryBook2.X"), _Anim);
+	modeldata->CloneModelData(SkinModelManager::LoadModel("HistoryBook.X"), _Anim);
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 
@@ -35,7 +35,7 @@ void HistoryBook::Awake()
 
 void HistoryBook::Start()
 {
-	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 1.5f) + PLAYER_HALFHEIGHT);
+	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f) + PLAYER_HALFHEIGHT);
 	transform->SetLocalScale(Vector3::one);
 
 	//アニメーションの終了時間設定。
@@ -67,7 +67,7 @@ void HistoryBook::Start()
 void HistoryBook::Update()
 {
 	//歴史書を見ているフラグを変える操作。
-	IsLookAtHistoryFlagChange();
+	ChangeIsLookAtHistoryFlag();
 
 	//歴史書の状態を見てアニメーション再生。
 	AnimationControl();
@@ -130,7 +130,7 @@ void HistoryBook::AnimationControl()
 	}
 }
 
-void HistoryBook::IsLookAtHistoryFlagChange()
+void HistoryBook::ChangeIsLookAtHistoryFlag()
 {
 	//歴史書を見るフラグの切り替え。
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
@@ -156,6 +156,7 @@ void HistoryBook::IsLookAtHistoryFlagChange()
 		}
 		
 		_PlayerFoward = _Player->transform->GetForward();
+		_PlayerFoward = _PlayerFoward*-1;
 		transform->SetLocalPosition(_PlayerFoward + PLAYER_HALFHEIGHT);
 	}
 }
