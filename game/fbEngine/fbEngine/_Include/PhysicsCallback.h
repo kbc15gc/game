@@ -125,7 +125,7 @@ namespace fbPhysicsCallback
 				hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
 			}
 			else {
-				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
+hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 			}
 
 			//hitオブジェクトがある
@@ -159,7 +159,7 @@ namespace fbPhysicsCallback
 	struct	ClosestRayResultCallback : public btCollisionWorld::RayResultCallback
 	{
 	public:
-		ClosestRayResultCallback(const btVector3& from,const btVector3& to,const int& attr)
+		ClosestRayResultCallback(const btVector3& from, const btVector3& to, const int& attr)
 		{
 			_fromPos = from;
 			_toPos = to;
@@ -214,7 +214,7 @@ namespace fbPhysicsCallback
 	struct ClosestConvexResultCallback : public btCollisionWorld::ConvexResultCallback
 	{
 	public:
-		ClosestConvexResultCallback(const Vector3& start,const int& attr,const btCollisionObject* me)
+		ClosestConvexResultCallback(const Vector3& start, const int& attr, const btCollisionObject* me)
 		{
 			_startPos = start;
 			_attribute = attr;
@@ -225,7 +225,7 @@ namespace fbPhysicsCallback
 		{
 			//自身と衝突したか？ &&
 			//属性が合わなかった
-			if (convexResult.m_hitCollisionObject == _me &&
+			if (convexResult.m_hitCollisionObject == _me ||
 				(_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0)
 			{
 				//ヒットしなかった。
@@ -271,12 +271,11 @@ namespace fbPhysicsCallback
 		btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 		float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 
-															//衝突したときに呼ばれるコールバック関数。
+		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			if (convexResult.m_hitCollisionObject == me
 				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER
-				//|| convexResult.m_hitCollisionObject->getUserIndex() == Collision_ID::
 				) {
 				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 				return 0.0f;
@@ -289,6 +288,12 @@ namespace fbPhysicsCallback
 			if (angle < D3DX_PI * 0.2f		//地面の傾斜が54度より小さいので地面とみなす。
 				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND //もしくはコリジョン属性が地面と指定されている。
 				) {
+
+				if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(5)) {
+					// ゴーストは無視。
+					return 0.0f;
+				}
+
 				//衝突している。
 				isHit = true;
 
@@ -304,6 +309,7 @@ namespace fbPhysicsCallback
 					dist = distTmp;
 				}
 			}
+
 			return 0.0f;
 		}
 	};
@@ -316,13 +322,20 @@ namespace fbPhysicsCallback
 		float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 		Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
-												//衝突したときに呼ばれるコールバック関数。
+
+		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			if (convexResult.m_hitCollisionObject == me) {
 				//自分に衝突した。or 地面に衝突した。
 				return 0.0f;
 			}
+
+			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(5)) {
+				// ゴーストは無視。
+				return 0.0f;
+			}
+
 			//衝突点の法線を引っ張ってくる。
 			Vector3 hitNormalTmp;
 			hitNormalTmp.Set(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
@@ -346,6 +359,7 @@ namespace fbPhysicsCallback
 					hitNormal = hitNormalTmp;
 				}
 			}
+
 			return 0.0f;
 		}
 	};

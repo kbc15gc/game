@@ -33,7 +33,7 @@ public:
 	// 攻撃判定用のコリジョン生成。
 	// 引数：	サイズ。
 	//			誰がコリジョンを生成したか。
-	//			コリジョン寿命。
+	//			コリジョン寿命(0.0fより小さい値で無限)。
 	inline void Create(const Vector3& size, CollisionMaster master, float lifeTime) {
 		_lifeTime = lifeTime;
 		Create(size, master);
@@ -43,6 +43,6 @@ private:
 	Collider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。
 	float time;				//コリジョン削除カウンター。
-	float _lifeTime = 3.0f;		// コリジョン寿命。
+	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
 };

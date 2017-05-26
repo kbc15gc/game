@@ -14,11 +14,12 @@ void AttackCollision::Awake()
 void AttackCollision::Update()
 {
 	time += Time::DeltaTime();
-	if (time > _lifeTime)
+	if (_lifeTime >= 0.0f && time > _lifeTime)
 	{
-		// 寿命を過ぎた。
+		// 寿命が無限でないかつ寿命を過ぎた。
+			// 寿命が無限でない。
 
-		// 削除。
+			// 削除。
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 	else {

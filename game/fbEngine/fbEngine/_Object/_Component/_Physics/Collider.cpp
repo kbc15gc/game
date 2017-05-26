@@ -36,7 +36,9 @@ void Collider::CreateViewModel(GameObject* Parent, const btTransform& Transform,
 		}
 		//あたり判定の大きさを調べる。
 		btVector3 min, max;
-		GetBody()->getAabb(Transform, min, max);
+		btTransform tr;
+		tr.setIdentity();
+		GetBody()->getAabb(tr, min, max);
 		Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
 		//当たり判定のサイズを指定
 		_CollisionModel->transform->SetLocalScale(size);
