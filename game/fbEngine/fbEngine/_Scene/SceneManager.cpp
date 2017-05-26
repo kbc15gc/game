@@ -31,10 +31,10 @@ SceneManager::SceneManager()
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
 	//アンチエイリアスの作成.
-	_AntiAliasing.Create();
+	//_AntiAliasing.Create();
 
 	//被写界深度の作成
-	_DepthofField.Create();
+	//_DepthofField.Create();
 
 	//ブルームの準備
 	_Bloom.Create();
@@ -97,7 +97,7 @@ void SceneManager::DrawScene()
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
 	//_DepthofField.Render();
-	_AntiAliasing.Render();
+	//_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
 	INSTANCE(RenderTargetManager)->BeforeRT();

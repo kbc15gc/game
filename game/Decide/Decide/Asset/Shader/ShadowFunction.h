@@ -74,15 +74,22 @@ float CalcShadow(float3 worldPos,out float3 color)
 
 		//uv座標に変換
 		float2 shadowMapUV = float2(0.5f, -0.5f) * posInLVP.xy + float2(0.5f, 0.5f);
+		float2 shadow_val = 1.0f;
 
 		if (shadowMapUV.x < 0.99f && shadowMapUV.y < 0.99f && shadowMapUV.x > 0.01f && shadowMapUV.y > 0.01f)
 		{
-			float2 shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
+			shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
+
+			/*color.rg = tex2D(texSampler[i], shadowMapUV).rg;
+			color.y = 0.0f;
+			color.z = 0.0f;*/
+
 			float depth = min(posInLVP.z, 1.0f);
 
 			if (true)
 			{
-				if (depth > shadow_val.r) {
+				if (depth > shadow_val.r)
+				{
 					//チェビシェフ
 					float depth_sq = shadow_val.r * shadow_val.r;
 					float variance = max(shadow_val.g - depth_sq, 0.0006f);
@@ -99,22 +106,23 @@ float CalcShadow(float3 worldPos,out float3 color)
 				}
 			}
 
-			if (i == 0)
+			/*if (i == 0)
 			{
-				color = float3(0.5f, 0, 0);
+				color = float3(0.5f, 1, 1);
 			}
 			else if (i == 1)
 			{
-				color = float3(0, 0.5f, 0);
+				color = float3(1, 0.5f, 1);
 			}
 			else
 			{
-				color = float3(0, 0, 0.5f);
-			}
+				color = float3(1, 1, 0.5f);
+			}*/
 
 			//一枚にヒットしたらループを終わる
 			break;
 		}
 	}
+
 	return result;
 }

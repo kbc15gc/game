@@ -11,7 +11,15 @@ namespace
 }
 
 HistoryBook::HistoryBook(const char * name) :
-	GameObject(name)
+	GameObject(name),
+	//閉じた状態。
+	_CloseState(this),
+	//開いている状態。
+	_OpeningState(this),
+	//開いた状態。
+	_Open(this),
+	//閉じている状態。
+	_Closeing(this)
 {
 
 }
@@ -25,7 +33,7 @@ void HistoryBook::Awake()
 	//モデルデータ。
 	SkinModelData* modeldata = new SkinModelData();
 	//クローンモデルの作成。
-	modeldata->CloneModelData(SkinModelManager::LoadModel("HistoryBook2.X"), _Anim);
+	modeldata->CloneModelData(SkinModelManager::LoadModel("HistoryBook.X"), _Anim);
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 
@@ -35,7 +43,7 @@ void HistoryBook::Awake()
 
 void HistoryBook::Start()
 {
-	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 1.5f) + PLAYER_HALFHEIGHT);
+	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f) + PLAYER_HALFHEIGHT);
 	transform->SetLocalScale(Vector3::one);
 
 	//アニメーションの終了時間設定。
@@ -52,7 +60,7 @@ void HistoryBook::Start()
 	}
 
 	//ステートの初期化。
-	_HistoryBookState = State::Close;
+	ChangeState(State::Close);
 	//アニメーションの初期化。
 	PlayAnimation(AnimationNo::AnimationClose, 0.2f, 0);
 
@@ -67,10 +75,14 @@ void HistoryBook::Start()
 void HistoryBook::Update()
 {
 	//歴史書を見ているフラグを変える操作。
-	IsLookAtHistoryFlagChange();
+	ChangeIsLookAtHistoryFlag();
 
-	//歴史書の状態を見てアニメーション再生。
-	AnimationControl();
+	//現在のステートに何か入っているなら。
+	if (_CurrentState != nullptr)
+	{
+		//ステートの更新。
+		_CurrentState->Update();
+	}
 	
 	//トランスフォーム更新。
 	transform->UpdateTransform();
@@ -86,51 +98,8 @@ void HistoryBook::PlayAnimation(AnimationNo animno, float interpolatetime, int l
 	}
 }
 
-void HistoryBook::AnimationControl()
-{
-	//歴史書の状態を見る。
-	switch (_HistoryBookState)
-	{
-		//本を閉じた状態。
-	case State::Close:
 
-		PlayAnimation(AnimationNo::AnimationClose, 0.2f, 1);
-
-		//本を見えないようにする。
-		_Model->enable = false;
-		break;
-		//本を開いている。
-	case State::Opening:
-		PlayAnimation(AnimationNo::AnimationOpening, 0.2f, 1);
-
-		//本を開ききったら本を開いている状態で固定。
-		if (_Anim->GetPlaying() == false)
-		{
-			_HistoryBookState = State::Open;
-		}
-		break;
-
-		//本を開いた状態。
-	case State::Open:
-		PlayAnimation(AnimationNo::AnimationOpen, 0.2f, 1);
-		break;
-
-		//本を閉じている。
-	case State::Closeing:
-		PlayAnimation(AnimationNo::AnimationCloseing, 0.2f, 1);
-
-		//閉じ終わったら。閉じた状態で固定。
-		if (_Anim->GetPlaying() == false)
-		{
-			_HistoryBookState = State::Close;
-		}
-		break;
-	default:
-		break;
-	}
-}
-
-void HistoryBook::IsLookAtHistoryFlagChange()
+void HistoryBook::ChangeIsLookAtHistoryFlag()
 {
 	//歴史書を見るフラグの切り替え。
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
@@ -142,20 +111,58 @@ void HistoryBook::IsLookAtHistoryFlagChange()
 		//trueなら歴史書を開く状態にする。
 		if (_IsLookAtHistoryFlag == true)
 		{
-			//本を可視化。
-			_Model->enable = true;
-
-			//本を開いている状態にする。
-			_HistoryBookState = State::Opening;
+			ChangeState(State::Opening);
 
 		}
 		//tureの時に押されたらその時歴史書は開いているので閉じる状態に遷移。
 		else if (_IsLookAtHistoryFlag == false)
 		{
-			_HistoryBookState = State::Closeing;
+			ChangeState(State::Closeing);
 		}
 		
 		_PlayerFoward = _Player->transform->GetForward();
+		_PlayerFoward = _PlayerFoward*-1;
 		transform->SetLocalPosition(_PlayerFoward + PLAYER_HALFHEIGHT);
 	}
+}
+
+void HistoryBook::ChangeState(State nextstate)
+{
+	//現在のステートがあるなら現在のステートを抜ける処理をする。
+	if (_CurrentState != nullptr)
+	{
+		_CurrentState->Exit();
+	}
+
+	//どのステートが来たかチェック。
+	switch (nextstate)
+	{
+		//閉じた状態。
+	case State::Close:
+		_CurrentState = &_CloseState;
+		break;
+
+		//開いている状態。
+	case State::Opening:
+		_CurrentState = &_OpeningState;
+		break;
+
+		//開いた状態。
+	case State::Open:
+		_CurrentState = &_Open;
+		break;
+
+		//閉じている状態。
+	case State::Closeing:
+		_CurrentState = &_Closeing;
+		break;
+	default:
+		break;
+	}
+
+	//渡されたステートに変更。
+	_State = nextstate;
+
+	//ステートが切り替わったので各ステートの入りに呼ばれる処理を呼ぶ。
+	_CurrentState->Entry();
 }

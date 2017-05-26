@@ -6,16 +6,22 @@
 void GameShadowCamera::Start()
 {
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
+	
+
 }
 
 void GameShadowCamera::Update()
 {
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
-
+	
 	Vector3 lightPos;
-	lightPos.Add(_Player->transform->GetPosition(), Vector3(10, 10, 10));
+
+	lightPos.Add(_Player->transform->GetPosition(), Vector3(1, 1, 0));
 	shadow->SetLightPosition(lightPos);
 	shadow->SetLightTarget(_Player->transform->GetPosition());
+	shadow->SetNear(1.0f);
+	shadow->SetFar(100.0f);
 
 	/*if (KeyBoardInput->isPressed(DIK_U))
 	{

@@ -318,14 +318,15 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	{
 		//影になっている.
 		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
+
 	}
 
 	color.rgb *= light.rgb;
 
 	////アンビエントライトを加算。
-	color.xyz += diffuseColor.xyz * g_light.ambient.xyz;
+	color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
 
-	//color.xyz *= cascadeColor;
+	color.xyz *= cascadeColor;
 
 	PSOutput Out = (PSOutput)0;
 
@@ -357,33 +358,25 @@ VS_ShadowOUT VSShadow(float4 Pos : POSITION)
 {
 	VS_ShadowOUT Out = (VS_ShadowOUT)0;
 
-	float4 pos;
-	pos = mul(Pos, g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
+	float4 pos = Pos;
+	pos = mul(pos, g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
 	pos = mul(pos, g_viewMatrix);		//ワールド空間からビュー空間に変換。
 	pos = mul(pos, g_projectionMatrix);	//ビュー空間から射影空間に変換。
-
 	Out._Shadow = Out._Pos = pos;
 
 	return Out;
 }
 
-float4 PSShadow(VS_ShadowOUT In) : COLOR0	//レンダーターゲット0に出力
+float4 PSShadow(VS_ShadowOUT In) : COLOR	//レンダーターゲット0に出力
 {
-	//深度
-	float depth = 0.0f;
-
 	//深度は射影変換済みの頂点の Z / W で算出できる
-	depth = In._Shadow.z / In._Shadow.w;
+	//深度
+	float z = In._Shadow.z / In._Shadow.w;
 
-	float dx = ddx(depth);
-	float dy = ddy(depth);
+	float dx = ddx(z);
+	float dy = ddy(z);
 
-	float4 ret = (float4)0;
-	ret.x = depth;
-	ret.y = depth * depth + 0.25f * (dx * dx + dy * dy);
-	ret.z = 0.0f;
-	ret.w = 1.0f;
-	return ret;
+	return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, 1.0f);
 }
 
 technique Shadow

@@ -5,77 +5,120 @@
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
-    <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
-    <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
-    <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
-    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp" />
-    <ClCompile Include="GameObject\Player\Player.cpp" />
-    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
-    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
-    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
-    <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
-    <ClCompile Include="GameObject\Village\MessageManager.cpp" />
-    <ClCompile Include="GameObject\Village\NPC.cpp" />
-    <ClCompile Include="GameObject\Village\Shop.cpp" />
-    <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyFallState.cpp" />
+    <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\Enemy.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyFallState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
+      <Filter>GameObject\HistoryBook</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Clerk.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\ContinentObject.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryButton.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryMenu.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\MessageManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\NPC.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\TextBox.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
-    <ClInclude Include="GameObject\Component\ObjectRotation.h" />
-    <ClInclude Include="GameObject\Enemy\Enemy.h" />
-    <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
-    <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
-    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\HistoryChip\AburaChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\FireChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\TetuChip.h" />
-    <ClInclude Include="GameObject\Player\Player.h" />
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
-    <ClInclude Include="GameObject\Village\ContinentObject.h" />
-    <ClInclude Include="GameObject\Village\HistoryButton.h" />
-    <ClInclude Include="GameObject\Village\HistoryInfo.h" />
-    <ClInclude Include="GameObject\Village\HistoryManager.h" />
-    <ClInclude Include="GameObject\Village\HistoryMenu.h" />
-    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
-    <ClInclude Include="GameObject\Village\MessageManager.h" />
-    <ClInclude Include="GameObject\Village\NPC.h" />
-    <ClInclude Include="GameObject\Village\Shop.h" />
-    <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
@@ -84,7 +127,117 @@
     <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyFallState.h" />
+    <ClInclude Include="GameObject\Component\ObjectRotation.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\Enemy.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemyCharacter.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\SearchViewAngle.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyDiscoveryState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyFallState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
+      <Filter>GameObject\HistoryBook</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\AburaChip.h">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\FireChip.h">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\TetuChip.h">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\Player.h">
+      <Filter>GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Clerk.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\ContinentObject.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryButton.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryInfo.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryManager.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryMenu.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\MessageManager.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\NPC.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\TextBox.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -92,5 +245,37 @@
   <ItemGroup>
     <Image Include="Decide.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{02fe3688-cf3b-4db5-87d2-62bd3ab7f8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component">
+      <UniqueIdentifier>{be373b17-7db6-4ce6-b12b-9d6a3ad757e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Enemy">
+      <UniqueIdentifier>{ac0695ac-fb17-4581-acd0-1860a60cfddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\HistoryBook">
+      <UniqueIdentifier>{d82f57ce-dae3-4203-b172-d79d299cab62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\HistoryChip">
+      <UniqueIdentifier>{8a268b1d-20b3-4285-833e-1bf0f1ef64e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player">
+      <UniqueIdentifier>{731246e2-2b17-4bbc-9efc-7877e5b138ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Village">
+      <UniqueIdentifier>{e2f2bc6d-af37-4f23-b491-fed719e1aded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Enemy\HFSM">
+      <UniqueIdentifier>{a4080293-5684-42c1-8811-775cd1a37e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player\PlayerState">
+      <UniqueIdentifier>{732a7773-c715-4971-be79-3928a3ac1f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\HistoryBook\HFSM">
+      <UniqueIdentifier>{396dc9aa-c950-4a8a-8a2b-d4080e610900}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
