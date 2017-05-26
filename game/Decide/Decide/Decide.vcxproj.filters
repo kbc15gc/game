@@ -101,6 +101,18 @@
     <ClCompile Include="GameObject\Village\TextBox.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -211,6 +223,21 @@
     <ClInclude Include="GameObject\Village\TextBox.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -246,6 +273,9 @@
     </Filter>
     <Filter Include="GameObject\Player\PlayerState">
       <UniqueIdentifier>{732a7773-c715-4971-be79-3928a3ac1f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\HistoryBook\HFSM">
+      <UniqueIdentifier>{396dc9aa-c950-4a8a-8a2b-d4080e610900}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
