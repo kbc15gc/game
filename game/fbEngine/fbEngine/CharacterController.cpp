@@ -15,6 +15,7 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 	//m_collider->Create(radius, height);
 
 	m_rigidBody.reset(new RigidBody(Object, tramsform));
+	m_rigidBody->Awake();
 	//リジッドボディ作成
 	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off);
 	//スリープさせない(必要かどうかわからない。)
@@ -36,7 +37,6 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 	////@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
 	//m_rigidBody->GetCollisonObj()->setUserIndex(enCollisionAttr_Character);
 	m_rigidBody->GetCollisonObj()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	//PhysicsWorld::Instance()->AddRigidBody(m_rigidBody);
 }
 void CCharacterController::Execute()
 {
@@ -200,5 +200,6 @@ void CCharacterController::Execute()
 */
 void CCharacterController::RemoveRigidBoby()
 {
-	PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
+	m_rigidBody.reset(nullptr);
+	//PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
 }

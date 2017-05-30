@@ -86,12 +86,9 @@ void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& 
 	if (nowFrame == eventFrame)
 	{
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
-		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		Transform* trans = attack->GetComponent<Transform>();
-		trans->SetLocalPosition(pos);
-		trans->SetLocalAngle(angle);
-		trans->UpdateTransform();
-		attack->Create(size,AttackCollision::CollisionMaster::Enemy,3.0f);
+		unsigned int priorty = 1;
+		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack_enemy", priorty);
+		attack->Create(pos, angle,size,AttackCollision::CollisionMaster::Enemy,3.0f);
 	}
 }
 

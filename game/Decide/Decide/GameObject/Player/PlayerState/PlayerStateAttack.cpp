@@ -33,11 +33,7 @@ void PlayerStateAttack::Update()
 	{
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		Transform* trans = attack->GetComponent<Transform>();
-		trans->SetLocalPosition(player->transform->Local(Vector3(0.0f, 1.0f, 0.0f)));
-		trans->SetLocalAngle(player->transform->GetLocalAngle());
-		trans->UpdateTransform();
-		attack->Create(Vector3(1.0f,1.0f,1.0f),AttackCollision::CollisionMaster::Player,-1.0f);
+		attack->Create(player->transform->Local(Vector3::zero), player->transform->GetLocalAngle(),Vector3::one,AttackCollision::CollisionMaster::Player);
 	}
 
 	if (player->GetAnimIsPlay() != true)

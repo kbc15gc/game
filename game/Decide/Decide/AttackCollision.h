@@ -1,6 +1,5 @@
 #pragma once
 #include "fbEngine\_Object\_Component\_Physics\GostCollision.h"
-
 class AttackCollision : public GameObject
 {
 public:
@@ -15,29 +14,17 @@ public:
 	void Update()override;
 
 	// 攻撃判定用のコリジョン生成。
-	// 引数：	サイズ。
-	inline void Create(const Vector3& size) {
-		static_cast<BoxCollider*>(_Colider)->Create(size);		// コライダー生成。
-		_Gost->Create(_Colider,Collision_ID::ATTACK);	// ゴーストコリジョン生成。
-	}
-
-
-	// 攻撃判定用のコリジョン生成。
-	// 引数：	サイズ。
-	//			誰がコリジョンを生成したか。
-	inline void Create(const Vector3& size, CollisionMaster master) {
-		_master = master;
-		Create(size);
-	}
-
-	// 攻撃判定用のコリジョン生成。
-	// 引数：	サイズ。
+	// 引数：	位置。
+	//			回転(オイラー、単位はラジアン)。
+	//			サイズ。
 	//			誰がコリジョンを生成したか。
 	//			コリジョン寿命(0.0fより小さい値で無限)。
-	inline void Create(const Vector3& size, CollisionMaster master, float lifeTime) {
-		_lifeTime = lifeTime;
-		Create(size, master);
-	}
+	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
+	// 戻り値：	生成したコリジョン。
+	GostCollision* Create(const Vector3& pos, const Vector3& angle, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f, Transform* Parent = nullptr);
+private:	
+	// 衝突検出。
+	void DetectionCollision();
 
 private:
 	Collider* _Colider = nullptr;	// コリジョン形状。

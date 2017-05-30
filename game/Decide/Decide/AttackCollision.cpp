@@ -17,7 +17,7 @@ void AttackCollision::Update()
 	if (_lifeTime >= 0.0f && time > _lifeTime)
 	{
 		// 寿命が無限でないかつ寿命を過ぎた。
-			// 寿命が無限でない。
+		// かつ寿命が無限でない。
 
 			// 削除。
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
@@ -26,30 +26,50 @@ void AttackCollision::Update()
 		// 寿命がまだある。
 
 		// 衝突判定。
-		// ※衝突しているコリジョンをすべて取得する。
-		btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
-		for (int idx = 0; idx < collisions.size();idx++) {
-			switch (_master) {
-			case CollisionMaster::Player:
-				// プレイヤーが生成した攻撃。
-				if (collisions[idx]->getUserIndex() == Collision_ID::ENEMY) {
-					// 敵と衝突した。
-					static_cast<Player*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
-				}
-				break;
-			case CollisionMaster::Enemy:
-				// 雑魚敵が生成した攻撃。
-				if (collisions[idx]->getUserIndex() == Collision_ID::PLAYER) {
-					// プレイヤーと衝突した。
-					static_cast<EnemyCharacter*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
-				}
-				break;
-			case CollisionMaster::Other:
-				// その他が生成した攻撃。
-				// ※暫定。とりあえず何もしない。
-				break;
+		DetectionCollision();
+	}
+}
+
+void AttackCollision::DetectionCollision() {
+	// 衝突しているコリジョンをすべて取得する。
+	btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
+
+	for (int idx = 0; idx < collisions.size(); idx++) {
+		// 取得したコリジョンの情報を参照して対応するコールバックを呼び出す。
+
+		switch (_master) {
+		case CollisionMaster::Player:
+			// プレイヤーが生成した攻撃。
+			if (collisions[idx]->getUserIndex() == Collision_ID::ENEMY) {
+				// 敵と衝突した。
+				static_cast<EnemyCharacter*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
 			}
+			break;
+		case CollisionMaster::Enemy:
+			// 雑魚敵が生成した攻撃。
+			if (collisions[idx]->getUserIndex() == Collision_ID::PLAYER) {
+				// プレイヤーと衝突した。
+				static_cast<Player*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
+			}
+			break;
+		case CollisionMaster::Other:
+			// その他が生成した攻撃。
+			// ※暫定。とりあえず何もしない。
+			break;
 		}
 	}
 }
 
+GostCollision* AttackCollision::Create(const Vector3& pos, const Vector3& angle, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
+	_lifeTime = lifeTime;	// 寿命を保存。
+	_master = master;		// コリジョンの生成者を保存。
+	static_cast<BoxCollider*>(_Colider)->Create(size);		// コライダー生成(※とりあえず暫定的にボックス固定)。
+	if (Parent) {
+		transform->SetParent(Parent);
+	}
+	transform->SetLocalPosition(pos);
+	transform->SetLocalAngle(angle);
+	transform->UpdateTransform();
+	_Gost->Create(_Colider, Collision_ID::ATTACK);	// ゴーストコリジョン生成。
+	return _Gost;
+}
