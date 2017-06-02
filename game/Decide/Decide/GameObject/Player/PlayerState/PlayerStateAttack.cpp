@@ -33,7 +33,12 @@ void PlayerStateAttack::Update()
 	{
 		//攻撃コリジョン作成
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		attack->Create(player->transform->Local(Vector3::zero), player->transform->GetLocalAngle(),Vector3::one,AttackCollision::CollisionMaster::Player);
+		// ※テスト用(後で直してね)。
+		{
+			Quaternion rot;
+			rot = Quaternion::Identity;
+			attack->Create(Vector3(0.0f,0.0f,5.0f), rot/*player->transform->GetLocalAngle()*/, Vector3(1.0f,1.0f,5.0f)/*Vector3::one*/, AttackCollision::CollisionMaster::Player, -1.0f, player->transform);
+		}
 	}
 
 	if (player->GetAnimIsPlay() != true)

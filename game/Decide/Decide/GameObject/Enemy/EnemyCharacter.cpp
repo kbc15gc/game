@@ -88,7 +88,8 @@ void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& 
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack_enemy", priorty);
-		attack->Create(pos, angle,size,AttackCollision::CollisionMaster::Enemy,3.0f);
+		Quaternion rot = Quaternion::Identity;
+		attack->Create(pos, rot,size,AttackCollision::CollisionMaster::Enemy,-1.0f);
 	}
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "_Object\_Component\Component.h"
+#include "_Include\CollisionEnum.h"
 
 class ModelObject;
 //あたり判定の基底クラス
@@ -24,7 +25,7 @@ public:
 	//第二引数 Collider* あたり判定の形状
 	//第三引数 const int コリジョンに設定するID
 	//第四引数 Vector3& 基点からの移動量
-	void Create(btCollisionObject* collision, Collider* shape, const int& id,Vector3 offset = Vector3::zero);
+	void Create(btCollisionObject* collision, Collider* shape, const int& id = static_cast<int>(fbCollisionAttributeE::ALL),Vector3 offset = Vector3::zero);
 	btCollisionObject* GetCollisonObj() const
 	{
 		return _CollisionObject.get();
@@ -45,7 +46,7 @@ public:
 	// 全レイヤーマスクオン。
 	// すべてのコリジョンと当たり判定を行う。
 	inline void FilterMask_AllOn() {
-		SetFilterMask(btBroadphaseProxy::CollisionFilterGroups::AllFilter);
+		SetFilterMask(static_cast<int>(fbCollisionAttributeE::ALL));
 	}
 
 	// フィルターマスクに加算。

@@ -181,21 +181,21 @@ hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 			{
 				//始点から終点を0～1にした時のヒットした位置の割合。
 				_Fraction = m_closestHitFraction = fracTmp;
-				//ヒットしたコリジョン
-				m_collisionObject = rayResult.m_collisionObject;
-				if (normalInWorldSpace)
-				{
-					m_hitNormalWorld = rayResult.m_hitNormalLocal;
-				}
-				else
-				{
-					///need to Transform normal into worldspace
-					m_hitNormalWorld = m_collisionObject->getWorldTransform().getBasis()*rayResult.m_hitNormalLocal;
-				}
-				//ヒットした位置を取得
-				m_hitPointWorld.setInterpolate3(_fromPos, _toPos, rayResult.m_hitFraction);
-				//ヒットしたコリジョン取得
-				hitObject = (Collision*)m_collisionObject->getUserPointer();
+//ヒットしたコリジョン
+m_collisionObject = rayResult.m_collisionObject;
+if (normalInWorldSpace)
+{
+	m_hitNormalWorld = rayResult.m_hitNormalLocal;
+}
+else
+{
+	///need to Transform normal into worldspace
+	m_hitNormalWorld = m_collisionObject->getWorldTransform().getBasis()*rayResult.m_hitNormalLocal;
+}
+//ヒットした位置を取得
+m_hitPointWorld.setInterpolate3(_fromPos, _toPos, rayResult.m_hitFraction);
+//ヒットしたコリジョン取得
+hitObject = (Collision*)m_collisionObject->getUserPointer();
 			}
 			return rayResult.m_hitFraction;
 		}
@@ -270,16 +270,22 @@ hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 		Vector3 hitNormal = Vector3::zero;				//衝突点の法線。
 		btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 		float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
+		vector<unsigned int> Through_ID;		// 無視するコリジョン属性。
+		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
 
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject == me
-				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER
-				) {
+			if (convexResult.m_hitCollisionObject == me) {
 				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 				return 0.0f;
 			}
+
+			if ((_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0) {
+				// 衝突を取りたいコリジョンではなかった。
+				return 0.0f;
+			}
+
 			//衝突点の法線を引っ張ってくる。
 			Vector3 hitNormalTmp = *(Vector3*)&convexResult.m_hitNormalLocal;
 			//上方向と法線のなす角度を求める。
@@ -289,10 +295,6 @@ hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND //もしくはコリジョン属性が地面と指定されている。
 				) {
 
-				if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(5)) {
-					// ゴーストは無視。
-					return 0.0f;
-				}
 
 				//衝突している。
 				isHit = true;
@@ -322,17 +324,18 @@ hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 		float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 		Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
+		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
 
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject == me) {
-				//自分に衝突した。or 地面に衝突した。
+			if (convexResult.m_hitCollisionObject == me){
+				//自分に衝突した。
 				return 0.0f;
 			}
 
-			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(5)) {
-				// ゴーストは無視。
+			if ((_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0) {
+				// 衝突を取りたいコリジョンではなかった。
 				return 0.0f;
 			}
 

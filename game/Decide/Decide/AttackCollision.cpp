@@ -60,7 +60,7 @@ void AttackCollision::DetectionCollision() {
 	}
 }
 
-GostCollision* AttackCollision::Create(const Vector3& pos, const Vector3& angle, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
+GostCollision* AttackCollision::Create(const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
 	_lifeTime = lifeTime;	// 寿命を保存。
 	_master = master;		// コリジョンの生成者を保存。
 	static_cast<BoxCollider*>(_Colider)->Create(size);		// コライダー生成(※とりあえず暫定的にボックス固定)。
@@ -68,7 +68,8 @@ GostCollision* AttackCollision::Create(const Vector3& pos, const Vector3& angle,
 		transform->SetParent(Parent);
 	}
 	transform->SetLocalPosition(pos);
-	transform->SetLocalAngle(angle);
+	transform->SetLocalRotation(rotation);
+
 	transform->UpdateTransform();
 	_Gost->Create(_Colider, Collision_ID::ATTACK);	// ゴーストコリジョン生成。
 	return _Gost;

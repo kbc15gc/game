@@ -174,9 +174,25 @@ void Transform::UpdateWolrdMatrix()
 	}
 }
 
+Vector3 Transform::GetRight()
+{
+	Vector3 right(_WorldMatrix.m[0][0], _WorldMatrix.m[0][1], _WorldMatrix.m[0][2]);
+	right.Normalize();
+	return right;	// ワールド行列のX成分を返す。
+}
+
+Vector3 Transform::GetUp()
+{
+	Vector3 up(_WorldMatrix.m[1][0], _WorldMatrix.m[1][1], _WorldMatrix.m[1][2]);
+	up.Normalize();
+	return up;	// ワールド行列のY成分を返す。
+}
+
 Vector3 Transform::GetForward()
 {
-	return Direction(Vector3::front);
+	Vector3 forward(_WorldMatrix.m[2][0], _WorldMatrix.m[2][1], _WorldMatrix.m[2][2]);
+	forward.Normalize();
+	return forward;/*Direction(Vector3::front)*/;	// ワールド行列のZ成分を返す。
 }
 
 Vector3 Transform::Direction(const Vector3& v)
@@ -287,11 +303,13 @@ void Transform::SetParent(Transform * _Parent)
 	//親に登録
 	this->_Parent = _Parent;
 	//親の子に自分を登録
-	_Parent->_Children.push_back(this);
+	if (_Parent) {
+		// 親が設定された。
+		_Parent->_Children.push_back(this);
+		//親の設定を取得
+		gameObject->SetDiscard(_Parent->gameObject->GetDiscard());
+	}
 	UpdateTransform();
-
-	//親の設定を取得
-	gameObject->SetDiscard(_Parent->gameObject->GetDiscard());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

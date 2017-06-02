@@ -18,24 +18,21 @@ public:
 	~Collider();
 
 	// コライダーの形状を視覚化するためのモデルを生成する関数。
-	// 引数：	コライダーをアタッチするオブジェクト(自動的にこのオブジェクトと親子関係を形成する,nullだと親子関係を持たないコライダーとなる)。
-	//			コリジョンオブジェクト。
-	//			モデルの中心点とコリジョンの中心点の差分。
-	void CreateViewModel(GameObject* Parent,btCollisionObject* CollisionObject, const Vector3& Offset);
-	// コライダーの形状を視覚化するためのモデルを生成する関数。
-	// 引数：	コライダーをアタッチするオブジェクト(自動的にこのオブジェクトと親子関係を形成する,nullだと親子関係を持たないコライダーとなる)。
-	//			Transform情報。
-	//			モデルの中心点とコリジョンの中心点の差分。
-	void CreateViewModel(GameObject* Parent, const btTransform& Transform, const Vector3& Offset);
-
+	// 引数：	コリジョンのTransform情報。
+	void CreateViewModel(const btTransform& collisionTr);
+	// コリジョン描画用モデルのTransform情報更新。
+	void UpdateTransform(const btTransform& collisionTr);
 private:
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。
-	virtual void ColliderModelLoad() {}/* = 0*/;
+	virtual void ColliderModelLoad() = 0;
 
 public:
 	virtual btCollisionShape* GetBody() = 0 ;
 protected:
 	//当たり判定を視覚化した3Dオブジェクト。
 	ModelObject* _CollisionModel = nullptr;
+	Vector3 _CollisionModelOffset = Vector3::zero;	// コリジョン視覚化用モデルの中心点とコリジョンの中心点の差分(継承先によって変更)。
+private:
+	unique_ptr<Transform> _CollisionTr;	// コリジョンのTransform情報。
 };

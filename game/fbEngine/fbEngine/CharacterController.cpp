@@ -5,14 +5,17 @@
 #include "CharacterController.h"
 #include "_Object\_Component\_Physics\Collider.h"
 
-void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity)
+void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity, int attributeXZ, int attributeY)
 {
 	//コリジョン作成。
 	m_radius = radius;
 	m_height = height;
 	//重力設定。
 	SetGravity(gravity);
-	//m_collider->Create(radius, height);
+
+	// 衝突を検出したい属性を設定。
+	m_attributeXZ = attributeXZ;
+	m_attributeY = attributeY;
 
 	m_rigidBody.reset(new RigidBody(Object, tramsform));
 	m_rigidBody->Awake();
@@ -23,19 +26,7 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 
 
 	m_collider = capsule;
-	// コリジョンを視覚化する処理。
-	m_collider->CreateViewModel(gameObject,m_rigidBody->GetCollisonObj(),Vector3::zero);
 
-	//剛体を初期化。
-	//RigidBodyInfo rbInfo;
-	//rbInfo.collider = m_collider;
-	//rbInfo.mass = 0.0f;
-	//m_rigidBody->Create(0.0f, m_collider, 5);
-	//btTransform& trans = m_rigidBody->GetCollisonObj()->getWorldTransform();
-	////剛体の位置を更新。
-	//trans.setOrigin(btVector3(transform->position.x, transform->position.y, transform->position.z));
-	////@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-	//m_rigidBody->GetCollisonObj()->setUserIndex(enCollisionAttr_Character);
 	m_rigidBody->GetCollisonObj()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 }
 void CCharacterController::Execute()
@@ -79,6 +70,7 @@ void CCharacterController::Execute()
 				fbPhysicsCallback::SweepResultWall callback;
 				callback.me = m_rigidBody->GetCollisonObj();
 				callback.startPos = posTmp;
+				callback._attribute = m_attributeXZ;
 				//衝突検出。
 				PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 
@@ -125,7 +117,8 @@ void CCharacterController::Execute()
 		addPos.Subtract(nextPosition, transform->GetLocalPosition());
 
 		transform->SetLocalPosition(nextPosition);	//移動の仮確定。
-											//レイを作成する。
+
+		//レイを作成する。
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
@@ -155,6 +148,7 @@ void CCharacterController::Execute()
 		fbPhysicsCallback::SweepResultGround callback;
 		callback.me = m_rigidBody->GetCollisonObj();
 		callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
+		callback._attribute = m_attributeY;
 		//スタートとエンドの差
 		btVector3 Sub = start.getOrigin() - end.getOrigin();
 		//差が0.0001以上なら衝突検出します
