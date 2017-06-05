@@ -19,7 +19,7 @@ void AburaChip::Awake()
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("AburaChip.X"));
 	model->SetModelData(modeldata);
-	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+	model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
 
 	transform->SetLocalPosition(Vector3(10.0f, 6.0f, 0.0f));
 	transform->SetLocalScale(Vector3::one);

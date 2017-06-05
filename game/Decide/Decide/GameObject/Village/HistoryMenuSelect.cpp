@@ -16,6 +16,10 @@ HistoryMenuSelect::~HistoryMenuSelect()
 {
 }
 
+void HistoryMenuSelect::Awake()
+{
+}
+
 void HistoryMenuSelect::Start()
 {
 }
@@ -81,4 +85,14 @@ void HistoryMenuSelect::AburaSelect()
 
 	//ç≈èâÇÕï\é¶ÇµÇ»Ç¢ÇΩÇﬂFALSE
 	_SetMenuEnabel(false);
+}
+
+void HistoryMenuSelect::MenuSelectNumber()
+{
+	/*switch (_MenuNomber)
+	{
+	case MenuNomber::One:
+		break;
+	
+	}*/
 }

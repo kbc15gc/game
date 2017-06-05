@@ -19,7 +19,7 @@ void TetuChip::Awake()
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("tetuchip.X"));
 	model->SetModelData(modeldata);
-	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+	model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
 
 	transform->SetLocalPosition(Vector3(50.0f, 6.0f, 0.0f));
 	transform->SetLocalScale(Vector3::one);
