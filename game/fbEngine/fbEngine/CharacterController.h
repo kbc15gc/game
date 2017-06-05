@@ -4,6 +4,7 @@
 #pragma once
 
 #include "_Object\_Component\Component.h"
+#include "_Include\CollisionEnum.h"
 
 /*!
 * @brief	キャラクタコントローラー。
@@ -19,6 +20,7 @@ public:
 	{
 
 	}
+
 	/*!
 	* @brief	初期化。
 	* param		ゲームオブジェクト
@@ -29,8 +31,11 @@ public:
 	*			コリジョンの属性。
 	*			コリジョン形状。
 	*			重力
+	*			衝突を取りたい属性(左右方向、レイヤーマスクなのでビット演算)。
+	*			衝突を取りたい属性(上下方向、レイヤーマスクなのでビット演算)。
 	*/
-	void Init(GameObject* Object,Transform* tramsform,float radius, float height, Vector3 off , int, Collider* capsule , float gravity);
+	void Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off , int type, Collider* capsule , float gravity,int attributeXZ = -1, int attributeY = -1/*static_cast<int>(fbCollisionAttributeE::ALL)*/);
+	
 	/*!
 	* @brief	実行。
 	*/
@@ -96,6 +101,60 @@ public:
 	* @brief	剛体を物理エンジンから削除。。
 	*/
 	void RemoveRigidBoby();
+
+	// 全レイヤーマスクオフ(左右)。
+	// すべての衝突を無視。
+	inline void AttributeXZ_AllOff() {
+		SetAttributeXZ(0x00000000);
+	}
+	// 全レイヤーマスクオフ(上下)。
+	// すべての衝突を無視。
+	inline void AttributeY_AllOff() {
+		SetAttributeY(0x00000000);
+	}
+
+	// 全レイヤーマスクオン(左右)。
+	// すべてのコリジョンと当たり判定を行う。
+	inline void AttributeXZ_AllOn() {
+		SetAttributeXZ(static_cast<int>(fbCollisionAttributeE::ALL));
+	}
+	// 全レイヤーマスクオン(上下)。
+	// すべてのコリジョンと当たり判定を行う。
+	inline void AttributeY_AllOn() {
+		SetAttributeY(static_cast<int>(fbCollisionAttributeE::ALL));
+	}
+
+	// フィルターマスクに加算(左右)。
+	inline void AddAttributeXZ(short bit) {
+		SetAttributeXZ(m_attributeXZ | bit);
+	}
+	// フィルターマスクに加算(上下)。
+	inline void AddAttributeY(short bit) {
+		SetAttributeY(m_attributeY | bit);
+	}
+
+	// フィルターマスクから減算(左右)。
+	inline void SubAttributeXZ(short bit) {
+		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
+		bit = ~bit;
+		SetAttributeXZ(m_attributeXZ & bit);
+	}
+	// フィルターマスクから減算(上下)。
+	inline void SubAttributeY(short bit) {
+		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
+		bit = ~bit;
+		SetAttributeY(m_attributeY & bit);
+	}
+
+	// 衝突を取りたい属性を設定(左右)。
+	inline void SetAttributeXZ(short mask) {
+		m_attributeXZ = mask;
+	}
+	// 衝突を取りたい属性を設定(上下)。
+	inline void SetAttributeY(short mask) {
+		m_attributeY = mask;
+	}
+
 private:
 	Vector3 				m_moveSpeed = Vector3::zero;	//移動速度。 
 	bool 					m_isJump = false;				//ジャンプ中？
@@ -105,4 +164,6 @@ private:
 	float					m_height = 0.0f;				//高さ。
 	unique_ptr<RigidBody>	m_rigidBody = nullptr;			//剛体。
 	float					m_gravity = -9.8f;				//重力。
+	int						m_attributeXZ;					// 衝突を取りたい属性(左右方向)。
+	int						m_attributeY;					// 衝突を取りたい属性(上下方向)。
 };

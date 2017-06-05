@@ -73,3 +73,24 @@ void ObjectRotation::RotationToObject_XZ(const GameObject& Object) {
 		////}
 	}
 }
+
+void ObjectRotation::RotationToDirection_XZ(const Vector3& dir) {
+	// 向かせたい向きのXとZから回転角度を求める。
+	// ※求まるのは絶対角度。
+	float angle = atan2f(dir.x, dir.z);
+	// クォータニオン作成。
+	Quaternion Rota = Quaternion::Identity;
+	Rota.SetRotation(Vector3::axisY, angle);
+
+	// クォータニオン設定。
+	gameObject->transform->SetRotation(Rota);
+}
+
+void ObjectRotation::RotationAxis(const Vector3& axis, float angle) {
+	Quaternion quat;
+	quat = Quaternion::Identity;
+	quat.SetRotation(axis, angle);
+	Quaternion rot = gameObject->transform->GetRotation();
+	rot.Multiply(quat);
+	gameObject->transform->SetLocalRotation(rot);
+}

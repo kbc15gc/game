@@ -3,20 +3,32 @@
 
 namespace
 {
+	//NPCのタイプ
+	enum NPCTypeE : int
+	{
+		VILLAGER,   //普通の村人
+		SHOP,       //店員
+	};
 	//オブジェクトの情報
 	struct NPCInfo : public ObjectInfo
 	{
+	public:
+		NPCTypeE NPCType = NPCTypeE::VILLAGER;
+		//店のID
+		int ShopID = -1;
 		int MesseageID;	//メッセージのID
 		bool ShowTitle;	//タイトルを見せるかどうか？
 	};
 
 	//メンバ変数の情報設定
-	const Support::DATARECORD NPCInfoData[6] =
+	const Support::DATARECORD NPCInfoData[] =
 	{
 		{ "filename",Support::DataTypeE::STRING, offsetof(struct NPCInfo,filename),sizeof(char) * 256 },
 		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,pos),sizeof(Vector3) },
 		{ "ang",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,ang),sizeof(Vector3) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,sca),sizeof(Vector3) },
+		{ "NPCType",Support::DataTypeE::INT, offsetof(struct NPCInfo,NPCType),sizeof(NPCTypeE) },
+		{ "ShopID",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShopID),sizeof(int) },
 		{ "MesseageID",Support::DataTypeE::INT, offsetof(struct NPCInfo,MesseageID),sizeof(int) },
 		{ "ShowTitle",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShowTitle),sizeof(bool) },
 	};
@@ -33,9 +45,13 @@ public:
 	~NPC();
 	void Awake()override;
 	void Update()override;
-	void SetMesseage(const int& id,const bool show);
 	void LateUpdate()override;
-private:
+
+	void SetMesseage(const int& id, const bool show);
+protected:
+	//話す
+	void _Speak();
+protected:
 	//NPCの身長(モデルのサイズを計算してもいいかもしれない。)
 	float _Height;
 	//テキストボックス

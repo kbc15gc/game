@@ -31,6 +31,15 @@ public:
 		_MoveSpeed = speed;
 	}
 
+	// この関数でtrueを設定すると、徘徊範囲外に出たらステートを終了するようになる。
+	inline void SetIsWandering(bool flg) {
+		_isWandering = flg;
+	}
+
+	// 徘徊範囲外に出たか返却
+	inline bool GetIsOutsideRange() const {
+		return _isOutsideRange;
+	}
 private:
 	void _EntrySubClass()override;
 
@@ -44,7 +53,8 @@ private:
 	Vector3 _Direction;	// 進む方向。
 	float _MoveLength;	// 移動量。
 	float _MoveSpeed;	// 移動するスピード(毎秒)。
-
+	bool _isOutsideRange = false;
 	// 以下作業用。
 	Vector3 _InitPos;	// 初期位置。
+	bool _isWandering = false;	// 徘徊中の直進か。
 };

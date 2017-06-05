@@ -79,9 +79,9 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	//スカイボックスはビュー行列をかけない。
 	if (!SkyBox)
 	{
-		pos = mul(float4(pos.xyz, 1.0f), g_viewMatrix);			//ワールド空間からビュー空間に変換。
+		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	}
-	pos = mul(float4(pos.xyz, 1.0f), g_projectionMatrix );	//ビュー空間から射影空間に変換。
+	pos = mul(pos, g_projectionMatrix );	//ビュー空間から射影空間に変換。
 	Out._Pos = pos;
 	Out._World.w = pos.w;
 
@@ -163,8 +163,6 @@ PSOutput PSMain(VS_OUTPUT In)
 		//影になっている.
 		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
 	}
-
-	//color.rgb *= light.rgb + g_ambientLight.rgb;
 
 	//ライトをかける
 	color.rgb *= light.rgb;
@@ -314,34 +312,21 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	//ディフューズライト
 	float4 light = DiffuseLight(normal);
 
-	float3 cascadeColor = 0;
+	float3 cascadeColor = 1;
 
 	if (g_EffectFlg.x)
 	{
 		//影になっている.
 		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
+
 	}
 
 	color.rgb *= light.rgb;
 
-	////大気錯乱。
-	////color = In.rayColor + color * In.mieColor;
-
-	////ポイントライト。
-	//color.xyz += diffuseColor.xyz * PointLight(normal, In._World.xyz, 0);
 	////アンビエントライトを加算。
-	color.xyz += diffuseColor.xyz * g_light.ambient.xyz;
+	color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
 
-	//PSOutput psOut = (PSOutput)0;
-	//psOut.velocity.xy = In.velocity.xy / In.velocity.w - In.screenPos.xy / In.screenPos.w;
-	//psOut.velocity.xy *= 0.5f;
-	//psOut.velocity.xy += 0.5f;
-	//psOut.velocity.zw = 0.0f;
-
-	//psOut.color = color;
-	//psOut.depth = In._World.w;
-
-	//return psOut;
+	color.xyz *= cascadeColor;
 
 	PSOutput Out = (PSOutput)0;
 
@@ -362,99 +347,10 @@ technique TerrainRender
 }
 
 //////////////////////////////////////////////////////////////
-//事前描画
-
-struct PS_PreOUTPUT {
-	float4	_Color	: COLOR0;		//色
-	float4	_Depth	: COLOR1;		//深度
-	float4	_Luminance	: COLOR2;	//輝度
-};
-
-PS_PreOUTPUT PSPre(VS_OUTPUT In)
-{
-	PS_PreOUTPUT o = (PS_PreOUTPUT)0;	//最終的に出力するカラー
-	float4 diff = (float4)0;			//メッシュのマテリアル
-	float4 color = (float4)0;
-	float3 normal = normalize(In._Normal.xyz);
-	//カラー
-	if (Texflg)
-	{
-		if (SkyBox)
-		{
-
-			//反転しているので-1をかけて法線をもどす
-			o._Color = texCUBE(g_cubeSampler, In._Normal * -1.0f);
-			return o;
-		}
-		else
-		{
-			diff = tex2D(g_TextureSampler, In._UV) * g_Textureblendcolor;
-		}
-	}
-	else
-	{
-		//マテリアルの色そのまま
-		diff = g_diffuseMaterial;
-	}
-	diff *= g_blendcolor;
-	color = diff;
-
-	float4 light = (float4)0;
-
-	//デフューズライトを計算。
-	light = DiffuseLight(normal);
-
-	//スペキュラーライト
-	if (Spec)
-	{
-		float3 spec = 0.0f;
-		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World.xyz);
-		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
-		for (int i = 0; i < g_LightNum; i++)
-		{
-			//スペキュラ成分を計算する。
-			//反射ベクトルを計算。
-			float3 L = -g_diffuseLightDirection[i].xyz;
-			spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[i].w;	//スペキュラ強度。
-		}
-
-		light.rgb += spec.xyz;
-	}
-
-	float3 cascadeColor = 0;
-
-	if (g_EffectFlg.x)
-	{
-		//影になっている.
-		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
-	}
-	//影になっていない。
-
-	o._Color.rgb *= light.rgb + g_ambientLight.rgb;
-	o._Color.rgb *= cascadeColor;
-
-	//ライトをかける
-	//color.rgb *= light.rgb;
-	//アンビエントライトを加算。
-	//color.rgb += diff.rgb * g_ambientLight.rgb;
-
-	return o;
-}
-
-technique PreRender
-{
-	pass p0
-	{
-		VertexShader = compile vs_3_0 VSMain();
-		PixelShader = compile ps_3_0 PSPre();
-	}
-}
-
-//////////////////////////////////////////////////////////////
 //影描画用
 
 struct VS_ShadowOUT {
-	float4	_Pos		: POSITION;
+	float4	_Pos	: POSITION;
 	float4	_Shadow	: TEXCOORD;
 };
 
@@ -462,33 +358,25 @@ VS_ShadowOUT VSShadow(float4 Pos : POSITION)
 {
 	VS_ShadowOUT Out = (VS_ShadowOUT)0;
 
-	float4 pos;
-	pos = mul(Pos, g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
+	float4 pos = Pos;
+	pos = mul(pos, g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
 	pos = mul(pos, g_viewMatrix);		//ワールド空間からビュー空間に変換。
 	pos = mul(pos, g_projectionMatrix);	//ビュー空間から射影空間に変換。
-
 	Out._Shadow = Out._Pos = pos;
 
 	return Out;
 }
 
-float4 PSShadow(VS_ShadowOUT In) : COLOR0	//レンダーターゲット0に出力
+float4 PSShadow(VS_ShadowOUT In) : COLOR	//レンダーターゲット0に出力
 {
-	//深度
-	float depth = 0.0f;
-
 	//深度は射影変換済みの頂点の Z / W で算出できる
-	depth = In._Shadow.z / In._Shadow.w;
+	//深度
+	float z = In._Shadow.z / In._Shadow.w;
 
-	float dx = ddx(depth);
-	float dy = ddy(depth);
+	float dx = ddx(z);
+	float dy = ddy(z);
 
-	float4 ret = (float4)0;
-	ret.x = depth;
-	ret.y = depth * depth + 0.25f * (dx * dx + dy * dy);
-	ret.z = 0.0f;
-	ret.w = 1.0f;
-	return ret;
+	return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, 1.0f);
 }
 
 technique Shadow

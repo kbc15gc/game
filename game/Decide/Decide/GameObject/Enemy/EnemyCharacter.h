@@ -4,6 +4,7 @@
 #include "SearchViewAngle.h"
 #include "../Component/ObjectRotation.h"
 #include "fbEngine\CharacterController.h"
+#include "AttackCollision.h"
 
 class SkinModel;
 class Animation;
@@ -73,6 +74,19 @@ public:
 		_MyComponent.RotationAction->RotationToObject_XZ(Object);
 	}
 
+	// エネミーを指定した方向に向かせる処理(補間なし)。
+	// 引数：	向きベクトル。
+	inline void LookAtDirection(const Vector3& dir) {
+		_MyComponent.RotationAction->RotationToDirection_XZ(dir);
+	}
+
+	// エネミーを指定した軸と角度を用いて回転する関数。
+	// 引数：	軸(単位ベクトル)。
+	//			回転角度(ラジアン)。
+	inline void RotationAxis(const Vector3& axis, float angle) {
+		_MyComponent.RotationAction->RotationAxis(axis, angle);
+	}
+
 	// 攻撃処理を決定する関数。
 	// ※継承先で実装。
 	// ※複数攻撃パターンがある場合はここでローカルステートに遷移する際に分岐させる。
@@ -104,6 +118,19 @@ public:
 	// エネミーがアニメーションを再生しているか。
 	inline bool GetIsPlaying() {
 		return _MyComponent.Animation->GetPlaying();
+	}
+
+	// エネミーが徘徊範囲外に出たか判定。
+	bool IsOutsideWandering();
+
+	// 引数の値を加算した結果、エネミーが徘徊範囲外に出たか判定。
+	bool IsOutsideWandering(const Vector3& Add);
+
+	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollision(AttackCollision* hitCollision) {
+		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 	}
 
 	// ステート処理中にステートを割り込みで切り替える関数。
@@ -154,6 +181,23 @@ public:
 	// 攻撃可能範囲取得。
 	inline float GetAttackRange()const {
 		return _AttackRange;
+	}
+
+	// 徘徊範囲返却。
+	inline float GetWanderingRange()const {
+		return _WanderingRange;
+	}
+
+	// 初期位置から現在の位置の移動量を返却(Y成分無視)。
+	inline float GetInitToNowPosRange_XZ()const {
+		Vector3 vec(_InitPos - transform->GetPosition());
+		vec.y = 0.0f;
+		return vec.Length();
+	}
+
+	// 初期位置から現在位置へのベクトルを返却。
+	inline const Vector3& GetInitToNowPosVec() const {
+		return transform->GetPosition() - _InitPos;
 	}
 
 	// 初期位置取得。
@@ -247,6 +291,8 @@ protected:
 	float _ViewRange = 0.0f;		// 見える距離。
 
 	float _AttackRange = 0.0f;	// 攻撃可能範囲。
+
+	float _WanderingRange = 0.0f;	// 徘徊範囲。
 private:
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 

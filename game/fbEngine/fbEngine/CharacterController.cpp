@@ -3,17 +3,22 @@
 */
 #include"fbstdafx.h"
 #include "CharacterController.h"
+#include "_Object\_Component\_Physics\Collider.h"
 
-void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity)
+void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity, int attributeXZ, int attributeY)
 {
 	//コリジョン作成。
 	m_radius = radius;
 	m_height = height;
-	//重力設定
+	//重力設定。
 	SetGravity(gravity);
-	//m_collider->Create(radius, height);
+
+	// 衝突を検出したい属性を設定。
+	m_attributeXZ = attributeXZ;
+	m_attributeY = attributeY;
 
 	m_rigidBody.reset(new RigidBody(Object, tramsform));
+	m_rigidBody->Awake();
 	//リジッドボディ作成
 	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off);
 	//スリープさせない(必要かどうかわからない。)
@@ -21,18 +26,8 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 
 
 	m_collider = capsule;
-	//剛体を初期化。
-	//RigidBodyInfo rbInfo;
-	//rbInfo.collider = m_collider;
-	//rbInfo.mass = 0.0f;
-	//m_rigidBody->Create(0.0f, m_collider, 5);
-	//btTransform& trans = m_rigidBody->GetCollisonObj()->getWorldTransform();
-	////剛体の位置を更新。
-	//trans.setOrigin(btVector3(transform->position.x, transform->position.y, transform->position.z));
-	////@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-	//m_rigidBody->GetCollisonObj()->setUserIndex(enCollisionAttr_Character);
+
 	m_rigidBody->GetCollisonObj()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	//PhysicsWorld::Instance()->AddRigidBody(m_rigidBody);
 }
 void CCharacterController::Execute()
 {
@@ -54,59 +49,62 @@ void CCharacterController::Execute()
 			addPos.Subtract(nextPosition, transform->GetLocalPosition());
 			Vector3 addPosXZ = addPos;
 			addPosXZ.y = 0.0f;
-			if (addPosXZ.Length() < FLT_EPSILON) {
+			if (addPosXZ.Length() /*<*/ > FLT_EPSILON) {
 				//XZ平面で動きがないので調べる必要なし。
 				//FLT_EPSILONは1より大きい、最小の値との差分を表す定数。
 				//とても小さい値のことです。
-				break;
-			}
+			//	break;
+			//}
 			//カプセルコライダーの中心座標 + 0.2の座標をposTmpに求める。
-			Vector3 posTmp = transform->GetPosition();
-			posTmp.y += m_height * 0.5f + m_radius + 0.2f;
-			//レイを作成。
-			btTransform start, end;
-			start.setIdentity();
-			end.setIdentity();
-			//始点はカプセルコライダーの中心座標 + 0.2の座標をposTmpに求める。
-			start.setOrigin(btVector3(posTmp.x, posTmp.y, posTmp.z));
-			//終点は次の移動先。XZ平面での衝突を調べるので、yはposTmp.yを設定する。
-			end.setOrigin(btVector3(nextPosition.x, posTmp.y, nextPosition.z));
+				Vector3 posTmp = transform->GetPosition();
+				posTmp.y += m_height * 0.5f + m_radius + 0.2f;
+				//レイを作成。
+				btTransform start, end;
+				start.setIdentity();
+				end.setIdentity();
+				//始点はカプセルコライダーの中心座標 + 0.2の座標をposTmpに求める。
+				start.setOrigin(btVector3(posTmp.x, posTmp.y, posTmp.z));
+				//終点は次の移動先。XZ平面での衝突を調べるので、yはposTmp.yを設定する。
+				end.setOrigin(btVector3(nextPosition.x, posTmp.y, nextPosition.z));
 
-			fbPhysicsCallback::SweepResultWall callback;
-			callback.me = m_rigidBody->GetCollisonObj();
-			callback.startPos = posTmp;
-			//衝突検出。
-			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
+				fbPhysicsCallback::SweepResultWall callback;
+				callback.me = m_rigidBody->GetCollisonObj();
+				callback.startPos = posTmp;
+				callback._attribute = m_attributeXZ;
+				//衝突検出。
+				PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 
-			if (callback.isHit) {
-				//当たった。
-				//壁。
-				Vector3 vT0, vT1;
-				//XZ平面上での移動後の座標をvT0に、交点の座標をvT1に設定する。
-				vT0.Set(nextPosition.x, 0.0f, nextPosition.z);
-				vT1.Set(callback.hitPos.x, 0.0f, callback.hitPos.z);
-				//めり込みが発生している移動ベクトルを求める。
-				Vector3 vMerikomi;
-				vMerikomi.Subtract(vT0, vT1);
-				//XZ平面での衝突した壁の法線を求める。。
-				Vector3 hitNormalXZ = callback.hitNormal;
-				hitNormalXZ.y = 0.0f;
-				hitNormalXZ.Normalize();
-				//めり込みベクトルを壁の法線に射影する。
-				float fT0 = hitNormalXZ.Dot(vMerikomi);
-				//押し戻し返すベクトルを求める。
-				//押し返すベクトルは壁の法線に射影されためり込みベクトル+半径。
-				Vector3 vOffset;
-				vOffset = hitNormalXZ;
-				vOffset.Scale(-fT0 + m_radius);
-				nextPosition.Add(vOffset);
-			}
-			else {
-				//どことも当たらないので終わり。
-				break;
+				if (callback.isHit) {
+					//当たった。
+					//壁。
+
+					Vector3 vT0, vT1;
+					//XZ平面上での移動後の座標をvT0に、交点の座標をvT1に設定する。
+					vT0.Set(nextPosition.x, 0.0f, nextPosition.z);
+					vT1.Set(callback.hitPos.x, 0.0f, callback.hitPos.z);
+					//めり込みが発生している移動ベクトルを求める。
+					Vector3 vMerikomi;
+					vMerikomi.Subtract(vT0, vT1);
+					//XZ平面での衝突した壁の法線を求める。。
+					Vector3 hitNormalXZ = callback.hitNormal;
+					hitNormalXZ.y = 0.0f;
+					hitNormalXZ.Normalize();
+					//めり込みベクトルを壁の法線に射影する。
+					float fT0 = hitNormalXZ.Dot(vMerikomi);
+					//押し戻し返すベクトルを求める。
+					//押し返すベクトルは壁の法線に射影されためり込みベクトル+半径。
+					Vector3 vOffset;
+					vOffset = hitNormalXZ;
+					vOffset.Scale(-fT0 + m_radius);
+					nextPosition.Add(vOffset);
+				}
+				else {
+					//どことも当たらないので終わり。
+					break;
+				}
 			}
 			loopCount++;
-			if (loopCount == 5) {
+			if (loopCount >= 5) {
 				break;
 			}
 		}
@@ -119,7 +117,8 @@ void CCharacterController::Execute()
 		addPos.Subtract(nextPosition, transform->GetLocalPosition());
 
 		transform->SetLocalPosition(nextPosition);	//移動の仮確定。
-											//レイを作成する。
+
+		//レイを作成する。
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
@@ -149,24 +148,34 @@ void CCharacterController::Execute()
 		fbPhysicsCallback::SweepResultGround callback;
 		callback.me = m_rigidBody->GetCollisonObj();
 		callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
+		callback._attribute = m_attributeY;
 		//スタートとエンドの差
 		btVector3 Sub = start.getOrigin() - end.getOrigin();
 		//差が0.0001以上なら衝突検出します
 		if (fabs(Sub.length()) > 0.0001f)
 		{
 			//衝突検出。
+			//int LoopCount = 0;
+			//while (true) {
 			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 			if (callback.isHit) {
 				//当たった。
-				//当たった。
+
 				m_moveSpeed.y = 0.0f;
 				m_isJump = false;
 				m_isOnGround = true;
 				nextPosition.y = callback.hitPos.y;
+
+				//break;
+			//LoopCount++;
+			//if (LoopCount >= 5) {
+			//	break;
+			//}
 			}
 			else {
 				//地面上にいない。
 				m_isOnGround = false;
+				//break;
 			}
 		}
 	}
@@ -185,5 +194,6 @@ void CCharacterController::Execute()
 */
 void CCharacterController::RemoveRigidBoby()
 {
-	PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
+	m_rigidBody.reset(nullptr);
+	//PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
 }

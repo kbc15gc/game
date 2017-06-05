@@ -25,4 +25,5 @@ private:
 private:
 	GameObject* _Player = nullptr;
 	float _Speed = 0.0f;	// ˆÚ“®‘¬“xB
+	bool _isOutside = false;
 };

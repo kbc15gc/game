@@ -24,9 +24,12 @@ void EnemyAttackState::_UpdateSubClass() {
 	// ※暫定処理。
 	// ※エネミーは複数種類いる可能性があるため、モーションによってコリジョン発生位置やタイミングを変える必要がある。
 	const int eventFrame = 10;
+	Vector3 pos = _EnemyObject->transform->GetPosition();
+	pos += _EnemyObject->transform->GetForward() * 1.0f;
+	pos.y += 0.5f;
 	_EnemyObject->CreateAttackCollision(
 		eventFrame,
-		_EnemyObject->transform->GetPosition() + _EnemyObject->transform->GetForward() * 0.5f,
+		pos,
 		Vector3::zero,
 		Vector3::one);
 

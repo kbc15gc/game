@@ -23,7 +23,7 @@
 #include "GameObject\HistoryBook\HistoryBook.h"
 #include "GameObject\Village\HistoryMenuSelect.h"
 
-
+#include "GameObject\Village\Shop.h"
 ImageObject* g_depth;
 
 void GameScene::Start()
@@ -39,7 +39,7 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//プレイヤー生成
-	INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	//火の歴史チップ
@@ -51,18 +51,23 @@ void GameScene::Start()
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	HistoryBook* book = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 	//メニューセレクト
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenuSelect>("HistoryMenuSelect", 9);
 
 	g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(0));
 	g_depth->SetPivot(Vector2(0, 0));
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
 	g_depth->SetActive(false);
 
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
+
+	//歴史書の親にプレイヤーを設定。
+	book->transform->SetParent(player->transform);
+
+	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 
 }
 

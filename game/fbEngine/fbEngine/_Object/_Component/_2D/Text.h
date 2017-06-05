@@ -27,13 +27,26 @@ namespace fbText
 class Text : public Component
 {
 public:
+	//テキストの初期化に使うパラメータ
+	struct TextParameter
+	{
+	public:
+		char* String = "";
+		float FontSize = 40.0f;
+		Color Color = Color::white;
+		fbSprite::SpriteEffectE EffectFlg = fbSprite::SpriteEffectE::NONE;
+		char* Style = "ＭＳ 明朝";
+		unsigned int Format = (unsigned int)fbText::TextFormatE::CENTER;
+	};
+public:
 	Text(GameObject* g, Transform* t);
 	void Awake()override;
 	void PreRender()override;
 	void ImageRender()override;
-	//フォントスタイルを文字列で指定
+	//一括初期化
 	void Initialize(const wchar_t* string, const float& size, const Color& color = Color::white,
 		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "ＭＳ 明朝", const unsigned int& format = (int)fbText::TextFormatE::CENTER);
+	void Initialize(const TextParameter& param);
 	//文字列セット
 	void SetString(const wchar_t* s);
 	void SetString(const char* s);

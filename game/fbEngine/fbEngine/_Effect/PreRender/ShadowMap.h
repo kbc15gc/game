@@ -4,6 +4,7 @@
 #pragma once
 
 #include"_Effect\Blur.h"
+#include"_Object\_Component\_3D\Camera.h"
 
 /**
 * シャドウマップクラス.
@@ -22,10 +23,8 @@ public:
 	{
 	public:
 
-		/** ライトビュー行列. */
-		D3DXMATRIX _LVMatrix;
-		/** ライトプロジェクション行列. */
-		D3DXMATRIX _LPMatrix[SHADOWMAP_NUM];
+		/** ライトビュープロジェクション行列. */
+		D3DXMATRIX _LVPMatrix[SHADOWMAP_NUM];
 		/** シャドウマップテクスチャの数. */
 		int _ShadowMapNum = SHADOWMAP_NUM;
 
@@ -96,7 +95,7 @@ public:
 	*/
 	D3DXMATRIX* GetLVMatrix()
 	{
-		return &_LVMatrix;
+		return &_LVMatrix[_NowRenderShadowMap];
 	}
 
 	/**
@@ -136,13 +135,38 @@ public:
 		return _ShadowMapRT[idx].texture;
 	}
 
+	///**
+	//* 一枚目のテクスチャのサイズを取得.
+	//*/
+	//const Vector2& GetSize()
+	//{
+	//	return _ShadowArea[0];
+	//}
+
 	/**
-	* 一枚目のテクスチャのサイズを取得.
+	* カメラのポインタを設定.
 	*/
-	const Vector2& GetSize()
+	void SetCamera(Camera* camera)
 	{
-		return _ShadowArea[0];
+		_Camera = camera;
 	}
+
+	void SetNear(float n)
+	{
+		_Near = n;
+	}
+
+	void SetFar(float f)
+	{
+		_Far = f;
+	}
+
+private:
+
+	/**
+	* ライトビュープロジェクション行列を計算.
+	*/
+	void CalcLVPMatrixFromCamera();
 
 private:
 
@@ -165,14 +189,12 @@ private:
 	/** 近平面. */
 	float _Near = 2.0f;
 	/** 遠平面. */
-	float _Far = 40.0f;
+	float _Far = 100.0f;
 	/** アスペクト比. */
 	float _Aspect = 1.0f;
-	/** 影を落とす範囲の幅. */
-	Vector2 _ShadowArea[SHADOWMAP_NUM];
 
 	/** ライトビュー行列. */
-	D3DXMATRIX _LVMatrix;
+	D3DXMATRIX _LVMatrix[SHADOWMAP_NUM];
 	/** ライトプロジェクション行列. */
 	D3DXMATRIX _LPMatrix[SHADOWMAP_NUM];
 
@@ -184,5 +206,8 @@ private:
 
 	/** バリアンスシャドウマップのフラグ. */
 	bool _isVSM = true;
+
+	/** カメラクラスのポインタ. */
+	Camera* _Camera = nullptr;
 
 };

@@ -26,7 +26,29 @@ void NPC::Awake()
 
 void NPC::Update()
 {
-	if(_Player == nullptr)
+	//話す。
+	_Speak();
+}
+
+void NPC::LateUpdate()
+{
+	//頭の場所計算
+	Vector3 headPos = transform->GetPosition();
+	headPos.y += _Height;
+	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
+	//テキストの場所設定。
+	_TextBox->transform->SetPosition(Vector3(screemPos, 0));
+}
+
+void NPC::SetMesseage(const int & id, const bool show)
+{
+	_TextBox->SetMessageID(id);
+	_ShowTitle = show;
+}
+
+void NPC::_Speak()
+{
+	if (_Player == nullptr)
 	{
 		_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	}
@@ -61,20 +83,4 @@ void NPC::Update()
 			_TextBox->CloseMessage();
 		}
 	}
-}
-
-void NPC::SetMesseage(const int & id, const bool show)
-{
-	_TextBox->SetMessageID(id);
-	_ShowTitle = show;
-}
-
-void NPC::LateUpdate()
-{
-	//頭の場所計算
-	Vector3 headPos = transform->GetPosition();
-	headPos.y += _Height;
-	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
-	//テキストの場所設定。
-	_TextBox->transform->SetPosition(Vector3(screemPos, 0));
 }

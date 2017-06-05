@@ -4,6 +4,7 @@
 #include "PlayerState/PlayerStateRun.h"
 #include "PlayerState/PlayerStateIdol.h"
 #include "PlayerState/PlayerStateAttack.h"
+#include "AttackCollision.h"
 
 class SkinModel;
 class Animation;
@@ -46,6 +47,14 @@ public:
 	void PlayAnimation(AnimationNo animno, float interpolatetime , int loopnum = -1);
 	//アニメーションコントロール
 	void AnimationControl();
+
+	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline void HitAttackCollision(AttackCollision* hitCollision) {
+		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
+	}
+
 	//セットステート
 	void SetState(State state)
 	{

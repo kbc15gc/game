@@ -1,20 +1,12 @@
 #include"fbstdafx.h"
 #include "Collision.h"
-
-#ifdef _DEBUG
-#include "_Object\_GameObject\ModelOject.h"
-#endif // _DEBUG
-
+#include "Collider.h"
 
 Collision::~Collision()
 {
 	_Shape = nullptr;
 	//シェアードポインタなのでnullを入れるだけでOK
 	_CollisionObject = nullptr;
-#ifdef _DEBUG
-	if(_CollisionModel)
-	INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
-#endif // _DEBUG
 }
 void Collision::Awake()
 {
@@ -43,48 +35,8 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 	//トランスフォーム更新
 	_UpdateCollisionTrans();
 
-#ifdef _DEBUG
-	//前に設定されていたアドレスを削除
-	if (_CollisionModel)
-		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
-
-	//形状取得
-	int type = _Shape->GetBody()->getShapeType();
-	//形に対応したモデル読み込み
-	switch (type)
-	{
-	case 0:	//box
-		//当たり判定を視覚化したオブジェクト生成
-		_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
-		_CollisionModel->LoadModel("Debug/BoxCollision.X");
-		break;
-	case 8:	//sphere
-		//当たり判定を視覚化したオブジェクト生成
-		_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
-		_CollisionModel->LoadModel("Debug/SphereCollision.X");
-		break;
-	default:
-		break;
-	}
-	//モデルがあるのなら
-	if (_CollisionModel)
-	{
-		_CollisionModel->GetSkinModel()->SetModelEffect(ModelEffectE::NONE);
-		//半透明な赤に設定。
-		_CollisionModel->GetSkinModel()->SetAllBlend(Color(1.0f, 0.0f, 0.0f, 0.5f));
-		//子に設定
-		_CollisionModel->transform->SetParent(this->transform);
-		//あたり判定の大きさを調べる。
-		btTransform t = _CollisionObject->getWorldTransform();
-		btVector3 min, max;
-		_Shape->GetBody()->getAabb(t, min, max);
-		Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
-		//当たり判定のサイズを指定
-		_CollisionModel->transform->SetLocalScale(size);
-		//当たり判定をずらす
-		_CollisionModel->transform->SetLocalPosition(_Offset);
-	}
-#endif // _DEBUG
+	// とりあえずここでコライダーの描画をオンにする。
+	_Shape->CreateViewModel(_CollisionObject->getWorldTransform());
 }
 
 void Collision::SetFilter(short group, short mask)
@@ -111,4 +63,7 @@ void Collision::_UpdateCollisionTrans()
 	trans.setOrigin(btVector3(GetOffsetPos().x, GetOffsetPos().y, GetOffsetPos().z));
 	//回転を設定
 	trans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
+	
+	// コリジョン描画用モデルのTransform情報更新。
+	_Shape->UpdateTransform(trans);
 }

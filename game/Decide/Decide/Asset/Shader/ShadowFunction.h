@@ -45,9 +45,8 @@ sampler g_ShadowMapSampler_2 = sampler_state
 struct ShadowReceiverParam
 {
 	/** ライトビュー行列. */
-	float4x4 _LVMatrix;
-	/** ライトプロジェクション行列. */
-	float4x4 _LPMatrix[SHADOWMAP_NUM];
+	float4x4 _LVPMatrix[SHADOWMAP_NUM];
+	
 	/** シャドウマップの数. */
 	int _NumShadowMap;
 };
@@ -70,8 +69,7 @@ float CalcShadow(float3 worldPos,out float3 color)
 	for (int i = 0; i < g_ShadowReceiverParam._NumShadowMap; i++)
 	{
 		//影落とす
-		float4 posInLVP = mul(float4(worldPos, 1.0f), g_ShadowReceiverParam._LVMatrix); 
-		posInLVP = mul(posInLVP, g_ShadowReceiverParam._LPMatrix[i]);
+		float4 posInLVP = mul(float4(worldPos, 1.0f), g_ShadowReceiverParam._LVPMatrix[i]); 
 		posInLVP.xyz /= posInLVP.w;
 
 		//uv座標に変換
@@ -81,11 +79,17 @@ float CalcShadow(float3 worldPos,out float3 color)
 		if (shadowMapUV.x < 0.99f && shadowMapUV.y < 0.99f && shadowMapUV.x > 0.01f && shadowMapUV.y > 0.01f)
 		{
 			shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
+
+			/*color.rg = tex2D(texSampler[i], shadowMapUV).rg;
+			color.y = 0.0f;
+			color.z = 0.0f;*/
+
 			float depth = min(posInLVP.z, 1.0f);
 
 			if (true)
 			{
-				if (depth > shadow_val.r) {
+				if (depth > shadow_val.r)
+				{
 					//チェビシェフ
 					float depth_sq = shadow_val.r * shadow_val.r;
 					float variance = max(shadow_val.g - depth_sq, 0.0006f);
@@ -102,22 +106,23 @@ float CalcShadow(float3 worldPos,out float3 color)
 				}
 			}
 
-			if (i == 0)
+			/*if (i == 0)
 			{
-				color = float3(0.5f, 0, 0);
+				color = float3(0.5f, 1, 1);
 			}
 			else if (i == 1)
 			{
-				color = float3(0, 0.5f, 0);
+				color = float3(1, 0.5f, 1);
 			}
 			else
 			{
-				color = float3(0, 0, 0.5f);
-			}
+				color = float3(1, 1, 0.5f);
+			}*/
 
 			//一枚にヒットしたらループを終わる
 			break;
 		}
 	}
+
 	return result;
 }

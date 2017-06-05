@@ -170,6 +170,11 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
     <ClInclude Include="GameObject\HistoryChip\AburaChip.h" />
     <ClInclude Include="GameObject\HistoryChip\FireChip.h" />
@@ -179,6 +184,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
+    <ClInclude Include="GameObject\Village\Clerk.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
     <ClInclude Include="GameObject\Village\HistoryButton.h" />
     <ClInclude Include="GameObject\Village\HistoryInfo.h" />
@@ -215,6 +221,10 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
     <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp" />
     <ClCompile Include="GameObject\HistoryChip\FireChip.cpp" />
@@ -223,6 +233,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
+    <ClCompile Include="GameObject\Village\Clerk.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />

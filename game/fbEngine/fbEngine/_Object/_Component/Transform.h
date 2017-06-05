@@ -31,7 +31,11 @@ public:
 	//トランスフォームからワールド行列更新
 	void UpdateWolrdMatrix();
 
-	//前向きのベクトル取得
+	// 右方向のベクトル取得。
+	Vector3 Transform::GetRight();
+	// 上方向のベクトル取得。
+	Vector3 Transform::GetUp();
+	//前向きのベクトル取得。
 	Vector3 GetForward();
 	//受け取ったベクトルをこいつから見た向きに変換
 	Vector3 Direction(const Vector3& v);
@@ -68,13 +72,37 @@ public:
 	//各セッター・ゲッター
 
 	void SetLocalPosition(const Vector3& v);
+	inline void SetLocalPosition(float x, float y, float z) {
+		SetLocalPosition(Vector3(x, y, z));
+	}
 	void SetPosition(const Vector3& v);
+	inline void SetPosition(float x, float y, float z) {
+		SetPosition(Vector3(x, y, z));
+	}
 	void SetLocalScale(const Vector3& v);
+	inline void SetLocalScale(float x, float y, float z) {
+		SetLocalScale(Vector3(x, y, z));
+	}
 	void SetScale(const Vector3& v);
+	inline void SetScale(float x, float y, float z) {
+		SetScale(Vector3(x, y, z));
+	}
 	void SetLocalAngle(const Vector3& v);
+	inline void SetLocalAngle(float x, float y, float z) {
+		SetLocalAngle(Vector3(x, y, z));
+	}
 	void SetAngle(const Vector3& v);
+	inline void SetAngle(float x, float y, float z) {
+		SetAngle(Vector3(x, y, z));
+	}
 	void SetLocalRotation(const Quaternion& q);
+	inline void SetLocalRotation(float x, float y, float z, float w) {
+		SetLocalRotation(Quaternion(x, y, z, w));
+	}
 	void SetRotation(const Quaternion& q);
+	inline void SetRotation(float x, float y, float z, float w) {
+		SetRotation(Quaternion(x, y, z, w));
+	}
 	void SetRotateMatrix(const D3DXMATRIX r);
 	void SetWorldMatrix(D3DXMATRIX w);
 

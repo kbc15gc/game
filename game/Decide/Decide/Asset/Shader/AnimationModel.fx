@@ -210,8 +210,6 @@ PSOutput PSMain( VS_OUTPUT In )
 	//アンビエントライトを加算。
 	color.rgb += diff.rgb * g_ambientLight.rgb;
 
-	//color.rgb *= cascadeColor;
-
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
