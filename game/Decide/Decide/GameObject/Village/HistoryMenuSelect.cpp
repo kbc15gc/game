@@ -2,9 +2,19 @@
 #include "HistoryMenuSelect.h"
 #include "fbEngine\_Object\_GameObject\Button.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
-#include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\Village\HistoryButton.h"
+
+namespace
+{
+	Vector3 chippos[] =
+	{
+		Vector3(0,0,0),
+		Vector3(1000.0f, 200.0f, 0.0f),
+		Vector3(1000.0f, 350.0f, 0.0f),
+		Vector3(1000.0f, 500.0f, 0.0f),
+	};
+}
 
 HistoryMenuSelect::HistoryMenuSelect(const char * name) :
 	GameObject(name)
@@ -45,54 +55,16 @@ void HistoryMenuSelect::_SetMenuEnabel(const bool & enabel)
 	}
 }
 
-void HistoryMenuSelect::FireSelect()
+void HistoryMenuSelect::ChipSelect(ChipID id)
 {
-	//火のボタン
+	//ボタン
 	HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
 	b->SetMenuButtonFlag(false);
-	b->SetChipID(ChipID::FIRE);
-	Vector3 pos = Vector3(1000.0f, 200.0f, 0.0f);
+	b->SetChipID(id);
+	Vector3 pos = chippos[(int)id];
 	b->transform->SetLocalPosition(pos);
 	_MenuSelectObjects.push_back(b);
 
 	//最初は表示しないためFALSE
 	_SetMenuEnabel(false);
-}
-
-void HistoryMenuSelect::TetuSelect()
-{
-	//鉄のボタン
-	HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
-	b->SetMenuButtonFlag(false);
-	b->SetChipID(ChipID::IRON);
-	Vector3 pos = Vector3(1000.0f, 350.0f, 0.0f);
-	b->transform->SetLocalPosition(pos);
-	_MenuSelectObjects.push_back(b);
-
-	//最初は表示しないためFALSE
-	_SetMenuEnabel(false);
-}
-
-void HistoryMenuSelect::AburaSelect()
-{
-	//油のボタン
-	HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
-	b->SetMenuButtonFlag(false);
-	b->SetChipID(ChipID::OIL);
-	Vector3 pos = Vector3(1000.0f, 500.0f, 0.0f);
-	b->transform->SetLocalPosition(pos);
-	_MenuSelectObjects.push_back(b);
-
-	//最初は表示しないためFALSE
-	_SetMenuEnabel(false);
-}
-
-void HistoryMenuSelect::MenuSelectNumber()
-{
-	/*switch (_MenuNomber)
-	{
-	case MenuNomber::One:
-		break;
-	
-	}*/
 }

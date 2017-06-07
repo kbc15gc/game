@@ -176,9 +176,7 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\HistoryChip\AburaChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\FireChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\TetuChip.h" />
+    <ClInclude Include="GameObject\HistoryChip\Chips.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
@@ -226,9 +224,7 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp" />
+    <ClCompile Include="GameObject\HistoryChip\Chips.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />

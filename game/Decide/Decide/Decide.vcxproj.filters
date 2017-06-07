@@ -48,15 +48,6 @@
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
       <Filter>GameObject\HistoryBook</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Player\Player.cpp">
       <Filter>GameObject\Player</Filter>
     </ClCompile>
@@ -117,6 +108,9 @@
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\Chips.cpp">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -167,15 +161,6 @@
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
       <Filter>GameObject\HistoryBook</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\AburaChip.h">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\FireChip.h">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\TetuChip.h">
-      <Filter>GameObject\HistoryChip</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Player\Player.h">
       <Filter>GameObject\Player</Filter>
@@ -245,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\Chips.h">
+      <Filter>GameObject\HistoryChip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
