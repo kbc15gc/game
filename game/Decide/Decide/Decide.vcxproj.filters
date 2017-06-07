@@ -5,12 +5,10 @@
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -113,20 +111,24 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TitleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
-    <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
@@ -238,6 +240,12 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TitleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -276,6 +284,9 @@
     </Filter>
     <Filter Include="GameObject\HistoryBook\HFSM">
       <UniqueIdentifier>{396dc9aa-c950-4a8a-8a2b-d4080e610900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{c117e626-6846-4798-ba83-85b4345fc284}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
