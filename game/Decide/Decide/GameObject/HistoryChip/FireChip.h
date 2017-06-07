@@ -1,5 +1,6 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\GameObject.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 class Player;
 class HistoryMenuSelect;
@@ -16,4 +17,6 @@ private:
 	Player*		_Player;
 	//ヒストリーメニューセレクトオブジェクト
 	HistoryMenuSelect* _HistoryMenuSelect;
+	//サウンド
+	SoundSource* _SE;
 };

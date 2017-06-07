@@ -7,6 +7,7 @@
 #include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\HistoryMenuSelect.h"
 
+
 AburaChip::AburaChip(const char * name) :
 	GameObject(name)
 {
@@ -23,6 +24,9 @@ void AburaChip::Awake()
 
 	transform->SetLocalPosition(Vector3(10.0f, 6.0f, 0.0f));
 	transform->SetLocalScale(Vector3::one);
+
+	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE",0);
+	_SE->Init("Asset/Sound/coin.wav");
 }
 
 void AburaChip::Start()
@@ -44,9 +48,10 @@ void AburaChip::Update()
 	//一定の距離内だとオブジェクト削除
 	if (toLenght <= 0.2f)
 	{
+		_SE->Play(false);
+
 		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)ChipID::FIRE);
 		_HistoryMenuSelect->AburaSelect();
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
-
 }

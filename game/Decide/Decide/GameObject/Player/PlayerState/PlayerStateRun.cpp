@@ -18,18 +18,18 @@ void PlayerStateRun::Update()
 {
 	//移動速度
 	Vector3 movespeed = Vector3::zero;
-	movespeed.y = player->GetCharaCon().GetMoveSpeed().y;
+	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
 
 	//キーボードのJ　or　パッドのAボタンでジャンプ
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (player->GetCharaCon().IsOnGround() == true)
+		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
 			//ジャンプパワーを設定
 			movespeed.y = _JumpSpeed;
 			//キャラクターコントローラーをジャンプに
-			player->GetCharaCon().Jump();
+			_Player->GetCharaCon().Jump();
 		}
 	}
 
@@ -94,23 +94,23 @@ void PlayerStateRun::Update()
 		//ベクトルから角度を求める
 		float rot = D3DXToRadian(360) - atan2f(vec.z, vec.x);
 		//回転
-		player->transform->SetLocalAngle(Vector3(0.0f, D3DXToDegree(rot + D3DXToRadian(-90)), 0.0f));
+		_Player->transform->SetLocalAngle(Vector3(0.0f, D3DXToDegree(rot + D3DXToRadian(-90)), 0.0f));
 	}
 	//移動していない
 	if (dir.Length() < 0.0001f)
 	{
-		player->ChangeState(Player::State::Idol);
+		_Player->ChangeState(Player::State::Idol);
 	}
 
 	//キャラクターコントローラー更新
-	player->GetCharaCon().SetMoveSpeed(movespeed);
-	player->GetCharaCon().Execute();
+	_Player->GetCharaCon().SetMoveSpeed(movespeed);
+	_Player->GetCharaCon().Execute();
 	//攻撃へ移動
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE))
 	{
-		if (player->GetCharaCon().IsOnGround() == true)
+		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
-			player->ChangeState(Player::State::Attack);
+			_Player->ChangeState(Player::State::Attack);
 		}
 	}
 }

@@ -23,6 +23,9 @@ void FireChip::Awake()
 
 	transform->SetLocalPosition(Vector3(30.0f, 6.0f, 0.0f));
 	transform->SetLocalScale(Vector3::one);
+
+	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
+	_SE->Init("Asset/Sound/coin.wav");
 }
 
 void FireChip::Start()
@@ -44,6 +47,8 @@ void FireChip::Update()
 	//一定の距離内だとオブジェクト削除
 	if (toLenght <= 0.2f)
 	{
+		_SE->Play(false);
+
 		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)ChipID::FIRE);
 		_HistoryMenuSelect->FireSelect();
 		INSTANCE(GameObjectManager)->AddRemoveList(this);

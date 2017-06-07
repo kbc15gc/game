@@ -113,6 +113,9 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -237,6 +240,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
