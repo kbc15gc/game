@@ -48,7 +48,7 @@ void HistoryBook::Start()
 
 	//アニメーションの終了時間設定。
 	//-1.0fを設定しているのはアニメーションの再生時間が1秒未満。
-	_AnimationEndTime[(int)AnimationNo::AnimationClose] = 3.0f;		//本が閉じた状態のアニメーション。
+	_AnimationEndTime[(int)AnimationNo::AnimationClose] = 5.0f;		//本が閉じた状態のアニメーション。
 	_AnimationEndTime[(int)AnimationNo::AnimationOpening] = 3.0f;		//本が開くアニメーション。
 	_AnimationEndTime[(int)AnimationNo::AnimationOpen] = 3.0f;			//本が開いた状態のアニメーション。
 	_AnimationEndTime[(int)AnimationNo::AnimationCloseing] = 3.3f;	    //本が閉じるアニメーション。
@@ -81,8 +81,8 @@ void HistoryBook::Update()
 		_CurrentState->Update();
 	}
 
-	_AngleY += 0.9;
-	transform->SetLocalAngle(Vector3(0.0f, _AngleY, 0.0f));
+	//_AngleY += 0.9;
+	//transform->SetLocalAngle(Vector3(0.0f, _AngleY, 0.0f));
 	//トランスフォーム更新。
 	transform->UpdateTransform();
 

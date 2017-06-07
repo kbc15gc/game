@@ -142,8 +142,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-#include "TitleScene.h"
-#include "GameScene.h"
+#include "Scene\TitleScene.h"
+#include "Scene\GameScene.h"
 
 void InitializeGame()
 {
