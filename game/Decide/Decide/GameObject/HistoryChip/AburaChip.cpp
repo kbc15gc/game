@@ -44,9 +44,9 @@ void AburaChip::Update()
 	transform->SetLocalAngle(angle);
 
 	//プレイヤーとの距離
-	float toLenght = fabs(transform->GetLocalPosition().Length() - _Player->transform->GetLocalPosition().Length());
+	float toLenght = (transform->GetLocalPosition() - _Player->transform->GetLocalPosition()).Length();
 	//一定の距離内だとオブジェクト削除
-	if (toLenght <= 0.2f)
+	if (toLenght <= 1.2f)
 	{
 		_SE->Play(false);
 
