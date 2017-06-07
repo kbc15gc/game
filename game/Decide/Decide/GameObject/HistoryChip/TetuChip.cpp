@@ -23,6 +23,9 @@ void TetuChip::Awake()
 
 	transform->SetLocalPosition(Vector3(50.0f, 6.0f, 0.0f));
 	transform->SetLocalScale(Vector3::one);
+
+	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
+	_SE->Init("Asset/Sound/coin.wav");
 }
 
 void TetuChip::Start()
@@ -44,6 +47,8 @@ void TetuChip::Update()
 	//一定の距離内だとオブジェクト削除
 	if (toLenght <= 0.2f)
 	{
+		_SE->Play(false);
+
 		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)ChipID::FIRE);
 		_HistoryMenuSelect->TetuSelect();
 		INSTANCE(GameObjectManager)->AddRemoveList(this);

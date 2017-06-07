@@ -9,6 +9,10 @@ void TitleScene::Start()
 	ImageObject* title = INSTANCE(GameObjectManager)->AddNew<ImageObject>("title",0);
 	title->SetTexture(LOADTEXTURE("title.png"));
 	title->SetPivot(0.0f, 0.0f);
+
+	_TitleBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TitleBGM", 0);
+	_TitleBGM->InitStreaming("Asset/Sound/titleBgm.WAV");
+	_TitleBGM->Play(true);
 }
 
 void TitleScene::Update()

@@ -69,6 +69,10 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 
+	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("_WorldSE", 9);
+	_WorldSE->InitStreaming("Asset/Sound/world_bgm.wav");
+	_WorldSE->Play(true);
+
 }
 
 void GameScene::Update()
