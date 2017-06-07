@@ -64,9 +64,6 @@ void HistoryBook::Start()
 	//アニメーションの初期化。
 	PlayAnimation(AnimationNo::AnimationClose, 0.2f, 0);
 
-	//フラグの初期化。
-	_IsLookAtHistoryFlag = false;
-
 	//本は見えないように設定。
 	_Model->enable = false;
 
@@ -83,7 +80,9 @@ void HistoryBook::Update()
 		//ステートの更新。
 		_CurrentState->Update();
 	}
-	
+
+	_AngleY += 0.9;
+	transform->SetLocalAngle(Vector3(0.0f, _AngleY, 0.0f));
 	//トランスフォーム更新。
 	transform->UpdateTransform();
 
