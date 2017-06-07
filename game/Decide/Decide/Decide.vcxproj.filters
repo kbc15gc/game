@@ -71,9 +71,6 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Village\Clerk.cpp">
-      <Filter>GameObject\Village</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Village\ContinentObject.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
@@ -192,9 +189,6 @@
     </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h">
       <Filter>GameObject\Player\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\Clerk.h">
-      <Filter>GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\ContinentObject.h">
       <Filter>GameObject\Village</Filter>

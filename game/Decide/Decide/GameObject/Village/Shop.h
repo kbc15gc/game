@@ -35,6 +35,8 @@ namespace
 		{ "ItemID",Support::DataTypeE::INT , offsetof(struct Product,ItemID),sizeof(int) },
 		{ "Type",Support::DataTypeE::INT, offsetof(struct Product,Type),sizeof(int) },
 	};
+
+	typedef char ShopName[256];
 }
 
 namespace
@@ -44,23 +46,12 @@ namespace
 	{
 		char name[256];
 	};
+	
 }
 
 //お店。
 class Shop:public GameObject
 {
-public:
-	Shop(const char* name);
-	~Shop();
-
-	//お店の情報読み込み。
-	void LoadShopData();
-private:
-	//購入画面表示
-	void _OpenMenu();
-	//スタティック変数の初期化
-	void _StaticInit();
-private:
 	//ショップのステート
 	enum ShopStateE
 	{
@@ -69,19 +60,44 @@ private:
 		BUY,		//購入画面。
 		SELL,		//販売画面。ないかもしれない。
 	};
+public:
+	Shop(const char* name);
+	~Shop();
+
+	void Update()override;
+
+	//ショップオープン。
+	void OpenShop(const unsigned int& shopID);
+private:
+	//購入画面表示。
+	void _OpenMenu();
+	//お店の情報読み込み。
+	void _LoadShopData(const unsigned int& shopID);
+	//スタティック変数の初期化。
+	void _StaticInit();
+
+	//ステート変更。
+	void _ChangeState(const ShopStateE& state);
+
+	//選択画面の更新。
+	void _SelectUpdate();
+	//購入画面の更新。
+	void _BuyUpdate();
+private:
 	//商品の品ぞろえ。
 	vector<Product*> _ProductList;
 	//ショップのステート
 	ShopStateE _State;
+	//ステートによって変わるアップデート
+	std::function<void()> _Update;
 
 	//どうせ全部同じ場所で同じ画像だろうからstatic変数。
 	//カーソルの画像
 	static ImageObject* _Cursor[2];
 	//かう・うるの画像
-	static ImageObject* _BuySell;
+	static ImageObject* _SelectWindow;
 	//本命のウィンドウ
 	static ImageObject* _MainWindow;
-private:
-	
+	//ショップの名前
 	static vector<testchar*> _ShopNameList;
 };

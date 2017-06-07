@@ -1,19 +1,20 @@
 #include"stdafx.h"
 #include "MessageManager.h"
 
-MessageManager*  MessageManager::_Instance;
-
 namespace
 {
 	//ƒƒ“ƒo•Ï”‚Ìî•ñİ’è
-	Support::DATARECORD Messagedata[4] =
+	Support::DATARECORD Messagedata[] =
 	{
-		{ "MessageID",Support::DataTypeE::INT , offsetof(struct MessageInfo,MessageID),sizeof(int)},
-		{ "Title",Support::DataTypeE::STRING, offsetof(struct MessageInfo,Title),sizeof(char)*256 },
-		{ "Text",Support::DataTypeE::STRING, offsetof(struct MessageInfo,Text),sizeof(char)*256 },
+		{ "MessageID",Support::DataTypeE::INT , offsetof(struct MessageInfo,MessageID),sizeof(int) },
+		{ "Title",Support::DataTypeE::STRING, offsetof(struct MessageInfo,Title),sizeof(char) * 256 },
+		{ "Text",Support::DataTypeE::STRING, offsetof(struct MessageInfo,Text),sizeof(char) * 256 },
 		{ "NextID",Support::DataTypeE::INT , offsetof(struct MessageInfo,NextID),sizeof(int) },
+		{ "EventID",Support::DataTypeE::INT , offsetof(struct MessageInfo,EventID),sizeof(int) },
 	};
 }
+
+MessageManager*  MessageManager::_Instance;
 
 MessageInfo* MessageManager::GetMess(const int & id)
 {
