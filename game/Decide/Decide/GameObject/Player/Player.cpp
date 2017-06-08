@@ -16,7 +16,9 @@ Player::Player(const char * name) :
 	//アイドルステート
 	_IdolState(this),
 	//攻撃ステート
-	_AttackState(this)
+	_AttackState(this),
+	//死亡ステート
+	_DeathState(this)
 {
 }
 
@@ -45,9 +47,26 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	_Model->SetAllBlend(Color::white * 13);
 	//キャラクターコントローラー初期化
-	_CharacterController->Init(this,transform,_Radius,_Height, Vector3(0.0f,_Height / 2, 0.0f) , Collision_ID::PLAYER,coll, _Gravity);
-	//キャラクターコントローラーの重力設定
-	_CharacterController->SetGravity(_Gravity);
+	{
+		_CharacterController->Init(this, transform, _Radius, _Height, Vector3(0.0f, _Height / 2, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
+		// 以下衝突を取りたい属性(横方向)を指定。
+		{
+			// ※テスト用(後で直してね)。
+			_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
+			_CharacterController->AddAttributeXZ(Collision_ID::ATTACK);	// 攻撃コリジョンを追加。
+		}
+		// 以下衝突を取りたい属性(縦方向)を指定。
+		{
+			// ※テスト用(後で直してね)。
+			_CharacterController->AttributeY_AllOn();	// 全衝突。
+			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
+		}
+		//キャラクターコントローラーの重力設定
+		_CharacterController->SetGravity(_Gravity);
+	}
+	//ダメージSE初期化
+	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
+	_DamageSE->Init("Asset/Sound/Damage_01.wav");
 }
 
 void Player::Start()
@@ -73,7 +92,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+	transform->SetLocalPosition(Vector3(0.0f, 50.0f, 0.0f));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -81,6 +100,8 @@ void Player::Start()
 	//プレイヤーのレベル初期化
 	//最初は１から
 	_Level = 1;
+	//プレイヤーのライフを設定。
+	_Life = 5;
 }
 
 void Player::Update()
@@ -90,6 +111,8 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+	//ライフが0になると死亡する。
+
 	//アニメーションコントロール
 	AnimationControl();
 	//トランスフォーム更新
@@ -116,6 +139,9 @@ void Player::ChangeState(State nextstate)
 	case State::Attack:
 		_CurrentState = &_AttackState;
 		break;
+		//死亡状態
+	case State::Death:
+		_CurrentState = &_DeathState;
 		//デフォルト
 	default:
 		break;
@@ -158,6 +184,11 @@ void Player::AnimationControl()
 		else if (_State == State::Attack)
 		{
 			PlayAnimation(AnimationNo::AnimationAttack01, 0.1f, 1);
+		}
+		//死亡アニメーション
+		else if (_State == State::Death)
+		{
+			PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		}
 	}
 }

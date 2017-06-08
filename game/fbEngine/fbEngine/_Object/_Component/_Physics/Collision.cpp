@@ -36,7 +36,7 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 	_UpdateCollisionTrans();
 
 	// とりあえずここでコライダーの描画をオンにする。
-	_Shape->CreateViewModel(gameObject,collision, offset);
+	_Shape->CreateViewModel(_CollisionObject->getWorldTransform());
 }
 
 void Collision::SetFilter(short group, short mask)
@@ -63,4 +63,7 @@ void Collision::_UpdateCollisionTrans()
 	trans.setOrigin(btVector3(GetOffsetPos().x, GetOffsetPos().y, GetOffsetPos().z));
 	//回転を設定
 	trans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
+	
+	// コリジョン描画用モデルのTransform情報更新。
+	_Shape->UpdateTransform(trans);
 }

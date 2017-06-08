@@ -5,16 +5,13 @@
 Collider::~Collider(){
 #ifdef _DEBUG
 	if (_CollisionModel) {
+		_CollisionModel->transform->SetParent(nullptr);
 		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
 	}
 #endif //_DEBUG
 };
 
-void Collider::CreateViewModel(GameObject* Parent, btCollisionObject* CollisionObject, const Vector3& Offset){
-	CreateViewModel(Parent,CollisionObject->getWorldTransform(), Offset);
-}
-
-void Collider::CreateViewModel(GameObject* Parent, const btTransform& Transform, const Vector3& Offset){
+void Collider::CreateViewModel(const btTransform& collisionTr){
 #ifdef _DEBUG
 
 //前に設定されていたアドレスを削除
@@ -30,18 +27,38 @@ void Collider::CreateViewModel(GameObject* Parent, const btTransform& Transform,
 		_CollisionModel->GetSkinModel()->SetModelEffect(ModelEffectE::NONE);
 		//半透明な赤に設定。
 		_CollisionModel->GetSkinModel()->SetAllBlend(Color(1.0f, 0.0f, 0.0f, 0.5f));
-		//子に設定
-		if (Parent) {
-			_CollisionModel->transform->SetParent(Parent->transform);
-		}
 		//あたり判定の大きさを調べる。
 		btVector3 min, max;
-		GetBody()->getAabb(Transform, min, max);
+		btTransform tr;
+		tr.setIdentity();
+		GetBody()->getAabb(tr, min, max);
 		Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
 		//当たり判定のサイズを指定
 		_CollisionModel->transform->SetLocalScale(size);
-		//当たり判定をずらす
-		_CollisionModel->transform->SetLocalPosition(Offset);
+		//実際のコリジョンを親に設定(描画用モデルをコリジョンの座標系にする。)
+		// Transformコンポーネントを使用するにはGameObjectが必要となるため、空のGameObjectを生成する。
+		unique_ptr<GameObject> Obj(new GameObject(""));
+
+		// コリジョンのTransform情報生成。
+		_CollisionTr.reset(new Transform(Obj.get(),nullptr));
+		
+		UpdateTransform(collisionTr);
+
+		//コリジョン描画用モデルの中心点とコリジョンの中心点の差分を設定。
+		_CollisionModel->transform->SetLocalPosition(_CollisionModelOffset);
 	}
 #endif //_DEBUG
+}
+
+void Collider::UpdateTransform(const btTransform& collisionTr) {
+	if (_CollisionTr) {
+		// 位置情報設定。
+		btVector3 pos = collisionTr.getOrigin();
+		_CollisionTr->SetPosition(pos.getX(), pos.getY(), pos.getZ());
+		// 回転情報設定。
+		btQuaternion rot = collisionTr.getRotation();
+		_CollisionTr->SetRotation(rot.getX(), rot.getY(), rot.getZ(), rot.getW());
+		// コリジョンのTransform情報を親に設定。
+		_CollisionModel->transform->SetParent(_CollisionTr.get());
+	}
 }

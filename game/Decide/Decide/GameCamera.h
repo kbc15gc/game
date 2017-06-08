@@ -40,7 +40,7 @@ private:
 	float _Radius;
 
 	//歴史書オブジェクト。
-	HistoryBook* _HistoryBook;
+	HistoryBook* _HistoryBook = nullptr;
 	//歴史書のポジションへの参照。
 	Vector3 _HistoryBookPos;
 	//線形補間されたカメラの位置。

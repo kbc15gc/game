@@ -7,7 +7,7 @@ class PlayerState
 public:
 	PlayerState(Player* player)
 	{
-		this->player = player;
+		this->_Player = player;
 	}
 	virtual ~PlayerState()
 	{
@@ -19,7 +19,7 @@ public:
 	//”²‚¯‚é
 	virtual void Leave() = 0;
 protected:
-	Player* player;
+	Player* _Player;
 	const float _Speed = 20.0f;
 	const float _JumpSpeed = 15.0f;
 };

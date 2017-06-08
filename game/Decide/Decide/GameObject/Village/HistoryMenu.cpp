@@ -5,6 +5,7 @@
 #include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\Village\HistoryButton.h"
+#include "fbEngine\_Object\_GameObject\ImageObject.h"
 
 HistoryMenu::HistoryMenu(const char * name) :
 	GameObject(name)
@@ -20,7 +21,6 @@ void HistoryMenu::Start()
 {
 	Vector2 hasi(250, 200);
 	Vector2 interval(150, 100);
-
 	//メニューボタンとかテキスト生成
 	{
 		FOR(continent, CONTINENT_NUM)
@@ -48,8 +48,15 @@ void HistoryMenu::Start()
 				_MenuObjects.push_back(b);
 			}
 		}
+		//選択ボタン
+		_SelectImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BoxImage", _Priority);
+		_SelectImage->SetTexture(LOADTEXTURE("cursor.png"));
+		_SelectImage->SetPivot(0.5, 1.0);
+		_SelectImage->transform->SetLocalPosition(Vector3(hasi.x, hasi.y, 0.0f));
+		_SelectImage->transform->SetScale(Vector3::one);
+		_SelectImage->SetActive(false);
+		_MenuNomber = MenuNomber::One;
 	}
-
 	_SetMenuEnabel(false);
 }
 
@@ -66,6 +73,7 @@ void HistoryMenu::Update()
 			_OpenMenu();
 		}
 	}
+	SelectMenuButton();
 }
 
 void HistoryMenu::_SetMenuEnabel(const bool & enabel)
@@ -76,6 +84,7 @@ void HistoryMenu::_SetMenuEnabel(const bool & enabel)
 	{
 		o->SetActive(_MenuEnabel);
 	}
+	_SelectImage->SetActive(_MenuEnabel);
 }
 
 void HistoryMenu::_OpenMenu()
@@ -93,6 +102,37 @@ void HistoryMenu::_OpenMenu()
 	}
 }
 
+void HistoryMenu::SelectMenuButton()
+{
+	static Vector2 hasi(250, 200);
+	static Vector2 interval(150, 100);
+	int select = (int)_MenuNomber;
+	if (KeyBoardInput->isPush(DIK_RIGHT) && _MenuNomber != MenuNomber::Three)
+	{
+		select++;
+	}
+	else if (KeyBoardInput->isPush(DIK_LEFT) && _MenuNomber != MenuNomber::One)
+	{
+		select--;
+	}
+	_MenuNomber = (MenuNomber)select;
+
+	switch (_MenuNomber)
+	{
+	case MenuNomber::One :
+		_SelectImage->transform->SetLocalPosition(Vector3(250, 200, 0.0f));
+		break;
+	case MenuNomber::Two:
+		_SelectImage->transform->SetLocalPosition(Vector3(400, 200, 0.0f));
+		break;
+	case MenuNomber::Three:
+		_SelectImage->transform->SetLocalPosition(Vector3(550, 200, 0.0f));
+		break;
+	default:
+		break;
+	}
+}
+
 void HistoryMenu::SetMenuSelectChip(ChipID chipid)
 {
 	static int chip = 0;		//チップ
@@ -100,30 +140,8 @@ void HistoryMenu::SetMenuSelectChip(ChipID chipid)
 	
 	//ボタンに読み込んだ情報割り当て。
 	//セットできたなら。
-	INSTANCE(HistoryManager)->SetHistoryChip(continent, chip, (const int)chipid);
-	_Buttons[continent][chip]->SetChipID(chipid);
-	//チップが最大値より小さい場合
-	if (chip < HISTORY_CHIP_NUM)
+	if (INSTANCE(HistoryManager)->SetHistoryChip(continent, _MenuNomber, (const int)chipid))
 	{
-		//次のチップの場所へ
-		chip++;
-	}
-	else
-	{
-		//チップを０の場所に
-		chip = 0;
-		//大陸の数が最大値より小さい場合
-		if (continent < CONTINENT_NUM)
-		{
-			//次の大陸へ
-			continent++;
-			//次のチップの場所へ
-			chip++;
-		}
-		else
-		{
-			//最初の大陸へ
-			continent = 0;
-		}
+		_Buttons[continent][_MenuNomber]->SetChipID(chipid);
 	}
 }

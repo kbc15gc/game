@@ -9,6 +9,12 @@ class HistoryMenuButton;
 class HistoryMenu:public GameObject
 {
 public:
+	enum MenuNomber
+	{
+		One = 0,
+		Two,
+		Three,
+	};
 	HistoryMenu(const char* name);
 	~HistoryMenu();
 
@@ -22,6 +28,8 @@ private:
 	void _SetMenuEnabel(const bool& enabel);
 	//メニューを開く処理
 	void _OpenMenu();
+	//セレクトボタンの更新
+	void SelectMenuButton();
 private:
 	//メニューの有効フラグ
 	bool _MenuEnabel;
@@ -32,4 +40,8 @@ private:
 	Button* _OK;
 	//メニューに使ってるオブジェクトたち
 	vector<GameObject*> _MenuObjects;
+	//選択ボタンイメージ
+	ImageObject* _SelectImage;
+	//メニューで何番を選択するか。
+	MenuNomber _MenuNomber;
 };

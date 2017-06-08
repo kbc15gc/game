@@ -206,11 +206,12 @@ namespace Support {
 				{
 				case DataTypeE::INT:
 					memcpy(&i, addres, datas[idx].size);
+					//sprintf_s(word, "%d", i);
 					ToString(i, word);
 					break;
 				case DataTypeE::FLOAT:
 					memcpy(&f, addres, datas[idx].size);
-					//‚Ü‚¾Afloat‚É‘Î‰‚µ‚Ä‚¢‚È‚¢B
+					//sprintf_s(word, "%f", f);
 					ToString(f, word);
 					break;
 				case DataTypeE::STRING:

@@ -120,7 +120,8 @@ void GameCamera::_Move()
 	//カメラの移動先
 	to = from + dist;
 	//レイを飛ばす
-	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere,from, to);
+	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK);	// 衝突を無視する属性を減算。
+	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere,from, to, attri);
 	//移動先ポジション
 	Vector3 next;
 	//レイが何かに当たったかどうか？
@@ -222,7 +223,7 @@ void GameCamera::_HistoryBehavior()
 	_LerpCameraLookAtPos = (_HistoryBookPos * (1.0f - _LerpRate) + ((*_PlayerPos)) * _LerpRate);
 
 	//カメラの位置の線形補間を行う(ゲームカメラの位置からプレイヤーの位置に向けて補間)。
-	_LerpCameraPos = (((*_PlayerPos) + PLAYER_HEIGHT) * (1.0f - _LerpRate) + _PrevGameCameraPos * _LerpRate);
+	_LerpCameraPos = (((*_PlayerPos) + PLAYER_HEIGHT) * (1.0f - _LerpRate) + (_Player->transform->GetPosition()+Vector3(0.0f,10.0f,0.0f)) * _LerpRate);
 
 	//カメラの注視点を線形補間された位置に設定。
 	transform->LockAt((_LerpCameraLookAtPos));
