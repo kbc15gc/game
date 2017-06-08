@@ -223,6 +223,7 @@ void SkinModel::DrawMeshContainer(
 		if(_SkyBox)
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
 		}
 
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -353,6 +354,8 @@ void SkinModel::DrawMeshContainer(
 		if (_SkyBox)
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+
 		}
 
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);

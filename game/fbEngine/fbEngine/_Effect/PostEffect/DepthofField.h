@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include"_Effect\Blur.h"
+#include"_Effect\GaussianBlur.h"
 
 class Vertex;
 class Effect;
@@ -70,7 +70,7 @@ public:
 	}
 
 	/**
-	* 終点距離を設定.
+	* 焦点距離を設定.
 	*/
 	void SetFocalLength(float len)
 	{
@@ -96,18 +96,21 @@ private:
 	Vertex* _Vertex = nullptr;
 
 	/** 前ボケ用ブラー. */
-	Blur _BlurForward;
+	GaussianBlur _BlurForward;
 	/** 奥ボケ用ブラー. */
-	Blur _BlurBack;
+	GaussianBlur _BlurBack;
+
+	/** ボケ合成用のレンダリングターゲット. */
+	RenderTarget _CombineRenderTarget;
 
 	/** エフェクト. */
 	Effect* _Effect = nullptr;
 
 	/** 焦点距離. */
-	float _FocalLength = 0.0f;
+	float _FocalLength = 26.0f;
 	/** F値. */
-	float _F = 0.0f;
+	float _F = 5.6f;
 	/** ピント. */
-	float _Pint = 0.0f;
+	float _Pint = 3.0f;
 
 };

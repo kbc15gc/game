@@ -17,13 +17,16 @@ sampler g_BlurSampler =
 sampler_state
 {
 	Texture = <g_Blur>;
-	MipFilter = LINEAR;
+	MipFilter = NONE;
 	MinFilter = LINEAR;
 	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 float2 g_TexSize; //テクスチャのサイズ
 
+float2 g_texelOffset;
 
 //Xブラーの頂点シェーダー
 VS_OUTPUT_BLUR VSBlur_X(VS_INPUT In)
@@ -33,7 +36,7 @@ VS_OUTPUT_BLUR VSBlur_X(VS_INPUT In)
 
 	float2 tex = In.tex;
 
-	Out.tex0 = tex;
+	Out.tex0 = tex + g_texelOffset;
 	Out.tex1 = float2(0.5f / g_TexSize.x, 0.0f);
 	Out.tex2 = float2(1.0f / g_TexSize.x, 0.0f);
 
@@ -46,9 +49,9 @@ VS_OUTPUT_BLUR VSBlur_Y(VS_INPUT In)
 	VS_OUTPUT_BLUR Out;
 	Out.pos = In.pos;
 
-	float2 tex = In.tex;
+	float2 tex = In.tex + g_texelOffset;
 
-	Out.tex0 = tex;
+	Out.tex0 = tex + float2(0.5 / g_TexSize.x, 0.5 / g_TexSize.y);
 	Out.tex1 = float2(0.0f, 0.5f / g_TexSize.y);
 	Out.tex2 = float2(0.0f, 1.0f / g_TexSize.y);
 
