@@ -5,12 +5,10 @@
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -50,15 +48,6 @@
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
       <Filter>GameObject\HistoryBook</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Player\Player.cpp">
       <Filter>GameObject\Player</Filter>
     </ClCompile>
@@ -70,9 +59,6 @@
     </ClCompile>
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Village\Clerk.cpp">
-      <Filter>GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\ContinentObject.cpp">
       <Filter>GameObject\Village</Filter>
@@ -113,20 +99,33 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TitleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryChip\Chips.cpp">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Component\CharacterParameter.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
-    <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
@@ -166,15 +165,6 @@
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
       <Filter>GameObject\HistoryBook</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\AburaChip.h">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\FireChip.h">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\TetuChip.h">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Player\Player.h">
       <Filter>GameObject\Player</Filter>
     </ClInclude>
@@ -189,9 +179,6 @@
     </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h">
       <Filter>GameObject\Player\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\Clerk.h">
-      <Filter>GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\ContinentObject.h">
       <Filter>GameObject\Village</Filter>
@@ -238,6 +225,21 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TitleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryChip\Chips.h">
+      <Filter>GameObject\HistoryChip</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\CharacterParameter.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -276,6 +278,9 @@
     </Filter>
     <Filter Include="GameObject\HistoryBook\HFSM">
       <UniqueIdentifier>{396dc9aa-c950-4a8a-8a2b-d4080e610900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{c117e626-6846-4798-ba83-85b4345fc284}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

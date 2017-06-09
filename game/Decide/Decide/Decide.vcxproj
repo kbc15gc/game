@@ -158,6 +158,7 @@
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
+    <ClInclude Include="GameObject\Component\CharacterParameter.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
@@ -176,15 +177,13 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\HistoryChip\AburaChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\FireChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\TetuChip.h" />
+    <ClInclude Include="GameObject\HistoryChip\Chips.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
-    <ClInclude Include="GameObject\Village\Clerk.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
     <ClInclude Include="GameObject\Village\HistoryButton.h" />
     <ClInclude Include="GameObject\Village\HistoryInfo.h" />
@@ -195,20 +194,21 @@
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
-    <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
+    <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
@@ -226,14 +226,12 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp" />
+    <ClCompile Include="GameObject\HistoryChip\Chips.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
-    <ClCompile Include="GameObject\Village\Clerk.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
@@ -243,14 +241,14 @@
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
-    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

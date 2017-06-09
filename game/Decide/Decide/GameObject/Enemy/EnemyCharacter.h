@@ -131,6 +131,10 @@ public:
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
 	inline virtual void HitAttackCollision(AttackCollision* hitCollision) {
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
+		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
+		{
+			INSTANCE(GameObjectManager)->AddRemoveList(this);
+		}
 	}
 
 	// ステート処理中にステートを割り込みで切り替える関数。

@@ -255,6 +255,9 @@
     <ClCompile Include="_Object\_Component\_Physics\Collider.cpp">
       <Filter>Object\Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="_Effect\GaussianBlur.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -497,5 +500,8 @@
       <Filter>Effect\PreRender</Filter>
     </ClInclude>
     <ClInclude Include="fbstdafx.h" />
+    <ClInclude Include="_Effect\GaussianBlur.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

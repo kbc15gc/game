@@ -45,12 +45,19 @@ void DepthofField::Create()
 	}
 	
 	//16bit。
-	_DepthRT.Create(g_WindowSize,D3DFMT_R16F);
+	_DepthRT.Create(g_WindowSize, D3DFMT_R16F);
 
 	_BlurForward.Create(g_WindowSize.x, g_WindowSize.y, D3DFMT_A16B16G16R16F);
+	_BlurForward.SetBlurPower(20.0f);
+	_BlurForward.SetUseWeights(GaussianBlur::Weight_8);
+
 	_BlurBack.Create(g_WindowSize.x, g_WindowSize.y, D3DFMT_A16B16G16R16F);
+	_BlurBack.SetBlurPower(2.0f);
+	_BlurBack.SetUseWeights(GaussianBlur::Weight_8);
 
 	_Effect = EffectManager::LoadEffect("DepthofField.fx");
+
+	_CombineRenderTarget.Create(g_WindowSize, D3DFMT_A16B16G16R16F);
 
 }
 
@@ -63,12 +70,11 @@ void DepthofField::Render()
 	static float CoC = 0.033f;			//許容錯乱円(単位はmm)
 	float forwardDof = (CoC * _F * _Pint * _Pint) / (_FocalLength * _FocalLength + CoC * _F * _Pint);
 	float backDof = (CoC * _F * _Pint * _Pint) / (_FocalLength * _FocalLength - CoC * _F * _Pint);
+	if (backDof < 0.0f)
+	{
+		backDof = 0.0f;
+	}
 	//手前ボケ、奥ボケ、ピントをm単位に変更してGPUに送る
-	//float dofParam[] = {
-	//	forwardDof / 1000.0f,
-	//	backDof / 1000.0f,
-	//	_Pint / 1000.0f
-	//};
 	float dofParam[] = {
 		forwardDof / 1000.0f,
 		backDof / 1000.0f,
@@ -80,23 +86,24 @@ void DepthofField::Render()
 	//ボケ画像を作成する。
 	//手前ボケ
 	{
-		_BlurForward.SetTexture(SceneTextrue);
+		_BlurForward.SetSrcTexture(*SceneTextrue);
 		_BlurForward.Render();
 	}
 	//奥ボケ
 	{
-		_BlurBack.SetTexture(SceneTextrue);
+		_BlurBack.SetSrcTexture(*SceneTextrue);
 		_BlurBack.Render();
 	}
 	
-	//合成。
+	//手前ボケと奥ボケを合成。
 	{
-		_Effect->SetTechnique("DOF");
+		INSTANCE(RenderTargetManager)->ReSetRT(0, &_CombineRenderTarget);
+
+		_Effect->SetTechnique("CombineBackForwardBoke");
 		_Effect->Begin(0, D3DXFX_DONOTSAVESTATE);
 		_Effect->BeginPass(0);
 
 		_Effect->SetValue("g_DofParam", dofParam, sizeof(dofParam));
-		_Effect->SetTexture("g_Scene", SceneTextrue->pTexture);
 		_Effect->SetTexture("g_Depth", _DepthRT.texture->pTexture);
 		_Effect->SetTexture("g_BlurBack", _BlurBack.GetTexture()->pTexture);
 		_Effect->SetTexture("g_BlurForward", _BlurForward.GetTexture()->pTexture);
@@ -110,15 +117,42 @@ void DepthofField::Render()
 		_Effect->SetValue("g_SceneTexSize", texSize, sizeof(texSize));
 
 		_Effect->CommitChanges();
+	
+		_Vertex->DrawPrimitive();
 
-		INSTANCE(SceneManager)->ToggleMainRenderTarget();
-		//レンダリングターゲットを設定
-		INSTANCE(RenderTargetManager)->ReSetRT(0, INSTANCE(SceneManager)->GetMainRenderTarget());
+		_Effect->EndPass();
+		_Effect->End();
+	}
+
+	//ボケ画像とシーンを合成
+	{
+
+		INSTANCE(RenderTargetManager)->SetRT(0, INSTANCE(SceneManager)->GetMainRenderTarget());
+
+		_Effect->SetTechnique("TransformedPrim");
+		_Effect->Begin(0, D3DXFX_DONOTSAVESTATE);
+		_Effect->BeginPass(0);
+		
+		float offset[] = {
+			0.5f / static_cast<float>(INSTANCE(SceneManager)->GetMainRenderTarget()->texture->Size.x),
+			0.5f / static_cast<float>(INSTANCE(SceneManager)->GetMainRenderTarget()->texture->Size.y),
+		};
+
+		_Effect->SetValue("g_TexelOffset", offset, sizeof(offset));
+		_Effect->SetTexture("g_Tex", _CombineRenderTarget.texture->pTexture);
+		_Effect->CommitChanges();
+
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		_Vertex->DrawPrimitive();
 
 		_Effect->EndPass();
 		_Effect->End();
+
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
 	}
 
 }

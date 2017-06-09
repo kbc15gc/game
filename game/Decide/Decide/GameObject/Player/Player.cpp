@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
+#include <string>
+#include <sstream>
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -16,7 +18,13 @@ Player::Player(const char * name) :
 	//アイドルステート
 	_IdolState(this),
 	//攻撃ステート
-	_AttackState(this)
+	_AttackState(this),
+	//死亡ステート
+	_DeathState(this)
+{
+}
+
+Player::~Player()
 {
 }
 
@@ -30,6 +38,8 @@ void Player::Awake()
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
 	//キャラクターコントローラー
 	_CharacterController = AddComponent<CCharacterController>();
+	//キャラクターパラメーター
+	_PlayerParam = AddComponent<CharacterParameter>();
 	//高さ設定
 	_Height = 1.5f;
 	//半径設定
@@ -63,6 +73,23 @@ void Player::Awake()
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);
 	}
+	//HPのテキスト表示
+	{
+		_HPText = INSTANCE(GameObjectManager)->AddNew<TextObject>("HPText", _Priority);
+		_HPText->Initialize(L"", 70.0f);
+		_HPText->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
+		_HPText->transform->SetLocalPosition(Vector3(1150, 630,0));
+	}
+	//MPのテキスト表示
+	{
+		_MPText = INSTANCE(GameObjectManager)->AddNew<TextObject>("MPText", _Priority);
+		_MPText->Initialize(L"", 70.0f);
+		_MPText->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
+		_MPText->transform->SetLocalPosition(Vector3(1150, 680, 0));
+	}
+	//ダメージSE初期化
+	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
+	_DamageSE->Init("Asset/Sound/Damage_01.wav");
 }
 
 void Player::Start()
@@ -88,13 +115,17 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
+	transform->SetLocalPosition(Vector3(374, 69, -1275));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
 	_State = State::Idol;
-	//プレイヤーのレベル初期化
-	//最初は１から
+	//攻撃アニメーションステートの初期化
+	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
+	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
+	//プレイヤーのパラメーター初期化。
+	_PlayerParam->ParamInit(100, 50, 5, 4, 3, 1);
+	//レベル初期化
 	_Level = 1;
 }
 
@@ -105,6 +136,13 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+	//HPのテキストを表示更新
+	string hp = to_string(_PlayerParam->_HP);
+	string mp = to_string(_PlayerParam->_MP);
+	_HPText->SetString(hp.data());
+	_MPText->SetString(mp.data());
+	//ライフが0になると死亡する。
+
 	//アニメーションコントロール
 	AnimationControl();
 	//トランスフォーム更新
@@ -131,6 +169,9 @@ void Player::ChangeState(State nextstate)
 	case State::Attack:
 		_CurrentState = &_AttackState;
 		break;
+		//死亡状態
+	case State::Death:
+		_CurrentState = &_DeathState;
 		//デフォルト
 	default:
 		break;
@@ -172,12 +213,27 @@ void Player::AnimationControl()
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
-			PlayAnimation(AnimationNo::AnimationAttack01, 0.1f, 1);
+			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
+			{
+				//攻撃開始
+				PlayAnimation(_NextAttackAnimNo, 0.1f, 1);
+				_NowAttackAnimNo = _NextAttackAnimNo;
+				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
+			}
+			else if (_NextAttackAnimNo != AnimationNo::AnimationInvalid)
+			{
+				//連撃
+				PlayAnimation(_NextAttackAnimNo, 0.1f, 1);
+				_NowAttackAnimNo = _NextAttackAnimNo;
+				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
+			}
+
+			
+		}
+		//死亡アニメーション
+		else if (_State == State::Death)
+		{
+			PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		}
 	}
-}
-
-const bool Player::GetAnimIsPlay() const 
-{
-	return _Anim->GetPlaying();
 }

@@ -40,37 +40,38 @@ void PlayerStateIdol::Update()
 		dir.x += 1.0f;
 	}
 #endif
-	Vector3 movespeed = player->GetCharaCon().GetMoveSpeed();
+	Vector3 movespeed = _Player->GetCharaCon().GetMoveSpeed();
 	movespeed.x = 0.0f;
 	movespeed.z = 0.0f;
 	//キーボードのJ　or　パッドのAボタンでジャンプ
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (player->GetCharaCon().IsOnGround() == true)
+		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
 			//ジャンプパワーを設定
 			movespeed.y = _JumpSpeed;
 			//キャラクターコントローラーをジャンプに
-			player->GetCharaCon().Jump();
+			_Player->GetCharaCon().Jump();
 		}
 	}
 	if (dir.Length() >= 0.0001f)
 	{
-		player->ChangeState(Player::State::Run);
+		_Player->ChangeState(Player::State::Run);
 	}
 
 	movespeed.x = dir.x * _Speed;
 	movespeed.z = dir.z * _Speed;
 	
-	player->GetCharaCon().SetMoveSpeed(movespeed);
-	player->GetCharaCon().Execute();
+	_Player->GetCharaCon().SetMoveSpeed(movespeed);
+	_Player->GetCharaCon().Execute();
 	//攻撃へ移動
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE))
 	{
-		if (player->GetCharaCon().IsOnGround() == true)
+		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
-			player->ChangeState(Player::State::Attack);
+			_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
+			_Player->ChangeState(Player::State::Attack);
 		}
 	}
 }

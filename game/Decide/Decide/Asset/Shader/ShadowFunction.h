@@ -80,10 +80,6 @@ float CalcShadow(float3 worldPos,out float3 color)
 		{
 			shadow_val = tex2D(texSampler[i], shadowMapUV).rg;
 
-			/*color.rg = tex2D(texSampler[i], shadowMapUV).rg;
-			color.y = 0.0f;
-			color.z = 0.0f;*/
-
 			float depth = min(posInLVP.z, 1.0f);
 
 			if (true)
@@ -106,7 +102,7 @@ float CalcShadow(float3 worldPos,out float3 color)
 				}
 			}
 
-			/*if (i == 0)
+			if (i == 0)
 			{
 				color = float3(0.5f, 1, 1);
 			}
@@ -117,7 +113,7 @@ float CalcShadow(float3 worldPos,out float3 color)
 			else
 			{
 				color = float3(1, 1, 0.5f);
-			}*/
+			}
 
 			//一枚にヒットしたらループを終わる
 			break;

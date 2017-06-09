@@ -29,8 +29,9 @@ public:
 	inline void RemoveParent() {
 		transform->SetParent(nullptr);
 	}
-
-	inline CollisionMaster GetMaster() {
+	//誰が発生させたコリジョンかをゲット。
+	inline CollisionMaster GetMaster()  const
+	{
 		return _master;
 	}
 private:	

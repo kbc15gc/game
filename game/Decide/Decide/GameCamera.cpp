@@ -14,8 +14,8 @@ void GameCamera::Awake()
 {
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
-	_Camera->SetNear(1);
-	_Camera->SetFar(1000);
+	_Camera->SetNear(0.01f);
+	_Camera->SetFar(10000.0f);
 	INSTANCE(GameObjectManager)->mainCamera = _Camera;
 
 	//カメラのコリジョンの半径設定
@@ -57,9 +57,11 @@ void GameCamera::Update()
 		_HistoryBehavior();
 	}
 
-	_toPosition.Subtract(transform->GetPosition(),(*_PlayerPos) + PLAYER_HEIGHT );
+	_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
 
-	INSTANCE(SceneManager)->GetDepthofField().SetPint(_toPosition.Length() * 1000);
+	float Len = _toPosition.Length();
+
+	INSTANCE(SceneManager)->GetDepthofField().SetPint(Len * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(26.0f);
 

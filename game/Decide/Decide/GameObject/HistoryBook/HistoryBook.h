@@ -66,9 +66,9 @@ public:
 private:
 	SkinModel*					_Model = nullptr;									//モデルのコンポーネント。のアドレス保持用。
 	Animation*					_Anim = nullptr;									//アニメーションのコンポーネントのアドレス保持用。
-	double						_AnimationEndTime[(int)AnimationNo::AnimationNum];	//アニメーションの終了時間。
+	double						_AnimationEndTime[(int)AnimationNo::AnimationNum] = { 0.0f,0.0f,0.0f,0.0f };	//アニメーションの終了時間。
 	State						_State;												//歴史書の状態。
-	bool						_IsLookAtHistoryFlag;								//歴史書を見ているかどうかのフラグ(最初は見ていないのでfalse)。
+	bool						_IsLookAtHistoryFlag = false;						//歴史書を見ているかどうかのフラグ(最初は見ていないのでfalse)。
 	Player*						_Player = nullptr;									//プレイヤーのコンポーネント。
 	Vector3						_PlayerFoward;
 	HistoryBookState*			_CurrentState = nullptr;							//歴史書の現在の状態。
@@ -76,4 +76,5 @@ private:
 	HistoryBookStateOpening		_OpeningState;										//歴史書の状態　開いている状態。
 	HistoryBookStateOpen		_Open;												//歴史書の状態　開いた状態。
 	HistoryBookStateCloseing	_Closeing;											//歴史書の状態　閉じている状態。
+	float						_AngleY = 0.0f;
 };
