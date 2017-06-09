@@ -36,7 +36,7 @@ public:
 	//ヒットしたコリジョンを全て取得
 	//Collison*　コリジョン
 	//int　指定したコリジョンの属性とのみ当たりをとる
-	vector<Collision*> AllHitsContactTest(Collision * coll, const int& attr = (const int)fbCollisionAttributeE::ALL) const;
+	const vector<Collision*> AllHitsContactTest(Collision * coll, const int& attr = (const int)fbCollisionAttributeE::ALL) const;
 	//レイを飛ばしてヒットした中で最も近かったものを取得
 	//Vector3　レイの始点
 	//Vector3　レイの終点

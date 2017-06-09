@@ -51,13 +51,14 @@ void Player::Awake()
 		{
 			// ※テスト用(後で直してね)。
 			_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
-			_CharacterController->AddAttributeXZ(Collision_ID::ATTACK);	// 攻撃コリジョンを追加。
+			//_CharacterController->AddAttributeXZ(Collision_ID::ATTACK);	// 攻撃コリジョンを追加。
 		}
 		// 以下衝突を取りたい属性(縦方向)を指定。
 		{
 			// ※テスト用(後で直してね)。
 			_CharacterController->AttributeY_AllOn();	// 全衝突。
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
+			_CharacterController->SubAttributeY(Collision_ID::ATTACK);
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);

@@ -29,6 +29,10 @@ public:
 	inline void RemoveParent() {
 		transform->SetParent(nullptr);
 	}
+
+	inline CollisionMaster GetMaster() {
+		return _master;
+	}
 private:	
 	// Õ“ËŒŸoB
 	void DetectionCollision();

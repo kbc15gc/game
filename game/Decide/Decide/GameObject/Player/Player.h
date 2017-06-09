@@ -52,6 +52,7 @@ public:
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
 	inline void HitAttackCollision(AttackCollision* hitCollision) {
+		// エネミーが作った攻撃。
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 	}
 

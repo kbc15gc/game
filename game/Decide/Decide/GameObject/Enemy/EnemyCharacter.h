@@ -261,8 +261,13 @@ private:
 	// ※処理自体は継承先に委譲。
 	virtual void _ConfigCollision() = 0;
 
+	// キャラクターコントローラーのパラメーターを設定する関数。
+	// 衝突するコリジョン属性や重力の値などをここで設定する。
+	// ※処理自体は継承先に委譲。
+	virtual void _ConfigCharacterController() = 0;
+
 	// パラメーターで剛体を生成。
-	virtual void _BuildCollision();
+	void _BuildCollision();
 
 	// モデルデータ初期化関数。
 	void _BuildModelData();
@@ -283,6 +288,8 @@ protected:
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
+
+	float _Gravity = -50.0f;	// 重力。
 
 	Vector3 _InitPos;	// 初期位置。
 
