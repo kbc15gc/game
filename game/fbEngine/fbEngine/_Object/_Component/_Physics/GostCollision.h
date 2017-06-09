@@ -19,7 +19,7 @@ public:
 	void Create(Collider* shape, int id);
 	void Update()override;
 	//ゴーストオブジェクトと重なっているコリジョンを取得する。
-	btAlignedObjectArray<btCollisionObject*> GetPairCollisions();
+	const btAlignedObjectArray<btCollisionObject*>& GetPairCollisions();
 	//他のコリジョンが接触した時に呼ばれる
 	virtual void OnCollisionEnter(Collision* coll) {};
 	//触れているコリジョンが離れた時に呼び出される。

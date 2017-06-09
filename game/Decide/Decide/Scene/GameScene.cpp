@@ -74,6 +74,8 @@ void GameScene::Start()
 	_WorldSE->InitStreaming("Asset/Sound/titleBgm.wav");
 	_WorldSE->Play(true);
 
+	_isShadowMap = true;
+
 }
 
 void GameScene::Update()

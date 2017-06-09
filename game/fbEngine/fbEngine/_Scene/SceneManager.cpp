@@ -70,7 +70,10 @@ void SceneManager::UpdateScene()
 	INSTANCE(GameObjectManager)->LateUpdateObject();
 
 	//シャドウマップの更新.
-	_ShadowMap.Update();
+	if (_Scenes[_NowScene]->GetIsShadowMap())
+	{
+		_ShadowMap.Update();
+	}
 }
 
 void SceneManager::DrawScene()
@@ -79,7 +82,10 @@ void SceneManager::DrawScene()
 	INSTANCE(GameObjectManager)->PreRenderObject();
 
 	//シャドウマップの描画.
-	_ShadowMap.Render();
+	if (_Scenes[_NowScene]->GetIsShadowMap())
+	{
+		_ShadowMap.Render();
+	}
 
 	//0番目に設定(オフスクリーンレンダリング用)
 	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);

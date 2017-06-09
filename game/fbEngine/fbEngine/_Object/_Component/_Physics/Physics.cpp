@@ -113,13 +113,15 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll,const int& a
 	return callback.hitObject;
 }
 
-vector<Collision*> PhysicsWorld::AllHitsContactTest(Collision * coll, const int & attr) const
+const vector<Collision*> PhysicsWorld::AllHitsContactTest(Collision * coll, const int & attr) const
 {
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;
 	dynamicWorld->contactTest(coll->GetCollisonObj(), callback);
 
+	// callbackはローカル変数のため、参照で配列を返しても関数を抜けると情報がロストする。
+	// ※とりあえず値で返却する。
 	return callback.hitObjects;
 }
 

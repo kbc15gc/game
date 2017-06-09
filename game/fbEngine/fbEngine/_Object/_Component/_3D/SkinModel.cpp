@@ -225,11 +225,10 @@ void SkinModel::DrawMeshContainer(
 			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
 		}
-
+		
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
 		{
@@ -355,7 +354,6 @@ void SkinModel::DrawMeshContainer(
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
-
 		}
 
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);

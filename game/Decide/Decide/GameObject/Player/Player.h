@@ -60,6 +60,7 @@ public:
 	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	// エネミーが作った攻撃。
 	void HitAttackCollision(AttackCollision* hitCollision) {
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy)

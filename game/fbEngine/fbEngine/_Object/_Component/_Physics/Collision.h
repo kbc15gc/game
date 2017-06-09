@@ -70,6 +70,10 @@ public:
 	inline short GetFilterMask()const {
 		return _FilterMask;
 	}
+	// このコリジョン生成時に設定した属性を返却。
+	inline int GetID()const {
+		return _CollisionObject->getUserIndex();
+	}
 protected:
 	//コリジョンの位置や回転を更新
 	void _UpdateCollisionTrans();
