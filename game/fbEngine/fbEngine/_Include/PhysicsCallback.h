@@ -125,7 +125,7 @@ namespace fbPhysicsCallback
 				hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
 			}
 			else {
-hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
+				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 			}
 
 			//hitオブジェクトがある

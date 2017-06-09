@@ -34,7 +34,7 @@ void GostCollision::Update()
 	Collision::Update();
 }
 
-btAlignedObjectArray<btCollisionObject*> GostCollision::GetPairCollisions()
+const btAlignedObjectArray<btCollisionObject*>& GostCollision::GetPairCollisions()
 {
 	//自身と重なっているコリジョン取得
 	return _GostObject->getOverlappingPairs();

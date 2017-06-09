@@ -30,7 +30,7 @@ public:
 		transform->SetParent(nullptr);
 	}
 	//誰が発生させたコリジョンかをゲット。
-	const CollisionMaster& GetMaster() const
+	inline CollisionMaster GetMaster()  const
 	{
 		return _master;
 	}

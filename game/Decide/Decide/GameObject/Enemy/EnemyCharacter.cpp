@@ -153,13 +153,14 @@ void EnemyCharacter::_BuildCollision() {
 		abort();
 	}
 
-	float gravity = -50.0f;
-
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(this, transform, _Radius, _Height, Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, gravity);
-	//キャラクターコントローラーの重力設定
-	_MyComponent.CharacterController->SetGravity(gravity);
+	_MyComponent.CharacterController->Init(this, transform, _Radius, _Height, Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity);
+	
+	// キャラクターコントローラーにパラメーターを設定。
+	_ConfigCharacterController();
+
+	_MyComponent.CharacterController->SetGravity(_Gravity);
 }
 
 void EnemyCharacter::_BuildModelData() {
