@@ -61,6 +61,7 @@ struct VS_OUTPUT{
 	float3	_Normal	: NORMAL;
 	float2	_UV		: TEXCOORD0;
 	float4  _World	: TEXCOORD1;	//xyzにワールド座標。wには射影空間でのdepthが格納される。
+	float4  _WVP	: TEXCOORD2;	//カメラから見た行列
 };
 
 
@@ -82,7 +83,8 @@ VS_OUTPUT VSMain(VS_INPUT In)
 		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	}
 	pos = mul(pos, g_projectionMatrix );	//ビュー空間から射影空間に変換。
-	Out._Pos = pos;
+
+	Out._Pos = Out._WVP = pos;
 	Out._World.w = pos.w;
 
 	Out._Color = In._Color;
@@ -118,7 +120,7 @@ PSOutput PSMain(VS_OUTPUT In)
 			PSOutput Out = (PSOutput)0;
 
 			Out.Color = diff;
-			Out.Depth = 0;
+			Out.Depth = In._WVP.z / In._WVP.w;
 
 			return Out;
 		}
@@ -174,7 +176,7 @@ PSOutput PSMain(VS_OUTPUT In)
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-	Out.Depth = In._World.w;
+	Out.Depth = In._WVP.z / In._WVP.w;
 
 	return Out;
 }
@@ -326,12 +328,12 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	////アンビエントライトを加算。
 	color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
 
-	color.xyz *= cascadeColor;
+	//color.xyz *= cascadeColor;
 
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-	Out.Depth = In._World.w;
+	Out.Depth = In._WVP.z / In._WVP.w;
 
 	return Out;
 }

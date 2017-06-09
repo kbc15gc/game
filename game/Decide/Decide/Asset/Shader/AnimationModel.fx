@@ -213,7 +213,7 @@ PSOutput PSMain( VS_OUTPUT In )
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-	Out.Depth = In._World.w;
+	Out.Depth = In._WVP.z / In._WVP.w;
 
 	return Out;
 }
