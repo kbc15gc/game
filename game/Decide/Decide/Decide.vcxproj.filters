@@ -114,6 +114,7 @@
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Ocean.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="GameObject\Component\CharacterParameter.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Ocean.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
