@@ -9,7 +9,7 @@ namespace
 {
 	Vector3 chippos[] =
 	{
-		Vector3(0,0,0),
+		Vector3(0,0,0),//0”Ô–Ú‚Í‚È‚¢‚½‚ß‹ó‚Ìî•ñ‚ğ
 		Vector3(1000.0f, 200.0f, 0.0f),
 		Vector3(1000.0f, 350.0f, 0.0f),
 		Vector3(1000.0f, 500.0f, 0.0f),

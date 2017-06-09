@@ -7,6 +7,8 @@
 #include "PlayerState\/PlayerStateDeath.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
+#include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\Component\CharacterParameter.h"
 
 class SkinModel;
 class Animation;
@@ -29,8 +31,10 @@ public:
 	{
 		AnimationInvalid = -1,		//無効
 		AnimationDeath,				//死亡
-		AnimationAttack02,			//攻撃02
+		AnimationAttackEnd,
+		AnimationAttack02 = AnimationAttackEnd,			//攻撃02
 		AnimationAttack01,			//攻撃01
+		AnimationAttackStart = AnimationAttack01,
 		AnimationJump,				//ジャンプ
 		AnimationRun,				//走る
 		AnimationWalk,				//歩き
@@ -38,6 +42,7 @@ public:
 		AnimationNum,				//アニメーションの数
 	};
 	Player(const char* name);
+	~Player();
 	void Awake()override;
 	void Start()override;
 	void Update()override;
@@ -59,7 +64,7 @@ public:
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy)
 		{
-			_Life--;	//とりあえず、ライフを１ずつ減らす。
+			_PlayerParam->_HP--;	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
 			_DamageSE->Play(false);//ダメージを受けたときのSE
 		}
 	}
@@ -77,17 +82,19 @@ public:
 	//キャラクターコントローラーゲット
 	CCharacterController& GetCharaCon() const
 	{
-		return* _CharacterController;
+		return*_CharacterController;
 	}
-	//アニメーション再生中フラグゲット
-	const bool GetAnimIsPlay() const;
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
+	friend class PlayerStateIdol;
+	friend class PlayerStateRun;
 
 	//コンポーネントとかアドレスの保持が必要なものたち
-	SkinModel* _Model;
-	Animation* _Anim;
+	//モデル
+	SkinModel* _Model = nullptr;
+	//アニメーション
+	Animation* _Anim = nullptr;
 	//高さ
 	float _Height;
 	//半径
@@ -100,16 +107,16 @@ private:
 	float _Gravity;
 	//プレイヤーの状態
 	State _State;
-	//プレイヤーのレベル
-	int _Level;
-	//プレイヤーのライフ
-	int _Life;
 	//アニメーションの終了時間
 	double _AnimationEndTime[(int)AnimationNo::AnimationNum];
 	//キャラクターコントローラー
-	CCharacterController* _CharacterController;
+	CCharacterController* _CharacterController = nullptr;
 	//現在のプレイヤーのステート
-	PlayerState*	_CurrentState;
+	PlayerState*	_CurrentState = nullptr;
+	//現在の攻撃アニメーションステート
+	AnimationNo	_NowAttackAnimNo;
+	//次の攻撃アニメーションステート
+	AnimationNo _NextAttackAnimNo;
 	//プレイヤーステートラン
 	PlayerStateRun	_RunState;
 	//プレイヤーステートアイドル
@@ -119,5 +126,13 @@ private:
 	//プレイヤーステートデス
 	PlayerStateDeath _DeathState;
 	//プレイヤーがダメージ受けた時のSE
-	SoundSource* _DamageSE;
+	SoundSource* _DamageSE = nullptr;
+	//プレイヤーのパラメーター
+	CharacterParameter* _PlayerParam = nullptr;
+	//プレイヤーのレベル
+	int _Level;
+	//HPのテキスト表示
+	TextObject* _HPText;
+	//MPのテキスト表示
+	TextObject* _MPText;
 };

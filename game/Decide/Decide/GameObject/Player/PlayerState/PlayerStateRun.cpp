@@ -110,6 +110,7 @@ void PlayerStateRun::Update()
 	{
 		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
+			_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
 			_Player->ChangeState(Player::State::Attack);
 		}
 	}
