@@ -37,6 +37,10 @@ void Enemy::_StartSubClass(){
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Red);
+	_MyComponent.HadBar->Create(Color,50.0f,50.0f);
+
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);

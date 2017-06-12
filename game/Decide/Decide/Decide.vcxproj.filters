@@ -114,6 +114,9 @@
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Component\HadBar.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -238,6 +241,9 @@
       <Filter>GameObject\HistoryChip</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Component\CharacterParameter.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\HadBar.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>

@@ -159,6 +159,7 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
+    <ClInclude Include="GameObject\Component\HadBar.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
+    <ClCompile Include="GameObject\Component\HadBar.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
