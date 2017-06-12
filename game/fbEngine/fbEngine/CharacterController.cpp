@@ -26,8 +26,8 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 
 
 	m_collider = capsule;
-
-	m_rigidBody->GetCollisonObj()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	//もともとのフラグを残したまま新しいフラグを追加。
+	m_rigidBody->GetCollisonObj()->setCollisionFlags(m_rigidBody->GetCollisonObj()->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
 }
 void CCharacterController::Execute()
 {
