@@ -1,5 +1,6 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\GameObject.h"
+
 namespace
 {
 	//オブジェクトの情報

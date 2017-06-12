@@ -9,6 +9,7 @@ class GameCamera :public GameObject
 {
 public:
 	GameCamera(const char* name) :GameObject(name) {}
+	~GameCamera();
 	void Awake()override;
 	void Start()override;
 	void Update()override;
