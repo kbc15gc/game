@@ -36,6 +36,7 @@ void Ground::Awake()
 
 	transform->SetLocalPosition(Vector3::zero);
 	transform->SetLocalScale(Vector3::one);
+
 }
 
 void Ground::Update()

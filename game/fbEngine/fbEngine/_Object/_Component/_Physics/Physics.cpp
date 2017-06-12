@@ -48,6 +48,7 @@ void PhysicsWorld::Start()
 	dynamicWorld->setGravity(btVector3(0.0f, -9.8f*100, 0.0f));
 	//ゴーストコリジョンがペアを見つけるときに使うコールバック設定。
 	//これを設定しないとゴーストオブジェクトは重なったペアを見つけることはできない。
+	dynamicWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
 	dynamicWorld->getPairCache()->setInternalGhostPairCallback(new fbPhysicsCallback::MyGhostPairCallback);
 }
 void PhysicsWorld::Update()

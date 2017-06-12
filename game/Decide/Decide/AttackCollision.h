@@ -12,6 +12,7 @@ public:
 
 	void Awake()override;
 	void Update()override;
+	void LateUpdate()override;
 
 	// 攻撃判定用のコリジョン生成。
 	// 引数：	位置(ローカル座標)。
