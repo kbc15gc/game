@@ -28,7 +28,7 @@ private:
 	void _SetMenuEnabel(const bool& enabel);
 	//メニューを開く処理
 	void _OpenMenu();
-	//セレクトボタンの更新
+	//セレクトボタンの更新(チップをセットする場所を決める)
 	void SelectMenuButton();
 private:
 	//メニューの有効フラグ

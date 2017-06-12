@@ -77,13 +77,17 @@ void Blur::Render()
 	//Xブラー。
 	{
 		//レンダリングターゲットをブラーに設定
-		INSTANCE(RenderTargetManager)->ReSetRT(0,&_BlurRT[0]);
+		INSTANCE(RenderTargetManager)->SetRT(0,&_BlurRT[0]);
 
 		float size[2] = {
 			static_cast<float>(_SrcTextureSize[0]),
 			static_cast<float>(_SrcTextureSize[1])
 		};
 
+		float texelOffset[] = {
+			0.5f / _BlurRT[0].texture->Size.x,
+			0.5f / _BlurRT[0].texture->Size.y
+		};
 
 		_Effect->SetTechnique("XBlur");
 
@@ -92,6 +96,7 @@ void Blur::Render()
 
 		_Effect->SetTexture("g_Blur", _SrcTexture->pTexture);
 		_Effect->SetValue("g_TexSize", size, sizeof(size));
+		_Effect->SetValue("g_texelOffset", texelOffset, sizeof(texelOffset));
 
 		_Effect->CommitChanges();
 
@@ -105,22 +110,28 @@ void Blur::Render()
 	//Yブラー。
 	{
 		//レンダリングターゲットをブラーに設定
-		INSTANCE(RenderTargetManager)->ReSetRT(0, &_BlurRT[1]);
+		INSTANCE(RenderTargetManager)->SetRT(0, &_BlurRT[1]);
 		
 
 		float size[2] =
 		{
-			static_cast<float>(_BlurRT[0].texture->Size.x),
-			static_cast<float>(_BlurRT[0].texture->Size.y)
+			static_cast<float>(_BlurRT[1].texture->Size.x),
+			static_cast<float>(_BlurRT[1].texture->Size.y)
+		};
+
+		float texelOffset[] = {
+			0.5f / _BlurRT[0].texture->Size.x,
+			0.5f / _BlurRT[0].texture->Size.y
 		};
 
 		_Effect->SetTechnique("YBlur");
 
 		_Effect->Begin(0, D3DXFX_DONOTSAVESTATE);
 		_Effect->BeginPass(0);
-
+		
 		_Effect->SetTexture("g_Blur", _BlurRT[0].texture->pTexture);
 		_Effect->SetValue("g_TexSize", size, sizeof(size));
+		_Effect->SetValue("g_texelOffset", texelOffset, sizeof(texelOffset));
 
 		_Effect->CommitChanges();
 

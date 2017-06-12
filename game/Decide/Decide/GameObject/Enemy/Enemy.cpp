@@ -106,6 +106,17 @@ void Enemy::_ConfigCollision() {
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius,_Height);
 }
 
+void Enemy::_ConfigCharacterController() {
+	// 衝突する属性を設定(横)。
+	_MyComponent.CharacterController->AttributeXZ_AllOn();
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
+	// 衝突する属性を設定(縦)。
+	_MyComponent.CharacterController->AttributeY_AllOn();
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
+}
+
 void Enemy::_BuildAnimation() {
 	vector<unique_ptr<AnimationData>> Datas;
 	for (int idx = 0; idx < _MyComponent.Animation->GetNumAnimationSet(); idx++) {
@@ -113,9 +124,6 @@ void Enemy::_BuildAnimation() {
 		unique_ptr<AnimationData> data(new AnimationData);
 		data->No = idx;
 		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
-		// 各アニメーションの終了時間を設定していく。
-		//_MyComponent.Animation->SetAnimationEndTime(data->No, data->Time);
-
 		// 配列に追加。
 		Datas.push_back(move(data));
 	}

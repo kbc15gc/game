@@ -25,6 +25,7 @@
     </ClCompile>
     <ClCompile Include="_Effect\Blur.cpp" />
     <ClCompile Include="_Effect\EffectManager.cpp" />
+    <ClCompile Include="_Effect\GaussianBlur.cpp" />
     <ClCompile Include="_Effect\PostEffect\AntiAliasing.cpp" />
     <ClCompile Include="_Effect\PostEffect\Bloom.cpp" />
     <ClCompile Include="_Effect\PostEffect\DepthofField.cpp" />
@@ -98,6 +99,7 @@
     <ClInclude Include="_Effect\Blur.h" />
     <ClInclude Include="_Effect\Effect.h" />
     <ClInclude Include="_Effect\EffectManager.h" />
+    <ClInclude Include="_Effect\GaussianBlur.h" />
     <ClInclude Include="_Effect\PostEffect\AntiAliasing.h" />
     <ClInclude Include="_Effect\PostEffect\Bloom.h" />
     <ClInclude Include="_Effect\PostEffect\DepthofField.h" />
