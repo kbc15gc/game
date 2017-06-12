@@ -5,6 +5,7 @@
 #include"Ocean.h"
 #include"fbEngine\_Object\Vertex.h"
 #include"fbEngine\_Effect\EffectManager.h"
+#include"fbEngine\_Object\_Component\_3D\Light.h"
 
 /**
 * 早めの初期化.
@@ -24,30 +25,52 @@ void Ocean::Awake()
 			{ 10000.0f, 0.0f, 10000.0f, 1.0f },//右上
 		};
 		//UV定義
-		VERTEX_TEXCOORD texcoord[] = 
+		VERTEX_TEXCOORD texcoord[] =
 		{
-			{ -9.0f, -9.0f },//左上
-			{ 10.0f, -9.0f },//右上
-			{ -9.0f, 10.0f },//左下
-			{ 10.0f, 10.0f },//右下
+			{ -40.0f, -40.0f },//左上
+			{ 41.0f, -40.0f },//右上
+			{ -40.0f, 41.0f },//左下
+			{ 41.0f, 41.0f },//右下
 		};
+
+		VERTEX_NORMAL normal[] =
+		{
+			{ 0, 1, 0, 1 },
+			{ 0, 1, 0, 1 },
+			{ 0, 1, 0, 1 },
+			{ 0, 1, 0, 1 },
+		};
+
+		VERTEX_TANGENT tangent[] =
+		{
+			{ 1, -0, -0, 1 },
+			{ 1, -0, -0, 1 },
+			{ 1, -0, -0, 1 },
+			{ 1, -0, -0, 1 },
+		};
+	
 
 		//頂点レイアウト.
 		D3DVERTEXELEMENT9 elements[] = {
 			{ 0, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },	// 頂点座標.
 			{ 1, 0	, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD   , 0 }, // UV座標.
+			{ 2, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },	// 法線ベクトル.
+			{ 2, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },	// 接ベクトル.
 			D3DDECL_END()
 		};
 
 		_Vertex->Initialize(fbEngine::PRIMITIVETYPE::TRIANGLESTRIP, 4);
 		_Vertex->CreateVertexBuffer(position, 4, sizeof(VERTEX_POSITION), elements[0]);
 		_Vertex->CreateVertexBuffer(texcoord, 4, sizeof(VERTEX_TEXCOORD), elements[1]);
+		_Vertex->CreateVertexBuffer(normal, 4, sizeof(VERTEX_NORMAL), elements[2]);
+		_Vertex->CreateVertexBuffer(tangent, 4, sizeof(VERTEX_TANGENT), elements[3]);
 		_Vertex->CreateDeclaration();
 	}
 
 	_Effect = EffectManager::LoadEffect("Ocean.fx");
 
-	_Texture = LOADTEXTURE("Ocean.png");
+	_NormalTexture[0] = LOADTEXTURE("Ocean/Ocean2_Normal.png");
+	_NormalTexture[1] = LOADTEXTURE("Ocean/Ocean3_Normal.png");
 
 }
 
@@ -56,7 +79,7 @@ void Ocean::Awake()
 */
 void Ocean::Start()
 {
-	transform->SetLocalPosition(Vector3(374, 69, -1275));
+	transform->SetLocalPosition(Vector3(0, 50, 0));
 }
 
 /**
@@ -64,6 +87,8 @@ void Ocean::Start()
 */
 void Ocean::Update()
 {
+	_Wave += 0.0002f;
+
 	//トランスフォームの更新.
 	transform->UpdateTransform();
 }
@@ -76,10 +101,10 @@ void Ocean::Render()
 	
 	//両面描画.
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	//(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+	//(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	_Effect->SetTechnique("Ocean");
 
@@ -90,7 +115,37 @@ void Ocean::Render()
 	_Effect->SetMatrix("g_ViewMatrix",&(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetViewMat());
 	_Effect->SetMatrix("g_ProjMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetProjectionMat());
 
-	_Effect->SetTexture("g_Texture", _Texture->pTexture);
+	_Effect->SetTexture("g_Normal_1", _NormalTexture[0]->pTexture);
+	_Effect->SetTexture("g_Normal_2", _NormalTexture[1]->pTexture);
+
+	_Effect->SetFloat("g_Wave", _Wave);
+
+	//ライト.
+	{
+		const int num = INSTANCE(GameObjectManager)->mainLight->GetNum();
+		Vector4 dir[System::MAX_LIGHTNUM];
+		Color color[System::MAX_LIGHTNUM];
+		ZeroMemory(dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
+		const vector<DirectionalLight*>& vec = INSTANCE(GameObjectManager)->mainLight->GetLight();
+		FOR(i, num)
+		{
+			dir[i] = vec[i]->Direction();
+			color[i] = vec[i]->GetColor();
+			color[i].a = 10;
+		}
+		//ライトの向きを転送。
+		_Effect->SetValue("g_diffuseLightDirection", &dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
+		//ライトのカラーを転送。
+		_Effect->SetValue("g_diffuseLightColor", &color, sizeof(Color)*System::MAX_LIGHTNUM);
+		//ライト数セット
+		_Effect->SetInt("g_LightNum", num);
+		//環境光
+		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(0.3, 0.3, 0.3, 1.0f));
+	}
+
+	//カメラのポジションセット(スペキュラライト用)
+	Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
+	_Effect->SetValue("g_cameraPos", &D3DXVECTOR4(campos.x, campos.y, campos.z, 1.0f), sizeof(D3DXVECTOR4));
 
 	_Effect->CommitChanges();
 
@@ -100,8 +155,8 @@ void Ocean::Render()
 	_Effect->End();
 
 	//変更したステートを元に戻す
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	/*(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);*/
 }

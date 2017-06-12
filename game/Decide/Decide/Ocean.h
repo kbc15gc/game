@@ -52,7 +52,10 @@ private:
 	/** エフェクトクラス. */
 	Effect* _Effect = nullptr;
 
-	/** テクスチャ. */
-	TEXTURE* _Texture = nullptr;
+	/** 法線マップ用テクスチャ. */
+	TEXTURE* _NormalTexture[2] = { nullptr };
+
+	/** 波. */
+	float _Wave = 0;
 
 };

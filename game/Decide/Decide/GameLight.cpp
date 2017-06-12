@@ -25,5 +25,9 @@ void GameLight::Awake()
 
 void GameLight::Update()
 {
+	static float angle = 0;
+	Light* light = GetComponent<Light>();
+	light->GetLight()[0]->SetEulerAngles(Vector3(45, angle, 180));
 
+	angle += 1.0f;
 }
