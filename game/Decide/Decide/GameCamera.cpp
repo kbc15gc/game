@@ -10,6 +10,12 @@ namespace
 	const float CAMERA_SPEED = 1.0f;
 }
 
+GameCamera::~GameCamera()
+{
+	//シャドウマップに設定したカメラを外す
+	INSTANCE(SceneManager)->GetShadowMap()->SetCamera(nullptr);
+}
+
 void GameCamera::Awake()
 {
 	//カメラコンポーネント
