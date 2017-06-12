@@ -30,9 +30,19 @@ void AttackCollision::Update()
 	}
 }
 
+void AttackCollision::LateUpdate()
+{
+	btAlignedObjectArray<btCollisionObject*> colls = _Gost->GetPairCollisions();
+
+	FOR(i, colls.size())
+		((Collision*)(colls.at(i)->getUserPointer()))->gameObject;
+}
+
 void AttackCollision::DetectionCollision() {
 	// 衝突しているコリジョンをすべて取得する。
 	vector<Collision*> collisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(this->_Gost);
+
+	
 
 	for (int idx = 0; idx < collisions.size(); idx++) {
 		// 取得したコリジョンの情報を参照して対応するコールバックを呼び出す。
@@ -58,6 +68,8 @@ void AttackCollision::DetectionCollision() {
 			break;
 		}
 	}
+
+	
 }
 
 GostCollision* AttackCollision::Create(const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
