@@ -75,7 +75,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldSE->InitStreaming("Asset/Sound/titleBgm.wav");
+	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
 	_isShadowMap = true;
