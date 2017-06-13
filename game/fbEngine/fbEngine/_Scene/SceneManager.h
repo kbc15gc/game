@@ -5,6 +5,7 @@
 #include"_Effect\PostEffect\DepthofField.h"
 /** シャドウマップクラス. */
 #include"_Effect\PreRender\ShadowMap.h"
+#include"_Effect\PreRender\EnvironmentMap.h"
 
 class Scene;
 class Sprite;
@@ -92,6 +93,14 @@ public:
 		return _DepthofField;
 	}
 
+	/**
+	* 環境マップクラスを取得.
+	*/
+	EnvironmentMap* GetEnvironmentMap()
+	{
+		return &_EnvironmentMap;
+	}
+
 private:
 	int _NowScene;	//現在のシーンの添え字
 	vector<Scene*> _Scenes;
@@ -109,4 +118,8 @@ private:
 	DepthofField _DepthofField;
 	Bloom _Bloom;
 	ShadowMap  _ShadowMap;
+
+	/** 環境マップ. */
+	EnvironmentMap _EnvironmentMap;
+
 };

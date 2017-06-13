@@ -12,6 +12,9 @@ bool ReceiveShadow;						//影を写す
 
 bool SkyBox;
 
+/** 環境マップフラグ. */
+int g_isEnvironmentMap;
+
 float4x4 g_rotationMatrix;				//回転行列。法線を回転させるために必要になる。ライティングするなら必須。
 float4x4 g_worldMatrix;					//ワールド行列。
 float4x4 g_viewMatrix;					//ビュー行列。
@@ -78,7 +81,7 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	Out._World = pos;						//ワールド行列を保持
 
 	//スカイボックスはビュー行列をかけない。
-	if (!SkyBox)
+	if (!SkyBox || g_isEnvironmentMap > 0.0f)
 	{
 		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	}

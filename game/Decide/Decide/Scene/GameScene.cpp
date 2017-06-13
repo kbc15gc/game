@@ -79,6 +79,7 @@ void GameScene::Start()
 	_WorldSE->Play(true);
 
 	_isShadowMap = true;
+	_isEnvironmentMap = true;
 
 }
 

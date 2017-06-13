@@ -119,7 +119,7 @@ void Player::Start()
 	ChangeState(State::Idol);
 	//ポジション
 	transform->SetLocalPosition(Vector3(374, 69, -1275));
-	//transform->SetLocalPosition(Vector3(560, 69, -1000));
+	transform->SetLocalPosition(Vector3(560, 69, -1000));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）

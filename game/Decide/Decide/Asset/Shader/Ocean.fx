@@ -28,6 +28,17 @@ sampler_state
 	AddressV = Wrap;
 };
 
+/** 環境マップテクスチャ. */
+textureCUBE g_EnvironmentMap;
+samplerCUBE g_EnvironmentMapSampler = 
+sampler_state
+{
+	Texture = <g_EnvironmentMap>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+};
+
 /** ワールド行列. */
 float4x4 g_WorldMatrix;
 /** ビュー行列. */
@@ -142,6 +153,17 @@ float4 PSMain(VS_OUTPUT In) : COLOR0
 	LightColor.xyz += SpecCalc(normal, In.WorldPos.xyz);
 
 	LightColor.xyz += g_ambientLight.xyz * defColor.xyz;
+
+	{
+		//ワールド空間での視線ベクトル.
+		float3 worldViewVec = In.WorldPos.xyz - g_cameraPos.xyz;
+		float3 vReflect = reflect(worldViewVec, normal);
+		//環境マップのカラー.
+		float4 EnvironmentColor = texCUBE(g_EnvironmentMapSampler, vReflect);
+
+		float R = 0.03f;
+		OutColor = lerp(EnvironmentColor, defColor, R);
+	}
 
 	OutColor *= LightColor;
 
