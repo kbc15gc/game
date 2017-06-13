@@ -40,9 +40,9 @@ void AttackCollision::LateUpdate()
 
 void AttackCollision::DetectionCollision() {
 	// 衝突しているコリジョンをすべて取得する。
-	vector<Collision*> collisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(this->_Gost);
+	//vector<Collision*> collisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(this->_Gost);
 
-	
+	btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
 
 	for (int idx = 0; idx < collisions.size(); idx++) {
 		// 取得したコリジョンの情報を参照して対応するコールバックを呼び出す。
@@ -50,16 +50,16 @@ void AttackCollision::DetectionCollision() {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (collisions[idx]->GetID() == Collision_ID::ENEMY) {
+			if (collisions[idx]->getUserIndex() == Collision_ID::ENEMY) {
 				// 敵と衝突した。
-				static_cast<EnemyCharacter*>(collisions[idx]->gameObject)->HitAttackCollision(this);
+				static_cast<EnemyCharacter*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
 			}
 			break;
 		case CollisionMaster::Enemy:
 			// 雑魚敵が生成した攻撃。
-			if (collisions[idx]->GetID() == Collision_ID::PLAYER) {
+			if (collisions[idx]->getUserIndex() == Collision_ID::PLAYER) {
 				// プレイヤーと衝突した。
-				static_cast<Player*>(collisions[idx]->gameObject)->HitAttackCollision(this);
+				static_cast<Player*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
 			}
 			break;
 		case CollisionMaster::Other:
