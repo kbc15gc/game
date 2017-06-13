@@ -10,6 +10,7 @@ void Sky::Awake()
 	model->SetModelData(modeldata);
 	model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
 	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 	model->SetSky(true);
 	transform->SetLocalAngle(Vector3(15, 0, 0));
 }

@@ -119,6 +119,7 @@ void Player::Start()
 	ChangeState(State::Idol);
 	//ポジション
 	transform->SetLocalPosition(Vector3(374, 69, -1275));
+	transform->SetLocalPosition(Vector3(560, 69, -1000));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -226,12 +227,10 @@ void Player::AnimationControl()
 			else if (_NextAttackAnimNo != AnimationNo::AnimationInvalid)
 			{
 				//連撃
-				PlayAnimation(_NextAttackAnimNo, 0.1f, 1);
+				PlayAnimation(_NextAttackAnimNo, 0.1f,1);
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
-
-			
 		}
 		//死亡アニメーション
 		else if (_State == State::Death)

@@ -11,6 +11,7 @@
 
 #include "Ground.h"
 #include "Sky.h"
+#include"Ocean.h"
 
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
@@ -22,6 +23,7 @@
 
 #include "GameObject\Village\Shop.h"
 #include "GameObject\HistoryChip\Chips.h"
+
 
 ImageObject* g_depth;
 
@@ -37,6 +39,8 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	//海生成.
+	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 1);
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
@@ -71,10 +75,11 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldSE->InitStreaming("Asset/Sound/titleBgm.wav");
+	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
 	_isShadowMap = true;
+	_isEnvironmentMap = true;
 
 }
 

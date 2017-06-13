@@ -51,6 +51,14 @@ public:
 		return _isShadowMap;
 	}
 
+	/**
+	* 環境マップフラグを取得.
+	*/
+	bool GetIsEnvironmentMap()
+	{
+		return _isEnvironmentMap;
+	}
+
 private:
 	//フェード描画
 	void _DrawFade();
@@ -72,6 +80,9 @@ protected:
 
 	/** シャドウマップフラグ. */
 	bool _isShadowMap = false;
+
+	/** 環境マップフラグ. */
+	bool _isEnvironmentMap = false;
 
 
 };

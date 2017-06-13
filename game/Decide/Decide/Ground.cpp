@@ -19,14 +19,16 @@ void Ground::Awake()
 	//マテリアル取得
 	Material* material = modeldata->FindMaterial("ground4_Diffuse.tga");
 	//スプラットマップセット
-	material->SetTexture(Material::TextureHandleE::SplatMap, TextureManager::LoadBaseTexture("Xfile/groundSplatmap.png"));
-	material->SetTexture(Material::TextureHandleE::TerrainTex0, TextureManager::LoadBaseTexture("Xfile/Grass.tga"));
-	material->SetTexture(Material::TextureHandleE::TerrainTex1, TextureManager::LoadBaseTexture("Xfile/ground1_Diffuse.tga"));
-	material->SetTexture(Material::TextureHandleE::TerrainTex2, TextureManager::LoadBaseTexture("Xfile/Sand_Albedo.tga"));
+	material->SetTexture(Material::TextureHandleE::SplatMap, TextureManager::LoadBaseTexture("Xfile/groundSplatmap.png"));		
+	material->SetTexture(Material::TextureHandleE::TerrainTex0, TextureManager::LoadBaseTexture("Xfile/Grass.tga"));			//赤	草
+	material->SetTexture(Material::TextureHandleE::TerrainTex1, TextureManager::LoadBaseTexture("Xfile/ground1_Diffuse.tga"));	//緑	地面
+	material->SetTexture(Material::TextureHandleE::TerrainTex2, TextureManager::LoadBaseTexture("Xfile/Sand_Albedo.tga"));		//青	砂
 	model->SetModelData(modeldata);
 	model->terain = true;
 	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
 	//model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+
+	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
@@ -36,6 +38,7 @@ void Ground::Awake()
 
 	transform->SetLocalPosition(Vector3::zero);
 	transform->SetLocalScale(Vector3::one);
+
 }
 
 void Ground::Update()
