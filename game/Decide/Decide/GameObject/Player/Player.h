@@ -65,7 +65,7 @@ public:
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy)
 		{
-			_PlayerParam->_HP--;	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
+			_PlayerParam->SubParam(CharacterParameter::Param::HP,1);	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
 			_DamageSE->Play(false);//ダメージを受けたときのSE
 		}
 	}
