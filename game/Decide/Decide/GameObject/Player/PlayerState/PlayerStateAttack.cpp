@@ -54,13 +54,10 @@ void PlayerStateAttack::Update()
 		)
 	{
 		//コンボ！
-		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() - 1);
+ 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() - 1);
 	}
-
 	//フレームが10の時あたり判定作成
 	Attack(attackpram1);
-
-	
 }
 
 void PlayerStateAttack::Enter()

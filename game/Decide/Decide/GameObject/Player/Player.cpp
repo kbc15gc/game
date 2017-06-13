@@ -227,12 +227,10 @@ void Player::AnimationControl()
 			else if (_NextAttackAnimNo != AnimationNo::AnimationInvalid)
 			{
 				//連撃
-				PlayAnimation(_NextAttackAnimNo, 0.1f, 1);
+				PlayAnimation(_NextAttackAnimNo, 0.1f,1);
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
-
-			
 		}
 		//死亡アニメーション
 		else if (_State == State::Death)
