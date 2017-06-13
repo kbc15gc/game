@@ -27,10 +27,10 @@ void Ocean::Awake()
 		//UV定義
 		VERTEX_TEXCOORD texcoord[] =
 		{
-			{ -40.0f, -40.0f },//左上
-			{ 41.0f, -40.0f },//右上
-			{ -40.0f, 41.0f },//左下
-			{ 41.0f, 41.0f },//右下
+			{ -10.0f, -10.0f },//左上
+			{ 11.0f, -10.0f },//右上
+			{ -10.0f, 11.0f },//左下
+			{ 11.0f, 11.0f },//右下
 		};
 
 		VERTEX_NORMAL normal[] =
@@ -43,10 +43,10 @@ void Ocean::Awake()
 
 		VERTEX_TANGENT tangent[] =
 		{
-			{ 1, -0, -0, 1 },
-			{ 1, -0, -0, 1 },
-			{ 1, -0, -0, 1 },
-			{ 1, -0, -0, 1 },
+			{ 1, 0, 0, 1 },
+			{ 1, 0, 0, 1 },
+			{ 1, 0, 0, 1 },
+			{ 1, 0, 0, 1 },
 		};
 	
 
@@ -87,7 +87,12 @@ void Ocean::Start()
 */
 void Ocean::Update()
 {
-	_Wave += 0.0002f;
+	_Wave += 0.0001f;
+
+	static float miti = 0;
+
+	transform->SetLocalPosition(Vector3(0, 50 + sin(miti), 0));
+	miti += 0.01;
 
 	//トランスフォームの更新.
 	transform->UpdateTransform();
@@ -101,10 +106,6 @@ void Ocean::Render()
 	
 	//両面描画.
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	//(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
-	//(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	_Effect->SetTechnique("Ocean");
 
@@ -131,7 +132,7 @@ void Ocean::Render()
 		{
 			dir[i] = vec[i]->Direction();
 			color[i] = vec[i]->GetColor();
-			color[i].a = 10;
+			color[i].a = 1.2;
 		}
 		//ライトの向きを転送。
 		_Effect->SetValue("g_diffuseLightDirection", &dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
@@ -147,6 +148,8 @@ void Ocean::Render()
 	Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
 	_Effect->SetValue("g_cameraPos", &D3DXVECTOR4(campos.x, campos.y, campos.z, 1.0f), sizeof(D3DXVECTOR4));
 
+	_Effect->SetTexture("g_EnvironmentMap", INSTANCE(SceneManager)->GetEnvironmentMap()->GetCubeTexture());
+
 	_Effect->CommitChanges();
 
 	_Vertex->DrawPrimitive();
@@ -156,7 +159,5 @@ void Ocean::Render()
 
 	//変更したステートを元に戻す
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	/*(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);*/
+
 }

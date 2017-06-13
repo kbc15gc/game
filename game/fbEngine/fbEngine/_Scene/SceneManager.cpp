@@ -41,6 +41,10 @@ SceneManager::SceneManager()
 
 	//シャドウマップの初期化.
 	_ShadowMap.Create();
+
+	//環境マップの初期化.
+	_EnvironmentMap.Create();
+
 }
 
 SceneManager::~SceneManager()
@@ -74,6 +78,12 @@ void SceneManager::UpdateScene()
 	{
 		_ShadowMap.Update();
 	}
+
+	//環境マップの更新.
+	if (_Scenes[_NowScene]->GetIsEnvironmentMap())
+	{
+		_EnvironmentMap.Update();
+	}
 }
 
 void SceneManager::DrawScene()
@@ -85,6 +95,11 @@ void SceneManager::DrawScene()
 	if (_Scenes[_NowScene]->GetIsShadowMap())
 	{
 		_ShadowMap.Render();
+	}
+	//環境マップの描画.
+	if (_Scenes[_NowScene]->GetIsEnvironmentMap())
+	{
+		_EnvironmentMap.Render();
 	}
 
 	//0番目に設定(オフスクリーンレンダリング用)

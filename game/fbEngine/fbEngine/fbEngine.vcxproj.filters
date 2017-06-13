@@ -258,6 +258,9 @@
     <ClCompile Include="_Effect\GaussianBlur.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
+    <ClCompile Include="_Effect\PreRender\EnvironmentMap.cpp">
+      <Filter>Effect\PreRender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -502,6 +505,9 @@
     <ClInclude Include="fbstdafx.h" />
     <ClInclude Include="_Effect\GaussianBlur.h">
       <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PreRender\EnvironmentMap.h">
+      <Filter>Effect\PreRender</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

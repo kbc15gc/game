@@ -15,6 +15,7 @@ enum ModelEffectE
 	SPECULAR = BIT(3),			//鏡面反射
 	TOON = BIT(4),				//トゥーン
 	LIMLIGHT = BIT(5),			//リムライト
+	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
 };
 
 //モデルの描画を行うクラス
@@ -34,6 +35,12 @@ public:
 	* シャドウマップクラスから呼ばれている.
 	*/
 	void RenderToShadowMap();
+
+	/**
+	* 環境マップに描画する.
+	* 環境マップクラスから呼ばれている.
+	*/
+	void RenderToEnvironmentMap();
 
 	void SetCamera(Camera* c) 
 	{

@@ -28,6 +28,8 @@ void Ground::Awake()
 	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
 	//model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 
+	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
+
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
