@@ -35,6 +35,7 @@
     <ClCompile Include="_Inputs\KeyBoard .cpp" />
     <ClCompile Include="_Inputs\Mouse.cpp" />
     <ClCompile Include="_Inputs\XInput.cpp" />
+    <ClCompile Include="_Nature\Sky.cpp" />
     <ClCompile Include="_Object\Object.cpp" />
     <ClCompile Include="_Object\Vertex.cpp" />
     <ClCompile Include="_Object\_Component\Component.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="_Inputs\KeyBoard .h" />
     <ClInclude Include="_Inputs\Mouse.h" />
     <ClInclude Include="_Inputs\XInput.h" />
+    <ClInclude Include="_Nature\Sky.h" />
     <ClInclude Include="_Object\Noncopyable.h" />
     <ClInclude Include="_Object\Object.h" />
     <ClInclude Include="_Object\Vertex.h" />

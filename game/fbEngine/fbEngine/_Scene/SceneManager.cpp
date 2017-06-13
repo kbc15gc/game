@@ -45,6 +45,7 @@ SceneManager::SceneManager()
 	//環境マップの初期化.
 	_EnvironmentMap.Create();
 
+	
 }
 
 SceneManager::~SceneManager()
@@ -62,6 +63,11 @@ void SceneManager::StartScene()
 	FPS* fps = INSTANCE(GameObjectManager)->AddNew<FPS>("fps", System::MAX_PRIORITY);
 	//fps->transform->SetLocalPosition(Vector3(0, 30, 0));
 //#endif // DEBUG
+
+	//空描画クラスの初期化.
+	_Sky = INSTANCE(GameObjectManager)->AddNew<Sky>("sky", 0);
+	_Sky->SetActive(false);
+
 	_Scenes[_NowScene]->Start();
 	INSTANCE(GameObjectManager)->StartObject();
 }
@@ -84,6 +90,7 @@ void SceneManager::UpdateScene()
 	{
 		_EnvironmentMap.Update();
 	}
+
 }
 
 void SceneManager::DrawScene()

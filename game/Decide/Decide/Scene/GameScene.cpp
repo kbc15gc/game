@@ -10,8 +10,7 @@
 #include "GameShadowCamera.h"
 
 #include "Ground.h"
-#include "Sky.h"
-#include"Ocean.h"
+#include "Ocean.h"
 
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
@@ -35,8 +34,6 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
 	//‰eƒJƒƒ‰¶¬
 	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 8);
-	//‹ó¶¬
-	INSTANCE(GameObjectManager)->AddNew<Sky>("Sky", 0);
 	//’n–Ê¶¬
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//ŠC¶¬.
@@ -80,6 +77,8 @@ void GameScene::Start()
 
 	_isShadowMap = true;
 	_isEnvironmentMap = true;
+
+	INSTANCE(SceneManager)->GetSky()->SetActive(true);
 
 }
 

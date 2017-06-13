@@ -25,7 +25,7 @@ void HistoryBookStateCloseing::Update()
 	if (_HistoryBook->GetIsPlay() == false)
 	{
 		//—ðŽj‘‚Ìó‘Ô‚ð•Â‚¶‚½ó‘Ô‚É•ÏXB
-		_HistoryBook->ChangeState(HistoryBook::State::Close);
+		_HistoryBook->ChangeState(HistoryBook::StateCodeE::Close);
 	}
 		
 }
