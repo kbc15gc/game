@@ -138,10 +138,8 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 		//true‚È‚ç—ðŽj‘‚ðŠJ‚­ó‘Ô‚É‚·‚éB
 		//ture‚ÌŽž‚É‰Ÿ‚³‚ê‚½‚ç‚»‚ÌŽž—ðŽj‘‚ÍŠJ‚¢‚Ä‚¢‚é‚Ì‚Å•Â‚¶‚éó‘Ô‚É‘JˆÚB
 		ChangeState(_IsLookAtHistoryFlag ? StateCodeE::Opening : StateCodeE::Closeing);
-		
-		_PlayerFoward = _Player->transform->GetForward();
-		_PlayerFoward.Scale(-1);
-		transform->SetLocalPosition(_PlayerFoward + PLAYER_HALFHEIGHT);
+
+		transform->SetLocalPosition(Vector3(0.0f, 0.0f, PLAYER_HALFHEIGHT.y));
 	}
 }
 
