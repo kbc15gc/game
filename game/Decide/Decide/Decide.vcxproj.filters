@@ -115,6 +115,9 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Ocean.cpp" />
+    <ClCompile Include="GameObject\Component\HadBar.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -242,6 +245,9 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Ocean.h" />
+    <ClInclude Include="GameObject\Component\HadBar.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
