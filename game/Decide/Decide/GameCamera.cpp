@@ -1,15 +1,26 @@
+/**
+* ゲームカメラクラスの実装.
+*/
 #include"stdafx.h"
 #include "GameCamera.h"
+
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
 
 namespace
 {
+	
+	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
+	/** 回転速度. */
 	const float CAMERA_SPEED = 1.0f;
+
 }
 
+/**
+* デストラクタ.
+*/
 GameCamera::~GameCamera()
 {
 	//シャドウマップに設定したカメラを外す
@@ -54,9 +65,10 @@ void GameCamera::Start()
 void GameCamera::Update()
 {
 	//歴史書を見ているかどうか。
-	if (_HistoryBook->GetIsLookAtHistoryFlag() == false)
+	if (!_HistoryBook->GetIsLookAtHistoryFlag())
 	{
 		_StandardBehavior();
+		_CameraPos = transform->GetPosition();
 	}
 	else
 	{
@@ -73,7 +85,7 @@ void GameCamera::Update()
 
 }
 
-void GameCamera::RotTransversal(float roty)
+void GameCamera::_RotTransversal(float roty)
 {
 	D3DXQUATERNION mAxisY;
 	D3DXVECTOR4 v;
@@ -86,7 +98,7 @@ void GameCamera::RotTransversal(float roty)
 	_ToPlayerDir.z = v.z;
 }
 
-void GameCamera::RotLongitudinal(float rotx)
+void GameCamera::_RotLongitudinal(float rotx)
 {
 	D3DXVECTOR3 Cross;
 	D3DXQUATERNION zAxis;
@@ -148,6 +160,9 @@ void GameCamera::_Move()
 	transform->SetPosition(next);
 }
 
+/**
+* 通常時のカメラ挙動.
+*/
 void GameCamera::_StandardBehavior()
 {
 
@@ -177,22 +192,22 @@ void GameCamera::_StandardBehavior()
 		//右回転
 		if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) > 0.1f)
 		{
-			RotTransversal(CAMERA_SPEED * Time::DeltaTime());
+			_RotTransversal(CAMERA_SPEED * Time::DeltaTime());
 		}
 		//左回転
 		if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f) < -0.1f)
 		{
-			RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
+			_RotTransversal(-CAMERA_SPEED * Time::DeltaTime());
 		}
 		//上
 		if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) > 0.1f)
 		{
-			RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
+			_RotLongitudinal(CAMERA_SPEED * Time::DeltaTime());
 		}
 		//下
 		if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f) < -0.1f)
 		{
-			RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
+			_RotLongitudinal(-CAMERA_SPEED * Time::DeltaTime());
 		}
 
 		//移動
@@ -210,6 +225,9 @@ void GameCamera::_StandardBehavior()
 
 }
 
+/**
+* 本を見ている時の挙動.
+*/
 void GameCamera::_HistoryBehavior()
 {
 	//歴史書の位置を取得。
@@ -226,15 +244,18 @@ void GameCamera::_HistoryBehavior()
 	}
 	
 	//カメラの注視点の線形補間を行う(プレイヤーから歴史書に向けて補間)。
-	_LerpCameraLookAtPos = (_HistoryBookPos * (1.0f - _LerpRate) + ((*_PlayerPos)) * _LerpRate);
+	_LerpCameraLookAtPos = _HistoryBookPos * (1.0f - _LerpRate) + (*_PlayerPos) * _LerpRate;
 
 	//カメラの位置の線形補間を行う(ゲームカメラの位置からプレイヤーの位置に向けて補間)。
-	_LerpCameraPos = (((*_PlayerPos) + PLAYER_HEIGHT) * (1.0f - _LerpRate) + (_Player->transform->GetPosition()+Vector3(0.0f,10.0f,0.0f)) * _LerpRate);
+	Vector3 playerPos = (*_PlayerPos) + PLAYER_HEIGHT;
+
+	_LerpCameraPos = playerPos * (1.0f - _LerpRate) + _CameraPos * _LerpRate;
 
 	//カメラの注視点を線形補間された位置に設定。
-	transform->LockAt((_LerpCameraLookAtPos));
+	transform->LockAt(_LerpCameraLookAtPos);
 	_Camera->SetTarget(_LerpCameraLookAtPos);
 
 	//カメラの位置を線形補完された位置に設定。。
-	transform->SetPosition((_LerpCameraPos));
+	transform->SetPosition(_LerpCameraPos);
+
 }
