@@ -52,6 +52,9 @@
     <Filter Include="Effect\PreRender">
       <UniqueIdentifier>{183c2c2d-99e3-406e-ad6e-2a52ece085dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nature">
+      <UniqueIdentifier>{37cce69d-c542-48e5-9b75-b797d9182095}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -257,6 +260,12 @@
     </ClCompile>
     <ClCompile Include="_Effect\GaussianBlur.cpp">
       <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="_Effect\PreRender\EnvironmentMap.cpp">
+      <Filter>Effect\PreRender</Filter>
+    </ClCompile>
+    <ClCompile Include="_Nature\Sky.cpp">
+      <Filter>Nature</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -502,6 +511,12 @@
     <ClInclude Include="fbstdafx.h" />
     <ClInclude Include="_Effect\GaussianBlur.h">
       <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PreRender\EnvironmentMap.h">
+      <Filter>Effect\PreRender</Filter>
+    </ClInclude>
+    <ClInclude Include="_Nature\Sky.h">
+      <Filter>Nature</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,6 +16,11 @@ struct VERTEX_NORMAL
 {
 	float x, y, z, w;
 };
+//接ベクトル.
+struct VERTEX_TANGENT
+{
+	float x, y, z, w;
+};
 //頂点カラー
 struct VERTEX_COLOR
 {

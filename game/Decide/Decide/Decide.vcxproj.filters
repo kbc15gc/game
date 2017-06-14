@@ -7,7 +7,6 @@
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
-    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
       <Filter>GameObject\Component</Filter>
@@ -114,8 +113,9 @@
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Village\ItemManager.cpp">
-      <Filter>GameObject\Village</Filter>
+    <ClCompile Include="Ocean.cpp" />
+    <ClCompile Include="GameObject\Component\HadBar.cpp">
+      <Filter>GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,7 +127,6 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h">
       <Filter>GameObject\Component</Filter>
@@ -243,8 +242,9 @@
     <ClInclude Include="GameObject\Component\CharacterParameter.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\ItemManager.h">
-      <Filter>GameObject\Village</Filter>
+    <ClInclude Include="Ocean.h" />
+    <ClInclude Include="GameObject\Component\HadBar.h">
+      <Filter>GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,5 +288,13 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{c117e626-6846-4798-ba83-85b4345fc284}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{4024f616-bb02-4548-b159-81e914e0379c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Asset\Shader\Ocean.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

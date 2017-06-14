@@ -159,6 +159,7 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
+    <ClInclude Include="GameObject\Component\HadBar.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
@@ -198,10 +199,10 @@
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +211,7 @@
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
+    <ClCompile Include="GameObject\Component\HadBar.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
@@ -245,9 +247,9 @@
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -258,6 +260,11 @@
   <ItemGroup>
     <Image Include="Decide.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Asset\Shader\Ocean.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
