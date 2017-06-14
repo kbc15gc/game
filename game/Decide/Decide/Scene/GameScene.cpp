@@ -21,6 +21,7 @@
 #include "GameObject\Village\HistoryMenuSelect.h"
 
 #include "GameObject\Village\Shop.h"
+#include "GameObject\Village\ItemManager.h"
 #include "GameObject\HistoryChip\Chips.h"
 
 ImageObject* g_depth;
@@ -68,14 +69,15 @@ void GameScene::Start()
 	//歴史書の親にプレイヤーを設定。
 	book->transform->SetParent(player->transform);
 
-	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
+	INSTANCE(ItemManager)->LoadItemData();
+	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
+	shop->OpenShop(0);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/titleBgm.wav");
 	_WorldSE->Play(true);
 
 	_isShadowMap = true;
-
 }
 
 void GameScene::Update()

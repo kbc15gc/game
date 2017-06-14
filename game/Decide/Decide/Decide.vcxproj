@@ -190,6 +190,7 @@
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
     <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
+    <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\Shop.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
+    <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\Shop.cpp" />

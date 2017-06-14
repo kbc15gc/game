@@ -114,6 +114,9 @@
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Village\ItemManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Component\CharacterParameter.h">
       <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\ItemManager.h">
+      <Filter>GameObject\Village</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
