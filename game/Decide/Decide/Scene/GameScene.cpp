@@ -21,6 +21,7 @@
 #include "GameObject\Village\HistoryMenuSelect.h"
 
 #include "GameObject\Village\Shop.h"
+#include "GameObject\Village\ItemManager.h"
 #include "GameObject\HistoryChip\Chips.h"
 
 
@@ -70,12 +71,16 @@ void GameScene::Start()
 	book->transform->SetParent(player->transform);
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
+	INSTANCE(ItemManager)->LoadItemData();
+	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
+	shop->OpenShop(0);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
 	_isShadowMap = true;
+
 	_isEnvironmentMap = true;
 
 	INSTANCE(SceneManager)->GetSky()->SetActive(true);

@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "Shop.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
-ImageObject* Shop::_Cursor[] = { nullptr,nullptr };
-ImageObject* Shop::_SelectWindow = nullptr;
-ImageObject* Shop::_MainWindow = nullptr;
-
-vector<testchar*> Shop::_ShopNameList;
 
 Shop::Shop(const char * name):
 	GameObject(name)
@@ -30,22 +25,90 @@ void Shop::OpenShop(const unsigned int & shopID)
 {
 	//店の商品読み込み
 	_LoadShopData(shopID);
-	//メニューを開く
-	_OpenMenu();
-}
-
-void Shop::_OpenMenu()
-{
+	//セレクトメニューを開く
 	_ChangeState(ShopStateE::SELECT);
-	_SelectWindow->SetActive(true, true);
 }
 
 void Shop::_LoadShopData(const unsigned int& shopID)
 {
 	char path[256];
 	sprintf(path, "Asset/Data/ShopData/%s.csv", _ShopNameList.at(shopID));
-	//読み込み
+	//品揃えを読み込み
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
+
+	//アイテムの情報を取得
+	for each (Product* pro in _ProductList)
+	{
+		Item::ItemInfo* item = INSTANCE(ItemManager)->GetItem((unsigned int&)pro->ItemID, (unsigned int)pro->Type);
+
+		//nullチェック
+		if (item)
+			_ItemList.push_back(item);
+	}
+}
+
+void Shop::_ChangeState(const ShopStateE & state)
+{
+	_State = state;
+	switch (_State)
+	{
+		//メニューを閉じる
+	case Shop::ShopStateE::CLOSE:
+		_Update = nullptr;
+		_SelectWindow->SetActive(false, true);
+		_MainWindow->SetActive(false, true);
+		break;
+		//セレクトメニュー
+	case Shop::ShopStateE::SELECT:
+		_Update = std::bind(&Shop::_SelectUpdate, this);
+		_SelectWindow->SetActive(true, true);
+		break;
+	case Shop::ShopStateE::BUY:
+		_Update = std::bind(&Shop::_BuyUpdate, this);
+		_MainWindow->SetActive(true, true);
+		break;
+	case Shop::ShopStateE::SELL:
+		_Update = nullptr;
+		break;
+	default:
+		break;
+	}
+}
+
+void Shop::_SelectUpdate()
+{
+	//現在選択している項目
+	static int select = 0;
+	if(KeyBoardInput->isPush(DIK_UP))
+	{
+		select = select > 0 ? select - 1 : 1;
+	}
+	else if (KeyBoardInput->isPush(DIK_DOWN))
+	{
+		select = (select + 1) % 2;
+	}
+	//カーソルをずらす。
+	_Cursor[0]->transform->SetLocalPosition(Vector3(-60, 40 + -80 * select, 0));
+	
+	//決定(仮)
+	if(KeyBoardInput->isPush(DIK_P))
+	{
+		if(select)
+		{
+			_ChangeState(Shop::ShopStateE::BUY);
+		}else
+		{
+			_ChangeState(Shop::ShopStateE::SELL);
+		}
+	}
+}
+
+void Shop::_BuyUpdate()
+{
+	if (KeyBoardInput->isPush(DIK_P))
+	{
+		_ChangeState(Shop::ShopStateE::CLOSE);
+	}
 }
 
 void Shop::_StaticInit()
@@ -84,48 +147,12 @@ void Shop::_StaticInit()
 	_SelectWindow->SetActive(false, true);
 	_MainWindow->SetActive(false, true);
 	//ショップ読み込み
-	if(_ShopNameList.size() <= 0)
+	if (_ShopNameList.size() <= 0)
 	{
 		Support::DATARECORD shopdata[] =
 		{
-			"ShopName",Support::DataTypeE::STRING,0,sizeof(testchar)
+			"ShopName",Support::DataTypeE::STRING,0,sizeof(char) * 256
 		};
 		Support::LoadCSVData<testchar>("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
 	}
-}
-
-void Shop::_ChangeState(const ShopStateE & state)
-{
-	_State = state;
-	switch (_State)
-	{
-	case Shop::ShopStateE::CLOSE:
-		_Update = nullptr;
-		break;
-	case Shop::ShopStateE::SELECT:
-		_Update = std::bind(&Shop::_SelectUpdate, this);
-		//_SelectWindow->SetActive(true, true);
-		break;
-	case Shop::ShopStateE::BUY:
-		_Update = std::bind(&Shop::_BuyUpdate, this);
-		break;
-	case Shop::ShopStateE::SELL:
-		_Update = nullptr;
-		break;
-	default:
-		break;
-	}
-}
-
-void Shop::_SelectUpdate()
-{
-	static int a = 0;
-
-	_Cursor[0]->transform->SetLocalPosition(Vector3(-10, 10 + 5 * a, 0));
-
-	a = (a + 1) % 2;
-}
-
-void Shop::_BuyUpdate()
-{
 }
