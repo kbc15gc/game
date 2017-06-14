@@ -54,6 +54,7 @@ class CHadBar :
 	public Component
 {
 	static const Vector3 CreatePos_DefaultArg;
+	static const Vector2 CreateScale_DefaultArg;
 public:
 	CHadBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()){};
 	~CHadBar();
@@ -64,7 +65,7 @@ public:
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
-	void Create(const vector<BarColor>&, float max, float value, Transform* tr = nullptr, Vector3 pos = CreatePos_DefaultArg,Vector2 scale = Vector2(1.0f, 2.0f));
+	void Create(const vector<BarColor>&, float max, float value, Transform* tr = nullptr, Vector3 pos = CreatePos_DefaultArg,Vector2 scale = CreateScale_DefaultArg);
 	void Update()override;
 	void ImageRender()override;
 

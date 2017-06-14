@@ -78,11 +78,14 @@ void CBarElement::BarScaling() {
 }
 
 // CHadBar。
+
+const Vector3 CHadBar::CreatePos_DefaultArg = Vector3(175.0f, 21.9f, 0.0f);
+const Vector2 CHadBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
+
 CHadBar::~CHadBar()
 {
 }
 
-const Vector3 CHadBar::CreatePos_DefaultArg = Vector3(175.0f, 1125.0f, 0.0f);
 void CHadBar::Create(const vector<BarColor>& BarColorArray,float max,float value,Transform* parent,Vector3 pos, Vector2 scale) {
 	// バーのフレームを生成。
 	{
