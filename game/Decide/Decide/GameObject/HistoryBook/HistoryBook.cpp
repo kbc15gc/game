@@ -1,29 +1,24 @@
+/**
+* 歴史書クラスの実装.
+*/
 #include"stdafx.h"
 #include "HistoryBook.h"
+
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "GameObject\Player\Player.h"
 
 namespace
 {
-	//プレイヤーの半分の高さ。
+
+	/** プレイヤーの半分の高さ。*/
 	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.75f, 0.0f);
-}
-
-HistoryBook::HistoryBook(const char * name) :
-	GameObject(name),
-	//閉じた状態。
-	_CloseState(this),
-	//開いている状態。
-	_OpeningState(this),
-	//開いた状態。
-	_Open(this),
-	//閉じている状態。
-	_Closeing(this)
-{
 
 }
 
+/**
+* コンストラクタ後の初期化.
+*/
 void HistoryBook::Awake()
 {
 	//モデル。
@@ -39,8 +34,15 @@ void HistoryBook::Awake()
 
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
+	//状態リストを初期化.
+	_InitState();
+
 }
 
+/**
+* 初期化.
+*/
 void HistoryBook::Start()
 {
 	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f) + PLAYER_HALFHEIGHT);
@@ -59,8 +61,6 @@ void HistoryBook::Start()
 		_Anim->SetAnimationEndTime(i, _AnimationEndTime[i]);
 	}
 
-	//ステートの初期化。
-	ChangeState(State::Close);
 	//アニメーションの初期化。
 	PlayAnimation(AnimationNo::AnimationClose, 0.2f, 0);
 
@@ -69,25 +69,31 @@ void HistoryBook::Start()
 
 }
 
+/**
+* 更新.
+*/
 void HistoryBook::Update()
 {
 	//歴史書を見ているフラグを変える操作。
-	ChangeIsLookAtHistoryFlag();
+	_ChangeIsLookAtHistoryFlag();
 
-	//現在のステートに何か入っているなら。
-	if (_CurrentState != nullptr)
-	{
-		//ステートの更新。
-		_CurrentState->Update();
-	}
+	//状態の更新。
+	_StateList[_NowState]->Update();
 
 	//_AngleY += 0.9;
 	//transform->SetLocalAngle(Vector3(0.0f, _AngleY, 0.0f));
+
 	//トランスフォーム更新。
 	transform->UpdateTransform();
-
 }
 
+/**
+* アニメーションの再生.
+*
+* @param animno				アニメーションのナンバー.
+* @param interpolatetime	補間時間.
+* @param loopnum			ループ回数 (デフォルトは-1).
+*/
 void HistoryBook::PlayAnimation(AnimationNo animno, float interpolatetime, int loopnum)
 {
 	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない。
@@ -97,10 +103,32 @@ void HistoryBook::PlayAnimation(AnimationNo animno, float interpolatetime, int l
 	}
 }
 
+/**
+* 状態リストの初期化.
+*/
+void HistoryBook::_InitState()
+{
+	//閉じた状態.
+	_StateList.push_back(new HistoryBookStateClose(this));
+	//本が開いている状態.
+	_StateList.push_back(new HistoryBookStateOpening(this));
+	//開いた状態状態.
+	_StateList.push_back(new HistoryBookStateOpen(this));
+	//本が閉じている.
+	_StateList.push_back(new HistoryBookStateCloseing(this));
 
-void HistoryBook::ChangeIsLookAtHistoryFlag()
+	//初期値は閉じている.
+	ChangeState(StateCodeE::Close);
+
+}
+
+/**
+* 歴史書を開いている判定フラグを変更.
+*/
+void HistoryBook::_ChangeIsLookAtHistoryFlag()
 {
 	//歴史書を見るフラグの切り替え。
+	//スタートボタン又はEキーが押された.
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
 	{
 		//今_IsLookAtHistoryFlagに設定されている反対のフラグを設定。
@@ -108,60 +136,31 @@ void HistoryBook::ChangeIsLookAtHistoryFlag()
 
 		//フラグを見て歴史書の状態を遷移。
 		//trueなら歴史書を開く状態にする。
-		if (_IsLookAtHistoryFlag == true)
-		{
-			ChangeState(State::Opening);
-
-		}
 		//tureの時に押されたらその時歴史書は開いているので閉じる状態に遷移。
-		else if (_IsLookAtHistoryFlag == false)
-		{
-			ChangeState(State::Closeing);
-		}
+		ChangeState(_IsLookAtHistoryFlag ? StateCodeE::Opening : StateCodeE::Closeing);
 		
 		_PlayerFoward = _Player->transform->GetForward();
-		_PlayerFoward = _PlayerFoward*-1;
+		_PlayerFoward.Scale(-1);
 		transform->SetLocalPosition(_PlayerFoward + PLAYER_HALFHEIGHT);
 	}
 }
 
-void HistoryBook::ChangeState(State nextstate)
+/**
+* 状態の変更.
+*
+* @param nextState	次の状態.
+*/
+void HistoryBook::ChangeState(StateCodeE nextState)
 {
-	//現在のステートがあるなら現在のステートを抜ける処理をする。
-	if (_CurrentState != nullptr)
+	//現在の状態があるなら現在の状態を抜ける処理をする。
+	if (_NowState != (int)StateCodeE::Invalid)
 	{
-		_CurrentState->Exit();
+		_StateList[_NowState]->Exit();
 	}
 
-	//どのステートが来たかチェック。
-	switch (nextstate)
-	{
-		//閉じた状態。
-	case State::Close:
-		_CurrentState = &_CloseState;
-		break;
+	//状態を変更.
+	_NowState = (int)nextState;
 
-		//開いている状態。
-	case State::Opening:
-		_CurrentState = &_OpeningState;
-		break;
-
-		//開いた状態。
-	case State::Open:
-		_CurrentState = &_Open;
-		break;
-
-		//閉じている状態。
-	case State::Closeing:
-		_CurrentState = &_Closeing;
-		break;
-	default:
-		break;
-	}
-
-	//渡されたステートに変更。
-	_State = nextstate;
-
-	//ステートが切り替わったので各ステートの入りに呼ばれる処理を呼ぶ。
-	_CurrentState->Entry();
+	//状態が切り替わったので各状態の入りに呼ばれる処理を呼ぶ。
+	_StateList[_NowState]->Entry();
 }

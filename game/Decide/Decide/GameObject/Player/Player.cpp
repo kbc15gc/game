@@ -141,8 +141,8 @@ void Player::Update()
 		_CurrentState->Update();
 	}
 	//HPのテキストを表示更新
-	string hp = to_string(_PlayerParam->_HP);
-	string mp = to_string(_PlayerParam->_MP);
+	string hp = to_string(_PlayerParam->GetParam(CharacterParameter::Param::HP));
+	string mp = to_string(_PlayerParam->GetParam(CharacterParameter::Param::MP));
 	_HPText->SetString(hp.data());
 	_MPText->SetString(mp.data());
 	//ライフが0になると死亡する。

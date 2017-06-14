@@ -13,6 +13,8 @@ void TitleScene::Start()
 	_TitleBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TitleBGM", 0);
 	_TitleBGM->InitStreaming("Asset/Sound/titleBgm.WAV");
 	_TitleBGM->Play(true);
+
+	INSTANCE(SceneManager)->GetSky()->SetActive(false);
 }
 
 void TitleScene::Update()

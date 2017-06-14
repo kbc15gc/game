@@ -138,6 +138,8 @@ void EnemyCharacter::_BuildMyComponents() {
 	_MyComponent.CharacterController = AddComponent<CCharacterController>();
 	// 回転クラスを追加。
 	_MyComponent.RotationAction = AddComponent<ObjectRotation>();
+	// バーコンポーネントを追加。
+	_MyComponent.HadBar = AddComponent<CHadBar>();
 }
 
 void EnemyCharacter::_BuildCollision() {

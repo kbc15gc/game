@@ -37,12 +37,18 @@ void Enemy::_StartSubClass(){
 	//モデルにライト設定
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	_MyComponent.HadBar->Create(Color,100.0f,25.0f);
+
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
 }
 
 void Enemy::_UpdateSubClass() {
+	//_MyComponent.HadBar->SubValue(1.0f);
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
 		if (_NowStateIdx != State::Fall) {

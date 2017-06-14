@@ -7,6 +7,8 @@
 #include"_Effect\PreRender\ShadowMap.h"
 #include"_Effect\PreRender\EnvironmentMap.h"
 
+#include"_Nature\Sky.h"
+
 class Scene;
 class Sprite;
 class ImageObject;
@@ -101,6 +103,14 @@ public:
 		return &_EnvironmentMap;
 	}
 
+	/**
+	* 空描画クラスを取得.
+	*/
+	Sky* GetSky()
+	{
+		return _Sky;
+	}
+
 private:
 	int _NowScene;	//現在のシーンの添え字
 	vector<Scene*> _Scenes;
@@ -121,5 +131,8 @@ private:
 
 	/** 環境マップ. */
 	EnvironmentMap _EnvironmentMap;
+
+	/** 空クラス. */
+	Sky* _Sky = nullptr;
 
 };
