@@ -68,11 +68,12 @@ public:
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
 	//			バーに設定する最大値(HP最大量など)。
 	//			バーに設定する初期値(HP量など)。
+	//			バーの枠を描画するか。
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	void Create(const vector<BarColor>&, float max, float value, Transform* tr = nullptr,const Vector3& pos = CreatePos_DefaultArg,const Vector2& scale = CreateScale_DefaultArg, bool isHud = true);
+	void Create(const vector<BarColor>&, float max, float value, bool isRenderFrame = true, Transform* tr = nullptr,const Vector3& pos = CreatePos_DefaultArg,const Vector2& scale = CreateScale_DefaultArg, bool isHud = true);
 	void Update()override;
 	void ImageRender()override;
 
@@ -124,5 +125,6 @@ private:
 private:
 	// 描画用。
 	bool _isHud;		// HUDとして使用するか。
+	bool _isRenderFrame;	// バーの枠を描画するか。
 	unique_ptr<ImageObject> _BarFrame;	// バーの枠。
 };

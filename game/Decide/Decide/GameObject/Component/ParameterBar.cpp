@@ -85,7 +85,7 @@ ParameterBar::~ParameterBar()
 {
 }
 
-void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float value,Transform* parent,const Vector3& pos,const Vector2& scale, bool isHud) {
+void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float value,bool isRenderFrame,Transform* parent,const Vector3& pos,const Vector2& scale, bool isHud) {
 	// 作業用Transform情報を保存。
 	// 親子関係を組んだ場合は親が移動したりすると自動更新される。
 	if (parent) {
@@ -93,6 +93,9 @@ void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float 
 	}
 	_Transform->SetLocalPosition(pos);
 	_Transform->SetScale(Vector3(scale.x, scale.y, 1.0f));
+
+	// バーの枠を描画するか。
+	_isRenderFrame = isRenderFrame;
 
 	// バーのフレームを生成。
 	// ※親子関係を作成すると勝手に更新されるため、ここでは親子関係のない絶対座標を渡す。
@@ -134,8 +137,11 @@ void ParameterBar::Update() {
 
 void ParameterBar::ImageRender() {
 	// 背面のものから描画していく。
-	_BarFrame->GetComponentManager().ImageRender();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
-	for (int idx = _BarElement.size() - 1; idx >= 0;idx--) {
+	if (_isRenderFrame) {
+		// バーの枠を描画する。
+		_BarFrame->GetComponentManager().ImageRender();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+	}
+	for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
 		_BarElement[idx]->ImageRender(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	}
 }
