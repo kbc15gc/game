@@ -15,10 +15,10 @@ HistoryBookStateClose::~HistoryBookStateClose()
 
 void HistoryBookStateClose::Entry()
 {
-	_HistoryBook->PlayAnimation(HistoryBook::AnimationNo::AnimationClose, 0.2f, 1);
+	_HistoryBook->PlayAnimation(HistoryBook::AnimationNo::AnimationClose, 0.2f, -1);
 
 	//本のコンポーネントを無効化。
-	_HistoryBook->SetEnable(false);
+	//_HistoryBook->SetEnable(false);
 }
 
 void HistoryBookStateClose::Update()
