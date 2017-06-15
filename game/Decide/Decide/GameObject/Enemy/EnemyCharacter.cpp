@@ -51,6 +51,12 @@ void EnemyCharacter::Start() {
 }
 
 void EnemyCharacter::Update() {
+
+	if (_MyComponent.Parameter->HP <= 0)
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(this);
+	}
+
 	// 継承先により変わる処理。
 	_UpdateSubClass();
 
@@ -89,7 +95,7 @@ void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& 
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack_enemy", priorty);
 		Quaternion rot = Quaternion::Identity;
-		attack->Create(pos, rot,size,AttackCollision::CollisionMaster::Enemy,-1.0f);
+		attack->Create(_MyComponent.Parameter->AttackDamageMass(1), pos, rot, size, AttackCollision::CollisionMaster::Enemy, -1.0f);
 	}
 }
 
@@ -139,7 +145,9 @@ void EnemyCharacter::_BuildMyComponents() {
 	// 回転クラスを追加。
 	_MyComponent.RotationAction = AddComponent<ObjectRotation>();
 	// バーコンポーネントを追加。
-	_MyComponent.HadBar = AddComponent<CHadBar>();
+	_MyComponent.HPBar = AddComponent<ParameterBar>();
+	//パラメーターのコンポーネント追加。
+	_MyComponent.Parameter = AddComponent<CharacterParameter>();
 }
 
 void EnemyCharacter::_BuildCollision() {

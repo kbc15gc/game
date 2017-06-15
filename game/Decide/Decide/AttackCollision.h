@@ -15,14 +15,15 @@ public:
 	void LateUpdate()override;
 
 	// 攻撃判定用のコリジョン生成。
-	// 引数：	位置(ローカル座標)。
+	// 引数：	コリジョン製作者の攻撃力
+	//			位置(ローカル座標)。
 	//			回転(ローカル座標、クォータニオン)。
 	//			サイズ。
 	//			誰がコリジョンを生成したか。
 	//			コリジョン寿命(0.0fより小さい値で無限)。
 	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
 	// 戻り値：	生成したコリジョン。
-	GostCollision* Create(int attack, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f, Transform* Parent = nullptr);
+	GostCollision* Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f, Transform* Parent = nullptr);
 
 	inline void SetParent(Transform* Parent) {
 		transform->SetParent(Parent);
@@ -35,10 +36,11 @@ public:
 	{
 		return _master;
 	}
-	//攻撃した時のダメージ量ゲット。
-	int GetAttack() const
+
+	//設定されたダメージをゲット。
+	inline int GetDamage()
 	{
-		return _AttackDamage;
+		return _Damage;
 	}
 private:	
 	// 衝突検出。
@@ -50,6 +52,5 @@ private:
 	float time;				//コリジョン削除カウンター。
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
-
-	int _AttackDamage;			//攻撃した時のダメージ量。
+	int _Damage = 0;
 };

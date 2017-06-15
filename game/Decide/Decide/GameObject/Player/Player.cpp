@@ -4,6 +4,7 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include <string>
 #include <sstream>
+#include "GameObject\Component\ParameterBar.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -41,6 +42,10 @@ void Player::Awake()
 	//キャラクターパラメーター
 	_PlayerParam = AddComponent<CharacterParameter>();
 	_Rotation = AddComponent<ObjectRotation>();
+	// HPバー。
+	_HPBar = AddComponent<ParameterBar>();
+	// MPバー。
+	_MPBar = AddComponent<ParameterBar>();
 	//高さ設定
 	_Height = 1.5f;
 	//半径設定
@@ -83,6 +88,14 @@ void Player::Awake()
 		_HPText->Initialize(L"", 70.0f);
 		_HPText->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 		_HPText->transform->SetLocalPosition(Vector3(1150, 630,0));
+		// HPのバーを表示。
+		// ※暫定処理なので、設定する値や親子関係やバーの位置は好きにいじってね。
+		{
+			vector<BarColor> Colors;
+			Colors.push_back(BarColor::Green);
+			_HPBar->Create(Colors,100.0f,100.0f);
+			_HPBar->SubValue(50.0f);
+		}
 	}
 	//MPのテキスト表示
 	{
@@ -90,6 +103,13 @@ void Player::Awake()
 		_MPText->Initialize(L"", 70.0f);
 		_MPText->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 		_MPText->transform->SetLocalPosition(Vector3(1150, 680, 0));
+		// MPのバーを表示。
+		// ※暫定処理なので、設定する値や親子関係やバーの位置は好きにいじってね。
+		{
+			vector<BarColor> Colors;
+			Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
+			_MPBar->Create(Colors, 50.0f, 40.0f,true,_HPBar->GetTransform(),Vector3(10.0f,57.0f, 0.0f),Vector2(2.0f,1.5f));
+		}
 	}
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
@@ -121,7 +141,6 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(374, 69, -1275));
 	transform->SetLocalPosition(Vector3(560, 69, -1000));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -131,7 +150,7 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(100, 50, 5, 4, 3, 1);
+	_PlayerParam->ParamInit(100, 100, 50, 50, 5, 4, 3, 1);
 	//レベル初期化
 	_Level = 1;
 }

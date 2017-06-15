@@ -11,10 +11,9 @@ public:
 	// 物理属性(斬、打、魔など)。
 	enum class Physical{None = 0};
 	// パラメーター列挙。
-	enum Param{HP = 0,MP,ATK,DEF,DEX,AGI,MAX};
-	/*初期化
-	*/
-	void ParamInit(int hp, int mp, int atk, int def, int dex, int agi);
+	enum Param { HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, MAX };
+	//初期化。
+	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi);
 	
 	// 指定したパラメーターに加算。
 	// 引数：	パラメータータイプ。
@@ -33,12 +32,24 @@ public:
 	inline int GetParam(Param idx)const {
 		return _Param[idx];
 	}
+
+	//ダメージの計算。
+	//第一引数:攻撃系のパラメーター 第二引数:防御系のパラメーター。
+	void DamageMass(int atk, int defidx);
+	//死んだかどうかのフラグを取得。
+	//tureなら死んでいる。
+	inline bool GetDeathFalg()
+	{
+		return _DeathFlag;
+	}
+
+	//与えるダメージの計算。
+	inline int AttackDamageMass(int atk = 1)
+	{
+		return _Param[Param::ATK] * atk;
+	}
 private:
 	int _Param[Param::MAX];
-	//int _HP;	//ヒットポイント
-	//int _MP;	//マジックポイント
-	//int _ATK;	//攻撃力
-	//int _DEF;	//防御力
-	//int _DEX;	//命中力
-	//int _AGI;	//回避力
+	bool _DeathFlag = false;//死んだかどうかのフラグ。
+
 };

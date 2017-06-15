@@ -13,35 +13,32 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 	//UŒ‚‚P
 	{
 		AttackCollisionParameter attackparam1;
-		attackparam1.attackdamage = _Player->_PlayerParam->GetParam(CharacterParameter::ATK);
 		attackparam1.pos = Vector3(0.0f, 0.0f, 2.0f);
 		attackparam1.rot = Quaternion::Identity;
 		attackparam1.scale = Vector3::one;
 		attackparam1.attackframe = 10.0f;
 		attackparam1.lifetime = 0.5f;
-		attackparam.push_back(attackparam1);
+		_AttackPram.push_back(attackparam1);
 	}
 	//UŒ‚‚Q
 	{
 		AttackCollisionParameter attackparam2;
-		attackparam2.attackdamage = _Player->_PlayerParam->GetParam(CharacterParameter::ATK);
 		attackparam2.pos = Vector3(0.0f, 0.0f, 1.5f);
 		attackparam2.rot = Quaternion::Identity;
 		attackparam2.scale = Vector3::one;
 		attackparam2.attackframe = 25;
 		attackparam2.lifetime = 0.5f;
-		attackparam.push_back(attackparam2);
+		_AttackPram.push_back(attackparam2);
 	}
 	//UŒ‚‚R
 	{
 		AttackCollisionParameter attackparam3;
-		attackparam3.attackdamage = _Player->_PlayerParam->GetParam(CharacterParameter::ATK);
 		attackparam3.pos = Vector3(0.0f, 0.0f, 1.5f);
 		attackparam3.rot = Quaternion::Identity;
 		attackparam3.scale = Vector3::one;
 		attackparam3.attackframe = 25;
 		attackparam3.lifetime = 0.5f;
-		attackparam.push_back(attackparam3);
+		_AttackPram.push_back(attackparam3);
 	}
 	
 }
@@ -81,15 +78,15 @@ void PlayerStateAttack::Update()
 	{
 		//UŒ‚‚P‚ÌŽž
 	case (int)Player::AnimationNo::AnimationAttack01:
-		Attack(attackparam[0]);
+		Attack(_AttackPram[0]);
 		break;
 		//UŒ‚‚Q‚ÌŽž
 	case (int)Player::AnimationNo::AnimationAttack02:
-		Attack(attackparam[1]);
+		Attack(_AttackPram[1]);
 		break;
 		//UŒ‚‚R‚ÌŽž
 	case (int)Player::AnimationNo::AnimationAttack03:
-		Attack(attackparam[2]);
+		Attack(_AttackPram[2]);
 		break;
 	}
 	
@@ -116,6 +113,6 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 		_SE->Play(false);
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		attack->Create(pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, _Player->transform);
+		attack->Create(_Player->_PlayerParam->AttackDamageMass(1),pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, _Player->transform);
 	}
 }

@@ -13,7 +13,7 @@
 
 class SkinModel;
 class Animation;
-
+class ParameterBar;
 
 class Player : public GameObject
 {
@@ -138,7 +138,10 @@ private:
 	TextObject* _HPText;
 	//MPのテキスト表示
 	TextObject* _MPText;
-
 	// 回転。
 	ObjectRotation* _Rotation = nullptr;
+	// HPバー。
+	ParameterBar* _HPBar = nullptr;
+	// MPバー。
+	ParameterBar* _MPBar = nullptr;
 };
