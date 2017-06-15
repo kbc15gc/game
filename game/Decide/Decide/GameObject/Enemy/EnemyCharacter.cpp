@@ -43,7 +43,7 @@ void EnemyCharacter::Start() {
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
 	// 位置情報設定。
-	_InitPos = Vector3(0.0f, 5.0f, 0.0f);
+	_InitPos = Vector3(560, 69, -1000);
 	transform->SetLocalPosition(_InitPos);
 
 	// 継承先により変わる処理。
@@ -139,11 +139,9 @@ void EnemyCharacter::_BuildMyComponents() {
 	// 回転クラスを追加。
 	_MyComponent.RotationAction = AddComponent<ObjectRotation>();
 	// バーコンポーネントを追加。
-	_MyComponent.HadBar = AddComponent<CHadBar>();
+	_MyComponent.HPBar = AddComponent<ParameterBar>();
 	//パラメーターのコンポーネント追加。
 	_MyComponent.Parameter = AddComponent<CharacterParameter>();
-	//
-	_MyComponent.player = AddComponent<Player>();
 }
 
 void EnemyCharacter::_BuildCollision() {

@@ -5,9 +5,8 @@
 #include "../Component/ObjectRotation.h"
 #include "fbEngine\CharacterController.h"
 #include "AttackCollision.h"
-#include "GameObject\Component\HadBar.h"
 #include "GameObject\Component\CharacterParameter.h"
-#include "GameObject\Player\Player.h"
+#include "GameObject\Component\ParameterBar.h"
 
 class SkinModel;
 class Animation;
@@ -47,9 +46,8 @@ private:
 		Collider* Collider = nullptr;	// コリジョン形状。
 		CCharacterController* CharacterController = nullptr;		// キャラクターコントローラ。
 		ObjectRotation* RotationAction = nullptr;	// オブジェクトを回転させるクラス。
-		CHadBar* HadBar = nullptr;			// ゲージHP用。
 		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
-		Player* player = nullptr;
+		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 	};
 
 public:
@@ -139,7 +137,7 @@ public:
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
 		{
-			_MyComponent.Parameter->DamageMass(_MyComponent.player->GetCharaPar().ATK,_MyComponent.Parameter->GetParam(CharacterParameter::DEF));
+			_MyComponent.Parameter->DamageMass(100,_MyComponent.Parameter->GetParam(CharacterParameter::DEF));
 			//INSTANCE(GameObjectManager)->AddRemoveList(this);
 		}
 	}
