@@ -147,7 +147,7 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(100, 50, 5, 4, 3, 1);
+	_PlayerParam->ParamInit(100, 100, 50, 50, 5, 4, 3, 1);
 	//レベル初期化
 	_Level = 1;
 }

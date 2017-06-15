@@ -51,6 +51,12 @@ void EnemyCharacter::Start() {
 }
 
 void EnemyCharacter::Update() {
+
+	if (_MyComponent.Parameter->HP <= 0)
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(this);
+	}
+
 	// Œp³æ‚É‚æ‚è•Ï‚í‚éˆ—B
 	_UpdateSubClass();
 
@@ -89,7 +95,7 @@ void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& 
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack_enemy", priorty);
 		Quaternion rot = Quaternion::Identity;
-		attack->Create(pos, rot,size,AttackCollision::CollisionMaster::Enemy,-1.0f);
+		attack->Create(_MyComponent.Parameter->AttackDamageMass(1), pos, rot, size, AttackCollision::CollisionMaster::Enemy, -1.0f);
 	}
 }
 
