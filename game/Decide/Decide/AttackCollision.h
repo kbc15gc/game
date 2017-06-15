@@ -22,7 +22,7 @@ public:
 	//			コリジョン寿命(0.0fより小さい値で無限)。
 	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
 	// 戻り値：	生成したコリジョン。
-	GostCollision* Create(const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f, Transform* Parent = nullptr);
+	GostCollision* Create(int attack, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f, Transform* Parent = nullptr);
 
 	inline void SetParent(Transform* Parent) {
 		transform->SetParent(Parent);
@@ -35,6 +35,11 @@ public:
 	{
 		return _master;
 	}
+	//攻撃した時のダメージ量ゲット。
+	int GetAttack() const
+	{
+		return _AttackDamage;
+	}
 private:	
 	// 衝突検出。
 	void DetectionCollision();
@@ -45,4 +50,6 @@ private:
 	float time;				//コリジョン削除カウンター。
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
+
+	int _AttackDamage;			//攻撃した時のダメージ量。
 };

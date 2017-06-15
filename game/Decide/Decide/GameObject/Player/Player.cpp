@@ -40,6 +40,7 @@ void Player::Awake()
 	_CharacterController = AddComponent<CCharacterController>();
 	//キャラクターパラメーター
 	_PlayerParam = AddComponent<CharacterParameter>();
+	_Rotation = AddComponent<ObjectRotation>();
 	//高さ設定
 	_Height = 1.5f;
 	//半径設定
@@ -53,13 +54,12 @@ void Player::Awake()
 	//モデル設定
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
-	_Model->SetAllBlend(Color::white * 13);
+	//_Model->SetAllBlend(Color::white * 13);
 	//キャラクターコントローラー初期化
 	{
 		_CharacterController->Init(this, transform, _Radius, _Height, Vector3(0.0f, _Height / 2, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
 		// 以下衝突を取りたい属性(横方向)を指定。
 		{
-			// ※テスト用(後で直してね)。
 			_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 			_CharacterController->AddAttributeXZ(Collision_ID::GROUND);	// 地面コリジョンを追加。
 			_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);	// 敵のコリジョン追加。
@@ -67,10 +67,11 @@ void Player::Awake()
 		}
 		// 以下衝突を取りたい属性(縦方向)を指定。
 		{
-			// ※テスト用(後で直してね)。
 			_CharacterController->AttributeY_AllOn();	// 全衝突。
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
+			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン。
+
 
 		}
 		//キャラクターコントローラーの重力設定
@@ -105,8 +106,10 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0;			//アイドル
 	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0;			//歩く
 	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.68;			//走る
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//攻撃１
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//攻撃２
+	_AnimationEndTime[(int)AnimationNo::AnimationJump] = -1.0;			//ジャンプ
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//攻撃1
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//攻撃2
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0;		//攻撃3
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0;			//死亡
 	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -149,8 +152,14 @@ void Player::Update()
 
 	//アニメーションコントロール
 	AnimationControl();
-	//トランスフォーム更新
-	transform->UpdateTransform();
+
+	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
+	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
+	// ※都合が悪いのでとりあえずコメントアウト。
+	{
+		////トランスフォーム更新
+		//transform->UpdateTransform();
+	}
 }
 
 void Player::ChangeState(State nextstate)

@@ -9,6 +9,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Component\CharacterParameter.h"
+#include"GameObject\Component\ObjectRotation.h"
 
 class SkinModel;
 class Animation;
@@ -29,17 +30,18 @@ public:
 	//アニメーションのナンバー
 	enum class AnimationNo
 	{
-		AnimationInvalid = -1,		//無効
-		AnimationDeath,				//死亡
-		AnimationAttackEnd,
-		AnimationAttack02 = AnimationAttackEnd,			//攻撃02
-		AnimationAttack01,			//攻撃01
-		AnimationAttackStart = AnimationAttack01,
-		AnimationJump,				//ジャンプ
-		AnimationRun,				//走る
-		AnimationWalk,				//歩き
-		AnimationIdol,				//アイドル	
-		AnimationNum,				//アニメーションの数
+		AnimationInvalid = -1,						//無効
+		AnimationIdol,								//アイドル	
+		AnimationWalk,								//歩き
+		AnimationRun,								//走る
+		AnimationJump,								//ジャンプ
+		AnimationAttackStart,			
+		AnimationAttack01 = AnimationAttackStart,	//攻撃01
+		AnimationAttack02,							//攻撃02
+		AnimationAttack03,							//攻撃03
+		AnimationAttackEnd = AnimationAttack03,
+		AnimationDeath,								//死亡
+		AnimationNum,								//アニメーションの数
 	};
 	Player(const char* name);
 	~Player();
@@ -136,4 +138,7 @@ private:
 	TextObject* _HPText;
 	//MPのテキスト表示
 	TextObject* _MPText;
+
+	// 回転。
+	ObjectRotation* _Rotation = nullptr;
 };

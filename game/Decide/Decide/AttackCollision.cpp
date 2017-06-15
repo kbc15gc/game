@@ -72,9 +72,10 @@ void AttackCollision::DetectionCollision() {
 	
 }
 
-GostCollision* AttackCollision::Create(const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
+GostCollision* AttackCollision::Create(int attack, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
 	_lifeTime = lifeTime;	// 寿命を保存。
 	_master = master;		// コリジョンの生成者を保存。
+	_AttackDamage = attack;		// 攻撃力を保存。
 	static_cast<BoxCollider*>(_Colider)->Create(size);		// コライダー生成(※とりあえず暫定的にボックス固定)。
 	if (Parent) {
 		transform->SetParent(Parent);

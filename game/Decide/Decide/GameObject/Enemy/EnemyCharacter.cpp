@@ -43,7 +43,7 @@ void EnemyCharacter::Start() {
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
 	// 位置情報設定。
-	_InitPos = Vector3(0.0f, 5.0f, 0.0f);
+	_InitPos = Vector3(560, 69, -1000);
 	transform->SetLocalPosition(_InitPos);
 
 	// 継承先により変わる処理。
