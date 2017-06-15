@@ -107,7 +107,7 @@ void Player::Awake()
 		{
 			vector<BarColor> Colors;
 			Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
-			_MPBar->Create(Colors, 50.0f, 40.0f,_HPBar->GetTransform(),Vector3(10.0f,57.0f, 0.0f),Vector2(2.0f,1.5f));
+			_MPBar->Create(Colors, 50.0f, 40.0f,true,_HPBar->GetTransform(),Vector3(10.0f,57.0f, 0.0f),Vector2(2.0f,1.5f));
 		}
 	}
 	//ƒ_ƒ[ƒWSE‰Šú‰»
