@@ -85,6 +85,12 @@ public:
 	{
 		return*_CharacterController;
 	}
+
+	//パラメーターゲット。
+	CharacterParameter&GetCharaPar() const
+	{
+		return *_PlayerParam;
+	}
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
