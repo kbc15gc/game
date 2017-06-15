@@ -91,8 +91,10 @@ void Player::Awake()
 		// ※暫定処理なので、設定する値や親子関係やバーの位置は好きにいじってね。
 		{
 			vector<BarColor> Colors;
+			Colors.push_back(BarColor::Blue);
 			Colors.push_back(BarColor::Green);
-			_HPBar->Create(Colors,100.0f,100.0f);
+			Colors.push_back(BarColor::Yellow);
+			_HPBar->Create(Colors,300.0f,25.0f);
 			_HPBar->SubValue(50.0f);
 		}
 	}
@@ -106,7 +108,7 @@ void Player::Awake()
 		// ※暫定処理なので、設定する値や親子関係やバーの位置は好きにいじってね。
 		{
 			vector<BarColor> Colors;
-			Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
+			Colors.push_back(BarColor::Blue);
 			_MPBar->Create(Colors, 50.0f, 40.0f,true,_HPBar->GetTransform(),Vector3(10.0f,57.0f, 0.0f),Vector2(2.0f,1.5f));
 		}
 	}
@@ -147,7 +149,7 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(100, 50, 5, 4, 3, 1);
+	_PlayerParam->ParamInit(100,100, 50,50, 5, 4, 3, 1);
 	//レベル初期化
 	_Level = 1;
 }

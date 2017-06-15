@@ -99,7 +99,7 @@ void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float 
 
 	// バーのフレームを生成。
 	// ※親子関係を作成すると勝手に更新されるため、ここでは親子関係のない絶対座標を渡す。
-	CreateBarFrame(_Transform->GetPosition(), _Transform->GetScale(),isHud);
+	_CreateBarFrame(_Transform->GetPosition(), _Transform->GetScale(),isHud);
 
 	// 指定された色の順と数に従ってバーを生成。
 	_ActiveBarColor(BarColorArray,max,value, _BarFrame->transform);
@@ -123,14 +123,25 @@ void ParameterBar::Update() {
 
 		_NowBar->Update();
 	}
+
 	if (_NowBar->GetValue() <= 0.0f) {
 		_NowBarNum++;
-		if (_NowBarNum < 0) {
-			_NowBarNum = 0;
-		}
 		if (_NowBarNum < _MaxBarNum) {
 			// 更新中のバーを変更。
 			_NowBar = _BarElement[_NowBarNum].get();
+		}
+		else {
+			_NowBarNum--;
+		}
+	}
+	else if (_NowBar->GetValue() >= _NowBar->GetMaxValue()) {
+		_NowBarNum--;
+		if (_NowBarNum >= 0) {
+			// 更新中のバーを変更。
+			_NowBar = _BarElement[_NowBarNum].get();
+		}
+		else {
+			_NowBarNum++;
 		}
 	}
 }
@@ -147,54 +158,113 @@ void ParameterBar::ImageRender() {
 }
 
 void ParameterBar::_UpdateValue(float value) {
-	float work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 一本のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
+	float work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
 
 	float Difference = _Value - value;	// 一瞬前の値との差分を算出。
-	if(Difference >= 0.0001f){
+	if (fabsf(Difference) >= 0.0001f) {
 		// 一瞬前の値と違う値が設定された。
-		while (true) {
-			float nowBarValue = _NowSettingBar->GetTargetValue();	// 現在のゲージが持つ値を取得。
-			if (nowBarValue <= Difference) {
-				// 1ゲージ以上削った。
-				// ブレイク時のイベント。
-				this->_BreakEvent();
-				// とりあえず今のバーの値を0にする。
-				_NowSettingBar->SetValue(0.0f);
-				_NowSettingNum++;
-				if (_NowSettingNum < _MaxBarNum) {
-					// 次のバーがあればそちらにターゲットを変更。
-					_NowSettingBar = _BarElement[_NowSettingNum].get();
-					if (nowBarValue < Difference) {
-						// 1ゲージ以上あふれる。
+		if (Difference > 0.0f) {
+			// 減算処理。
+			_UpdateSubValue(Difference, work);
+		}
+		else {
+			// 加算処理。
+			_UpdateAddValue(Difference, work);
+		}
 
-						// 設定した値を差分から引き、新しい差分を設定。
-						Difference -= nowBarValue;
-						// 処理を続行。
-						continue;
-					}
-					else {
-						// ちょうど1ゲージ使った。
-						break;
-					}
+		// 全体としての値を更新。
+		if (value < 0.0f) {
+			_Value = 0.0f;
+		}
+		else if (value >= _MaxValue) {
+			_Value = _MaxValue;
+		}
+		else {
+			_Value = value;
+		}
+	}
+}
+
+void ParameterBar::_UpdateSubValue(float Difference, float Fraction) {
+	while (true) {
+		float nowBarValue = _NowSettingBar->GetTargetValue();	// 現在のゲージが持つ値を取得。
+		if (nowBarValue <= Difference) {
+			// 1ゲージ以上削った。
+			// ブレイク時のイベント。
+			this->_BreakEvent();
+			// とりあえず今のバーの値を0にする。
+			_NowSettingBar->SetValue(0.0f);
+			_NowSettingNum++;
+			if (_NowSettingNum < _MaxBarNum) {
+				// 次のバーがあればそちらにターゲットを変更。
+				_NowSettingBar = _BarElement[_NowSettingNum].get();
+				if (nowBarValue < Difference) {
+					// 1ゲージ以上あふれる。
+
+					// 設定した値を差分から引き、新しい差分を設定。
+					Difference -= nowBarValue;
+					// 処理を続行。
+					continue;
 				}
 				else {
-					// 次のバーがなければ処理を終了。
-					_NowSettingNum--;
+					// ちょうど1ゲージ使った。
 					break;
 				}
 			}
 			else {
-				// あふれない場合はバーに入れて処理を終了。
-				_NowSettingBar->SetValue(work);
+				// 次のバーがなければ処理を終了。
+				_NowSettingNum--;
 				break;
 			}
 		}
-		// 全体としての値を更新。
-		_Value = value;
+		else {
+			// あふれない場合はバーに入れて処理を終了。
+			_NowSettingBar->SetValue(Fraction);
+			break;
+		}
 	}
 }
 
-void ParameterBar::CreateBarFrame(const Vector3& pos,const Vector3& scale,bool isHud){
+void ParameterBar::_UpdateAddValue(float Difference, float Fraction) {
+	Difference *= -1.0f;
+	while (true) {
+		float nowBarBusy = _NowSettingBar->GetMaxValue() - _NowSettingBar->GetTargetValue();	// 現在のゲージに入れることのできる値を取得。
+		if (Difference > nowBarBusy) {
+			// 1ゲージに入りきらない。
+			// とりあえず今のバーの値を最大値にする。
+			_NowSettingBar->SetValue(_NowSettingBar->GetMaxValue());
+			_NowSettingNum--;
+			if (_NowSettingNum >= 0) {
+				// 次のバーがあればそちらにターゲットを変更。
+				_NowSettingBar = _BarElement[_NowSettingNum].get();
+				// 設定した値を差分から引き、新しい差分を設定。
+				Difference -= nowBarBusy;
+				// 処理を続行。
+				continue;
+			}
+			else {
+				// 次のバーがなければ処理を終了。
+				_NowSettingNum++;
+				break;
+			}
+		}
+		else {
+			// あふれない場合はバーに入れて処理を終了。
+			if (Fraction < 0.0001f) {
+				// ジャスト最大値が設定された。
+				_NowSettingBar->SetValue(_NowSettingBar->GetMaxValue());
+			}
+			else {
+				// 他のバーに入れて余った値を設定。
+				_NowSettingBar->SetValue(Fraction);
+			}
+
+			break;
+		}
+	}
+}
+
+void ParameterBar::_CreateBarFrame(const Vector3& pos,const Vector3& scale,bool isHud){
 	_BarFrame.reset(new ImageObject("BarFrame"));
 	_BarFrame->Awake();
 	_BarFrame->Start();

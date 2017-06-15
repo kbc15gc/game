@@ -1,6 +1,8 @@
 #include"stdafx.h"
 #include "../Player.h"
 #include "PlayerStateIdol.h"
+#include "GameObject\Component\ParameterBar.h"
+
 
 PlayerStateIdol::PlayerStateIdol(Player* player) :
 	PlayerState(player)
@@ -70,6 +72,10 @@ void PlayerStateIdol::Update()
 	{
 		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
+			// テスト。
+			{
+				_Player->_HPBar->AddValue(275.0f);
+			}
 			_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
 			_Player->ChangeState(Player::State::Attack);
 		}

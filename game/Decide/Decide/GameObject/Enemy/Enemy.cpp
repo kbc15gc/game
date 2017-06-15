@@ -34,7 +34,7 @@ void Enemy::_StartSubClass(){
 	// ※暫定処理。
 	_WanderingRange = 10.0f;
 
-	//モデルにライト設定
+	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	vector<BarColor> Color;
