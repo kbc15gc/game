@@ -8,7 +8,6 @@ public:
 	//攻撃コリジョンパラメータ。
 	struct  AttackCollisionParameter
 	{
-		int 攻撃力;		//攻撃力。
 		Vector3 pos;	//発生位置。
 		Quaternion rot;	//回転。
 		Vector3 scale;	//大きさ。
