@@ -17,7 +17,7 @@ HistoryBookStateOpen::~HistoryBookStateOpen()
 
 void HistoryBookStateOpen::Entry()
 {
-	_HistoryBook->PlayAnimation(HistoryBook::AnimationNo::AnimationOpen, 0.2f, 1);
+	_HistoryBook->PlayAnimation(HistoryBook::AnimationNo::AnimationOpen, 1.0f, -1);
 }
 
 void HistoryBookStateOpen::Update()
