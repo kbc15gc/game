@@ -14,12 +14,12 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::AGI]	= agi;		//回避力。
 }
 
-void CharacterParameter::DamageMass(int atkidx, int defidx)
+int CharacterParameter::DamageMass(int atk, int def)
 {
 	int Damage = 0;
 
 	//ダメージ=攻撃力-(0.5(補正値的な何かにそのうち置き換えて)*防御力)。
-	Damage = atkidx - (0.5*defidx);
+	Damage = atk - ((1 - 0.5f)*def);
 
 	//体力を計算したダメージ分減算。
 	SubParam(Param::HP, Damage);
@@ -30,4 +30,5 @@ void CharacterParameter::DamageMass(int atkidx, int defidx)
 		_DeathFlag = true;
 	}
 
+	return Damage;
 }

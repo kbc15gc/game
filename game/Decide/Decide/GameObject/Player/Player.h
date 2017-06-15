@@ -9,6 +9,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Component\CharacterParameter.h"
+#include"GameObject\Component\ObjectRotation.h"
 
 class SkinModel;
 class Animation;
@@ -29,17 +30,18 @@ public:
 	//アニメーションのナンバー
 	enum class AnimationNo
 	{
-		AnimationInvalid = -1,		//無効
-		AnimationDeath,				//死亡
-		AnimationAttackEnd,
-		AnimationAttack02 = AnimationAttackEnd,			//攻撃02
-		AnimationAttack01,			//攻撃01
-		AnimationAttackStart = AnimationAttack01,
-		AnimationJump,				//ジャンプ
-		AnimationRun,				//走る
-		AnimationWalk,				//歩き
-		AnimationIdol,				//アイドル	
-		AnimationNum,				//アニメーションの数
+		AnimationInvalid = -1,						//無効
+		AnimationIdol,								//アイドル	
+		AnimationWalk,								//歩き
+		AnimationRun,								//走る
+		AnimationJump,								//ジャンプ
+		AnimationAttackStart,			
+		AnimationAttack01 = AnimationAttackStart,	//攻撃01
+		AnimationAttack02,							//攻撃02
+		AnimationAttack03,							//攻撃03
+		AnimationAttackEnd = AnimationAttack03,
+		AnimationDeath,								//死亡
+		AnimationNum,								//アニメーションの数
 	};
 	Player(const char* name);
 	~Player();
@@ -61,14 +63,7 @@ public:
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
 	// エネミーが作った攻撃。
-	void HitAttackCollision(AttackCollision* hitCollision) {
-		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
-		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy)
-		{
-			_PlayerParam->SubParam(CharacterParameter::Param::HP,1);	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
-			_DamageSE->Play(false);//ダメージを受けたときのSE
-		}
-	}
+	void HitAttackCollision(AttackCollision* hitCollision);
 
 	//セットステート
 	void SetState(State state)
@@ -84,12 +79,6 @@ public:
 	CCharacterController& GetCharaCon() const
 	{
 		return*_CharacterController;
-	}
-
-	//パラメーターゲット。
-	CharacterParameter&GetCharaPar() const
-	{
-		return *_PlayerParam;
 	}
 private:
 	friend class PlayerStateAttack;
@@ -138,10 +127,8 @@ private:
 	CharacterParameter* _PlayerParam = nullptr;
 	//プレイヤーのレベル
 	int _Level;
-	//HPのテキスト表示
-	TextObject* _HPText;
-	//MPのテキスト表示
-	TextObject* _MPText;
+	// 回転。
+	ObjectRotation* _Rotation = nullptr;
 	// HPバー。
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
