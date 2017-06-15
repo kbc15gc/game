@@ -40,7 +40,7 @@ void Enemy::_StartSubClass(){
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
-	_MyComponent.HadBar->Create(Color,100.0f,25.0f);
+	_MyComponent.HPBar->Create(Color,100.0f,25.0f,transform,Vector3(0.0f,2.0f,0.0f),Vector2(1.0f,1.0f),false);
 
 	// 初期ステートに移行。
 	// ※暫定処理。

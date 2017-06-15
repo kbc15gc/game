@@ -42,7 +42,7 @@ void GameScene::Start()
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
-	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
+	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 9);
 
 	FOR(i,ChipID::NUM)
 	{

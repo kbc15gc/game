@@ -62,13 +62,15 @@ Vector2 Camera::WorldToScreen(Vector3 wpos)
 	Vector2 ToWXZ = Vector2(ToW.x, ToW.z);
 	ToWXZ.Normalize();
 	//向きベクトル
-	Vector3 Dir = transform->Direction(Vector3::front);
+	//Vector3 Dir = transform->Direction(Vector3::front);
+	Vector3 Dir = transform->GetForward();
 	Vector2 DirXZ = Vector2(Dir.x, Dir.z);
 	DirXZ.Normalize();
 	//内積　0～2の範囲が返るように調整
 	float dot = fabs(DirXZ.Dot(ToWXZ) - 1);
 	//θを角度に変換
 	float vangle = D3DXToDegree(dot);
+
 	//長さ
 	float len = ToW.Length();
 

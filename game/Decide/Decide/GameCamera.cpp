@@ -54,6 +54,12 @@ void GameCamera::Start()
 	_PlayerPos = &_Player->transform->GetPosition();
 	//³‹K‰»‚µ‚½•ûŒü‚ð“ü‚ê‚é
 	D3DXVec3Normalize(&_ToPlayerDir, &D3DXVECTOR3(0.0f, 3.0f, -4.0f));
+	// ‰Šú’lÝ’è‚Ì‚½‚ßˆ—‚ðŒÄ‚ÔB
+	// ¦Á‚·‚ÈB
+	{
+		_Move();
+		_Camera->Update();
+	}
 
 	//—ðŽj‘‚ðŒŸõB
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");

@@ -5,7 +5,7 @@
 #include "../Component/ObjectRotation.h"
 #include "fbEngine\CharacterController.h"
 #include "AttackCollision.h"
-#include "GameObject\Component\HadBar.h"
+#include "GameObject\Component\ParameterBar.h"
 
 class SkinModel;
 class Animation;
@@ -45,7 +45,7 @@ private:
 		Collider* Collider = nullptr;	// コリジョン形状。
 		CCharacterController* CharacterController = nullptr;		// キャラクターコントローラ。
 		ObjectRotation* RotationAction = nullptr;	// オブジェクトを回転させるクラス。
-		CHadBar* HadBar = nullptr;			// ゲージHP用。
+		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 	};
 
 public:
