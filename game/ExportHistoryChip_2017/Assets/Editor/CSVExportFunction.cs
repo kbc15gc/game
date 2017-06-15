@@ -104,7 +104,7 @@ public class CSVExportFunction : Editor
                 continue;
 
             //メッシュ取得
-            Mesh mesh = child.GetComponent<MeshFilter>().mesh;
+            //Mesh mesh = child.GetComponent<MeshFilter>().mesh;
 
             //メッシュ名を書き出し
             //sw.Write(mesh.name.Replace(" Instance", "") + ".X");

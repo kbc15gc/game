@@ -13,6 +13,9 @@ namespace
 {
 	/** シャドウマップ描画フラグ. */
 	bool g_ShadowRender = false;
+	/** 環境マップ描画フラグ. */
+	bool g_EnvironmentRender = false;
+
 }
 
 SkinModel::SkinModel(GameObject * g, Transform * t) :
@@ -99,11 +102,16 @@ void SkinModel::PreRender()
 	{
 		INSTANCE(SceneManager)->GetShadowMap()->EntryModel(this);
 	}
+	if (_ModelEffect & ModelEffectE::CAST_ENVIRONMENT)
+	{
+		INSTANCE(SceneManager)->GetEnvironmentMap()->EntryModel(this);
+	}
 }
 
 void SkinModel::Render()
 {
 	g_ShadowRender = false;
+	g_EnvironmentRender = false;
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -119,6 +127,24 @@ void SkinModel::Render()
 void SkinModel::RenderToShadowMap()
 {
 	g_ShadowRender = true;
+	g_EnvironmentRender = false;
+
+	//モデルデータがあるなら
+	if (_ModelDate)
+	{
+		//再帰関数呼び出し
+		DrawFrame(_ModelDate->GetFrameRoot());
+	}
+}
+
+/**
+* 環境マップに描画する.
+* 環境マップクラスから呼ばれている.
+*/
+void SkinModel::RenderToEnvironmentMap()
+{
+	g_ShadowRender = false;
+	g_EnvironmentRender = true;
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -190,9 +216,18 @@ void SkinModel::DrawMeshContainer(
 		
 		//各行列を送信
 		_Effect->SetMatrix("g_rotationMatrix", transform->GetRotateMatrixAddress());
-		_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetViewMat());
-		_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetProjectionMat());
 		
+		if (g_EnvironmentRender)
+		{
+			_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)INSTANCE(SceneManager)->GetEnvironmentMap()->GetViewMatrix());
+			_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)INSTANCE(SceneManager)->GetEnvironmentMap()->GetProjMatrix());
+		}
+		else
+		{
+			_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetViewMat());
+			_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetProjectionMat());
+		}
+
 		{
 			//レシーバー用パラメータを設定.
 			ShadowMap::ShadowReceiverParam* shadowParam = INSTANCE(SceneManager)->GetShadowMap()->GetShadowReceiverParam();
@@ -223,12 +258,12 @@ void SkinModel::DrawMeshContainer(
 		if(_SkyBox)
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
 		}
-
+		
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
 		{
@@ -290,6 +325,8 @@ void SkinModel::DrawMeshContainer(
 		else
 		{
 			_Effect->SetMatrix("g_worldMatrix", &pFrame->CombinedTransformationMatrix);
+
+			_Effect->SetInt("g_isEnvironmentMap", g_EnvironmentRender ? 1 : 0);
 
 			//マテリアルの数
 			DWORD MaterialNum = pMeshContainer->NumMaterials;
@@ -353,6 +390,7 @@ void SkinModel::DrawMeshContainer(
 		if (_SkyBox)
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 		}
 
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);

@@ -48,6 +48,7 @@ void PhysicsWorld::Start()
 	dynamicWorld->setGravity(btVector3(0.0f, -9.8f*100, 0.0f));
 	//ゴーストコリジョンがペアを見つけるときに使うコールバック設定。
 	//これを設定しないとゴーストオブジェクトは重なったペアを見つけることはできない。
+	dynamicWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
 	dynamicWorld->getPairCache()->setInternalGhostPairCallback(new fbPhysicsCallback::MyGhostPairCallback);
 }
 void PhysicsWorld::Update()
@@ -113,13 +114,15 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll,const int& a
 	return callback.hitObject;
 }
 
-vector<Collision*> PhysicsWorld::AllHitsContactTest(Collision * coll, const int & attr) const
+const vector<Collision*> PhysicsWorld::AllHitsContactTest(Collision * coll, const int & attr) const
 {
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;
 	dynamicWorld->contactTest(coll->GetCollisonObj(), callback);
 
+	// callbackはローカル変数のため、参照で配列を返しても関数を抜けると情報がロストする。
+	// ※とりあえず値で返却する。
 	return callback.hitObjects;
 }
 

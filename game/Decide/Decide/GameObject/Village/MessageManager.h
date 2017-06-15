@@ -1,16 +1,14 @@
 #pragma once
 
-//namespace {
 	//メッセージの情報
-	struct MessageInfo :Noncopyable
-	{
-		int MessageID;		//メッセージのID
-		char Title[256];	//タイトル
-		char Text[256];		//本文
-		int NextID;			//次のメッセージのID
-		int EventID;		//イベントのID
-	};
-//}
+struct MessageInfo :Noncopyable
+{
+	int MessageID;		//メッセージのID
+	char Title[256];	//タイトル
+	char Text[256];		//本文
+	int NextID;			//次のメッセージのID
+	int EventID;		//イベントのID
+};
 
 //メッセージを管理するクラス
 class MessageManager

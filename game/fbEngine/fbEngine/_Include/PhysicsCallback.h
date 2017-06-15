@@ -16,18 +16,18 @@ namespace fbPhysicsCallback
 			//(元がゴーストオブジェクト以外ならnullになる)
 			btGhostObject* ghost0 = btGhostObject::upcast(colObj0);
 			btGhostObject* ghost1 = btGhostObject::upcast(colObj1);
+			Collision* coll0 = (Collision*)colObj0->getUserPointer();
+			Collision* coll1 = (Collision*)colObj1->getUserPointer();
 
 			if (ghost0)
 			{
 				//ペア追加
 				ghost0->addOverlappingObjectInternal(proxy1, proxy0);
-				Collision* coll0 = (Collision*)ghost0->getUserPointer();
-				Collision* coll1 = (Collision*)ghost1->getUserPointer();
 			}
 			if (ghost1)
 			{
 				//ペア追加
-				ghost1->addOverlappingObjectInternal(proxy0, proxy1);
+				ghost1->addOverlappingObjectInternal(proxy0, proxy1);				
 			}
 			return 0;
 		}
@@ -125,7 +125,7 @@ namespace fbPhysicsCallback
 				hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
 			}
 			else {
-hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
+				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 			}
 
 			//hitオブジェクトがある

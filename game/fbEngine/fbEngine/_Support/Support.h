@@ -89,7 +89,8 @@ namespace
 }
 
 namespace Support {
-	//CSVファイルから情報を読み取り、テンプレートクラスに格納する。
+	//CSVファイルから情報を読み取り、構造体に格納する。
+	//※仮想関数を実装した構造体を使うとメモリを破壊する可能性あり。
 	template<class T>
 	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<T*>& output)
 	{
@@ -100,7 +101,7 @@ namespace Support {
 		if (fin.fail())
 		{
 			char error[256];
-			sprintf(error, "%s\nを開けませんでした。", filepath);
+			sprintf(error, "ファイル名：%s\nを開けませんでした。", filepath);
 			MessageBoxA(0, error, "ファイル読み込みエラー", MB_ICONWARNING);
 			return fin.fail();
 		}
@@ -206,13 +207,13 @@ namespace Support {
 				{
 				case DataTypeE::INT:
 					memcpy(&i, addres, datas[idx].size);
-					//sprintf_s(word, "%d", i);
-					ToString(i, word);
+					sprintf(word, "%d", i);
+					//ToString(i, word);
 					break;
 				case DataTypeE::FLOAT:
 					memcpy(&f, addres, datas[idx].size);
-					//sprintf_s(word, "%f", f);
-					ToString(f, word);
+					sprintf(word, "%f", f);
+					//ToString(f, word);
 					break;
 				case DataTypeE::STRING:
 					memcpy(word, addres, datas[idx].size);

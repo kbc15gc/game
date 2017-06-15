@@ -31,16 +31,21 @@ SceneManager::SceneManager()
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
 	//アンチエイリアスの作成.
-	//_AntiAliasing.Create();
+	_AntiAliasing.Create();
 
 	//被写界深度の作成
-	//_DepthofField.Create();
+	_DepthofField.Create();
 
 	//ブルームの準備
 	_Bloom.Create();
 
 	//シャドウマップの初期化.
 	_ShadowMap.Create();
+
+	//環境マップの初期化.
+	_EnvironmentMap.Create();
+
+	
 }
 
 SceneManager::~SceneManager()
@@ -58,6 +63,11 @@ void SceneManager::StartScene()
 	FPS* fps = INSTANCE(GameObjectManager)->AddNew<FPS>("fps", System::MAX_PRIORITY);
 	//fps->transform->SetLocalPosition(Vector3(0, 30, 0));
 //#endif // DEBUG
+
+	//空描画クラスの初期化.
+	_Sky = INSTANCE(GameObjectManager)->AddNew<Sky>("sky", 0);
+	_Sky->SetActive(false);
+
 	_Scenes[_NowScene]->Start();
 	INSTANCE(GameObjectManager)->StartObject();
 }
@@ -70,7 +80,17 @@ void SceneManager::UpdateScene()
 	INSTANCE(GameObjectManager)->LateUpdateObject();
 
 	//シャドウマップの更新.
-	_ShadowMap.Update();
+	if (_Scenes[_NowScene]->GetIsShadowMap())
+	{
+		_ShadowMap.Update();
+	}
+
+	//環境マップの更新.
+	if (_Scenes[_NowScene]->GetIsEnvironmentMap())
+	{
+		_EnvironmentMap.Update();
+	}
+
 }
 
 void SceneManager::DrawScene()
@@ -79,7 +99,15 @@ void SceneManager::DrawScene()
 	INSTANCE(GameObjectManager)->PreRenderObject();
 
 	//シャドウマップの描画.
-	_ShadowMap.Render();
+	if (_Scenes[_NowScene]->GetIsShadowMap())
+	{
+		_ShadowMap.Render();
+	}
+	//環境マップの描画.
+	if (_Scenes[_NowScene]->GetIsEnvironmentMap())
+	{
+		_EnvironmentMap.Render();
+	}
 
 	//0番目に設定(オフスクリーンレンダリング用)
 	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
@@ -97,7 +125,8 @@ void SceneManager::DrawScene()
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
 	//_DepthofField.Render();
-	//_AntiAliasing.Render();
+	
+	_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
 	INSTANCE(RenderTargetManager)->BeforeRT();
@@ -106,7 +135,7 @@ void SceneManager::DrawScene()
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
 	
-	//_Bloom.Render();
+	_Bloom.Render();
 	
 	INSTANCE(GameObjectManager)->PostRenderObject();
 	

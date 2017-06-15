@@ -8,7 +8,7 @@
 namespace
 {
 	//テクスチャファイル名
-	char* ChipTexture[(int)ChipID::NUM]
+	char* ChipTexture[]
 	{
 		"nullChip.png",
 		"FireChip.png",

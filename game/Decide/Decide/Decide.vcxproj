@@ -158,6 +158,8 @@
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
+    <ClInclude Include="GameObject\Component\CharacterParameter.h" />
+    <ClInclude Include="GameObject\Component\HadBar.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
@@ -176,9 +178,7 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\HistoryChip\AburaChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\FireChip.h" />
-    <ClInclude Include="GameObject\HistoryChip\TetuChip.h" />
+    <ClInclude Include="GameObject\HistoryChip\Chips.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
@@ -191,6 +191,7 @@
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
     <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
+    <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\Shop.h" />
@@ -198,10 +199,10 @@
     <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="Sky.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +210,8 @@
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
+    <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
+    <ClCompile Include="GameObject\Component\HadBar.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
@@ -226,9 +229,7 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\AburaChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\FireChip.cpp" />
-    <ClCompile Include="GameObject\HistoryChip\TetuChip.cpp" />
+    <ClCompile Include="GameObject\HistoryChip\Chips.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
@@ -239,15 +240,16 @@
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
+    <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -258,6 +260,11 @@
   <ItemGroup>
     <Image Include="Decide.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Asset\Shader\Ocean.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

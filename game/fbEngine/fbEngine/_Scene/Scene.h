@@ -42,6 +42,23 @@ public:
 	{
 		_FadeState = fbScene::FadeStateE::WAIT;
 	}
+
+	/**
+	* シャドウマップの有効フラグ.
+	*/
+	bool GetIsShadowMap()
+	{
+		return _isShadowMap;
+	}
+
+	/**
+	* 環境マップフラグを取得.
+	*/
+	bool GetIsEnvironmentMap()
+	{
+		return _isEnvironmentMap;
+	}
+
 private:
 	//フェード描画
 	void _DrawFade();
@@ -58,4 +75,14 @@ private:
 protected:
 	//フェード中
 	static fbScene::FadeStateE _FadeState;
+
+protected:
+
+	/** シャドウマップフラグ. */
+	bool _isShadowMap = false;
+
+	/** 環境マップフラグ. */
+	bool _isEnvironmentMap = false;
+
+
 };

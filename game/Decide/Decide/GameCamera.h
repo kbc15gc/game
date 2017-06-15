@@ -1,29 +1,73 @@
+/**
+* ゲームカメラクラスの定義.
+*/
 #pragma once
+
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class Player;
 class HistoryBook;
 
-//ゲームカメラ
+/**
+* ゲームカメラクラス.
+*/
 class GameCamera :public GameObject
 {
 public:
-	GameCamera(const char* name) :GameObject(name) {}
+
+	/**
+	* コンストラクタ.
+	*/
+	GameCamera(const char* name) :
+		GameObject(name) 
+	{
+	}
+	
+	/**
+	* デストラクタ.
+	*/
+	~GameCamera();
+	
+	/**
+	* コンストラクタ後の初期化.
+	*/
 	void Awake()override;
+	
+	/**
+	* 初期化.
+	*/
 	void Start()override;
+
+	/**
+	* 更新.
+	*/
 	void Update()override;
-	//カメラ横回転
-	void RotTransversal(float roty);
-	//カメラが縦に回転。
-	void RotLongitudinal(float rotx);
+
 private:
+
+	/**
+	* カメラ横回転.
+	*
+	* @param roty	回転角度.
+	*/
+	void _RotTransversal(float roty);
+
+	/**
+	* カメラが縦に回転.
+	*
+	* @param roty	回転角度.
+	*/
+	void _RotLongitudinal(float rotx);
+
 	//移動関数
 	void _Move();
 	//通常時のカメラ挙動
 	void _StandardBehavior();
 	//本を見ている時の挙動
 	void _HistoryBehavior();
+
 private:
+
 	//レイの形状
 	SphereCollider* _Sphere;
 	//カメラコンポーネント
@@ -51,6 +95,9 @@ private:
 	float _LerpRate;
 	//歴史書を見る前のカメラの位置を格納する用。
 	Vector3 _PrevGameCameraPos;
+	
+	//切り替わった瞬間のカメラの視点.
+	Vector3 _CameraPos = Vector3::zero;
 
 	Vector3 _toPosition = Vector3::zero;
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\GameObject.h"
+#include "GameObject\Village\HistoryInfo.h"
 
 class Button;
 class HistoryMenuButton;
@@ -14,19 +15,11 @@ public:
 	void Awake()override;
 	void Start()override;
 	void Update()override;
-	//火のメニューセレクト
-	void FireSelect();
-	//鉄のメニューセレクト
-	void TetuSelect();
-	//油のメニューセレクト
-	void AburaSelect();
-	//どの村のどの場所に設置するか。
-	void MenuSelectNumber();
+	//どのチップをメニューにセレクトするか。
+	void ChipSelect(ChipID id);
 private:
 	//メニューの有効フラグ設定
 	void _SetMenuEnabel(const bool& enabel);
-	//メニューを開く処理
-	void _OpenMenu();
 private:
 	//メニューの有効フラグ
 	bool _MenuEnabel;		

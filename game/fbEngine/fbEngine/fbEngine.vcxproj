@@ -25,14 +25,17 @@
     </ClCompile>
     <ClCompile Include="_Effect\Blur.cpp" />
     <ClCompile Include="_Effect\EffectManager.cpp" />
+    <ClCompile Include="_Effect\GaussianBlur.cpp" />
     <ClCompile Include="_Effect\PostEffect\AntiAliasing.cpp" />
     <ClCompile Include="_Effect\PostEffect\Bloom.cpp" />
     <ClCompile Include="_Effect\PostEffect\DepthofField.cpp" />
+    <ClCompile Include="_Effect\PreRender\EnvironmentMap.cpp" />
     <ClCompile Include="_Effect\PreRender\ShadowMap.cpp" />
     <ClCompile Include="_Inputs\InputManager.cpp" />
     <ClCompile Include="_Inputs\KeyBoard .cpp" />
     <ClCompile Include="_Inputs\Mouse.cpp" />
     <ClCompile Include="_Inputs\XInput.cpp" />
+    <ClCompile Include="_Nature\Sky.cpp" />
     <ClCompile Include="_Object\Object.cpp" />
     <ClCompile Include="_Object\Vertex.cpp" />
     <ClCompile Include="_Object\_Component\Component.cpp" />
@@ -98,9 +101,11 @@
     <ClInclude Include="_Effect\Blur.h" />
     <ClInclude Include="_Effect\Effect.h" />
     <ClInclude Include="_Effect\EffectManager.h" />
+    <ClInclude Include="_Effect\GaussianBlur.h" />
     <ClInclude Include="_Effect\PostEffect\AntiAliasing.h" />
     <ClInclude Include="_Effect\PostEffect\Bloom.h" />
     <ClInclude Include="_Effect\PostEffect\DepthofField.h" />
+    <ClInclude Include="_Effect\PreRender\EnvironmentMap.h" />
     <ClInclude Include="_Effect\PreRender\ShadowMap.h" />
     <ClInclude Include="_Include\CollisionInclude.h" />
     <ClInclude Include="_Include\CollisionEnum.h" />
@@ -111,6 +116,7 @@
     <ClInclude Include="_Inputs\KeyBoard .h" />
     <ClInclude Include="_Inputs\Mouse.h" />
     <ClInclude Include="_Inputs\XInput.h" />
+    <ClInclude Include="_Nature\Sky.h" />
     <ClInclude Include="_Object\Noncopyable.h" />
     <ClInclude Include="_Object\Object.h" />
     <ClInclude Include="_Object\Vertex.h" />

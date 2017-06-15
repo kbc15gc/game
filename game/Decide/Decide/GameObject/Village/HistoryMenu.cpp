@@ -7,6 +7,13 @@
 #include "GameObject\Village\HistoryButton.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 
+namespace
+{
+	Vector3 Chip1 = Vector3(250, 200, 0.0f);
+	Vector3 Chip2 = Vector3(400, 200, 0.0f);
+	Vector3 Chip3 = Vector3(550, 200, 0.0f);
+}
+
 HistoryMenu::HistoryMenu(const char * name) :
 	GameObject(name)
 {
@@ -73,7 +80,13 @@ void HistoryMenu::Update()
 			_OpenMenu();
 		}
 	}
-	SelectMenuButton();
+	//メニューを開いているときの処理。
+	if (_MenuEnabel)
+	{
+		//チップをセットする場所を設定する。
+		SelectMenuButton();
+	}
+	
 }
 
 void HistoryMenu::_SetMenuEnabel(const bool & enabel)
@@ -104,29 +117,34 @@ void HistoryMenu::_OpenMenu()
 
 void HistoryMenu::SelectMenuButton()
 {
-	static Vector2 hasi(250, 200);
-	static Vector2 interval(150, 100);
 	int select = (int)_MenuNomber;
+	//次のページへ。
 	if (KeyBoardInput->isPush(DIK_RIGHT) && _MenuNomber != MenuNomber::Three)
 	{
 		select++;
 	}
+	//前のページへ。
 	else if (KeyBoardInput->isPush(DIK_LEFT) && _MenuNomber != MenuNomber::One)
 	{
 		select--;
 	}
+	//移動した分を渡す。
 	_MenuNomber = (MenuNomber)select;
 
+	//各メニューナンバーの座標。
 	switch (_MenuNomber)
 	{
+		//1番目
 	case MenuNomber::One :
-		_SelectImage->transform->SetLocalPosition(Vector3(250, 200, 0.0f));
+		_SelectImage->transform->SetLocalPosition(Chip1);
 		break;
+		//2番目
 	case MenuNomber::Two:
-		_SelectImage->transform->SetLocalPosition(Vector3(400, 200, 0.0f));
+		_SelectImage->transform->SetLocalPosition(Chip2);
 		break;
+		//3番目
 	case MenuNomber::Three:
-		_SelectImage->transform->SetLocalPosition(Vector3(550, 200, 0.0f));
+		_SelectImage->transform->SetLocalPosition(Chip3);
 		break;
 	default:
 		break;
