@@ -140,6 +140,8 @@ void EnemyCharacter::_BuildMyComponents() {
 	_MyComponent.RotationAction = AddComponent<ObjectRotation>();
 	// バーコンポーネントを追加。
 	_MyComponent.HPBar = AddComponent<ParameterBar>();
+	//パラメーターのコンポーネント追加。
+	_MyComponent.Parameter = AddComponent<CharacterParameter>();
 }
 
 void EnemyCharacter::_BuildCollision() {
