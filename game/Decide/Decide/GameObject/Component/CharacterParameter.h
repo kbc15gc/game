@@ -35,7 +35,7 @@ public:
 
 	//ダメージの計算。
 	//第一引数:攻撃系のパラメーター 第二引数:防御系のパラメーター。
-	void DamageMass(int atk, int defidx);
+	int DamageMass(int atk, int defidx);
 	//死んだかどうかのフラグを取得。
 	//tureなら死んでいる。
 	inline bool GetDeathFalg()

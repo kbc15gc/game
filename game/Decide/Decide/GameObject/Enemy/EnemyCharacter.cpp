@@ -52,7 +52,7 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	if (_MyComponent.Parameter->HP <= 0)
+	if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) <= 0)
 	{
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}

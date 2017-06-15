@@ -63,14 +63,7 @@ public:
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
 	// エネミーが作った攻撃。
-	void HitAttackCollision(AttackCollision* hitCollision) {
-		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
-		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy)
-		{
-			_PlayerParam->SubParam(CharacterParameter::Param::HP,1);	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
-			_DamageSE->Play(false);//ダメージを受けたときのSE
-		}
-	}
+	void HitAttackCollision(AttackCollision* hitCollision);
 
 	//セットステート
 	void SetState(State state)
@@ -134,10 +127,6 @@ private:
 	CharacterParameter* _PlayerParam = nullptr;
 	//プレイヤーのレベル
 	int _Level;
-	//HPのテキスト表示
-	TextObject* _HPText;
-	//MPのテキスト表示
-	TextObject* _MPText;
 	// 回転。
 	ObjectRotation* _Rotation = nullptr;
 	// HPバー。
