@@ -101,7 +101,8 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="GameObject\Component\HadBar.cpp">
+    <ClCompile Include="GameObject\Village\ItemManager.cpp" />
+    <ClCompile Include="GameObject\Component\ParameterBar.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.cpp">
@@ -226,7 +227,8 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Ocean.h" />
-    <ClInclude Include="GameObject\Component\HadBar.h">
+    <ClInclude Include="GameObject\Village\ItemManager.h" />
+    <ClInclude Include="GameObject\Component\ParameterBar.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.h">

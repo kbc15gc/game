@@ -11,11 +11,12 @@ public:
 	// 物理属性(斬、打、魔など)。
 	enum class Physical{None = 0};
 	// パラメーター列挙。
-	enum Param{HP = 0,MP,ATK,DEF,DEX,AGI,MAX};
-	/*初期化
-	*/
-	void ParamInit(int hp, int mp, int atk, int def, int dex, int agi);
+	enum Param { HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, MAX };
+	//初期化。
+	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi);
 	
+	void Update()override;
+
 	// 指定したパラメーターに加算。
 	// 引数：	パラメータータイプ。
 	//			加算量。
@@ -33,12 +34,33 @@ public:
 	inline int GetParam(Param idx)const {
 		return _Param[idx];
 	}
+
+	//死んだかどうかのフラグを取得。
+	//tureなら死んでいる。
+	inline bool GetDeathFalg()
+	{
+		return _DeathFlag;
+	}
+
+	// 被ダメージ処理(パラメーターにダメージを与える)。
+	// 引数:		敵からのダメージ。
+	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
+	//				装備品の防御力(デフォルトは0)。
+	int ReciveDamage(int defaultDamage, int defidx = 1, int Equipment = 0);
+
+	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
+	// 引数:		敵からのダメージ。
+	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
+	//				装備品の防御力(デフォルトは0)。
+	int ReceiveDamageMass(int defaultDamage, int defidx = 1,int Equipment = 0);
+
+	//与ダメージ計算。
+	// 引数：		キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
+	inline int GiveDamageMass(int atk = 1)
+	{
+		return _Param[Param::ATK] * atk;
+	}
 private:
 	int _Param[Param::MAX];
-	//int _HP;	//ヒットポイント
-	//int _MP;	//マジックポイント
-	//int _ATK;	//攻撃力
-	//int _DEF;	//防御力
-	//int _DEX;	//命中力
-	//int _AGI;	//回避力
+	bool _DeathFlag = false;//死んだかどうかのフラグ。
 };

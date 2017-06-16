@@ -11,8 +11,8 @@
 namespace
 {
 
-	/** プレイヤーの半分の高さ。*/
-	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.75f, 0.0f);
+	/** 歴史書の出現位置. 。*/
+	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.5f, 0.7f);
 
 }
 
@@ -46,7 +46,7 @@ void HistoryBook::Start()
 	//状態リストを初期化.
 	_InitState();
 
-	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f) + PLAYER_HALFHEIGHT);
+	transform->SetLocalPosition(PLAYER_HALFHEIGHT);
 	transform->SetLocalScale(Vector3::one);
 
 	//アニメーションの終了時間設定.
@@ -137,9 +137,7 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 			_Player->SetEnable(true);
 		}
 
-		_PlayerFoward = _Player->transform->GetForward();
-		_PlayerFoward.Scale(-1);
-		transform->SetLocalPosition(_PlayerFoward + PLAYER_HALFHEIGHT);
+
 	}
 
 }

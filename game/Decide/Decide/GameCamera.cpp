@@ -54,6 +54,12 @@ void GameCamera::Start()
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を入れる
 	D3DXVec3Normalize(&_ToPlayerDir, &D3DXVECTOR3(0.0f, 3.0f, -4.0f));
+	// 初期値設定のため処理を呼ぶ。
+	// ※消すな。
+	{
+		_Move();
+		_Camera->Update();
+	}
 
 	//歴史書を検索。
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
@@ -139,7 +145,7 @@ void GameCamera::_Move()
 	//カメラの移動先
 	to = from + dist;
 	//レイを飛ばす
-	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK);	// 衝突を無視する属性を減算。
+	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK) & ~(Collision_ID::PLAYER) & ~(Collision_ID::ENEMY) & ~(Collision_ID::BOSS);	// 衝突を無視する属性を減算。
 	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere,from, to, attri);
 	//移動先ポジション
 	Vector3 next;
