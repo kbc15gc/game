@@ -30,6 +30,9 @@ public:
 	{
 		return _CollisionObject.get();
 	}
+	shared_ptr<btCollisionObject> GetCollisionObj()const {
+		return _CollisionObject;
+	}
 	//オフセットした先のポジション取得
 	const Vector3 GetOffsetPos()
 	{

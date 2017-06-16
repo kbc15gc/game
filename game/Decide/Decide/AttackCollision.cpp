@@ -45,12 +45,12 @@ void AttackCollision::DetectionCollision() {
 	for (auto itr = _HitCollisions.begin(); itr != _HitCollisions.end();) {
 		bool isHit = false;	// 登録しているコリジョンが現在も衝突しているか。
 		for (int idx = 0; idx < collisions.size(); idx++) {
-			if (*itr == collisions[idx]->getUserPointer()) {
+			if ((*itr).get() == collisions[idx]) {
 				// 既に登録されているコリジョンが衝突している。
 				isHit = true;
 
 				// 衝突している間呼び続けるコールバック処理。
-				_CallBackStay(*itr);
+				_CallBackStay((*itr).get());
 				// コールバックを呼んだものは配列から除く。
 				collisions.remove(collisions[idx]);
 				break;
@@ -66,7 +66,8 @@ void AttackCollision::DetectionCollision() {
 		if (!isHit) {
 			// 登録されていたコリジョンが衝突していなかった。
 			// 衝突を外れた時に呼び出すコールバック処理。
-			_CallBackExit(*itr);
+			_CallBackExit((*itr).get());
+			//(*itr).reset();	// シェアードポインタの参照カウンタを明示的に下げる(必要？)。
 			itr = _HitCollisions.erase(itr);
 		}
 		else {
@@ -76,79 +77,89 @@ void AttackCollision::DetectionCollision() {
 
 	for (int idx = 0; idx < collisions.size();idx++) {
 		// 衝突をした瞬間に呼び出すコールバック処理。
-		_CallBackEnter(static_cast<Collision*>(collisions[idx]->getUserPointer()));
+		_CallBackEnter(collisions[idx]);
 		// 衝突リストに追加。
-		_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer()));
+		_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj());
 	}
 }
 
-void AttackCollision::_CallBackEnter(Collision* coll) {
-	switch (_master) {
-	case CollisionMaster::Player:
-		// プレイヤーが生成した攻撃。
-		if (coll->GetID() == Collision_ID::ENEMY) {
-			// 敵と衝突した。
-			static_cast<EnemyCharacter*>(coll->gameObject)->HitAttackCollisionEnter(this);
+void AttackCollision::_CallBackEnter(btCollisionObject* coll) {
+	GameObject* obj = _CollisionObjectToGameObject(coll);
+	if (obj) {
+		switch (_master) {
+		case CollisionMaster::Player:
+			// プレイヤーが生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+				// 敵と衝突した。
+				// ゲームオブジェクトがある。
+				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionEnter(this);
+			}
+			break;
+		case CollisionMaster::Enemy:
+			// 雑魚敵が生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+				// プレイヤーと衝突した。
+				static_cast<Player*>(obj)->HitAttackCollisionEnter(this);
+			}
+			break;
+		case CollisionMaster::Other:
+			// その他が生成した攻撃。
+			// ※暫定。とりあえず何もしない。
+			break;
 		}
-		break;
-	case CollisionMaster::Enemy:
-		// 雑魚敵が生成した攻撃。
-		if (coll->GetID() == Collision_ID::PLAYER) {
-			// プレイヤーと衝突した。
-			static_cast<Player*>(coll->gameObject)->HitAttackCollisionEnter(this);
-		}
-		break;
-	case CollisionMaster::Other:
-		// その他が生成した攻撃。
-		// ※暫定。とりあえず何もしない。
-		break;
 	}
 }
 
 // 衝突している間呼び続けるコールバック処理。
-void AttackCollision::_CallBackStay(Collision* coll) {
-	switch (_master) {
-	case CollisionMaster::Player:
-		// プレイヤーが生成した攻撃。
-		if (coll->GetID() == Collision_ID::ENEMY) {
-			// 敵と衝突した。
-			static_cast<EnemyCharacter*>(coll->gameObject)->HitAttackCollisionStay(this);
+void AttackCollision::_CallBackStay(btCollisionObject* coll) {
+	GameObject* obj = _CollisionObjectToGameObject(coll);
+	if (obj) {
+		switch (_master) {
+		case CollisionMaster::Player:
+			// プレイヤーが生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+				// 敵と衝突した。
+				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionStay(this);
+			}
+			break;
+		case CollisionMaster::Enemy:
+			// 雑魚敵が生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+				// プレイヤーと衝突した。
+				static_cast<Player*>(obj)->HitAttackCollisionStay(this);
+			}
+			break;
+		case CollisionMaster::Other:
+			// その他が生成した攻撃。
+			// ※暫定。とりあえず何もしない。
+			break;
 		}
-		break;
-	case CollisionMaster::Enemy:
-		// 雑魚敵が生成した攻撃。
-		if (coll->GetID() == Collision_ID::PLAYER) {
-			// プレイヤーと衝突した。
-			static_cast<Player*>(coll->gameObject)->HitAttackCollisionStay(this);
-		}
-		break;
-	case CollisionMaster::Other:
-		// その他が生成した攻撃。
-		// ※暫定。とりあえず何もしない。
-		break;
 	}
 }
 
-void AttackCollision::_CallBackExit(Collision* coll) {
-	switch (_master) {
-	case CollisionMaster::Player:
-		// プレイヤーが生成した攻撃。
-		if (coll->GetID() == Collision_ID::ENEMY) {
-			// 敵と衝突した。
-			static_cast<EnemyCharacter*>(coll->gameObject)->HitAttackCollisionExit(this);
+void AttackCollision::_CallBackExit(btCollisionObject* coll) {
+	GameObject* obj = _CollisionObjectToGameObject(coll);
+	if (obj) {
+		switch (_master) {
+		case CollisionMaster::Player:
+			// プレイヤーが生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+				// 敵と衝突した。
+				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionExit(this);
+			}
+			break;
+		case CollisionMaster::Enemy:
+			// 雑魚敵が生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+				// プレイヤーと衝突した。
+				static_cast<Player*>(obj)->HitAttackCollisionExit(this);
+			}
+			break;
+		case CollisionMaster::Other:
+			// その他が生成した攻撃。
+			// ※暫定。とりあえず何もしない。
+			break;
 		}
-		break;
-	case CollisionMaster::Enemy:
-		// 雑魚敵が生成した攻撃。
-		if (coll->GetID() == Collision_ID::PLAYER) {
-			// プレイヤーと衝突した。
-			static_cast<Player*>(coll->gameObject)->HitAttackCollisionExit(this);
-		}
-		break;
-	case CollisionMaster::Other:
-		// その他が生成した攻撃。
-		// ※暫定。とりあえず何もしない。
-		break;
 	}
 }
 
