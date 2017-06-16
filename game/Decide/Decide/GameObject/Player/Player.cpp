@@ -259,7 +259,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		_HPBar->SubValue(_PlayerParam->DamageMass(hitCollision->GetDamage(), _PlayerParam->GetParam(CharacterParameter::DEF)));
+		_HPBar->SubValue(_PlayerParam->ReciveDamage(hitCollision->GetDamage()));
 		_DamageSE->Play(false);//ƒ_ƒ[ƒW‚ğó‚¯‚½‚Æ‚«‚ÌSE
 	}
 }

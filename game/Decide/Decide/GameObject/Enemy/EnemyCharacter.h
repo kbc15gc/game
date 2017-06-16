@@ -136,7 +136,7 @@ public:
 	inline virtual void HitAttackCollisionEnter(AttackCollision* hitCollision) {
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
 		{
-			_MyComponent.Parameter->DamageMass(hitCollision->GetDamage(), _MyComponent.Parameter->GetParam(CharacterParameter::DEF));
+			_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage());
 		}
 	}
 
