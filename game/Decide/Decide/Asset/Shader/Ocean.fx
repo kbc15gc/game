@@ -87,6 +87,8 @@ VS_OUTPUT VSMain(VS_INPUT In)
 
 	Out.Pos = pos;
 
+	Out.WorldPos.w = pos.w;
+
 	Out.Tex = In.Tex;
 
 	float3 nor = mul(In.Normal.xyz, (float4x3)g_WorldMatrix);
@@ -127,32 +129,29 @@ float3 SpecCalc(float3 normal,float3 worldPos)
 	return SpecColor;
 }
 
+struct PS_OUTPUT
+{
+	float4 Color : COLOR0;
+	float4 Depth : COLOR1;
+};
+
 /**
 * ピクセルシェーダ.
 */
-float4 PSMain(VS_OUTPUT In) : COLOR0
+PS_OUTPUT PSMain(VS_OUTPUT In)
 {
-
-	float4 defColor = 0;
-	
-	float3 color = float3(27, 61, 176) / 255;
-	defColor = float4(color, 0.8f);
-
-	//出力カラー.
-	float4 OutColor = defColor;
-	
 	float3 normal = In.Normal.xyz;
 	float3 tangent = In.Tangent.xyz;
-
 	normal = NormalCalc(normal, tangent, tex2D(g_NormalSampler_1, In.Tex + float2(g_Wave, g_Wave)).xyz);
 	normal = NormalCalc(normal, tangent, tex2D(g_NormalSampler_2, In.Tex + float2(g_Wave, -g_Wave)).xyz);
 	
-	float4 LightColor = DiffuseLight(normal);
 
-	//スペキュラ.
-	LightColor.xyz += SpecCalc(normal, In.WorldPos.xyz);
+	float4 defColor = 0;
+	float3 color = float3(0, 151, 156) / 255;
+	defColor = float4(color, 0.3f);
 
-	LightColor.xyz += g_ambientLight.xyz * defColor.xyz;
+	//出力カラー.
+	float4 OutColor = defColor;
 
 	{
 		//ワールド空間での視線ベクトル.
@@ -160,14 +159,29 @@ float4 PSMain(VS_OUTPUT In) : COLOR0
 		float3 vReflect = reflect(worldViewVec, normal);
 		//環境マップのカラー.
 		float4 EnvironmentColor = texCUBE(g_EnvironmentMapSampler, vReflect);
+		
+		float R = 0.5f;
+		OutColor.xyz = lerp(EnvironmentColor.xyz, defColor.xyz, R);
 
-		float R = 0.03f;
-		OutColor = lerp(EnvironmentColor, defColor, R);
 	}
+
+	float4 LightColor = DiffuseLight(normal);
+
+	//スペキュラ.
+	LightColor.xyz += SpecCalc(normal, In.WorldPos.xyz);
 
 	OutColor *= LightColor;
 
-	return OutColor;
+	//環境光.
+	OutColor.xyz += g_ambientLight.xyz * defColor.xyz;
+
+	PS_OUTPUT Out = (PS_OUTPUT)0;
+
+	Out.Color = OutColor;
+	float3 depth = In.WorldPos.w;
+	Out.Depth = float4(depth, 1.0f);
+
+	return Out;
 }
 
 /**

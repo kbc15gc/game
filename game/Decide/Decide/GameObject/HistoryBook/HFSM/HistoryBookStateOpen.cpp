@@ -1,31 +1,34 @@
+/**
+* 歴史書が開く状態クラスの実装.
+*/
 #include "stdafx.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
 #include "HistoryBookStateOpen.h"
 
-
-HistoryBookStateOpen::HistoryBookStateOpen(HistoryBook* historybook):
-	HistoryBookState(historybook)
-{
-
-}
-
-
-HistoryBookStateOpen::~HistoryBookStateOpen()
-{
-	
-}
-
+/**
+* 状態に切り替えたとき呼ばれる.
+*/
 void HistoryBookStateOpen::Entry()
 {
-	_HistoryBook->PlayAnimation(HistoryBook::AnimationNo::AnimationOpen, 0.2f, 1);
+	_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::Open, 0.2f, 1);
 }
 
+/**
+* 更新.
+*/
 void HistoryBookStateOpen::Update()
 {
-
+	//本を開ききったら本を開いている状態で固定。
+	if (!_HistoryBook->GetIsPlay())
+	{
+		//開ききるアニメーションの再生が終わったら開いた状態に変更。
+		//_HistoryBook->ChangeState(HistoryBook::StateCodeE::Open);
+	}
 }
 
+/**
+* 他の状態に変わるとき呼ばれる.
+*/
 void HistoryBookStateOpen::Exit()
 {
-
 }

@@ -1,20 +1,21 @@
 /**
-* 歴史書が開く状態クラスの定義.
+* 歴史書の未使用状態クラスの定義.
 */
 #pragma once
+
 #include "HistoryBookState.h"
 
 /**
-* 歴史書が開く状態クラス.
+* 歴史書の未使用状態クラス.
 */
-class HistoryBookStateOpen :public IHistoryBookState
+class HistoryBookStateUnused : public IHistoryBookState
 {
 public:
 
 	/**
 	* コンストラクタ.
 	*/
-	HistoryBookStateOpen(HistoryBook* historybook) :
+	HistoryBookStateUnused(HistoryBook* historybook) :
 		IHistoryBookState(historybook)
 	{
 	}
@@ -22,7 +23,7 @@ public:
 	/**
 	* デストラクタ.
 	*/
-	~HistoryBookStateOpen()
+	~HistoryBookStateUnused()
 	{
 	}
 

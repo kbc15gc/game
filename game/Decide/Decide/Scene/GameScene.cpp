@@ -7,7 +7,6 @@
 
 #include "GameLight.h"
 #include "GameCamera.h"
-#include "GameShadowCamera.h"
 
 #include "Ground.h"
 #include "Ocean.h"
@@ -29,15 +28,13 @@ ImageObject* g_depth;
 void GameScene::Start()
 {
 	//ゲームライト生成
-	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
+	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
-	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 8);
+	GameCamera* camera = INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
-	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 1);
+	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
@@ -78,7 +75,7 @@ void GameScene::Start()
 	_isShadowMap = true;
 	_isEnvironmentMap = true;
 
-	INSTANCE(SceneManager)->GetSky()->SetActive(true);
+	INSTANCE(SceneManager)->GetSky()->SetEnable(camera->GetComponent<Camera>(), light->GetComponent<Light>());
 
 }
 
