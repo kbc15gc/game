@@ -137,7 +137,7 @@ public:
 		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
 		{
-			_MyComponent.Parameter->DamageMass(hitCollision->GetDamage(),_MyComponent.Parameter->GetParam(CharacterParameter::DEF));
+			_MyComponent.Parameter->DamageMass(hitCollision->GetDamage(), _MyComponent.Parameter->GetParam(CharacterParameter::DEF));
 		}
 	}
 
