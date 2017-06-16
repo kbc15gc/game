@@ -59,11 +59,24 @@ public:
 	//アニメーションコントロール
 	void AnimationControl();
 
-	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
+	// 自分が発生させたもの以外の攻撃コリジョンと衝突した瞬間呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
-	// エネミーが作った攻撃。
-	void HitAttackCollision(AttackCollision* hitCollision);
+	inline virtual void HitAttackCollisionEnter(AttackCollision* hitCollision);
+
+	// 自分が発生させたもの以外の攻撃コリジョンに衝突ている間呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollisionStay(AttackCollision* hitCollision) {
+		OutputDebugString("Stay");
+	}
+
+	// 自分が発生させたもの以外の攻撃コリジョンとの衝突から外れたら呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollisionExit(AttackCollision* hitCollision) {
+		OutputDebugString("Exit");
+	}
 
 	//セットステート
 	void SetState(State state)

@@ -9,6 +9,9 @@ public:
 	{
 
 	};
+	~AttackCollision() {
+		_HitCollisions.clear();
+	}
 
 	void Awake()override;
 	void Update()override;
@@ -45,7 +48,12 @@ public:
 private:	
 	// 衝突検出。
 	void DetectionCollision();
-
+	// 衝突した瞬間呼ぶコールバック処理。
+	void _CallBackEnter(Collision* coll);
+	// 衝突している間呼び続けるコールバック処理。
+	void _CallBackStay(Collision* coll);
+	// 衝突した瞬間呼ぶコールバック処理。
+	void _CallBackExit(Collision* coll);
 private:
 	Collider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。
@@ -53,4 +61,5 @@ private:
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
 	int _Damage = 0;
+	vector<Collision*> _HitCollisions;	// 当たっているコリジョン。
 };

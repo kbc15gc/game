@@ -255,7 +255,7 @@ void Player::AnimationControl()
 }
 
 //UŒ‚‚ðŽó‚¯‚½‚Æ‚«B
-void Player:: HitAttackCollision(AttackCollision* hitCollision) 
+void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision) 
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
