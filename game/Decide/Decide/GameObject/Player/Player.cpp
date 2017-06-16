@@ -260,7 +260,6 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
 		_HPBar->SubValue(_PlayerParam->DamageMass(hitCollision->GetDamage(), _PlayerParam->GetParam(CharacterParameter::DEF)));
-		//_PlayerParam->SubParam(CharacterParameter::Param::HP,1);	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 	}
 }

@@ -80,7 +80,7 @@ void PlayerStateRun::Update()
 		cameraX.z = viewinv.m[0][2];
 		cameraX.Normalize();	//YŽ²‚ð‘Å‚¿Á‚µ‚Ä‚¢‚é‚Ì‚Å³‹K‰»‚·‚éB
 
-		// Œü‚«ƒxƒNƒgƒ‹‚ÉˆÚ“®—Ê‚ðÏŽZB
+								// Œü‚«ƒxƒNƒgƒ‹‚ÉˆÚ“®—Ê‚ðÏŽZB
 		dir = dir * _Speed;
 		//ƒJƒƒ‰‚©‚ç‚Ý‚½•ûŒü‚ÉŽË‰eB
 		movespeed = movespeed + cameraX * dir.x;
@@ -92,10 +92,6 @@ void PlayerStateRun::Update()
 		//³‹K‰»
 		vec.Normalize();
 		//ƒxƒNƒgƒ‹‚©‚çŠp“x‚ð‹‚ß‚é
-		float rot = /*D3DXToRadian(360) - */atan2f(vec.x, vec.z);
-		if (rot >= 0.0f) {
-			OutputDebugString("");
-		}
 		//‰ñ“]
 		_Player->_Rotation->RotationToDirection_XZ(vec);
 	}
