@@ -71,7 +71,7 @@ void GameCamera::Start()
 void GameCamera::Update()
 {
 	//歴史書を見ているかどうか。
-	if (!_HistoryBook->GetIsLookAtHistoryFlag())
+	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
 	{
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
@@ -84,10 +84,11 @@ void GameCamera::Update()
 	_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
 
 	float Len = _toPosition.Length();
+	Len = 3;
 
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(Len * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
-	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(26.0f);
+	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 
 }
 
@@ -185,12 +186,12 @@ void GameCamera::_StandardBehavior()
 		_LerpCameraPos = (_LerpCameraPos * (1.0f - _LerpRate) + _PrevGameCameraPos * _LerpRate);
 
 		//カメラの注視点を線形補間された位置に設定。
-		transform->LockAt((_LerpCameraLookAtPos));
+		transform->LockAt(_LerpCameraLookAtPos);
 		_Camera->SetTarget(_LerpCameraLookAtPos);
 
 
 		//カメラの位置を線形補完された位置に設定。
-		transform->SetPosition((_LerpCameraPos));
+		transform->SetPosition(_LerpCameraPos);
 	}
 	//線形補間をし終わったので通常のカメラの動きをする。
 	else

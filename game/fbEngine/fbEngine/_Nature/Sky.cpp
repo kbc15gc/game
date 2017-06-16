@@ -4,6 +4,8 @@
 #include"fbstdafx.h"
 #include"Sky.h"
 
+#include"_Object\_Component\_3D\Light.h"
+
 /**
 * ‰Šú‰».
 */
@@ -18,9 +20,11 @@ void Sky::Awake()
 	_SkyModel->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 	_SkyModel->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT, true);
 	_SkyModel->SetSky(true);
-	
+
 	transform->SetLocalAngle(Vector3(15, 0, 0));
 
+	//‘¾—z‚ÌˆÊ’u.
+	_SunPosition.Set(0.0f, 1000000.0f, 0.0f);
 }
 
 /**
@@ -28,6 +32,48 @@ void Sky::Awake()
 */
 void Sky::Update()
 {
+	if (_Camera != nullptr)
+	{
+		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
+		_SunAngle += 0.02f * Time::DeltaTime();
+
+		//XŽ²‰ñ“].
+		_SunPosition.Set(0.0f, sinf(_SunAngle), cosf(_SunAngle));
+
+		//ZŽ²‰ñ“].
+		float angleZ = PI * -0.15f;
+		_SunPosition.x = _SunPosition.y * sinf(angleZ);
+		_SunPosition.y *= cosf(angleZ);
+
+		//‘¾—z‚Ì•ûŒü‚É‘ã“ü.
+		_SunDir = _SunPosition;
+		_SunPosition.Scale(1000000.0f);
+
+		//‘å‹CŽU——pƒpƒ‰ƒ[ƒ^‚ðXV.
+		_AtomosphereParam.Update(_Camera->GetPosition(), _SunPosition);
+
+		if (_SceneLight != nullptr)
+		{
+			//ƒ‰ƒCƒg‚Ì•ûŒü‚ðŒvŽZ.
+			Vector3 limLightDir = _SunDir;
+			limLightDir.Scale(-1.0f);
+
+			//•½sŒõŒ¹‚Ì0”Ô–Ú‚ðXV.
+			_SceneLight->GetLight()[0]->SetDirection(limLightDir);
+	
+			//‘¾—z‚ÌˆÊ’u‚©‚çŠÂ‹«Œõ‚ðŒvŽZ.
+			float t = max(0.0f, _SunDir.Dot(Vector3::up));
+			Vector3 ambientLight;
+			ambientLight = Vector3::Lerp(_NightAmbientLight, _DayAmbientLight, t);
+
+			//ŠÂ‹«Œõ‚ðÝ’è.
+			_SceneLight->SetAmbientLight(ambientLight);
+		}
+
+	}
+
+	transform->SetLocalPosition(_Camera->GetTarget());
+
 	transform->UpdateTransform();
 }
 

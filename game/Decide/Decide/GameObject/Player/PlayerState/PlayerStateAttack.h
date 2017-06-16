@@ -8,7 +8,6 @@ public:
 	//攻撃コリジョンパラメータ。
 	struct  AttackCollisionParameter
 	{
-		int 攻撃力;		//攻撃力。
 		Vector3 pos;	//発生位置。
 		Quaternion rot;	//回転。
 		Vector3 scale;	//大きさ。
@@ -25,6 +24,6 @@ public:
 private:
 	//攻撃時のSE
 	SoundSource* _SE = nullptr;
-	//攻撃コリジョン１
-	AttackCollisionParameter attackpram1;
+	//攻撃コリジョン
+	std::vector<AttackCollisionParameter> _AttackPram;
 };

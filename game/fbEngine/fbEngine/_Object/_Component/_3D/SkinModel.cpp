@@ -6,6 +6,8 @@
 #include "_Object\_Component\_3D\Camera.h"
 #include "_Object\_Component\_3D\ShadowCamera.h"
 
+#include"_Nature\Sky.h"
+
 //extern UINT                 g_NumBoneMatricesMax;
 //extern D3DXMATRIXA16*       g_pBoneMatrices ;
 
@@ -208,7 +210,8 @@ void SkinModel::DrawMeshContainer(
 		//ライト数セット
 		_Effect->SetInt("g_LightNum", num);
 		//環境光
-		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(0.4, 0.4, 0.4, 1.0f));
+		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
+		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 
 		//カメラのポジションセット(スペキュラライト用)
 		Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
@@ -255,15 +258,22 @@ void SkinModel::DrawMeshContainer(
 
 		_Effect->SetVector("g_blendcolor", (D3DXVECTOR4*)&_AllBlend);
 
-		if(_SkyBox)
-		{
-			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
-		}
-		
+		AtmosphericScatteringParamS atmos = INSTANCE(SceneManager)->GetSky()->GetAtmosphericScatteringParam();
+		_Effect->SetValue("g_atmosParam", &atmos, sizeof(atmos));
+		_Effect->SetInt("g_atmosFlag", _AtomosphereFunc);
+
+	
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, _SkyBox ? FALSE : TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	
+
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
 		{

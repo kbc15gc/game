@@ -58,6 +58,8 @@ bool EnvironmentMap::Create()
 	//プロジェクション行列の計算.
 	D3DXMatrixPerspectiveFovLH(&_ProjMatrix, D3DXToRadian(90.0f), 1.0f, 1.0f, 10000.0f);
 
+	_RenderTime = 0.0f;
+
 	return true;
 	
 }
@@ -97,8 +99,12 @@ void EnvironmentMap::Render()
 			(*graphicsDevice()).SetRenderTarget(0, renderTarget);
 			(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
+			Vector3 cameraTarget = INSTANCE(GameObjectManager)->mainCamera->GetTarget();
+
+			D3DXVECTOR3 eye = D3DXVECTOR3(cameraTarget.x, cameraTarget.y, cameraTarget.z);
+			D3DXVECTOR3 at = lookAt[i] + eye;
 			//ビュー行列の計算.
-			D3DXMatrixLookAtLH(&_ViewMatrix, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &lookAt[i], &up[i]);
+			D3DXMatrixLookAtLH(&_ViewMatrix, &eye, &at, &up[i]);
 		
 			for (auto& it : _ModelList)
 			{

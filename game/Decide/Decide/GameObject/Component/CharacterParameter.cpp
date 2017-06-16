@@ -14,20 +14,26 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::AGI]	= agi;		//回避力。
 }
 
-void CharacterParameter::DamageMass(int atk, int def)
-{
-	int Damage = 0;
-
-	//ダメージ=攻撃力-(0.5(補正値的な何かにそのうち置き換えて)*防御力)。
-	Damage = atk - (0.5f*def);
-
-	//体力を計算したダメージ分減算。
-	SubParam(Param::HP, Damage);
-
-	//体力が0以下になったので死んだ。
+void CharacterParameter::Update() {
+	//HPが0以下になったので死んだ。
 	if (_Param[Param::HP] <= 0)
 	{
 		_DeathFlag = true;
 	}
+}
 
+int CharacterParameter::ReciveDamage(int defaultDamage, int defidx, int Equipment) {
+	int damage = ReceiveDamageMass(defaultDamage, defidx, Equipment);
+	//ダメージ分HPを減算。
+	SubParam(Param::HP, damage);
+	return damage;
+}
+
+int CharacterParameter::ReceiveDamageMass(int defaultDamage, int defidx, int Equipment)
+{
+	//こちらの防御力も考慮したダメージ = 相手の与ダメージ-((防御力 + 装備品の防御力) * 属性的なやつ * キャラクターの行動による防御率)。
+	float element = 1.0f;// 属性による補正的なやつ(とりあえず作るだけ作っとく)※暫定処理。
+	int damage = max(0, defaultDamage - ((_Param[Param::DEF] + Equipment) * element * defidx));
+
+	return damage;
 }

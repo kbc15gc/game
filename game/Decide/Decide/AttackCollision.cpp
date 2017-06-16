@@ -19,7 +19,7 @@ void AttackCollision::Update()
 		// 寿命が無限でないかつ寿命を過ぎた。
 		// かつ寿命が無限でない。
 
-			// 削除。
+		// 削除。
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 	else {
@@ -40,26 +40,66 @@ void AttackCollision::LateUpdate()
 
 void AttackCollision::DetectionCollision() {
 	// 衝突しているコリジョンをすべて取得する。
-	//vector<Collision*> collisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(this->_Gost);
-
 	btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
 
-	for (int idx = 0; idx < collisions.size(); idx++) {
-		// 取得したコリジョンの情報を参照して対応するコールバックを呼び出す。
+	for (auto itr = _HitCollisions.begin(); itr != _HitCollisions.end();) {
+		bool isHit = false;	// 登録しているコリジョンが現在も衝突しているか。
+		for (int idx = 0; idx < collisions.size(); idx++) {
+			if ((*itr).get() == collisions[idx]) {
+				// 既に登録されているコリジョンが衝突している。
+				isHit = true;
 
+				// 衝突している間呼び続けるコールバック処理。
+				_CallBackStay((*itr).get());
+				// コールバックを呼んだものは配列から除く。
+				collisions.remove(collisions[idx]);
+				break;
+			}
+			else if (collisions[idx]->getUserIndex() != Collision_ID::PLAYER && 
+				collisions[idx]->getUserIndex() != Collision_ID::ENEMY &&
+				collisions[idx]->getUserIndex() != Collision_ID::BOSS) {
+				// コールバックを呼ばないコリジョンだった。
+				collisions.remove(collisions[idx]);
+			}
+		}
+
+		if (!isHit) {
+			// 登録されていたコリジョンが衝突していなかった。
+			// 衝突を外れた時に呼び出すコールバック処理。
+			_CallBackExit((*itr).get());
+			//(*itr).reset();	// シェアードポインタの参照カウンタを明示的に下げる(必要？)。
+			itr = _HitCollisions.erase(itr);
+		}
+		else {
+			itr++;
+		}
+	}
+
+	for (int idx = 0; idx < collisions.size();idx++) {
+		// 衝突をした瞬間に呼び出すコールバック処理。
+		_CallBackEnter(collisions[idx]);
+		// 衝突リストに追加。
+		_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj());
+	}
+}
+
+void AttackCollision::_CallBackEnter(btCollisionObject* coll) {
+	GameObject* obj = _CollisionObjectToGameObject(coll);
+	if (obj) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (collisions[idx]->getUserIndex() == Collision_ID::ENEMY) {
+			if (coll->getUserIndex() == Collision_ID::ENEMY) {
 				// 敵と衝突した。
-				static_cast<EnemyCharacter*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
+				// ゲームオブジェクトがある。
+				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionEnter(this);
 			}
 			break;
 		case CollisionMaster::Enemy:
 			// 雑魚敵が生成した攻撃。
-			if (collisions[idx]->getUserIndex() == Collision_ID::PLAYER) {
+			if (coll->getUserIndex() == Collision_ID::PLAYER) {
 				// プレイヤーと衝突した。
-				static_cast<Player*>(static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject)->HitAttackCollision(this);
+				static_cast<Player*>(obj)->HitAttackCollisionEnter(this);
 			}
 			break;
 		case CollisionMaster::Other:
@@ -68,8 +108,59 @@ void AttackCollision::DetectionCollision() {
 			break;
 		}
 	}
+}
 
-	
+// 衝突している間呼び続けるコールバック処理。
+void AttackCollision::_CallBackStay(btCollisionObject* coll) {
+	GameObject* obj = _CollisionObjectToGameObject(coll);
+	if (obj) {
+		switch (_master) {
+		case CollisionMaster::Player:
+			// プレイヤーが生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+				// 敵と衝突した。
+				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionStay(this);
+			}
+			break;
+		case CollisionMaster::Enemy:
+			// 雑魚敵が生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+				// プレイヤーと衝突した。
+				static_cast<Player*>(obj)->HitAttackCollisionStay(this);
+			}
+			break;
+		case CollisionMaster::Other:
+			// その他が生成した攻撃。
+			// ※暫定。とりあえず何もしない。
+			break;
+		}
+	}
+}
+
+void AttackCollision::_CallBackExit(btCollisionObject* coll) {
+	GameObject* obj = _CollisionObjectToGameObject(coll);
+	if (obj) {
+		switch (_master) {
+		case CollisionMaster::Player:
+			// プレイヤーが生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+				// 敵と衝突した。
+				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionExit(this);
+			}
+			break;
+		case CollisionMaster::Enemy:
+			// 雑魚敵が生成した攻撃。
+			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+				// プレイヤーと衝突した。
+				static_cast<Player*>(obj)->HitAttackCollisionExit(this);
+			}
+			break;
+		case CollisionMaster::Other:
+			// その他が生成した攻撃。
+			// ※暫定。とりあえず何もしない。
+			break;
+		}
+	}
 }
 
 GostCollision* AttackCollision::Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {

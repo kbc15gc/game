@@ -19,11 +19,14 @@ public:
 		_WorkValue = (_TargetValue - _Value) / (60.0f * _Time);
 		_Dir = _WorkValue / fabsf(_WorkValue);
 	}
-	float GetValue() {
+	inline float GetTargetValue() const{
+		return _TargetValue;
+	}
+	inline float GetValue() const {
 		return _Value;
 	}
-	float GetTargetValue() {
-		return _TargetValue;
+	inline float GetMaxValue()const {
+		return _MaxValue;
 	}
 private:
 	void _BarValueUpdate();
@@ -82,14 +85,20 @@ private:
 	// 引数：	位置(ワールド座標)。
 	//			拡縮(ワールド座標)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	void CreateBarFrame(const Vector3& pos, const Vector3& scale, bool isHud);
+	void _CreateBarFrame(const Vector3& pos, const Vector3& scale, bool isHud);
 	// どの順番でどの色を表示するかを決めた配列を渡し、CBarElementのインスタンスを生成する関数。
 	// ※先に追加した色のゲージから減っていく。
 	void _ActiveBarColor(const vector<BarColor>& BarColorArray, float max, float value,Transform* tr);
 	// ワンゲージ削った際のイベント。
 	void _BreakEvent();
-	// 引数の値でバーのサイズを更新。
+	// 引数の値で各バーに設定する値を更新。
 	void _UpdateValue(float value);
+	// バーの値を減算更新。
+	// 引数：	今の値との差分。
+	//			最後のゲージに設定する値。
+	void _UpdateSubValue(float Difference, float Fraction);
+	// バーの値を加算更新。
+	void _UpdateAddValue(float Difference, float Fraction);
 	// HUDとして使用しない場合にスクリーン座標系に変換する関数。
 	void _ToScreenPos();
 public:

@@ -70,9 +70,9 @@ void DepthofField::Render()
 	static float CoC = 0.033f;			//許容錯乱円(単位はmm)
 	float forwardDof = (CoC * _F * _Pint * _Pint) / (_FocalLength * _FocalLength + CoC * _F * _Pint);
 	float backDof = (CoC * _F * _Pint * _Pint) / (_FocalLength * _FocalLength - CoC * _F * _Pint);
-	if (backDof < 0.0f)
+	if (backDof < 0.0f) 
 	{
-		backDof = 0.0f;
+		backDof = 10000.0f;
 	}
 	//手前ボケ、奥ボケ、ピントをm単位に変更してGPUに送る
 	float dofParam[] = {
@@ -145,7 +145,11 @@ void DepthofField::Render()
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
+		
+		(*graphicsDevice()).SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ONE);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ZERO);
+		
 		_Vertex->DrawPrimitive();
 
 		_Effect->EndPass();
@@ -153,6 +157,9 @@ void DepthofField::Render()
 
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
+		(*graphicsDevice()).SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 	}
 
 }

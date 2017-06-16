@@ -15,6 +15,8 @@ public:
 	//初期化。
 	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi);
 	
+	void Update()override;
+
 	// 指定したパラメーターに加算。
 	// 引数：	パラメータータイプ。
 	//			加算量。
@@ -33,9 +35,6 @@ public:
 		return _Param[idx];
 	}
 
-	//ダメージの計算。
-	//第一引数:攻撃系のパラメーター 第二引数:防御系のパラメーター。
-	void DamageMass(int atk, int defidx);
 	//死んだかどうかのフラグを取得。
 	//tureなら死んでいる。
 	inline bool GetDeathFalg()
@@ -43,13 +42,25 @@ public:
 		return _DeathFlag;
 	}
 
-	//与えるダメージの計算。
-	inline int AttackDamageMass(int atk = 1)
+	// 被ダメージ処理(パラメーターにダメージを与える)。
+	// 引数:		敵からのダメージ。
+	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
+	//				装備品の防御力(デフォルトは0)。
+	int ReciveDamage(int defaultDamage, int defidx = 1, int Equipment = 0);
+
+	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
+	// 引数:		敵からのダメージ。
+	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
+	//				装備品の防御力(デフォルトは0)。
+	int ReceiveDamageMass(int defaultDamage, int defidx = 1,int Equipment = 0);
+
+	//与ダメージ計算。
+	// 引数：		キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
+	inline int GiveDamageMass(int atk = 1)
 	{
 		return _Param[Param::ATK] * atk;
 	}
 private:
 	int _Param[Param::MAX];
 	bool _DeathFlag = false;//死んだかどうかのフラグ。
-
 };

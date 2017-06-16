@@ -43,6 +43,14 @@ public:
 	*/
 	void Update()override;
 
+	/**
+	* •âŠÔƒŒ[ƒg‚ğæ“¾.
+	*/
+	float GetLerpRate() const
+	{
+		return _LerpRate;
+	}
+
 private:
 
 	/**

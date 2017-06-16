@@ -3,32 +3,32 @@
 */
 #pragma once
 
+static const double PI = 3.14159265358979323846f;
+
 /**
 * 大気散乱用パラメータ.
 */
-#pragma pack(4)
+#pragma pack (4)
 struct AtmosphericScatteringParamS
 {
-public:
-
 	/**
 	* コンストラクタ.
 	*/
 	AtmosphericScatteringParamS()
 	{
 		fScaleDepth = 0.25;
-		const float fInvScaleDepth = 4;
+		//const float fInvScaleDepth = 4;
 
-		const int nSamples = 2;
-		const float fSamples = 2.0f;
-		const float km = 0.0010f;
+		//const int nSamples = 2;
+		//const float fSamples = 2.0f;
+		const float km = 0.001f;
 		const float ESun = 30.0f;
 		const float kr = 0.0025f;
 		//大気錯乱パラメータの更新。
-		fKm4PI = km * 4.0f *  3.14159265358979323846f;
+		fKm4PI = km * 4.0f * PI;
 		fKmESun = km * ESun;
 
-		fKr4PI = kr * 4.0f *  3.14159265358979323846f;
+		fKr4PI = kr * 4.0f * PI;
 		fKrESun = kr * ESun;
 		fInnerRadius = 8.0f; //単位km
 		fInnerRadius2 = fInnerRadius * fInnerRadius;
@@ -49,8 +49,6 @@ public:
 		v3InvWavelength.Set(1 / fWavelength4[0], 1 / fWavelength4[1], 1 / fWavelength4[2]);
 	}
 
-public:
-
 	Vector3 v3LightPos;
 	Vector3 v3LightDirection;
 	Vector3 v3InvWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
@@ -70,8 +68,6 @@ public:
 	float g;
 	float g2;
 	
-public:
-
 	/**
 	* 更新.
 	*/
@@ -88,6 +84,7 @@ public:
 		fCameraHeight2 = fCameraHeight * fCameraHeight;
 	}
 };
+#pragma pack ()
 
 /**
 * 空描画クラス.
@@ -126,9 +123,71 @@ public:
 	*/
 	void Render()override;
 
+	/**
+	* 空のシミュレーションを有効にする.
+	*/
+	void SetEnable(const Camera* camera, Light* light)
+	{
+		_Camera = camera;
+		_SceneLight = light;
+		SetActive(true);
+	}
+
+	/**
+	* 太陽の座標を取得.
+	*/
+	const Vector3& GetSunPosition() const
+	{
+		return _SunPosition;
+	}
+
+	/**
+	* 日中の環境光を設定.
+	*/
+	void SetDayAmbientLight(const Vector3& ambient)
+	{
+		_DayAmbientLight = ambient;
+	}
+
+	/**
+	* 夜間の環境光を設定.
+	*/
+	void SetNightAmbientLight(const Vector3& ambient)
+	{
+		_NightAmbientLight = ambient;
+	}
+
+	/**
+	* 大気散乱用パラメータを取得.
+	*/
+	const AtmosphericScatteringParamS& GetAtmosphericScatteringParam() const
+	{
+		return _AtomosphereParam;
+	}
+
 private:
 
 	/** 空モデル. */
 	SkinModel* _SkyModel = nullptr;
+
+	/** 大気散乱用パラメータ. */
+	AtmosphericScatteringParamS _AtomosphereParam;
+
+	/** 太陽の座標. */
+	Vector3 _SunPosition = Vector3::zero;
+	/** 太陽の角度. */
+	float _SunAngle = 0.0f;
+	/** 太陽の方向. */
+	Vector3 _SunDir = Vector3::zero;
+
+	/** カメラのポインタ. */
+	const Camera* _Camera = nullptr;
+	/** ライトのポインタ. */
+	Light* _SceneLight = nullptr;
+
+	/** 日中の環境光. */
+	Vector3 _DayAmbientLight = Vector3(0.3f, 0.3f, 0.3f);
+	/** 夜間の環境光. */
+	Vector3 _NightAmbientLight = Vector3(0.1f, 0.1f, 0.1f);
 
 };

@@ -4,11 +4,6 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "../Decide/Decide/AttackCollision.h"
 
-namespace
-{
-	const int Attack = 10;
-}
-
 PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)
 {
@@ -17,11 +12,33 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 
 	//UŒ‚‚P
 	{
-		attackpram1.pos = Vector3(0.0f, 0.0f, 2.0f);
-		attackpram1.rot = Quaternion::Identity;
-		attackpram1.scale = Vector3::one;
-		attackpram1.attackframe = 10.0f;
-		attackpram1.lifetime = 0.5f;
+		AttackCollisionParameter attackparam1;
+		attackparam1.pos = Vector3(0.0f, 0.0f, 2.0f);
+		attackparam1.rot = Quaternion::Identity;
+		attackparam1.scale = Vector3::one;
+		attackparam1.attackframe = 10.0f;
+		attackparam1.lifetime = 0.5f;
+		_AttackPram.push_back(attackparam1);
+	}
+	//UŒ‚‚Q
+	{
+		AttackCollisionParameter attackparam2;
+		attackparam2.pos = Vector3(0.0f, 0.0f, 1.5f);
+		attackparam2.rot = Quaternion::Identity;
+		attackparam2.scale = Vector3::one;
+		attackparam2.attackframe = 25;
+		attackparam2.lifetime = 0.5f;
+		_AttackPram.push_back(attackparam2);
+	}
+	//UŒ‚‚R
+	{
+		AttackCollisionParameter attackparam3;
+		attackparam3.pos = Vector3(0.0f, 0.0f, 1.5f);
+		attackparam3.rot = Quaternion::Identity;
+		attackparam3.scale = Vector3::one;
+		attackparam3.attackframe = 25;
+		attackparam3.lifetime = 0.5f;
+		_AttackPram.push_back(attackparam3);
 	}
 	
 }
@@ -48,16 +65,31 @@ void PlayerStateAttack::Update()
 		_Player->ChangeState(Player::State::Idol);
 	}
 	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE)
-		&& currentanimno <= (int)Player::AnimationNo::AnimationAttackStart
-		&& currentanimno > (int)Player::AnimationNo::AnimationAttackEnd
+		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
+		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
 		)
 	{
 		//ƒRƒ“ƒ{I
- 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() - 1);
+ 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
 	}
-	//ƒtƒŒ[ƒ€‚ª10‚ÌŽž‚ ‚½‚è”»’èì¬
-	Attack(attackpram1);
+	//‚ ‚½‚è”»’èì¬
+	switch (currentanimno)
+	{
+		//UŒ‚‚P‚ÌŽž
+	case (int)Player::AnimationNo::AnimationAttack01:
+		Attack(_AttackPram[0]);
+		break;
+		//UŒ‚‚Q‚ÌŽž
+	case (int)Player::AnimationNo::AnimationAttack02:
+		Attack(_AttackPram[1]);
+		break;
+		//UŒ‚‚R‚ÌŽž
+	case (int)Player::AnimationNo::AnimationAttack03:
+		Attack(_AttackPram[2]);
+		break;
+	}
+	
 }
 
 void PlayerStateAttack::Enter()
@@ -81,6 +113,6 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 		_SE->Play(false);
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		attack->Create(_Player->_PlayerParam->AttackDamageMass(1),pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, _Player->transform);
+		attack->Create(_Player->_PlayerParam->GiveDamageMass(),pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, _Player->transform);
 	}
 }

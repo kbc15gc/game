@@ -80,21 +80,20 @@ void PlayerStateRun::Update()
 		cameraX.z = viewinv.m[0][2];
 		cameraX.Normalize();	//Y軸を打ち消しているので正規化する。
 
-		//カメラからみた方向
-		movespeed.x = cameraX.x * dir.x + cameraZ.x * dir.z;
-		movespeed.y = movespeed.y;	//Y軸はいらない。
-		movespeed.z = cameraX.z * dir.x + cameraZ.z * dir.z;
-		//移動速度にスピードをかける
-		movespeed.x *= _Speed;
-		movespeed.z *= _Speed;
+								// 向きベクトルに移動量を積算。
+		dir = dir * _Speed;
+		//カメラからみた方向に射影。
+		movespeed = movespeed + cameraX * dir.x;
+		movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。
+		movespeed = movespeed + cameraZ * dir.z;
+
 		//移動したい方向のベクトル
 		Vector3 vec = movespeed;
 		//正規化
 		vec.Normalize();
 		//ベクトルから角度を求める
-		float rot = D3DXToRadian(360) - atan2f(vec.z, vec.x);
 		//回転
-		_Player->transform->SetLocalAngle(Vector3(0.0f, D3DXToDegree(rot + D3DXToRadian(-90)), 0.0f));
+		_Player->_Rotation->RotationToDirection_XZ(vec);
 	}
 	//移動していない
 	if (dir.Length() < 0.0001f)
