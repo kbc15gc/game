@@ -54,6 +54,12 @@ void GameCamera::Start()
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を入れる
 	D3DXVec3Normalize(&_ToPlayerDir, &D3DXVECTOR3(0.0f, 3.0f, -4.0f));
+	// 初期値設定のため処理を呼ぶ。
+	// ※消すな。
+	{
+		_Move();
+		_Camera->Update();
+	}
 
 	//歴史書を検索。
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
@@ -65,7 +71,7 @@ void GameCamera::Start()
 void GameCamera::Update()
 {
 	//歴史書を見ているかどうか。
-	if (!_HistoryBook->GetIsLookAtHistoryFlag())
+	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
 	{
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
@@ -78,10 +84,11 @@ void GameCamera::Update()
 	_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
 
 	float Len = _toPosition.Length();
+	Len = 3;
 
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(Len * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
-	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(26.0f);
+	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 
 }
 
@@ -138,7 +145,7 @@ void GameCamera::_Move()
 	//カメラの移動先
 	to = from + dist;
 	//レイを飛ばす
-	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK);	// 衝突を無視する属性を減算。
+	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK) & ~(Collision_ID::PLAYER) & ~(Collision_ID::ENEMY) & ~(Collision_ID::BOSS);	// 衝突を無視する属性を減算。
 	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere,from, to, attri);
 	//移動先ポジション
 	Vector3 next;
@@ -179,12 +186,12 @@ void GameCamera::_StandardBehavior()
 		_LerpCameraPos = (_LerpCameraPos * (1.0f - _LerpRate) + _PrevGameCameraPos * _LerpRate);
 
 		//カメラの注視点を線形補間された位置に設定。
-		transform->LockAt((_LerpCameraLookAtPos));
+		transform->LockAt(_LerpCameraLookAtPos);
 		_Camera->SetTarget(_LerpCameraLookAtPos);
 
 
 		//カメラの位置を線形補完された位置に設定。
-		transform->SetPosition((_LerpCameraPos));
+		transform->SetPosition(_LerpCameraPos);
 	}
 	//線形補間をし終わったので通常のカメラの動きをする。
 	else

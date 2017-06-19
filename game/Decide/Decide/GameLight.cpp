@@ -8,7 +8,7 @@ void GameLight::Awake()
 	INSTANCE(GameObjectManager)->mainLight = light;
 	int num = 4;
 	DirectionalLight* Dl[4];
-	FOR(i,num)
+	FOR(i, num)
 		Dl[i] = new DirectionalLight();
 	Dl[0]->SetEulerAngles(Vector3(45, 45, 180));	//‰œ
 	Dl[1]->SetEulerAngles(Vector3(0, 0, 180));	//‰œ
@@ -19,15 +19,36 @@ void GameLight::Awake()
 	Dl[1]->SetColor(Color(0.3f, 0.3f, 0.3f, 1.0f));	//‰E
 	Dl[2]->SetColor(Color(0.3f, 0.3f, 0.3f, 1.0f));	//¶
 	Dl[3]->SetColor(Color(0.3f, 0.3f, 0.3f, 1.0f));	//‰º
-	FOR(i,num)
+	FOR(i, num)
+	{
 		light->AddLight(Dl[i]);
+	}
+
+	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
+	shadow->SetNear(1.0f);
+	shadow->SetFar(100.0f);
+}
+
+/**
+* ‰Šú‰».
+*/
+void GameLight::Start()
+{
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
+	INSTANCE(SceneManager)->GetSky()->SetDayAmbientLight(Vector3(0.5f, 0.5f, 0.5f));
+	INSTANCE(SceneManager)->GetSky()->SetNightAmbientLight(Vector3(0.2f, 0.2f, 0.2f));
 }
 
 void GameLight::Update()
 {
-	static float angle = 0;
-	Light* light = GetComponent<Light>();
-	light->GetLight()[0]->SetEulerAngles(Vector3(45, angle, 180));
+	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 
-	angle += 1.0f;
+	Vector3 lightPos = INSTANCE(SceneManager)->GetSky()->GetSunPosition();
+	lightPos.Normalize();
+	lightPos.Scale(30.0f);
+	lightPos.Add(_Player->transform->GetPosition());
+	shadow->SetLightPosition(lightPos);
+	shadow->SetLightTarget(_Player->transform->GetPosition());
+
 }

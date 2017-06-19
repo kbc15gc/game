@@ -24,6 +24,6 @@ public:
 private:
 	//UŒ‚‚ÌSE
 	SoundSource* _SE = nullptr;
-	//UŒ‚ƒRƒŠƒWƒ‡ƒ“‚P
-	AttackCollisionParameter attackpram1;
+	//UŒ‚ƒRƒŠƒWƒ‡ƒ“
+	std::vector<AttackCollisionParameter> _AttackPram;
 };

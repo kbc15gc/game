@@ -101,7 +101,7 @@ void Bloom::Render()
 
 			//テクスチャの設定
 			//オフスクリーンしたやつ
-			_Effect->SetTexture("g_Scene", INSTANCE(SceneManager)->GetOffScreenTexture()->pTexture);
+			_Effect->SetTexture("g_Scene", INSTANCE(SceneManager)->GetMainRenderTarget()->texture->pTexture);
 
 			_Effect->CommitChanges();
 
@@ -273,7 +273,7 @@ void Bloom::Render()
 
 		}//ボケフィルターの合成
 
-		 //ブルーム
+		//ブルーム
 		{
 
 			float offset[] =
@@ -283,9 +283,8 @@ void Bloom::Render()
 			};
 
 			//メインレンダーに変更
-			INSTANCE(RenderTargetManager)->BeforeRT();
+			INSTANCE(RenderTargetManager)->SetRT(0, INSTANCE(SceneManager)->GetMainRenderTarget());
 			
-
 			//加算合成。
 			(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 			(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);

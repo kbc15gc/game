@@ -5,7 +5,8 @@
 #include "../Component/ObjectRotation.h"
 #include "fbEngine\CharacterController.h"
 #include "AttackCollision.h"
-#include "GameObject\Component\HadBar.h"
+#include "GameObject\Component\CharacterParameter.h"
+#include "GameObject\Component\ParameterBar.h"
 
 class SkinModel;
 class Animation;
@@ -45,7 +46,8 @@ private:
 		Collider* Collider = nullptr;	// コリジョン形状。
 		CCharacterController* CharacterController = nullptr;		// キャラクターコントローラ。
 		ObjectRotation* RotationAction = nullptr;	// オブジェクトを回転させるクラス。
-		CHadBar* HadBar = nullptr;			// ゲージHP用。
+		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
+		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 	};
 
 public:
@@ -128,16 +130,30 @@ public:
 	// 引数の値を加算した結果、エネミーが徘徊範囲外に出たか判定。
 	bool IsOutsideWandering(const Vector3& Add);
 
-	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
+	// 自分が発生させたもの以外の攻撃コリジョンと衝突した瞬間呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
-	inline virtual void HitAttackCollision(AttackCollision* hitCollision) {
-		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
+	inline virtual void HitAttackCollisionEnter(AttackCollision* hitCollision) {
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(this);
+			_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage());
 		}
 	}
+
+	// 自分が発生させたもの以外の攻撃コリジョンに衝突ている間呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollisionStay(AttackCollision* hitCollision) {
+
+	}
+
+	// 自分が発生させたもの以外の攻撃コリジョンとの衝突から外れたら呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollisionExit(AttackCollision* hitCollision) {
+
+	}
+
 
 	// ステート処理中にステートを割り込みで切り替える関数。
 	// ※外部やステート内からステート切り替えを行おうとする場合はこちらを呼ぶ。

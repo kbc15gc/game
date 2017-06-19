@@ -2,13 +2,13 @@
 * 歴史書クラスの定義.
 */
 #pragma once
-#include "fbEngine\_Object\_GameObject\GameObject.h"
 
-//ステート.
-#include "HFSM\HistoryBookStateClose.h"
-#include "HFSM\HistoryBookStateOpening.h"
-#include "HFSM\HistoryBookStateOpen.h"
-#include "HFSM\HistoryBookStateCloseing.h"
+//状態.
+#include"HFSM\HistoryBookStateUnused.h"
+#include"HFSM\HistoryBookStateIdol.h"
+#include"HFSM\HistoryBookStateOpen.h"
+//#include "HFSM\HistoryBookStateOpening.h"
+//#include "HFSM\HistoryBookStateCloseing.h"
 
 class Player;
 
@@ -24,24 +24,22 @@ public:
 	*/
 	enum class StateCodeE
 	{
-		Invalid = -1,	//!< 設定なし.
-		Close,			//!< 閉じた状態。
-		Opening,		//!< 本が開いている。
-		Open,			//!< 開いた状態。
-		Closeing,		//!< 本が閉じている。
+		Invalid = -1,	//!< 無効.
+		Unused,			//!< 未使用.
+		Idol,			//!< 閉じた状態.
+		Open,			//!< 開く.
+		StateNum,		//!< 状態の数.
 	};
 
 	/**
 	* 歴史書のアニメーションコード.
 	*/
-	enum class AnimationNo
+	enum class AnimationCodeE
 	{
-		AnimationInvalid = -1,	//!< 無効。
-		AnimationClose,			//!< 本が閉じた状態。
-		AnimationOpening,		//!< 本が開いている状態。
-		AnimationOpen,			//!< 本が開いたままの状態。
-		AnimationCloseing,		//!< 本が閉じている状態。
-		AnimationNum,			//!< アニメーション数.
+		Invalid = -1,	//!< 無効.
+		Idol,			//!< 待機.
+		Open,			//!< 開くアニメーション.
+		AnimationNum,	//!< アニメーション数.
 	};
 
 	/**
@@ -75,11 +73,11 @@ public:
 	void Update()override;
 
 	/**
-	* 歴史書を開いている判定フラグを取得.
+	* 現在の状態を取得.
 	*/
-	bool GetIsLookAtHistoryFlag() const
+	int GetNowState() const
 	{
-		return _IsLookAtHistoryFlag;
+		return _NowState;
 	}
 
 	/**
@@ -104,11 +102,11 @@ public:
 	/**
 	* アニメーションの再生.
 	*
-	* @param animno				アニメーションのナンバー.
+	* @param animNo				アニメーションのナンバー.
 	* @param interpolatetime	補間時間.
 	* @param loopnum			ループ回数 (デフォルトは-1).
 	*/
-	void PlayAnimation(AnimationNo animno, float interpolatetime, int loopnum = -1);
+	void PlayAnimation(AnimationCodeE animNo, float interpolatetime, int loopnum = -1);
 	
 	/**
 	* 状態の変更.
@@ -135,19 +133,12 @@ private:
 	SkinModel* _Model = nullptr;
 	/** 歴史書のアニメーション. */
 	Animation* _Anim = nullptr;
-	/** アニメーションの終了時間. */
-	double _AnimationEndTime[(int)AnimationNo::AnimationNum] = { 0.0f,0.0f,0.0f,0.0f };
 	
 	/** 歴史書の現在の状態. */
 	int _NowState = (int)StateCodeE::Invalid;
 	/** 歴史書の状態リスト, */
-	vector<HistoryBookState*> _StateList;
+	vector<IHistoryBookState*> _StateList;
 	
-	/** 何の角度? */
-	float _AngleY = 0.0f;
-
-	/** 歴史書を見ているかどうかのフラグ(最初は見ていないのでfalse). */
-	bool _IsLookAtHistoryFlag = false;
 	/** プレイヤーのポインタ. */
 	Player*	_Player = nullptr;
 	/** プレイヤーの前方向. */

@@ -9,10 +9,11 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Component\CharacterParameter.h"
+#include"GameObject\Component\ObjectRotation.h"
 
 class SkinModel;
 class Animation;
-
+class ParameterBar;
 
 class Player : public GameObject
 {
@@ -29,17 +30,18 @@ public:
 	//アニメーションのナンバー
 	enum class AnimationNo
 	{
-		AnimationInvalid = -1,		//無効
-		AnimationDeath,				//死亡
-		AnimationAttackEnd,
-		AnimationAttack02 = AnimationAttackEnd,			//攻撃02
-		AnimationAttack01,			//攻撃01
-		AnimationAttackStart = AnimationAttack01,
-		AnimationJump,				//ジャンプ
-		AnimationRun,				//走る
-		AnimationWalk,				//歩き
-		AnimationIdol,				//アイドル	
-		AnimationNum,				//アニメーションの数
+		AnimationInvalid = -1,						//無効
+		AnimationIdol,								//アイドル	
+		AnimationWalk,								//歩き
+		AnimationRun,								//走る
+		AnimationJump,								//ジャンプ
+		AnimationAttackStart,			
+		AnimationAttack01 = AnimationAttackStart,	//攻撃01
+		AnimationAttack02,							//攻撃02
+		AnimationAttack03,							//攻撃03
+		AnimationAttackEnd = AnimationAttack03,
+		AnimationDeath,								//死亡
+		AnimationNum,								//アニメーションの数
 	};
 	Player(const char* name);
 	~Player();
@@ -57,17 +59,23 @@ public:
 	//アニメーションコントロール
 	void AnimationControl();
 
-	// 自分が発生させたもの以外の攻撃コリジョンに衝突したら呼ばれるコールバック。
+	// 自分が発生させたもの以外の攻撃コリジョンと衝突した瞬間呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
-	// エネミーが作った攻撃。
-	void HitAttackCollision(AttackCollision* hitCollision) {
-		OutputDebugString("とりあえずブレイクポイント設定できるようにするね。");
-		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy)
-		{
-			_PlayerParam->SubParam(CharacterParameter::Param::HP,1);	//ダメージを受ける(とりあえず、ライフを１ずつ減らす)
-			_DamageSE->Play(false);//ダメージを受けたときのSE
-		}
+	inline virtual void HitAttackCollisionEnter(AttackCollision* hitCollision);
+
+	// 自分が発生させたもの以外の攻撃コリジョンに衝突ている間呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollisionStay(AttackCollision* hitCollision) {
+		OutputDebugString("Stay");
+	}
+
+	// 自分が発生させたもの以外の攻撃コリジョンとの衝突から外れたら呼ばれるコールバック。
+	// ※引数は衝突した攻撃コリジョン。
+	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+	inline virtual void HitAttackCollisionExit(AttackCollision* hitCollision) {
+		OutputDebugString("Exit");
 	}
 
 	//セットステート
@@ -85,6 +93,12 @@ public:
 	{
 		return*_CharacterController;
 	}
+
+	void SetEnable(bool is)
+	{
+		_Model->enable = is;
+	}
+
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
@@ -132,8 +146,13 @@ private:
 	CharacterParameter* _PlayerParam = nullptr;
 	//プレイヤーのレベル
 	int _Level;
-	//HPのテキスト表示
-	TextObject* _HPText;
-	//MPのテキスト表示
-	TextObject* _MPText;
+	// 回転。
+	ObjectRotation* _Rotation = nullptr;
+	// HPバー。
+	ParameterBar* _HPBar = nullptr;
+	// MPバー。
+	ParameterBar* _MPBar = nullptr;
+
+	//攻撃の値を表示。
+	TextObject* _AttackValue;
 };

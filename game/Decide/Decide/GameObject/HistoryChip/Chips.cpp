@@ -87,7 +87,8 @@ void Chips::SetChipID(const ChipID & id)
 	modeldata->CloneModelData(SkinModelManager::LoadModel(filename[(int)_ChipID]));
 	model->SetModelData(modeldata);
 	model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
-
+	model->SetModelEffect(ModelEffectE::SPECULAR, true);
+	model->SetAllBlend(Color::white * 13);
 	//Ý’è‚³‚ê‚½ID‚Ìƒ‚ƒfƒ‹‚ÌˆÊ’u‚Æ‘å‚«‚³‚ðÝ’èB
 	transform->SetLocalPosition(pos[(int)_ChipID]);
 	transform->SetLocalScale(Vector3::one);

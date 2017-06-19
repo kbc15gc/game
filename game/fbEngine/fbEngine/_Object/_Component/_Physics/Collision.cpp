@@ -5,6 +5,8 @@
 Collision::~Collision()
 {
 	_Shape = nullptr;
+	// シェアードポインタなので、このコンポーネントが削除された後もコリジョンオブジェクトが参照されることを考慮する。
+	_CollisionObject->setUserPointer(nullptr);
 	//シェアードポインタなのでnullを入れるだけでOK
 	_CollisionObject = nullptr;
 }

@@ -11,7 +11,7 @@ void ContinentObject::Awake()
 	_Model = AddComponent<SkinModel>();
 	_Anim = AddComponent<Animation>();
 
-	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
+	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,false);
 
 }
 
