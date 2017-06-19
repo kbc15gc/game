@@ -21,30 +21,41 @@ public class CSVExportFunction : Editor
             return;
         }
 
+        bool all = true;
         //グループループ
         for (int idx = 0; idx < export.transform.childCount; idx++)
         {
             //グループ取得
             Transform group = export.transform.GetChild(idx);
             //オブジェクト書き出し
-            ExportObject(group);
+            bool obj = ExportObject(group);
             //NPC書き出し
-            ExportNPC(group);
-            Debug.Log(group.name + "の書き出しに成功");
+            bool npc = ExportNPC(group);
+
+            if (obj == true && npc == true)
+            {
+                Debug.Log(group.name + "の書き出しに成功");
+            }
+            else
+            {
+                all = false;
+                Debug.LogError(group.name + "の書き出しに失敗");
+            }
         }
-        Debug.Log("全てのファイルを正常に書き出せました。");
+        if (all)
+            Debug.Log("全てのファイルを正常に書き出せました。");
     }
 
     //オブジェクトを出力
-    static public void ExportObject(Transform group)
+    static public bool ExportObject(Transform group)
     {
         string name = "ExportObjects";
         //オブジェクト検索
         Transform objects = group.FindChild(name);
         if (objects == null)
         {
-            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
-            return;
+            Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
+            return false;
         }
 
         //子供たちのTransformコンポーネントを取得
@@ -75,18 +86,20 @@ public class CSVExportFunction : Editor
         }
         sw.Close();
         fs.Close();
+
+        return true;
     }
 
     //NPCを出力
-    static public void ExportNPC(Transform group)
+    static public bool ExportNPC(Transform group)
     {
         string name = "ExportNPCs";
         //オブジェクト検索
         Transform npcs = group.FindChild(name);
         if (npcs == null)
         {
-            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
-            return;
+            Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
+            return false;
         }
 
         //子供たちのTransformコンポーネントを取得
@@ -125,6 +138,8 @@ public class CSVExportFunction : Editor
         }
         sw.Close();
         fs.Close();
+
+        return true;
     }
 
     static public string Vector3ToString(Vector3 val)

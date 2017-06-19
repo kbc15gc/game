@@ -64,7 +64,28 @@ public:
 	const vector<DirectionalLight*>& GetLight();
 	//ライトの数取得
 	const int GetNum()const;
+
+	/**
+	* 環境光を取得.
+	*/
+	const Vector3& GetAmbientLight()
+	{
+		return _AmbientLight;
+	}
+
+	/**
+	* 環境光を設定.
+	*/
+	void SetAmbientLight(const Vector3& amb)
+	{
+		_AmbientLight = amb;
+	}
+
 private:
 	//ライトのポインタ達
 	vector<DirectionalLight*> _LightVec;
+	
+	/** 環境光. */
+	Vector3 _AmbientLight = Vector3(0.3f, 0.3f, 0.3f);
+
 };

@@ -18,6 +18,17 @@ enum ModelEffectE
 	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
 };
 
+/**
+* 大気散乱の種類.
+*/
+enum AtmosphereFunc
+{
+	enAtomosphereFuncNone = 0,				//大気錯乱シミュレーションなし。
+	enAtomosphereFuncObjectFromAtomosphere,	//オブジェクトを大気圏から見た場合の大気錯乱シミュレーション。
+	enAtomosphereFuncSkyFromAtomosphere,	//空を大気圏から見た場合の大気錯乱シミュレーション。
+	enAtomosphereFuncNum,
+};
+
 //モデルの描画を行うクラス
 class SkinModel:public Component{
 public:
@@ -68,6 +79,7 @@ public:
 	void SetSky(bool f)
 	{
 		_SkyBox = f;
+		SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncSkyFromAtomosphere);
 	}
 	void SetTextureBlend(const Color& c)
 	{
@@ -76,6 +88,14 @@ public:
 	void SetAllBlend(const Color& c)
 	{
 		_AllBlend = c;
+	}
+
+	/**
+	* 大気散乱シミュレーションの種類を設定.
+	*/
+	void SetAtomosphereFunc(AtmosphereFunc func)
+	{
+		_AtomosphereFunc = func;
 	}
 	
 	//上書きセット
@@ -130,4 +150,8 @@ private:
 	static const int MAX_MATRIX_PALLET = 50;
 	//一時的にボーン行列を格納する作業用変数？
 	D3DXMATRIX _BoneMatrixPallets[MAX_MATRIX_PALLET];
+
+	/** 大気散乱. */
+	AtmosphereFunc _AtomosphereFunc = AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere;
+
 };

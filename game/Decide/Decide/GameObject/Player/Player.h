@@ -93,6 +93,12 @@ public:
 	{
 		return*_CharacterController;
 	}
+
+	void SetEnable(bool is)
+	{
+		_Model->enable = is;
+	}
+
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
@@ -146,4 +152,7 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
+
+	//攻撃の値を表示。
+	TextObject* _AttackValue;
 };

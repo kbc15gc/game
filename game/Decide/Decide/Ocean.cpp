@@ -27,10 +27,10 @@ void Ocean::Awake()
 		//UV定義
 		VERTEX_TEXCOORD texcoord[] =
 		{
-			{ -10.0f, -10.0f },//左上
-			{ 11.0f, -10.0f },//右上
-			{ -10.0f, 11.0f },//左下
-			{ 11.0f, 11.0f },//右下
+			{ -80.0f, -80.0f },//左上
+			{ 81.0f, -80.0f },//右上
+			{ -80.0f, 81.0f },//左下
+			{ 81.0f, 81.0f },//右下
 		};
 
 		VERTEX_NORMAL normal[] =
@@ -87,7 +87,7 @@ void Ocean::Start()
 */
 void Ocean::Update()
 {
-	_Wave += 0.0001f;
+	_Wave += 0.0003f;
 
 	static float miti = 0;
 
@@ -106,7 +106,14 @@ void Ocean::Render()
 	
 	//両面描画.
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
+	
+	//アルファテスト.
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	//元のテクスチャはそのままのRGBA
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//書き込むテクスチャは(1.0f - R(GBA))計算.
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	
 	_Effect->SetTechnique("Ocean");
 
 	_Effect->Begin(0, D3DXFX_DONOTSAVESTATE);
@@ -132,7 +139,7 @@ void Ocean::Render()
 		{
 			dir[i] = vec[i]->Direction();
 			color[i] = vec[i]->GetColor();
-			color[i].a = 1.2;
+			color[i].a = 5;
 		}
 		//ライトの向きを転送。
 		_Effect->SetValue("g_diffuseLightDirection", &dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
@@ -141,7 +148,8 @@ void Ocean::Render()
 		//ライト数セット
 		_Effect->SetInt("g_LightNum", num);
 		//環境光
-		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(0.3, 0.3, 0.3, 1.0f));
+		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
+		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 	}
 
 	//カメラのポジションセット(スペキュラライト用)
@@ -159,5 +167,7 @@ void Ocean::Render()
 
 	//変更したステートを元に戻す
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
 
 }

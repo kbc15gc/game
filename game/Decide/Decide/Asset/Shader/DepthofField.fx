@@ -112,15 +112,15 @@ float4 PSCombine(VS_OUTPUT In) : COLOR
 
 		color = float4(blur.xyz, alpha);
 	}
-	//else
-	//{
-	//	//手前ボケ
-	//	alpha = min(1.0f, alpha * 2.0f);
+	else
+	{
+		//手前ボケ
+		alpha = min(1.0f, alpha * 2.0f);
 
-	//	float4 blur = tex2D(g_BlurForwardSampler, In.Tex);
+		float4 blur = tex2D(g_BlurForwardSampler, In.Tex);
 
-	//	color = float4(blur.xyz, alpha);
-	//}
+		color = float4(blur.xyz, alpha);
+	}
 
 	return color;
 }

@@ -7,7 +7,6 @@
 
 #include "GameLight.h"
 #include "GameCamera.h"
-#include "GameShadowCamera.h"
 
 #include "Ground.h"
 #include "Ocean.h"
@@ -24,23 +23,18 @@
 #include "GameObject\Village\ItemManager.h"
 #include "GameObject\HistoryChip\Chips.h"
 
-#include "SplitSpace.h"
-
-
 ImageObject* g_depth;
 
 void GameScene::Start()
 {
 	//ゲームライト生成
-	INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
+	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 	//ゲームカメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
-	//影カメラ生成
-	INSTANCE(GameObjectManager)->AddNew<GameShadowCamera>("GameShadowCamera", 8);
+	GameCamera* camera = INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
-	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 1);
+	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
@@ -57,20 +51,14 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	HistoryBook* book = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	//歴史書の親にプレイヤーを設定。
+	book->transform->SetParent(player->transform);
+
 	//メニューセレクト
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenuSelect>("HistoryMenuSelect", 9);
 
-	g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
-	g_depth->SetPivot(Vector2(0, 0));
-	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	g_depth->SetActive(false);
-
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
-
-	//歴史書の親にプレイヤーを設定。
-	book->transform->SetParent(player->transform);
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadItemData();
@@ -81,11 +69,18 @@ void GameScene::Start()
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
+	//シャドウマップ有効.
 	_isShadowMap = true;
-
+	//環境マップ有効.
 	_isEnvironmentMap = true;
 
-	INSTANCE(SceneManager)->GetSky()->SetActive(true);
+	INSTANCE(SceneManager)->GetSky()->SetEnable(camera->GetComponent<Camera>(), light->GetComponent<Light>());
+
+	g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
+	g_depth->SetPivot(Vector2(0, 0));
+	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	g_depth->SetActive(false);
 
 }
 

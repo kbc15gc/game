@@ -173,10 +173,9 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h" />
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h" />
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
     <ClInclude Include="GameObject\HistoryChip\Chips.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
@@ -197,7 +196,6 @@
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
-    <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Ocean.h" />
@@ -225,10 +223,9 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
     <ClCompile Include="GameObject\HistoryChip\Chips.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
@@ -247,7 +244,6 @@
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
-    <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />

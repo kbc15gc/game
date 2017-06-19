@@ -1,30 +1,53 @@
+/**
+* 歴史書の状態の基底クラスの定義.
+*/
 #pragma once
 
+/**
+* 歴史書クラス.
+*/
 class HistoryBook;
 
-//基底クラス。
-//歴史書のステート。
-class HistoryBookState
+/**
+* 歴史書の状態の基底クラス.
+*/
+class IHistoryBookState
 {
 public:
-	HistoryBookState(HistoryBook* historybook)
+
+	/**
+	* コンストラクタ.
+	*/
+	IHistoryBookState(HistoryBook* historybook)
 	{
 		this->_HistoryBook = historybook;
 	}
 
-	virtual ~HistoryBookState()
+	/**
+	* デストラクタ.
+	*/
+	virtual ~IHistoryBookState()
 	{
 	}
 
-	//ステートを切り替えた時に呼ばれる。
+	/**
+	* 状態に切り替えたとき呼ばれる.
+	*/
 	virtual void Entry() = 0;
 
-	//更新。
+	/**
+	* 更新.
+	*/
 	virtual void Update() = 0;
 
-	//次のステートに切り替え前に呼ばれる。。
+	/**
+	* 他の状態に変わるとき呼ばれる.
+	*/
 	virtual void Exit() = 0;
+
 protected:
-	HistoryBook* _HistoryBook = nullptr;	//歴史書のコンポーネント。
+
+	/** 歴史書のポインタ. */
+	HistoryBook* _HistoryBook = nullptr;
 
 };

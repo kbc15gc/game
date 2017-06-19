@@ -116,7 +116,7 @@ void SceneManager::DrawScene()
 		1,
 		NULL,
 		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_RGBA(1, 1,1,1),
+		D3DCOLOR_RGBA(0, 0,1,1),
 		1.0f,
 		0);
 
@@ -124,8 +124,13 @@ void SceneManager::DrawScene()
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
-	//_DepthofField.Render();
+	//ブルームの描画.
+	_Bloom.Render();
+
+	//被写界深度の描画.
+	_DepthofField.Render();
 	
+	//アンチエイリアスの描画.
 	_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
@@ -134,8 +139,6 @@ void SceneManager::DrawScene()
 	//オフスクリーンのやつ描画
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
-	
-	_Bloom.Render();
 	
 	INSTANCE(GameObjectManager)->PostRenderObject();
 	

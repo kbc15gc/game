@@ -64,7 +64,7 @@ void ShadowMap::Render()
 		INSTANCE(RenderTargetManager)->SetRT(0, &_ShadowMapRT[count]);
 
 		(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
-	
+
 		_NowRenderShadowMap = count;
 
 		//背面のカリングはしない.
@@ -81,8 +81,6 @@ void ShadowMap::Render()
 
 		_Blur[count].Render();
 	}
-
-
 	
 	//全てのモデルをリストから削除.
 	_CasterModelList.clear();

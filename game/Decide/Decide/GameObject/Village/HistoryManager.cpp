@@ -25,8 +25,35 @@ void HistoryManager::CreateObject()
 {
 	FOR(i, _HistoryList.size())
 	{
-		//
+		//歴史のオブジェクト切り替え・生成
 		_ChangeContinent(i);
+	}
+
+	//共通オブジェクト生成
+	char* type[2] = { "Obj","NPC" };
+	char path[128];
+	{		
+		//パス生成
+		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", type[0]);
+		//CSVからオブジェクトの情報読み込み
+		vector<ObjectInfo*> objInfo;
+		Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
+
+		//情報からオブジェクト生成。
+		FOR(i, objInfo.size())
+		{
+			//生成
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+			obj->LoadModel(objInfo[i]->filename);
+			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6.5f, 0));
+			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetLocalScale(objInfo[i]->sca);
+
+			//もういらないので解放
+			SAFE_DELETE(objInfo[i]);
+		}
+
+		objInfo.clear();
 	}
 }
 
@@ -57,7 +84,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	}
 
 	//チップの状態からグループを計算。
-	int group = _CalcPattern(_HistoryList[continent]);
+	const int group = _CalcPattern(_HistoryList[continent]);
 
 	char* type[2] = { "Obj","NPC" };
 	char path[128];
