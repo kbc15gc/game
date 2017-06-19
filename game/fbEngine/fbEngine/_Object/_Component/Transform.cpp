@@ -514,52 +514,52 @@ void Transform::SetWorldMatrix(D3DXMATRIX w)
 	_WorldMatrix = w;
 }
 //ÉQÉbÉ^Å[
-Vector3& Transform::GetLocalPosition()
+const Vector3& Transform::GetLocalPosition()const
 {
 	return _LocalPosition;
 }
 
-const Vector3& Transform::GetPosition()
+const Vector3& Transform::GetPosition()const
 {
 	return _Position;
 }
 
-const Vector3& Transform::GetLocalScale()
+const Vector3& Transform::GetLocalScale()const
 {
 	return _LocalScale;
 }
 
-const Vector3& Transform::GetScale()
+const Vector3& Transform::GetScale()const
 {
 	return _Scale;
 }
 
-const Vector3& Transform::GetLocalAngle()
+const Vector3& Transform::GetLocalAngle()const
 {
 	return _LocalAngle;
 }
 
-const Vector3& Transform::GetAngle()
+const Vector3& Transform::GetAngle()const
 {
 	return _Angle;
 }
 
-const Quaternion& Transform::GetLocalRotation()
+const Quaternion& Transform::GetLocalRotation()const
 {
 	return _LocalRotation;
 }
 
-const Quaternion& Transform::GetRotation()
+const Quaternion& Transform::GetRotation()const
 {
 	return _Rotation;
 }
 
-const D3DXMATRIX & Transform::GetWorldMatrix()
+const D3DXMATRIX & Transform::GetWorldMatrix()const
 {
 	return _WorldMatrix;
 }
 
-const D3DXMATRIX & Transform::GetRotateMatrix()
+const D3DXMATRIX & Transform::GetRotateMatrix()const
 {
 	return _RotateMatrix;
 }

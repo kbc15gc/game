@@ -56,6 +56,10 @@ public:
 	{
 		_ModelDate = pD;
 	}
+	const SkinModelData* GetModelData() {
+		return _ModelDate;
+	}
+
 	//メッシュコライダー作るときに
 	LPD3DXMESH GetOrgMeshFirst() const
 	{

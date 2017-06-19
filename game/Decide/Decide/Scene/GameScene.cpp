@@ -24,6 +24,8 @@
 #include "GameObject\Village\ItemManager.h"
 #include "GameObject\HistoryChip\Chips.h"
 
+#include "SplitSpace.h"
+
 
 ImageObject* g_depth;
 
@@ -43,7 +45,7 @@ void GameScene::Start()
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 9);
-
+	
 	FOR(i,ChipID::NUM)
 	{
 		//歴史チップ
