@@ -117,6 +117,9 @@
     <ClCompile Include="GameObject\Component\HadBar.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Village\ItemManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -245,6 +248,9 @@
     <ClInclude Include="Ocean.h" />
     <ClInclude Include="GameObject\Component\HadBar.h">
       <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\ItemManager.h">
+      <Filter>GameObject\Village</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
