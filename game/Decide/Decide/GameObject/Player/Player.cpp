@@ -157,6 +157,16 @@ void Player::Update()
 	{
 		ChangeState(State::Death);
 	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (transform->GetLocalPosition().y < 48.5f)
+	{
+		_PlayerParam->SubParam(CharacterParameter::HP, 2);
+		_HPBar->SubValue(2);
+	}
+
+
 	//HPバーの更新
 	_HPBar->Update();
 	//MPバーの更新
@@ -217,8 +227,13 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	//死亡アニメーション
+	if (_State == State::Death)
+	{
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+	}
 	//ジャンプアニメーション
-	if (_CharacterController->IsJump())
+	else if (_CharacterController->IsJump())
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
 	}
@@ -251,11 +266,6 @@ void Player::AnimationControl()
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
-		}
-		//死亡アニメーション
-		else if (_State == State::Death)
-		{
-			PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		}
 	}
 }
