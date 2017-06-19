@@ -146,4 +146,7 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
+
+	//攻撃の値を表示。
+	TextObject* _AttackValue;
 };
