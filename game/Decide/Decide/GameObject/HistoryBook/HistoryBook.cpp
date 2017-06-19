@@ -11,8 +11,8 @@
 namespace
 {
 
-	/** プレイヤーの半分の高さ。*/
-	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.75f, 0.0f);
+	/** 歴史書の出現位置. 。*/
+	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.5f, 0.7f);
 
 }
 
@@ -35,9 +35,6 @@ void HistoryBook::Awake()
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
-	//状態リストを初期化.
-	_InitState();
-
 }
 
 /**
@@ -45,24 +42,26 @@ void HistoryBook::Awake()
 */
 void HistoryBook::Start()
 {
-	transform->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f) + PLAYER_HALFHEIGHT);
+
+	//状態リストを初期化.
+	_InitState();
+
+	transform->SetLocalPosition(PLAYER_HALFHEIGHT);
 	transform->SetLocalScale(Vector3::one);
 
-	//アニメーションの終了時間設定。
-	//-1.0fを設定しているのはアニメーションの再生時間が1秒未満。
-	_AnimationEndTime[(int)AnimationNo::AnimationClose] = 5.0f;		//本が閉じた状態のアニメーション。
-	_AnimationEndTime[(int)AnimationNo::AnimationOpening] = 3.0f;		//本が開くアニメーション。
-	_AnimationEndTime[(int)AnimationNo::AnimationOpen] = 3.0f;			//本が開いた状態のアニメーション。
-	_AnimationEndTime[(int)AnimationNo::AnimationCloseing] = 3.3f;	    //本が閉じるアニメーション。
+	//アニメーションの終了時間設定.
+	//-1.0fを設定しているのはアニメーションの再生時間が1秒未満.
+	double animationEndTime[(int)AnimationCodeE::AnimationNum];
+	animationEndTime[(int)AnimationCodeE::Idol] = 2.0f;		//待機アニメーション.
 
-	//各エンドタイムを設定。
-	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
+	//各エンドタイムを設定.
+	for (int i = 0; i < (int)AnimationCodeE::AnimationNum; i++)
 	{
-		_Anim->SetAnimationEndTime(i, _AnimationEndTime[i]);
+		_Anim->SetAnimationEndTime(i, animationEndTime[i]);
 	}
 
 	//アニメーションの初期化。
-	PlayAnimation(AnimationNo::AnimationClose, 0.2f, 0);
+	PlayAnimation(AnimationCodeE::Idol, 0.2f, 0);
 
 	//本は見えないように設定。
 	_Model->enable = false;
@@ -80,9 +79,6 @@ void HistoryBook::Update()
 	//状態の更新。
 	_StateList[_NowState]->Update();
 
-	//_AngleY += 0.9;
-	//transform->SetLocalAngle(Vector3(0.0f, _AngleY, 0.0f));
-
 	//トランスフォーム更新。
 	transform->UpdateTransform();
 }
@@ -94,10 +90,10 @@ void HistoryBook::Update()
 * @param interpolatetime	補間時間.
 * @param loopnum			ループ回数 (デフォルトは-1).
 */
-void HistoryBook::PlayAnimation(AnimationNo animno, float interpolatetime, int loopnum)
+void HistoryBook::PlayAnimation(AnimationCodeE animno, float interpolatetime, int loopnum)
 {
 	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない。
-	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationNo::AnimationInvalid)
+	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationCodeE::Invalid)
 	{
 		_Anim->PlayAnimation((int)animno, interpolatetime, loopnum);
 	}
@@ -108,17 +104,16 @@ void HistoryBook::PlayAnimation(AnimationNo animno, float interpolatetime, int l
 */
 void HistoryBook::_InitState()
 {
-	//閉じた状態.
-	_StateList.push_back(new HistoryBookStateClose(this));
-	//本が開いている状態.
-	_StateList.push_back(new HistoryBookStateOpening(this));
-	//開いた状態状態.
+	//未使用状態.
+	_StateList.push_back(new HistoryBookStateUnused(this));
+	//待機状態.
+	_StateList.push_back(new HistoryBookStateIdol(this));
+	//開く状態状態.
 	_StateList.push_back(new HistoryBookStateOpen(this));
-	//本が閉じている.
-	_StateList.push_back(new HistoryBookStateCloseing(this));
+
 
 	//初期値は閉じている.
-	ChangeState(StateCodeE::Close);
+	ChangeState(StateCodeE::Unused);
 
 }
 
@@ -131,16 +126,20 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 	//スタートボタン又はEキーが押された.
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
 	{
-		//今_IsLookAtHistoryFlagに設定されている反対のフラグを設定。
-		_IsLookAtHistoryFlag = !_IsLookAtHistoryFlag;
+		//未使用なら表示。使用状態なら閉じる.
+		if (_NowState == (int)StateCodeE::Unused)
+		{
+			ChangeState(StateCodeE::Idol);
+		}
+		else
+		{
+			ChangeState(StateCodeE::Unused);
+			_Player->SetEnable(true);
+		}
 
-		//フラグを見て歴史書の状態を遷移。
-		//trueなら歴史書を開く状態にする。
-		//tureの時に押されたらその時歴史書は開いているので閉じる状態に遷移。
-		ChangeState(_IsLookAtHistoryFlag ? StateCodeE::Opening : StateCodeE::Closeing);
 
-		transform->SetLocalPosition(Vector3(0.0f, 0.0f, PLAYER_HALFHEIGHT.y));
 	}
+
 }
 
 /**

@@ -5,7 +5,6 @@
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="GameShadowCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
@@ -86,18 +85,6 @@
     <ClCompile Include="GameObject\Village\TextBox.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
@@ -118,13 +105,21 @@
     <ClCompile Include="GameObject\Component\ParameterBar.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
-    <ClInclude Include="GameShadowCamera.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
@@ -216,18 +211,6 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpening.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateCloseing.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
@@ -247,6 +230,15 @@
     <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h">
       <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

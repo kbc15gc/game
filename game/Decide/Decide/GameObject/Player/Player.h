@@ -93,6 +93,12 @@ public:
 	{
 		return*_CharacterController;
 	}
+
+	void SetEnable(bool is)
+	{
+		_Model->enable = is;
+	}
+
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;

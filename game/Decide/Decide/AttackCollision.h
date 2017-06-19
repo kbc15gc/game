@@ -49,11 +49,25 @@ private:
 	// 衝突検出。
 	void DetectionCollision();
 	// 衝突した瞬間呼ぶコールバック処理。
-	void _CallBackEnter(Collision* coll);
+	void _CallBackEnter(btCollisionObject* coll);
 	// 衝突している間呼び続けるコールバック処理。
-	void _CallBackStay(Collision* coll);
+	void _CallBackStay(btCollisionObject* coll);
 	// 衝突した瞬間呼ぶコールバック処理。
-	void _CallBackExit(Collision* coll);
+	void _CallBackExit(btCollisionObject* coll);
+	// コリジョンオブジェクトからゲームオブジェクトを取得する。
+	GameObject* _CollisionObjectToGameObject(btCollisionObject* coll) {
+		if (!coll) {
+			return nullptr;
+		}
+		Collision* Coll = static_cast<Collision*>(coll->getUserPointer());
+		if (Coll) {
+			return Coll->gameObject;
+		}
+		else {
+			// コリジョンコンポーネントがない。
+			return nullptr;
+		}
+	}
 private:
 	Collider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。
@@ -61,5 +75,5 @@ private:
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
 	int _Damage = 0;
-	vector<Collision*> _HitCollisions;	// 当たっているコリジョン。
+	vector<shared_ptr<btCollisionObject>> _HitCollisions;	// 当たっているコリジョン。
 };

@@ -51,22 +51,26 @@ sampler_state
 
 //頂点情報構造体
 
-struct VS_INPUT{
+struct VS_INPUT
+{
 	float4	_Pos		: POSITION;
 	float4	_Color	: COLOR0;
 	float3	_Normal	: NORMAL;
 	float2	_UV		: TEXCOORD0;
 };
 
-struct VS_OUTPUT{
-	float4	_Pos	: POSITION;
-	float4	_Color	: COLOR0;
-	float3	_Normal	: NORMAL;
-	float2	_UV		: TEXCOORD0;
-	float4  _World	: TEXCOORD1;	//xyzにワールド座標。wには射影空間でのdepthが格納される。
-	float4  _WVP	: TEXCOORD2;	//カメラから見た行列
+struct VS_OUTPUT
+{
+	float4	_Pos			: POSITION;
+	float4	_Color			: COLOR0;
+	float3	_Normal			: NORMAL;
+	float2	_UV				: TEXCOORD0;
+	float4  _World			: TEXCOORD1;	//xyzにワールド座標。wには射影空間でのdepthが格納される。
+	float4  _WVP			: TEXCOORD2;	//カメラから見た行列
+	float4	_MieColor		: TEXCOORD3;	//ミー錯乱色。
+	float4	_RayColor		: TEXCOORD4;	//レイリー錯乱色。
+	float3  _PosToCameraDir	: TEXCOORD5;
 };
-
 
 /*!
  *@brief	頂点シェーダー。
@@ -76,12 +80,12 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	VS_OUTPUT Out = (VS_OUTPUT)0;
 
 	float4 pos;
-	pos = mul( float4(In._Pos.xyz,1.0f), g_worldMatrix );		//モデルのローカル空間からワールド空間に変換。
+	pos = mul(float4(In._Pos.xyz, 1.0f), g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
 	
-	Out._World = pos;						//ワールド行列を保持
+	Out._World.xyz = pos.xyz;						//ワールド行列を保持
 
 	//スカイボックスはビュー行列をかけない。
-	if (!SkyBox || g_isEnvironmentMap > 0.0f)
+	//if (!SkyBox || g_isEnvironmentMap > 0.0f)
 	{
 		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	}
@@ -94,6 +98,9 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	Out._UV = In._UV;
 	Out._Normal = mul(In._Normal, g_rotationMatrix);	//法線を回す。
 	
+	//大気散乱.
+	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
+
 	return Out;
 }
 
@@ -108,8 +115,8 @@ struct PSOutput
  */
 PSOutput PSMain(VS_OUTPUT In)
 {
-	float4 color = (float4)0;	//最終的に出力するカラー
-	float4 diff = (float4)0;	//メッシュのマテリアル
+	float4 color = 0.0f;	//最終的に出力するカラー
+	float4 diff = 0.0f;	//メッシュのマテリアル
 	float3 normal = normalize(In._Normal.xyz);
 	//カラー
 	if (Texflg)
@@ -118,12 +125,37 @@ PSOutput PSMain(VS_OUTPUT In)
 		{
 			
 			//反転しているので-1をかけて法線をもどす
-			diff = texCUBE(g_cubeSampler, In._Normal * -1.0f);
+			diff = texCUBE(g_cubeSampler, normal * -1.0f);
+
+			//float3 mono = float3(0.29900f, 0.58700f, 0.11400f);
+
+			//float Y = dot(mono, diff.xyz);
+
+			//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
+			//float cloudRate = pow(Y, 3.0f);
+
+			color = In._RayColor + 0.25f * In._MieColor;
+
+			//大気の色もモノクロ化
+			//float colorY = max(0.0f, dot(mono, color.xyz));
+
+			//float nightRate = max(0.0f,dot(float3(0.0f,1.0f,0.0f), g_atmosParam.v3LightDirection));
+
+			//雲の色.
+			//float cloudColor = lerp(3.0f, 0.1f, pow(1.0f - nightRate, 3.0f));
+
+			//空の色.
+			//color.xyz = lerp(color.xyz, cloudColor, cloudRate);
+
+			//color.xyz *= 1.1f;
+
+			color.w = 1.0f;
 
 			PSOutput Out = (PSOutput)0;
 
-			Out.Color = diff;
-			Out.Depth = In._WVP.z / In._WVP.w;
+			Out.Color = color;
+			float3 depth = In._World.w;
+			Out.Depth = float4(depth, 1.0f);
 
 			return Out;
 		}
@@ -136,10 +168,11 @@ PSOutput PSMain(VS_OUTPUT In)
 	{
 		diff = g_diffuseMaterial;
 	}
+
 	diff *= g_blendcolor;
 	color = diff;
 
-	float4 light = (float4)0;
+	float4 light = 0.0f;
 
 	//デフューズライトを計算。
 	light = DiffuseLight(normal);
@@ -166,20 +199,28 @@ PSOutput PSMain(VS_OUTPUT In)
 	if (g_EffectFlg.x)
 	{
 		//影になっている.
-		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
+		light.xyz *= CalcShadow(In._World.xyz, cascadeColor);
 	}
 
 	//ライトをかける
-	color.rgb *= light.rgb;
+	color *= light;
+
+	//大気散乱.
+	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+	{
+		color = In._RayColor + color * In._MieColor;
+		color.w = diff.w;
+	}
+
 	//アンビエントライトを加算。
 	color.rgb += diff.rgb * g_ambientLight.rgb;
-	
-	//color.rgb *= cascadeColor;
+
 
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-	Out.Depth = In._WVP.z / In._WVP.w;
+	float3 depth = In._World.w;
+	Out.Depth = float4(depth, 1.0f);
 
 	return Out;
 }
@@ -322,21 +363,27 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	if (g_EffectFlg.x)
 	{
 		//影になっている.
-		light.rgb *= CalcShadow(In._World.xyz, cascadeColor);
+		light.xyz *= CalcShadow(In._World.xyz, cascadeColor);
 
 	}
+	
+	color *= light;
 
-	color.rgb *= light.rgb;
+	//大気散乱.
+	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+	{
+		color = In._RayColor + color * In._MieColor;
+		color.w = diffuseColor.w;
+	}
 
-	////アンビエントライトを加算。
+	//アンビエントライトを加算。
 	color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
-
-	//color.xyz *= cascadeColor;
 
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-	Out.Depth = In._WVP.z / In._WVP.w;
+	float3 depth = In._World.w;
+	Out.Depth = float4(depth, 1.0f);
 
 	return Out;
 }
