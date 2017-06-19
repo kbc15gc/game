@@ -135,7 +135,7 @@ public:
 	// ¦ˆ—‚ª­‚È‚¢‚¤‚¿‚Íinline‚Ì‚Ü‚Ü‚Å‚¢‚¢‚æ(‚¾‚¢‚½‚¢3sˆÈã‚Ìˆ—‚ð‚·‚é‚æ‚¤‚É‚È‚é‚Ü‚Å)B
 	inline virtual void HitAttackCollisionEnter(AttackCollision* hitCollision) {
 		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
-
+		{
 			_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage());
 		}
 	}
