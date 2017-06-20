@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GameObject\Component\ParameterBar.h"
-#include "SplitSpace.h"
+#include "GameObject\SplitSpace.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -146,7 +146,7 @@ void Player::Start()
 
 	// とりあえずテスト。
 	// 空間分割コリジョン生成。
-	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 1, 3);
 }
 
 void Player::Update()

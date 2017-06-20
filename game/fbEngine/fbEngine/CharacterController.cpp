@@ -17,7 +17,7 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 	m_attributeXZ = attributeXZ;
 	m_attributeY = attributeY;
 
-	m_rigidBody.reset(new RigidBody(Object, tramsform));
+	m_rigidBody = gameObject->AddComponent<RigidBody>();
 	m_rigidBody->Awake();
 	//リジッドボディ作成
 	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off);
@@ -194,6 +194,5 @@ void CCharacterController::Execute()
 */
 void CCharacterController::RemoveRigidBoby()
 {
-	m_rigidBody.reset(nullptr);
 	//PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
 }

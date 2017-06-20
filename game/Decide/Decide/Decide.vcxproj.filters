@@ -117,6 +117,9 @@
     <ClCompile Include="GameObject\SplitSpace.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\SpaceCollisionObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -244,6 +247,9 @@
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\SplitSpace.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\SpaceCollisionObject.h">
       <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
