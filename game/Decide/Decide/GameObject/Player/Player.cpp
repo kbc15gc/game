@@ -247,7 +247,10 @@ void Player::AnimationControl()
 			else if (_NextAttackAnimNo != AnimationNo::AnimationInvalid)
 			{
 				//連撃
-				PlayAnimation(_NextAttackAnimNo, 0.1f,1);
+				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
+				//_Anim->AddAnimationQueue(info);
+				//アニメーションキューに追加。
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
