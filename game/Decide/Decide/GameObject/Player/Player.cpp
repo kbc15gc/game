@@ -77,8 +77,6 @@ void Player::Awake()
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
 			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン。
-
-
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);
@@ -152,6 +150,7 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
 	//ライフが0になると死亡する。
 	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
 	{
@@ -165,8 +164,6 @@ void Player::Update()
 		_PlayerParam->SubParam(CharacterParameter::HP, 2);
 		_HPBar->SubValue(2);
 	}
-
-
 	//HPバーの更新
 	_HPBar->Update();
 	//MPバーの更新
@@ -231,9 +228,10 @@ void Player::AnimationControl()
 	if (_State == State::Death)
 	{
 		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+		return;
 	}
 	//ジャンプアニメーション
-	else if (_CharacterController->IsJump())
+	if (_CharacterController->IsJump())
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
 	}
