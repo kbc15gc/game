@@ -78,8 +78,6 @@ void Player::Awake()
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
 			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン。
-
-
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);
@@ -158,10 +156,19 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
 	//ライフが0になると死亡する。
 	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
 	{
 		ChangeState(State::Death);
+	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (transform->GetLocalPosition().y < 48.5f)
+	{
+		_PlayerParam->SubParam(CharacterParameter::HP, 2);
+		_HPBar->SubValue(2);
 	}
 	//HPバーの更新
 	_HPBar->Update();
@@ -223,6 +230,12 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	//死亡アニメーション
+	if (_State == State::Death)
+	{
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+		return;
+	}
 	//ジャンプアニメーション
 	if (_CharacterController->IsJump())
 	{
@@ -253,15 +266,13 @@ void Player::AnimationControl()
 			else if (_NextAttackAnimNo != AnimationNo::AnimationInvalid)
 			{
 				//連撃
-				PlayAnimation(_NextAttackAnimNo, 0.1f,1);
+				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
+				//_Anim->AddAnimationQueue(info);
+				//アニメーションキューに追加。
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
-		}
-		//死亡アニメーション
-		else if (_State == State::Death)
-		{
-			PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		}
 	}
 }
