@@ -47,7 +47,7 @@ void Enemy::_StartSubClass(){
 	_ChangeState(State::Wandering);
 
 	//パラメーター設定。
-	_MyComponent.Parameter->ParamInit(10, 10, 0, 0, 3, 1, 1, 1);
+	_MyComponent.Parameter->ParamInit(10, 10, 0, 0, 5, 1, 1, 1);
 }
 
 void Enemy::_UpdateSubClass() {

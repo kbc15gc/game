@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GameObject\Component\ParameterBar.h"
+#include "SplitSpace.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -77,8 +78,6 @@ void Player::Awake()
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
 			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン。
-
-
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);
@@ -143,6 +142,11 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//レベル初期化
 	_Level = 1;
+
+
+	// とりあえずテスト。
+	// 空間分割コリジョン生成。
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
 }
 
 void Player::Update()
@@ -152,10 +156,19 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
 	//ライフが0になると死亡する。
 	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
 	{
 		ChangeState(State::Death);
+	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (transform->GetLocalPosition().y < 48.5f)
+	{
+		_PlayerParam->SubParam(CharacterParameter::HP, 2);
+		_HPBar->SubValue(2);
 	}
 	//HPバーの更新
 	_HPBar->Update();
@@ -217,6 +230,12 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	//死亡アニメーション
+	if (_State == State::Death)
+	{
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+		return;
+	}
 	//ジャンプアニメーション
 	if (_CharacterController->IsJump())
 	{
@@ -254,11 +273,6 @@ void Player::AnimationControl()
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
-		}
-		//死亡アニメーション
-		else if (_State == State::Death)
-		{
-			PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		}
 	}
 }
