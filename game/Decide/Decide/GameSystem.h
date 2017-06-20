@@ -14,4 +14,5 @@ enum Collision_ID
 	ENEMY = BIT(3),
 	BOSS = BIT(4),
 	ATTACK = BIT(5),
+	SPACE = BIT(6),
 };

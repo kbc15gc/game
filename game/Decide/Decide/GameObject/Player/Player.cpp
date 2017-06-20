@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GameObject\Component\ParameterBar.h"
+#include "SplitSpace.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -141,6 +142,11 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//レベル初期化
 	_Level = 1;
+
+
+	// とりあえずテスト。
+	// 空間分割コリジョン生成。
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
 }
 
 void Player::Update()

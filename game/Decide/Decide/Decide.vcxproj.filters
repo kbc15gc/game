@@ -114,6 +114,9 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\SplitSpace.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\SplitSpace.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
