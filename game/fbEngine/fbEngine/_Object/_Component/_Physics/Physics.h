@@ -29,12 +29,17 @@ public:
 		dynamicWorld->convexSweepTest(castShape, convexFromWorld, convexToWorld, resultCallback, allowedCcdPenetration);
 	}
 
+	//指定したコリジョン同士が衝突しているか判定する
+	//Collision*　コリジョン
+	//Collision*  コリジョン
+	//int　指定したコリジョンの属性とのみ当たりをとる
+	bool ContactPairTest(Collision* coll1, Collision* coll2, int attr = static_cast<int>(fbCollisionAttributeE::ALL))const;
 	//ヒットした中で最も近いコリジョンを取得
-	//Collison*　コリジョン
+	//Collision*　コリジョン
 	//int　指定したコリジョンの属性とのみ当たりをとる
 	const Collision* ClosestContactTest(Collision * coll,const int& attr = (const int)fbCollisionAttributeE::ALL) const;
 	//ヒットしたコリジョンを全て取得
-	//Collison*　コリジョン
+	//Collision*　コリジョン
 	//int　指定したコリジョンの属性とのみ当たりをとる
 	const vector<Collision*> AllHitsContactTest(Collision * coll, const int& attr = (const int)fbCollisionAttributeE::ALL) const;
 	//レイを飛ばしてヒットした中で最も近かったものを取得
@@ -45,7 +50,7 @@ public:
 	//形のある例を飛ばす
 	fbPhysicsCallback::ClosestConvexResultCallback ClosestRayShape(Collider* shape,const Vector3& from, const Vector3& to, const int& attr = (const int)fbCollisionAttributeE::ALL);
 	//受け取ったコリジョンを始点から終点まで飛ばしてヒットした中で最も近かったものを取得
-	//Collison* 飛ばすコリジョン
+	//Collision* 飛ばすコリジョン
 	//Vector3　始点
 	//Vector3　終点
 	//int　指定したコリジョンの属性とのみ当たりをとる
