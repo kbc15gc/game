@@ -114,6 +114,12 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -238,6 +244,12 @@
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.h">
+      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
   </ItemGroup>

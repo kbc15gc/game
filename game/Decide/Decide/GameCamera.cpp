@@ -76,10 +76,10 @@ void GameCamera::Update()
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
 	}
-	else
-	{
-		_HistoryBehavior();
-	}
+	//else
+	//{
+	//	_HistoryBehavior();
+	//}
 
 	_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
 

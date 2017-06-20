@@ -1,29 +1,28 @@
 /**
-* 歴史書の未使用状態クラスの定義.
+* 歴史書の閉じる状態クラスの定義.
 */
 #pragma once
 
 #include "HistoryBookState.h"
-#include "GameCamera.h"
 
 class Player;
 
 /**
-* 歴史書の未使用状態クラス.
+* 歴史書の閉じる状態クラス.
 */
-class HistoryBookStateUnused : public IHistoryBookState
+class HistoryBookStateClose : public IHistoryBookState
 {
 public:
 
 	/**
 	* コンストラクタ.
 	*/
-	HistoryBookStateUnused(HistoryBook* historybook);
+	HistoryBookStateClose(HistoryBook* historybook);
 
 	/**
 	* デストラクタ.
 	*/
-	~HistoryBookStateUnused()
+	~HistoryBookStateClose()
 	{
 	}
 
@@ -43,9 +42,6 @@ public:
 	void Exit()override;
 
 private:
-
-	/** ゲームカメラクラスのポインタ. */
-	GameCamera* _GameCamera = nullptr;
 
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;

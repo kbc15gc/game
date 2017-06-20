@@ -173,7 +173,9 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
@@ -222,7 +224,9 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />

@@ -1,5 +1,5 @@
 /**
-* 歴史書の待機状態クラスの定義.
+* 歴史書の移動状態クラスの定義.
 */
 #pragma once
 
@@ -8,21 +8,21 @@
 #include"GameCamera.h"
 
 /**
-* 歴史書の待機状態クラス.
+* 歴史書の移動状態クラス.
 */
-class HistoryBookStateIdol : public IHistoryBookState
+class HistoryBookStateMove : public IHistoryBookState
 {
 public:
 
 	/**
 	* コンストラクタ.
 	*/
-	HistoryBookStateIdol(HistoryBook* historybook);
+	HistoryBookStateMove(HistoryBook* historybook);
 
 	/**
 	* デストラクタ.
 	*/
-	~HistoryBookStateIdol()
+	~HistoryBookStateMove()
 	{
 	}
 
@@ -45,5 +45,13 @@ private:
 
 	/** ゲームカメラのポインタ. */
 	GameCamera* _GameCamera = nullptr;
+
+	/** 補間レート. */
+	float _LerpRate = 0.0f;
+
+	/** 現在の位置. */
+	Vector3 _Position = Vector3::zero;
+	/** 現在の回転. */
+	Quaternion _Rotation = Quaternion::Identity;
 
 };
