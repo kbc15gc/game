@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GameObject\Component\ParameterBar.h"
-#include "SplitSpace.h"
+#include "GameObject\SplitSpace.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -132,7 +132,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(560, 69, -1000));
+	transform->SetLocalPosition(Vector3(400, 69, -1000));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -151,32 +151,37 @@ void Player::Start()
 
 void Player::Update()
 {
-	if (_CurrentState != NULL)
-	{
-		//ステートアップデート
-		_CurrentState->Update();
-	}
-
 	//ライフが0になると死亡する。
-	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
+	if (_PlayerParam)
 	{
-		ChangeState(State::Death);
+		if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
+		{
+			ChangeState(State::Death);
+		}
 	}
 	/*
 	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
 	*/
-	if (transform->GetLocalPosition().y < 48.5f)
+	if (transform)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, 2);
-		_HPBar->SubValue(2);
+		if (transform->GetLocalPosition().y < 48.5f)
+		{
+			_PlayerParam->SubParam(CharacterParameter::HP, 2);
+			_HPBar->SubValue(2);
+		}
 	}
 	//HPバーの更新
 	_HPBar->Update();
 	//MPバーの更新
 	_MPBar->Update();
+	
 	//アニメーションコントロール
 	AnimationControl();
-
+	if (_CurrentState != NULL)
+	{
+		//ステートアップデート
+		_CurrentState->Update();
+	}
 	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
 	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
 	// ※都合が悪いのでとりあえずコメントアウト。
