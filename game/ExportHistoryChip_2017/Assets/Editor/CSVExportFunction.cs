@@ -172,7 +172,7 @@ public class CSVExportFunction : Editor
             string ang = Vector3ToString(child.eulerAngles);
             string sca = Vector3ToString(child.lossyScale);
             ExportCollision npc = child.GetComponent<ExportCollision>();
-            bool camera = npc.HitCamera;
+            int camera = Convert.ToInt32(npc.HitCamera);
             //
             string line = string.Format("{0},{1},{2},{3}", pos, ang, sca, camera);
 
@@ -188,7 +188,7 @@ public class CSVExportFunction : Editor
     static public string Vector3ToString(Vector3 val)
     {
         //"x/y/z"の形で返す。
-        return String.Format("{0}/{1}/{2}", val.x, val.y, val.z);
+        return String.Format("{0}/{1}/{2}", -val.x, val.y, -val.z);
     }
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)

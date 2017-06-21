@@ -20,6 +20,24 @@ namespace
 		{ "ang",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,ang),sizeof(Vector3) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,sca),sizeof(Vector3) },
 	};
+
+	//コリジョンの情報
+	struct CollisionInfo
+	{
+		Vector3 pos;	//ポジション
+		Vector3 ang;	//回転
+		Vector3 sca;	//スケール
+		int camerahit;	//カメラと当たるかどうかのフラグ。
+	};
+
+	//メンバ変数の情報設定
+	const Support::DATARECORD CollisionInfoData[4] =
+	{
+		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,pos),sizeof(Vector3) },
+		{ "ang",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,ang),sizeof(Vector3) },
+		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,sca),sizeof(Vector3) },
+		{ "camerahit",Support::DataTypeE::INT, offsetof(struct CollisionInfo,camerahit),sizeof(int) },
+	};
 }
 
 //歴史によって出るオブジェクト
