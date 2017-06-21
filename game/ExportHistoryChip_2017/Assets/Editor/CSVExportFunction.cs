@@ -31,8 +31,12 @@ public class CSVExportFunction : Editor
             bool obj = ExportObject(group);
             //NPC書き出し
             bool npc = ExportNPC(group);
+            //コリジョン書き出し。
+            bool coll = ExportCollision(group);
 
-            if (obj == true && npc == true)
+            if (obj == true &&
+                npc == true &&
+                coll == true)
             {
                 Debug.Log(group.name + "の書き出しに成功");
             }
@@ -50,11 +54,10 @@ public class CSVExportFunction : Editor
     static public bool ExportObject(Transform group)
     {
         string name = "ExportObjects";
+        Transform objects;
         //オブジェクト検索
-        Transform objects = group.FindChild(name);
-        if (objects == null)
+        if ((objects = FindObject(group, name)) == null)
         {
-            Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
             return false;
         }
 
@@ -92,15 +95,14 @@ public class CSVExportFunction : Editor
 
     //NPCを出力
     static public bool ExportNPC(Transform group)
-    {
+    {        
         string name = "ExportNPCs";
+        Transform npcs;
         //オブジェクト検索
-        Transform npcs = group.FindChild(name);
-        if (npcs == null)
+        if ((npcs = FindObject(group, name)) == null)
         {
-            Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
             return false;
-        }
+        }    
 
         //子供たちのTransformコンポーネントを取得
         Transform[] Children = npcs.GetComponentsInChildren<Transform>();
@@ -142,10 +144,51 @@ public class CSVExportFunction : Editor
         return true;
     }
 
+    static public bool ExportCollision(Transform group)
+    {
+        string name = "ExportCollisions";
+        Transform colls;
+        //オブジェクト検索
+        if ((colls = FindObject(group, name)) == null)
+        {
+            return false;
+        }
+
+        //子供たちのTransformコンポーネントを取得
+        Transform[] Children = colls.GetComponentsInChildren<Transform>();
+        //ファイルパス
+        string path = Application.dataPath + "/Export/Coll/" + group.name + "Coll" + ".csv";
+
+        //ファイルを開く準備
+        FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+        StreamWriter sw = new StreamWriter(fs);
+        sw.WriteLine("pos,ang,sca,hitcamera");
+        foreach (Transform child in Children)
+        {
+            if (child.name == colls.name)
+                continue;
+                        
+            string pos = Vector3ToString(child.position);
+            string ang = Vector3ToString(child.eulerAngles);
+            string sca = Vector3ToString(child.lossyScale);
+            ExportCollision npc = child.GetComponent<ExportCollision>();
+            int camera = Convert.ToInt32(npc.HitCamera);
+            //
+            string line = string.Format("{0},{1},{2},{3}", pos, ang, sca, camera);
+
+            //列書き出し
+            sw.WriteLine(line);
+        }
+        sw.Close();
+        fs.Close();
+
+        return true;
+    }
+
     static public string Vector3ToString(Vector3 val)
     {
         //"x/y/z"の形で返す。
-        return String.Format("{0}/{1}/{2}", val.x, val.y, val.z);
+        return String.Format("{0}/{1}/{2}", -val.x, val.y, -val.z);
     }
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)
@@ -160,5 +203,16 @@ public class CSVExportFunction : Editor
         {
             sw.Write(',');
         }
+    }
+
+    static public Transform FindObject(Transform group,string name)
+    {
+        //オブジェクト検索
+        Transform obj = group.FindChild(name);
+        if (obj == null)
+        {
+            Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
+        }
+        return obj;
     }
 }

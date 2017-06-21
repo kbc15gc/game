@@ -35,25 +35,7 @@ void HistoryManager::CreateObject()
 	{		
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", type[0]);
-		//CSVからオブジェクトの情報読み込み
-		vector<ObjectInfo*> objInfo;
-		Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
-
-		//情報からオブジェクト生成。
-		FOR(i, objInfo.size())
-		{
-			//生成
-			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-			obj->LoadModel(objInfo[i]->filename);
-			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6.5f, 0));
-			obj->transform->SetLocalAngle(objInfo[i]->ang);
-			obj->transform->SetLocalScale(objInfo[i]->sca);
-
-			//もういらないので解放
-			SAFE_DELETE(objInfo[i]);
-		}
-
-		objInfo.clear();
+		_CreateObject(-1, path);
 	}
 }
 
@@ -93,26 +75,8 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	{
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[0]);
-		//CSVからオブジェクトの情報読み込み
-		vector<ObjectInfo*> objInfo;
-		Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
-
-		//情報からオブジェクト生成。
-		FOR(i, objInfo.size())
-		{
-			//生成
-			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-			obj->LoadModel(objInfo[i]->filename);
-			obj->transform->SetLocalPosition(objInfo[i]->pos + Vector3(0, 6.5f, 0));
-			obj->transform->SetLocalAngle(objInfo[i]->ang);
-			obj->transform->SetLocalScale(objInfo[i]->sca);
-			_GameObjects[continent].push_back(obj);
-
-			//もういらないので解放
-			SAFE_DELETE(objInfo[i]);
-		}
-
-		objInfo.clear();
+		_CreateObject(continent, path);
+		
 	}
 	ZeroMemory(path, 128);
 	//NPC
@@ -132,9 +96,10 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 			NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
 			npc->LoadModel(npcInfo[i]->filename);
 			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-			npc->transform->SetLocalPosition(npcInfo[i]->pos + Vector3(0, 6.5f, 0));
+			npc->transform->SetLocalPosition(npcInfo[i]->pos);
 			npc->transform->SetLocalAngle(npcInfo[i]->ang);
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
+			//管理用の配列に追加。
 			_GameObjects[continent].push_back(npc);
 
 			//もういらないので解放
@@ -177,4 +142,56 @@ const int HistoryManager::_CalcPattern(const HistoryInfo * info)
 		SAFE_DELETE(groupList[i]);
 	}
 	return pattern;
+}
+
+void HistoryManager::_CreateObject(const int& continent,const char * path)
+{
+	//CSVからオブジェクトの情報読み込み
+	vector<ObjectInfo*> objInfo;
+	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
+
+	//情報からオブジェクト生成。
+	FOR(i, objInfo.size())
+	{
+		//生成
+		ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+		obj->LoadModel(objInfo[i]->filename);
+		obj->transform->SetLocalPosition(objInfo[i]->pos);
+		obj->transform->SetLocalAngle(objInfo[i]->ang);
+		obj->transform->SetLocalScale(objInfo[i]->sca);
+		//管理用の配列に追加。
+		if (continent >= 0)
+			_GameObjects[continent].push_back(obj);
+
+		//もういらないので解放
+		SAFE_DELETE(objInfo[i]);
+	}
+
+	objInfo.clear();
+}
+
+void HistoryManager::_CreateCollision(const int & continent, const char * path)
+{
+	//CSVから当たり判定の情報読み込み
+	vector<CollisionInfo*> colls;
+	Support::LoadCSVData(path, CollisionInfoData, ARRAY_SIZE(CollisionInfoData), colls);
+
+	//情報から当たり判定生成。
+	FOR(i, colls.size())
+	{
+		//生成
+		ContinentObject* coll = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("StageCollision", 2);
+		
+		coll->transform->SetLocalPosition(colls[i]->pos);
+		coll->transform->SetLocalAngle(colls[i]->ang);
+		coll->transform->SetLocalScale(colls[i]->sca);
+		//管理用の配列に追加。
+		if (continent >= 0)
+			_GameObjects[continent].push_back(coll);
+
+		//もういらないので解放
+		SAFE_DELETE(colls[i]);
+	}
+
+	colls.clear();
 }
