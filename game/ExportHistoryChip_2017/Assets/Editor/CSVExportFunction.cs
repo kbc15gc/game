@@ -188,7 +188,7 @@ public class CSVExportFunction : Editor
     static public string Vector3ToString(Vector3 val)
     {
         //"x/y/z"の形で返す。
-        return String.Format("{0}/{1}/{2}", val.x, val.y, val.z);
+        return String.Format("{0}/{1}/{2}", -val.x, val.y, -val.z);
     }
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)
