@@ -37,24 +37,26 @@ public:
 	//ヒットした中で最も近いコリジョンを取得
 	//Collision*　コリジョン
 	//int　指定したコリジョンの属性とのみ当たりをとる
-	const Collision* ClosestContactTest(Collision * coll,const int& attr = (const int)fbCollisionAttributeE::ALL) const;
+	const Collision* ClosestContactTest(Collision * coll,int attr = (int)fbCollisionAttributeE::ALL) const;
 	//ヒットしたコリジョンを全て取得
 	//Collision*　コリジョン
+	//const vector<Collision*>&  衝突したコリジョンの配列。
 	//int　指定したコリジョンの属性とのみ当たりをとる
-	const vector<Collision*> AllHitsContactTest(Collision * coll, const int& attr = (const int)fbCollisionAttributeE::ALL) const;
+	// 戻り値は第二引数と同じ。
+	const vector<Collision*>& AllHitsContactTest(Collision * coll,vector<Collision*>& HitCollisions, int attr = (int)fbCollisionAttributeE::ALL) const;
 	//レイを飛ばしてヒットした中で最も近かったものを取得
 	//Vector3　レイの始点
 	//Vector3　レイの終点
 	//int　指定したコリジョンの属性とのみ当たりをとる
-	fbPhysicsCallback::ClosestRayResultCallback ClosestRayTest(const Vector3& from, const Vector3& to, const int& attr = (const int)fbCollisionAttributeE::ALL);
+	fbPhysicsCallback::ClosestRayResultCallback ClosestRayTest(const Vector3& from, const Vector3& to, int attr = (int)fbCollisionAttributeE::ALL);
 	//形のある例を飛ばす
-	fbPhysicsCallback::ClosestConvexResultCallback ClosestRayShape(Collider* shape,const Vector3& from, const Vector3& to, const int& attr = (const int)fbCollisionAttributeE::ALL);
+	fbPhysicsCallback::ClosestConvexResultCallback ClosestRayShape(Collider* shape,const Vector3& from, const Vector3& to, int attr = (int)fbCollisionAttributeE::ALL);
 	//受け取ったコリジョンを始点から終点まで飛ばしてヒットした中で最も近かったものを取得
 	//Collision* 飛ばすコリジョン
 	//Vector3　始点
 	//Vector3　終点
 	//int　指定したコリジョンの属性とのみ当たりをとる
-	const Collision* ClosestConvexSweepTest(Collision * coll, const Vector3& start, const Vector3& end,const int& attr = (const int)fbCollisionAttributeE::ALL) const;
+	const Collision* ClosestConvexSweepTest(Collision * coll, const Vector3& start, const Vector3& end,int attr = (int)fbCollisionAttributeE::ALL) const;
 	//地面用当たり判定
 	const fbPhysicsCallback::SweepResultGround FindOverlappedStage(btCollisionObject * colliObject,const Vector3& start,const Vector3& end) const;
 

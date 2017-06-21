@@ -32,10 +32,6 @@ void AttackCollision::Update()
 
 void AttackCollision::LateUpdate()
 {
-	btAlignedObjectArray<btCollisionObject*> colls = _Gost->GetPairCollisions();
-
-	FOR(i, colls.size())
-		((Collision*)(colls.at(i)->getUserPointer()))->gameObject;
 }
 
 void AttackCollision::DetectionCollision() {

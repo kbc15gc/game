@@ -5,6 +5,11 @@
 Collision::~Collision()
 {
 	_Shape = nullptr;
+
+	if (_CollisionObject)
+	{
+		RemoveWorld();
+	}
 	// シェアードポインタなので、このコンポーネントが削除された後もコリジョンオブジェクトが参照されることを考慮する。
 	_CollisionObject->setUserPointer(nullptr);
 	//シェアードポインタなのでnullを入れるだけでOK
@@ -25,7 +30,7 @@ void Collision::Update()
 	_UpdateCollisionTrans();
 }
 
-void Collision::Create(btCollisionObject * collision, Collider * shape, const int & id, Vector3 offset)
+void Collision::Create(btCollisionObject * collision, Collider * shape, const int & id, Vector3 offset,bool isAddWorld)
 {
 	_Offset = offset;
 	_Shape = shape;
@@ -36,6 +41,10 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 	_CollisionObject->setUserIndex(id);		//コリジョンID設定
 	//トランスフォーム更新
 	_UpdateCollisionTrans();
+
+	if (isAddWorld) {
+		AddWorld(); 
+	}
 
 	// とりあえずここでコライダーの描画をオンにする。
 	_Shape->CreateViewModel(_CollisionObject->getWorldTransform());
@@ -68,4 +77,19 @@ void Collision::_UpdateCollisionTrans()
 	
 	// コリジョン描画用モデルのTransform情報更新。
 	_Shape->UpdateTransform(trans);
+}
+
+// ワールドに登録。
+void Collision::AddWorld() {
+	if (!_isAddWorld) {
+		_AddWorldSubClass();
+		_isAddWorld = true;
+	}
+}
+// ワールドから削除。
+void Collision::RemoveWorld() {
+	if (_isAddWorld) {
+		_RemoveWorldSubClass();
+		_isAddWorld = false;
+	}
 }

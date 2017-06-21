@@ -29,6 +29,11 @@ void EnemyCharacter::Awake() {
 	// このクラスで使用するコンポーネントを追加。
 	// ※下記の関数を継承先のクラスで上書きしている場合はそちらが呼ばれる。
 	_BuildMyComponents();
+
+	// 位置情報設定。
+	_InitPos = Vector3(560, 69, -1000);
+	transform->SetPosition(_InitPos);
+	
 	// 使用するステートを列挙。
 	_BuildState();
 	// 剛体生成。
@@ -42,12 +47,11 @@ void EnemyCharacter::Awake() {
 void EnemyCharacter::Start() {
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
-	// 位置情報設定。
-	_InitPos = Vector3(560, 69, -1000);
-	transform->SetLocalPosition(_InitPos);
-
 	// 継承先により変わる処理。
 	_StartSubClass();
+	// 継承先で初期位置が設定された可能性があるため更新。
+	_MyComponent.CharacterController->Execute();
+	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
 }
 
 void EnemyCharacter::Update() {
@@ -165,7 +169,7 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(this, transform, _Radius, _Height, Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity);
+	_MyComponent.CharacterController->Init(this, transform, _Radius, _Height, Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
