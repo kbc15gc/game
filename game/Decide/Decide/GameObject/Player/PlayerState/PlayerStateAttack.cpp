@@ -26,7 +26,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam2.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam2.rot = Quaternion::Identity;
 		attackparam2.scale = Vector3(2.0f, 2.0f, 2.0f);
-		attackparam2.attackframe = 25;
+		attackparam2.attackframe = 10;
 		attackparam2.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam2);
 	}
