@@ -172,7 +172,7 @@ public class CSVExportFunction : Editor
             string ang = Vector3ToString(child.eulerAngles);
             string sca = Vector3ToString(child.lossyScale);
             ExportCollision npc = child.GetComponent<ExportCollision>();
-            bool camera = npc.HitCamera;
+            int camera = Convert.ToInt32(npc.HitCamera);
             //
             string line = string.Format("{0},{1},{2},{3}", pos, ang, sca, camera);
 

@@ -34,6 +34,9 @@ private:
 	void _ChangeContinent(const unsigned int& continent);
 	//パターン計算
 	const int _CalcPattern(const HistoryInfo* info);
+
+	void _CreateObject(const int& continent,const char* path);
+	void _CreateCollision(const int& continent, const char* path);
 private:
 	//全大陸の歴史の情報
 	vector<HistoryInfo*> _HistoryList;
