@@ -8,15 +8,19 @@ class GostCollision :public Collision
 public:
 	GostCollision(GameObject* g, Transform* t) :Collision(g, t, typeid(this).name())
 	{
-		
+
 	};
-	GostCollision(GameObject* g, Transform* t,const char* classname) :Collision(g, t, classname)
+	GostCollision(GameObject* g, Transform* t, const char* classname) :Collision(g, t, classname)
 	{
 
 	};
 	virtual ~GostCollision();
 	void Awake()override;
-	void Create(Collider* shape, int id);
+	// コリジョン生成関数。
+	// 引数：	形状。
+	//			コリジョン属性。
+	//			生成時にワールドに登録するか(登録した瞬間のTransformの値でAABBのバウンディングボックスが生成される)。
+	void Create(Collider* shape, int id, bool isAddWorld = true);
 	void Update()override;
 	//ゴーストオブジェクトと重なっているコリジョンを取得する。
 	//重なっているかどうかの判定はUpdateで行われるので。
@@ -26,6 +30,10 @@ public:
 	virtual void OnCollisionEnter(Collision* coll) {};
 	//触れているコリジョンが離れた時に呼び出される。
 	virtual void OnCollisionExit(Collision* coll) {};
+
+	void _AddWorldSubClass()override;
+
+	void _RemoveWorldSubClass()override;
 protected:
 	//ゴーストへのポインタ(_CollisionObjectをキャストしただけ。)
 	btGhostObject* _GostObject;

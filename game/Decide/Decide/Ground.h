@@ -6,6 +6,7 @@ class Ground : public GameObject
 public:
 	Ground(const char* name);
 	void Awake()override;
+	void Start()override;
 	void Update()override;
 private:
 };

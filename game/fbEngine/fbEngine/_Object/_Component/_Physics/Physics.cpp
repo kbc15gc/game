@@ -77,7 +77,7 @@ void PhysicsWorld::RemoveCollision(Collision * coll)
 	dynamicWorld->removeCollisionObject(coll->GetCollisonObj());
 }
 
-fbPhysicsCallback::ClosestRayResultCallback PhysicsWorld::ClosestRayTest(const Vector3& f, const Vector3& t, const int& attr)
+fbPhysicsCallback::ClosestRayResultCallback PhysicsWorld::ClosestRayTest(const Vector3& f, const Vector3& t, int attr)
 {
 	//始点と終点を設定
 	btVector3 from(f.x, f.y, f.z), to(t.x, t.y, t.z);
@@ -88,7 +88,7 @@ fbPhysicsCallback::ClosestRayResultCallback PhysicsWorld::ClosestRayTest(const V
 	return callback;
 }
 
-fbPhysicsCallback::ClosestConvexResultCallback PhysicsWorld::ClosestRayShape(Collider * shape, const Vector3 & from, const Vector3 & to, const int & attr)
+fbPhysicsCallback::ClosestConvexResultCallback PhysicsWorld::ClosestRayShape(Collider * shape, const Vector3 & from, const Vector3 & to,int attr)
 {
 	fbPhysicsCallback::ClosestConvexResultCallback callback(from, attr, nullptr);
 
@@ -117,7 +117,7 @@ bool PhysicsWorld::ContactPairTest(Collision* coll1, Collision* coll2, int attr)
 	}
 }
 
-const Collision * PhysicsWorld::ClosestContactTest(Collision * coll,const int& attr) const
+const Collision * PhysicsWorld::ClosestContactTest(Collision * coll, int attr) const
 {
 	fbPhysicsCallback::ClosestContactResultCallback callback;
 	callback.me = coll;
@@ -127,19 +127,20 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll,const int& a
 	return callback.hitObject;
 }
 
-const vector<Collision*> PhysicsWorld::AllHitsContactTest(Collision * coll, const int & attr) const
+const vector<Collision*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vector<Collision*>& HitCollisions, int attr) const
 {
+	HitCollisions.clear();
+
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;
 	dynamicWorld->contactTest(coll->GetCollisonObj(), callback);
 
-	// callbackはローカル変数のため、参照で配列を返しても関数を抜けると情報がロストする。
-	// ※とりあえず値で返却する。
-	return callback.hitObjects;
+	HitCollisions = callback.hitObjects;
+	return HitCollisions;
 }
 
-const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const Vector3 & s, const Vector3 & e, const int & attr) const
+const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const Vector3 & s, const Vector3 & e, int attr) const
 {
 	fbPhysicsCallback::ClosestConvexResultCallback callback(s, attr, coll->GetCollisonObj());
 

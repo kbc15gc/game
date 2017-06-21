@@ -2,7 +2,7 @@
 #include "Ground.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
-
+#include "GameObject\SplitSpace.h"
 
 Ground::Ground(const char * name) :
 GameObject(name)
@@ -41,6 +41,13 @@ void Ground::Awake()
 	transform->SetLocalPosition(Vector3::zero);
 	transform->SetLocalScale(Vector3::one);
 
+}
+
+void Ground::Start() {
+	// とりあえずテスト。
+	int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK)/* & ~(Collision_ID::GROUND)*/;
+	// 空間分割コリジョン生成。
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 10)->Split(GetComponent<SkinModel>()->GetModelData(), transform, 5, 1, 1, attr);
 }
 
 void Ground::Update()

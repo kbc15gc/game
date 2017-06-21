@@ -1,6 +1,6 @@
 #pragma once
 
-#include"fbEngine\fbstdafx.h"
+#include "fbEngine\fbstdafx.h"
 
 class SpaceCollisionObject;
 
@@ -11,6 +11,7 @@ public:
 	~SplitSpace() {};
 
 	void Awake()override;
+	void Update()override;
 
 	// 空間分割関数。
 	// 引数：	モデルデータ(このモデルを内包できるサイズのボックスを定義し、分割する)。
@@ -18,7 +19,8 @@ public:
 	//			分割数(横)。
 	//			分割数(縦)。
 	//			分割数(奥行)。
-	void Split(const SkinModelData* data, const Transform& transform,int x, int y, int z);
+	//			衝突判定を取りたい属性をレイヤーで指定(デフォルトは全属性)。
+	void Split(const SkinModelData* data, Transform* transform,int x, int y, int z,int attr = _defaultAttr);
 
 	//// 指定した要素番号の空間コリジョン取得。
 	//inline const SpaceCollisionObject* GetCollisionObject(int x, int y, int z) const{
@@ -39,9 +41,10 @@ private:
 
 	// 最大空間を表すボックスを定義する関数。
 	// 引数：	モデルデータ(このモデルを内包できるサイズのボックスを定義する)。
+	//			Transform情報。
 	//			定義したボックスのサイズ(戻り値の値と同じ)。
 	// 戻り値：	定義したボックスのサイズ。
-	const Vector3& CreateSpaceBox(const SkinModelData& data,Vector3& size);
+	const Vector3& CreateSpaceBox(const SkinModelData& data, const Transform& transform,Vector3& size);
 	
 	// 分割された空間を表すボックスコリジョンを生成する関数。
 	// 引数：	分割前のボックスサイズ。
@@ -49,7 +52,8 @@ private:
 	//			分割数(横)。
 	//			分割数(縦)。
 	//			分割数(奥行)。
-	void CreateSplitBox(const Vector3& size, const Transform& transform,int x,int y,int z);
+	//			衝突判定を取りたい属性をレイヤーで指定(デフォルトは全属性)。
+	void CreateSplitBox(const Vector3& size, Transform* transform,int x,int y,int z,int attr);
 
 	// 隣接する空間オブジェクトを登録する。
 	void _AdjacentSpace();
@@ -61,4 +65,5 @@ private:
 	int _splitX = 1;	// 分割数(横)。
 	int _splitY = 1;	// 分割数(縦)。
 	int _splitZ = 1;	// 分割数(奥行)。
+	static const int _defaultAttr;
 };
