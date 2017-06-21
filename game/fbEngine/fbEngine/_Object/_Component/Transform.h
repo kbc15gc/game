@@ -106,17 +106,17 @@ public:
 	void SetRotateMatrix(const D3DXMATRIX r);
 	void SetWorldMatrix(D3DXMATRIX w);
 
-	Vector3&	GetLocalPosition();
-	const Vector3& GetPosition();
-	const Vector3& GetLocalScale();
-	const Vector3& GetScale();
-	const Vector3&	GetLocalAngle();
-	const Vector3& GetAngle();
-	const Quaternion& GetLocalRotation();
-	const Quaternion& GetRotation();
+	const Vector3&	GetLocalPosition()const;
+	const Vector3& GetPosition()const;
+	const Vector3& GetLocalScale()const;
+	const Vector3& GetScale()const;
+	const Vector3&	GetLocalAngle()const;
+	const Vector3& GetAngle()const;
+	const Quaternion& GetLocalRotation()const;
+	const Quaternion& GetRotation()const;
 	D3DXMATRIX* GetRotateMatrixAddress();
-	const D3DXMATRIX& GetRotateMatrix();
-	const D3DXMATRIX& GetWorldMatrix();
+	const D3DXMATRIX& GetRotateMatrix()const;
+	const D3DXMATRIX& GetWorldMatrix()const;
 private:
 	Transform* _Parent;		//親のアドレス
 	vector<Transform*> _Children;		//子供達のアドレスを格納した

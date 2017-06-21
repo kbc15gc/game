@@ -40,6 +40,23 @@ Animation::Animation(GameObject * g, Transform * t) :
 
 }
 
+Animation::~Animation()
+{
+	//ユニークポインタ破棄
+	_AnimationSets.release();
+	_BlendRateTable.release();
+	_EndTime.release();
+
+	//キューを解放
+	unsigned int size = _AnimationQueue.size();
+	FOR(idx,size)
+	{
+		PlayAnimInfo* info = _AnimationQueue.front();
+		SAFE_DELETE(info);
+		_AnimationQueue.pop();
+	}
+}
+
 void Animation::Awake()
 {
 	
@@ -68,7 +85,9 @@ void Animation::PlayAnimation(const UINT& animationSetIndex)
 				}
 			}
 			//トラックにアニメーションセット
-			_AnimController->SetTrackAnimationSet(_CurrentTrackNo, _AnimationSets[(_NumAnimSet - 1) - _CurrentAnimationSetNo]);
+			LPD3DXANIMATIONSET aniset = _AnimationSets[(_NumAnimSet - 1) - _CurrentAnimationSetNo];
+			_AnimController->SetTrackAnimationSet(_CurrentTrackNo, aniset);
+			_EndTime[animationSetIndex] = _EndTime[animationSetIndex] > 0.0f ? _EndTime[animationSetIndex] : aniset->GetPeriod();
 			SetLocalAnimationTime(0, 0.0f);
 		}
 	}
@@ -101,8 +120,10 @@ void Animation::PlayAnimation(const UINT& animationSetIndex, const float& interp
 			//トラックを有効にする。
 			_AnimController->SetTrackEnable(_CurrentTrackNo, TRUE);
 			//トラックにアニメーションセット
-			_AnimController->SetTrackAnimationSet(_CurrentTrackNo, _AnimationSets[(_NumAnimSet - 1) - _CurrentAnimationSetNo]);
-			SetLocalAnimationTime(_CurrentTrackNo,0.0f);
+			LPD3DXANIMATIONSET aniset = _AnimationSets[(_NumAnimSet - 1) - _CurrentAnimationSetNo];
+			_AnimController->SetTrackAnimationSet(_CurrentTrackNo, aniset);
+			_EndTime[animationSetIndex] = _EndTime[animationSetIndex] > 0.0f ? _EndTime[animationSetIndex] : aniset->GetPeriod();
+			SetLocalAnimationTime(_CurrentTrackNo, 0.0f);
 		}
 	}
 	else {
@@ -110,17 +131,103 @@ void Animation::PlayAnimation(const UINT& animationSetIndex, const float& interp
 	}
 }
 
-void Animation::PlayAnimation(const UINT& animationSetIndex, const float& interpolateTime, const float& transitionTime, const int& loopnum)
+bool Animation::PlayAnimation(const UINT& animationSetIndex, const float& interpolateTime, const float& transitionTime, const int& loopnum)
 {
-	if(transitionTime <= _TimeRatio)
+	bool play;
+	if(play = (transitionTime <= _TimeRatio))
 	{
 		PlayAnimation(animationSetIndex, interpolateTime, loopnum);
+	}
+	return play;
+}
+
+void Animation::AddAnimationQueue(PlayAnimInfo* info)
+{
+	if (_IsPlaying)
+	{
+		//キューに追加。
+		_AnimationQueue.push(info);
+	}
+	else
+	{
+		//普通に再生。
+		PlayAnimation(info->Index, info->InterpolateTime, info->TransitionTime, info->LoopNum);
+		//解放
+		SAFE_DELETE(info);
+	}
+}
+
+void Animation::_NextQueue()
+{
+	//次のアニメーション添え字をキューから取り出す。
+	PlayAnimInfo* info = _AnimationQueue.front();
+	//アニメーション再生。
+	if (PlayAnimation(info->Index, info->InterpolateTime, info->TransitionTime, info->LoopNum))
+	{
+		_AnimationQueue.pop();
+		//解放
+		SAFE_DELETE(info);
+	}
+}
+
+void Animation::_EndAnimation(const float& endtime)
+{
+	if (_LoopNum != -1 &&		//無限ループではない
+		_LoopCount >= _LoopNum)	//カウントが指定した数以上になった
+	{
+		//アニメーション終了
+		_IsPlaying = false;
+		//最後の方で止める。
+		SetLocalAnimationTime(_CurrentTrackNo, endtime - 0.001f);
+	}
+	else
+	{
+		//アニメーション時間をリセット
+		SetLocalAnimationTime(_CurrentTrackNo, _LocalAnimationTime - endtime);
+	}
+}
+
+void Animation::_InterpolateAnimation(const float& delta)
+{
+	//補完するよ。
+	if (_IsInterpolate) {
+		//補間時間加算。
+		_InterpolateTimer += delta;
+		//重み。
+		float weight = 0.0f;
+		if (_InterpolateTimer > _InterpolateEndTime) {
+			//補間終了。
+			_IsInterpolate = false;
+			weight = 1.0f;
+			_AnimController->SetTrackWeight(_CurrentTrackNo, weight);
+			//現在のトラック以外を無効にする。
+			FOR(i, _NumMaxTracks) {
+				if (i != _CurrentTrackNo) {
+					_AnimController->SetTrackEnable(i, FALSE);
+				}
+			}
+		}
+		//補完中
+		else {
+			//割合を設定
+			weight = _InterpolateTimer / _InterpolateEndTime;
+			float invWeight = 1.0f - weight;
+			//ウェイトを設定していく。
+			for (int i = 0; i < _NumMaxTracks; i++) {
+				if (i != _CurrentTrackNo) {
+					_AnimController->SetTrackWeight(i, _BlendRateTable[i] * invWeight);
+				}
+				else {
+					_AnimController->SetTrackWeight(i, weight);
+				}
+			}
+		}
 	}
 }
 
 void Animation::Update()
 {
-	//指定されたループ数ないかどうか
+	//アニメーション再生中なら。
 	if (_IsPlaying)
 	{
 		//nullチェック
@@ -128,81 +235,39 @@ void Animation::Update()
 			return;
 
 		//デルタタイム
-		double delta = Time::DeltaTime() * (double)_PlaySpeed;
-
-		//補完するよ。
-		if (_IsInterpolate) {
-			//補間中。
-			_InterpolateTimer += delta;
-			float weight = 0.0f;
-			if (_InterpolateTimer > _InterpolateEndTime) {
-				//補間終了。
-				_IsInterpolate = false;
-				weight = 1.0f;
-				_AnimController->SetTrackWeight(_CurrentTrackNo, weight);
-				//現在のトラック以外を無効にする。
-				FOR(i, _NumMaxTracks){
-					if (i != _CurrentTrackNo) {
-						_AnimController->SetTrackEnable(i, FALSE);
-					}
-				}
-			}
-			//補完中
-			else {
-				//割合を設定
-				weight = _InterpolateTimer / _InterpolateEndTime;
-				float invWeight = 1.0f - weight;
-				//ウェイトを設定していく。
-				for (int i = 0; i < _NumMaxTracks; i++) {
-					if (i != _CurrentTrackNo) {
-						_AnimController->SetTrackWeight(i, _BlendRateTable[i] * invWeight);
-					}
-					else {
-						_AnimController->SetTrackWeight(i, weight);
-					}
-				}
-			}
-		}
-
+		double delta = Time::DeltaTime() * (double)_PlaySpeed;		
+		//アニメーションの補完
+		_InterpolateAnimation(delta);
+				
 		//フレームを増加させる
-		_CurrentFrame += 1.0f;//delta / (1.0 / 60.0);
-		//現在のトラックのアニメーションセット取得
-		LPD3DXANIMATIONSET aniset;
-		//設定されているトラックからアニメーションセット取得
-		_AnimController->GetTrackAnimationSet(_CurrentTrackNo, &aniset);
-
-		//アニメーションの終了時間設定
-		//エンドタイムが指定されているのならそちらを優先
-		double endtime = _EndTime[_CurrentAnimationSetNo] > 0.0f ? _EndTime[_CurrentAnimationSetNo] : aniset->GetPeriod();
-
+		_CurrentFrame += 1.0f;
 		//ローカルタイムに加算
-		_LocalAnimationTime += delta;
+		_LocalAnimationTime += delta;		
 		//グローバルタイムに加算
 		_AnimController->AdvanceTime(delta, NULL);
-		//割合を計算
+
+		//エンドタイムを取得。
+		double endtime = _EndTime[_CurrentAnimationSetNo];
+		//アニメーションの再生割合を計算。( 経過時間 / 終了時間 )
 		_TimeRatio = min(1.0f, _LocalAnimationTime / endtime);
 
-		//アニメーション終了時間を超えた。
+		//キューがあるかどうか？
+		if (_AnimationQueue.size() > 0)
+		{
+			//次の要素に
+			_NextQueue();
+		}
+
+		//アニメーション終了時間を超えた。(1Loop終了した。)
 		if (endtime <= _LocalAnimationTime) 
 		{
 			//経過したフレーム初期化
-			_CurrentFrame = 0;
+			_CurrentFrame = 0.0f;
 			//ループ数増加
 			_LoopCount++;
 
-			if (_LoopNum != -1 &&		//無限ループではない
-				_LoopCount >= _LoopNum)	//カウントが指定した数以上になった
-			{
-				//アニメーション終了
-				_IsPlaying = false;
-				//最後の方で止める。
-				SetLocalAnimationTime(_CurrentTrackNo, endtime - 0.001f);
-			}
-			else
-			{
-				//アニメーション時間をリセット
-				SetLocalAnimationTime(_CurrentTrackNo, _LocalAnimationTime - endtime);
-			}
+			//アニメーションが終了した時の処理。				
+			_EndAnimation(endtime);
 		}
 		else
 		{
