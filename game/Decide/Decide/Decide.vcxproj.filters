@@ -114,6 +114,8 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="FreeCamera.cpp" />
+    <ClCompile Include="ThirdPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -240,6 +242,8 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="FreeCamera.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
