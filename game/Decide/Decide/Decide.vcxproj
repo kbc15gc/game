@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
+    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
+    <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
     <ClInclude Include="GameObject\Village\HistoryButton.h" />
@@ -203,10 +205,12 @@
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
+    <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
@@ -233,6 +237,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
+    <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
@@ -251,6 +256,7 @@
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThirdPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

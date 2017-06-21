@@ -104,6 +104,19 @@ fbPhysicsCallback::ClosestConvexResultCallback PhysicsWorld::ClosestRayShape(Col
 	return callback;
 }
 
+bool PhysicsWorld::ContactPairTest(Collision* coll1, Collision* coll2, int attr)const {
+	fbPhysicsCallback::ClosestContactResultCallback callback;
+	callback.me = coll1;
+	callback.attribute = attr;
+	dynamicWorld->contactPairTest(coll1->GetCollisonObj(), coll2->GetCollisonObj(), callback);
+	if (callback.hitObject) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 const Collision * PhysicsWorld::ClosestContactTest(Collision * coll,const int& attr) const
 {
 	fbPhysicsCallback::ClosestContactResultCallback callback;

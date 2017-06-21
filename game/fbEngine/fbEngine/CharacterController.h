@@ -95,7 +95,7 @@ public:
 	*/
 	RigidBody* GetRigidBody()
 	{
-		return m_rigidBody.get();
+		return m_rigidBody;
 	}
 	/*!
 	* @brief	剛体を物理エンジンから削除。。
@@ -162,7 +162,7 @@ private:
 	Collider*				m_collider = nullptr;			//コライダー。
 	float					m_radius = 0.0f;				//半径。
 	float					m_height = 0.0f;				//高さ。
-	unique_ptr<RigidBody>	m_rigidBody = nullptr;			//剛体。
+	RigidBody*				m_rigidBody = nullptr;			//剛体。
 	float					m_gravity = -9.8f;				//重力。
 	int						m_attributeXZ;					// 衝突を取りたい属性(左右方向)。
 	int						m_attributeY;					// 衝突を取りたい属性(上下方向)。

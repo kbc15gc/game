@@ -3,12 +3,38 @@
  */
 #pragma once
 #include "_Object\_Component\Component.h"
+#include <queue>
 
 /*!
  * @brief	アニメーションクラス。
  */
 class Animation : public Component{
 public:
+	//アニメーション再生に必要な情報
+	struct PlayAnimInfo
+	{
+	public:
+		//アニメーションの添え字
+		//アニメーション補完時間
+		//アニメーション遷移開始時間
+		//ループ数。
+		PlayAnimInfo(const UINT& index, const float& interpolateTime, const float& transitionTime, const int& loopnum = -1)
+		{
+			Index = index;
+			InterpolateTime = interpolateTime;
+			TransitionTime = transitionTime;
+			LoopNum = loopnum;
+		}
+	
+		//アニメーションセットの添え字。
+		unsigned int Index;
+		//アニメーション補完時間
+		float InterpolateTime;
+		//アニメーションの遷移開始時間。(割合)
+		float TransitionTime;
+		//ループする数
+		int LoopNum;
+	};
 	/*!
 	 * @brief	コンストラクタ
 	 */
@@ -16,13 +42,8 @@ public:
 	/*!
 	 * @brief	デストラクタ。
 	 */
-	~Animation()
-	{
-		//ユニークポインタ破棄
-		_AnimationSets.release();
-		_BlendRateTable.release();
-		_EndTime.release();
-	}
+	~Animation();
+	
 	
 	void Initialize(ID3DXAnimationController* anim);
 	void Awake();
@@ -37,8 +58,14 @@ public:
 	//アニメーション再生(補完あり)
 	//第1引数　再生したいアニメーションのインデックス
 	//第2引数　補間時間
-	//第3引数　ループ数
-	void PlayAnimation(const UINT& animationSetIndex, const float& interpolateTime, const float& transitionTime, const int& loopnum = -1);
+	//第3引数　アニメーションを開始する時間。
+	//第4引数　ループ数
+	//戻り値　再生できたかどうか？
+	bool PlayAnimation(const UINT& animationSetIndex, const float& interpolateTime, const float& transitionTime, const int& loopnum = -1);
+
+	//キューにアニメーションの再生情報を追加。
+	//確保したアドレスはアニメーションないで解放される。
+	void AddAnimationQueue(PlayAnimInfo* info);
 	/*!
 	*@brief	アニメーションセットの取得。
 	*/
@@ -102,6 +129,14 @@ public:
 		//ポジションを更新するために呼ばなければいけない
 		_AnimController->AdvanceTime(0.0, NULL);
 	}
+
+private:
+	//アニメーションの補完をする関数。
+	void _InterpolateAnimation(const float& delta);
+	//次の要素をキューから取り出す。
+	void _NextQueue();
+	//アニメーションが終了した時の処理。
+	void _EndAnimation(const float& endtime);
 private:
 	ID3DXAnimationController*				_AnimController;		//!<アニメーションコントローラ。
 	UINT									_NumAnimSet;				//!<アニメーションセットの数。
@@ -117,10 +152,12 @@ private:
 
 	std::unique_ptr<double[]> _EndTime;	//各アニメーションの終了時間を格納した配列
 	double _TimeRatio;					//正規化された時間の割合。
-	double _LocalAnimationTime;			//ローカルなアニメーションの経過時間
-	double _CurrentFrame;					//アニメーションが再生されて現在何フレーム目か。
+	double _LocalAnimationTime;			//ローカルなアニメーションの経過時間(ややこしかったので自分で管理することにした)
+	double _CurrentFrame;				//アニメーションが再生されて現在何フレーム目か。
 	float _PlaySpeed;					//再生速度
 	int _LoopNum;						//アニメーションをループさせる数。
 	int _LoopCount;						//ループ数をカウントする。
 	bool _IsPlaying;					//アニメーション再生中であることを示す。
+
+	std::queue<PlayAnimInfo*> _AnimationQueue;	//アニメーションを保持するキュー。
 };
