@@ -5,7 +5,7 @@
 #include "CharacterController.h"
 #include "_Object\_Component\_Physics\Collider.h"
 
-void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity, int attributeXZ, int attributeY)
+void CCharacterController::Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off, int type, Collider* capsule, float gravity, int attributeXZ, int attributeY, bool isAddWorld)
 {
 	//コリジョン作成。
 	m_radius = radius;
@@ -17,10 +17,9 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 	m_attributeXZ = attributeXZ;
 	m_attributeY = attributeY;
 
-	m_rigidBody.reset(new RigidBody(Object, tramsform));
-	m_rigidBody->Awake();
+	m_rigidBody = gameObject->AddComponent<RigidBody>();
 	//リジッドボディ作成
-	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off);
+	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off,isAddWorld);
 	//スリープさせない(必要かどうかわからない。)
 	static_cast<btRigidBody*>(m_rigidBody->GetCollisonObj())->setSleepingThresholds(0, 0);
 
@@ -34,7 +33,7 @@ void CCharacterController::Execute()
 	//速度に重力加速度を加える。
 	m_moveSpeed.y += m_gravity * Time::DeltaTime();
 	//次の移動先となる座標を計算する。
-	Vector3 nextPosition = transform->GetLocalPosition();
+	Vector3 nextPosition = transform->GetPosition();
 	//速度からこのフレームでの移動量を求める。オイラー積分。
 	Vector3 addPos = m_moveSpeed;
 	addPos.Scale(Time::DeltaTime());
@@ -46,7 +45,7 @@ void CCharacterController::Execute()
 		while (true) {
 			//現在の座標から次の移動先へ向かうベクトルを求める。
 			Vector3 addPos;
-			addPos.Subtract(nextPosition, transform->GetLocalPosition());
+			addPos.Subtract(nextPosition, transform->GetPosition());
 			Vector3 addPosXZ = addPos;
 			addPosXZ.y = 0.0f;
 			if (addPosXZ.Length() /*<*/ > FLT_EPSILON) {
@@ -109,21 +108,21 @@ void CCharacterController::Execute()
 			}
 		}
 	}
-	//XZの移動は確定。
-	transform->SetLocalPosition(Vector3(nextPosition.x, transform->GetLocalPosition().y, nextPosition.x));
+	////XZの移動は確定。
+	//transform->SetPosition(Vector3(nextPosition.x, transform->GetPosition().y, nextPosition.z));
 	//下方向を調べる。
 	{
 		Vector3 addPos;
-		addPos.Subtract(nextPosition, transform->GetLocalPosition());
+		addPos.Subtract(nextPosition, Vector3(nextPosition.x, transform->GetPosition().y, nextPosition.z));
 
-		transform->SetLocalPosition(nextPosition);	//移動の仮確定。
+		transform->SetPosition(nextPosition);	//移動の仮確定。
 
 		//レイを作成する。
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
 		//始点はカプセルコライダーの中心。
-		start.setOrigin(btVector3(transform->GetLocalPosition().x, transform->GetLocalPosition().y + m_height * 0.5f + m_radius, transform->GetLocalPosition().z));
+		start.setOrigin(btVector3(transform->GetPosition().x, transform->GetPosition().y + m_height * 0.5f + m_radius, transform->GetPosition().z));
 		//終点は地面上にいない場合は1m下を見る。
 		//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 		//地面上にいなくて降下中の場合はそのまま落下先を調べる。
@@ -180,20 +179,13 @@ void CCharacterController::Execute()
 		}
 	}
 	//移動確定。
-	transform->SetLocalPosition(nextPosition);
-	btRigidBody* btBody = (btRigidBody*)m_rigidBody->GetCollisonObj();
+	transform->SetPosition(nextPosition);
+	m_rigidBody->Update();
+	//btRigidBody* btBody = (btRigidBody*)m_rigidBody->GetCollisonObj();
 	//剛体を動かす。
-	btBody->setActivationState(DISABLE_DEACTIVATION);
-	btTransform& trans = btBody->getWorldTransform();
-	//剛体の位置を更新。
-	trans.setOrigin(btVector3(transform->GetLocalPosition().x, transform->GetLocalPosition().y, transform->GetLocalPosition().z));
+	m_rigidBody->GetCollisonObj()->setActivationState(DISABLE_DEACTIVATION);
+	//btTransform& trans = btBody->getWorldTransform();
+	////剛体の位置を更新。
+	//trans.setOrigin(btVector3(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z));
 	//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
-}
-/*!
-* @brief	死亡したことを通知。
-*/
-void CCharacterController::RemoveRigidBoby()
-{
-	m_rigidBody.reset(nullptr);
-	//PhysicsWorld::Instance()->RemoveRigidBody(m_rigidBody.get());
 }

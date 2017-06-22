@@ -128,9 +128,19 @@ namespace fbPhysicsCallback
 				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 			}
 
+			if (hitObjectTmp->GetCollisionObj()->getUserIndex() == BIT(3)) {
+				OutputDebugString("Enemyと衝突。");
+			}
+			
 			//hitオブジェクトがある
 			if (hitObjectTmp)
 			{
+				GameObject* enemy = INSTANCE(GameObjectManager)->FindObject("EnemyProt");
+
+				if (enemy == hitObjectTmp->gameObject) {
+					OutputDebugString("Enemyと衝突。");
+				}
+
 				//属性が一致するか？マスクをとる
 				if ((attribute & hitObjectTmp->GetCollisonObj()->getUserIndex()) != 0)
 				{

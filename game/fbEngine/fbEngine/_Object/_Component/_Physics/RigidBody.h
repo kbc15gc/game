@@ -12,10 +12,22 @@ public:
 	void LateUpdate()override;
 	void Release();
 	//void Create(RigidBodyInfo& rbInfo);
-	void Create(float mass,Collider* coll, int id, Vector3 inertia = Vector3::zero,Vector3 off = Vector3::zero);
+	// コリジョン生成関数。
+	// 引数：	質量。
+	//			形状。
+	//			コリジョン属性。
+	//			
+	//			差分。
+	//			生成時にワールドに登録するか(登録した瞬間のTransformの値でAABBのバウンディングボックスが生成される)。
+	void Create(float mass,Collider* coll, int id, Vector3 inertia = Vector3::zero,Vector3 off = Vector3::zero, bool isAddWorld = true);
 	void SetGravity(Vector3 set);
 	void SetGravity(btVector3& set);
 	void SetGravity(float x, float y, float z);
+
+	// ワールドに登録。
+	void _AddWorldSubClass()override;
+	// ワールドから削除。
+	void _RemoveWorldSubClass()override;
 private:
 	btDefaultMotionState*	myMotionState;	//モーションステート。
 };

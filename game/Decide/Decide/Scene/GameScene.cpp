@@ -22,6 +22,9 @@
 #include "GameObject\Village\ItemManager.h"
 #include "GameObject\HistoryChip\Chips.h"
 
+#include "ThirdPersonCamera.h"
+#include "FreeCamera.h"
+
 ImageObject* g_depth;
 
 void GameScene::Start()
@@ -53,6 +56,14 @@ void GameScene::Start()
 
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
+
+	//ふかんカメラの生成。
+	INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
+
+	//フリーカメラの生成。
+	INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
+
+
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadItemData();

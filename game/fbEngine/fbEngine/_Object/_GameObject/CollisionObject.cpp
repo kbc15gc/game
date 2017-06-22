@@ -1,11 +1,10 @@
 #include"fbstdafx.h"
 #include "CollisionObject.h"
 
-void CollisionObject::Initialize(int ID, Vector3 size)
+void CollisionObject::Create(int ID, Vector3 size,bool isAddWorld)
 {
-	transform->SetLocalScale(Vector3(size.x, size.y, size.z));
-	_Shape->Create(Vector3(size.x, size.y, size.z));
-	_Coll->Create(_Shape,ID);
+	_Shape->Create(size);
+	_Coll->Create(_Shape,ID,isAddWorld);
 }
 
 void CollisionObject::Awake()

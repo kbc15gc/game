@@ -7,9 +7,13 @@ class CollisionObject:public GameObject
 {
 public:
 	CollisionObject(char* name) :GameObject(name) {}
-	void Initialize(int ID, Vector3 size);
+	void Create(int ID, Vector3 size, bool isAddWorld = true);
 	void Awake()override;
 	void Update()override;
+
+	inline GostCollision* GetCollision() const{
+		return _Coll;
+	}
 private:
 	BoxCollider* _Shape;
 	GostCollision* _Coll;

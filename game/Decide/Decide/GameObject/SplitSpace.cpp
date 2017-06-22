@@ -3,18 +3,69 @@
 #include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
 #include "fbEngine\_Object\_Component\_Physics\GostCollision.h"
 #include "GameSystem.h"
-#include "fbEngine\_Object\_GameObject\CollisionObject.h"
+#include "SpaceCollisionObject.h"
 
-void SplitSpace::Split(const SkinModelData* data,const Transform& transform, int x, int y, int z) {
+const int SplitSpace::_defaultAttr = static_cast<int>(fbCollisionAttributeE::ALL);
+
+void SplitSpace::Awake() {
+	// 隣接要素を列挙。
+	_AdjacentIndex[Space::Up] = Vector3::down;
+	_AdjacentIndex[Space::Down] = Vector3::up;
+	_AdjacentIndex[Space::Right] = Vector3::right;
+	_AdjacentIndex[Space::Left] = Vector3::left;
+	_AdjacentIndex[Space::Front] = Vector3::front;
+	_AdjacentIndex[Space::Back] = Vector3::back;
+
+	_AdjacentIndex[Space::RightUp] = Vector3::down + Vector3::right;
+	_AdjacentIndex[Space::RightDown] = Vector3::up + Vector3::right;
+	_AdjacentIndex[Space::LeftUp] = Vector3::down + Vector3::left;
+	_AdjacentIndex[Space::LeftDown] = Vector3::up + Vector3::left;
+
+	_AdjacentIndex[Space::RightUpFront] = _AdjacentIndex[Space::RightUp] + Vector3::front;
+	_AdjacentIndex[Space::RightDownFront] = _AdjacentIndex[Space::RightDown] + Vector3::front;
+	_AdjacentIndex[Space::LeftUpFront] = _AdjacentIndex[Space::LeftUp] + Vector3::front;
+	_AdjacentIndex[Space::LeftDownFront] = _AdjacentIndex[Space::LeftDown] + Vector3::front;
+	_AdjacentIndex[Space::RightUpBack] = _AdjacentIndex[Space::RightUp] + Vector3::back;
+	_AdjacentIndex[Space::RightDownBack] = _AdjacentIndex[Space::RightDown] + Vector3::back;
+	_AdjacentIndex[Space::LeftUpBack] = _AdjacentIndex[Space::LeftUp] + Vector3::back;
+	_AdjacentIndex[Space::LeftDownBack] = _AdjacentIndex[Space::LeftDown] + Vector3::back;
+}
+
+void SplitSpace::Update() {
+	SpaceCollisionObject* playerHitSpace = nullptr;	// プレイヤーと衝突している空間オブジェクト。
+	for (auto& y : _SpaceCollisions) {
+		for (auto& x : y) {
+			for (auto z : x) {
+				if (z) {
+					z->UpdateActiveSpace();
+					if (z->GetisHitPlayer()) {
+						playerHitSpace = z;
+					}
+				}
+			}
+		}
+	}
+
+	// アクティブ化した空間と隣接する空間もアクティブ化。
+	if (playerHitSpace) {
+		//playerHitSpace->_EnableObjectsAdjacent();
+	}
+}
+
+void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, int y, int z, int attr) {
 	if (data == nullptr) {
 		abort();
 		// モデルデータがnull。
 	}
 
-	CreateSplitBox(CreateSpaceBox(*data, _unSplitSpaceSize),transform,x,y,z);
+	_splitX = x;
+	_splitY = y;
+	_splitZ = z;
+
+	CreateSplitBox(CreateSpaceBox(*data,*transform, _unSplitSpaceSize),transform,x,y,z,attr);
 }
 
-const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, Vector3& size) {
+const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Transform& transform,Vector3& size) {
 	float minX,minY,minZ,maxX,maxY,maxZ;	// 頂点の最小位置と最大位置(モデルを内包できるボックスを定義するので、要素ごとに最小値と最大値を求める)。
 	minX = minY = minZ = FLT_MAX;
 	maxX = maxY = maxZ = 0.0f;
@@ -52,25 +103,31 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, Vector3& si
 			// 頂点すべてを参照する。
 
 			localPosition = reinterpret_cast<D3DXVECTOR3*>(pData + offset);	// 各頂点データの先頭から位置情報の入ったデータまで差分を加算。
-			if (localPosition->x < minX) {
-				minX = localPosition->x;
+			D3DXVECTOR4 worldPos;
+
+			// 頂点座標はローカルポジションなのでワールド座標に変換。
+			D3DXMATRIX mat = transform.GetWorldMatrix();
+			D3DXVec3Transform(&worldPos, localPosition, &mat);
+
+			if (worldPos.x < minX) {
+				minX = worldPos.x;
 			}
-			else if (localPosition->x > maxX) {
-				maxX = localPosition->x;
+			else if (worldPos.x > maxX) {
+				maxX = worldPos.x;
 			}
 
-			if (localPosition->y < minY) {
-				minY = localPosition->y;
+			if (worldPos.y < minY) {
+				minY = worldPos.y;
 			}
-			else if (localPosition->y > maxY) {
-				maxY = localPosition->y;
+			else if (worldPos.y > maxY) {
+				maxY = worldPos.y;
 			}
 
-			if (localPosition->z < minZ) {
-				minZ = localPosition->z;
+			if (worldPos.z < minZ) {
+				minZ = worldPos.z;
 			}
-			else if (localPosition->z > maxZ) {
-				maxZ = localPosition->z;
+			else if (worldPos.z > maxZ) {
+				maxZ = worldPos.z;
 			}
 
 			pData += stride;	// 1頂点分ポインタを進める。
@@ -83,27 +140,89 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, Vector3& si
 	return size;
 }
 
-void SplitSpace::CreateSplitBox(const Vector3& size,const Transform& transform, int x, int y, int z) {
+void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x, int y, int z,int attr) {
 	if (x <= 0 || y <= 0 || z <= 0) {
 		abort();
 		// 分割数に0より小さい値が設定された。
 	}
+
+	Vector3 WorkSize = Vector3(size.x / static_cast<float>(x), size.y / static_cast<float>(y), size.z / static_cast<float>(z));
+	//_splitSpaceSize = Vector3(size.x / static_cast<float>(x), size.y / static_cast<float>(y), size.z / static_cast<float>(z));
+
+	_splitSpaceSize = WorkSize/* + (WorkSize * 0.1f)*/;	// 空間コリジョン同士の間に隙間ができないよう、サイズを少し拡大する。
+
+	// 三次元配列分メモリ領域確保。
+	_SpaceCollisions = vector<vector<vector<SpaceCollisionObject*>>>(y, vector<vector<SpaceCollisionObject*>>(x, vector<SpaceCollisionObject*>(z,nullptr)));
+	static int test = 0;
 
 	for (int idxX = 0; idxX < x; idxX++) {
 		for (int idxY = 0; idxY < y; idxY++) {
 			for (int idxZ = 0; idxZ < z; idxZ++) {
 				// 分割数分のコリジョン生成。
 
-				CollisionObject* box = INSTANCE(GameObjectManager)->AddNew<CollisionObject>("SpaceBox", 1);
-				Vector3 splitSize(size.x / x, size.y / y, size.z / z);
-				box->Initialize(Collision_ID::SPACE, splitSize);
+				SpaceCollisionObject* box = INSTANCE(GameObjectManager)->AddNew<SpaceCollisionObject>("SpaceBox", 10);
 				// 元の位置情報を中心として分割できるようポジション調整。
-				box->transform->SetPosition(transform.GetPosition() - (size * 0.5f) + Vector3((idxX * (splitSize.x/* + 1.0f*/)) + (splitSize.x * 0.5f), (idxY * (splitSize.y/* + 1.0f*/)) + (splitSize.y * 0.5f), (idxZ * (splitSize.z/* + 1.0f*/)) + (splitSize.z * 0.5f)));
-				box->transform->SetRotation(transform.GetRotation());
-				box->transform->SetScale(transform.GetScale());
+				Vector3 pos = Vector3::zero;
+				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * WorkSize.x) + (WorkSize.x * 0.5f);
+				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * WorkSize.y) + (WorkSize.y * 0.5f);
+				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * WorkSize.z) + (WorkSize.z * 0.5f);
 
-				_SpaceCollisions.push_back(box);
+				box->Create(pos,Quaternion::Identity, _splitSpaceSize,Collision_ID::SPACE, transform,attr);
+
+				box->_Right = pos.x + WorkSize.x * 0.5f;
+				box->_Left = pos.x + -WorkSize.x * 0.5f;
+				box->_Up = pos.y + WorkSize.y * 0.5f;
+				box->_Down = pos.y + -WorkSize.y * 0.5f;
+				box->_Front = pos.z + WorkSize.z * 0.5f;
+				box->_Back = pos.z + -WorkSize.z * 0.5f;
+
+				_SpaceCollisions[idxY][idxX][idxZ] = box;
+
+				box->test = test;
+				test++;
+			}
+		}
+	}
+
+	//_AdjacentSpace();
+}
+
+void SplitSpace::_AdjacentSpace() {
+	for (int y = 0; y < _splitY; y++) {
+		for (int x = 0; x < _splitX; x++) {
+			for (int z = 0; z < _splitZ; z++) {
+				for (int idx = 0; idx < Space::Max; idx++) {
+					int workX = x + static_cast<int>(_AdjacentIndex[idx].x);
+					int workY = y + static_cast<int>(_AdjacentIndex[idx].y);
+					int workZ = z + static_cast<int>(_AdjacentIndex[idx].z);
+
+					if (workX >= 0 && workX < _splitX && workY >= 0 && workY < _splitY && workZ >= 0 && workZ < _splitZ) {
+						// 配列外にアクセスしていない。
+						_SpaceCollisions[y][x][z]->AddAdjacentSpaceObject(_SpaceCollisions[workY][workX][workZ]);
+					}
+				}
 			}
 		}
 	}
 }
+
+void SplitSpace::AddObjectHitSpace(const GameObject& object) {
+	for (auto& y : _SpaceCollisions) {
+		for (auto& x : y) {
+			for (auto z : x) {
+				z->AddObjectHitSpace(const_cast<GameObject&>(object));
+			}
+		}
+	}
+}
+
+void SplitSpace::RegistrationObject() {
+	for (auto& y : _SpaceCollisions) {
+		for (auto& x : y) {
+			for (auto z : x) {
+				z->RegistrationObject();
+			}
+		}
+	}
+}
+

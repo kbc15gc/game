@@ -143,10 +143,15 @@ void Player::Start()
 	//レベル初期化
 	_Level = 1;
 
+	//// とりあえずテスト。
+	//int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK);
+	//// 空間分割コリジョン生成。
+	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(GetComponent<SkinModel>()->GetModelData(), *transform, 3, 1, 3, attr);
 
 	// とりあえずテスト。
 	// 空間分割コリジョン生成。
 	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
+
 }
 
 void Player::Update()
@@ -266,7 +271,10 @@ void Player::AnimationControl()
 			else if (_NextAttackAnimNo != AnimationNo::AnimationInvalid)
 			{
 				//連撃
-				PlayAnimation(_NextAttackAnimNo, 0.1f,1);
+				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
+				//_Anim->AddAnimationQueue(info);
+				//アニメーションキューに追加。
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
