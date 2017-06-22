@@ -354,7 +354,7 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 			hitNormalTmp.Set(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
 			//上方向と衝突点の法線のなす角度を求める。
 			float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
-			if (angle >= 3.1415 * 0.45f		//地面の傾斜が54度以上なので壁とみなす。
+			if (angle >= 3.1415 * 0.3f		//地面の傾斜が54度以上なので壁とみなす。
 				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER	//もしくはコリジョン属性がキャラクタなので壁とみなす。
 				) {
 				isHit = true;

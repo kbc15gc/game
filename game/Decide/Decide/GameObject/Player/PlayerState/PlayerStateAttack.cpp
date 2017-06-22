@@ -15,7 +15,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		AttackCollisionParameter attackparam1;
 		attackparam1.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam1.rot = Quaternion::Identity;
-		attackparam1.scale = Vector3(2.0f,2.0f,2.0f);
+		attackparam1.scale = Vector3(1.0f,1.0f,1.0f);
 		attackparam1.attackframe = 10.0f;
 		attackparam1.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam1);
@@ -25,7 +25,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		AttackCollisionParameter attackparam2;
 		attackparam2.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam2.rot = Quaternion::Identity;
-		attackparam2.scale = Vector3(2.0f, 2.0f, 2.0f);
+		attackparam2.scale = Vector3(1.0f, 1.0f, 1.0f);
 		attackparam2.attackframe = 10;
 		attackparam2.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam2);
@@ -35,7 +35,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		AttackCollisionParameter attackparam3;
 		attackparam3.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam3.rot = Quaternion::Identity;
-		attackparam3.scale = Vector3(2.0f, 2.0f, 2.0f);
+		attackparam3.scale = Vector3(1.0f, 1.0f, 1.0f);
 		attackparam3.attackframe = 25;
 		attackparam3.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam3);

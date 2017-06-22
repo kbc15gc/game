@@ -153,7 +153,7 @@ void Player::Start()
 void Player::Update()
 {
 	//ライフが0になると死亡する。
-	if (_PlayerParam)
+	if (_PlayerParam != NULL)
 	{
 		if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
 		{
@@ -163,7 +163,7 @@ void Player::Update()
 	/*
 	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
 	*/
-	if (transform)
+	if (transform != NULL)
 	{
 		if (transform->GetLocalPosition().y < 48.5f)
 		{
