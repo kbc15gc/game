@@ -28,7 +28,7 @@ public:
 	/**
 	* 更新.
 	*/
-	void Update()override;
+	void UpdateSubClass()override;
 
 	/**
 	* 補間レートを取得.
@@ -90,7 +90,6 @@ private:
 
 	//切り替わった瞬間のカメラの視点.
 	Vector3 _CameraPos = Vector3::zero;
-
 
 	Camera* _PlayerCamera = nullptr;
 };
