@@ -78,9 +78,10 @@ void PlayerCamera::Update()
 	{
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
-
-		_toPosition.Subtract(transform->GetPosition(), _PlayerCamera->GetTarget());
-		Pint = _toPosition.Length();
+		
+		Vector3 toPosition = Vector3::zero;
+		toPosition.Subtract(transform->GetPosition(), _PlayerCamera->GetTarget());
+		Pint = toPosition.Length();
 		Pint = 3.0f;
 
 	}
@@ -91,12 +92,7 @@ void PlayerCamera::Update()
 		Pint = min(3.0f, CameraToHistory.Length());
 	}
 
-	_toPosition.Subtract(transform->GetPosition(), _PlayerCamera->GetTarget());
-
-	float Len = _toPosition.Length();
-	Len = 3;
-
-	INSTANCE(SceneManager)->GetDepthofField().SetPint(Len * 1000);
+	INSTANCE(SceneManager)->GetDepthofField().SetPint(Pint * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 
