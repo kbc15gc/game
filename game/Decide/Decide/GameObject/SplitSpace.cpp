@@ -169,7 +169,7 @@ void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x
 		}
 	}
 
-	//_AdjacentSpace();
+	_AdjacentSpace();
 }
 
 void SplitSpace::_AdjacentSpace() {

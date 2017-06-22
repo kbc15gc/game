@@ -45,7 +45,7 @@ void Ground::Awake()
 
 void Ground::Start() {
 	// とりあえずテスト。
-	int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK)/* & ~(Collision_ID::GROUND)*/;
+	int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK) & ~(Collision_ID::GROUND);
 	// 空間分割コリジョン生成。
 	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 10)->Split(GetComponent<SkinModel>()->GetModelData(), transform, 5, 1, 1, attr);
 }
