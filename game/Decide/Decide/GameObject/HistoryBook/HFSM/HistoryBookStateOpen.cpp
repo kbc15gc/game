@@ -22,7 +22,7 @@ void HistoryBookStateOpen::Update()
 	if (!_HistoryBook->GetIsPlay())
 	{
 		//開ききるアニメーションの再生が終わったら開いた状態に変更。
-		//_HistoryBook->ChangeState(HistoryBook::StateCodeE::Open);
+		_HistoryBook->ChangeState(HistoryBook::StateCodeE::Idol);
 	}
 }
 

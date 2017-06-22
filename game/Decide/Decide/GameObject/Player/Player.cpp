@@ -132,7 +132,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(400, 69, -1000));
+	transform->SetLocalPosition(Vector3(378, 69, -1286));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -148,41 +148,40 @@ void Player::Start()
 	//// 空間分割コリジョン生成。
 	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(GetComponent<SkinModel>()->GetModelData(), *transform, 3, 1, 3, attr);
 
+	// とりあえずテスト。
+	// 空間分割コリジョン生成。
+	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
+
 }
 
 void Player::Update()
 {
-	//ライフが0になると死亡する。
-	if (_PlayerParam != NULL)
-	{
-		if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
-		{
-			ChangeState(State::Death);
-		}
-	}
-	/*
-	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
-	*/
-	if (transform != NULL)
-	{
-		if (transform->GetLocalPosition().y < 48.5f)
-		{
-			_PlayerParam->SubParam(CharacterParameter::HP, 2);
-			_HPBar->SubValue(2);
-		}
-	}
-	//HPバーの更新
-	_HPBar->Update();
-	//MPバーの更新
-	_MPBar->Update();
-	
-	//アニメーションコントロール
-	AnimationControl();
 	if (_CurrentState != NULL)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
+	//ライフが0になると死亡する。
+	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
+	{
+		ChangeState(State::Death);
+	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (transform->GetLocalPosition().y < 48.5f)
+	{
+		_PlayerParam->SubParam(CharacterParameter::HP, 2);
+		_HPBar->SubValue(2);
+	}
+	//HPバーの更新
+	_HPBar->Update();
+	//MPバーの更新
+	_MPBar->Update();
+	//アニメーションコントロール
+	AnimationControl();
+
 	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
 	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
 	// ※都合が悪いのでとりあえずコメントアウト。
@@ -275,7 +274,7 @@ void Player::AnimationControl()
 				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
 				//_Anim->AddAnimationQueue(info);
 				//アニメーションキューに追加。
-				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.55f, 1));
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}

@@ -14,6 +14,7 @@ public:
 	void Render()const;
 	void PostRender()const;
 	void ImageRender()const;
+	void OnDestroy()const;	// アタッチしているGameObjectが削除リストに積まれたら呼ばれる処理。
 
 	//コンポーネント型のみを追加したい・・・。
 	template<class T>

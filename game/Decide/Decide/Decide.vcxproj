@@ -174,7 +174,9 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.h" />
+    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h" />
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.h" />
     <ClInclude Include="GameObject\HistoryBook\HistoryBook.h" />
@@ -188,11 +190,9 @@
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
-    <ClInclude Include="GameObject\Village\HistoryButton.h" />
     <ClInclude Include="GameObject\Village\HistoryInfo.h" />
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
-    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
@@ -201,6 +201,7 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Ocean.h" />
+    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
@@ -227,7 +228,9 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.cpp" />
+    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.cpp" />
     <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp" />
@@ -240,10 +243,8 @@
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
@@ -251,6 +252,7 @@
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Ocean.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">

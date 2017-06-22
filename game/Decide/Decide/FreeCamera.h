@@ -1,13 +1,13 @@
 #pragma once
-#include "fbEngine\_Object\_GameObject\GameObject.h"
+#include "GameCamera.h"
 
 //フリーカメラクラスの定義。
-class FreeCamera : public GameObject
+class FreeCamera : public GameCamera
 {
 public:
 	//コンストラクタ。
 	FreeCamera(const char* name) :
-		GameObject(name)
+		GameCamera(name)
 	{
 	}
 
@@ -30,20 +30,11 @@ private:
 	//このカメラをメインカメラに切り替える。
 	void SetMainCamera()
 	{
-		//ふかんカメラにする前のカメラをゲット。
-		_GameCamera = INSTANCE(GameObjectManager)->mainCamera;
-
-		//ふかんカメラに切り替え。
-		INSTANCE(GameObjectManager)->mainCamera = _FreeCamera;
-
-		_FreeCameraFlag = true;
+		
 	}
 private:
 	//カメラコンポーネント
 	Camera* _FreeCamera;
-
-	//ゲームカメラ。
-	Camera* _GameCamera = nullptr;
 
 	bool _FreeCameraFlag = false;
 
