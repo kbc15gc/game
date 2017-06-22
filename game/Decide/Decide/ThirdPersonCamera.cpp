@@ -6,6 +6,7 @@
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
 {
+	
 }
 
 void ThirdPersonCamera::Awake()
@@ -14,8 +15,6 @@ void ThirdPersonCamera::Awake()
 	_ThirdPersonCamera = AddComponent<Camera>();
 	_ThirdPersonCamera->SetNear(0.01f);
 	_ThirdPersonCamera->SetFar(10000.0f);
-
-	SetMainCamera();
 
 }
 
@@ -31,22 +30,22 @@ void ThirdPersonCamera::Start()
 
 void ThirdPersonCamera::Update()
 {
-	if ((KeyBoardInput->isPressed(DIK_C)))
+	if ((KeyBoardInput->isPush(DIK_C)))
 	{
 		if (_ThirdPersonCameraFlag == false)
 		{
-			//ふかんカメラからゲームカメラに戻す処理。
-			INSTANCE(GameObjectManager)->mainCamera = _ThirdPersonCamera;
+			_Camera = INSTANCE(GameObjectManager)->mainCamera;
 
+			INSTANCE(GameObjectManager)->mainCamera = _ThirdPersonCamera;
+			
 			_ThirdPersonCameraFlag = !_ThirdPersonCameraFlag;
 		}
 		else
 		{
-			INSTANCE(GameObjectManager)->mainCamera = _GameCamera;
-
+			INSTANCE(GameObjectManager)->mainCamera = _Camera;
+			//SetCamera(GetCamera());
 			_ThirdPersonCameraFlag = !_ThirdPersonCameraFlag;
 		}
-		
 	}
 }
 

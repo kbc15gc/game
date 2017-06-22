@@ -1,165 +1,86 @@
+/**
+* 歴史変更メニュー画面クラスの実装.
+*/
 #include"stdafx.h"
 #include "HistoryMenu.h"
-#include "fbEngine\_Object\_GameObject\Button.h"
-#include "fbEngine\_Object\_GameObject\TextObject.h"
-#include "GameObject\Village\HistoryInfo.h"
-#include "GameObject\Village\HistoryManager.h"
-#include "GameObject\Village\HistoryButton.h"
-#include "fbEngine\_Object\_GameObject\ImageObject.h"
 
+#include "fbEngine\_Object\_GameObject\TextObject.h"
+#include"GameObject\HistoryBook\HistoryBook.h"
+
+/**
+* 無名空間.
+*/
 namespace
 {
-	Vector3 Chip1 = Vector3(250, 200, 0.0f);
-	Vector3 Chip2 = Vector3(400, 200, 0.0f);
-	Vector3 Chip3 = Vector3(550, 200, 0.0f);
+
+	/** 場所名. */
+	string LocationNameList[(int)HistoryMenu::LocationCodeE::LocationNum] =
+	{
+		"始まりの集落",
+		"狩猟の村",
+		"繁栄の町",
+	};
+
 }
 
-HistoryMenu::HistoryMenu(const char * name) :
-	GameObject(name)
-{
-
-}
-
-HistoryMenu::~HistoryMenu()
-{
-}
-
+/**
+* 初期化.
+*/
 void HistoryMenu::Start()
 {
-	Vector2 hasi(250, 200);
-	Vector2 interval(150, 100);
-	//メニューボタンとかテキスト生成
-	{
-		FOR(continent, CONTINENT_NUM)
-		{
-			//高さ計算
-			float height = interval.y * (continent + 1) + hasi.y / 2;
 
-			//大陸のIDのテキスト
-			TextObject* ContinentIDText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ContinentID" ,_Priority);
-			wchar_t id[20];
-			Support::ToString(continent, id);
-			ContinentIDText->Initialize(id, 80.0f, Color::dokaben, fbSprite::SpriteEffectE::NONE, STRING(fbText::TextStyleE::NewDokabenFont));
-			ContinentIDText->transform->SetLocalPosition(Vector3(150.0f, height, 0.0f));
-			_MenuObjects.push_back(ContinentIDText);
+	_LocationNameRender = INSTANCE(GameObjectManager)->AddNew<TextObject>("LocationNameRender", _Priority);
 
-			FOR(history, HISTORY_CHIP_NUM)
-			{
-				//ボタン
-				HistoryMenuButton* b = INSTANCE(GameObjectManager)->AddNew<HistoryMenuButton>("HistoryMenuButton", _Priority);
-				b->SetMenuButtonFlag(true);//メニューボタンだよ。
-				_Buttons[continent][history] = b;
-				b->SetInfo(continent, history);
-				Vector3 pos = Vector3(interval.x * (history + 1) + hasi.x / 2, height, 0.0f);
-				b->transform->SetLocalPosition(pos);
-				_MenuObjects.push_back(b);
-			}
-		}
-		//選択ボタン
-		_SelectImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BoxImage", _Priority);
-		_SelectImage->SetTexture(LOADTEXTURE("cursor.png"));
-		_SelectImage->SetPivot(0.5, 1.0);
-		_SelectImage->transform->SetLocalPosition(Vector3(hasi.x, hasi.y, 0.0f));
-		_SelectImage->transform->SetScale(Vector3::one);
-		_SelectImage->SetActive(false);
-		_MenuNomber = MenuNomber::One;
-	}
-	_SetMenuEnabel(false);
+	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::ＭＳ_明朝));
+	
+
+	//座標を設定.
+	_LocationNameRender->transform->SetLocalPosition(Vector3(g_WindowSize.x / 2.0f, 50.0f, 0));
+	//表示名を設定.
+	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
+
+	//歴史書のポインタを取得.
+	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+
+	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 }
 
+/**
+* 更新.
+*/
 void HistoryMenu::Update()
 {
-	//Eキーの押下
-	if (KeyBoardInput->isPush(DIK_E))
+	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Idol)
 	{
-		//フラグ反転
-		_SetMenuEnabel(!_MenuEnabel);
-		if (_MenuEnabel)
-		{
-			//メニューを開く
-			_OpenMenu();
-		}
+		//表示.
+		EnableUpdate();
 	}
-	//メニューを開いているときの処理。
-	if (_MenuEnabel)
+	else
 	{
-		//チップをセットする場所を設定する。
-		SelectMenuButton();
-	}
-	
-}
-
-void HistoryMenu::_SetMenuEnabel(const bool & enabel)
-{
-	_MenuEnabel = enabel;
-	//メニューのオブジェクトすべてに適応する
-	for each (GameObject* o in _MenuObjects)
-	{
-		o->SetActive(_MenuEnabel);
-	}
-	_SelectImage->SetActive(_MenuEnabel);
-}
-
-void HistoryMenu::_OpenMenu()
-{
-	//歴史ボタン全部分ループ
-	FOR(conti, CONTINENT_NUM)
-	{
-		//大陸の歴史情報取得
-		HistoryInfo* h = INSTANCE(HistoryManager)->GetHistory(conti);
-		FOR(chip, HISTORY_CHIP_NUM)
-		{
-			//ボタンに読み込んだ情報割り当て。
-			_Buttons[conti][chip]->SetChipID(h->Slot[chip]);
-		}
+		//非表示.
+		_LocationNameRender->SetActive(false);
 	}
 }
 
-void HistoryMenu::SelectMenuButton()
+/**
+* 表示中の更新.
+*/
+void HistoryMenu::EnableUpdate()
 {
-	int select = (int)_MenuNomber;
-	//次のページへ。
-	if (KeyBoardInput->isPush(DIK_RIGHT) && _MenuNomber != MenuNomber::Three)
-	{
-		select++;
-	}
-	//前のページへ。
-	else if (KeyBoardInput->isPush(DIK_LEFT) && _MenuNomber != MenuNomber::One)
-	{
-		select--;
-	}
-	//移動した分を渡す。
-	_MenuNomber = (MenuNomber)select;
+	//表示.
+	_LocationNameRender->SetActive(true);
 
-	//各メニューナンバーの座標。
-	switch (_MenuNomber)
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
-		//1番目
-	case MenuNomber::One :
-		_SelectImage->transform->SetLocalPosition(Chip1);
-		break;
-		//2番目
-	case MenuNomber::Two:
-		_SelectImage->transform->SetLocalPosition(Chip2);
-		break;
-		//3番目
-	case MenuNomber::Three:
-		_SelectImage->transform->SetLocalPosition(Chip3);
-		break;
-	default:
-		break;
+		//左トリガー.
+		_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
-}
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+	{
+		//右トリガー.
+		_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+	}
 
-void HistoryMenu::SetMenuSelectChip(ChipID chipid)
-{
-	static int chip = 0;		//チップ
-	static int continent = 0;	//大陸
-	
-	//ボタンに読み込んだ情報割り当て。
-	//セットできたなら。
-	if (INSTANCE(HistoryManager)->SetHistoryChip(continent, _MenuNomber, (const int)chipid))
-	{
-		_Buttons[continent][_MenuNomber]->SetChipID(chipid);
-	}
+	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
+
 }

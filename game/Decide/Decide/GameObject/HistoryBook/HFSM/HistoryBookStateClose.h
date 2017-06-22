@@ -1,29 +1,28 @@
 /**
-* 歴史書の待機状態クラスの定義.
+* 歴史書の閉じる状態クラスの定義.
 */
 #pragma once
 
 #include "HistoryBookState.h"
 
-//#include"GameCamera.h"
-#include "PlayerCamera.h"
+class Player;
 
 /**
-* 歴史書の待機状態クラス.
+* 歴史書の閉じる状態クラス.
 */
-class HistoryBookStateIdol : public IHistoryBookState
+class HistoryBookStateClose : public IHistoryBookState
 {
 public:
 
 	/**
 	* コンストラクタ.
 	*/
-	HistoryBookStateIdol(HistoryBook* historybook);
+	HistoryBookStateClose(HistoryBook* historybook);
 
 	/**
 	* デストラクタ.
 	*/
-	~HistoryBookStateIdol()
+	~HistoryBookStateClose()
 	{
 	}
 
@@ -44,9 +43,9 @@ public:
 
 private:
 
-	/** ゲームカメラのポインタ. */
-	PlayerCamera* _PlayerCamera = nullptr;
-	/** プレイヤーのポインタ. */
+	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;
+	/** プレイヤーの正面方向. */
+	Vector3 _PlayerFoward = Vector3::zero;
 
 };

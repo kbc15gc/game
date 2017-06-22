@@ -4,6 +4,9 @@
 #pragma once
 
 #include "HistoryBookState.h"
+#include "GameCamera.h"
+
+class Player;
 
 /**
 * 歴史書の未使用状態クラス.
@@ -15,10 +18,7 @@ public:
 	/**
 	* コンストラクタ.
 	*/
-	HistoryBookStateUnused(HistoryBook* historybook) :
-		IHistoryBookState(historybook)
-	{
-	}
+	HistoryBookStateUnused(HistoryBook* historybook);
 
 	/**
 	* デストラクタ.
@@ -41,5 +41,15 @@ public:
 	* 他の状態に変わるとき呼ばれる.
 	*/
 	void Exit()override;
+
+private:
+
+	/** ゲームカメラクラスのポインタ. */
+	GameCamera* _GameCamera = nullptr;
+
+	/** プレイヤークラスのポインタ. */
+	Player* _Player = nullptr;
+	/** プレイヤーの正面方向. */
+	Vector3 _PlayerFoward = Vector3::zero;
 
 };
