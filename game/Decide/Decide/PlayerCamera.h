@@ -91,7 +91,6 @@ private:
 	//Ø‚è‘Ö‚í‚Á‚½uŠÔ‚ÌƒJƒƒ‰‚Ì‹“_.
 	Vector3 _CameraPos = Vector3::zero;
 
-	Vector3 _toPosition = Vector3::zero;
 
 	Camera* _PlayerCamera = nullptr;
 };
