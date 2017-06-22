@@ -201,6 +201,7 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Ocean.h" />
+    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Ocean.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">

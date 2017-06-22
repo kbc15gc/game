@@ -120,6 +120,9 @@
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="FreeCamera.cpp" />
+    <ClCompile Include="ThirdPersonCamera.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -252,6 +255,9 @@
     <ClInclude Include="GameObject\SpaceCollisionObject.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="FreeCamera.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
+    <ClInclude Include="PlayerCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

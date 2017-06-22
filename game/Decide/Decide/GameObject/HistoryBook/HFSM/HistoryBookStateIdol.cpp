@@ -13,7 +13,7 @@
 HistoryBookStateIdol::HistoryBookStateIdol(HistoryBook * historybook) :
 	IHistoryBookState(historybook)
 {
-	_GameCamera = (GameCamera*)INSTANCE(GameObjectManager)->FindObject("GameCamera");
+	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
@@ -32,11 +32,11 @@ void HistoryBookStateIdol::Entry()
 */
 void HistoryBookStateIdol::Update()
 {
-	if (_GameCamera->GetLerpRate() <= 0.2f)
+	if (_PlayerCamera->GetLerpRate() <= 0.2f)
 	{
 		_Player->SetEnable(false);
 	}
-	if (_GameCamera->GetLerpRate() == 0.0f)
+	if (_PlayerCamera->GetLerpRate() == 0.0f)
 	{
 		_HistoryBook->ChangeState(HistoryBook::StateCodeE::Open);
 	}
