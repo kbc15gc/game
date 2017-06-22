@@ -28,7 +28,7 @@ public:
 	/**
 	* 更新.
 	*/
-	void Update()override;
+	void UpdateSubClass()override;
 
 	/**
 	* 補間レートを取得.
@@ -92,6 +92,4 @@ private:
 	Vector3 _CameraPos = Vector3::zero;
 
 	Vector3 _toPosition = Vector3::zero;
-
-	Camera* _PlayerCamera = nullptr;
 };

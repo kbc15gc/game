@@ -7,7 +7,7 @@ GameObject* GameObjectManager::Add(GameObject* pAdd, int priority)
 {
 	GameObject* obj = pAdd;
 	_GameObjects.at(priority).push_back(obj);
-	obj->Awake();
+	/*obj->Awake();*/
 	return pAdd;
 }
 

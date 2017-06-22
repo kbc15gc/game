@@ -21,7 +21,7 @@ public:
 	void Start()override;
 
 	//XVB
-	void Update()override;
+	void UpdateSubClass()override;
 
 private:
 	//ˆÚ“®ŠÖ”
