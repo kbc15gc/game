@@ -310,4 +310,5 @@ const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
 
 ParameterBar::~ParameterBar()
 {
+	INSTANCE(GameObjectManager)->AddRemoveList(_Object);
 }

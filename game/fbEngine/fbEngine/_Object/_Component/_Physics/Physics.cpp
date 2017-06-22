@@ -59,22 +59,22 @@ void PhysicsWorld::Update()
 
 void PhysicsWorld::AddRigidBody(RigidBody * rb, short group, short mask)
 {
-	dynamicWorld->addRigidBody((btRigidBody*)rb->GetCollisonObj(),group,mask);
+	dynamicWorld->addRigidBody((btRigidBody*)rb->GetCollisionObj(),group,mask);
 }
 
 void PhysicsWorld::RemoveRigidBody(RigidBody* rb)
 {
-	dynamicWorld->removeRigidBody((btRigidBody*)rb->GetCollisonObj());
+	dynamicWorld->removeRigidBody((btRigidBody*)rb->GetCollisionObj());
 }
 
 void PhysicsWorld::AddCollision(Collision* coll, short group, short mask)
 {
-	dynamicWorld->addCollisionObject(coll->GetCollisonObj(),group,mask);
+	dynamicWorld->addCollisionObject(coll->GetCollisionObj(),group,mask);
 }
 
 void PhysicsWorld::RemoveCollision(Collision * coll)
 {
-	dynamicWorld->removeCollisionObject(coll->GetCollisonObj());
+	dynamicWorld->removeCollisionObject(coll->GetCollisionObj());
 }
 
 fbPhysicsCallback::ClosestRayResultCallback PhysicsWorld::ClosestRayTest(const Vector3& f, const Vector3& t, int attr)
@@ -108,7 +108,7 @@ bool PhysicsWorld::ContactPairTest(Collision* coll1, Collision* coll2, int attr)
 	fbPhysicsCallback::ClosestContactResultCallback callback;
 	callback.me = coll1;
 	callback.attribute = attr;
-	dynamicWorld->contactPairTest(coll1->GetCollisonObj(), coll2->GetCollisonObj(), callback);
+	dynamicWorld->contactPairTest(coll1->GetCollisionObj(), coll2->GetCollisionObj(), callback);
 	if (callback.hitObject) {
 		return true;
 	}
@@ -122,7 +122,7 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll, int attr) c
 	fbPhysicsCallback::ClosestContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;
-	dynamicWorld->contactTest(coll->GetCollisonObj(), callback);
+	dynamicWorld->contactTest(coll->GetCollisionObj(), callback);
 
 	return callback.hitObject;
 }
@@ -133,7 +133,7 @@ const vector<Collision*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vec
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;
-	dynamicWorld->contactTest(coll->GetCollisonObj(), callback);
+	dynamicWorld->contactTest(coll->GetCollisionObj(), callback);
 
 	HitCollisions = callback.hitObjects;
 	return HitCollisions;
@@ -141,7 +141,7 @@ const vector<Collision*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vec
 
 const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const Vector3 & s, const Vector3 & e, int attr) const
 {
-	fbPhysicsCallback::ClosestConvexResultCallback callback(s, attr, coll->GetCollisonObj());
+	fbPhysicsCallback::ClosestConvexResultCallback callback(s, attr, coll->GetCollisionObj());
 
 	btTransform start, end;
 	//‰Šú‰»
@@ -151,7 +151,7 @@ const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const V
 	start.setOrigin(btVector3(s.x, s.y, s.z));
 	end.setOrigin(btVector3(e.x, e.y, e.z));
 
-	dynamicWorld->convexSweepTest((const btConvexShape*)coll->GetCollisonObj()->getCollisionShape(), start, end, callback);
+	dynamicWorld->convexSweepTest((const btConvexShape*)coll->GetCollisionObj()->getCollisionShape(), start, end, callback);
 	return callback.hitObject;
 }
 

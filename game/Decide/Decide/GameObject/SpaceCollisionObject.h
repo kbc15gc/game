@@ -27,7 +27,12 @@ public:
 		_HitCollisions.clear();
 		if (GetCollision()) {
 			if (GetCollision()->GetCollisionObj()) {
-				_HitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), _HitCollisions, _attribute);
+				vector<Collision*> hitCollisions;
+				hitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), hitCollisions, _attribute);
+				
+				for (auto coll : hitCollisions) {
+					_HitCollisions.push_back(coll->GetCollisionObj_shared());
+				}
 			}
 		}
 	}
@@ -66,7 +71,7 @@ public:
 		_adjacentSpaceObjects.push_back(obj);
 	}
 private:
-	vector<Collision*> _HitCollisions;	// 衝突しているコリジョン。
+	vector<shared_ptr<btCollisionObject>> _HitCollisions;	// 衝突しているコリジョン。
 
 	vector<SpaceCollisionObject*> _adjacentSpaceObjects;		// 隣接する空間オブジェクト。
 	GameObject* _player = nullptr;
