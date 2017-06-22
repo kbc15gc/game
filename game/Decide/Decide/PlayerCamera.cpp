@@ -79,7 +79,7 @@ void PlayerCamera::Update()
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
 
-		_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
+		_toPosition.Subtract(transform->GetPosition(), _PlayerCamera->GetTarget());
 		Pint = _toPosition.Length();
 		Pint = 3.0f;
 
