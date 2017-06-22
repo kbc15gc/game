@@ -51,7 +51,7 @@ void Chips::Start()
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	//ヒストリーメニューセレクト検索
-	_HistoryMenuSelect = (HistoryMenuSelect*)INSTANCE(GameObjectManager)->FindObject("HistoryMenuSelect");
+	//_HistoryMenuSelect = (HistoryMenuSelect*)INSTANCE(GameObjectManager)->FindObject("HistoryMenuSelect");
 }
 
 void Chips::Update()
@@ -70,7 +70,7 @@ void Chips::Update()
 
 		//取得したチップをメニューにセット
 		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)_ChipID);
-		_HistoryMenuSelect->ChipSelect(_ChipID);
+		//_HistoryMenuSelect->ChipSelect(_ChipID);
 		//取得したらもういらないので削除
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}

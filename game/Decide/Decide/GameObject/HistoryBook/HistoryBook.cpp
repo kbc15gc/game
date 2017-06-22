@@ -8,14 +8,6 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "GameObject\Player\Player.h"
 
-namespace
-{
-
-	/** 歴史書の出現位置. 。*/
-	const Vector3 PLAYER_HALFHEIGHT(0.0f, 0.5f, 0.7f);
-
-}
-
 /**
 * コンストラクタ後の初期化.
 */
@@ -46,13 +38,10 @@ void HistoryBook::Start()
 	//状態リストを初期化.
 	_InitState();
 
-	transform->SetLocalPosition(PLAYER_HALFHEIGHT);
-	transform->SetLocalScale(Vector3::one);
-
 	//アニメーションの終了時間設定.
 	//-1.0fを設定しているのはアニメーションの再生時間が1秒未満.
 	double animationEndTime[(int)AnimationCodeE::AnimationNum];
-	animationEndTime[(int)AnimationCodeE::Idol] = 2.0f;		//待機アニメーション.
+	animationEndTime[(int)AnimationCodeE::CloseIdol] = 2.0f;		//待機アニメーション.
 
 	//各エンドタイムを設定.
 	for (int i = 0; i < (int)AnimationCodeE::AnimationNum; i++)
@@ -61,7 +50,7 @@ void HistoryBook::Start()
 	}
 
 	//アニメーションの初期化。
-	PlayAnimation(AnimationCodeE::Idol, 0.2f, 0);
+	PlayAnimation(AnimationCodeE::OpenIdol, 0.0f);
 
 	//本は見えないように設定。
 	_Model->enable = false;
@@ -78,9 +67,6 @@ void HistoryBook::Update()
 
 	//状態の更新。
 	_StateList[_NowState]->Update();
-
-	//トランスフォーム更新。
-	transform->UpdateTransform();
 }
 
 /**
@@ -105,12 +91,15 @@ void HistoryBook::PlayAnimation(AnimationCodeE animno, float interpolatetime, in
 void HistoryBook::_InitState()
 {
 	//未使用状態.
-	_StateList.push_back(new HistoryBookStateUnused(this));
+	_StateList.push_back(unique_ptr<HistoryBookStateUnused>(new HistoryBookStateUnused(this)));
 	//待機状態.
-	_StateList.push_back(new HistoryBookStateIdol(this));
+	_StateList.push_back(unique_ptr<HistoryBookStateIdol>(new HistoryBookStateIdol(this)));
+	//移動状態.
+	_StateList.push_back(unique_ptr<HistoryBookStateMove>(new HistoryBookStateMove(this)));
 	//開く状態状態.
-	_StateList.push_back(new HistoryBookStateOpen(this));
-
+	_StateList.push_back(unique_ptr<HistoryBookStateOpen>(new HistoryBookStateOpen(this)));
+	//閉じる状態状態.
+	_StateList.push_back(unique_ptr<HistoryBookStateClose>(new HistoryBookStateClose(this)));
 
 	//初期値は閉じている.
 	ChangeState(StateCodeE::Unused);
@@ -126,20 +115,19 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 	//スタートボタン又はEキーが押された.
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
 	{
+
 		//未使用なら表示。使用状態なら閉じる.
 		if (_NowState == (int)StateCodeE::Unused)
 		{
-			ChangeState(StateCodeE::Idol);
+			_IsOpenOrClose = true;
+			ChangeState(StateCodeE::Move);
 		}
-		else
+		else if (_NowState == (int)StateCodeE::Idol)
 		{
-			ChangeState(StateCodeE::Unused);
-			_Player->SetEnable(true);
+			_IsOpenOrClose = false;
+			ChangeState(StateCodeE::Close);
 		}
-
-
 	}
-
 }
 
 /**

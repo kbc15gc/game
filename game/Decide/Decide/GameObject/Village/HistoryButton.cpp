@@ -82,5 +82,5 @@ void HistoryMenuButton::_NextChip()
 void HistoryMenuButton::_SetChip()
 {
 	//チップをセットする
-	_HistoryMenu->SetMenuSelectChip(_ChipID);
+	//_HistoryMenu->SetMenuSelectChip(_ChipID);
 }

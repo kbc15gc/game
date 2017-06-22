@@ -25,7 +25,8 @@ public:
 	//第二引数 Collider* あたり判定の形状
 	//第三引数 const int コリジョンに設定するID
 	//第四引数 Vector3& 基点からの移動量
-	void Create(btCollisionObject* collision, Collider* shape, const int& id = static_cast<int>(fbCollisionAttributeE::ALL),Vector3 offset = Vector3::zero);
+	//第五引数 bool 生成時にワールドに追加するか。
+	void Create(btCollisionObject* collision, Collider* shape, const int& id = static_cast<int>(fbCollisionAttributeE::ALL),Vector3 offset = Vector3::zero,bool isAddWorld = true);
 	btCollisionObject* GetCollisonObj() const
 	{
 		return _CollisionObject.get();
@@ -77,6 +78,16 @@ public:
 	inline int GetID()const {
 		return _CollisionObject->getUserIndex();
 	}
+
+	// 継承先によって異なる処理。
+	virtual void _AddWorldSubClass() = 0;
+	// ワールドに登録。
+	void AddWorld(); 
+	// 継承先によって異なる処理。
+	virtual void _RemoveWorldSubClass() = 0;
+	// ワールドから削除。
+	void RemoveWorld();
+
 protected:
 	//コリジョンの位置や回転を更新
 	void _UpdateCollisionTrans();
@@ -91,4 +102,5 @@ protected:
 	Collider *_Shape;
 	//コリジョンオブジェクト。
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
+	bool _isAddWorld = false;	// ワールドに追加したか。
 };

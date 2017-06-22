@@ -7,7 +7,7 @@ class CollisionObject:public GameObject
 {
 public:
 	CollisionObject(char* name) :GameObject(name) {}
-	void Create(int ID, Vector3 size);
+	void Create(int ID, Vector3 size, bool isAddWorld = true);
 	void Awake()override;
 	void Update()override;
 

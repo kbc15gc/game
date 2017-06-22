@@ -2,10 +2,15 @@
 #include "GameObject\SpaceCollisionObject.h"
 #include "fbEngine\_Object\_Component\_Physics\Collision.h"
 
-void SpaceCollisionObject::Create(const Vector3& pos, const Quaternion& rot, const Vector3& scale, int id) {
-	transform->SetPosition(pos);
-	transform->SetRotation(rot);
-	CollisionObject::Create(id, scale);
+void SpaceCollisionObject::Create(const Vector3& pos, const Quaternion& rot, const Vector3& size, int id,Transform* parent,int attr) {
+	if (parent) {
+		transform->SetParent(parent);
+	}
+	transform->SetLocalPosition(pos);
+	transform->SetLocalRotation(rot);
+	transform->SetScale(Vector3::one);
+	_attribute = attr;
+	CollisionObject::Create(id, size,false);
 }
 
 void SpaceCollisionObject::Start() {
@@ -13,34 +18,36 @@ void SpaceCollisionObject::Start() {
 	RegistrationObject();
 }
 
-void SpaceCollisionObject::Update() {
+void SpaceCollisionObject::UpdateActiveSpace() {
 	// 必要になったら呼ぶ。
-	//RegistrationObject();
-
-
+	//	RegistrationObject();
+	
 	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
 		// プレイヤーと衝突している。
 		_isHitPlayer = true;
-		EnableObjects();	// 自分に衝突しているオブジェクトをアクティブ化。
-		_EnableObjectsAdjacent();	// 周囲の空間に衝突しているオブジェクトをアクティブ化。
+		//EnableObjects();	// 自分に衝突しているオブジェクトをアクティブ化。
+		DisableObjects();
+		if (test == 2) {
+			OutputDebugString("3");
+		}
 	}
 	else {
 		// 衝突していない。
 		_isHitPlayer = false;
-		DisableObjects();
+		EnableObjects();
 	}
 }
 
 void SpaceCollisionObject::AddObjectHitSpace(GameObject& object) {
-	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), object.GetComponent<Collision>())) {
+	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(object)),_attribute) {
 		// 衝突していたので追加。
-		_HitCollisions.push_back(object.GetComponent<Collision>()->GetCollisonObj());
+		_HitCollisions.push_back(object.GetComponent<Collision>());
 	}
 }
 
 void SpaceCollisionObject::_SetActives(bool flg) {
 	for (int idx = 0; idx < _HitCollisions.size(); idx++) {
-		static_cast<Collision*>(_HitCollisions[idx]->getUserPointer())->gameObject->SetActive(flg);
+		_HitCollisions[idx]->gameObject->SetActive(flg);
 	}
 }
 

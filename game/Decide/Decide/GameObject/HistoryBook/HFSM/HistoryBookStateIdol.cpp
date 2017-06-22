@@ -5,8 +5,6 @@
 #include "GameObject\HistoryBook\HistoryBook.h"
 #include "HistoryBookStateIdol.h"
 
-#include"GameObject\Player\Player.h"
-
 /**
 * コンストラクタ.
 */
@@ -22,9 +20,14 @@ HistoryBookStateIdol::HistoryBookStateIdol(HistoryBook * historybook) :
 */
 void HistoryBookStateIdol::Entry()
 {
-	_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::Idol, 0.2f, 1);
-
-	_HistoryBook->SetEnable(true);
+	if (_HistoryBook->GetIsOpenOrClose())
+	{
+		_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::OpenIdol, 0.1f);
+	}
+	else
+	{
+		_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::CloseIdol, 0.1f);
+	}
 }
 
 /**
@@ -32,14 +35,7 @@ void HistoryBookStateIdol::Entry()
 */
 void HistoryBookStateIdol::Update()
 {
-	if (_PlayerCamera->GetLerpRate() <= 0.2f)
-	{
-		_Player->SetEnable(false);
-	}
-	if (_PlayerCamera->GetLerpRate() == 0.0f)
-	{
-		_HistoryBook->ChangeState(HistoryBook::StateCodeE::Open);
-	}
+
 }
 
 /**
@@ -47,4 +43,5 @@ void HistoryBookStateIdol::Update()
 */
 void HistoryBookStateIdol::Exit()
 {
+
 }

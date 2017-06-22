@@ -132,7 +132,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(560, 69, -1000));
+	transform->SetLocalPosition(Vector3(378, 69, -1286));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -143,10 +143,15 @@ void Player::Start()
 	//レベル初期化
 	_Level = 1;
 
+	//// とりあえずテスト。
+	//int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK);
+	//// 空間分割コリジョン生成。
+	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(GetComponent<SkinModel>()->GetModelData(), *transform, 3, 1, 3, attr);
 
 	// とりあえずテスト。
 	// 空間分割コリジョン生成。
-	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 1, 3);
+	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
+
 }
 
 void Player::Update()

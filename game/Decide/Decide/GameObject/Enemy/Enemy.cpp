@@ -119,11 +119,13 @@ void Enemy::_ConfigCharacterController() {
 	// Õ“Ë‚·‚é‘®«‚ðÝ’è(‰¡)B
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
 	// Õ“Ë‚·‚é‘®«‚ðÝ’è(c)B
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
 }
 
 void Enemy::_BuildAnimation() {

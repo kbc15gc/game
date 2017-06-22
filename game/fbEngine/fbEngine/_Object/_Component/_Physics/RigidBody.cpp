@@ -20,8 +20,6 @@ void RigidBody::Release()
 {
 	if (_CollisionObject)
 	{
-		//登録されているので削除
-		PhysicsWorld::Instance()->RemoveRigidBody(this);
 		SAFE_DELETE(myMotionState);
 	}
 }
@@ -45,7 +43,7 @@ void RigidBody::LateUpdate()
 }
 
 //void RigidBody::Create(RigidBodyInfo& rbInfo)
-void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia,Vector3 off)
+void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vector3 off, bool isAddWorld)
 {
 	//前回の内容解放
 	Release();
@@ -57,9 +55,7 @@ void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia,Vecto
 	myMotionState = new btDefaultMotionState(StartTrans);
 	//剛体を作成。
 	btRigidBody::btRigidBodyConstructionInfo btRbInfo(mass, myMotionState, coll->GetBody(), btVector3(inertia.x, inertia.y, inertia.z));
-	Collision::Create(new btRigidBody(btRbInfo), coll, id, off);
-	//自身を登録
-	PhysicsWorld::Instance()->AddRigidBody(this, _FilterGroup, _FilterMask);
+	Collision::Create(new btRigidBody(btRbInfo), coll, id, off,isAddWorld);
 }
 
 void RigidBody::SetGravity(Vector3 set)
@@ -81,4 +77,12 @@ void RigidBody::SetGravity(float x, float y, float z)
 	//アップキャスト
 	btRigidBody* rigit = (btRigidBody*)_CollisionObject.get();
 	rigit->setGravity(btVector3(x, y, z));
+}
+
+void RigidBody::_AddWorldSubClass() {
+	INSTANCE(PhysicsWorld)->AddRigidBody(this);
+}
+
+void RigidBody::_RemoveWorldSubClass() {
+	INSTANCE(PhysicsWorld)->RemoveRigidBody(this);
 }
