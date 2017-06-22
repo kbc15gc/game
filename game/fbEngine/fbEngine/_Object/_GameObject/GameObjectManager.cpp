@@ -135,6 +135,8 @@ void GameObjectManager::AddRemoveList(GameObject * obj)
 			//アドレスの比較
 			if (obj == *it)
 			{
+				(*it)->OnDestroy();
+				(*it)->GetComponentManager().OnDestroy();
 				RemoveObj remove(it, priority);
 				_RemoveList.push_back(remove);
 				return;
@@ -159,7 +161,8 @@ void GameObjectManager::AddRemoveList(char * name)
 				//重複チェック。
 				if (_CheckUniqueRemoveList((*it)) == FALSE)
 					return;
-
+				(*it)->OnDestroy();
+				(*it)->GetComponentManager().OnDestroy();
 				RemoveObj remove(it,priority);
 				_RemoveList.push_back(remove);
 				return;
