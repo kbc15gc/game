@@ -81,7 +81,6 @@ void PlayerCamera::UpdateSubClass()
 
 		Vector3 toPosition = Vector3::zero;
 		toPosition.Subtract(transform->GetPosition(), _PlayerCamera->GetTarget());
-		Pint = toPosition.Length();
 		Pint = 3.0f;
 
 	}
