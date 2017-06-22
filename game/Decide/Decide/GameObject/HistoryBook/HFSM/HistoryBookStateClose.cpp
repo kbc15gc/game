@@ -53,5 +53,4 @@ void HistoryBookStateClose::Exit()
 	_PlayerFoward = _Player->transform->GetForward();
 	Vector3 foward = _PlayerFoward + HISTORY_POINT;
 	_HistoryBook->SetDestPos(foward + _Player->transform->GetPosition());
-	_HistoryBook->SetDestRot(_Player->transform->GetRotation());
 }

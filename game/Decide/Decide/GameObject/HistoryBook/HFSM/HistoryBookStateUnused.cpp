@@ -7,14 +7,6 @@
 
 #include"GameObject\Player\Player.h"
 
-namespace
-{
-
-	/** 歴史書の出現位置. */
-	const Vector3 HISTORY_POINT(0.0f, 0.5f, 0.0f);
-
-}
-
 /**
 * コンストラクタ.
 */
@@ -47,7 +39,7 @@ void HistoryBookStateUnused::Exit()
 {
 	
 	_PlayerFoward = _Player->transform->GetForward();
-	Vector3 foward = _PlayerFoward + HISTORY_POINT;
+	Vector3 foward = _PlayerFoward;
 	_HistoryBook->transform->SetLocalPosition(foward + _Player->transform->GetPosition());
 
 	_HistoryBook->transform->SetRotation(_Player->transform->GetRotation());
@@ -58,7 +50,8 @@ void HistoryBookStateUnused::Exit()
 	cameraFoward.y -= 0.5f;
 	cameraFoward.Scale(0.8f);
 	_HistoryBook->SetDestPos(_GameCamera->transform->GetPosition() + cameraFoward);
-	_HistoryBook->SetDestRot(_GameCamera->transform->GetRotation());
+	
+	_HistoryBook->transform->SetRotation(_GameCamera->transform->GetRotation());
 
 	_HistoryBook->SetEnable(true);
 }

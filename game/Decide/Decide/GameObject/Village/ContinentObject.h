@@ -31,6 +31,8 @@ public:
 	//読み込むモデルのファイル名指定
 	void LoadModel(const char* filename);
 protected:
+	//モデル描画
 	SkinModel* _Model;
+	//アニメーション
 	Animation* _Anim;
 };

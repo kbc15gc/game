@@ -70,26 +70,32 @@ void GameCamera::Start()
 
 void GameCamera::Update()
 {
+	
+
+	float Pint = 3.0f;
+
 	//歴史書を見ているかどうか。
 	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
 	{
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
+
+		_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
+		Pint = _toPosition.Length();
+		Pint = 3.0f;
 	}
-	//else
-	//{
-	//	_HistoryBehavior();
-	//}
+	else
+	{
+		Vector3 CameraToHistory;
+		CameraToHistory.Subtract(_HistoryBook->transform->GetPosition(), transform->GetPosition());
+		Pint = min(3.0f, CameraToHistory.Length());
+	}
 
-	_toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
-
-	float Len = _toPosition.Length();
-	Len = 3;
-
-	INSTANCE(SceneManager)->GetDepthofField().SetPint(Len * 1000);
+	INSTANCE(SceneManager)->GetDepthofField().SetPint(Pint * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 
+	
 }
 
 void GameCamera::_RotTransversal(float roty)
@@ -145,7 +151,8 @@ void GameCamera::_Move()
 	//カメラの移動先
 	to = from + dist;
 	//レイを飛ばす
-	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK) & ~(Collision_ID::PLAYER) & ~(Collision_ID::ENEMY) & ~(Collision_ID::BOSS);	// 衝突を無視する属性を減算。
+	// 衝突を無視する属性を減算。
+	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK) & ~(Collision_ID::PLAYER) & ~(Collision_ID::ENEMY) & ~(Collision_ID::BOSS);	
 	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere,from, to, attri);
 	//移動先ポジション
 	Vector3 next;

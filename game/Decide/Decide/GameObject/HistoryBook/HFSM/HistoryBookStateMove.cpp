@@ -45,14 +45,6 @@ void HistoryBookStateMove::Update()
 	//À•W‚ðÝ’è.
 	_HistoryBook->transform->SetPosition(dest + pos);
 
-	Quaternion destRot = _HistoryBook->GetDestRot();
-	destRot.Scale(_LerpRate);
-	Quaternion rot = _Rotation;
-	rot.Scale(1.0f - _LerpRate);
-
-	//‰ñ“]‚ðÝ’è.
-	_HistoryBook->transform->SetRotation(destRot + rot);
-
 	if (_LerpRate >= 1.0f)
 	{
 		if (_HistoryBook->GetIsOpenOrClose())

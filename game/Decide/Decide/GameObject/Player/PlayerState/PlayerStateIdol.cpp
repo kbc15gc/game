@@ -21,6 +21,20 @@ void PlayerStateIdol::Update()
 	//移動速度
 	Vector3 movespeed = Vector3::zero;
 	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
+
+	//キーボードのJ　or　パッドのAボタンでジャンプ
+	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+	{
+		//地面上にいる場合
+		if (_Player->GetCharaCon().IsOnGround() == true)
+		{
+			//ジャンプパワーを設定
+			movespeed.y = _JumpSpeed;
+			//キャラクターコントローラーをジャンプに
+			_Player->GetCharaCon().Jump();
+		}
+	}
+
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
 	//コントローラー移動

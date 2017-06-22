@@ -17,7 +17,6 @@
 #include "GameObject\Village\HistoryMenu.h"
 #include "GameObject\Village\HistoryManager.h"
 #include "GameObject\HistoryBook\HistoryBook.h"
-#include "GameObject\Village\HistoryMenuSelect.h"
 
 #include "GameObject\Village\Shop.h"
 #include "GameObject\Village\ItemManager.h"
@@ -38,8 +37,8 @@ void GameScene::Start()
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
-	//INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 9);
-
+	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 9);
+	
 	FOR(i,ChipID::NUM)
 	{
 		//歴史チップ
@@ -51,19 +50,14 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	HistoryBook* book = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
-	//歴史書の親にプレイヤーを設定。
-	//book->transform->SetParent(player->transform);
-
-	//メニューセレクト
-	INSTANCE(GameObjectManager)->AddNew<HistoryMenuSelect>("HistoryMenuSelect", 9);
 
 	//歴史で生成されるオブジェクト生成。
-	//INSTANCE(HistoryManager)->CreateObject();
+	INSTANCE(HistoryManager)->CreateObject();
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadItemData();
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
-	shop->OpenShop(0);
+	//shop->OpenShop(0);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
@@ -76,11 +70,11 @@ void GameScene::Start()
 
 	INSTANCE(SceneManager)->GetSky()->SetEnable(camera->GetComponent<Camera>(), light->GetComponent<Light>());
 
-	g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
 	g_depth->SetPivot(Vector2(0, 0));
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	g_depth->SetActive(false);
+	g_depth->SetActive(false);*/
 
 }
 

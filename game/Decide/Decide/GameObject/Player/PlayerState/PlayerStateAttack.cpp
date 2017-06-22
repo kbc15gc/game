@@ -13,9 +13,9 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 	//UŒ‚‚P
 	{
 		AttackCollisionParameter attackparam1;
-		attackparam1.pos = Vector3(0.0f, 0.0f, 2.0f);
+		attackparam1.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam1.rot = Quaternion::Identity;
-		attackparam1.scale = Vector3::one;
+		attackparam1.scale = Vector3(2.0f,2.0f,2.0f);
 		attackparam1.attackframe = 10.0f;
 		attackparam1.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam1);
@@ -23,9 +23,9 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 	//UŒ‚‚Q
 	{
 		AttackCollisionParameter attackparam2;
-		attackparam2.pos = Vector3(0.0f, 0.0f, 1.5f);
+		attackparam2.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam2.rot = Quaternion::Identity;
-		attackparam2.scale = Vector3::one;
+		attackparam2.scale = Vector3(2.0f, 2.0f, 2.0f);
 		attackparam2.attackframe = 25;
 		attackparam2.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam2);
@@ -33,9 +33,9 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 	//UŒ‚‚R
 	{
 		AttackCollisionParameter attackparam3;
-		attackparam3.pos = Vector3(0.0f, 0.0f, 1.5f);
+		attackparam3.pos = Vector3(0.0f, 0.0f, 1.0f);
 		attackparam3.rot = Quaternion::Identity;
-		attackparam3.scale = Vector3::one;
+		attackparam3.scale = Vector3(2.0f, 2.0f, 2.0f);
 		attackparam3.attackframe = 25;
 		attackparam3.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam3);
@@ -114,5 +114,9 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 		attack->Create(_Player->_PlayerParam->GiveDamageMass(),pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, _Player->transform);
+
+		_Player->_AttackValue->transform->SetLocalPosition(Vector3(pram.pos.x,pram.pos.y, pram.pos.z));
+		string attackvalue = to_string(_Player->_PlayerParam->GiveDamageMass());
+		_Player->_AttackValue->SetString(attackvalue.data());
 	}
 }

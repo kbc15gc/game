@@ -186,12 +186,11 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
+    <ClInclude Include="GameObject\SplitSpace.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
-    <ClInclude Include="GameObject\Village\HistoryButton.h" />
     <ClInclude Include="GameObject\Village\HistoryInfo.h" />
     <ClInclude Include="GameObject\Village\HistoryManager.h" />
     <ClInclude Include="GameObject\Village\HistoryMenu.h" />
-    <ClInclude Include="GameObject\Village\HistoryMenuSelect.h" />
     <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
@@ -236,11 +235,10 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
+    <ClCompile Include="GameObject\SplitSpace.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryButton.cpp" />
     <ClCompile Include="GameObject\Village\HistoryManager.cpp" />
     <ClCompile Include="GameObject\Village\HistoryMenu.cpp" />
-    <ClCompile Include="GameObject\Village\HistoryMenuSelect.cpp" />
     <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />

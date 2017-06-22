@@ -139,31 +139,12 @@ public:
 	}
 	
 	/**
-	* 目的回転を設定.
-	*/
-	void SetDestRot(const Quaternion& dest)
-	{
-		_DestRot = dest;
-	}
-
-	/**
-	* 目的回転を取得.
-	*/
-	const Quaternion& GetDestRot() const
-	{
-		return _DestRot;
-	}
-
-
-	/**
 	* 開閉判定を取得.
 	*/
 	bool GetIsOpenOrClose() const
 	{
 		return _IsOpenOrClose;
 	}
-
-
 
 private:
 
@@ -196,8 +177,6 @@ private:
 
 	/** 目的座標. */
 	Vector3 _DestPos = Vector3::zero;
-	/** 目的回転. */
-	Quaternion _DestRot = Quaternion::Identity;
 
 	bool _IsOpenOrClose = true;
 

@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GameObject\Component\ParameterBar.h"
+#include "GameObject\SplitSpace.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -77,8 +78,6 @@ void Player::Awake()
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
 			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン。
-
-
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);
@@ -96,6 +95,12 @@ void Player::Awake()
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
 		_MPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXMP), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+	}
+	//攻撃の値のテクストオブジェクト。
+	{
+		_AttackValue = INSTANCE(GameObjectManager)->AddNew<TextObject>("MPText", _Priority);
+		_AttackValue->Initialize(L"", 70.0f);
+		_AttackValue->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 	}
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
@@ -127,7 +132,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(560, 69, -1000));
+	transform->SetLocalPosition(Vector3(378, 69, -1286));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//初期プレイヤー状態（待機）
@@ -137,6 +142,11 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//レベル初期化
 	_Level = 1;
+
+
+	// とりあえずテスト。
+	// 空間分割コリジョン生成。
+	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
 }
 
 void Player::Update()
@@ -146,10 +156,19 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
 	//ライフが0になると死亡する。
 	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
 	{
 		ChangeState(State::Death);
+	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (transform->GetLocalPosition().y < 48.5f)
+	{
+		_PlayerParam->SubParam(CharacterParameter::HP, 2);
+		_HPBar->SubValue(2);
 	}
 	//HPバーの更新
 	_HPBar->Update();
@@ -211,6 +230,12 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	//死亡アニメーション
+	if (_State == State::Death)
+	{
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+		return;
+	}
 	//ジャンプアニメーション
 	if (_CharacterController->IsJump())
 	{
@@ -245,11 +270,6 @@ void Player::AnimationControl()
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
-		}
-		//死亡アニメーション
-		else if (_State == State::Death)
-		{
-			PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		}
 	}
 }
