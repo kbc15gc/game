@@ -15,6 +15,6 @@ public:
 		return _Coll;
 	}
 private:
-	BoxCollider* _Shape;
-	GostCollision* _Coll;
+	BoxCollider* _Shape = nullptr;
+	GostCollision* _Coll = nullptr;
 };

@@ -37,10 +37,6 @@ void Enemy::_StartSubClass(){
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	_MyComponent.HPBar->Create(Color,100.0f,25.0f,false,transform,Vector3(0.0f,2.0f,0.0f),Vector2(1.0f,1.0f),false);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -48,6 +44,12 @@ void Enemy::_StartSubClass(){
 
 	//パラメーター設定。
 	_MyComponent.Parameter->ParamInit(10, 10, 0, 0, 5, 1, 1, 1);
+
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	_MyComponent.HPBar->Create(Color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(1.0f, 1.0f), false);
+
 }
 
 void Enemy::_UpdateSubClass() {

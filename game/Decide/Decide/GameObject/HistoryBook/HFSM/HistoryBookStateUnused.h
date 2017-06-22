@@ -4,7 +4,7 @@
 #pragma once
 
 #include "HistoryBookState.h"
-#include "GameCamera.h"
+#include "PlayerCamera.h"
 
 class Player;
 
@@ -45,7 +45,7 @@ public:
 private:
 
 	/** ゲームカメラクラスのポインタ. */
-	GameCamera* _GameCamera = nullptr;
+	PlayerCamera* _PlayerCamera = nullptr;
 
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;

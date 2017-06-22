@@ -1,7 +1,6 @@
 #pragma once
 
-
-	//歴史チップの種類
+//歴史チップの種類
 enum class ChipID : int
 {
 	NONE,	//外す

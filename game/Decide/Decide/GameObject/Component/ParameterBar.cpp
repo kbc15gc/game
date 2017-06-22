@@ -2,7 +2,7 @@
 #include "GameObject\Component\ParameterBar.h"
 
 // CBarElement。
-float BarElement::_Time = 0.2f;
+float BarElement::_Time = 0.1f;
 void BarElement::Create(BarColor color, float max,Transform* parent) {
 	Start(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 
@@ -77,36 +77,32 @@ void BarElement::_BarScaling() {
 	transform->SetLocalPosition(pos);
 }
 
-// ParameterBar。
-const Vector3 ParameterBar::CreatePos_DefaultArg = Vector3(175.0f, 21.9f, 0.0f);
-const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
-
-ParameterBar::~ParameterBar()
-{
+// BarAdapter。
+BarAdapter::~BarAdapter() {
 	_BarFrame->GetComponentManager().OnDestroy();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
 		_BarElement[idx]->OnDestroy(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	}
-}
+};
 
-void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float value,bool isRenderFrame,Transform* parent,const Vector3& pos,const Vector2& scale, bool isHud) {
+void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float value, bool isRenderFrame, Transform* parent, const Vector3& pos, const Vector2& scale, bool isHud) {
 	// 作業用Transform情報を保存。
 	// 親子関係を組んだ場合は親が移動したりすると自動更新される。
 	if (parent) {
-		_Transform->SetParent(parent);
+		transform->SetParent(parent);
 	}
-	_Transform->SetLocalPosition(pos);
-	_Transform->SetScale(Vector3(scale.x, scale.y, 1.0f));
+	transform->SetLocalPosition(pos);
+	transform->SetScale(Vector3(scale.x, scale.y, 1.0f));
 
 	// バーの枠を描画するか。
 	_isRenderFrame = isRenderFrame;
 
 	// バーのフレームを生成。
 	// ※親子関係を作成すると勝手に更新されるため、ここでは親子関係のない絶対座標を渡す。
-	_CreateBarFrame(_Transform->GetPosition(), _Transform->GetScale(),isHud);
+	_CreateBarFrame(transform->GetPosition(), transform->GetScale(), isHud);
 
 	// 指定された色の順と数に従ってバーを生成。
-	_ActiveBarColor(BarColorArray,max,value, _BarFrame->transform);
+	_ActiveBarColor(BarColorArray, max, value, _BarFrame->transform);
 	// 最初のバーを決定。
 	_NowBarNum = _NowSettingNum = 0;
 	_NowBar = _NowSettingBar = _BarElement[_NowBarNum].get();
@@ -118,7 +114,7 @@ void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float 
 	_UpdateValue(value);	// 初期値を各バーに分配して設定。
 }
 
-void ParameterBar::Update() {
+void BarAdapter::Update() {
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
 		_BarFrame->GetComponentManager().Update();
@@ -150,7 +146,7 @@ void ParameterBar::Update() {
 	}
 }
 
-void ParameterBar::ImageRender() {
+void BarAdapter::ImageRender() {
 	// 背面のものから描画していく。
 	if (_isRenderFrame) {
 		// バーの枠を描画する。
@@ -161,7 +157,7 @@ void ParameterBar::ImageRender() {
 	}
 }
 
-void ParameterBar::_UpdateValue(float value) {
+void BarAdapter::_UpdateValue(float value) {
 	float work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
 
 	float Difference = _Value - value;	// 一瞬前の値との差分を算出。
@@ -189,7 +185,7 @@ void ParameterBar::_UpdateValue(float value) {
 	}
 }
 
-void ParameterBar::_UpdateSubValue(float Difference, float Fraction) {
+void BarAdapter::_UpdateSubValue(float Difference, float Fraction) {
 	while (true) {
 		float nowBarValue = _NowSettingBar->GetTargetValue();	// 現在のゲージが持つ値を取得。
 		if (nowBarValue <= Difference) {
@@ -229,7 +225,7 @@ void ParameterBar::_UpdateSubValue(float Difference, float Fraction) {
 	}
 }
 
-void ParameterBar::_UpdateAddValue(float Difference, float Fraction) {
+void BarAdapter::_UpdateAddValue(float Difference, float Fraction) {
 	Difference *= -1.0f;
 	while (true) {
 		float nowBarBusy = _NowSettingBar->GetMaxValue() - _NowSettingBar->GetTargetValue();	// 現在のゲージに入れることのできる値を取得。
@@ -268,7 +264,7 @@ void ParameterBar::_UpdateAddValue(float Difference, float Fraction) {
 	}
 }
 
-void ParameterBar::_CreateBarFrame(const Vector3& pos,const Vector3& scale,bool isHud){
+void BarAdapter::_CreateBarFrame(const Vector3& pos, const Vector3& scale, bool isHud) {
 	_BarFrame.reset(new ImageObject("BarFrame"));
 	_BarFrame->Awake();
 	_BarFrame->Start();
@@ -284,26 +280,34 @@ void ParameterBar::_CreateBarFrame(const Vector3& pos,const Vector3& scale,bool 
 	_BarFrame->SetTexture(LOADTEXTURE("hpsp_bar.png"));
 }
 
-void ParameterBar::_ActiveBarColor(const vector<BarColor>& BarColorArray,float max,float value,Transform* tr) {
+void BarAdapter::_ActiveBarColor(const vector<BarColor>& BarColorArray, float max, float value, Transform* tr) {
 	_MaxBarNum = BarColorArray.size();
 	for (auto BarColor : BarColorArray) {
 		BarElement* bar = new BarElement("BarElement")/*INSTANCE(GameObjectManager)->AddNew<CBarElement>("BarElement", idx)*/;
 		bar->Awake(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 
-		// バーを重ねる場合は値を重ねるバーの数分だけ分割する。
-		bar->Create(BarColor, max / _MaxBarNum,tr);
+					  // バーを重ねる場合は値を重ねるバーの数分だけ分割する。
+		bar->Create(BarColor, max / _MaxBarNum, tr);
 		_BarElement.push_back(unique_ptr<BarElement>(bar));
 	}
 }
 
-void ParameterBar::_BreakEvent() {
+void BarAdapter::_BreakEvent() {
 }
 
-void ParameterBar::_ToScreenPos() {
+void BarAdapter::_ToScreenPos() {
 	if (!_isHud) {
 		// HUDとして使用せず、キャラクターの座標系を用いて周辺に表示する。
 
 		// スクリーン座標系に変換して再設定。
-		_BarFrame->transform->SetPosition(Vector3(INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(_Transform->GetPosition()), 0.0f));
+		_BarFrame->transform->SetPosition(Vector3(INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(transform->GetPosition()), 0.0f));
 	}
+}
+
+// ParameterBar。
+const Vector3 ParameterBar::CreatePos_DefaultArg = Vector3(175.0f, 21.9f, 0.0f);
+const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
+
+ParameterBar::~ParameterBar()
+{
 }

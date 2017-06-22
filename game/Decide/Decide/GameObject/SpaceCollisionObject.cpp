@@ -21,20 +21,21 @@ void SpaceCollisionObject::Start() {
 void SpaceCollisionObject::UpdateActiveSpace() {
 	// 必要になったら呼ぶ。
 	//	RegistrationObject();
-	
-	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
-		// プレイヤーと衝突している。
-		_isHitPlayer = true;
-		//EnableObjects();	// 自分に衝突しているオブジェクトをアクティブ化。
-		DisableObjects();
-		if (test == 2) {
-			OutputDebugString("3");
+
+	if (GetCollision()) {
+		if (GetCollision()->GetCollisionObj()) {
+			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
+				// プレイヤーと衝突している。
+				_isHitPlayer = true;
+				//EnableObjects();	// 自分に衝突しているオブジェクトをアクティブ化。
+				DisableObjects();
+			}
+			else {
+				// 衝突していない。
+				_isHitPlayer = false;
+				EnableObjects();
+			}
 		}
-	}
-	else {
-		// 衝突していない。
-		_isHitPlayer = false;
-		EnableObjects();
 	}
 }
 

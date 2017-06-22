@@ -71,15 +71,17 @@ void Collision::SetFilterMask(short mask)
 
 void Collision::_UpdateCollisionTrans()
 {
-	//コリジョンのトランスフォームの参照を取得
-	btTransform& trans = _CollisionObject->getWorldTransform();
-	//移動を設定
-	trans.setOrigin(btVector3(GetOffsetPos().x, GetOffsetPos().y, GetOffsetPos().z));
-	//回転を設定
-	trans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
-	
-	// コリジョン描画用モデルのTransform情報更新。
-	_Shape->UpdateTransform(trans);
+	if (_CollisionObject.get()) {
+		//コリジョンのトランスフォームの参照を取得
+		btTransform& trans = _CollisionObject->getWorldTransform();
+		//移動を設定
+		trans.setOrigin(btVector3(GetOffsetPos().x, GetOffsetPos().y, GetOffsetPos().z));
+		//回転を設定
+		trans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
+
+		// コリジョン描画用モデルのTransform情報更新。
+		_Shape->UpdateTransform(trans);
+	}
 }
 
 // ワールドに登録。
