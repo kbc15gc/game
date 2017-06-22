@@ -58,12 +58,10 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->CreateObject();
 
 	//ふかんカメラの生成。
-	INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
+	//INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
 
 	//フリーカメラの生成。
-	INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
-
-
+	//INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadItemData();
