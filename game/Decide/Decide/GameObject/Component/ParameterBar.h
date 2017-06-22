@@ -52,7 +52,6 @@ namespace {
 }
 
 // バー。
-// ※パラメーターの減算にはまだ非対応。
 class ParameterBar :
 	public Component
 {

@@ -83,6 +83,16 @@ void ComponentManager::ImageRender() const
 	}
 }
 
+void ComponentManager::OnDestroy()const {
+	for each (Component* c in _Components)
+	{
+		if (c->enable)
+		{
+			c->OnDestroy();
+		}
+	}
+}
+
 Component* ComponentManager::GetComponent(const char * Componentname)
 {
 	char classname[64];

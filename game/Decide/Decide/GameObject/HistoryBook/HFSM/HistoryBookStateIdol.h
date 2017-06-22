@@ -5,7 +5,8 @@
 
 #include "HistoryBookState.h"
 
-#include"GameCamera.h"
+//#include"GameCamera.h"
+#include "PlayerCamera.h"
 
 /**
 * 歴史書の待機状態クラス.
@@ -44,6 +45,8 @@ public:
 private:
 
 	/** ゲームカメラのポインタ. */
-	GameCamera* _GameCamera = nullptr;
+	PlayerCamera* _PlayerCamera = nullptr;
+	/** プレイヤーのポインタ. */
+	Player* _Player = nullptr;
 
 };

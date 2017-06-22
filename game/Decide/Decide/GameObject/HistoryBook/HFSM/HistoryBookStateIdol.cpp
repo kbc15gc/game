@@ -11,7 +11,8 @@
 HistoryBookStateIdol::HistoryBookStateIdol(HistoryBook * historybook) :
 	IHistoryBookState(historybook)
 {
-	_GameCamera = (GameCamera*)INSTANCE(GameObjectManager)->FindObject("GameCamera");
+	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 /**

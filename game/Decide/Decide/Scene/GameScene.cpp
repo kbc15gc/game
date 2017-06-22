@@ -6,7 +6,7 @@
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
 
 #include "GameLight.h"
-#include "GameCamera.h"
+//#include "GameCamera.h"
 
 #include "Ground.h"
 #include "Ocean.h"
@@ -22,6 +22,7 @@
 #include "GameObject\Village\ItemManager.h"
 #include "GameObject\HistoryChip\Chips.h"
 
+#include "PlayerCamera.h"
 #include "ThirdPersonCamera.h"
 #include "FreeCamera.h"
 
@@ -32,7 +33,7 @@ void GameScene::Start()
 	//ゲームライト生成
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 	//ゲームカメラ生成
-	GameCamera* camera = INSTANCE(GameObjectManager)->AddNew<GameCamera>("GameCamera", 8);
+	PlayerCamera* camera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.

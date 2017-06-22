@@ -5,7 +5,7 @@
 
 namespace {
 	//移動速度。
-	const float MOVE_SPEED = 5.0f;
+	const float MOVE_SPEED = 3.0f;
 }
 
 //デストラクタ.
@@ -21,7 +21,7 @@ void FreeCamera::Awake()
 	_FreeCamera->SetNear(0.01f);
 	_FreeCamera->SetFar(10000.0f);
 
-	SetMainCamera();
+	//SetMainCamera();
 }
 
 void FreeCamera::Start()
@@ -38,34 +38,20 @@ void FreeCamera::Update()
 {
 	if ((KeyBoardInput->isPressed(DIK_V)))
 	{
-		if (_FreeCameraFlag == false)
-		{
-			//ふかんカメラからゲームカメラに戻す処理。
-			INSTANCE(GameObjectManager)->mainCamera = _FreeCamera;
 
-			_FreeCameraFlag = !_FreeCameraFlag;
-		}
-		else
-		{
-			INSTANCE(GameObjectManager)->mainCamera = _GameCamera;
-
-			_FreeCameraFlag = !_FreeCameraFlag;
-		}
-
-	}
-
+	}	
 	_Move();
 }
 
 void FreeCamera::_Move()
 {
-	//ゲームパッドから取得した方向
+	//ゲームパッドから取得した方向。
 	Vector3 dir = Vector3::zero;
-	//コントローラー移動
+	//コントローラー移動。
 	dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f);
 	dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f);
 #ifdef _DEBUG
-	//キーボード(デバッグ用)
+	//キーボード(デバッグ用)。
 	if (KeyBoardInput->isPressed(DIK_W))
 	{
 		dir.z++;
@@ -83,7 +69,7 @@ void FreeCamera::_Move()
 		dir.x++;
 	}
 #endif
-	//移動したか
+	//移動したか。
 	if (dir.Length() != 0)
 	{
 		Vector3 pos;

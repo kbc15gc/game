@@ -19,7 +19,9 @@ public:
 	};
 	virtual ~Collision();
 	void Awake()override;
-	virtual void Update();
+	virtual void Update()override;
+
+	virtual void OnDestroy()override;
 	//コリジョン生成
 	//第一引数 btCollisionObject* バレットフィジックスのコリジョンオブジェクト
 	//第二引数 Collider* あたり判定の形状

@@ -6,15 +6,10 @@ Collision::~Collision()
 {
 	_Shape = nullptr;
 
-	if (_CollisionObject)
-	{
-		RemoveWorld();
-	}
 	// シェアードポインタなので、このコンポーネントが削除された後もコリジョンオブジェクトが参照されることを考慮する。
 	_CollisionObject->setUserPointer(nullptr);
-	//シェアードポインタなのでnullを入れるだけでOK
-	_CollisionObject = nullptr;
 }
+
 void Collision::Awake()
 {
 	_Offset = Vector3::zero;
@@ -28,6 +23,14 @@ void Collision::Update()
 {
 	//トランスフォームの更新
 	_UpdateCollisionTrans();
+}
+
+void Collision::OnDestroy() {
+	// ※RemoveWorld関数は内部で仮想関数を呼び出すため、デストラクタでは正しい挙動とならない。
+	if (_CollisionObject)
+	{
+		RemoveWorld();
+	}
 }
 
 void Collision::Create(btCollisionObject * collision, Collider * shape, const int & id, Vector3 offset,bool isAddWorld)
