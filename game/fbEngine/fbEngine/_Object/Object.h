@@ -43,6 +43,11 @@ public:
 	//イメージ(2D)描画
 	virtual void ImageRender(){};
 
+	// マネージャーに登録している場合、削除リストに積まれた瞬間に呼び出される処理。
+	// ※デストラクタとは別。
+	// ※デストラクタよりも前に呼ばれる。
+	virtual void OnDestroy() {};
+
 	const char* GetName() const
 	{
 		return _Name;

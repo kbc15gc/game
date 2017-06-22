@@ -83,6 +83,10 @@ const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
 
 ParameterBar::~ParameterBar()
 {
+	_BarFrame->GetComponentManager().OnDestroy();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+	for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
+		_BarElement[idx]->OnDestroy(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+	}
 }
 
 void ParameterBar::Create(const vector<BarColor>& BarColorArray,float max,float value,bool isRenderFrame,Transform* parent,const Vector3& pos,const Vector2& scale, bool isHud) {

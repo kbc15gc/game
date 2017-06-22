@@ -25,7 +25,7 @@ public:
 	inline void RegistrationObject() 
 	{
 		_HitCollisions.clear();
-		_HitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), _HitCollisions,_attribute);
+		//_HitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), _HitCollisions,_attribute);
 
 
 		//// AABBB
@@ -38,8 +38,6 @@ public:
 
 		//	_HitCollisions.push_back(_GetAttachCollision(*enemy));
 		//}
-
-		bool flg = INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*INSTANCE(GameObjectManager)->FindObject("EnemyProt")));
 
 		for (auto obj : _HitCollisions) {
 			if (obj->gameObject == INSTANCE(GameObjectManager)->FindObject("EnemyProt")) {
