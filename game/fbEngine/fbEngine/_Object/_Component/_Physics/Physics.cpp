@@ -130,7 +130,6 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll, int attr) c
 const vector<Collision*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vector<Collision*>& HitCollisions, int attr) const
 {
 	HitCollisions.clear();
-
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;

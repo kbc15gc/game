@@ -146,14 +146,10 @@ void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x
 		// 分割数に0より小さい値が設定された。
 	}
 
-	Vector3 WorkSize = Vector3(size.x / static_cast<float>(x), size.y / static_cast<float>(y), size.z / static_cast<float>(z));
-	//_splitSpaceSize = Vector3(size.x / static_cast<float>(x), size.y / static_cast<float>(y), size.z / static_cast<float>(z));
-
-	_splitSpaceSize = WorkSize/* + (WorkSize * 0.1f)*/;	// 空間コリジョン同士の間に隙間ができないよう、サイズを少し拡大する。
+	_splitSpaceSize = Vector3(size.x / static_cast<float>(x), size.y / static_cast<float>(y), size.z / static_cast<float>(z));
 
 	// 三次元配列分メモリ領域確保。
 	_SpaceCollisions = vector<vector<vector<SpaceCollisionObject*>>>(y, vector<vector<SpaceCollisionObject*>>(x, vector<SpaceCollisionObject*>(z,nullptr)));
-	static int test = 0;
 
 	for (int idxX = 0; idxX < x; idxX++) {
 		for (int idxY = 0; idxY < y; idxY++) {
@@ -163,23 +159,12 @@ void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x
 				SpaceCollisionObject* box = INSTANCE(GameObjectManager)->AddNew<SpaceCollisionObject>("SpaceBox", 10);
 				// 元の位置情報を中心として分割できるようポジション調整。
 				Vector3 pos = Vector3::zero;
-				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * WorkSize.x) + (WorkSize.x * 0.5f);
-				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * WorkSize.y) + (WorkSize.y * 0.5f);
-				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * WorkSize.z) + (WorkSize.z * 0.5f);
+				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * _splitSpaceSize.x) + (_splitSpaceSize.x * 0.5f);
+				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * _splitSpaceSize.y) + (_splitSpaceSize.y * 0.5f);
+				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * _splitSpaceSize.z) + (_splitSpaceSize.z * 0.5f);
 
 				box->Create(pos,Quaternion::Identity, _splitSpaceSize,Collision_ID::SPACE, transform,attr);
-
-				box->_Right = pos.x + WorkSize.x * 0.5f;
-				box->_Left = pos.x + -WorkSize.x * 0.5f;
-				box->_Up = pos.y + WorkSize.y * 0.5f;
-				box->_Down = pos.y + -WorkSize.y * 0.5f;
-				box->_Front = pos.z + WorkSize.z * 0.5f;
-				box->_Back = pos.z + -WorkSize.z * 0.5f;
-
 				_SpaceCollisions[idxY][idxX][idxZ] = box;
-
-				box->test = test;
-				test++;
 			}
 		}
 	}

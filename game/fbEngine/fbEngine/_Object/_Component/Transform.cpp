@@ -282,6 +282,19 @@ void Transform::Release()
 	_Children.clear();
 }
 
+void Transform::AddChild(Transform* t) {
+	bool isRegistered = false;	// すでに子ども登録されているか。
+	for (auto child : _Children) {
+		if (child == t) {
+			// 登録済み。
+			return;
+		}
+	}
+	
+	// まだ登録されていない。
+	_Children.push_back(t);	//子に登録。
+}
+
 void Transform::RemoveChild(Transform * t)
 {
 	vector<Transform*>::iterator it = _Children.begin();
@@ -300,15 +313,27 @@ void Transform::RemoveChild(Transform * t)
 
 void Transform::SetParent(Transform * _Parent)
 {
-	//親に登録
-	this->_Parent = _Parent;
-	//親の子に自分を登録
 	if (_Parent) {
 		// 親が設定された。
-		_Parent->_Children.push_back(this);
+
+		// 親の子供に自分を追加。
+		_Parent->AddChild(this);
+
 		//親の設定を取得
-		gameObject->SetDiscard(_Parent->gameObject->GetDiscard());
+		if (gameObject) {
+			if (_Parent->gameObject) {
+				gameObject->SetDiscard(_Parent->gameObject->GetDiscard());
+			}
+		}
 	}
+	else {
+		// 親を外すので、現在の親の子供リストから自分を外す。
+		this->_Parent->RemoveChild(this);
+	}
+
+	//親に登録
+	this->_Parent = _Parent;
+
 	UpdateTransform();
 }
 
