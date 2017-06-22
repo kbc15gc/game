@@ -1,13 +1,34 @@
+/**
+* 歴史を管理するクラスの定義.
+*/
 #pragma once
 
 struct HistoryInfo;
 
-//大陸の歴史を管理するクラス
+/**
+* 歴史を管理するクラス.
+*/
 class HistoryManager
 {
-public:
+private:
+
+	/**
+	* コンストラクタ.
+	*/
 	HistoryManager();
-	//歴史オブジェクト生成。
+
+	/**
+	* デストラクタ.
+	*/
+	~HistoryManager()
+	{
+	}
+
+public:
+	
+	/**
+	* 歴史オブジェクト生成.
+	*/
 	void CreateObject();
 	//歴史を変える。
 	//[in] unsigned int 変更したい大陸のID
@@ -38,9 +59,13 @@ private:
 	void _CreateObject(const int& continent,const char* path);
 	void _CreateCollision(const int& continent, const char* path);
 private:
-	//全大陸の歴史の情報
-	vector<HistoryInfo*> _HistoryList;
-	//全大陸の歴史によって出されたオブジェクトへのポインタ
-	vector<vector<GameObject*>> _GameObjects;
+
+	/** インスタンス. */
 	static HistoryManager* _Instance;
+	
+	/** 全大陸の歴史の情報リスト. */
+	vector<HistoryInfo*> _HistoryList;
+	/** 全大陸の歴史によって出されたオブジェクトへのポインタリスト. */
+	vector<vector<GameObject*>> _GameObjectList;
+
 };

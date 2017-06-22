@@ -17,7 +17,7 @@ HistoryManager::HistoryManager()
 	{
 		//vectorを追加
 		vector<GameObject*> list;
-		_GameObjects.push_back(list);
+		_GameObjectList.push_back(list);
 	}
 }
 
@@ -58,11 +58,11 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 {
 	//前のオブジェクトを削除
 	{
-		for each (GameObject* obj in _GameObjects[continent])
+		for each (GameObject* obj in _GameObjectList[continent])
 		{
 			INSTANCE(GameObjectManager)->AddRemoveList(obj);
 		}
-		_GameObjects[continent].clear();
+		_GameObjectList[continent].clear();
 	}
 
 	//チップの状態からグループを計算。
@@ -100,7 +100,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 			npc->transform->SetLocalAngle(npcInfo[i]->ang);
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
 			//管理用の配列に追加。
-			_GameObjects[continent].push_back(npc);
+			_GameObjectList[continent].push_back(npc);
 
 			//もういらないので解放
 			SAFE_DELETE(npcInfo[i]);
@@ -161,7 +161,7 @@ void HistoryManager::_CreateObject(const int& continent,const char * path)
 		obj->transform->SetLocalScale(objInfo[i]->sca);
 		//管理用の配列に追加。
 		if (continent >= 0)
-			_GameObjects[continent].push_back(obj);
+			_GameObjectList[continent].push_back(obj);
 
 		//もういらないので解放
 		SAFE_DELETE(objInfo[i]);
@@ -187,7 +187,7 @@ void HistoryManager::_CreateCollision(const int & continent, const char * path)
 		coll->transform->SetLocalScale(colls[i]->sca);
 		//管理用の配列に追加。
 		if (continent >= 0)
-			_GameObjects[continent].push_back(coll);
+			_GameObjectList[continent].push_back(coll);
 
 		//もういらないので解放
 		SAFE_DELETE(colls[i]);
