@@ -87,6 +87,7 @@ void Collision::_UpdateCollisionTrans()
 // ワールドに登録。
 void Collision::AddWorld() {
 	if (!_isAddWorld) {
+		_UpdateCollisionTrans();	// コリジョン登録時にAABBボックスが生成されるため、ここでTransform情報を更新する。
 		_AddWorldSubClass();
 		_isAddWorld = true;
 	}

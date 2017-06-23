@@ -16,7 +16,7 @@ public:
 	// 引数：	質量。
 	//			形状。
 	//			コリジョン属性。
-	//			
+	//			物理現象以外の慣性(基本0)。
 	//			差分。
 	//			生成時にワールドに登録するか(登録した瞬間のTransformの値でAABBのバウンディングボックスが生成される)。
 	void Create(float mass,Collider* coll, int id, Vector3 inertia = Vector3::zero,Vector3 off = Vector3::zero, bool isAddWorld = true);

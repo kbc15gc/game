@@ -12,6 +12,7 @@ Collider::~Collider(){
 };
 
 void Collider::Update() {
+#ifdef _DEBUG
 	if ((KeyBoardInput->isPush(DIK_M))) {
 		if (GetIsRender()) {
 			// 空間分割のコリジョン描画オフ。
@@ -22,6 +23,7 @@ void Collider::Update() {
 			RenderEnable();
 		}
 	}
+#endif
 }
 
 void Collider::CreateViewModel(const btTransform& collisionTr){

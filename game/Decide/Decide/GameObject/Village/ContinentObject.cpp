@@ -15,6 +15,13 @@ void ContinentObject::Awake()
 
 }
 
+void ContinentObject::Start() {
+
+	// Transformが更新されるのでここで追加。
+	RigidBody* rigid = GetComponent<RigidBody>();
+	rigid->AddWorld();
+}
+
 void ContinentObject::LoadModel(const char * filename)
 {
 	SkinModelData* data= new SkinModelData();
@@ -27,5 +34,5 @@ void ContinentObject::LoadModel(const char * filename)
 
 	//メッシュコライダー生成。
 	mesh->Create(_Model);
-	rigid->Create(0, mesh, Collision_ID::BUILDING);
+	rigid->Create(0, mesh, Collision_ID::BUILDING,Vector3::zero,Vector3::zero,false);
 }
