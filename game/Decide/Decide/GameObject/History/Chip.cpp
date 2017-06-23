@@ -9,7 +9,6 @@ namespace
 {
 	//各コインのファイルネーム
 	char* filename[] = {
-		"",//0番目はないため空の情報を
 		"FireChip.X",
 		"TetuChip.X",
 		"AburaChip.X"
