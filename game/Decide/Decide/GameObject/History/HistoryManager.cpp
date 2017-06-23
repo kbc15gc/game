@@ -48,7 +48,11 @@ void HistoryManager::CreateObject()
 	char path[128];
 	{		
 		//ÉpÉXê∂ê¨
+#ifdef DEBUG_SPLITSPACE
+		sprintf(path, "Asset/Data/GroupData/_CommonGroup%s.csv", type[0]);
+#else
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", type[0]);
+#endif
 		_CreateObject(-1, path);
 	}
 }

@@ -17,3 +17,6 @@ enum Collision_ID
 	SPACE = BIT(6),
 	BUILDING = BIT(7),
 };
+
+
+//#define DEBUG_SPLITSPACE	// 定義で空間分割デバッグオン。

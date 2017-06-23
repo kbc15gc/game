@@ -22,7 +22,9 @@ Player::Player(const char * name) :
 	//攻撃ステート
 	_AttackState(this),
 	//死亡ステート
-	_DeathState(this)
+	_DeathState(this),
+	//デバッグか
+	_Debug(false)
 {
 }
 
@@ -171,10 +173,14 @@ void Player::Update()
 	/*
 	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
 	*/
-	if (transform->GetLocalPosition().y < 48.5f)
+	if (_Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, 2);
-		_HPBar->SubValue(2);
+		if (transform->GetLocalPosition().y < 48.5f)
+		{
+			_PlayerParam->SubParam(CharacterParameter::HP, 2);
+			_HPBar->SubValue(2);
+		}
+
 	}
 	//HPバーの更新
 	_HPBar->Update();

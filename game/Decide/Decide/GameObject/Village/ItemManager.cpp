@@ -10,7 +10,7 @@ ItemManager::ItemManager()
 void ItemManager::LoadItemData()
 {
 	//ファイルネーム
-	const char* filename[] = { "","WeaponData","ArmorData", };
+	const char* filename[] = { "ItemData","WeaponData","ArmorData", };
 	FOR(i, ARRAY_SIZE(filename))
 	{
 		//ファイルパス

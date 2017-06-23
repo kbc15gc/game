@@ -10,5 +10,4 @@ public:
 	void Enter()override;
 	void Leave()override;
 private:
-	bool debug = false;
 };
