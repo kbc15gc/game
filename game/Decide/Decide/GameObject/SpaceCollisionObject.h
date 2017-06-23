@@ -6,7 +6,9 @@ class Player;
 class SpaceCollisionObject :public CollisionObject {
 public:
 	SpaceCollisionObject(char* name) :CollisionObject(name) {};
-	~SpaceCollisionObject(){};
+	~SpaceCollisionObject(){
+		_HitCollisions.clear();
+	};
 
 	// 空間コリジョン生成関数。
 	// 引数：	位置(ローカル座標)。
@@ -25,26 +27,16 @@ public:
 	inline void RegistrationObject() 
 	{
 		_HitCollisions.clear();
-		//_HitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), _HitCollisions,_attribute);
-
-
-		//// AABB。
-		//if (_Right >= pos.x &&
-		//	_Left < pos.x &&
-		//	_Up >= pos.y &&
-		//	_Down < pos.y &&
-		//	_Front >= pos.z &&
-		//	_Back < pos.z) {
-
-		//	_HitCollisions.push_back(_GetAttachCollision(*enemy));
-		//}
-
-		for (auto obj : _HitCollisions) {
-			if (obj->gameObject == INSTANCE(GameObjectManager)->FindObject("EnemyProt")) {
-				OutputDebugString("Enemy");
+		if (GetCollision()) {
+			if (GetCollision()->GetCollisionObj()) {
+				vector<Collision*> hitCollisions;
+				hitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), hitCollisions, _attribute);
+				
+				for (auto coll : hitCollisions) {
+					_HitCollisions.push_back(coll->GetCollisionObj_shared());
+				}
 			}
 		}
-
 	}
 
 	// 衝突していれば衝突オブジェクトに追加登録。
@@ -81,20 +73,10 @@ public:
 		_adjacentSpaceObjects.push_back(obj);
 	}
 private:
-	vector<Collision*> _HitCollisions;	// 衝突しているコリジョン。
+	vector<shared_ptr<btCollisionObject>> _HitCollisions;	// 衝突しているコリジョン。
 
 	vector<SpaceCollisionObject*> _adjacentSpaceObjects;		// 隣接する空間オブジェクト。
 	GameObject* _player = nullptr;
 	bool _isHitPlayer;	// このコリジョンオブジェクトがプレイヤーと衝突しているか。
 	int _attribute;	// この空間に登録するオブジェクトのコリジョン属性。
-public:
-	int test = 0;
-
-	// AABB。
-	float _Right;
-	float _Left;
-	float _Up;
-	float _Down;
-	float _Front;
-	float _Back;
 };

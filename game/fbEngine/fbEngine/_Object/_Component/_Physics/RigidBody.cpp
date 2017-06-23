@@ -56,6 +56,8 @@ void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vect
 	//„‘Ì‚ðì¬B
 	btRigidBody::btRigidBodyConstructionInfo btRbInfo(mass, myMotionState, coll->GetBody(), btVector3(inertia.x, inertia.y, inertia.z));
 	Collision::Create(new btRigidBody(btRbInfo), coll, id, off,isAddWorld);
+
+	_MyObjectType = CollisionObjectType::Rigid;
 }
 
 void RigidBody::SetGravity(Vector3 set)

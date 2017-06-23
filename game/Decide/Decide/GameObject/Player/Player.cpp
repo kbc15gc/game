@@ -22,7 +22,9 @@ Player::Player(const char * name) :
 	//攻撃ステート
 	_AttackState(this),
 	//死亡ステート
-	_DeathState(this)
+	_DeathState(this),
+	//デバッグか
+	_Debug(false)
 {
 }
 
@@ -68,16 +70,17 @@ void Player::Awake()
 		// 以下衝突を取りたい属性(横方向)を指定。
 		{
 			_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
-			_CharacterController->AddAttributeXZ(Collision_ID::GROUND);	// 地面コリジョンを追加。
-			_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);	// 敵のコリジョン追加。
-			_CharacterController->AddAttributeXZ(Collision_ID::BOSS);	// ボスのコリジョン追加。
+			_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
+			_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
+			_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// ボスのコリジョン追加。
+			_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
 		}
 		// 以下衝突を取りたい属性(縦方向)を指定。
 		{
 			_CharacterController->AttributeY_AllOn();	// 全衝突。
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
-			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン。
+			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);
@@ -98,7 +101,7 @@ void Player::Awake()
 	}
 	//攻撃の値のテクストオブジェクト。
 	{
-		_AttackValue = INSTANCE(GameObjectManager)->AddNew<TextObject>("MPText", _Priority);
+		_AttackValue = INSTANCE(GameObjectManager)->AddNew<TextObject>("AttackValueText", _Priority);
 		_AttackValue->Initialize(L"", 70.0f);
 		_AttackValue->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 	}
@@ -170,10 +173,14 @@ void Player::Update()
 	/*
 	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
 	*/
-	if (transform->GetLocalPosition().y < 48.5f)
+	if (_Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, 2);
-		_HPBar->SubValue(2);
+		if (transform->GetLocalPosition().y < 48.5f)
+		{
+			_PlayerParam->SubParam(CharacterParameter::HP, 2);
+			_HPBar->SubValue(2);
+		}
+
 	}
 	//HPバーの更新
 	_HPBar->Update();

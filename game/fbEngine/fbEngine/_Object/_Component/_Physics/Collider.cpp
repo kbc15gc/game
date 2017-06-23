@@ -36,11 +36,9 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 		//当たり判定のサイズを指定
 		_CollisionModel->transform->SetLocalScale(size);
 		//実際のコリジョンを親に設定(描画用モデルをコリジョンの座標系にする。)
-		// Transformコンポーネントを使用するにはGameObjectが必要となるため、空のGameObjectを生成する。
-		unique_ptr<GameObject> Obj(new GameObject(""));
 
 		// コリジョンのTransform情報生成。
-		_CollisionTr.reset(new Transform(Obj.get(),nullptr));
+		_CollisionTr.reset(new Transform(nullptr,nullptr));
 		
 		UpdateTransform(collisionTr);
 
@@ -51,7 +49,7 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 }
 
 void Collider::UpdateTransform(const btTransform& collisionTr) {
-	if (_CollisionTr) {
+	if (_CollisionTr.get()) {
 		// 位置情報設定。
 		btVector3 pos = collisionTr.getOrigin();
 		_CollisionTr->SetPosition(pos.getX(), pos.getY(), pos.getZ());

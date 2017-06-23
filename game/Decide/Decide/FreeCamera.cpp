@@ -17,29 +17,27 @@ FreeCamera::~FreeCamera()
 void FreeCamera::Awake()
 {
 	//カメラコンポーネント
-	_FreeCamera = AddComponent<Camera>();
-	_FreeCamera->SetNear(0.01f);
-	_FreeCamera->SetFar(10000.0f);
+	_Camera = AddComponent<Camera>();
+	_Camera->SetNear(0.01f);
+	_Camera->SetFar(10000.0f);
 
-	//SetMainCamera();
 }
 
 void FreeCamera::Start()
 {
-	transform->SetPosition(Vector3(0, 80, 0));
+	transform->SetPosition(Vector3(0, 70, 0));
 
 	//真下を向くように回転。
 	transform->SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
 
-	_FreeCamera->SetTarget(transform->GetPosition());
+	_Camera->SetTarget(transform->GetPosition());
+
+	// 最初は更新しない。
+	UnActivateFlg();
 }
 
-void FreeCamera::Update()
+void FreeCamera::UpdateSubClass()
 {
-	if ((KeyBoardInput->isPressed(DIK_V)))
-	{
-
-	}	
 	_Move();
 }
 

@@ -28,7 +28,7 @@ public:
 	/**
 	* 更新.
 	*/
-	void Update()override;
+	void UpdateSubClass()override;
 
 	/**
 	* 補間レートを取得.
@@ -65,9 +65,9 @@ private:
 	//レイの形状
 	SphereCollider* _Sphere;
 	//プレイヤーオブジェクト
-	Player*		_Player;
+	//Player*		_Player;
 	//プレイヤーのポジションへの参照
-	const Vector3* _PlayerPos;
+	//const Vector3* _PlayerPos;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
 	//距離
@@ -90,7 +90,4 @@ private:
 
 	//切り替わった瞬間のカメラの視点.
 	Vector3 _CameraPos = Vector3::zero;
-
-
-	Camera* _PlayerCamera = nullptr;
 };

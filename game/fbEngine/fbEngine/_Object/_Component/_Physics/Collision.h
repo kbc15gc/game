@@ -7,6 +7,8 @@ class ModelObject;
 class Collision:public Component
 {
 public:
+	enum class CollisionObjectType{Rigid = 0,Ghost};
+public:
 	Collision(GameObject* g, Transform* t) :
 		Component(g, t, typeid(this).name())
 	{
@@ -29,11 +31,16 @@ public:
 	//第四引数 Vector3& 基点からの移動量
 	//第五引数 bool 生成時にワールドに追加するか。
 	void Create(btCollisionObject* collision, Collider* shape, const int& id = static_cast<int>(fbCollisionAttributeE::ALL),Vector3 offset = Vector3::zero,bool isAddWorld = true);
-	btCollisionObject* GetCollisonObj() const
+	btCollisionObject* GetCollisionObj() const
 	{
 		return _CollisionObject.get();
 	}
-	shared_ptr<btCollisionObject> GetCollisionObj()const {
+	// シェアードポインタで取得。
+	// コリジョンが削除されたときにNullチェックしたいときなどにシェアードポインタでコリジョンオブジェクトを保管しておくといい。
+	// ※Nullチェックの仕方は下記。
+	// if(static_cast<Collision*>(_CollisionObject->getUserPointer())->gameObject) : コリジョンがアタッチされたゲームオブジェクトのNullチェック。
+	// if(_CollisionObject->getUserPointer()) : コリジョンのNullチェック。
+	shared_ptr<btCollisionObject> GetCollisionObj_shared()const {
 		return _CollisionObject;
 	}
 	//オフセットした先のポジション取得
@@ -81,6 +88,19 @@ public:
 		return _CollisionObject->getUserIndex();
 	}
 
+	// 剛体をスリープ状態にする。
+	// ※物理挙動や力を加える処理などが無効化される。
+	inline void Sleep() {
+		if (_MyObjectType == CollisionObjectType::Rigid) {
+			static_cast<btRigidBody*>(_CollisionObject.get())->wantsSleeping();
+		}
+	}
+	// コリジョンをアクティブ状態にする。
+	// ※物理挙動や力を加える処理などが有効化される。
+	inline void Activate() {
+		_CollisionObject->activate();
+	}
+
 	// 継承先によって異なる処理。
 	virtual void _AddWorldSubClass() = 0;
 	// ワールドに登録。
@@ -105,4 +125,5 @@ protected:
 	//コリジョンオブジェクト。
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
 	bool _isAddWorld = false;	// ワールドに追加したか。
+	CollisionObjectType _MyObjectType;	// 剛体かゴーストか。
 };

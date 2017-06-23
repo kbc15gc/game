@@ -98,6 +98,12 @@ public:
 	{
 		_Model->enable = is;
 	}
+	//プレイヤー解放
+	void Releace()
+	{
+		_PlayerParam = nullptr;
+		transform = nullptr;
+	}
 
 private:
 	friend class PlayerStateAttack;
@@ -155,4 +161,6 @@ private:
 
 	//攻撃の値を表示。
 	TextObject* _AttackValue;
+
+	bool _Debug = false;
 };

@@ -6,7 +6,7 @@
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
 
 #include "GameLight.h"
-//#include "GameCamera.h"
+#include "GameCamera.h"
 
 #include "Ground.h"
 #include "Ocean.h"
@@ -14,13 +14,13 @@
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
 
-#include "GameObject\Village\HistoryMenu.h"
-#include "GameObject\Village\HistoryManager.h"
-#include "GameObject\HistoryBook\HistoryBook.h"
+#include "GameObject\History\HistoryManager.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
+#include "GameObject\History\HistoryMenu\HistoryMenu.h"
+#include "GameObject\History\Chip.h"
 
 #include "GameObject\Village\Shop.h"
 #include "GameObject\Village\ItemManager.h"
-#include "GameObject\HistoryChip\Chips.h"
 
 #include "PlayerCamera.h"
 #include "ThirdPersonCamera.h"
@@ -32,8 +32,26 @@ void GameScene::Start()
 {
 	//ゲームライト生成
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
-	//ゲームカメラ生成
-	PlayerCamera* camera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
+
+
+	//プレイヤーカメラ生成
+	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
+	playerCamera->ActiveCamera();
+
+	//ふかんカメラの生成。
+	GameCamera* thirdPersonCamera = INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
+	//プレイヤーカメラの次のカメラはふかんカメラを指定。
+	playerCamera->SetNextCamera(thirdPersonCamera);
+
+	//フリーカメラの生成。
+	GameCamera* freeCamera =INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
+	//ふかんカメラの次のカメラはフリーカメラを指定。
+	thirdPersonCamera->SetNextCamera(freeCamera);
+
+	//フリーカメラの次のカメラはプレイヤーカメラを指定。
+	freeCamera->SetNextCamera(playerCamera);
+
+
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
@@ -41,28 +59,23 @@ void GameScene::Start()
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 	// 雑魚エネミープロト生成。
-	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 9);
+	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	
-	FOR(i,ChipID::NUM)
+	FOR(i,ChipID::ChipNum)
 	{
 		//歴史チップ
-		Chips* chip = INSTANCE(GameObjectManager)->AddNew<Chips>("Chip", 1);
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 1);
 		chip->SetChipID((ChipID)i);
 	}
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	HistoryBook* book = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
+	INSTANCE(HistoryManager)->Start();
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
-
-	//ふかんカメラの生成。
-	INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
-
-	//フリーカメラの生成。
-	INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadItemData();
@@ -78,7 +91,8 @@ void GameScene::Start()
 	//環境マップ有効.
 	_isEnvironmentMap = true;
 
-	INSTANCE(SceneManager)->GetSky()->SetEnable(camera->GetComponent<Camera>(), light->GetComponent<Light>());
+	INSTANCE(SceneManager)->GetSky()->SetEnable(playerCamera->GetComponent<Camera>(), light->GetComponent<Light>());
+
 
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
