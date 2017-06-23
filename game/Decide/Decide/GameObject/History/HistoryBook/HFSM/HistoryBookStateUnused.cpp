@@ -2,8 +2,8 @@
 * —ğj‘‚Ìó‘Ô‚ÌŠî’êƒNƒ‰ƒX‚ÌÀ‘•.
 */
 #include"stdafx.h"
-#include "GameObject\HistoryBook\HistoryBook.h"
-#include "HistoryBookStateUnused.h"
+#include"..\HistoryBook.h"
+#include"HistoryBookStateUnused.h"
 
 #include"GameObject\Player\Player.h"
 
