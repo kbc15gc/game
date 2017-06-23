@@ -67,6 +67,9 @@ private:
 		return height;
 	}
 
+	//カメラの高さを変更。
+	void ChangeHeight();
+
 private:
 	
 	Camera_Height _NowHeight = Camera_Height::Low;//今の高さ。
