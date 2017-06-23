@@ -40,7 +40,7 @@ void Enemy::_StartSubClass(){
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
-	_MyComponent.HPBar->Create(Color,100.0f,25.0f,false,transform,Vector3(0.0f,2.0f,0.0f),Vector2(1.0f,1.0f),false);
+	_MyComponent.HPBar->Create(Color,10.0f,10.0f,false,transform,Vector3(0.0f,2.0f,0.0f),Vector2(1.0f,1.0f),false);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -120,6 +120,7 @@ void Enemy::_ConfigCharacterController() {
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::BUILDING);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);

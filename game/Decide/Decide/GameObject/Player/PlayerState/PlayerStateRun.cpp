@@ -16,7 +16,7 @@ PlayerStateRun::~PlayerStateRun()
 
 void PlayerStateRun::Update()
 {
-	if (KeyBoardInput->isPressed(DIK_0))
+	if (KeyBoardInput->isPush(DIK_0))
 	{
 		debug = !debug;
 		if (debug == true)

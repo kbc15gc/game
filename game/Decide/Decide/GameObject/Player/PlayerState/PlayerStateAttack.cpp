@@ -64,17 +64,21 @@ void PlayerStateAttack::Update()
 	{
 		_Player->ChangeState(Player::State::Idol);
 	}
-	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE)
+	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X)
+		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
+		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
+		&& currentanimno == (int)_Player->_NowAttackAnimNo
+		|| KeyBoardInput->isPush(DIK_SPACE)
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
 		)
 	{
 		//ƒRƒ“ƒ{I
- 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
+		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
 	}
 	//‚ ‚½‚è”»’èì¬
-	switch (currentanimno)
+ 	switch (currentanimno)
 	{
 		//UŒ‚‚P‚Ì
 	case (int)Player::AnimationNo::AnimationAttack01:
