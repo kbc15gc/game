@@ -23,19 +23,8 @@ public:
 	//更新。
 	void UpdateSubClass()override;
 
+	void Move()override;
 private:
-	//移動関数
-	void _Move();
-
-	//このカメラをメインカメラに切り替える。
-	void SetMainCamera()
-	{
-		
-	}
-private:
-	//カメラコンポーネント
-	Camera* _FreeCamera;
-
 	bool _FreeCameraFlag = false;
 
 	Vector3 _toPosition = Vector3::zero;

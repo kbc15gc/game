@@ -39,3 +39,8 @@ void GameCamera::SetNextCamera(GameCamera* next)
 {
 	_NextCamera = next;
 }
+
+void GameCamera::Move()
+{
+	
+}

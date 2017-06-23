@@ -37,6 +37,9 @@ public:
 	{
 		return _LerpRate;
 	}
+
+	//移動関数
+	void Move()override;
 private:
 
 	/**
@@ -53,8 +56,6 @@ private:
 	*/
 	void _RotLongitudinal(float rotx);
 
-	//移動関数
-	void _Move();
 	//通常時のカメラ挙動
 	void _StandardBehavior();
 	//本を見ている時の挙動
@@ -65,9 +66,9 @@ private:
 	//レイの形状
 	SphereCollider* _Sphere;
 	//プレイヤーオブジェクト
-	Player*		_Player;
+	//Player*		_Player;
 	//プレイヤーのポジションへの参照
-	const Vector3* _PlayerPos;
+	//const Vector3* _PlayerPos;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
 	//距離

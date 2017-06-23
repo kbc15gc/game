@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class SkinModel;
+class Player;
 
 //カメラの基底クラス。
 class GameCamera :public GameObject
@@ -50,6 +51,8 @@ public:
 			_isActivate = false;
 		}
 	}
+	// 継承先の更新処理。
+	virtual void Move() = 0;
 
 protected:
 	void ActivateFlg() {
@@ -58,6 +61,12 @@ protected:
 	void UnActivateFlg() {
 		_isActive = false;
 		_isActivate = false;
+	}
+
+	//カメラの移動速度を設定。
+	void SetCameraSpeed(float speed)
+	{
+		_MoveSpeed = speed;
 	}
 
 protected:
@@ -74,4 +83,14 @@ protected:
 	bool _isActivate = false;
 
 	SkinModel* _Model = nullptr;
+
+	//プレイヤーオブジェクト
+	Player* _Player = nullptr;
+
+	//プレイヤーのポジションへの参照
+	const Vector3* _PlayerPos = &Vector3::zero;
+
+	//カメラの移動速度。
+	float _MoveSpeed = 3.0f;
+
 };

@@ -58,7 +58,7 @@ void PlayerCamera::Start()
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{
-		_Move();
+		Move();
 		_Camera->Update();
 	}
 
@@ -140,7 +140,7 @@ void PlayerCamera::_RotLongitudinal(float rotx)
 	}
 }
 
-void PlayerCamera::_Move()
+void PlayerCamera::Move()
 {
 	//プレイヤーとカメラの距離
 	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
@@ -224,7 +224,7 @@ void PlayerCamera::_StandardBehavior()
 		}
 
 		//移動
-		_Move();
+		Move();
 
 		//歴史書を見始めた時点でのゲームカメラの位置を確保。
 		_PrevGameCameraPos = this->transform->GetPosition();
