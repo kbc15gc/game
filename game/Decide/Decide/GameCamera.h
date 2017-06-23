@@ -2,7 +2,6 @@
 
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
-class SkinModel;
 class Player;
 
 //カメラの基底クラス。
@@ -81,8 +80,6 @@ protected:
 
 	//このカメラをアクティブ化するか。
 	bool _isActivate = false;
-
-	SkinModel* _Model = nullptr;
 
 	//プレイヤーオブジェクト
 	Player* _Player = nullptr;

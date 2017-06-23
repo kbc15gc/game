@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ThirdPersonCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
-#include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "GameObject\Player\Player.h"
 
 //デストラクタ。
@@ -16,8 +15,6 @@ void ThirdPersonCamera::Awake()
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
-
-	_Model= AddComponent<SkinModel>();
 }
 
 void ThirdPersonCamera::Start()
@@ -38,15 +35,7 @@ void ThirdPersonCamera::Start()
 
 void ThirdPersonCamera::UpdateSubClass()
 {
-	if ((KeyBoardInput->isPush(DIK_UP)))
-	{
-		_NowHeight = Add(_NowHeight);
-	}
-
-	if ((KeyBoardInput->isPush(DIK_DOWN)))
-	{
-		_NowHeight = Subtract(_NowHeight);
-	}
+	ChangeHeight();
 
 	//今の高さを調べ、それに応じた処理をする。
 	switch (_NowHeight)
@@ -58,7 +47,8 @@ void ThirdPersonCamera::UpdateSubClass()
 		transform->SetPosition(transform->GetPosition().x, 80, transform->GetPosition().z);
 
 		//カメラの移動スピードを設定。
-		SetCameraSpeed(3.0f);
+		float LowCameraSpeed = 3.0f;
+		SetCameraSpeed(LowCameraSpeed);
 		Move();
 		break;
 		//高さ:中。
@@ -66,7 +56,8 @@ void ThirdPersonCamera::UpdateSubClass()
 		transform->SetPosition(transform->GetPosition().x, 500, transform->GetPosition().z);
 
 		//カメラの移動スピードを設定。
-		SetCameraSpeed(8.0f);
+		float MiddleCameraSpeed = 10.0f;
+		SetCameraSpeed(MiddleCameraSpeed);
 		Move();
 		break;
 		//高さ:高。
@@ -112,5 +103,18 @@ void ThirdPersonCamera::Move()
 		pos.x += dir.x*_MoveSpeed;
 		pos.z += dir.z*_MoveSpeed;
 		transform->SetPosition(pos);
+	}
+}
+
+void ThirdPersonCamera::ChangeHeight()
+{
+	if ((KeyBoardInput->isPush(DIK_UP)))
+	{
+		_NowHeight = Add(_NowHeight);
+	}
+
+	if ((KeyBoardInput->isPush(DIK_DOWN)))
+	{
+		_NowHeight = Subtract(_NowHeight);
 	}
 }
