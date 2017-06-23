@@ -98,6 +98,12 @@ public:
 	{
 		_Model->enable = is;
 	}
+	//ƒvƒŒƒCƒ„[‰ğ•ú
+	void Releace()
+	{
+		_PlayerParam = nullptr;
+		transform = nullptr;
+	}
 
 private:
 	friend class PlayerStateAttack;

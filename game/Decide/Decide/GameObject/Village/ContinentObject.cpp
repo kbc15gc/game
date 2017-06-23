@@ -27,5 +27,5 @@ void ContinentObject::LoadModel(const char * filename)
 
 	//メッシュコライダー生成。
 	mesh->Create(_Model);
-	rigid->Create(0, mesh, Collision_ID::GROUND);
+	rigid->Create(0, mesh, Collision_ID::BUILDING);
 }
