@@ -99,12 +99,10 @@ public:
 		_Model->enable = is;
 	}
 	//プレイヤー解放
-	void Releace()
-	{
-		_PlayerParam = nullptr;
-		transform = nullptr;
-	}
-
+	void Releace();
+private:
+	//プレイヤーがダメージを受ける処理
+	void _Damage();
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;

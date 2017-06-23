@@ -159,43 +159,30 @@ void Player::Start()
 
 void Player::Update()
 {
-	if (_CurrentState != NULL)
+	if (_CurrentState != nullptr)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
 	}
-
-	//ライフが0になると死亡する。
-	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
+	//ダメージを受ける処理。
+	_Damage();
+	if (_HPBar != nullptr)
 	{
-		ChangeState(State::Death);
+		//HPバーの更新
+		_HPBar->Update();
 	}
-	/*
-	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
-	*/
-	if (_Debug == false)
+	if (_MPBar != nullptr)
 	{
-		if (transform->GetLocalPosition().y < 48.5f)
-		{
-			_PlayerParam->SubParam(CharacterParameter::HP, 2);
-			_HPBar->SubValue(2);
-		}
-
+		//MPバーの更新
+		_MPBar->Update();
 	}
-	//HPバーの更新
-	_HPBar->Update();
-	//MPバーの更新
-	_MPBar->Update();
 	//アニメーションコントロール
 	AnimationControl();
-
 	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
 	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
 	// ※都合が悪いのでとりあえずコメントアウト。
-	{
 		////トランスフォーム更新
 		//transform->UpdateTransform();
-	}
 }
 
 void Player::ChangeState(State nextstate)
@@ -296,5 +283,37 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	{
 		_HPBar->SubValue(_PlayerParam->ReciveDamage(hitCollision->GetDamage()));
 		_DamageSE->Play(false);//ダメージを受けたときのSE
+	}
+}
+
+void Player::Releace()
+{
+	{
+		_PlayerParam = nullptr;
+		transform = nullptr;
+		_CurrentState = nullptr;
+		_HPBar = nullptr;
+		_MPBar = nullptr;
+	}
+}
+
+void Player::_Damage()
+{
+	//死亡ステート以外の時。
+		//ライフが0になると死亡する。
+	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
+	{
+		ChangeState(State::Death);
+	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (_Debug == false)
+	{
+		if (transform->GetLocalPosition().y < 48.5f)
+		{
+			_PlayerParam->SubParam(CharacterParameter::HP, 2);
+			_HPBar->SubValue(2);
+		}
 	}
 }
