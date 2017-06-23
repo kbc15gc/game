@@ -37,6 +37,9 @@ public:
 	{
 		return _LerpRate;
 	}
+
+	//ˆÚ“®ŠÖ”
+	void Move()override;
 private:
 
 	/**
@@ -53,8 +56,6 @@ private:
 	*/
 	void _RotLongitudinal(float rotx);
 
-	//ˆÚ“®ŠÖ”
-	void _Move();
 	//’Êí‚ÌƒJƒƒ‰‹““®
 	void _StandardBehavior();
 	//–{‚ğŒ©‚Ä‚¢‚é‚Ì‹““®

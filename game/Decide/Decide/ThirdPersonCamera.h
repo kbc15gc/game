@@ -29,10 +29,10 @@ public:
 
 	//更新。
 	void UpdateSubClass()override;
-private:
-	//移動関数。
-	void _Move();
 
+	void Move()override;
+private:
+	
 	//enmuの加算。
 	Camera_Height& Add (Camera_Height& height)
 	{

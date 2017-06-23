@@ -23,15 +23,7 @@ public:
 	//更新。
 	void UpdateSubClass()override;
 
-private:
-	//移動関数
-	void _Move();
-
-	//このカメラをメインカメラに切り替える。
-	void SetMainCamera()
-	{
-		
-	}
+	void Move()override;
 private:
 	bool _FreeCameraFlag = false;
 

@@ -51,6 +51,8 @@ public:
 			_isActivate = false;
 		}
 	}
+	// 継承先の更新処理。
+	virtual void Move() = 0;
 
 protected:
 	void ActivateFlg() {
@@ -61,7 +63,11 @@ protected:
 		_isActivate = false;
 	}
 
-
+	//カメラの移動速度を設定。
+	void SetCameraSpeed(float speed)
+	{
+		_MoveSpeed = speed;
+	}
 
 protected:
 	//カメラコンポーネント。
@@ -83,4 +89,8 @@ protected:
 
 	//プレイヤーのポジションへの参照
 	const Vector3* _PlayerPos = &Vector3::zero;
+
+	//カメラの移動速度。
+	float _MoveSpeed = 3.0f;
+
 };
