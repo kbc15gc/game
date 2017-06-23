@@ -8,7 +8,7 @@ GameCamera::~GameCamera()
 
 void GameCamera::Awake()
 {
-
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void GameCamera::Start()

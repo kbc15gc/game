@@ -1,8 +1,7 @@
 #pragma once
 
 #include "fbEngine\_Object\_GameObject\GameObject.h"
-
-class Player;
+#include "GameObject\Player\Player.h"
 
 //カメラの基底クラス。
 class GameCamera :public GameObject
@@ -41,6 +40,7 @@ public:
 			static_cast<GameCamera*>(cam->gameObject)->UnActivateFlg();
 		}
 		INSTANCE(GameObjectManager)->mainCamera = this->_Camera;
+		ChangeCameraReAction();
 		_isActivate = true;
 	}
 	
@@ -67,7 +67,9 @@ protected:
 	{
 		_MoveSpeed = speed;
 	}
-
+private:
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {}
 protected:
 	//カメラコンポーネント。
 	Camera* _Camera = nullptr;

@@ -1,9 +1,9 @@
 #pragma once
 #include "GameCamera.h"
 #include "fbEngine\_Object\_GameObject\GameObject.h"
-
-class Player;
+#include "GameObject\Player\Player.h"
 class HistoryBook;
+
 
 class PlayerCamera : public GameCamera
 {
@@ -60,6 +60,12 @@ private:
 	void _StandardBehavior();
 	//本を見ている時の挙動
 	void _HistoryBehavior();
+
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {
+		//プレイヤーの更新を止める。
+		_Player->SetIsStopUpdate(false);
+	}
 
 private:
 

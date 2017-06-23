@@ -1,11 +1,8 @@
-/**
-* ゲームカメラクラスの実装.
-*/
 #include"stdafx.h"
 #include "PlayerCamera.h"
 
-#include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
+#include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 
 namespace
@@ -34,7 +31,8 @@ void PlayerCamera::Awake()
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 	INSTANCE(GameObjectManager)->mainCamera = _Camera;
-	//SetCamera(_Camera);
+	
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
 	//カメラのコリジョンの半径設定
 	_Radius = 0.5f;

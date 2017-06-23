@@ -1,8 +1,6 @@
-//ゲームカメラクラスの実装。
-
 #include "stdafx.h"
 #include "FreeCamera.h"
-
+#include "GameObject\Player\Player.h"
 //デストラクタ.
 FreeCamera::~FreeCamera()
 {
@@ -16,6 +14,7 @@ void FreeCamera::Awake()
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void FreeCamera::Start()
