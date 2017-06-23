@@ -34,7 +34,7 @@ void GameObjectManager::UpdateObject()
 		{
 			if (obj->GetActive())
 			{
-				if (obj->GetIsStopUpdate()) {
+				if (!(obj->GetIsStopUpdate())) {
 					// 更新ストップフラグがオフ。
 					obj->Update();
 					obj->GetComponentManager().Update();

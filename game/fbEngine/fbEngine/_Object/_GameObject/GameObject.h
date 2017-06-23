@@ -115,5 +115,5 @@ protected:
 	//オブジェクトを破棄する
 	bool _Discard;
 private:
-	bool _isStopUpdate = true;	// 更新停止フラグ(GameObjectManagerに登録している場合、このフラグをtrueにすると更新処理を無視する)。
+	bool _isStopUpdate = false;	// 更新停止フラグ(GameObjectManagerに登録している場合、このフラグをtrueにすると更新処理を無視する)。
 };
