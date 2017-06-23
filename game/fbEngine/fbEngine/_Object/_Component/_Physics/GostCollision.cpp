@@ -20,6 +20,8 @@ void GostCollision::Create(Collider * shape, int id, bool isAddWorld)
 	int flags = _GostObject->getCollisionFlags();
 	//他のコリジョンと衝突しないようにフラグを設定。
 	_GostObject->setCollisionFlags(flags | btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE);
+
+	_MyObjectType = CollisionObjectType::Ghost;
 }
 
 void GostCollision::Update()

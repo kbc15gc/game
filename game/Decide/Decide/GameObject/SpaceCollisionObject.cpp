@@ -27,15 +27,15 @@ void SpaceCollisionObject::UpdateActiveSpace() {
 			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
 				// プレイヤーと衝突している。
 				_isHitPlayer = true;
-				//EnableObjects();	// この空間に含まれているオブジェクトをアクティブ化。
-				DisableObjects();
+				EnableObjects();	// この空間に含まれているオブジェクトをアクティブ化。
+				//DisableObjects();
 
 			}
 			else {
 				// 衝突していない。
 				_isHitPlayer = false;
-				//DisableObjects();	// この空間に含まれているオブジェクトを非アクティブ化。 
-				EnableObjects();
+				DisableObjects();	// この空間に含まれているオブジェクトを非アクティブ化。 
+				//EnableObjects();
 			}
 		}
 	}
@@ -65,8 +65,8 @@ void SpaceCollisionObject::_SetActives(bool flg) {
 
 void SpaceCollisionObject::_EnableObjectsAdjacent() {
 	for (auto Adjacent : _adjacentSpaceObjects) {
-		//Adjacent->EnableObjects();
-		Adjacent->DisableObjects();
+		Adjacent->EnableObjects();
+		//Adjacent->DisableObjects();
 	}
 }
 
