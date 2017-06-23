@@ -43,9 +43,6 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HistoryBook.cpp">
-      <Filter>GameObject\HistoryBook</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Player\Player.cpp">
       <Filter>GameObject\Player</Filter>
     </ClCompile>
@@ -59,12 +56,6 @@
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\ContinentObject.cpp">
-      <Filter>GameObject\Village</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Village\HistoryManager.cpp">
-      <Filter>GameObject\Village</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Village\HistoryMenu.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\MessageManager.cpp">
@@ -88,9 +79,6 @@
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryChip\Chips.cpp">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -98,15 +86,6 @@
     <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp">
       <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\SplitSpace.cpp">
       <Filter>GameObject</Filter>
@@ -116,11 +95,39 @@
     </ClCompile>
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="ThirdPersonCamera.cpp" />
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="GameObject\History\Chip.cpp">
+      <Filter>GameObject\History</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.cpp">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    <ClCompile Include="GameObject\History\HistoryManager.cpp">
+      <Filter>GameObject\History</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryBook.cpp">
+      <Filter>GameObject\History\HistoryBook</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.cpp">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateIdol.cpp">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateMove.cpp">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateOpen.cpp">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.cpp">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage.cpp">
+      <Filter>GameObject\History\HistoryBook</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp">
+      <Filter>GameObject\History\HistoryMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp">
+      <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
     <ClCompile Include="PlayerCamera.cpp" />
   </ItemGroup>
@@ -169,9 +176,6 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HistoryBook.h">
-      <Filter>GameObject\HistoryBook</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Player\Player.h">
       <Filter>GameObject\Player</Filter>
     </ClInclude>
@@ -190,15 +194,6 @@
     <ClInclude Include="GameObject\Village\ContinentObject.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\HistoryInfo.h">
-      <Filter>GameObject\Village</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\HistoryManager.h">
-      <Filter>GameObject\Village</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\HistoryMenu.h">
-      <Filter>GameObject\Village</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Village\MessageManager.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
@@ -211,9 +206,6 @@
     <ClInclude Include="GameObject\Village\TextBox.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookState.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
@@ -223,9 +215,6 @@
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryChip\Chips.h">
-      <Filter>GameObject\HistoryChip</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Component\CharacterParameter.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
@@ -233,15 +222,6 @@
     <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h">
       <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateIdol.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateUnused.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateOpen.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\SplitSpace.h">
       <Filter>GameObject</Filter>
@@ -251,11 +231,45 @@
     </ClInclude>
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="ThirdPersonCamera.h" />
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateClose.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="GameObject\History\Chip.h">
+      <Filter>GameObject\History</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.h">
-      <Filter>GameObject\HistoryBook\HFSM</Filter>
+    <ClInclude Include="GameObject\History\HistoryInfo.h">
+      <Filter>GameObject\History</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryManager.h">
+      <Filter>GameObject\History</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryBook.h">
+      <Filter>GameObject\History\HistoryBook</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookState.h">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.h">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateIdol.h">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateMove.h">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateOpen.h">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.h">
+      <Filter>GameObject\History\HistoryBook\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage.h">
+      <Filter>GameObject\History\HistoryBook</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryMenu\HistoryMenu.h">
+      <Filter>GameObject\History\HistoryMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryMenu\Chip2D.h">
+      <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCamera.h" />
   </ItemGroup>
@@ -276,12 +290,6 @@
     <Filter Include="GameObject\Enemy">
       <UniqueIdentifier>{ac0695ac-fb17-4581-acd0-1860a60cfddd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\HistoryBook">
-      <UniqueIdentifier>{d82f57ce-dae3-4203-b172-d79d299cab62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\HistoryChip">
-      <UniqueIdentifier>{8a268b1d-20b3-4285-833e-1bf0f1ef64e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameObject\Player">
       <UniqueIdentifier>{731246e2-2b17-4bbc-9efc-7877e5b138ca}</UniqueIdentifier>
     </Filter>
@@ -294,14 +302,23 @@
     <Filter Include="GameObject\Player\PlayerState">
       <UniqueIdentifier>{732a7773-c715-4971-be79-3928a3ac1f90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\HistoryBook\HFSM">
-      <UniqueIdentifier>{396dc9aa-c950-4a8a-8a2b-d4080e610900}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{c117e626-6846-4798-ba83-85b4345fc284}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{4024f616-bb02-4548-b159-81e914e0379c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History">
+      <UniqueIdentifier>{8a268b1d-20b3-4285-833e-1bf0f1ef64e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryBook">
+      <UniqueIdentifier>{d82f57ce-dae3-4203-b172-d79d299cab62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryBook\HFSM">
+      <UniqueIdentifier>{396dc9aa-c950-4a8a-8a2b-d4080e610900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryMenu">
+      <UniqueIdentifier>{f5c9b85b-eab5-4e30-a8fc-22b0309088ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,9 @@
 #include"stdafx.h"
-#include "Chips.h"
+#include "Chip.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Light.h"
 #include "GameObject\Player\Player.h"
-#include "GameObject\Village\HistoryManager.h"
-
-#include "GameObject\Village\HistoryMenuSelect.h"
-
+#include "HistoryManager.h"
 
 namespace
 {
@@ -21,7 +18,6 @@ namespace
 	//各コインのポジション
 	Vector3 pos[] =
 	{
-		Vector3(0,0,0),
 		Vector3(344, 69, -1255),
 		Vector3(385, 69, -1275),
 		Vector3(356, 69, -1245),
@@ -31,30 +27,32 @@ namespace
 	const float atari = 1.2f;
 	//回転のスピード
 	const float rotation_speed = 2.0f;
-}
-
-Chips::Chips(const char * name) :
-	GameObject(name)
-{
 
 }
 
-void Chips::Awake()
+/**
+* コンストラクタ後の初期化.
+*/
+void Chip::Awake()
 {
 	//チップを取得したSEを初期化
 	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_SE->Init("Asset/Sound/coin.wav");
 }
 
-void Chips::Start()
+/**
+* 初期化.
+*/
+void Chip::Start()
 {
 	//プレイヤーを検索
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
-	//ヒストリーメニューセレクト検索
-	//_HistoryMenuSelect = (HistoryMenuSelect*)INSTANCE(GameObjectManager)->FindObject("HistoryMenuSelect");
 }
 
-void Chips::Update()
+/**
+* 更新.
+*/
+void Chip::Update()
 {
 	static Vector3 rotation = Vector3::zero;
 	rotation.y += rotation_speed;
@@ -68,18 +66,21 @@ void Chips::Update()
 		//チップ取得SE
 		_SE->Play(false);
 
-		//取得したチップをメニューにセット
-		INSTANCE(HistoryManager)->SetHistoryChip(0, 0, (int)_ChipID);
-		//_HistoryMenuSelect->ChipSelect(_ChipID);
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(_ChipID);
+
 		//取得したらもういらないので削除
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 }
 
-void Chips::SetChipID(const ChipID & id)
+/**
+* チップIDを設定.
+*/
+void Chip::SetChipID(ChipID chipID)
 { 
 	//外部からセットしたIDを設定。
-	_ChipID = id;
+	_ChipID = chipID;
 
 	//設定されたIDのモデルをロード。
 	SkinModel* model = AddComponent<SkinModel>();

@@ -14,13 +14,13 @@
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
 
-#include "GameObject\Village\HistoryMenu.h"
-#include "GameObject\Village\HistoryManager.h"
-#include "GameObject\HistoryBook\HistoryBook.h"
+#include "GameObject\History\HistoryManager.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
+#include "GameObject\History\HistoryMenu\HistoryMenu.h"
+#include "GameObject\History\Chip.h"
 
 #include "GameObject\Village\Shop.h"
 #include "GameObject\Village\ItemManager.h"
-#include "GameObject\HistoryChip\Chips.h"
 
 #include "PlayerCamera.h"
 #include "ThirdPersonCamera.h"
@@ -61,18 +61,19 @@ void GameScene::Start()
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	
-	FOR(i,ChipID::NUM)
+	FOR(i,ChipID::ChipNum)
 	{
 		//歴史チップ
-		Chips* chip = INSTANCE(GameObjectManager)->AddNew<Chips>("Chip", 1);
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 1);
 		chip->SetChipID((ChipID)i);
 	}
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	HistoryBook* book = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
 
+	INSTANCE(HistoryManager)->Start();
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
 
@@ -91,6 +92,7 @@ void GameScene::Start()
 	_isEnvironmentMap = true;
 
 	INSTANCE(SceneManager)->GetSky()->SetEnable(playerCamera->GetComponent<Camera>(), light->GetComponent<Light>());
+
 
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);

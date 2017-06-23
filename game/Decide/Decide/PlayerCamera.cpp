@@ -6,7 +6,7 @@
 
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
-#include "GameObject\HistoryBook\HistoryBook.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
 
 namespace
 {
@@ -81,7 +81,7 @@ void PlayerCamera::UpdateSubClass()
 
 		Vector3 toPosition = Vector3::zero;
 		toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
-		Pint = toPosition.Length();
+
 		Pint = 3.0f;
 
 	}

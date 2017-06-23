@@ -1,32 +1,46 @@
 #include"stdafx.h"
 #include "HistoryManager.h"
 
-#include "GameObject\Village\HistoryInfo.h"
 #include "GameObject\Village\ContinentObject.h"
 #include "GameObject\Village\NPC.h"
 
-
+/** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
 
+/**
+* コンストラクタ.
+*/
 HistoryManager::HistoryManager()
 {
 	//CSVから歴史情報読み取り。
-	Support::LoadCSVData<HistoryInfo>("Asset/Data/VillageHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _HistoryList);
+	Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 
-	FOR(i, _HistoryList.size())
+	FOR(i, _LocationHistoryList.size())
 	{
 		//vectorを追加
 		vector<GameObject*> list;
 		_GameObjectList.push_back(list);
 	}
+
 }
 
+/**
+* 初期化.
+*/
+void HistoryManager::Start()
+{
+	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
+}
+
+/**
+* 歴史オブジェクト生成.
+*/
 void HistoryManager::CreateObject()
 {
-	FOR(i, _HistoryList.size())
+	FOR(i, _LocationHistoryList.size())
 	{
 		//歴史のオブジェクト切り替え・生成
-		_ChangeContinent(i);
+		_ChangeLocation((LocationCodeE)i);
 	}
 
 	//共通オブジェクト生成
@@ -43,34 +57,43 @@ void HistoryManager::CreateObject()
 	}
 }
 
-const bool HistoryManager::SetHistoryChip(const unsigned int & continent, const unsigned int & idx, const int & chip)
+/**
+* 歴史を変える.
+*
+* @param location	場所ID.
+* @param slot		スロット番号.
+* @param chip		チップID.
+*/
+bool HistoryManager::SetHistoryChip(LocationCodeE location, UINT slot, ChipID chip)
 {
-	//成功したかどうか？
-	bool success = false;
-	//歴史のチップセット
-	if(success =_HistoryList[continent]->SetChip(idx, (ChipID)chip))
-	{
-		//無事にセットされたなら大陸を変化させる。
-		_ChangeContinent(continent);
-		//csv保存処理
-		Support::OutputCSV<HistoryInfo>("Asset/Data/VillageHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _HistoryList);
-	}
-	return success;
+	//ひとまず入れるだけで上書されてしまう.
+	_LocationHistoryList[(int)location]->_ChipSlot[slot] = chip;
+
+	//変更したので歴史を改変させる.
+	_ChangeLocation(location);
+
+	//データを保存.
+	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+
+	return true;
 }
 
-void HistoryManager::_ChangeContinent(const unsigned int& continent)
+/**
+* 場所の変化.
+*
+* @param location	場所ID.
+*/
+void HistoryManager::_ChangeLocation(LocationCodeE location)
 {
 	//前のオブジェクトを削除
+	for(auto& it : _GameObjectList[(int)location])
 	{
-		for each (GameObject* obj in _GameObjectList[continent])
-		{
-			INSTANCE(GameObjectManager)->AddRemoveList(obj);
-		}
-		_GameObjectList[continent].clear();
+		INSTANCE(GameObjectManager)->AddRemoveList(it);
 	}
+	_GameObjectList[(int)location].clear();
 
 	//チップの状態からグループを計算。
-	const int group = _CalcPattern(_HistoryList[continent]);
+	const int group = _CalcPattern(_LocationHistoryList[(int)location]);
 
 	char* type[2] = { "Obj","NPC" };
 	char path[128];
@@ -79,7 +102,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	{
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[0]);
-		_CreateObject(continent, path);
+		_CreateObject((int)location, path);
 		
 	}
 	ZeroMemory(path, 128);
@@ -104,7 +127,7 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 			npc->transform->SetLocalAngle(npcInfo[i]->ang);
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
 			//管理用の配列に追加。
-			_GameObjectList[continent].push_back(npc);
+			_GameObjectList[(int)location].push_back(npc);
 
 			//もういらないので解放
 			SAFE_DELETE(npcInfo[i]);
@@ -114,7 +137,10 @@ void HistoryManager::_ChangeContinent(const unsigned int& continent)
 	}
 }
 
-const int HistoryManager::_CalcPattern(const HistoryInfo * info)
+/**
+* パターン計算.
+*/
+int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 {
 	//大陸に合ったグループシート読み込み
 	char path[256];
@@ -125,15 +151,23 @@ const int HistoryManager::_CalcPattern(const HistoryInfo * info)
 	
 	int pattern = 0;
 	//一致するものがあるか調べる。
-	for each (VillageGroup* group in groupList)
+	for(auto& group : groupList)
 	{
+		bool isMatch = true;
 		//各スロットを比較
-		if (group->Slot[0] != info->Slot[0])
+		for (int i = 0; i < (int)ChipID::ChipNum; i++)
+		{
+			if (group->Slot[i] != info->_ChipSlot[i])
+			{
+				isMatch = false;
+			}
+		}
+
+		if (!isMatch)
+		{
+			//マッチングしていないので次へ.
 			continue;
-		if (group->Slot[1] != info->Slot[1])
-			continue;
-		if (group->Slot[2] != info->Slot[2])
-			continue;
+		}
 
 		//パターン一致したのでID設定。
 		pattern = group->GroupID;
@@ -148,7 +182,13 @@ const int HistoryManager::_CalcPattern(const HistoryInfo * info)
 	return pattern;
 }
 
-void HistoryManager::_CreateObject(const int& continent,const char * path)
+/**
+* オブジェクトを作成.
+*
+* @param location	場所ID.
+* @param path		フォルダパス.
+*/
+void HistoryManager::_CreateObject(int location,const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
 	vector<ObjectInfo*> objInfo;
@@ -164,8 +204,10 @@ void HistoryManager::_CreateObject(const int& continent,const char * path)
 		obj->transform->SetLocalAngle(objInfo[i]->ang);
 		obj->transform->SetLocalScale(objInfo[i]->sca);
 		//管理用の配列に追加。
-		if (continent >= 0)
-			_GameObjectList[continent].push_back(obj);
+		if (location >= 0)
+		{
+			_GameObjectList[location].push_back(obj);
+		}
 
 		//もういらないので解放
 		SAFE_DELETE(objInfo[i]);
@@ -174,7 +216,13 @@ void HistoryManager::_CreateObject(const int& continent,const char * path)
 	objInfo.clear();
 }
 
-void HistoryManager::_CreateCollision(const int & continent, const char * path)
+/**
+* コリジョンを作成.
+*
+* @param location	場所ID.
+* @param path		フォルダパス.
+*/
+void HistoryManager::_CreateCollision(int location, const char * path)
 {
 	//CSVから当たり判定の情報読み込み
 	vector<CollisionInfo*> colls;
@@ -190,8 +238,10 @@ void HistoryManager::_CreateCollision(const int & continent, const char * path)
 		coll->transform->SetLocalAngle(colls[i]->ang);
 		coll->transform->SetLocalScale(colls[i]->sca);
 		//管理用の配列に追加。
-		if (continent >= 0)
-			_GameObjectList[continent].push_back(coll);
+		if (location >= 0)
+		{
+			_GameObjectList[location].push_back(coll);
+		}
 
 		//もういらないので解放
 		SAFE_DELETE(colls[i]);
