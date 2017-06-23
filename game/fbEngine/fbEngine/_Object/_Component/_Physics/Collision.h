@@ -33,6 +33,11 @@ public:
 	{
 		return _CollisionObject.get();
 	}
+	// シェアードポインタで取得。
+	// コリジョンが削除されたときにNullチェックしたいときなどにシェアードポインタでコリジョンオブジェクトを保管しておくといい。
+	// ※Nullチェックの仕方は下記。
+	// if(static_cast<Collision*>(_CollisionObject->getUserPointer())->gameObject) : コリジョンがアタッチされたゲームオブジェクトのNullチェック。
+	// if(_CollisionObject->getUserPointer()) : コリジョンのNullチェック。
 	shared_ptr<btCollisionObject> GetCollisionObj_shared()const {
 		return _CollisionObject;
 	}
