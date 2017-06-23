@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ThirdPersonCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
+#include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
@@ -15,14 +16,15 @@ void ThirdPersonCamera::Awake()
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 
+	_Model= AddComponent<SkinModel>();
 }
 
 void ThirdPersonCamera::Start()
 {
-	transform->SetPosition(Vector3(0,5000,0));
+	transform->SetPosition(Vector3(0,10,0));
 
 	//真下を向くように回転。
-	transform->SetRotation(Quaternion(0.75f, 0.0f, 0.0f, 1.0f));
+	transform->SetRotation(Quaternion(-0.75f, 0.0f, 0.0f, 1.0f));
 
 	_Camera->SetTarget(Vector3(0,0,0));
 
@@ -32,6 +34,7 @@ void ThirdPersonCamera::Start()
 
 void ThirdPersonCamera::UpdateSubClass()
 {
+	
 }
 
 void ThirdPersonCamera::_Move()

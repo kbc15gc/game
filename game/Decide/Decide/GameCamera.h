@@ -1,9 +1,10 @@
 #pragma once
 
 #include "fbEngine\_Object\_GameObject\GameObject.h"
-/**
-* カメラの基底クラス。
-*/
+
+class SkinModel;
+
+//カメラの基底クラス。
 class GameCamera :public GameObject
 {
 public:
@@ -71,4 +72,6 @@ protected:
 
 	//このカメラをアクティブ化するか。
 	bool _isActivate = false;
+
+	SkinModel* _Model = nullptr;
 };

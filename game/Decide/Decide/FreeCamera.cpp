@@ -25,7 +25,7 @@ void FreeCamera::Awake()
 
 void FreeCamera::Start()
 {
-	transform->SetPosition(Vector3(0, 80, 0));
+	transform->SetPosition(Vector3(0, 70, 0));
 
 	//^‰º‚ðŒü‚­‚æ‚¤‚É‰ñ“]B
 	transform->SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
