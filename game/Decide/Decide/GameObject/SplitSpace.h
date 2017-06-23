@@ -22,14 +22,6 @@ public:
 	//			衝突判定を取りたい属性をレイヤーで指定(デフォルトは全属性)。
 	void Split(const SkinModelData* data, Transform* transform,int x, int y, int z,int attr = _defaultAttr);
 
-	//// 指定した要素番号の空間コリジョン取得。
-	//inline const SpaceCollisionObject* GetCollisionObject(int x, int y, int z) const{
-	//	if (y >= _SpaceCollisions.size() || x >= _SpaceCollisions[0].size() || z >= _SpaceCollisions[0][0].size()) {
-	//		abort();	// 指定した要素番号が配列外。
-	//	}
-	//	return _SpaceCollisions[y][x][z];
-	//};
-
 	// 衝突した空間コリジョンの衝突オブジェクトに追加登録。
 	// 引数：	衝突判定をしたいゲームオブジェクト。
 	void AddObjectHitSpace(const GameObject& object);
@@ -37,7 +29,7 @@ public:
 	// 各空間コリジョンに衝突しているオブジェクトを登録する。
 	void RegistrationObject();
 private:
-	enum Space { Right = 0, Left, Up, Down, Front, Back, RightUp, RightDown, LeftUp, LeftDown, UpFront, DownFront, UpBack, DownBack, RightUpFront, RightDownFront, LeftUpFront, LeftDownFront, RightUpBack, RightDownBack, LeftUpBack, LeftDownBack, Max };
+	enum Space { Right = 0, Left, Up, Down, Front, Back, RightUp, RightDown,RightFront,RightBack, LeftUp, LeftDown,LeftFront,LeftBack, UpFront, UpBack, DownFront, DownBack, RightUpFront, RightDownFront, RightUpBack, RightDownBack, LeftUpFront, LeftDownFront,LeftUpBack, LeftDownBack, Max };
 
 	// 最大空間を表すボックスを定義する関数。
 	// 引数：	モデルデータ(このモデルを内包できるサイズのボックスを定義する)。
@@ -57,6 +49,13 @@ private:
 
 	// 隣接する空間オブジェクトを登録する。
 	void _AdjacentSpace();
+
+	// プレイヤーと衝突している空間コリジョンをすべての空間コリジョンから探索する。
+	SpaceCollisionObject* IsHitPlayerToAll();
+
+	// プレイヤーと衝突した空間をもとにアクティブ空間を変更。
+	void ChangeActivateSpace(SpaceCollisionObject* Obj);
+
 private:
 	Vector3 _unSplitSpaceSize;	// 分割前の空間サイズ。
 	Vector3 _splitSpaceSize;	// 分割後のボックス一つ当たりの空間サイズ。
@@ -66,4 +65,5 @@ private:
 	int _splitY = 1;	// 分割数(縦)。
 	int _splitZ = 1;	// 分割数(奥行)。
 	static const int _defaultAttr;
+	SpaceCollisionObject* _nowHitSpace = nullptr;	// 現在衝突している空間コリジョン。
 };

@@ -182,7 +182,6 @@ void Player::Update()
 		}
 
 	}
-	SetIsStopUpdate(true);
 	//HPバーの更新
 	_HPBar->Update();
 	//MPバーの更新

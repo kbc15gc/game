@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fbEngine\_Object\_GameObject\GameObject.h"
+#include "GameObject\Player\Player.h"
 
 class Player;
 
@@ -41,6 +42,8 @@ public:
 			static_cast<GameCamera*>(cam->gameObject)->UnActivateFlg();
 		}
 		INSTANCE(GameObjectManager)->mainCamera = this->_Camera;
+		_Player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
+		_Player->SetIsStopUpdate(false);
 		_isActivate = true;
 	}
 	
