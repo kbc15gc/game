@@ -21,10 +21,10 @@ void ThirdPersonCamera::Awake()
 
 void ThirdPersonCamera::Start()
 {
-	transform->SetPosition(Vector3(0,10,0));
+	transform->SetPosition(3378, 5000, -1286);
 
 	//^‰º‚ðŒü‚­‚æ‚¤‚É‰ñ“]B
-	transform->SetRotation(Quaternion(-0.75f, 0.0f, 0.0f, 1.0f));
+	transform->SetRotation(Quaternion(0.75f, 0.0f, 0.0f, 1.0f));
 
 	_Camera->SetTarget(Vector3(0,0,0));
 
