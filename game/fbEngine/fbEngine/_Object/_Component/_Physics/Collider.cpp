@@ -11,6 +11,19 @@ Collider::~Collider(){
 #endif //_DEBUG
 };
 
+void Collider::Update() {
+	if ((KeyBoardInput->isPush(DIK_M))) {
+		if (GetIsRender()) {
+			// 空間分割のコリジョン描画オフ。
+			RenderDisable();
+		}
+		else {
+			// 空間分割のコリジョン描画オン。
+			RenderEnable();
+		}
+	}
+}
+
 void Collider::CreateViewModel(const btTransform& collisionTr){
 #ifdef _DEBUG
 
@@ -58,5 +71,24 @@ void Collider::UpdateTransform(const btTransform& collisionTr) {
 		_CollisionTr->SetRotation(rot.getX(), rot.getY(), rot.getZ(), rot.getW());
 		// コリジョンのTransform情報を親に設定。
 		_CollisionModel->transform->SetParent(_CollisionTr.get());
+	}
+}
+
+bool Collider::GetIsRender() {
+	if (_CollisionModel) {
+		return _CollisionModel->GetSkinModel()->enable;
+	}
+	return false;
+}
+
+void Collider::RenderEnable() {
+	if (_CollisionModel) {
+		_CollisionModel->GetSkinModel()->enable = true;
+	}
+}
+
+void Collider::RenderDisable() {
+	if (_CollisionModel) {
+		_CollisionModel->GetSkinModel()->enable = false;
 	}
 }

@@ -48,7 +48,7 @@ void SplitSpace::Update() {
 
 	// アクティブ化した空間と隣接する空間もアクティブ化。
 	if (playerHitSpace) {
-		//playerHitSpace->_EnableObjectsAdjacent();
+		playerHitSpace->_EnableObjectsAdjacent();
 	}
 }
 
