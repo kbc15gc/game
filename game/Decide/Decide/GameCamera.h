@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 
 class SkinModel;
+class Player;
 
 //カメラの基底クラス。
 class GameCamera :public GameObject
@@ -60,6 +61,8 @@ protected:
 		_isActivate = false;
 	}
 
+
+
 protected:
 	//カメラコンポーネント。
 	Camera* _Camera = nullptr;
@@ -74,4 +77,10 @@ protected:
 	bool _isActivate = false;
 
 	SkinModel* _Model = nullptr;
+
+	//プレイヤーオブジェクト
+	Player* _Player = nullptr;
+
+	//プレイヤーのポジションへの参照
+	const Vector3* _PlayerPos = &Vector3::zero;
 };
