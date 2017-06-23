@@ -16,6 +16,8 @@ PlayerStateRun::~PlayerStateRun()
 
 void PlayerStateRun::Update()
 {
+#ifdef _DEBUG
+
 	if (KeyBoardInput->isPush(DIK_0))
 	{
 		debug = !debug;
@@ -99,6 +101,7 @@ void PlayerStateRun::Update()
 		}
 	}
 	else
+#endif
 	{
 		//ˆÚ“®‘¬“x
 		Vector3 movespeed = Vector3::zero;

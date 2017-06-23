@@ -21,12 +21,12 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, float 
 	//リジッドボディ作成
 	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off,isAddWorld);
 	//スリープさせない(必要かどうかわからない。)
-	static_cast<btRigidBody*>(m_rigidBody->GetCollisonObj())->setSleepingThresholds(0, 0);
+	static_cast<btRigidBody*>(m_rigidBody->GetCollisionObj())->setSleepingThresholds(0, 0);
 
 
 	m_collider = capsule;
 	//もともとのフラグを残したまま新しいフラグを追加。
-	m_rigidBody->GetCollisonObj()->setCollisionFlags(m_rigidBody->GetCollisonObj()->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
+	m_rigidBody->GetCollisionObj()->setCollisionFlags(m_rigidBody->GetCollisionObj()->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
 }
 void CCharacterController::Execute()
 {
@@ -67,7 +67,7 @@ void CCharacterController::Execute()
 				end.setOrigin(btVector3(nextPosition.x, posTmp.y, nextPosition.z));
 
 				fbPhysicsCallback::SweepResultWall callback;
-				callback.me = m_rigidBody->GetCollisonObj();
+				callback.me = m_rigidBody->GetCollisionObj();
 				callback.startPos = posTmp;
 				callback._attribute = m_attributeXZ;
 				//衝突検出。
@@ -145,7 +145,7 @@ void CCharacterController::Execute()
 		}
 		end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 		fbPhysicsCallback::SweepResultGround callback;
-		callback.me = m_rigidBody->GetCollisonObj();
+		callback.me = m_rigidBody->GetCollisionObj();
 		callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 		callback._attribute = m_attributeY;
 		//スタートとエンドの差
@@ -183,7 +183,7 @@ void CCharacterController::Execute()
 	m_rigidBody->Update();
 	//btRigidBody* btBody = (btRigidBody*)m_rigidBody->GetCollisonObj();
 	//剛体を動かす。
-	m_rigidBody->GetCollisonObj()->setActivationState(DISABLE_DEACTIVATION);
+	m_rigidBody->GetCollisionObj()->setActivationState(DISABLE_DEACTIVATION);
 	//btTransform& trans = btBody->getWorldTransform();
 	////剛体の位置を更新。
 	//trans.setOrigin(btVector3(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z));

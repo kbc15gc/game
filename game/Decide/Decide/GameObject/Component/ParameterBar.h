@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 
 enum BarColor {  Red = 0, Yellow,Green,Blue};
+
 // バーの中身。
 class BarElement:public ImageObject{
 public:
@@ -51,21 +52,12 @@ namespace {
 	};
 }
 
-// バー。
-class ParameterBar :
-	public Component
-{
-	static const Vector3 CreatePos_DefaultArg;
-	static const Vector2 CreateScale_DefaultArg;
+// バーはキャラクターの実行優先度とは独立して更新したいので、レイヤーとしてクラスを挟む。
+class BarAdapter :public GameObject {
 public:
-	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
-		// このコンポーネントを持つゲームオブジェクトに管理を委譲する。
-		// ※オブジェクト指向上あまりよろしくはないと思う。
-		if (g) {
-			_Transform = g->AddComponent<Transform>();
-		}
+	BarAdapter(char* name) : GameObject(name) {
 	};
-	~ParameterBar();
+	~BarAdapter();
 	// バー生成関数。
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
 	//			バーに設定する最大値(HP最大量など)。
@@ -75,7 +67,7 @@ public:
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	void Create(const vector<BarColor>&, float max, float value, bool isRenderFrame = true, Transform* tr = nullptr,const Vector3& pos = CreatePos_DefaultArg,const Vector2& scale = CreateScale_DefaultArg, bool isHud = true);
+	void Create(const vector<BarColor>& colors, float max, float value, bool isRenderFrame, Transform* tr, const Vector3& pos, const Vector2& scale, bool isHud);
 	void Update()override;
 	void ImageRender()override;
 
@@ -87,7 +79,7 @@ private:
 	void _CreateBarFrame(const Vector3& pos, const Vector3& scale, bool isHud);
 	// どの順番でどの色を表示するかを決めた配列を渡し、CBarElementのインスタンスを生成する関数。
 	// ※先に追加した色のゲージから減っていく。
-	void _ActiveBarColor(const vector<BarColor>& BarColorArray, float max, float value,Transform* tr);
+	void _ActiveBarColor(const vector<BarColor>& BarColorArray, float max, float value, Transform* tr);
 	// ワンゲージ削った際のイベント。
 	void _BreakEvent();
 	// 引数の値で各バーに設定する値を更新。
@@ -100,6 +92,7 @@ private:
 	void _UpdateAddValue(float Difference, float Fraction);
 	// HUDとして使用しない場合にスクリーン座標系に変換する関数。
 	void _ToScreenPos();
+
 public:
 	inline void SubValue(float value) {
 		_UpdateValue(_Value - value);
@@ -115,10 +108,7 @@ public:
 	inline short GetNowBarNum()const {
 		return _NowBarNum;
 	}
-	// HadBarのTransform情報を取得。
-	inline Transform* GetTransform()const {
-		return _Transform;
-	}
+
 private:
 	short _MaxBarNum;	// 何ゲージ分重ねるか。
 	vector<unique_ptr<BarElement>> _BarElement;	// バー。
@@ -129,10 +119,56 @@ private:
 	BarElement* _NowSettingBar = nullptr;	// 現在先行入力中のバー。
 	short _NowSettingNum;		// 現在先行入力中のバーを表す添え字。
 	short _framePriorty;
-	Transform* _Transform = nullptr;	// BarのTransform情報(三次元)。
 private:
 	// 描画用。
 	bool _isHud;		// HUDとして使用するか。
 	bool _isRenderFrame;	// バーの枠を描画するか。
 	unique_ptr<ImageObject> _BarFrame;	// バーの枠。
+};
+
+// バー。
+class ParameterBar :
+	public Component
+{
+	static const Vector3 CreatePos_DefaultArg;
+	static const Vector2 CreateScale_DefaultArg;
+public:
+	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar",9);
+	};
+	~ParameterBar();
+	// バー生成関数。
+	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
+	//			バーに設定する最大値(HP最大量など)。
+	//			バーに設定する初期値(HP量など)。
+	//			バーの枠を描画するか。
+	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
+	//			位置(ローカル座標、未設定で画面の左上に表示)。
+	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
+	//			HUDとして使用するか(デフォルトはtrue)。
+	inline void Create(const vector<BarColor>& colors, float max, float value, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, bool isHud = true) {
+		_Object->Create(colors,max, value, isRenderFrame, tr, pos, scale, isHud);
+	}
+public:
+	inline void SubValue(float value) {
+		_Object->SubValue(value);
+	}
+	void AddValue(float value) {
+		_Object->AddValue(value);
+	}
+	// 何ゲージ重ねるかを返却。
+	inline short GetMaxBarNum()const {
+		return _Object->GetMaxBarNum();
+	}
+	// 今何ゲージ目かを返却。
+	inline short GetNowBarNum()const {
+		return _Object->GetNowBarNum();
+	}
+	// HadBarのTransform情報を取得。
+	inline Transform* GetTransform()const {
+		return _Object->transform;
+	}
+
+private:
+	BarAdapter* _Object = nullptr;
 };

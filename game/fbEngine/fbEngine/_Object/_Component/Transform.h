@@ -49,6 +49,9 @@ public:
 
 	//解放
 	void Release();
+
+	// 子を追加。
+	void AddChild(Transform* t);
 	//子を外す
 	void RemoveChild(Transform* t);
 

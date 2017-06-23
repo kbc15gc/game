@@ -122,6 +122,7 @@
     <ClCompile Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.cpp">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -256,6 +257,7 @@
     <ClInclude Include="GameObject\HistoryBook\HFSM\HistoryBookStateMove.h">
       <Filter>GameObject\HistoryBook\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

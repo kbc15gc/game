@@ -21,39 +21,52 @@ void SpaceCollisionObject::Start() {
 void SpaceCollisionObject::UpdateActiveSpace() {
 	// 必要になったら呼ぶ。
 	//	RegistrationObject();
-	
-	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
-		// プレイヤーと衝突している。
-		_isHitPlayer = true;
-		//EnableObjects();	// 自分に衝突しているオブジェクトをアクティブ化。
-		DisableObjects();
-		if (test == 2) {
-			OutputDebugString("3");
+
+	if (GetCollision()) {
+		if (GetCollision()->GetCollisionObj()) {
+			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
+				// プレイヤーと衝突している。
+				_isHitPlayer = true;
+				//EnableObjects();	// この空間に含まれているオブジェクトをアクティブ化。
+				DisableObjects();
+
+			}
+			else {
+				// 衝突していない。
+				_isHitPlayer = false;
+				//DisableObjects();	// この空間に含まれているオブジェクトを非アクティブ化。 
+				EnableObjects();
+			}
 		}
-	}
-	else {
-		// 衝突していない。
-		_isHitPlayer = false;
-		EnableObjects();
 	}
 }
 
 void SpaceCollisionObject::AddObjectHitSpace(GameObject& object) {
 	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(object)),_attribute) {
 		// 衝突していたので追加。
-		_HitCollisions.push_back(object.GetComponent<Collision>());
+		_HitCollisions.push_back(object.GetComponent<Collision>()->GetCollisionObj_shared());
 	}
 }
 
 void SpaceCollisionObject::_SetActives(bool flg) {
-	for (int idx = 0; idx < _HitCollisions.size(); idx++) {
-		_HitCollisions[idx]->gameObject->SetActive(flg);
+	for (auto itr = _HitCollisions.begin(); itr != _HitCollisions.end();) {
+		if ((*itr)->getUserPointer()) {
+			// コリジョン削除されてない。
+			if (static_cast<Collision*>((*itr)->getUserPointer())->gameObject) {
+				// ゲームオブジェクトがある。
+				static_cast<Collision*>((*itr)->getUserPointer())->gameObject->SetActive(flg);
+				itr++;
+				continue;
+			}
+		}
+		itr = _HitCollisions.erase(itr);
 	}
 }
 
 void SpaceCollisionObject::_EnableObjectsAdjacent() {
 	for (auto Adjacent : _adjacentSpaceObjects) {
-		Adjacent->EnableObjects();
+		//Adjacent->EnableObjects();
+		Adjacent->DisableObjects();
 	}
 }
 

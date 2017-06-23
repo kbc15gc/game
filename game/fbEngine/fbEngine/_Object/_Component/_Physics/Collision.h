@@ -29,11 +29,16 @@ public:
 	//第四引数 Vector3& 基点からの移動量
 	//第五引数 bool 生成時にワールドに追加するか。
 	void Create(btCollisionObject* collision, Collider* shape, const int& id = static_cast<int>(fbCollisionAttributeE::ALL),Vector3 offset = Vector3::zero,bool isAddWorld = true);
-	btCollisionObject* GetCollisonObj() const
+	btCollisionObject* GetCollisionObj() const
 	{
 		return _CollisionObject.get();
 	}
-	shared_ptr<btCollisionObject> GetCollisionObj()const {
+	// シェアードポインタで取得。
+	// コリジョンが削除されたときにNullチェックしたいときなどにシェアードポインタでコリジョンオブジェクトを保管しておくといい。
+	// ※Nullチェックの仕方は下記。
+	// if(static_cast<Collision*>(_CollisionObject->getUserPointer())->gameObject) : コリジョンがアタッチされたゲームオブジェクトのNullチェック。
+	// if(_CollisionObject->getUserPointer()) : コリジョンのNullチェック。
+	shared_ptr<btCollisionObject> GetCollisionObj_shared()const {
 		return _CollisionObject;
 	}
 	//オフセットした先のポジション取得
