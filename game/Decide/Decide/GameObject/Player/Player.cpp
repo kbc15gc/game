@@ -182,6 +182,7 @@ void Player::Update()
 		}
 
 	}
+
 	//HPバーの更新
 	_HPBar->Update();
 	//MPバーの更新

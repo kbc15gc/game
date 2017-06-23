@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ThirdPersonCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
-#include "GameObject\Player\Player.h"
 
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
@@ -45,7 +44,7 @@ void ThirdPersonCamera::UpdateSubClass()
 		break;
 		//高さ:低。
 	case ThirdPersonCamera::Camera_Height::Low:
-		transform->SetPosition(transform->GetPosition().x, 80, transform->GetPosition().z);
+		transform->SetPosition(transform->GetPosition().x, 180.0f, transform->GetPosition().z);
 
 		//カメラの移動スピードを設定。
 		CameraSpeed = 3.0f;
@@ -54,16 +53,16 @@ void ThirdPersonCamera::UpdateSubClass()
 		break;
 		//高さ:中。
 	case ThirdPersonCamera::Camera_Height::Middle:
-		transform->SetPosition(transform->GetPosition().x, 500, transform->GetPosition().z);
+		transform->SetPosition(transform->GetPosition().x, 500.0f, transform->GetPosition().z);
 
 		//カメラの移動スピードを設定。
-		CameraSpeed = 10.0f;
+		CameraSpeed = 15.0f;
 		SetCameraSpeed(CameraSpeed);
 		Move();
 		break;
 		//高さ:高。
 	case ThirdPersonCamera::Camera_Height::Height:
-		transform->SetPosition(transform->GetPosition().x, 5000, transform->GetPosition().z);
+		transform->SetPosition(0.0f, 5000.0f,0.0f);
 		break;
 	default:
 		break;
@@ -112,10 +111,16 @@ void ThirdPersonCamera::ChangeHeight()
 	if ((KeyBoardInput->isPush(DIK_UP)))
 	{
 		_NowHeight = Add(_NowHeight);
+		if (_NowHeight != Camera_Height::Height) {
+			transform->SetPosition(_PlayerPos->x, 0.0f, _PlayerPos->z);
+		}
 	}
 
 	if ((KeyBoardInput->isPush(DIK_DOWN)))
 	{
 		_NowHeight = Subtract(_NowHeight);
+		if (_NowHeight != Camera_Height::Height) {
+			transform->SetPosition(_PlayerPos->x, 0.0f, _PlayerPos->z);
+		}
 	}
 }

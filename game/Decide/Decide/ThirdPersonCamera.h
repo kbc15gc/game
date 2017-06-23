@@ -1,5 +1,6 @@
 #pragma once
 #include "GameCamera.h"
+#include "GameObject\Player\Player.h"
 
 //ふかんカメラクラスの定義。
 class ThirdPersonCamera :	public GameCamera
@@ -69,6 +70,13 @@ private:
 
 	//カメラの高さを変更。
 	void ChangeHeight();
+
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {
+		transform->SetPosition(_PlayerPos->x, 0.0f, _PlayerPos->z);
+		//プレイヤーの更新を止める。
+		_Player->SetIsStopUpdate(true);
+	}
 
 private:
 	

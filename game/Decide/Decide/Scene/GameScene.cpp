@@ -59,6 +59,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
+
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	
