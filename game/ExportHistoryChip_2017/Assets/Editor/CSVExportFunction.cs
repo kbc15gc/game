@@ -193,11 +193,11 @@ public class CSVExportFunction : Editor
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)
     {
-        sw.Write(val.x);
+        sw.Write(-val.x);
         sw.Write('/');
         sw.Write(val.y);
         sw.Write('/');
-        sw.Write(val.z);
+        sw.Write(-val.z);
         //コンマを打つ
         if (comma)
         {

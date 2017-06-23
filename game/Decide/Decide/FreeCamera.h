@@ -33,9 +33,6 @@ private:
 		
 	}
 private:
-	//カメラコンポーネント
-	Camera* _FreeCamera;
-
 	bool _FreeCameraFlag = false;
 
 	Vector3 _toPosition = Vector3::zero;
