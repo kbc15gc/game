@@ -20,15 +20,15 @@ void PlayerStateRun::Update()
 
 	if (KeyBoardInput->isPush(DIK_0))
 	{
-		debug = !debug;
-		if (debug == true)
+		_Player->_Debug = !_Player->_Debug;
+		if (_Player->_Debug == true)
 		{
 			Vector3 pos = Vector3(_Player->transform->GetLocalPosition().x, _Player->transform->GetLocalPosition().y + 5.0f, _Player->transform->GetLocalPosition().z);
 			_Player->transform->SetLocalPosition(pos);
 		}
 	}
 
-	if (debug == true)
+	if (_Player->_Debug == true)
 	{
 		Vector3 movespeed = Vector3::zero;
 		//ゲームパッドから取得した方向
@@ -54,9 +54,13 @@ void PlayerStateRun::Update()
 		{
 			dir.x++;
 		}
-		if (KeyBoardInput->isPressed(DIK_1))
+		if (KeyBoardInput->isPush(DIK_9))
 		{
 			dir.y++;
+		}
+		if (KeyBoardInput->isPush(DIK_8))
+		{
+			dir.y--;
 		}
 #endif
 		//移動したか
@@ -86,7 +90,7 @@ void PlayerStateRun::Update()
 			dir = dir * _Speed;
 			//カメラからみた方向に射影。
 			movespeed = movespeed + cameraX * dir.x;
-			movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。
+			movespeed.y = dir.y;
 			movespeed = movespeed + cameraZ * dir.z;
 
 			//移動したい方向のベクトル
