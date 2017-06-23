@@ -30,11 +30,11 @@ PlayerCamera::~PlayerCamera()
 void PlayerCamera::Awake()
 {
 	//カメラコンポーネント
-	_PlayerCamera = AddComponent<Camera>();
-	_PlayerCamera->SetNear(0.01f);
-	_PlayerCamera->SetFar(10000.0f);
-	INSTANCE(GameObjectManager)->mainCamera = _PlayerCamera;
-	//SetCamera(_PlayerCamera);
+	_Camera = AddComponent<Camera>();
+	_Camera->SetNear(0.01f);
+	_Camera->SetFar(10000.0f);
+	INSTANCE(GameObjectManager)->mainCamera = _Camera;
+	//SetCamera(_Camera);
 
 	//カメラのコリジョンの半径設定
 	_Radius = 0.5f;
@@ -59,17 +59,17 @@ void PlayerCamera::Start()
 	// ※消すな。
 	{
 		_Move();
-		_PlayerCamera->Update();
+		_Camera->Update();
 	}
 
 	//歴史書を検索。
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
 	//カメラをシャドウマップに設定.
-	INSTANCE(SceneManager)->GetShadowMap()->SetCamera(_PlayerCamera);
+	INSTANCE(SceneManager)->GetShadowMap()->SetCamera(_Camera);
 }
 
-void PlayerCamera::Update()
+void PlayerCamera::UpdateSubClass()
 {
 	float Pint = 3.0f;
 
@@ -78,10 +78,10 @@ void PlayerCamera::Update()
 	{
 		_StandardBehavior();
 		_CameraPos = transform->GetPosition();
-		
+
 		Vector3 toPosition = Vector3::zero;
-		toPosition.Subtract(transform->GetPosition(), _PlayerCamera->GetTarget());
-		Pint = toPosition.Length();
+		toPosition.Subtract(transform->GetPosition(), _Camera->GetTarget());
+
 		Pint = 3.0f;
 
 	}
@@ -95,7 +95,6 @@ void PlayerCamera::Update()
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(Pint * 1000);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
-
 }
 
 void PlayerCamera::_RotTransversal(float roty)
@@ -194,7 +193,7 @@ void PlayerCamera::_StandardBehavior()
 
 		//カメラの注視点を線形補間された位置に設定。
 		transform->LockAt(_LerpCameraLookAtPos);
-		_PlayerCamera->SetTarget(_LerpCameraLookAtPos);
+		_Camera->SetTarget(_LerpCameraLookAtPos);
 
 
 		//カメラの位置を線形補完された位置に設定。
@@ -235,7 +234,7 @@ void PlayerCamera::_StandardBehavior()
 
 	//プレイヤーの方を向く
 	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
-	_PlayerCamera->SetTarget((*_PlayerPos) + PLAYER_HEIGHT);
+	_Camera->SetTarget((*_PlayerPos) + PLAYER_HEIGHT);
 
 }
 
@@ -267,7 +266,7 @@ void PlayerCamera::_HistoryBehavior()
 
 	//カメラの注視点を線形補間された位置に設定。
 	transform->LockAt(_LerpCameraLookAtPos);
-	_PlayerCamera->SetTarget(_LerpCameraLookAtPos);
+	_Camera->SetTarget(_LerpCameraLookAtPos);
 
 	//カメラの位置を線形補完された位置に設定。。
 	transform->SetPosition(_LerpCameraPos);

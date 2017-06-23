@@ -75,7 +75,7 @@ void AttackCollision::DetectionCollision() {
 		// 衝突をした瞬間に呼び出すコールバック処理。
 		_CallBackEnter(collisions[idx]);
 		// 衝突リストに追加。
-		_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj());
+		_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj_shared());
 	}
 }
 

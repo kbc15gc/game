@@ -129,6 +129,7 @@
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="GameObject\History\HistoryMenu\Chip2D.h">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

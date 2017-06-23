@@ -18,7 +18,7 @@ public:
 	void Start()override;
 
 	//更新。
-	void Update()override;
+	void UpdateSubClass()override;
 private:
 	//移動関数。
 	void _Move();

@@ -9,4 +9,6 @@ public:
 	void Update()override;
 	void Enter()override;
 	void Leave()override;
+private:
+	bool debug = false;
 };

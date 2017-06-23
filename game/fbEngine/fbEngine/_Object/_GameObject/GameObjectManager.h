@@ -39,7 +39,9 @@ public:
 	//戻り値：GameObject* 追加に成功したオブジェクトのポインタ
 	//第一引数：GameObject* アドレス
 	//第二引数：int 優先度
+	//*注意点:初期化をしたい場合はAwake()を自分で呼んで。
 	GameObject* Add(GameObject* pAdd,int priority);
+
 
 	template<class T>
 	T* AddNew(char* name, unsigned int priority)
@@ -77,6 +79,7 @@ public:
 	void ImageRenderObject();
 	
 	//破棄リストに追加
+	// この関数を呼ぶとフレーム終了時に削除される。
 	void AddRemoveList(GameObject* obj);
 	void AddRemoveList(char* name);
 
@@ -108,6 +111,8 @@ public:
 private:
 	//リストに重複がないかチェックする。
 	bool _CheckUniqueRemoveList(GameObject* obj);
+	// 各種チェックが終わった後に削除リストに積む。
+	void _AddRemoveList(list<GameObject*>::iterator itr, int priority);
 	//削除リストのオブジェクトを削除する。
 	void _RemoveObject();
 private:

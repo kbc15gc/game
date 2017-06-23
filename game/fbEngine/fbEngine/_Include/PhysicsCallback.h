@@ -77,7 +77,7 @@ namespace fbPhysicsCallback
 			//近いなら
 			if (distTmpSq < distSq) {
 				// col0 と col1 のどちらかは自分なのでアドレスを比較して確かめる
-				if (me->GetCollisonObj() == colObj0Wrap->getCollisionObject()) {
+				if (me->GetCollisionObj() == colObj0Wrap->getCollisionObject()) {
 					hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
 				}
 				else {
@@ -87,7 +87,7 @@ namespace fbPhysicsCallback
 				if (hitObjectTmp)
 				{
 					//属性が一致するか？マスクをとる
-					if ((attribute & hitObjectTmp->GetCollisonObj()->getUserIndex()) != 0)
+					if ((attribute & hitObjectTmp->GetCollisionObj()->getUserIndex()) != 0)
 					{
 						//距離を更新
 						distSq = distTmpSq;
@@ -121,7 +121,7 @@ namespace fbPhysicsCallback
 			Collision* hitObjectTmp = nullptr;
 
 			// col0 と col1 のどちらかは自分なのでアドレスを比較して確かめる
-			if (me->GetCollisonObj() == colObj0Wrap->getCollisionObject()) {
+			if (me->GetCollisionObj() == colObj0Wrap->getCollisionObject()) {
 				hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
 			}
 			else {
@@ -142,7 +142,7 @@ namespace fbPhysicsCallback
 				}
 
 				//属性が一致するか？マスクをとる
-				if ((attribute & hitObjectTmp->GetCollisonObj()->getUserIndex()) != 0)
+				if ((attribute & hitObjectTmp->GetCollisionObj()->getUserIndex()) != 0)
 				{
 					//重複チェック
 					for each (Collision* coll in hitObjects)

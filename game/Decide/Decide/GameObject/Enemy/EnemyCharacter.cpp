@@ -31,7 +31,7 @@ void EnemyCharacter::Awake() {
 	_BuildMyComponents();
 
 	// 位置情報設定。
-	_InitPos = Vector3(560, 69, -1000);
+	_InitPos = Vector3(378, 69, -1286);
 	transform->SetPosition(_InitPos);
 	
 	// 使用するステートを列挙。
