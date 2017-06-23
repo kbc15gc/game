@@ -14,6 +14,9 @@ public:
 	inline GostCollision* GetCollision() const{
 		return _Coll;
 	}
+	inline BoxCollider* GetCollider()const {
+		return _Shape;
+	}
 private:
 	BoxCollider* _Shape = nullptr;
 	GostCollision* _Coll = nullptr;

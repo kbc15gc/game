@@ -34,8 +34,11 @@ void GameObjectManager::UpdateObject()
 		{
 			if (obj->GetActive())
 			{
-				obj->Update();
-				obj->GetComponentManager().Update();
+				if (obj->GetIsStopUpdate()) {
+					// 更新ストップフラグがオフ。
+					obj->Update();
+					obj->GetComponentManager().Update();
+				}
 			}
 		}
 	}

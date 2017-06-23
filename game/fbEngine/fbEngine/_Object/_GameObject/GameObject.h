@@ -93,6 +93,15 @@ public:
 	{
 		_Priority = pri;
 	}
+
+	// trueを設定するとGameObjectManagerに登録しているオブジェクトの更新処理が停止する。
+	inline void SetIsStopUpdate(bool flg) {
+		_isStopUpdate = flg;
+	}
+	// 更新処理を無視するか。
+	inline bool GetIsStopUpdate()const {
+		return _isStopUpdate;
+	}
 public:
 	//トランスフォーム(簡単にアクセスしたかった。)
 	Transform* transform;	
@@ -105,4 +114,6 @@ protected:
 	bool _Active;
 	//オブジェクトを破棄する
 	bool _Discard;
+private:
+	bool _isStopUpdate = true;	// 更新停止フラグ(GameObjectManagerに登録している場合、このフラグをtrueにすると更新処理を無視する)。
 };
