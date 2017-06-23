@@ -2,7 +2,7 @@
 * —ğj‘‚ÌˆÚ“®ó‘ÔƒNƒ‰ƒX‚ÌÀ‘•.
 */
 #include"stdafx.h"
-#include "GameObject\HistoryBook\HistoryBook.h"
+#include"..\HistoryBook.h"
 #include "HistoryBookStateMove.h"
 
 /**

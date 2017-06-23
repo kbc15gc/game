@@ -3,15 +3,12 @@
 */
 #pragma once
 
-//状態.
-#include"HFSM\HistoryBookStateUnused.h"
-#include"HFSM\HistoryBookStateIdol.h"
-#include"HFSM\HistoryBookStateMove.h"
-#include"HFSM\HistoryBookStateOpen.h"
-#include"HFSM\HistoryBookStateClose.h"
+#include"HFSM\HistoryBookState.h"
 
+/** プレイヤークラス. */
 class Player;
 
+/** 歴史書の状態クラスのユニークポインタ. */
 using HistoryBookStatePtr = unique_ptr<IHistoryBookState>;
 
 /**
@@ -24,7 +21,7 @@ public:
 	/**
 	* 歴史書の状態コード.
 	*/
-	enum class StateCodeE
+	enum class StateCodeE : int
 	{
 		Invalid = -1,	//!< 無効.
 		Unused,			//!< 未使用.
