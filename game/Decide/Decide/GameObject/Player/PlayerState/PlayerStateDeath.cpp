@@ -18,6 +18,7 @@ void PlayerStateDeath::Update()
 	if (_Player->_Anim->GetPlaying() != true)
 	{
 		//タイトルシーンへ移行
+		_Player->Releace();
 		INSTANCE(SceneManager)->ChangeScene("GameScene");
 	}
 }

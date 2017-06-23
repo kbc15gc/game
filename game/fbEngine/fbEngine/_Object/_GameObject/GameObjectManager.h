@@ -111,6 +111,8 @@ public:
 private:
 	//リストに重複がないかチェックする。
 	bool _CheckUniqueRemoveList(GameObject* obj);
+	// 各種チェックが終わった後に削除リストに積む。
+	void _AddRemoveList(list<GameObject*>::iterator itr, int priority);
 	//削除リストのオブジェクトを削除する。
 	void _RemoveObject();
 private:

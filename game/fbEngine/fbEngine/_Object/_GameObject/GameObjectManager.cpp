@@ -135,10 +135,7 @@ void GameObjectManager::AddRemoveList(GameObject * obj)
 			//アドレスの比較
 			if (obj == *it)
 			{
-				(*it)->OnDestroy();
-				(*it)->GetComponentManager().OnDestroy();
-				RemoveObj remove(it, priority);
-				_RemoveList.push_back(remove);
+				_AddRemoveList(it, priority);
 				return;
 			}
 			else
@@ -161,10 +158,8 @@ void GameObjectManager::AddRemoveList(char * name)
 				//重複チェック。
 				if (_CheckUniqueRemoveList((*it)) == FALSE)
 					return;
-				(*it)->OnDestroy();
-				(*it)->GetComponentManager().OnDestroy();
-				RemoveObj remove(it,priority);
-				_RemoveList.push_back(remove);
+
+				_AddRemoveList(it, priority);
 				return;
 			}
 			else
@@ -228,6 +223,13 @@ bool GameObjectManager::_CheckUniqueRemoveList(GameObject * obj)
 	return TRUE;
 }
 
+void GameObjectManager::_AddRemoveList(list<GameObject*>::iterator itr,int priority) {
+	(*itr)->OnDestroy();
+	(*itr)->GetComponentManager().OnDestroy();
+	RemoveObj remove(itr, priority);
+	_RemoveList.push_back(remove);
+}
+
 void GameObjectManager::_RemoveObject()
 {
 	auto& removeIt = _RemoveList.begin();
@@ -253,10 +255,15 @@ void GameObjectManager::Release()
 			//すべて追加
 			while (it != _GameObjects[priority].end())
 			{
+				//重複チェック。
+				if (_CheckUniqueRemoveList(*it) == FALSE) {
+					it++;
+					continue;
+				}
+
 				if ((*it)->GetDiscard())
 				{
-					RemoveObj remove(it, priority);
-					_RemoveList.push_back(remove);
+					_AddRemoveList(it, priority);
 				}
 				else
 				{

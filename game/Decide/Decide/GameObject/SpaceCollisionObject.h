@@ -6,7 +6,9 @@ class Player;
 class SpaceCollisionObject :public CollisionObject {
 public:
 	SpaceCollisionObject(char* name) :CollisionObject(name) {};
-	~SpaceCollisionObject(){};
+	~SpaceCollisionObject(){
+		_HitCollisions.clear();
+	};
 
 	// 空間コリジョン生成関数。
 	// 引数：	位置(ローカル座標)。
