@@ -161,4 +161,6 @@ private:
 
 	//UŒ‚‚Ì’l‚ğ•\¦B
 	TextObject* _AttackValue;
+
+	bool _Debug = false;
 };
