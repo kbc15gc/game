@@ -4,7 +4,10 @@
 #pragma once
 
 #include "fbEngine\_Object\_GameObject\GameObject.h"
-#include "GameObject\Village\HistoryInfo.h"
+
+#include"..\HistoryInfo.h"
+
+#include"Chip2D.h"
 
 class HistoryBook;
 class TextObject;
@@ -15,26 +18,6 @@ class TextObject;
 */
 class HistoryMenu:public GameObject
 {
-public:
-
-	enum MenuNomber
-	{
-		One = 0,
-		Two,
-		Three,
-	};
-
-	/**
-	* 場所コード.
-	*/
-	enum class LocationCodeE
-	{
-		Begin = 0,		//!< 始まりの集落.
-		Hunting,		//!< 狩猟の村.
-		Prosperity,		//!< 繁栄の町.
-		LocationNum,	//!< 場所の数.
-	};
-
 public:
 
 	/**
@@ -62,6 +45,11 @@ public:
 	*/
 	void Update()override;
 
+	/**
+	* チップを追加.
+	*/
+	void AddChip(ChipID chipID);
+
 private:
 
 	/**
@@ -81,5 +69,11 @@ private:
 
 	/** 歴史書クラスのポインタ. */
 	HistoryBook* _HistoryBook = nullptr;
+
+	/** 所持チップを表示するクラスリスト. */
+	vector<Chip2D*> _Chip2DList;
+
+	/** 現在選択している所持チップ. */
+	int _NowSelectChip = 0;
 
 };

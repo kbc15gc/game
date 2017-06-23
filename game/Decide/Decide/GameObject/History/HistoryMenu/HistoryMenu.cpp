@@ -5,23 +5,8 @@
 #include "HistoryMenu.h"
 
 #include "fbEngine\_Object\_GameObject\TextObject.h"
-#include"GameObject\HistoryBook\HistoryBook.h"
 
-/**
-* 無名空間.
-*/
-namespace
-{
-
-	/** 場所名. */
-	string LocationNameList[(int)HistoryMenu::LocationCodeE::LocationNum] =
-	{
-		"始まりの集落",
-		"狩猟の村",
-		"繁栄の町",
-	};
-
-}
+#include"..\HistoryBook\HistoryBook.h"
 
 /**
 * 初期化.
@@ -59,7 +44,22 @@ void HistoryMenu::Update()
 	{
 		//非表示.
 		_LocationNameRender->SetActive(false);
+
+		for (auto& it : _Chip2DList)
+		{
+			it->SetActive(false);
+		}
 	}
+}
+
+/**
+* チップを追加.
+*/
+void HistoryMenu::AddChip(ChipID chipID)
+{
+	Chip2D* chip2D = INSTANCE(GameObjectManager)->AddNew<Chip2D>("Chip2D", 9);
+	chip2D->Start(chipID);
+	_Chip2DList.push_back(chip2D);
 }
 
 /**
@@ -82,5 +82,23 @@ void HistoryMenu::EnableUpdate()
 	}
 
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
+
+	for (int i = 0; i < _Chip2DList.size(); i++)
+	{
+		_Chip2DList[i]->SetActive(true);
+		if (i == _NowSelectChip)
+		{
+			_Chip2DList[i]->SetSize(Chip2D::SizeCodeE::Select);
+		}
+		else
+		{
+			_Chip2DList[i]->SetSize(Chip2D::SizeCodeE::NoSelect);
+		}
+
+		int len = i - _NowSelectChip;
+		float offset = 150.0f;
+		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
+		_Chip2DList[i]->transform->SetPosition(pos);
+	}
 
 }

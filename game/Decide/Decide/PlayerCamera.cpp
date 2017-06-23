@@ -6,7 +6,7 @@
 
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
-#include "GameObject\HistoryBook\HistoryBook.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
 
 namespace
 {

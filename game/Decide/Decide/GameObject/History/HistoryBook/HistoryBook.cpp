@@ -8,6 +8,13 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "GameObject\Player\Player.h"
 
+//状態.
+#include"HFSM\HistoryBookStateUnused.h"
+#include"HFSM\HistoryBookStateIdol.h"
+#include"HFSM\HistoryBookStateMove.h"
+#include"HFSM\HistoryBookStateOpen.h"
+#include"HFSM\HistoryBookStateClose.h"
+
 /**
 * コンストラクタ後の初期化.
 */
