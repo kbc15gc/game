@@ -34,6 +34,9 @@ void HistoryBook::Awake()
 	//ƒvƒŒƒCƒ„[‚ðŒŸõ
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
+	_HistoryPage = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage", 1);
+	_HistoryPage->transform->SetParent(this->transform);
+
 }
 
 /**

@@ -30,13 +30,6 @@ public:
 	*/
 	void UpdateSubClass()override;
 
-	/**
-	* 補間レートを取得.
-	*/
-	float GetLerpRate() const
-	{
-		return _LerpRate;
-	}
 private:
 
 	/**
@@ -57,8 +50,6 @@ private:
 	void _Move();
 	//通常時のカメラ挙動
 	void _StandardBehavior();
-	//本を見ている時の挙動
-	void _HistoryBehavior();
 
 private:
 
@@ -77,17 +68,5 @@ private:
 
 	//歴史書オブジェクト。
 	HistoryBook* _HistoryBook = nullptr;
-	//歴史書のポジションへの参照。
-	Vector3 _HistoryBookPos;
-	//線形補間されたカメラの位置。
-	Vector3 _LerpCameraPos;
-	//線形補間されたカメラの注視点の位置。
-	Vector3 _LerpCameraLookAtPos;
-	//線形補間に使う補間比率。
-	float _LerpRate;
-	//歴史書を見る前のカメラの位置を格納する用。
-	Vector3 _PrevGameCameraPos;
 
-	//切り替わった瞬間のカメラの視点.
-	Vector3 _CameraPos = Vector3::zero;
 };

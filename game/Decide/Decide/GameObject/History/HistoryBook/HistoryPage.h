@@ -40,12 +40,9 @@ public:
 	*/
 	void Update()override;
 
-	/**
-	* 描画.
-	*/
-	void Render()override;
-
 private:
 
+	/** ページのモデル. */
+	SkinModel* _Model = nullptr;
 
 };

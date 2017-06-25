@@ -5,6 +5,8 @@
 
 #include"HFSM\HistoryBookState.h"
 
+#include"HistoryPage.h"
+
 /** プレイヤークラス. */
 class Player;
 
@@ -89,6 +91,8 @@ public:
 	void SetEnable(bool flag)
 	{
 		_Model->enable = flag;
+		_HistoryPage->SetActive(flag);
+
 	}
 
 	/**
@@ -176,5 +180,8 @@ private:
 	Vector3 _DestPos = Vector3::zero;
 
 	bool _IsOpenOrClose = true;
+
+	/** ページクラスのポインタ. */
+	HistoryPage* _HistoryPage = nullptr;
 
 };
