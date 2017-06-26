@@ -103,6 +103,8 @@ public:
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
+	//移動
+	void Move();
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
@@ -158,7 +160,7 @@ private:
 	ParameterBar* _MPBar = nullptr;
 
 	//攻撃の値を表示。
-	TextObject* _AttackValue;
+	TextObject* _AttackValue = nullptr;
 
 	bool _Debug = false;
 };
