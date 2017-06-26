@@ -291,7 +291,7 @@ void Player::Releace()
 void Player::_Damage()
 {
 	//死亡ステート以外の時。
-		//ライフが0になると死亡する。
+	//ライフが0になると死亡する。
 	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0 && _State != State::Death)
 	{
 		ChangeState(State::Death);
