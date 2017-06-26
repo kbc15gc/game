@@ -3,6 +3,7 @@
 
 #include "GameObject\Village\ContinentObject.h"
 #include "GameObject\Village\NPC.h"
+#include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
 
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -195,22 +196,56 @@ void HistoryManager::_CreateObject(int location,const char * path)
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
-	FOR(i, objInfo.size())
+	for(short i = 0;i < objInfo.size();)
 	{
-		//生成
-		ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-		obj->LoadModel(objInfo[i]->filename);
-		obj->transform->SetLocalPosition(objInfo[i]->pos);
-		obj->transform->SetLocalAngle(objInfo[i]->ang);
-		obj->transform->SetLocalScale(objInfo[i]->sca);
-		//管理用の配列に追加。
-		if (location >= 0)
+		//コリジョンかどうか？
+		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
-			_GameObjectList[location].push_back(obj);
-		}
+			//オブジェクト生成
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
 
-		//もういらないので解放
-		SAFE_DELETE(objInfo[i]);
+			obj->LoadModel(objInfo[i]->filename);
+			obj->transform->SetLocalPosition(objInfo[i]->pos);
+			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetLocalScale(objInfo[i]->sca);
+
+			//管理用の配列に追加。
+			if (location >= 0)
+			{
+				_GameObjectList[location].push_back(obj);
+			}
+			//もういらないので解放
+			SAFE_DELETE(objInfo[i]);
+
+			//次がコリジョンかどうか？
+			while (true)
+			{
+				ObjectInfo* info;
+				//範囲外チェック。
+				try {
+					info = objInfo.at(++i);
+				}
+				catch (std::out_of_range& ex) {
+					break;
+				}
+
+				//名前チェック
+				if (strcmp(info->filename, "coll") == 0)
+				{
+					//コリジョンを生成してゲームオブジェクトにアタッチ。
+					BoxCollider* box = obj->AddComponent<BoxCollider>();
+					Collision* coll = obj->AddComponent<Collision>();
+					box->Create(info->sca);
+					coll->Create(new btCollisionObject, box, (const int)fbCollisionAttributeE::ALL, info->pos);
+					//解放
+					SAFE_DELETE(objInfo[i]);
+				}else
+				{
+					break;
+				}
+			}
+
+		}
 	}
 
 	objInfo.clear();

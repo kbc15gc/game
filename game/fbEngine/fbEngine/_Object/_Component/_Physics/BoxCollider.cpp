@@ -22,7 +22,7 @@ BoxCollider::~BoxCollider()
  */
 void BoxCollider::Create( const Vector3& size )
 {
-	_Shape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+	_Shape = new btBoxShape(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
 }
 
 void BoxCollider::ColliderModelLoad() {
