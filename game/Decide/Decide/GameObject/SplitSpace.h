@@ -12,7 +12,7 @@ public:
 
 	void Awake()override;
 	void Update()override;
-
+	void LateUpdate()override;
 	// 空間分割関数。
 	// 引数：	モデルデータ(このモデルを内包できるサイズのボックスを定義し、分割する)。
 	//			Transform情報(この情報をもとに生成したボックスを移動、回転、拡縮する。)。
@@ -20,7 +20,7 @@ public:
 	//			分割数(縦)。
 	//			分割数(奥行)。
 	//			衝突判定を取りたい属性をレイヤーで指定(デフォルトは全属性)。
-	void Split(const SkinModelData* data, Transform* transform,int x, int y, int z,int attr = _defaultAttr);
+	void Split(const SkinModelData* data, Transform* transform,int x, int y, int z,int attr = _defaultAttr,const Vector3& offset = Vector3::zero);
 
 	// 衝突した空間コリジョンの衝突オブジェクトに追加登録。
 	// 引数：	衝突判定をしたいゲームオブジェクト。
@@ -45,7 +45,7 @@ private:
 	//			分割数(縦)。
 	//			分割数(奥行)。
 	//			衝突判定を取りたい属性をレイヤーで指定(デフォルトは全属性)。
-	void CreateSplitBox(const Vector3& size, Transform* transform,int x,int y,int z,int attr);
+	void CreateSplitBox(const Vector3& size, Transform* transform,int x,int y,int z,int attr,const Vector3& offset);
 
 	// 隣接する空間オブジェクトを登録する。
 	void _AdjacentSpace();

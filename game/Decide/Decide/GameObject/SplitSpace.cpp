@@ -71,7 +71,60 @@ void SplitSpace::Update() {
 	}
 }
 
-void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, int y, int z, int attr) {
+void SplitSpace::LateUpdate() {
+
+	// SetIsStopUpdate()はUpdateにのみ影響を与えるもので、LateUpdateは呼び出される。
+#ifdef DEBUG_SPLITSPACE
+	if ((KeyBoardInput->isPush(DIK_N))) {
+		if (GetIsStopUpdate()) {
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->GetCollision()->enable = true;
+						//z->GetCollider()->RenderEnable();
+						z->GetCollider()->enable = true;
+					}
+				}
+			}
+			// 空間分割オン。
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->DisableNotAdjacent(nullptr);
+					}
+				}
+			}
+
+			SetIsStopUpdate(false);
+		}
+		else {
+			// 空間分割オフ。
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->EhableThisAndAdjacent();
+					}
+				}
+			}
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->GetCollision()->enable = false;
+						z->GetCollider()->RenderDisable();
+						z->GetCollider()->enable = false;
+					}
+				}
+			}
+
+			_nowHitSpace = nullptr;
+
+			SetIsStopUpdate(true);
+		}
+	}
+#endif
+}
+
+void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, int y, int z, int attr,const Vector3& offset) {
 	if (data == nullptr) {
 		abort();
 		// モデルデータがnull。
@@ -81,7 +134,7 @@ void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, i
 	_splitY = y;
 	_splitZ = z;
 
-	CreateSplitBox(CreateSpaceBox(*data,*transform, _unSplitSpaceSize),transform,x,y,z,attr);
+	CreateSplitBox(CreateSpaceBox(*data,*transform, _unSplitSpaceSize),transform,x,y,z,attr,offset);
 }
 
 const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Transform& transform,Vector3& size) {
@@ -159,7 +212,7 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Trans
 	return size;
 }
 
-void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x, int y, int z, int attr) {
+void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x, int y, int z, int attr,const Vector3& offset) {
 	if (x <= 0 || y <= 0 || z <= 0) {
 		abort();
 		// 分割数に0より小さい値が設定された。
@@ -178,9 +231,9 @@ void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x
 				SpaceCollisionObject* box = INSTANCE(GameObjectManager)->AddNew<SpaceCollisionObject>("SpaceBox", System::MAX_PRIORITY);
 				// 元の位置情報を中心として分割できるようポジション調整。
 				Vector3 pos = Vector3::zero;
-				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * _splitSpaceSize.x) + (_splitSpaceSize.x * 0.5f);
-				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * _splitSpaceSize.y) + (_splitSpaceSize.y * 0.5f);
-				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * _splitSpaceSize.z) + (_splitSpaceSize.z * 0.5f);
+				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * _splitSpaceSize.x) + (_splitSpaceSize.x * 0.5f) + offset.x;
+				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * _splitSpaceSize.y) + (_splitSpaceSize.y * 0.5f) + offset.y;
+				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * _splitSpaceSize.z) + (_splitSpaceSize.z * 0.5f) + offset.z;
 
 				box->Create(pos, Quaternion::Identity, _splitSpaceSize, Collision_ID::SPACE, transform, attr,Vector3(static_cast<float>(idxX), static_cast<float>(idxY), static_cast<float>(idxZ)));
 				_SpaceCollisions[idxX][idxY][idxZ] = box;

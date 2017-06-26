@@ -45,6 +45,7 @@ public:
 
 	// 渡されたオブジェクトに隣接していない空間を非アクティブ化。
 	// ※この空間とこの空間に隣接する空間のみ探索される。
+	// ※Nullを渡すとすべて非アクティブ化する。
 	void DisableNotAdjacent(const SpaceCollisionObject* Obj);
 
 private:

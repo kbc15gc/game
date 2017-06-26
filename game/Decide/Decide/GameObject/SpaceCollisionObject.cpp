@@ -115,13 +115,21 @@ void SpaceCollisionObject::EnableObjectsAdjacent() {
 }
 
 void SpaceCollisionObject::DisableNotAdjacent(const SpaceCollisionObject* Obj) {
-	if (!IsAdjacent(Obj->GetMyNumber())) {
-		// ‚±‚Ì‹óŠÔ‚Í—×Ú‚µ‚Ä‚¢‚È‚¢B
-		DisableObjects();
-	}
-	for (auto Adjacent : _adjacentSpaceObjects) {
-		if (!Adjacent->IsAdjacent(Obj->GetMyNumber())) {
+	if (Obj) {
+		if (!IsAdjacent(Obj->GetMyNumber())) {
 			// ‚±‚Ì‹óŠÔ‚Í—×Ú‚µ‚Ä‚¢‚È‚¢B
+			DisableObjects();
+		}
+		for (auto Adjacent : _adjacentSpaceObjects) {
+			if (!Adjacent->IsAdjacent(Obj->GetMyNumber())) {
+				// ‚±‚Ì‹óŠÔ‚Í—×Ú‚µ‚Ä‚¢‚È‚¢B
+				Adjacent->DisableObjects();
+			}
+		}
+	}
+	else {
+		DisableObjects();
+		for (auto Adjacent : _adjacentSpaceObjects) {
 			Adjacent->DisableObjects();
 		}
 	}
