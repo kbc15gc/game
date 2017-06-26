@@ -1,5 +1,6 @@
 #pragma once
 #include "GameCamera.h"
+#include "GameObject\Player\Player.h"
 
 //ふかんカメラクラスの定義。
 class ThirdPersonCamera :	public GameCamera
@@ -29,10 +30,10 @@ public:
 
 	//更新。
 	void UpdateSubClass()override;
-private:
-	//移動関数。
-	void _Move();
 
+	void Move()override;
+private:
+	
 	//enmuの加算。
 	Camera_Height& Add (Camera_Height& height)
 	{
@@ -65,6 +66,16 @@ private:
 
 		//計算された高さを返す。
 		return height;
+	}
+
+	//カメラの高さを変更。
+	void ChangeHeight();
+
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {
+		transform->SetPosition(_PlayerPos->x, 0.0f, _PlayerPos->z);
+		//プレイヤーの更新を止める。
+		_Player->SetIsStopUpdate(true);
 	}
 
 private:

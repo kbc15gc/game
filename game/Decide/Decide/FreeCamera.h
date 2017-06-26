@@ -1,5 +1,6 @@
 #pragma once
 #include "GameCamera.h"
+#include "GameObject\Player\Player.h"
 
 //フリーカメラクラスの定義。
 class FreeCamera : public GameCamera
@@ -23,14 +24,13 @@ public:
 	//更新。
 	void UpdateSubClass()override;
 
-private:
-	//移動関数
-	void _Move();
+	void Move()override;
 
-	//このカメラをメインカメラに切り替える。
-	void SetMainCamera()
-	{
-		
+private:
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {
+		//プレイヤーの更新を止める。
+		_Player->SetIsStopUpdate(true);
 	}
 private:
 	bool _FreeCameraFlag = false;

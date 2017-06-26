@@ -9,17 +9,27 @@ const int SplitSpace::_defaultAttr = static_cast<int>(fbCollisionAttributeE::ALL
 
 void SplitSpace::Awake() {
 	// 隣接要素を列挙。
-	_AdjacentIndex[Space::Up] = Vector3::down;
-	_AdjacentIndex[Space::Down] = Vector3::up;
+	_AdjacentIndex[Space::Up] = Vector3::up;
+	_AdjacentIndex[Space::Down] = Vector3::down;
 	_AdjacentIndex[Space::Right] = Vector3::right;
 	_AdjacentIndex[Space::Left] = Vector3::left;
 	_AdjacentIndex[Space::Front] = Vector3::front;
 	_AdjacentIndex[Space::Back] = Vector3::back;
 
-	_AdjacentIndex[Space::RightUp] = Vector3::down + Vector3::right;
-	_AdjacentIndex[Space::RightDown] = Vector3::up + Vector3::right;
-	_AdjacentIndex[Space::LeftUp] = Vector3::down + Vector3::left;
-	_AdjacentIndex[Space::LeftDown] = Vector3::up + Vector3::left;
+	_AdjacentIndex[Space::RightUp] = Vector3::up + Vector3::right;
+	_AdjacentIndex[Space::RightDown] = Vector3::down + Vector3::right;
+	_AdjacentIndex[Space::RightFront] = Vector3::right + Vector3::front;
+	_AdjacentIndex[Space::RightBack] = Vector3::right + Vector3::back;
+
+	_AdjacentIndex[Space::LeftUp] = Vector3::up + Vector3::left;
+	_AdjacentIndex[Space::LeftDown] = Vector3::down + Vector3::left;
+	_AdjacentIndex[Space::LeftFront] = Vector3::left + Vector3::front;
+	_AdjacentIndex[Space::LeftBack] = Vector3::left + Vector3::back;
+
+	_AdjacentIndex[Space::UpFront] = Vector3::up + Vector3::front;
+	_AdjacentIndex[Space::UpBack] = Vector3::up + Vector3::back;
+	_AdjacentIndex[Space::DownFront] = Vector3::down + Vector3::front;
+	_AdjacentIndex[Space::DownBack] = Vector3::down + Vector3::back;
 
 	_AdjacentIndex[Space::RightUpFront] = _AdjacentIndex[Space::RightUp] + Vector3::front;
 	_AdjacentIndex[Space::RightDownFront] = _AdjacentIndex[Space::RightDown] + Vector3::front;
@@ -32,27 +42,89 @@ void SplitSpace::Awake() {
 }
 
 void SplitSpace::Update() {
-	SpaceCollisionObject* playerHitSpace = nullptr;	// プレイヤーと衝突している空間オブジェクト。
-	for (auto& y : _SpaceCollisions) {
-		for (auto& x : y) {
-			for (auto z : x) {
-				if (z) {
-					z->UpdateActiveSpace();
-					if (z->GetisHitPlayer()) {
-						playerHitSpace = z;
-					}
-				}
-			}
-		}
-	}
+	if (_nowHitSpace == nullptr) {
+		// プレイヤーがどの空間にもあたっていない。
 
-	// アクティブ化した空間と隣接する空間もアクティブ化。
-	if (playerHitSpace) {
-		//playerHitSpace->_EnableObjectsAdjacent();
+		// すべての空間から探索。
+		ChangeActivateSpace(IsHitPlayerToAll());
+	}
+	else if (_nowHitSpace->isHitPlayer()) {
+		// 一瞬前まで衝突していた空間にプレイヤーがまだ衝突している。
+		// ※今のところ何もしない。
+	}
+	else {
+		// 一瞬前まで衝突していた空間からプレイヤーが外れた。
+
+		// 隣接している空間を探索。
+		SpaceCollisionObject* hit = _nowHitSpace->IsHitPlayerAdjacent();
+		if (hit) {
+			// 衝突している空間発見。
+
+			ChangeActivateSpace(hit);
+		}
+		else {
+			// ロスト。
+
+			// すべての空間から探索。
+			ChangeActivateSpace(IsHitPlayerToAll());
+		}
 	}
 }
 
-void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, int y, int z, int attr) {
+void SplitSpace::LateUpdate() {
+
+	// SetIsStopUpdate()はUpdateにのみ影響を与えるもので、LateUpdateは呼び出される。
+#ifdef DEBUG_SPLITSPACE
+	if ((KeyBoardInput->isPush(DIK_N))) {
+		if (GetIsStopUpdate()) {
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->GetCollision()->enable = true;
+						//z->GetCollider()->RenderEnable();
+						z->GetCollider()->enable = true;
+					}
+				}
+			}
+			// 空間分割オン。
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->DisableNotAdjacent(nullptr);
+					}
+				}
+			}
+
+			SetIsStopUpdate(false);
+		}
+		else {
+			// 空間分割オフ。
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->EhableThisAndAdjacent();
+					}
+				}
+			}
+			for (auto& x : _SpaceCollisions) {
+				for (auto& y : x) {
+					for (auto z : y) {
+						z->GetCollision()->enable = false;
+						z->GetCollider()->RenderDisable();
+						z->GetCollider()->enable = false;
+					}
+				}
+			}
+
+			_nowHitSpace = nullptr;
+
+			SetIsStopUpdate(true);
+		}
+	}
+#endif
+}
+
+void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, int y, int z, int attr,const Vector3& offset) {
 	if (data == nullptr) {
 		abort();
 		// モデルデータがnull。
@@ -62,7 +134,7 @@ void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, i
 	_splitY = y;
 	_splitZ = z;
 
-	CreateSplitBox(CreateSpaceBox(*data,*transform, _unSplitSpaceSize),transform,x,y,z,attr);
+	CreateSplitBox(CreateSpaceBox(*data,*transform, _unSplitSpaceSize),transform,x,y,z,attr,offset);
 }
 
 const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Transform& transform,Vector3& size) {
@@ -140,7 +212,7 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Trans
 	return size;
 }
 
-void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x, int y, int z,int attr) {
+void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x, int y, int z, int attr,const Vector3& offset) {
 	if (x <= 0 || y <= 0 || z <= 0) {
 		abort();
 		// 分割数に0より小さい値が設定された。
@@ -149,32 +221,33 @@ void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x
 	_splitSpaceSize = Vector3(size.x / static_cast<float>(x), size.y / static_cast<float>(y), size.z / static_cast<float>(z));
 
 	// 三次元配列分メモリ領域確保。
-	_SpaceCollisions = vector<vector<vector<SpaceCollisionObject*>>>(y, vector<vector<SpaceCollisionObject*>>(x, vector<SpaceCollisionObject*>(z,nullptr)));
+	_SpaceCollisions = vector<vector<vector<SpaceCollisionObject*>>>(x, vector<vector<SpaceCollisionObject*>>(y, vector<SpaceCollisionObject*>(z, nullptr)));
 
 	for (int idxX = 0; idxX < x; idxX++) {
 		for (int idxY = 0; idxY < y; idxY++) {
 			for (int idxZ = 0; idxZ < z; idxZ++) {
 				// 分割数分のコリジョン生成。
 
-				SpaceCollisionObject* box = INSTANCE(GameObjectManager)->AddNew<SpaceCollisionObject>("SpaceBox", 10);
+				SpaceCollisionObject* box = INSTANCE(GameObjectManager)->AddNew<SpaceCollisionObject>("SpaceBox", System::MAX_PRIORITY);
 				// 元の位置情報を中心として分割できるようポジション調整。
 				Vector3 pos = Vector3::zero;
-				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * _splitSpaceSize.x) + (_splitSpaceSize.x * 0.5f);
-				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * _splitSpaceSize.y) + (_splitSpaceSize.y * 0.5f);
-				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * _splitSpaceSize.z) + (_splitSpaceSize.z * 0.5f);
+				pos.x = (pos.x - (size.x * 0.5f)) + (idxX * _splitSpaceSize.x) + (_splitSpaceSize.x * 0.5f) + offset.x;
+				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * _splitSpaceSize.y) + (_splitSpaceSize.y * 0.5f) + offset.y;
+				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * _splitSpaceSize.z) + (_splitSpaceSize.z * 0.5f) + offset.z;
 
-				box->Create(pos,Quaternion::Identity, _splitSpaceSize,Collision_ID::SPACE, transform,attr);
-				_SpaceCollisions[idxY][idxX][idxZ] = box;
+				box->Create(pos, Quaternion::Identity, _splitSpaceSize, Collision_ID::SPACE, transform, attr,Vector3(static_cast<float>(idxX), static_cast<float>(idxY), static_cast<float>(idxZ)));
+				_SpaceCollisions[idxX][idxY][idxZ] = box;
 			}
 		}
 	}
 
+	// 周囲の空間コリジョンを登録していく。
 	_AdjacentSpace();
 }
 
 void SplitSpace::_AdjacentSpace() {
-	for (int y = 0; y < _splitY; y++) {
-		for (int x = 0; x < _splitX; x++) {
+	for (int x = 0; x < _splitX; x++) {
+		for (int y = 0; y < _splitY; y++) {
 			for (int z = 0; z < _splitZ; z++) {
 				for (int idx = 0; idx < Space::Max; idx++) {
 					int workX = x + static_cast<int>(_AdjacentIndex[idx].x);
@@ -183,7 +256,7 @@ void SplitSpace::_AdjacentSpace() {
 
 					if (workX >= 0 && workX < _splitX && workY >= 0 && workY < _splitY && workZ >= 0 && workZ < _splitZ) {
 						// 配列外にアクセスしていない。
-						_SpaceCollisions[y][x][z]->AddAdjacentSpaceObject(_SpaceCollisions[workY][workX][workZ]);
+						_SpaceCollisions[x][y][z]->AddAdjacentSpaceObject(_SpaceCollisions[workX][workY][workZ]);
 					}
 				}
 			}
@@ -192,9 +265,9 @@ void SplitSpace::_AdjacentSpace() {
 }
 
 void SplitSpace::AddObjectHitSpace(const GameObject& object) {
-	for (auto& y : _SpaceCollisions) {
-		for (auto& x : y) {
-			for (auto z : x) {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
 				z->AddObjectHitSpace(const_cast<GameObject&>(object));
 			}
 		}
@@ -202,12 +275,40 @@ void SplitSpace::AddObjectHitSpace(const GameObject& object) {
 }
 
 void SplitSpace::RegistrationObject() {
-	for (auto& y : _SpaceCollisions) {
-		for (auto& x : y) {
-			for (auto z : x) {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
 				z->RegistrationObject();
 			}
 		}
 	}
 }
 
+SpaceCollisionObject* SplitSpace::IsHitPlayerToAll() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				if (z->isHitPlayer()) {
+					// 衝突している。
+					return z;
+				}
+			}
+		}
+	}
+	return nullptr;
+}
+
+void SplitSpace::ChangeActivateSpace(SpaceCollisionObject* Obj) {
+	if (Obj) {
+		if (_nowHitSpace) {
+			// 以前のアクティブ空間の中で、新しい衝突空間と隣接していない空間を非アクティブ化。
+			_nowHitSpace->DisableNotAdjacent(Obj);
+		}
+
+		// 新しい衝突空間と隣接空間に属するオブジェクトをアクティブ化。
+		Obj->EhableThisAndAdjacent();
+
+		// 衝突している空間を更新。
+		_nowHitSpace = Obj;
+	}
+}

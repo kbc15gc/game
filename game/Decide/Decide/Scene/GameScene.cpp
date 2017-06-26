@@ -33,6 +33,9 @@ void GameScene::Start()
 	//ゲームライト生成
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
+	//プレイヤー生成
+	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+
 
 	//プレイヤーカメラ生成
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
@@ -56,8 +59,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
-	//プレイヤー生成
-	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	

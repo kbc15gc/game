@@ -1,11 +1,8 @@
-/**
-* ゲームカメラクラスの実装.
-*/
 #include"stdafx.h"
 #include "PlayerCamera.h"
 
-#include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\Player\Player.h"
+#include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 
 namespace
@@ -34,7 +31,8 @@ void PlayerCamera::Awake()
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 	INSTANCE(GameObjectManager)->mainCamera = _Camera;
-	//SetCamera(_Camera);
+	
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
 	//カメラのコリジョンの半径設定
 	_Radius = 0.5f;
@@ -58,7 +56,7 @@ void PlayerCamera::Start()
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{
-		_Move();
+		Move();
 		_Camera->Update();
 	}
 
@@ -140,7 +138,7 @@ void PlayerCamera::_RotLongitudinal(float rotx)
 	}
 }
 
-void PlayerCamera::_Move()
+void PlayerCamera::Move()
 {
 	//プレイヤーとカメラの距離
 	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
@@ -224,7 +222,7 @@ void PlayerCamera::_StandardBehavior()
 		}
 
 		//移動
-		_Move();
+		Move();
 
 		//歴史書を見始めた時点でのゲームカメラの位置を確保。
 		_PrevGameCameraPos = this->transform->GetPosition();

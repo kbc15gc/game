@@ -1,13 +1,6 @@
-//ゲームカメラクラスの実装。
-
 #include "stdafx.h"
 #include "FreeCamera.h"
-
-namespace {
-	//移動速度。
-	const float MOVE_SPEED = 3.0f;
-}
-
+#include "GameObject\Player\Player.h"
 //デストラクタ.
 FreeCamera::~FreeCamera()
 {
@@ -21,6 +14,7 @@ void FreeCamera::Awake()
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void FreeCamera::Start()
@@ -38,10 +32,10 @@ void FreeCamera::Start()
 
 void FreeCamera::UpdateSubClass()
 {
-	_Move();
+	Move();
 }
 
-void FreeCamera::_Move()
+void FreeCamera::Move()
 {
 	//ゲームパッドから取得した方向。
 	Vector3 dir = Vector3::zero;
@@ -72,8 +66,8 @@ void FreeCamera::_Move()
 	{
 		Vector3 pos;
 		pos = transform->GetPosition();
-		pos.x += dir.x*MOVE_SPEED;
-		pos.z += dir.z*MOVE_SPEED;
+		pos.x += dir.x*_MoveSpeed;
+		pos.z += dir.z*_MoveSpeed;
 		transform->SetPosition(pos);
 	}
 }

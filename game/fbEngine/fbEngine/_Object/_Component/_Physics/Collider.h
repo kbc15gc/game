@@ -17,11 +17,19 @@ public:
 	};
 	~Collider();
 
+	void Update()override;
 	// コライダーの形状を視覚化するためのモデルを生成する関数。
 	// 引数：	コリジョンのTransform情報。
 	void CreateViewModel(const btTransform& collisionTr);
 	// コリジョン描画用モデルのTransform情報更新。
 	void UpdateTransform(const btTransform& collisionTr);
+
+	// 描画中か。
+	bool GetIsRender();
+	// 描画オン。
+	void RenderEnable();
+	// 描画オフ。
+	void RenderDisable();
 private:
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。

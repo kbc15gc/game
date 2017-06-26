@@ -46,6 +46,7 @@ class ContinentObject:public GameObject
 public:
 	ContinentObject(const char* name);
 	void Awake()override;
+	void Start()override;
 	//読み込むモデルのファイル名指定
 	void LoadModel(const char* filename);
 protected:
