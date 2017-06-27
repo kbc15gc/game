@@ -31,12 +31,9 @@ public class CSVExportFunction : Editor
             bool obj = ExportObject(group);
             //NPC書き出し
             bool npc = ExportNPC(group);
-            //コリジョン書き出し。
-            bool coll = ExportCollision(group);
 
             if (obj == true &&
-                npc == true &&
-                coll == true)
+                npc == true)
             {
                 Debug.Log(group.name + "の書き出しに成功");
             }
@@ -69,23 +66,33 @@ public class CSVExportFunction : Editor
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
         sw.WriteLine("name,pos,ang,sca");
-        foreach (Transform child in Children)
+        //1つのオブジェクトを取り出して書き出す。
+        for (int idx = 0; idx < objects.childCount; idx++) 
         {
-            if (child.name == objects.name)
-                continue;
+            //子を取得
+            Transform child = objects.GetChild(idx);
 
             //名前書き出し
-            sw.Write(child.name + ".X");
-            sw.Write(',');
+            string filename = child.name + ".X";
             //ポジション
-            WriteVector3(sw, child.position);
+            string pos = Vector3ToString(child.position);
             //回転
-            WriteVector3(sw, child.eulerAngles);
+            string ang = Vector3ToString(child.eulerAngles);
             //スケール
-            WriteVector3(sw, child.lossyScale,false);
+            string sca = Vector3ToString(child.lossyScale);
 
-            //改行
-            sw.Write("\r\n");
+            string line;
+            line = string.Format("{0},{1},{2},{3}", filename, pos, ang, sca);
+            //1列書き出し。
+            sw.WriteLine(line);
+
+            //オブジェクトのあたり判定を書き出し。
+            foreach (Transform coll in child.GetComponentsInChildren<Transform>())
+            {
+                if (coll.name == child.name)
+                    continue;
+                ExportCollision(coll, sw);
+            }
         }
         sw.Close();
         fs.Close();
@@ -144,45 +151,20 @@ public class CSVExportFunction : Editor
         return true;
     }
 
-    static public bool ExportCollision(Transform group)
+    static public void ExportCollision(Transform coll,StreamWriter sw)
     {
-        string name = "ExportCollisions";
-        Transform colls;
-        //オブジェクト検索
-        if ((colls = FindObject(group, name)) == null)
-        {
-            return false;
-        }
+        //名前書き出し
+        string filename = "coll";
+        //ポジション
+        string pos = Vector3ToString(coll.localPosition);
+        //回転
+        string ang = Vector3ToString(coll.localEulerAngles);
+        //スケール
+        string sca = Vector3ToString(coll.lossyScale);
 
-        //子供たちのTransformコンポーネントを取得
-        Transform[] Children = colls.GetComponentsInChildren<Transform>();
-        //ファイルパス
-        string path = Application.dataPath + "/Export/Coll/" + group.name + "Coll" + ".csv";
-
-        //ファイルを開く準備
-        FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
-        StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("pos,ang,sca,hitcamera");
-        foreach (Transform child in Children)
-        {
-            if (child.name == colls.name)
-                continue;
-                        
-            string pos = Vector3ToString(child.position);
-            string ang = Vector3ToString(child.eulerAngles);
-            string sca = Vector3ToString(child.lossyScale);
-            ExportCollision npc = child.GetComponent<ExportCollision>();
-            int camera = Convert.ToInt32(npc.HitCamera);
-            //
-            string line = string.Format("{0},{1},{2},{3}", pos, ang, sca, camera);
-
-            //列書き出し
-            sw.WriteLine(line);
-        }
-        sw.Close();
-        fs.Close();
-
-        return true;
+        string line;
+        line = string.Format("{0},{1},{2},{3}", filename, pos, ang, sca);
+        sw.WriteLine(line);
     }
 
     static public string Vector3ToString(Vector3 val)

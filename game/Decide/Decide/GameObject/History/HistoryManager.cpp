@@ -3,6 +3,7 @@
 
 #include "GameObject\Village\ContinentObject.h"
 #include "GameObject\Village\NPC.h"
+#include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
 
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -187,18 +188,57 @@ void HistoryManager::_CreateObject(int location,const char * path)
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
-	FOR(i, objInfo.size())
+	for(short i = 0;i < objInfo.size();)
 	{
-		//生成
-		ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-		obj->LoadModel(objInfo[i]->filename);
-		obj->transform->SetLocalPosition(objInfo[i]->pos);
-		obj->transform->SetLocalAngle(objInfo[i]->ang);
-		obj->transform->SetLocalScale(objInfo[i]->sca);
-		//管理用の配列に追加。
-		if (location >= 0)
+		//コリジョンかどうか？
+		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
-			_GameObjectList[location].push_back(obj);
+			//オブジェクト生成
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+
+			obj->transform->SetLocalPosition(objInfo[i]->pos);
+			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetLocalScale(objInfo[i]->sca);
+			obj->LoadModel(objInfo[i]->filename);
+
+			//管理用の配列に追加。
+			if (location >= 0)
+			{
+				_GameObjectList[location].push_back(obj);
+			}
+
+			//次がコリジョンかどうか？
+			while (true)
+			{
+				ObjectInfo* info;
+				//範囲外チェック。
+				try {
+					info = objInfo.at(++i).get();
+				}
+				catch (std::out_of_range& ex) {
+					break;
+				}
+
+				//名前チェック
+				if (strcmp(info->filename, "coll") == 0)
+				{
+					//コリジョンを生成してゲームオブジェクトにアタッチ。
+					BoxCollider* box = obj->AddComponent<BoxCollider>();
+					RigidBody* coll = obj->AddComponent<RigidBody>();
+					box->Create(info->sca);
+					RigidBodyInfo Rinfo;
+					Rinfo.mass = 0.0f;
+					Rinfo.coll = box;
+					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
+					Rinfo.offset = info->pos;
+					Quaternion q; q.SetEuler(info->ang);
+					Rinfo.rotation = q;
+					coll->Create(Rinfo,false);
+				}else
+				{
+					break;
+				}
+			}
 		}
 	}
 

@@ -40,6 +40,9 @@ public:
 	T* GetComponent();
 
 	template <class T>
+	T** GetComponents();
+
+	template <class T>
 	void RemoveComponent()
 	{
 		char* name = (char*)typeid(T).name();
@@ -83,5 +86,41 @@ inline T * ComponentManager::GetComponent()
 		it++;
 	}
 
+	return nullptr;
+}
+
+template<class T>
+inline T ** ComponentManager::GetComponents()
+{
+	//テンプレート型の内部の型情報取得
+	const type_info& Ttype = typeid(T);
+	vector<T*> Tmp;
+
+	//foreachは内部で値をコピーしているので、ポインタを返すなら使えない。
+	vector<Component*>::const_iterator it = _Components.cbegin();
+	while (it != _Components.end())
+	{
+		//コンポーネント型の内部の型情報取得
+		const type_info& type = typeid(*(*it));
+		//型情報比較
+		if (Ttype == type)
+		{
+			Tmp.push_back((T*)*it);
+		}
+		it++;
+	}
+
+	//配列。
+	int size = Tmp.size();
+	if (size > 0)
+	{
+		T** Array = new T*[size];
+		for (size_t i = 0; i < Tmp.size(); i++)
+		{
+			Array[i] = Tmp[i];
+		}
+
+		return Array;
+	}
 	return nullptr;
 }

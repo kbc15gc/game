@@ -42,6 +42,12 @@ public:
 		return _Components.GetComponent<T>();
 	}
 
+	template <class T>
+	T** GetComponents()
+	{
+		return _Components.GetComponents<T>();
+	}
+
 	//ゲームオブジェクトマネージャでしか使わない。(どうにかすべき)
 	const ComponentManager& GetComponentManager()
 	{
