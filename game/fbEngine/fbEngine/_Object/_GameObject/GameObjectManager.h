@@ -90,7 +90,7 @@ public:
 	GameObject* FindObject(char* name);
 
 	//未実装
-	bool FindObjects(char* name,GameObject** objArray);
+	const vector<GameObject*>& FindObjects(char* name,vector<GameObject*>& objArray);
 
 	//確保しているオブジェクトを解放
 	void Release();

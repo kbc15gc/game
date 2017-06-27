@@ -286,6 +286,10 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
+			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)) {
+				OutputDebugString("あああ");
+			}
+
 			if (convexResult.m_hitCollisionObject == me) {
 				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 				return 0.0f;
@@ -340,6 +344,9 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
+			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)) {
+				OutputDebugString("あああ");
+			}
 			if (convexResult.m_hitCollisionObject == me){
 				//自分に衝突した。
 				return 0.0f;

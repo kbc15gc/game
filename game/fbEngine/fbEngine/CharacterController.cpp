@@ -73,6 +73,19 @@ void CCharacterController::Execute()
 				//衝突検出。
 				PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 
+				// test
+				{
+					vector<GameObject*> obj;
+					INSTANCE(GameObjectManager)->FindObjects("ContinentObject", obj);
+					for (auto o : obj) {
+						unique_ptr<vector<RigidBody*>> rigidArray = o->GetComponents<RigidBody>();
+						for (auto rigid : *rigidArray.get()) {
+							if (INSTANCE(PhysicsWorld)->ContactPairTest(m_rigidBody, rigid)) {
+								OutputDebugString("あたったよ。");
+							}
+						}
+					}
+				}
 				if (callback.isHit) {
 					//当たった。
 					//壁。
