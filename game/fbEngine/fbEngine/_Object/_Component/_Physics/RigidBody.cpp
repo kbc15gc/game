@@ -31,15 +31,18 @@ void RigidBody::Update()
 
 void RigidBody::LateUpdate()
 {
-	//シュミレート後の結果を送る
-	btTransform trans = _CollisionObject->getWorldTransform();
-	
-	btVector3 pos = trans.getOrigin();
-	btQuaternion rot = trans.getRotation();
-	//ポジションはずらされているので戻す。
-	transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
-	//クォータニオンを各軸の回転量に変換
-	transform->SetRotation(Quaternion(rot.x(), rot.y(), rot.z(), rot.w()));
+	if (!_CollisionObject->isStaticOrKinematicObject())
+	{
+		//シュミレート後の結果を送る
+		btTransform trans = _CollisionObject->getWorldTransform();
+
+		btVector3 pos = trans.getOrigin();
+		btQuaternion rot = trans.getRotation();
+		//ポジションはずらされているので戻す。
+		transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
+		//クォータニオンを各軸の回転量に変換
+		transform->SetRotation(Quaternion(rot.x(), rot.y(), rot.z(), rot.w()));
+	}
 }
 
 //void RigidBody::Create(RigidBodyInfo& rbInfo)

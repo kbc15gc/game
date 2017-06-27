@@ -234,9 +234,9 @@ void HistoryManager::_CreateObject(int location,const char * path)
 				{
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
 					BoxCollider* box = obj->AddComponent<BoxCollider>();
-					Collision* coll = obj->AddComponent<Collision>();
+					RigidBody* coll = obj->AddComponent<RigidBody>();
 					box->Create(info->sca);
-					coll->Create(new btCollisionObject, box, (const int)fbCollisionAttributeE::ALL, info->pos);
+					coll->Create(0, box, (const int)fbCollisionAttributeE::ALL, Vector3::zero, info->pos);
 					//解放
 					SAFE_DELETE(objInfo[i]);
 				}else
