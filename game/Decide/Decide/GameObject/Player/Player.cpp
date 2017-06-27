@@ -82,6 +82,7 @@ void Player::Awake()
 			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
 			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
+			_CharacterController->SubAttributeY(Collision_ID::SPACE);	// 空間コリジョン削除。
 		}
 		//キャラクターコントローラーの重力設定
 		_CharacterController->SetGravity(_Gravity);

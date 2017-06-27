@@ -93,7 +93,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 	_GameObjectList[(int)location].clear();
 
 	//チップの状態からグループを計算。
-	const int group = _CalcPattern(_LocationHistoryList[(int)location]);
+	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
 
 	char* type[2] = { "Obj","NPC" };
 	char path[128];
@@ -113,7 +113,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 		
 		
 		//CSVからオブジェクトの情報読み込み
-		vector<NPCInfo*> npcInfo;
+		vector<unique_ptr<NPCInfo>> npcInfo;
 		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
 
 		//情報からオブジェクト生成。
@@ -128,9 +128,6 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
 			//管理用の配列に追加。
 			_GameObjectList[(int)location].push_back(npc);
-
-			//もういらないので解放
-			SAFE_DELETE(npcInfo[i]);
 		}
 
 		npcInfo.clear();
@@ -146,7 +143,7 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 	char path[256];
 	sprintf(path, "Asset/Data/Village%dGroup.csv", 0/*+ info->ContinentID*/);
 	//CSVからグループ情報読み込み
-	vector<VillageGroup*> groupList;
+	vector<unique_ptr<VillageGroup>> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
 	
 	int pattern = 0;
@@ -174,11 +171,6 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 		break;
 	}
 
-	//不要になったので解放。
-	FOR(i, groupList.size())
-	{
-		SAFE_DELETE(groupList[i]);
-	}
 	return pattern;
 }
 
@@ -191,7 +183,7 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 void HistoryManager::_CreateObject(int location,const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
-	vector<ObjectInfo*> objInfo;
+	vector<unique_ptr<ObjectInfo>> objInfo;
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
@@ -208,9 +200,6 @@ void HistoryManager::_CreateObject(int location,const char * path)
 		{
 			_GameObjectList[location].push_back(obj);
 		}
-
-		//もういらないので解放
-		SAFE_DELETE(objInfo[i]);
 	}
 
 	objInfo.clear();
@@ -225,7 +214,7 @@ void HistoryManager::_CreateObject(int location,const char * path)
 void HistoryManager::_CreateCollision(int location, const char * path)
 {
 	//CSVから当たり判定の情報読み込み
-	vector<CollisionInfo*> colls;
+	vector<unique_ptr<CollisionInfo>> colls;
 	Support::LoadCSVData(path, CollisionInfoData, ARRAY_SIZE(CollisionInfoData), colls);
 
 	//情報から当たり判定生成。
@@ -242,9 +231,6 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 		{
 			_GameObjectList[location].push_back(coll);
 		}
-
-		//もういらないので解放
-		SAFE_DELETE(colls[i]);
 	}
 
 	colls.clear();

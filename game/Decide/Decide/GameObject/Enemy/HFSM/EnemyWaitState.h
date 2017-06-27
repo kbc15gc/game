@@ -2,8 +2,6 @@
 
 #include "EnemyState.h"
 
-class EnemyCharacter;
-
 // エネミー待機ステート。
 class EnemyWaitState : public EnemyState {
 public:

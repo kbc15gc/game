@@ -1,8 +1,6 @@
 #pragma once
 #include "EnemyState.h"
 
-class EnemyCharacter;
-
 // エネミー徘徊ステート。
 class EnemyWanderingState : public EnemyState {
 public:

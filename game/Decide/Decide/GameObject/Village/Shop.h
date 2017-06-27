@@ -73,7 +73,7 @@ private:
 	void _StaticInit();
 private:
 	//商品の品ぞろえ。
-	vector<Product*> _ProductList;
+	vector<unique_ptr<Product>> _ProductList;
 	//アイテムのリスト。
 	vector<Item::ItemInfo*> _ItemList;
 	//ショップのステート
@@ -89,5 +89,5 @@ private:
 	//本命のウィンドウ
 	ImageObject* _MainWindow;
 	//ショップの名前
-	vector<testchar*> _ShopNameList;
+	vector<unique_ptr<testchar>> _ShopNameList;
 };

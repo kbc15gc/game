@@ -2,7 +2,6 @@
 
 #include "EnemyState.h"
 
-class EnemyCharacter;
 class Player;
 
 // エネミー発見ステート。
