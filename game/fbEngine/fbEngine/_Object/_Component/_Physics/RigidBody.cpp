@@ -31,7 +31,7 @@ void RigidBody::Update()
 
 void RigidBody::LateUpdate()
 {
-	//if (!_CollisionObject->isStaticOrKinematicObject())
+	if (!_CollisionObject->isStaticOrKinematicObject())
 	{
 		//シュミレート後の結果を送る
 		btTransform trans = _CollisionObject->getWorldTransform();
