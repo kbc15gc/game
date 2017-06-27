@@ -204,10 +204,10 @@ void HistoryManager::_CreateObject(int location,const char * path)
 			//オブジェクト生成
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
 
-			obj->LoadModel(objInfo[i]->filename);
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 			obj->transform->SetLocalAngle(objInfo[i]->ang);
 			obj->transform->SetLocalScale(objInfo[i]->sca);
+			obj->LoadModel(objInfo[i]->filename);
 
 			//管理用の配列に追加。
 			if (location >= 0)
@@ -236,7 +236,14 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					BoxCollider* box = obj->AddComponent<BoxCollider>();
 					RigidBody* coll = obj->AddComponent<RigidBody>();
 					box->Create(info->sca);
-					coll->Create(0, box, (const int)fbCollisionAttributeE::ALL, Vector3::zero, info->pos);
+					RigidBodyInfo Rinfo;
+					Rinfo.mass = 0.0f;
+					Rinfo.coll = box;
+					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
+					Rinfo.offset = info->pos;
+					Quaternion q; q.SetEuler(info->ang);
+					Rinfo.rotation = q;
+					coll->Create(Rinfo,false);
 					//解放
 					SAFE_DELETE(objInfo[i]);
 				}else

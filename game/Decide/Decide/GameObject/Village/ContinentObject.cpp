@@ -18,8 +18,16 @@ void ContinentObject::Awake()
 void ContinentObject::Start() {
 
 	// Transformが更新されるのでここで追加。
-	RigidBody* rigid = GetComponent<RigidBody>();
-	rigid->AddWorld();
+	RigidBody** rigid = GetComponents<RigidBody>();
+	//nullチェック
+	if ((rigid != nullptr))
+	{
+		FOR(i, ARRAY_SIZE(rigid))
+		{
+			rigid[i]->AddWorld();
+		}
+		
+	}
 }
 
 void ContinentObject::LoadModel(const char * filename)

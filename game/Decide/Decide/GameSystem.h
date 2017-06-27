@@ -19,4 +19,4 @@ enum Collision_ID
 };
 
 
-#define DEBUG_SPLITSPACE	// 定義で空間分割デバッグオン。
+//#define DEBUG_SPLITSPACE	// 定義で空間分割デバッグオン。
