@@ -9,7 +9,8 @@
 SceneManager*  SceneManager::_Instance;
 
 
-SceneManager::SceneManager()
+SceneManager::SceneManager():
+	_NextScene(-1)
 {
 	_OffScreen = new ImageObject("OffScreen");
 	_OffScreen->Awake();
@@ -74,6 +75,10 @@ void SceneManager::StartScene()
 
 void SceneManager::UpdateScene()
 {
+	//次のシーンが設定されている場合はシーン切り替え
+	if (_NextScene >= 0)
+		_ChangeScene();
+
 	_Scenes[_NowScene]->Update();
 	INSTANCE(GameObjectManager)->UpdateObject();
 	PhysicsWorld::Instance()->Update();
@@ -152,15 +157,9 @@ void SceneManager::DrawScene()
 
 Scene* SceneManager::ChangeScene(int key)
 {
-	//フェードが明ける
-	Scene::StartFade(false);
-	//シーンの添え字切り替え
-	_NowScene = key;
-	//オブジェクトリリース
-	INSTANCE(GameObjectManager)->Release();
-	//初期化する
-	SceneManager::StartScene();
-	return _Scenes[_NowScene];
+	//次のシーンを
+	_NextScene = key;
+	return _Scenes[_NextScene];
 }
 
 Scene* SceneManager::ChangeScene(char * Scenename)
@@ -186,4 +185,17 @@ Scene* SceneManager::ChangeScene(char * Scenename)
 TEXTURE* SceneManager::GetOffScreenTexture()
 {
 	return _MainRT[CurrentMainRT_]->texture;
+}
+
+void SceneManager::_ChangeScene()
+{
+	//シーンの添え字切り替え
+	_NowScene = _NextScene;
+	_NextScene = -1;
+	//オブジェクトリリース
+	INSTANCE(GameObjectManager)->Release();
+	//初期化する
+	SceneManager::StartScene();
+	//初期化が終わったなら、フェードが明ける
+	Scene::StartFade(false);
 }

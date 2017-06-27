@@ -93,6 +93,9 @@ void Scene::Fade()
 		//Ÿ‚Ìframe‚É‚Í‘Ò‹@ó‘Ô‚É–ß‚éB
 		_FadeState = fbScene::FadeStateE::WAIT;
 	}
+
+	if(_FadeState == fbScene::FadeStateE::WAIT)
+		_DrawFade();
 }
 
 void Scene::StartFade(const bool & fade, const float & fadetime)
