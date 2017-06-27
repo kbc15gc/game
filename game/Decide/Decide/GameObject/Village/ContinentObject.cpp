@@ -29,10 +29,10 @@ void ContinentObject::LoadModel(const char * filename)
 	_Model->SetModelData(data);
 
 	//当たり判定追加。
-	RigidBody* rigid = AddComponent<RigidBody>();
-	MeshCollider* mesh = AddComponent<MeshCollider>();
+	//RigidBody* rigid = AddComponent<RigidBody>();
+	//MeshCollider* mesh = AddComponent<MeshCollider>();
 
 	//メッシュコライダー生成。
-	mesh->Create(_Model);
-	rigid->Create(0, mesh, Collision_ID::BUILDING,Vector3::zero,Vector3::zero,false);
+	//mesh->Create(_Model);
+	//rigid->Create(0, mesh, Collision_ID::BUILDING,Vector3::zero,Vector3::zero,false);
 }
