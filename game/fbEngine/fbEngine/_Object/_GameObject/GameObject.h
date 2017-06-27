@@ -43,7 +43,7 @@ public:
 	}
 
 	template <class T>
-	T** GetComponents()
+	unique_ptr<vector<T*>> GetComponents()
 	{
 		return _Components.GetComponents<T>();
 	}

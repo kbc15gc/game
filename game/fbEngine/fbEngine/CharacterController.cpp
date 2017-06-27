@@ -78,15 +78,10 @@ void CCharacterController::Execute()
 					vector<GameObject*> obj;
 					INSTANCE(GameObjectManager)->FindObjects("ContinentObject", obj);
 					for (auto o : obj) {
-						RigidBody** rigid = o->GetComponents<RigidBody>();
-						if (rigid) {
-							{
-								FOR(i, ARRAY_SIZE(rigid))
-								{
-									if (INSTANCE(PhysicsWorld)->ContactPairTest(m_rigidBody,rigid[i], BIT(7))) {
-										OutputDebugString("Ç†ÇΩÇ¡ÇΩÇÊÅB");
-									}
-								}
+						unique_ptr<vector<RigidBody*>> rigidArray = o->GetComponents<RigidBody>();
+						for (auto rigid : *rigidArray.get()) {
+							if (INSTANCE(PhysicsWorld)->ContactPairTest(m_rigidBody, rigid)) {
+								OutputDebugString("Ç†ÇΩÇ¡ÇΩÇÊÅB");
 							}
 						}
 					}

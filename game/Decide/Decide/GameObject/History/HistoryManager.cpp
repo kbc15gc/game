@@ -225,7 +225,7 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
 					BoxCollider* box = obj->AddComponent<BoxCollider>();
 					RigidBody* coll = obj->AddComponent<RigidBody>();
-					box->Create(info->sca);
+					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
 					RigidBodyInfo Rinfo;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
