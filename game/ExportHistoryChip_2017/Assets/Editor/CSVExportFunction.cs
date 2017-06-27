@@ -31,9 +31,12 @@ public class CSVExportFunction : Editor
             bool obj = ExportObject(group);
             //NPC書き出し
             bool npc = ExportNPC(group);
+            //enemy
+            bool enemy = ExportEnemy(group);
 
             if (obj == true &&
-                npc == true)
+                npc == true &&
+                enemy == true)
             {
                 Debug.Log(group.name + "の書き出しに成功");
             }
@@ -167,10 +170,69 @@ public class CSVExportFunction : Editor
         sw.WriteLine(line);
     }
 
+    static public bool ExportEnemy(Transform group)
+    {
+        string name = "ExportEnemys";
+        Transform enemys;
+        //オブジェクト検索
+        if ((enemys = FindObject(group, name)) == null)
+        {
+            return false;
+        }
+
+        //子供たちのTransformコンポーネントを取得
+        Transform[] Children = enemys.GetComponentsInChildren<Transform>();
+        //ファイルパス
+        string path = Application.dataPath + "/Export/Enemy/" + group.name + "Enemy" + ".csv";
+
+        //ファイルを開く準備
+        FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+        StreamWriter sw = new StreamWriter(fs);
+        sw.WriteLine("type,hp,mhp,mp,mmp,atk,def,dex,agi,pos,Quaternion,sca");
+        foreach (Transform child in Children)
+        {
+            if (child.name == enemys.name)
+                continue;
+
+            ExportEnemy e = child.GetComponent<ExportEnemy>();
+            string type = Convert.ToString(e._EnemyType);
+
+            string hp = Convert.ToString(e._HP);
+            string mhp = Convert.ToString(e._MaxHP);
+            string mp = Convert.ToString(e._MP);
+            string mmp = Convert.ToString(e._MaxMP);
+            string atk = Convert.ToString(e._ATK);
+            string def = Convert.ToString(e._DEF);
+            string dex = Convert.ToString(e._DEX);
+            string agi = Convert.ToString(e._AGI);
+
+            string pos = Vector3ToString(child.position);
+            string quaternion = QuaternionToString(child.rotation);
+            string sca = Vector3ToString(child.lossyScale);
+
+            //
+            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", type, hp, mhp, mp, mmp, atk, def, dex, agi, pos, quaternion, sca);
+
+
+            //列書き出し
+            sw.WriteLine(line);
+        }
+        sw.Close();
+        fs.Close();
+
+        return true;
+    }
+
     static public string Vector3ToString(Vector3 val)
     {
         //"x/y/z"の形で返す。
         return String.Format("{0}/{1}/{2}", -val.x, val.y, -val.z);
+    }
+
+    static public string QuaternionToString(Quaternion val)
+    {
+        //"x/y/z/w"の形で返す。
+        return String.Format("{0}/{1}/{2}/{3}", val.x, val.y, val.z, val.w);
     }
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)
