@@ -243,6 +243,7 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					Rinfo.offset = info->pos;
 					Quaternion q; q.SetEuler(info->ang);
 					Rinfo.rotation = q;
+					coll->SetKinematick(true);
 					coll->Create(Rinfo,false);
 					//‰ð•ú
 					SAFE_DELETE(objInfo[i]);
