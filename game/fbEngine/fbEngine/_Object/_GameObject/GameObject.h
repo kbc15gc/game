@@ -42,6 +42,12 @@ public:
 		return _Components.GetComponent<T>();
 	}
 
+	template <class T>
+	unique_ptr<vector<T*>> GetComponents()
+	{
+		return _Components.GetComponents<T>();
+	}
+
 	//ゲームオブジェクトマネージャでしか使わない。(どうにかすべき)
 	const ComponentManager& GetComponentManager()
 	{
@@ -89,9 +95,12 @@ public:
 	}
 
 	//優先度をセット(基本使用するな)
-	void SetPriority(const unsigned int& pri)
+	inline void SetPriority(const unsigned int& pri)
 	{
 		_Priority = pri;
+	}
+	inline const unsigned int GetPriorty()const {
+		return _Priority;
 	}
 
 	// trueを設定するとGameObjectManagerに登録しているオブジェクトの更新処理が停止する。

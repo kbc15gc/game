@@ -3,6 +3,7 @@
 
 #include "GameObject\Village\ContinentObject.h"
 #include "GameObject\Village\NPC.h"
+#include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
 
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -93,7 +94,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 	_GameObjectList[(int)location].clear();
 
 	//チップの状態からグループを計算。
-	const int group = _CalcPattern(_LocationHistoryList[(int)location]);
+	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
 
 	char* type[2] = { "Obj","NPC" };
 	char path[128];
@@ -113,7 +114,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 		
 		
 		//CSVからオブジェクトの情報読み込み
-		vector<NPCInfo*> npcInfo;
+		vector<unique_ptr<NPCInfo>> npcInfo;
 		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
 
 		//情報からオブジェクト生成。
@@ -128,9 +129,6 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
 			//管理用の配列に追加。
 			_GameObjectList[(int)location].push_back(npc);
-
-			//もういらないので解放
-			SAFE_DELETE(npcInfo[i]);
 		}
 
 		npcInfo.clear();
@@ -146,7 +144,7 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 	char path[256];
 	sprintf(path, "Asset/Data/Village%dGroup.csv", 0/*+ info->ContinentID*/);
 	//CSVからグループ情報読み込み
-	vector<VillageGroup*> groupList;
+	vector<unique_ptr<VillageGroup>> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
 	
 	int pattern = 0;
@@ -174,11 +172,6 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 		break;
 	}
 
-	//不要になったので解放。
-	FOR(i, groupList.size())
-	{
-		SAFE_DELETE(groupList[i]);
-	}
 	return pattern;
 }
 
@@ -191,26 +184,63 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 void HistoryManager::_CreateObject(int location,const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
-	vector<ObjectInfo*> objInfo;
+	vector<unique_ptr<ObjectInfo>> objInfo;
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
-	FOR(i, objInfo.size())
+	for(short i = 0;i < objInfo.size();)
 	{
-		//生成
-		ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
-		obj->LoadModel(objInfo[i]->filename);
-		obj->transform->SetLocalPosition(objInfo[i]->pos);
-		obj->transform->SetLocalAngle(objInfo[i]->ang);
-		obj->transform->SetLocalScale(objInfo[i]->sca);
-		//管理用の配列に追加。
-		if (location >= 0)
+		//コリジョンかどうか？
+		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
-			_GameObjectList[location].push_back(obj);
-		}
+			//オブジェクト生成
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
 
-		//もういらないので解放
-		SAFE_DELETE(objInfo[i]);
+			obj->transform->SetLocalPosition(objInfo[i]->pos);
+			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetLocalScale(objInfo[i]->sca);
+			obj->LoadModel(objInfo[i]->filename);
+
+			//管理用の配列に追加。
+			if (location >= 0)
+			{
+				_GameObjectList[location].push_back(obj);
+			}
+
+			//次がコリジョンかどうか？
+			while (true)
+			{
+				ObjectInfo* info;
+				//範囲外チェック。
+				try {
+					info = objInfo.at(++i).get();
+				}
+				catch (std::out_of_range& ex) {
+					break;
+				}
+
+				//名前チェック
+				if (strcmp(info->filename, "coll") == 0)
+				{
+					//コリジョンを生成してゲームオブジェクトにアタッチ。
+					BoxCollider* box = obj->AddComponent<BoxCollider>();
+					RigidBody* coll = obj->AddComponent<RigidBody>();
+					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
+					RigidBodyInfo Rinfo;
+					Rinfo.mass = 0.0f;
+					Rinfo.coll = box;
+					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
+					Rinfo.offset = info->pos;
+					Quaternion q; q.SetEuler(info->ang);
+					Rinfo.rotation = q;
+					coll->SetKinematick(true);
+					coll->Create(Rinfo,false);
+				}else
+				{
+					break;
+				}
+			}
+		}
 	}
 
 	objInfo.clear();
@@ -225,7 +255,7 @@ void HistoryManager::_CreateObject(int location,const char * path)
 void HistoryManager::_CreateCollision(int location, const char * path)
 {
 	//CSVから当たり判定の情報読み込み
-	vector<CollisionInfo*> colls;
+	vector<unique_ptr<CollisionInfo>> colls;
 	Support::LoadCSVData(path, CollisionInfoData, ARRAY_SIZE(CollisionInfoData), colls);
 
 	//情報から当たり判定生成。
@@ -242,9 +272,6 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 		{
 			_GameObjectList[location].push_back(coll);
 		}
-
-		//もういらないので解放
-		SAFE_DELETE(colls[i]);
 	}
 
 	colls.clear();

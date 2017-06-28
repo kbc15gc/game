@@ -19,7 +19,7 @@ void PlayerStateDeath::Update()
 	{
 		//タイトルシーンへ移行
 		_Player->Releace();
-		INSTANCE(SceneManager)->ChangeScene("GameScene");
+		INSTANCE(SceneManager)->ChangeScene("TitleScene");
 	}
 }
 

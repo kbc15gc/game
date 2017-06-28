@@ -21,7 +21,6 @@ void PlayerStateIdol::Update()
 	//移動速度
 	Vector3 movespeed = Vector3::zero;
 	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
-
 	//キーボードのJ　or　パッドのAボタンでジャンプ
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
@@ -34,7 +33,6 @@ void PlayerStateIdol::Update()
 			_Player->GetCharaCon().Jump();
 		}
 	}
-
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
 	//コントローラー移動
@@ -112,10 +110,6 @@ void PlayerStateIdol::Update()
 	{
 		if (_Player->GetCharaCon().IsOnGround() == true)
 		{
-			// テスト。
-			{
-				_Player->_HPBar->AddValue(275.0f);
-			}
 			_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
 			_Player->ChangeState(Player::State::Attack);
 		}

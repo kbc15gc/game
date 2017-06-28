@@ -130,6 +130,15 @@
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
     <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyDeathState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemyManager.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Component\ObjectSpawn.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -272,6 +281,15 @@
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyDeathState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemyManager.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\ObjectSpawn.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

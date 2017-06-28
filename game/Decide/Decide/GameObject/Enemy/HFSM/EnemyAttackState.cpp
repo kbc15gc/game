@@ -23,15 +23,16 @@ void EnemyAttackState::_UpdateSubClass() {
 	// 攻撃判定用のコリジョン生成。
 	// ※暫定処理。
 	// ※エネミーは複数種類いる可能性があるため、モーションによってコリジョン発生位置やタイミングを変える必要がある。
-	const int eventFrame = 10;
+	const int eventFrame = 30;
 	Vector3 pos = _EnemyObject->transform->GetPosition();
-	pos += _EnemyObject->transform->GetForward() * 1.0f;
+	pos += _EnemyObject->transform->GetForward() * 1.5f;
 	pos.y += 0.5f;
 	_EnemyObject->CreateAttackCollision(
 		eventFrame,
 		pos,
 		Vector3::zero,
-		Vector3::one);
+		Vector3::one,
+		0.25f);
 
 	if (!_EnemyObject->GetIsPlaying()) {
 		// 攻撃モーション一度終了。

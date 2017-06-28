@@ -14,6 +14,12 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::AGI]	= agi;		//‰ñ”ğ—ÍB
 }
 
+void CharacterParameter::ParamInit(int param[Param::MAX]) {
+	for (int idx = 0; idx < Param::MAX; idx++) {
+		_Param[idx] = param[idx];
+	}
+}
+
 void CharacterParameter::Update() {
 	//HP‚ª0ˆÈ‰º‚É‚È‚Á‚½‚Ì‚Å€‚ñ‚¾B
 	if (_Param[Param::HP] <= 0)

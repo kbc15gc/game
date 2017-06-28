@@ -2,7 +2,6 @@
 
 #include "EnemyState.h"
 
-class EnemyCharacter;
 
 // エネミー攻撃開始ステート。
 class EnemyStartAttackState : public EnemyState {

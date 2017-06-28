@@ -193,7 +193,28 @@ namespace Support
 			}
 		}
 	}
+
+	void* ConvertFloatArrayFromString(char* word, void* pRet,const int dataNum) {
+		int offset = 0;
+		char copy[256];
+		strcpy(copy, word);
+		for (int idx = 0; idx < dataNum; idx++)
+		{
+			//数字の部分を取り出す。
+			char* num = strtok(copy + offset, "/");
+			//数字に変換する。
+			float value = Support::StringToDouble(num);
+			//値セット。
+			memcpy((char*)pRet + (sizeof(float) * idx), &value, sizeof(float));
+			//オフセット量を増やす。
+			offset += strlen(num) + 1;
+		}
+
+		return pRet;
+	}
 }
+
+
 
 
 

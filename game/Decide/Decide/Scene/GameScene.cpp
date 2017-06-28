@@ -25,6 +25,7 @@
 #include "PlayerCamera.h"
 #include "ThirdPersonCamera.h"
 #include "FreeCamera.h"
+#include "GameObject\Enemy\EnemyManager.h"
 
 ImageObject* g_depth;
 
@@ -35,6 +36,7 @@ void GameScene::Start()
 
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+
 
 	//プレイヤーカメラ生成
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
@@ -58,7 +60,10 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
-	
+
+	// エネミーマネージャー初期化。
+	INSTANCE(EnemyManager)->Start();
+
 	// 雑魚エネミープロト生成。
 	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	

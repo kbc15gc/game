@@ -286,6 +286,10 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
+			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)) {
+				OutputDebugString("あああ");
+			}
+
 			if (convexResult.m_hitCollisionObject == me) {
 				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 				return 0.0f;
@@ -303,6 +307,7 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 			angle = fabsf(acosf(angle));
 			if (angle < D3DX_PI * 0.2f		//地面の傾斜が54度より小さいので地面とみなす。
 				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND //もしくはコリジョン属性が地面と指定されている。
+				|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
 				) {
 
 
@@ -339,6 +344,9 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
+			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)) {
+				OutputDebugString("あああ");
+			}
 			if (convexResult.m_hitCollisionObject == me){
 				//自分に衝突した。
 				return 0.0f;
@@ -356,6 +364,7 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 			float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
 			if (angle >= 3.1415 * 0.3f		//地面の傾斜が54度以上なので壁とみなす。
 				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER	//もしくはコリジョン属性がキャラクタなので壁とみなす。
+				|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
 				) {
 				isHit = true;
 				Vector3 hitPosTmp;

@@ -64,34 +64,30 @@ void Player::Awake()
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	_Model->SetAllBlend(Color::white * 13);
+
 	//キャラクターコントローラー初期化
-	{
-		_CharacterController->Init(this, transform, _Radius, _Height, Vector3(0.0f, _Height / 2, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
-		// 以下衝突を取りたい属性(横方向)を指定。
-		{
-			_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
-			_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
-			_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
-			_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// ボスのコリジョン追加。
-			_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
-		}
-		// 以下衝突を取りたい属性(縦方向)を指定。
-		{
-			_CharacterController->AttributeY_AllOn();	// 全衝突。
-			_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
-			_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
-			_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
-		}
-		//キャラクターコントローラーの重力設定
-		_CharacterController->SetGravity(_Gravity);
-	}
+	_CharacterController->Init(this, transform, _Radius, _Height, Vector3(0.0f, _Height / 2, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
+	// 以下衝突を取りたい属性(横方向)を指定。
+	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
+	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// ボスのコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	// 以下衝突を取りたい属性(縦方向)を指定。
+	_CharacterController->AttributeY_AllOn();	// 全衝突。
+	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
+	_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
+	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
+	//キャラクターコントローラーの重力設定
+	_CharacterController->SetGravity(_Gravity);
+
 	//プレイヤーのパラメーター初期化。
 	_PlayerParam->ParamInit(100, 100, 50, 50, 5, 3, 3, 1);
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP),true,NULL, Vector3(1110,660,0));
+		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110, 660, 0));
 	}
 	// MPのバーを表示。
 	{
@@ -100,11 +96,9 @@ void Player::Awake()
 		_MPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXMP), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//攻撃の値のテクストオブジェクト。
-	{
-		_AttackValue = INSTANCE(GameObjectManager)->AddNew<TextObject>("AttackValueText", _Priority);
-		_AttackValue->Initialize(L"", 70.0f);
-		_AttackValue->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
-	}
+	_AttackValue = INSTANCE(GameObjectManager)->AddNew<TextObject>("AttackValueText", _Priority);
+	_AttackValue->Initialize(L"", 70.0f);
+	_AttackValue->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
@@ -117,14 +111,14 @@ void Player::Start()
 	//モデルにライト設定
 	_Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//アニメーションの終了時間設定
-	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0;			//アイドル
-	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0;			//歩く
-	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.68;			//走る
-	_AnimationEndTime[(int)AnimationNo::AnimationJump] = -1.0;			//ジャンプ
+	_AnimationEndTime[(int)AnimationNo::AnimationIdol] = -1.0f;			//アイドル
+	_AnimationEndTime[(int)AnimationNo::AnimationWalk] = -1.0f;			//歩く
+	_AnimationEndTime[(int)AnimationNo::AnimationRun] = 0.68f;			//走る
+	_AnimationEndTime[(int)AnimationNo::AnimationJump] = -1.0f;			//ジャンプ
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//攻撃1
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0;		//攻撃2
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0;		//攻撃3
-	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0;			//死亡
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0f;		//攻撃2
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0f;		//攻撃3
+	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0f;		//死亡
 	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
 	{
@@ -138,8 +132,6 @@ void Player::Start()
 	transform->SetLocalPosition(Vector3(378, 69, -1286));
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
-	//初期プレイヤー状態（待機）
-	_State = State::Idol;
 	//攻撃アニメーションステートの初期化
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
@@ -159,44 +151,30 @@ void Player::Start()
 
 void Player::Update()
 {
-	if (_CurrentState != NULL)
+	if (_CurrentState != nullptr)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
 	}
-
-	//ライフが0になると死亡する。
-	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0)
+	if (_HPBar != nullptr)
 	{
-		ChangeState(State::Death);
+		//HPバーの更新
+		_HPBar->Update();
 	}
-	/*
-	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
-	*/
-	if (_Debug == false)
+	if (_MPBar != nullptr)
 	{
-		if (transform->GetLocalPosition().y < 48.5f)
-		{
-			_PlayerParam->SubParam(CharacterParameter::HP, 2);
-			_HPBar->SubValue(2);
-		}
-
+		//MPバーの更新
+		_MPBar->Update();
 	}
-	
-	//HPバーの更新
-	_HPBar->Update();
-	//MPバーの更新
-	_MPBar->Update();
+	//ダメージを受ける処理。
+	_Damage();
 	//アニメーションコントロール
 	AnimationControl();
-
 	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
 	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
 	// ※都合が悪いのでとりあえずコメントアウト。
-	{
 		////トランスフォーム更新
 		//transform->UpdateTransform();
-	}
 }
 
 void Player::ChangeState(State nextstate)
@@ -297,5 +275,36 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	{
 		_HPBar->SubValue(_PlayerParam->ReciveDamage(hitCollision->GetDamage()));
 		_DamageSE->Play(false);//ダメージを受けたときのSE
+	}
+}
+
+void Player::Releace()
+{
+	_CharacterController = nullptr;
+	_DamageSE = nullptr;
+	_AttackValue = nullptr;
+	_Rotation = nullptr;
+	_PlayerParam = nullptr;
+	_CurrentState = nullptr;
+	_HPBar = nullptr;
+	_MPBar = nullptr;
+}
+
+void Player::_Damage()
+{
+	//死亡ステート以外の時。
+	//ライフが0になると死亡する。
+	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0 && _State != State::Death)
+	{
+		ChangeState(State::Death);
+	}
+	/*
+	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
+	*/
+	if (transform->GetLocalPosition().y < 48.5f 
+		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 &&_Debug == false)
+	{
+		_PlayerParam->SubParam(CharacterParameter::HP, 2);
+		_HPBar->SubValue(2);
 	}
 }

@@ -109,7 +109,10 @@ public:
 	virtual void _RemoveWorldSubClass() = 0;
 	// ワールドから削除。
 	void RemoveWorld();
-
+	void SetKinematick(bool flg)
+	{
+		_Kinematick = flg;
+	}
 protected:
 	//コリジョンの位置や回転を更新
 	void _UpdateCollisionTrans();
@@ -126,4 +129,6 @@ protected:
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
 	bool _isAddWorld = false;	// ワールドに追加したか。
 	CollisionObjectType _MyObjectType;	// 剛体かゴーストか。
+	//動かないよ。
+	bool _Kinematick;
 };
