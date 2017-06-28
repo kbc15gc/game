@@ -18,17 +18,20 @@ class EnemyCharacter :
 	public GameObject
 {
 public:
+	// 自分がどの種類のエネミーか。
+	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
+	enum class EnemyType{Prot = 0};
+
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-
-	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall };
+	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall,Death };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Fall, Max };
+	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Fall, Death,Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
@@ -101,8 +104,9 @@ public:
 	//			コリジョン発生位置。
 	//			コリジョン回転。
 	//			コリジョンのサイズ。
+	//			コリジョンの寿命(デフォルトは無限)。
 	// ※生成されるコリジョン形状はボックスです。
-	void CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size);
+	void CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size, float life = -1.0f, float wait = 0.0f);
 
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ。
@@ -115,7 +119,7 @@ public:
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
 	//			ループ回数。
-	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount) {
+	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1) {
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime, loopCount);
 	}
 
@@ -235,6 +239,17 @@ public:
 	inline bool GetIsGround() const {
 		return _MyComponent.CharacterController->IsOnGround();
 	}
+
+	// 死亡フラグ設定。
+	// ※ EnemyManager以外で呼ばないで。
+	inline void SetIsDead(bool flg) {
+		_isDead = flg;
+	}
+	// 死亡フラグ取得。
+	inline bool GetIsDead()const {
+		return _isDead;
+	}
+
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -303,6 +318,7 @@ private:
 	// 継承先でアニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
 	virtual void _BuildAnimation() = 0;
+
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
 	float _Radius = 0.0f;	// コリジョンサイズ(幅)。
@@ -322,6 +338,9 @@ protected:
 	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
+
+private:
+	bool _isDead = false;	// 死亡しているか(※直接設定せず、EnemyManagerのDeathEnemy関数で死亡させてね)。
 private:
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 

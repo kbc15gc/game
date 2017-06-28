@@ -40,7 +40,7 @@ public:
 	T* GetComponent();
 
 	template <class T>
-	T** GetComponents();
+	unique_ptr<vector<T*>> GetComponents();
 
 	template <class T>
 	void RemoveComponent()
@@ -90,11 +90,11 @@ inline T * ComponentManager::GetComponent()
 }
 
 template<class T>
-inline T ** ComponentManager::GetComponents()
+inline unique_ptr<vector<T*>> ComponentManager::GetComponents()
 {
 	//テンプレート型の内部の型情報取得
 	const type_info& Ttype = typeid(T);
-	vector<T*> Tmp;
+	unique_ptr<vector<T*>> Tmp(new vector<T*>());
 
 	//foreachは内部で値をコピーしているので、ポインタを返すなら使えない。
 	vector<Component*>::const_iterator it = _Components.cbegin();
@@ -105,22 +105,24 @@ inline T ** ComponentManager::GetComponents()
 		//型情報比較
 		if (Ttype == type)
 		{
-			Tmp.push_back((T*)*it);
+			Tmp->push_back((T*)*it);
 		}
 		it++;
 	}
 
-	//配列。
-	int size = Tmp.size();
-	if (size > 0)
-	{
-		T** Array = new T*[size];
-		for (size_t i = 0; i < Tmp.size(); i++)
-		{
-			Array[i] = Tmp[i];
-		}
+	return move(Tmp);
 
-		return Array;
-	}
+	////配列。
+	//int size = Tmp.size();
+	//if (size > 0)
+	//{
+	//	T** Array = new T*[size];
+	//	for (size_t i = 0; i < Tmp.size(); i++)
+	//	{
+	//		Array[i] = Tmp[i];
+	//	}
+
+	//	return Array;
+	//}
 	return nullptr;
 }

@@ -31,6 +31,6 @@ private:
 	void _LoadCSV();
 private:
 	//メッセージたち
-	vector<MessageInfo*> _Messages;
+	vector<unique_ptr<MessageInfo>> _Messages;
 	static MessageManager* _Instance;
 };

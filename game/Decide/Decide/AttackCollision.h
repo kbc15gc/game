@@ -24,9 +24,9 @@ public:
 	//			サイズ。
 	//			誰がコリジョンを生成したか。
 	//			コリジョン寿命(0.0fより小さい値で無限)。
+	//			コリジョン生成待ち時間(この関数が呼ばれてから何秒後にコリジョン生成するか)。
 	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
-	// 戻り値：	生成したコリジョン。
-	GostCollision* Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f, Transform* Parent = nullptr);
+	void Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f,float waitTime = 0.0f, Transform* Parent = nullptr);
 
 	inline void SetParent(Transform* Parent) {
 		transform->SetParent(Parent);
@@ -46,6 +46,8 @@ public:
 		return _Damage;
 	}
 private:	
+	// 攻撃コリジョン生成関数。
+	void CreateCollision();
 	// 衝突検出。
 	void DetectionCollision();
 	// 衝突した瞬間呼ぶコールバック処理。
@@ -71,9 +73,11 @@ private:
 private:
 	Collider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。
-	float time;				//コリジョン削除カウンター。
+	float _time;				//作業用カウンター。
+	float _waitTime = 0.0f;		// コリジョン生成待ち時間。
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
 	int _Damage = 0;
 	vector<shared_ptr<btCollisionObject>> _HitCollisions;	// 当たっているコリジョン。
+	bool _isCreateCollision = false;	// コリジョンを生成したか。
 };

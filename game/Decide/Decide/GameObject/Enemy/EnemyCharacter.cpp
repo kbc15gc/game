@@ -9,6 +9,7 @@
 #include "HFSM\EnemyAttackState.h"
 #include "HFSM\EnemyStartAttackState.h"
 #include "HFSM\EnemyFallState.h"
+#include "HFSM\EnemyDeathState.h"
 #include "AttackCollision.h"
 
 
@@ -58,7 +59,8 @@ void EnemyCharacter::Update() {
 
 	if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) <= 0)
 	{
-		INSTANCE(GameObjectManager)->AddRemoveList(this);
+		_ChangeState(State::Death);
+		static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
 	}
 
 	// 継承先により変わる処理。
@@ -89,7 +91,7 @@ void EnemyCharacter::LateUpdate() {
 }
 
 
-void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size) {
+void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size,float life,float wait) {
 	//現在のフレーム取得
 	const int nowFrame = _MyComponent.Animation->NowFrame();
 	//フレームが10の時あたり判定作成
@@ -99,7 +101,7 @@ void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& 
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack_enemy", priorty);
 		Quaternion rot = Quaternion::Identity;
-		attack->Create(_MyComponent.Parameter->GiveDamageMass(), pos, rot, size, AttackCollision::CollisionMaster::Enemy, 0.5f);
+		attack->Create(_MyComponent.Parameter->GiveDamageMass(), pos, rot, size, AttackCollision::CollisionMaster::Enemy, life,wait);
 	}
 }
 
@@ -202,6 +204,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyTranslationState>(new EnemyTranslationState(this)));
 	// 落下ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyFallState>(new EnemyFallState(this)));
+	// 死亡ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
 }
 
 void EnemyCharacter::_ChangeState(State next) {

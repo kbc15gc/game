@@ -158,6 +158,8 @@ void Enemy::_BuildAnimation() {
 		// 落下状態。
 		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
 	}
 }
 

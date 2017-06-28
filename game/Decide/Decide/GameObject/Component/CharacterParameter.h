@@ -16,7 +16,9 @@ public:
 	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, MAX };
 	//初期化。
 	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi);
-	
+	//初期化。
+	void ParamInit(int param[Param::MAX]);
+
 	void Update()override;
 
 	// 指定したパラメーターに加算。

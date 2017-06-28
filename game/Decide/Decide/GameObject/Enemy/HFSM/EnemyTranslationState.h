@@ -2,8 +2,6 @@
 
 #include "EnemyState.h"
 
-class EnemyCharacter;
-
 // エネミー直進ステート。
 class EnemyTranslationState : public EnemyState {
 public:

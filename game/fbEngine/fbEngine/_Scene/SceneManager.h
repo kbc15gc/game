@@ -33,11 +33,12 @@ public:
 	void UpdateScene();
 	//シーンの描画を行う
 	void DrawScene();
-	//シーンの切り替え
-	Scene* ChangeScene(int key);
-	Scene* ChangeScene(char* Scenename);
+	//シーンの切り替え外部から呼び出す用
+	//シーンの添え字、フェードするかどうか？
+	Scene* ChangeScene(int key, bool fade = false);
+	Scene* ChangeScene(char* Scenename, bool fade = false);
 	template<class T>
-	Scene* ChangeScene()
+	Scene* ChangeScene(bool fade = false)
 	{
 		const char* name = typeid(T).name();
 		int idx = 0;
@@ -46,8 +47,8 @@ public:
 			//名前の一致
 			if (name == typeid(*s).name())
 			{
-				_NowScene = idx;
-				return _Scenes[_NowScene];
+				//シーン切り替え
+				return ChangeScene(idx,fade);
 			}
 			idx++;
 		}
@@ -112,6 +113,9 @@ public:
 	}
 
 private:
+	//シーン切り替え。
+	void _ChangeScene();
+private:
 	int _NowScene;	//現在のシーンの添え字
 	vector<Scene*> _Scenes;
 	ImageObject* _OffScreen;
@@ -134,5 +138,6 @@ private:
 
 	/** 空クラス. */
 	Sky* _Sky = nullptr;
-
+	//次のシーン
+	int _NextScene;
 };

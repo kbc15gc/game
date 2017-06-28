@@ -18,15 +18,9 @@ void ContinentObject::Awake()
 void ContinentObject::Start() {
 
 	// Transformが更新されるのでここで追加。
-	RigidBody** rigid = GetComponents<RigidBody>();
-	//nullチェック
-	if ((rigid != nullptr))
-	{
-		FOR(i, ARRAY_SIZE(rigid))
-		{
-			rigid[i]->AddWorld();
-		}
-		
+	unique_ptr<vector<RigidBody*>> rigidArray = GetComponents<RigidBody>();
+	for (auto rigid : *rigidArray.get()) {
+		rigid->AddWorld();
 	}
 }
 

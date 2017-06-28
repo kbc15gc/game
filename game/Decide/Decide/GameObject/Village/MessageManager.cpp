@@ -14,14 +14,14 @@ namespace
 	};
 }
 
-MessageManager*  MessageManager::_Instance;
+MessageManager*  MessageManager::_Instance = nullptr;
 
 MessageInfo* MessageManager::GetMess(const int & id)
 {
 	MessageInfo* mess;
 	try
 	{
-		mess = _Messages.at(id);
+		mess = _Messages.at(id).get();
 	}
 	catch (std::out_of_range& out)
 	{

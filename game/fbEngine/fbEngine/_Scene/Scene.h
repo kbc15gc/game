@@ -59,6 +59,11 @@ public:
 		return _isEnvironmentMap;
 	}
 
+	static fbScene::FadeStateE GetState()
+	{
+		return _FadeState;
+	}
+
 private:
 	//フェード描画
 	void _DrawFade();
@@ -73,7 +78,7 @@ private:
 	//1秒間あたりに加算されるα値
 	static float _AddPerSecA;
 protected:
-	//フェード中
+	//フェードのステート
 	static fbScene::FadeStateE _FadeState;
 
 protected:
