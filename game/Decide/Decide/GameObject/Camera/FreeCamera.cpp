@@ -14,14 +14,14 @@ void FreeCamera::Awake()
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void FreeCamera::Start()
 {
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
 	transform->SetPosition(Vector3(0, 70, 0));
 
-	//^‰º‚ðŒü‚­‚æ‚¤‚É‰ñ“]B
 	transform->SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
 
 	_Camera->SetTarget(transform->GetPosition());
@@ -32,6 +32,7 @@ void FreeCamera::Start()
 
 void FreeCamera::UpdateSubClass()
 {
+	SetCameraSpeed(3.0f);
 	Move();
 }
 

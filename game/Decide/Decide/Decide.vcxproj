@@ -156,9 +156,11 @@
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
-    <ClInclude Include="FreeCamera.h" />
-    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
+    <ClInclude Include="GameObject\Camera\FreeCamera.h" />
+    <ClInclude Include="GameObject\Camera\GameCamera.h" />
+    <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
+    <ClInclude Include="GameObject\Camera\ThirdPersonCamera.h" />
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Component\ObjectSpawn.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
+    <ClInclude Include="GameObject\Ground\Ground.h" />
     <ClInclude Include="GameObject\History\Chip.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookState.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.h" />
@@ -204,21 +207,20 @@
     <ClInclude Include="GameObject\Village\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameSystem.h" />
-    <ClInclude Include="Ground.h" />
     <ClInclude Include="Ocean.h" />
-    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="ThirdPersonCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
-    <ClCompile Include="FreeCamera.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
+    <ClCompile Include="GameObject\Camera\FreeCamera.cpp" />
+    <ClCompile Include="GameObject\Camera\GameCamera.cpp" />
+    <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
+    <ClCompile Include="GameObject\Camera\ThirdPersonCamera.cpp" />
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp" />
@@ -236,6 +238,7 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\Ground\Ground.cpp" />
     <ClCompile Include="GameObject\History\Chip.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateIdol.cpp" />
@@ -260,15 +263,12 @@
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
-    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ThirdPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

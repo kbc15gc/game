@@ -6,7 +6,7 @@
 #include "HistoryBookState.h"
 
 //#include"GameCamera.h"
-#include "PlayerCamera.h"
+#include "GameObject\Camera\PlayerCamera.h"
 
 /**
 * —ğj‘‚Ì‘Ò‹@ó‘ÔƒNƒ‰ƒX.
