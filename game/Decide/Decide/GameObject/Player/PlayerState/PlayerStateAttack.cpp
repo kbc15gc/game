@@ -118,9 +118,5 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 		attack->Create(_Player->_PlayerParam->GiveDamageMass(),pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime,0.0f, _Player->transform);
-
-		_Player->_AttackValue->transform->SetLocalPosition(Vector3(pram.pos.x,pram.pos.y, pram.pos.z));
-		string attackvalue = to_string(_Player->_PlayerParam->GiveDamageMass());
-		_Player->_AttackValue->SetString(attackvalue.data());
 	}
 }
