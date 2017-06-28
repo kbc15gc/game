@@ -115,14 +115,8 @@ void GameScene::Update()
 	//エンターキー
 	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
-		//フェードイン開始
-		StartFade(true);
-	}
-	//フェードイン完了
-	if (_FadeState == fbScene::FadeStateE::INEND)
-	{
 		//タイトルシーンへ移行
-		INSTANCE(SceneManager)->ChangeScene("TitleScene");
+		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);
 		return;
 	}
 }

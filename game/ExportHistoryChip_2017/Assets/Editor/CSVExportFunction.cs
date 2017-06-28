@@ -78,7 +78,7 @@ public class CSVExportFunction : Editor
             //名前書き出し
             string filename = child.name + ".X";
             //ポジション
-            string pos = Vector3ToString(child.position);
+            string pos = Vector3ToString(child.position, true);
             //回転
             string ang = Vector3ToString(child.eulerAngles);
             //スケール
@@ -134,7 +134,7 @@ public class CSVExportFunction : Editor
             //メッシュ名を書き出し
             //sw.Write(mesh.name.Replace(" Instance", "") + ".X");
             string filename = child.name + ".X";
-            string pos = Vector3ToString(child.position);
+            string pos = Vector3ToString(child.position, true);
             string ang = Vector3ToString(child.eulerAngles);
             string sca = Vector3ToString(child.lossyScale);
             NPC npc = child.GetComponent<NPC>();
@@ -159,9 +159,9 @@ public class CSVExportFunction : Editor
         //名前書き出し
         string filename = "coll";
         //ポジション
-        string pos = Vector3ToString(coll.localPosition);
+        string pos = Vector3ToString(coll.localPosition, true);
         //回転
-        string ang = Vector3ToString(coll.localEulerAngles);
+        string ang = Vector3ToString(coll.eulerAngles);
         //スケール
         string sca = Vector3ToString(coll.lossyScale);
 
@@ -206,7 +206,7 @@ public class CSVExportFunction : Editor
             string dex = Convert.ToString(e._DEX);
             string agi = Convert.ToString(e._AGI);
 
-            string pos = Vector3ToString(child.position);
+            string pos = Vector3ToString(child.position,true);
             string quaternion = QuaternionToString(child.rotation);
             string sca = Vector3ToString(child.lossyScale);
 
@@ -223,10 +223,11 @@ public class CSVExportFunction : Editor
         return true;
     }
 
-    static public string Vector3ToString(Vector3 val)
+    static public string Vector3ToString(Vector3 val,bool sign = false)
     {
         //"x/y/z"の形で返す。
-        return String.Format("{0}/{1}/{2}", -val.x, val.y, -val.z);
+        int Sign = sign ? -1 : 1;
+        return String.Format("{0}/{1}/{2}", val.x * Sign, val.y, val.z * Sign);
     }
 
     static public string QuaternionToString(Quaternion val)

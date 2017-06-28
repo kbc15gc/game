@@ -28,6 +28,10 @@ void GameObjectManager::StartObject()
 
 void GameObjectManager::UpdateObject()
 {
+	//削除リストを削除
+	_RemoveObject();
+
+
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
 		for each (GameObject* obj in _GameObjects[priority])
@@ -57,9 +61,6 @@ void GameObjectManager::LateUpdateObject()
 			}
 		}
 	}
-
-	//削除リストを削除
-	_RemoveObject();
 }
 
 void GameObjectManager::PreRenderObject()
