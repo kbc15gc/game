@@ -10,6 +10,7 @@
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Component\CharacterParameter.h"
 #include"GameObject\Component\ObjectRotation.h"
+#include "GameObject\Component\ParameterBar.h"
 
 class SkinModel;
 class Animation;
@@ -103,8 +104,6 @@ public:
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
-	//移動
-	void Move();
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
@@ -120,6 +119,8 @@ private:
 	float _Height;
 	//半径
 	float _Radius;
+	//最初のポジション
+	Vector3 _StartPos;
 	//最終的な移動量
 	Vector3 _MoveSpeed;
 	//進行
@@ -158,9 +159,6 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
-
-	//攻撃の値を表示。
-	TextObject* _AttackValue = nullptr;
 
 	bool _Debug = false;
 };
