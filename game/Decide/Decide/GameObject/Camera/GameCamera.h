@@ -90,6 +90,6 @@ protected:
 	const Vector3* _PlayerPos = &Vector3::zero;
 
 	//ƒJƒƒ‰‚ÌˆÚ“®‘¬“xB
-	float _MoveSpeed = 3.0f;
+	float _MoveSpeed = 0.0f;
 
 };
