@@ -26,7 +26,7 @@ void EnemyManager::LoadEnemyOrigin() {
 	vector<unique_ptr<EnemyInfo>> infoDatas;
 
 	//CSVからエネミー情報読み取り。
-	Support::LoadCSVData<EnemyInfo>("Asset/Data/EnemyData.csv", EnemyInfoDecl, ARRAY_SIZE(EnemyInfoDecl), infoDatas);
+	Support::LoadCSVData<EnemyInfo>("Asset/Data/EnemyData/.csv", EnemyInfoDecl, ARRAY_SIZE(EnemyInfoDecl), infoDatas);
 
 	for (int idx = 0; idx < infoDatas.size(); idx++) {
 		// 読み取ったデータを管理用構造体で登録。
