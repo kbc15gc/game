@@ -36,7 +36,6 @@ void ThirdPersonCamera::UpdateSubClass()
 {
 	ChangeHeight();
 
-	float CameraSpeed = 0.0f;
 	//今の高さを調べ、それに応じた処理をする。
 	switch (_NowHeight)
 	{
@@ -47,8 +46,8 @@ void ThirdPersonCamera::UpdateSubClass()
 		transform->SetPosition(transform->GetPosition().x, 180.0f, transform->GetPosition().z);
 
 		//カメラの移動スピードを設定。
-		CameraSpeed = 3.0f;
-		SetCameraSpeed(CameraSpeed);
+		_LowCameraSpeed = 9.0f;
+		SetCameraSpeed(_LowCameraSpeed);
 		Move();
 		break;
 		//高さ:中。
@@ -56,8 +55,8 @@ void ThirdPersonCamera::UpdateSubClass()
 		transform->SetPosition(transform->GetPosition().x, 500.0f, transform->GetPosition().z);
 
 		//カメラの移動スピードを設定。
-		CameraSpeed = 15.0f;
-		SetCameraSpeed(CameraSpeed);
+		_MiddleCameraSpeed = 25.0f;
+		SetCameraSpeed(_MiddleCameraSpeed);
 		Move();
 		break;
 		//高さ:高。
