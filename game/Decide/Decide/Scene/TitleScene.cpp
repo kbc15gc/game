@@ -1,7 +1,7 @@
 #include"stdafx.h"
 #include "TitleScene.h"
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
-#include "GameCamera.h"
+#include "GameObject\Camera\GameCamera.h"
 #include "GameLight.h"
 
 void TitleScene::Start()

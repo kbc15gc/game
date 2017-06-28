@@ -6,9 +6,9 @@
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
 
 #include "GameLight.h"
-#include "GameCamera.h"
+#include "GameObject\Camera\GameCamera.h"
 
-#include "Ground.h"
+#include "GameObject\Ground\Ground.h"
 #include "Ocean.h"
 
 #include "GameObject/Player/Player.h"
@@ -22,9 +22,9 @@
 #include "GameObject\Village\Shop.h"
 #include "GameObject\Village\ItemManager.h"
 
-#include "PlayerCamera.h"
-#include "ThirdPersonCamera.h"
-#include "FreeCamera.h"
+#include "GameObject\Camera\PlayerCamera.h"
+#include "GameObject\Camera\ThirdPersonCamera.h"
+#include "GameObject\Camera\FreeCamera.h"
 #include "GameObject\Enemy\EnemyManager.h"
 
 ImageObject* g_depth;
