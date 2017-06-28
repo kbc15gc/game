@@ -76,7 +76,8 @@ void SceneManager::StartScene()
 void SceneManager::UpdateScene()
 {
 	//次のシーンが設定されている場合はシーン切り替え
-	if (_NextScene >= 0)
+	if (_NextScene >= 0 &&
+		Scene::GetState() == fbScene::FadeStateE::WAIT)
 		_ChangeScene();
 
 	_Scenes[_NowScene]->Update();
@@ -155,14 +156,17 @@ void SceneManager::DrawScene()
 	_Scenes[_NowScene]->Fade();
 }
 
-Scene* SceneManager::ChangeScene(int key)
+Scene* SceneManager::ChangeScene(int key, bool fade)
 {
+	if (fade)
+		//フェードが入る。
+		Scene::StartFade(true);
 	//次のシーンを
 	_NextScene = key;
 	return _Scenes[_NextScene];
 }
 
-Scene* SceneManager::ChangeScene(char * Scenename)
+Scene* SceneManager::ChangeScene(char * Scenename, bool fade)
 {
 	//クラス名
 	char* classname = new char[128];
@@ -175,7 +179,7 @@ Scene* SceneManager::ChangeScene(char * Scenename)
 		if (strcmp(classname, typeid(*s).name()) == 0)
 		{
 			//シーン切り替え
-			return ChangeScene(idx);
+			return ChangeScene(idx,fade);
 		}
 		idx++;
 	}

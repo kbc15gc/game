@@ -34,10 +34,11 @@ public:
 	//シーンの描画を行う
 	void DrawScene();
 	//シーンの切り替え外部から呼び出す用
-	Scene* ChangeScene(int key);
-	Scene* ChangeScene(char* Scenename);
+	//シーンの添え字、フェードするかどうか？
+	Scene* ChangeScene(int key, bool fade = false);
+	Scene* ChangeScene(char* Scenename, bool fade = false);
 	template<class T>
-	Scene* ChangeScene()
+	Scene* ChangeScene(bool fade = false)
 	{
 		const char* name = typeid(T).name();
 		int idx = 0;
@@ -47,7 +48,7 @@ public:
 			if (name == typeid(*s).name())
 			{
 				//シーン切り替え
-				return ChangeScene(idx);
+				return ChangeScene(idx,fade);
 			}
 			idx++;
 		}
