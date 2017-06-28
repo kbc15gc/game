@@ -195,7 +195,7 @@ public class CSVExportFunction : Editor
                 continue;
 
             ExportEnemy e = child.GetComponent<ExportEnemy>();
-            string type = Convert.ToString(e._EnemyType);
+            string type = Convert.ToString(Convert.ToInt32(e._EnemyType));
 
             string hp = Convert.ToString(e._HP);
             string mhp = Convert.ToString(e._MaxHP);
