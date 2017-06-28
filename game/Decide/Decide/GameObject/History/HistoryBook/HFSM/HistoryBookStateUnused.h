@@ -4,7 +4,7 @@
 #pragma once
 
 #include "HistoryBookState.h"
-#include "PlayerCamera.h"
+#include "GameObject\Camera\PlayerCamera.h"
 
 class Player;
 

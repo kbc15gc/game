@@ -3,9 +3,7 @@
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp">
       <Filter>GameObject\Component</Filter>
@@ -93,9 +91,6 @@
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="FreeCamera.cpp" />
-    <ClCompile Include="ThirdPersonCamera.cpp" />
-    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="GameObject\History\Chip.cpp">
       <Filter>GameObject\History</Filter>
     </ClCompile>
@@ -139,14 +134,27 @@
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Camera\FreeCamera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Camera\GameCamera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Camera\PlayerCamera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Camera\ThirdPersonCamera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Ground\Ground.cpp">
+      <Filter>GameObject\Ground</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
-    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameSystem.h" />
-    <ClInclude Include="Ground.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h">
@@ -238,9 +246,6 @@
     <ClInclude Include="GameObject\SpaceCollisionObject.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="FreeCamera.h" />
-    <ClInclude Include="ThirdPersonCamera.h" />
-    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="GameObject\History\Chip.h">
       <Filter>GameObject\History</Filter>
     </ClInclude>
@@ -290,6 +295,21 @@
     <ClInclude Include="GameObject\Component\ObjectSpawn.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Camera\FreeCamera.h">
+      <Filter>GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Camera\GameCamera.h">
+      <Filter>GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Camera\PlayerCamera.h">
+      <Filter>GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Camera\ThirdPersonCamera.h">
+      <Filter>GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Ground\Ground.h">
+      <Filter>GameObject\Ground</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -337,6 +357,12 @@
     </Filter>
     <Filter Include="GameObject\History\HistoryMenu">
       <UniqueIdentifier>{f5c9b85b-eab5-4e30-a8fc-22b0309088ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Camera">
+      <UniqueIdentifier>{65aeafb4-5c04-4abb-87e3-c0ed8c6f920b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Ground">
+      <UniqueIdentifier>{a2d108a1-7e0b-4c6e-a0fe-95d58856e151}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
