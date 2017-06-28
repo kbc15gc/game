@@ -80,7 +80,8 @@ private:
 
 private:
 	
-	Camera_Height _NowHeight = Camera_Height::Low;//今の高さ。
-
+	Camera_Height _NowHeight = Camera_Height::Low;	//今の高さ。
+	float _LowCameraSpeed = 0.0f;	//低い高さでのカメラの移動速度。
+	float _MiddleCameraSpeed = 0.0f;	//中の高さでのカメラの移動速度。
 };
 
