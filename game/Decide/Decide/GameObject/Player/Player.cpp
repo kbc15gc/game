@@ -4,7 +4,6 @@
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include <string>
 #include <sstream>
-#include "GameObject\Component\ParameterBar.h"
 #include "GameObject\SplitSpace.h"
 
 Player::Player(const char * name) :
@@ -26,10 +25,16 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false)
 {
+	char text[256];
+	sprintf(text, "Player address %x\n", *this);
+	OutputDebugString(text);
 }
 
 Player::~Player()
 {
+	char text[256];
+	sprintf(text, "~Player address %x\n", *this);
+	OutputDebugString(text);
 }
 
 void Player::Awake()
@@ -93,10 +98,6 @@ void Player::Awake()
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
 		_MPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXMP), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
-	//攻撃の値のテクストオブジェクト。
-	_AttackValue = INSTANCE(GameObjectManager)->AddNew<TextObject>("AttackValueText", _Priority);
-	_AttackValue->Initialize(L"", 70.0f);
-	_AttackValue->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
@@ -127,7 +128,8 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	transform->SetLocalPosition(Vector3(378, 69, -1286));
+	_StartPos = Vector3(378, 69, -1286);
+	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//攻撃アニメーションステートの初期化
@@ -280,7 +282,6 @@ void Player::Releace()
 {
 	_CharacterController = nullptr;
 	_DamageSE = nullptr;
-	_AttackValue = nullptr;
 	_Rotation = nullptr;
 	_PlayerParam = nullptr;
 	_CurrentState = nullptr;
