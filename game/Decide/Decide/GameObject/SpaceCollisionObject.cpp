@@ -75,9 +75,10 @@ void SpaceCollisionObject::RegistrationObject()
 }
 
 void SpaceCollisionObject::AddObjectHitSpace(GameObject& object) {
-	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(object)),_attribute) {
+	Collision* coll = _GetAttachCollision(object);
+	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), coll),_attribute) {
 		// Õ“Ë‚µ‚Ä‚¢‚½‚Ì‚Å’Ç‰ÁB
-		_HitCollisions.push_back(object.GetComponent<Collision>()->GetCollisionObj_shared());
+		_HitCollisions.push_back(coll->GetCollisionObj_shared());
 	}
 }
 

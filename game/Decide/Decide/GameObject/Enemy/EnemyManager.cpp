@@ -3,6 +3,7 @@
 #include "fbEngine\_Support\Support.h"
 #include "EnemyCharacter.h"
 #include "Enemy.h"
+#include "GameObject\SplitSpace.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 

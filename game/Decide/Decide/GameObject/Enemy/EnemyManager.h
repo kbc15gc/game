@@ -4,6 +4,7 @@
 #include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
+class SplitSpace;
 
 namespace {
 

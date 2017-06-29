@@ -2,10 +2,12 @@
 #include "GameObject\Component\ObjectSpawn.h"
 #include "fbEngine\_Support\Time.h"
 
+SplitSpace* Spawner::_splitSpace = nullptr;
 
 // 発生装置。
 void Spawner::Create(GameObject* spawn, float wait, const Vector3& pos, const Quaternion& rot, const Vector3& scale, Transform* parent) {
 	spawn->SetActive(false);	// まずは非アクティブ化する。
+
 	_spawnObject = spawn;
 
 	// 位置情報設定。
@@ -14,6 +16,13 @@ void Spawner::Create(GameObject* spawn, float wait, const Vector3& pos, const Qu
 	_spawnObject->transform->SetScale(scale);
 	if (parent) {
 		_spawnObject->transform->SetParent(parent);
+	}
+
+	_spawnObject->Start();	// 初期化。
+
+	if (_splitSpace) {
+		// 生成したオブジェクトを空間に登録。
+		_splitSpace->AddObjectHitSpace(*_spawnObject);
 	}
 
 	_waitTime = wait;
@@ -38,7 +47,6 @@ bool Spawner::_ClosedUpdate() {
 		if (_timeCounter >= _waitTime) {
 			// 指定した時間が経過した。
 			_spawnObject->SetActive(true);	// アクティブ化する。
-			_spawnObject->Start();	// 初期化。
 
 			// 発生させたので自分を削除する。
 			INSTANCE(GameObjectManager)->AddRemoveList(this);

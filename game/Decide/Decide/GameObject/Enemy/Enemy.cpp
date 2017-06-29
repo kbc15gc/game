@@ -35,7 +35,7 @@ void Enemy::_StartSubClass(){
 
 	// œpœj”ÍˆÍÝ’èB
 	// ¦Žb’èˆ—B
-	_WanderingRange = 10.0f;
+	_WanderingRange = 30.0f;
 
 	//ƒ‚ƒfƒ‹‚Éƒ‰ƒCƒgÝ’èB
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
