@@ -7,6 +7,7 @@
 #include "AttackCollision.h"
 #include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\Component\ParameterBar.h"
+#include "GameObject\Component\ObjectSpawn.h"
 
 class SkinModel;
 class Animation;
@@ -51,6 +52,7 @@ private:
 		ObjectRotation* RotationAction = nullptr;	// オブジェクトを回転させるクラス。
 		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
 		ParameterBar* HPBar = nullptr;			// ゲージHP用。
+		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
 	};
 
 public:
@@ -169,6 +171,15 @@ public:
 	// 視野角判定を行うステートから呼び出す。
 	void SearchView();
 
+	//全パラメーター設定。
+	inline void SetParamAll(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)const  {
+		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi);
+	}
+	//全パラメーター設定。
+	inline void SetParamAll(int param[CharacterParameter::Param::MAX]) const{
+		_MyComponent.Parameter->ParamInit(param);
+	}
+
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -240,16 +251,9 @@ public:
 		return _MyComponent.CharacterController->IsOnGround();
 	}
 
-	// 死亡フラグ設定。
-	// ※ EnemyManager以外で呼ばないで。
-	inline void SetIsDead(bool flg) {
-		_isDead = flg;
+	inline ObjectSpawn* GetSpawner()const {
+		return _MyComponent.Spawner;
 	}
-	// 死亡フラグ取得。
-	inline bool GetIsDead()const {
-		return _isDead;
-	}
-
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -339,8 +343,6 @@ protected:
 
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
 
-private:
-	bool _isDead = false;	// 死亡しているか(※直接設定せず、EnemyManagerのDeathEnemy関数で死亡させてね)。
 private:
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 

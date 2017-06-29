@@ -24,32 +24,36 @@ EnemyCharacter::~EnemyCharacter()
 
 
 void EnemyCharacter::Awake() {
-	// 継承先により変わる処理。
-	_AwakeSubClass();
-
 	// このクラスで使用するコンポーネントを追加。
 	// ※下記の関数を継承先のクラスで上書きしている場合はそちらが呼ばれる。
 	_BuildMyComponents();
 
-	// 位置情報設定。
-	_InitPos = Vector3(378, 69, -1286);
-	transform->SetPosition(_InitPos);
+	// 位置情報初期化。
+	transform->SetPosition(Vector3(0.0f,0.0f,0.0f));
 	
 	// 使用するステートを列挙。
 	_BuildState();
+
+	// 継承先により変わる処理。
+	_AwakeSubClass();
+}
+
+void EnemyCharacter::Start() {
 	// 剛体生成。
 	_BuildCollision();
 	// モデル生成。
 	_BuildModelData();
 	// アニメーションテーブル作成。
 	_BuildAnimation();
-}
 
-void EnemyCharacter::Start() {
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
 	// 継承先により変わる処理。
 	_StartSubClass();
+
+	// 初期位置設定。
+	_InitPos = transform->GetPosition();
+
 	// 継承先で初期位置が設定された可能性があるため更新。
 	_MyComponent.CharacterController->Execute();
 	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
@@ -154,6 +158,8 @@ void EnemyCharacter::_BuildMyComponents() {
 	_MyComponent.HPBar = AddComponent<ParameterBar>();
 	//パラメーターのコンポーネント追加。
 	_MyComponent.Parameter = AddComponent<CharacterParameter>();
+	// スポナーコンポーネント追加。
+	_MyComponent.Spawner = AddComponent<ObjectSpawn>();
 }
 
 void EnemyCharacter::_BuildCollision() {

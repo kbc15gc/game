@@ -38,7 +38,7 @@ void EnemyDeathState::_UpdateSubClass() {
 void EnemyDeathState::Exit(EnemyCharacter::State next) {
 	if (_EnemyObject) {
 		// 死亡ステートが終了したのでEnemyManagerの死亡処理を呼ぶ。
-		INSTANCE(GameObjectManager)->AddRemoveList(_EnemyObject);
+		INSTANCE(EnemyManager)->DeathEnemy(_EnemyObject);
 	}
 }
 

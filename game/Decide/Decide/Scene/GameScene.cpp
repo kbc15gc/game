@@ -26,6 +26,7 @@
 #include "GameObject\Camera\ThirdPersonCamera.h"
 #include "GameObject\Camera\FreeCamera.h"
 #include "GameObject\Enemy\EnemyManager.h"
+#include "GameObject\SplitSpace.h"
 
 ImageObject* g_depth;
 
@@ -55,6 +56,8 @@ void GameScene::Start()
 	//フリーカメラの次のカメラはプレイヤーカメラを指定。
 	freeCamera->SetNextCamera(playerCamera);
 
+	// 空間分割生成。
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);

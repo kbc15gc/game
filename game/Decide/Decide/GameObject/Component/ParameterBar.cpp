@@ -115,9 +115,19 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 }
 
 void BarAdapter::Update() {
+	if (_parentComponent) {
+		if (_parentComponent->gameObject) {
+			if (!_parentComponent->gameObject->GetActive()) {
+				// このバーを持つオブジェクトが非アクティブになっていればこのアダプターも非アクティブにする。
+				this->SetActive(false);
+			}
+		}
+	}
+
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
 		_BarFrame->GetComponentManager().Update();
+
 		// Transform情報は毎フレーム更新されるため、毎フレームスクリーン座標にして上書きする。
 		_ToScreenPos();
 
@@ -311,4 +321,9 @@ const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
 ParameterBar::~ParameterBar()
 {
 	INSTANCE(GameObjectManager)->AddRemoveList(_Object);
+}
+
+void ParameterBar::Update() {
+	//バーの更新処理が呼ばれているのでアダプターをアクティブにする。
+	_Object->SetActive(true);
 }
