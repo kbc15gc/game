@@ -81,5 +81,7 @@ private:
 private:
 	
 	Camera_Height _NowHeight = Camera_Height::Low;	//今の高さ。
+	const float _LowCameraSpeed = 9.0f;				//低い高さでの移動スピード。
+	const float _MiddleCameraSpeed = 25.0f;			//中くらいの高さでの移動スピード。
 };
 
