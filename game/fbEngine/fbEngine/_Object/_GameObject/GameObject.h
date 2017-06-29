@@ -111,6 +111,7 @@ public:
 	inline bool GetIsStopUpdate()const {
 		return _isStopUpdate;
 	}
+
 public:
 	//トランスフォーム(簡単にアクセスしたかった。)
 	Transform* transform;	

@@ -1,8 +1,10 @@
 #pragma once
 
 #include "fbEngine\fbstdafx.h"
-#include "EnemyCharacter.h"
 #include "GameObject\Component\CharacterParameter.h"
+#include "GameObject\Enemy\EnemyCharacter.h"
+
+class SplitSpace;
 
 namespace {
 
@@ -69,10 +71,8 @@ public:
 	// 読み込んだエネミーをGameObjectManagerに追加。
 	void CreateEnemy();
 
-	// 死亡したエネミーを再配置。
-	void ReSpawnEnemy();
-
 	// エネミー死亡関数。
+	// ※スポナーコンポーネントがあれば自動でリスポーンする。
 	void DeathEnemy(EnemyCharacter* object);
 
 private:
