@@ -20,6 +20,9 @@ Enemy::~Enemy()
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
+
+	//パラメーター初期化。
+	_MyComponent.Parameter->ParamInit(10, 10, 0, 0, 5, 1, 1, 1);
 }
 
 void Enemy::_StartSubClass(){
@@ -41,9 +44,6 @@ void Enemy::_StartSubClass(){
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
-
-	//パラメーター設定。
-	_MyComponent.Parameter->ParamInit(10, 10, 0, 0, 5, 1, 1, 1);
 
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Yellow);

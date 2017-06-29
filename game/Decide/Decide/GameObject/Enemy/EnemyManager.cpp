@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EnemyManager.h"
 #include "fbEngine\_Support\Support.h"
+#include "EnemyCharacter.h"
 #include "Enemy.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
@@ -53,8 +54,12 @@ void EnemyManager::CreateEnemy() {
 
 		if (enemy) {
 			info->Object = enemy;	// 生成したエネミーオブジェクトを保存。
-			info->Object->SetActive(true);
-			info->Object->SetIsDead(false);
+			// Transform情報設定。
+			enemy->transform->SetPosition(info->InfoData->position);
+			enemy->transform->SetRotation(info->InfoData->rotation);
+			enemy->transform->SetScale(info->InfoData->scale);		
+			// パラメーター設定。
+			enemy->SetParamAll(info->InfoData->param);
 		}
 		else {
 			// 生成失敗。
@@ -64,25 +69,24 @@ void EnemyManager::CreateEnemy() {
 	}
 }
 
-void EnemyManager::ReSpawnEnemy() {
+void EnemyManager::DeathEnemy(EnemyCharacter* object) {
+	INSTANCE(GameObjectManager)->AddRemoveList(object);
 	for (auto enemy : _enemys) {
-		if (enemy->Object->GetIsDead()) {
-			// エネミーが死亡している。
+		if (object == enemy->Object) {
+			// このクラスで生成したエネミーが死亡している。
 
-			// エネミーをアクティブ化。
-			enemy->Object->SetActive(true);	
-			enemy->Object->SetIsDead(false);
-			// Transform情報設定。
-			enemy->Object->transform->SetPosition(enemy->InfoData->position);
-			enemy->Object->transform->SetRotation(enemy->InfoData->rotation);
-			enemy->Object->transform->SetScale(enemy->InfoData->scale);
+			// エネミーをリスポーン。
+			ObjectSpawn* Spawner = enemy->Object->GetSpawner();
+			if (Spawner) {
+				switch (static_cast<EnemyCharacter::EnemyType>(enemy->InfoData->type)) {
+				case EnemyCharacter::EnemyType::Prot:
+					enemy->Object = Spawner->DeathAndRespawnObject<Enemy>(nullptr, 0.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					break;
+				}
+			}
 			// パラメーター設定。
-			enemy->Object->GetComponent<CharacterParameter>()->ParamInit(enemy->InfoData->param);
+			enemy->Object->SetParamAll(enemy->InfoData->param);
+			return;
 		}
 	}
-}
-
-void EnemyManager::DeathEnemy(EnemyCharacter* object) {
-	object->SetActive(false);	// 更新と描画をストップ。
-	object->SetIsDead(true);
 }
