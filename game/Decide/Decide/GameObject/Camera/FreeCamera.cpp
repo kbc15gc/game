@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "FreeCamera.h"
 #include "GameObject\Player\Player.h"
-//デストラクタ.
+#include "PlayerCamera.h"
+//デストラクタ。
 FreeCamera::~FreeCamera()
 {
 	
@@ -32,12 +33,26 @@ void FreeCamera::Start()
 
 void FreeCamera::UpdateSubClass()
 {
-	SetCameraSpeed(3.0f);
-	Move();
+
+	//ダッシュか通常時かを見てスピードを決める。
+	DecideCameraSpeed();
+
+	//切り替える前のプレイヤーカメラの位置に戻す。
+	Return();
+
+	//回転。
+	FreeCameraRotation();
+
+	//上下移動。
+	FreeCameraMoveUpDown();
+
+	//前後左右の移動。
+	Move();	
 }
 
 void FreeCamera::Move()
 {
+	Vector3 movespeed = Vector3::zero;
 	//ゲームパッドから取得した方向。
 	Vector3 dir = Vector3::zero;
 	//コントローラー移動。
@@ -65,10 +80,83 @@ void FreeCamera::Move()
 	//移動したか。
 	if (dir.Length() != 0)
 	{
+		//カメラからみた向きに変換
+		Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
+		//カメラのビュー行列をゲット
+		D3DXMATRIX view = camera->GetViewMat();
+		//ビュー行列の逆行列
+		D3DXMATRIX viewinv;
+		D3DXMatrixInverse(&viewinv, NULL, &view);
+		//カメラ空間から見た奥方向のベクトルを取得。
+		Vector3 cameraZ;
+		cameraZ.x = viewinv.m[2][0];
+		cameraZ.y = 0.0f;		//Y軸いらない。
+		cameraZ.z = viewinv.m[2][2];
+		cameraZ.Normalize();	//Y軸を打ち消しているので正規化する。
+								//カメラから見た横方向のベクトルを取得。
+		Vector3 cameraX;
+		cameraX.x = viewinv.m[0][0];
+		cameraX.y = 0.0f;		//Y軸はいらない。
+		cameraX.z = viewinv.m[0][2];
+		cameraX.Normalize();	//Y軸を打ち消しているので正規化する。
+
+		dir = dir * _MoveSpeed;
+
 		Vector3 pos;
 		pos = transform->GetPosition();
-		pos.x += dir.x*_MoveSpeed;
-		pos.z += dir.z*_MoveSpeed;
-		transform->SetPosition(pos);
+
+		//カメラからみた方向に射影。
+		movespeed = movespeed + cameraX * dir.x;
+		movespeed.y = dir.y;
+		movespeed = movespeed + cameraZ * dir.z;
+
+		transform->SetPosition(pos + movespeed);
+
+		_Camera->SetTarget(Vector3(pos.x, pos.y, pos.z + 1.0f));
+	}
+}
+
+void FreeCamera::FreeCameraRotation()
+{
+	//ゲームパッドから入力された値に_CameraRotationSpeedを掛けて回転速度を調整。
+	_R_STICK_Y += (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f)*_CameraRotationSpeed;
+	_R_STICK_X += (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f)*_CameraRotationSpeed;
+	Quaternion q;
+	//オイラー角からクォータニオンに変換。
+	q.SetEuler(Vector3(_R_STICK_X, -_R_STICK_Y, 0.0f));
+	transform->SetRotation(Quaternion(q.y, q.x, q.z, q.w));
+}
+
+void FreeCamera::FreeCameraMoveUpDown()
+{
+	Vector3 pos = transform->GetPosition();
+	//右トリガー押し込みで上昇。
+	pos.y -= XboxInput(0)->GetAnalog(AnalogInputE::TRIGGER).x / 255.0f*_MoveSpeed;
+	//左トリガー押し込みで下降。
+	pos.y += XboxInput(0)->GetAnalog(AnalogInputE::TRIGGER).y / 255.0f*_MoveSpeed;
+	transform->SetPosition(pos);
+}
+
+void FreeCamera::DecideCameraSpeed()
+{
+	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+	{
+		//ダッシュ用のボタンが押されていればダッシュ用のスピードを設定。
+		SetCameraSpeed(_DashSpeed);
+	}
+	else
+	{
+		//通常時のスピードを設定。
+		SetCameraSpeed(_NormalSpeed);
+	}
+}
+
+void FreeCamera::Return()
+{
+	//Pを押したらカメラの位置を変更。
+	if (KeyBoardInput->isPush(DIK_P))
+	{
+		PlayerCamera* playercamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+		transform->SetPosition(playercamera->transform->GetPosition());
 	}
 }

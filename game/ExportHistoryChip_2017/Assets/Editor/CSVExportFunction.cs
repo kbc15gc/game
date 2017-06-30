@@ -161,7 +161,7 @@ public class CSVExportFunction : Editor
         //ポジション
         string pos = Vector3ToString(coll.localPosition, true);
         //回転
-        string ang = Vector3ToString(coll.eulerAngles);
+        string ang = Vector3ToString(coll.localEulerAngles);
         //スケール
         string sca = Vector3ToString(coll.lossyScale);
 

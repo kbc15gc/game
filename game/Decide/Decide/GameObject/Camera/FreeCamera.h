@@ -32,9 +32,28 @@ private:
 		//プレイヤーの更新を止める。
 		_Player->SetIsStopUpdate(true);
 	}
-private:
-	bool _FreeCameraFlag = false;
 
-	Vector3 _toPosition = Vector3::zero;
+	//フリーカメラの回転。
+	void FreeCameraRotation();
+
+	//フリーカメラの上下移動。
+	void FreeCameraMoveUpDown();
+
+	//フリーカメラの移動速度を決める。
+	//RBボタンが押されていたらダッシュスピードを設定。
+	//押されていなかった通常スピードを設定。
+	void DecideCameraSpeed();
+
+	//フリーカメラの位置を切り替える前のプレイヤーカメラの位置に戻す。
+	void Return();
+private:
+
+	float _R_STICK_Y = 0.0f;					//入力された右スティックの上下成分を保持。
+	float _R_STICK_X = 0.0f;					//入力された右スティックの左右成分を保持。
+
+	const float _CameraRotationSpeed = 10.0f;	//カメラの回転スピード。
+
+	const float _DashSpeed = 70.0f;				//ダッシュ時のカメラのスピード。
+	const float _NormalSpeed = 10.0f;			//通常時のカメラのスピード。
 };
 

@@ -71,10 +71,6 @@ private:
 
 	//レイの形状
 	SphereCollider* _Sphere;
-	//プレイヤーオブジェクト
-	//Player*		_Player;
-	//プレイヤーのポジションへの参照
-	//const Vector3* _PlayerPos;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
 	//距離

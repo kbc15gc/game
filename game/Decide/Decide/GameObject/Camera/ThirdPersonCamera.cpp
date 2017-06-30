@@ -45,16 +45,16 @@ void ThirdPersonCamera::UpdateSubClass()
 	case ThirdPersonCamera::Camera_Height::Low:
 		transform->SetPosition(transform->GetPosition().x, 180.0f, transform->GetPosition().z);
 
-		//カメラの移動スピードを設定。
-		SetCameraSpeed(9.0f);
+		//低い高さの移動スピードを設定。
+		SetCameraSpeed(_LowCameraSpeed);
 		Move();
 		break;
 		//高さ:中。
 	case ThirdPersonCamera::Camera_Height::Middle:
 		transform->SetPosition(transform->GetPosition().x, 500.0f, transform->GetPosition().z);
 
-		//カメラの移動スピードを設定。
-		SetCameraSpeed(25.0f);
+		//中くらいの高さの移動スピードを設定。
+		SetCameraSpeed(_MiddleCameraSpeed);
 		Move();
 		break;
 		//高さ:高。
