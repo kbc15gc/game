@@ -164,6 +164,7 @@
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Component\ObjectSpawn.h" />
+    <ClInclude Include="GameObject\Component\OutputData.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp" />
+    <ClCompile Include="GameObject\Component\OutputData.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />

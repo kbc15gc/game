@@ -171,13 +171,26 @@ public:
 	// 視野角判定を行うステートから呼び出す。
 	void SearchView();
 
-	//全パラメーター設定。
-	inline void SetParamAll(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)const  {
+	// 全パラメーター設定。
+	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
+	//			HP。
+	//			HP最大値。
+	//			MP。
+	//			MP最大値。
+	//			攻撃力。
+	//			防御力。
+	//			命中力。
+	//			敏捷力。
+	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)const  {
 		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi);
+		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
-	//全パラメーター設定。
-	inline void SetParamAll(int param[CharacterParameter::Param::MAX]) const{
+	// 全パラメーター設定。
+	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
+	//			各種パラメーター。
+	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
 		_MyComponent.Parameter->ParamInit(param);
+		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
 
 

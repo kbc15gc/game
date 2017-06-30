@@ -11,6 +11,7 @@
 #include "GameObject\Component\CharacterParameter.h"
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
+#include "GameObject\Component\OutputData.h"
 
 class SkinModel;
 class Animation;
@@ -159,6 +160,9 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
-
+#ifdef _DEBUG
+	// デバッグ用データ出力コンポーネント。
+	OutputData* _outputData = nullptr;
+#endif
 	bool _Debug = false;
 };

@@ -7,13 +7,18 @@
 namespace Support
 {
 	//文字列からハッシュ値を求める(簡易)
-	extern int MakeHash(const char * s);
+	extern int MakeHash(const char* s);
 	//整数を文字列に
-	extern void ToString(const int& dnum, char* s);
+	extern void ToString(const int dnum, char* s);
 	//整数を文字列(wchar)に
-	extern void ToString(const int& dnum, wchar_t* s);
+	extern void ToString(const int dnum, wchar_t* s);
 	//小数を文字列に
-	extern void ToString(const float& fnum, wchar_t * s, const int& decimal = 1);
+	extern void ToString(const float fnum, wchar_t* s, const int decimal = 1);
+	// Vectorを文字列に
+	// 引数：	変換したい値。
+	//			変換後の文字列へのポインタ。
+	//			小数点第何位まで変換するか。
+	extern void ToString(const Vector4& vec4, wchar_t* s, const int decimal = 1);
 	//文字列を小数に
 	extern double StringToDouble(const char* string);
 	// 文字列をVectorやQuaternionやFloat配列に

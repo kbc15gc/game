@@ -60,7 +60,9 @@ void EnemyManager::CreateEnemy() {
 			enemy->transform->SetRotation(info->InfoData->rotation);
 			enemy->transform->SetScale(info->InfoData->scale);		
 			// パラメーター設定。
-			enemy->SetParamAll(info->InfoData->param);
+			vector<BarColor> Color;
+			Color.push_back(BarColor::Red);
+			enemy->SetParamAll(Color,info->InfoData->param);
 		}
 		else {
 			// 生成失敗。
@@ -86,7 +88,9 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 				}
 			}
 			// パラメーター設定。
-			enemy->Object->SetParamAll(enemy->InfoData->param);
+			vector<BarColor> Color;
+			Color.push_back(BarColor::Red);
+			enemy->Object->SetParamAll(Color,enemy->InfoData->param);
 			return;
 		}
 	}

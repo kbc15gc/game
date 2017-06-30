@@ -1,5 +1,7 @@
 #pragma once
 #include "fbEngine\_Object\_Component\Component.h"
+#include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "fbEngine\fbstdafx.h"
 
 class CharacterParameter :public Component {
 public:
@@ -7,14 +9,39 @@ public:
 	};
 	~CharacterParameter() {
 	};
+
+	void Awake()override;
 public:
+
+#ifdef _DEBUG
+	// デバッグ出力用の配列。
+	// ※パラメーターの種類を追加したら順番通りに追加して。
+	static const wchar_t* ENUM_NAME[];
+#endif
+
 	// 元素属性(火、水など)。
 	enum class Element{None = 0};
 	// 物理属性(斬、打、魔など)。
 	enum class Physical{None = 0};
 	// パラメーター列挙。
+	//			HP。
+	//			HP最大値。
+	//			MP。
+	//			MP最大値。
+	//			攻撃力。
+	//			防御力。
+	//			命中力。
+	//			敏捷力。
 	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, MAX };
 	//初期化。
+	// 引数：	HP。
+	//			HP最大値。
+	//			MP。
+	//			MP最大値。
+	//			攻撃力。
+	//			防御力。
+	//			命中力。
+	//			敏捷力。
 	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi);
 	//初期化。
 	void ParamInit(int param[Param::MAX]);
@@ -40,6 +67,11 @@ public:
 	inline int GetParam(Param idx)const {
 		_OutCheck(idx);
 		return _Param[idx];
+	}
+
+	// 全パラメーター取得。
+	inline const vector<int>& GetParams() {
+		return _Param;
 	}
 
 	//死んだかどうかのフラグを取得。
@@ -76,6 +108,6 @@ private:
 	}
 
 private:
-	int _Param[Param::MAX];
+	vector<int> _Param;
 	bool _DeathFlag = false;//死んだかどうかのフラグ。
 };

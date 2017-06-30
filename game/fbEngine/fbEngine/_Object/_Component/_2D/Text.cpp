@@ -74,6 +74,9 @@ void Text::Initialize(const TextParameter & param)
 
 void Text::SetString(const wchar_t * s)
 {
+	if (s == nullptr) {
+		return;
+	}
 	//‘O‰ñ‚Ì•¶Žš—ñ‰ð•ú
 	if (_WString)
 		SAFE_DELETE(_WString);

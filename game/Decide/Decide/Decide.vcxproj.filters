@@ -124,7 +124,6 @@
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDeathState.cpp">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClCompile>
@@ -148,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="GameObject\Ground\Ground.cpp">
       <Filter>GameObject\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Component\OutputData.cpp">
+      <Filter>GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,7 +287,6 @@
     <ClInclude Include="GameObject\History\HistoryMenu\Chip2D.h">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDeathState.h">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClInclude>
@@ -309,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Ground\Ground.h">
       <Filter>GameObject\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\OutputData.h">
+      <Filter>GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
