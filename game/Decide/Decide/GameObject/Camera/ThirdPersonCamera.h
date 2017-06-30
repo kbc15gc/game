@@ -2,6 +2,7 @@
 #include "GameCamera.h"
 #include "GameObject\Player\Player.h"
 
+#if _DEBUG
 //ふかんカメラクラスの定義。
 class ThirdPersonCamera :	public GameCamera
 {
@@ -99,3 +100,4 @@ private:
 	Vector3 _HeightPos = Vector3(0.0f, 5000.0f, 0.0f);	//高の高さ。
 };
 
+#endif // _DEBUG

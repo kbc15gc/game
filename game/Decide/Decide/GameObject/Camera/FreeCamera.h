@@ -2,6 +2,7 @@
 #include "GameCamera.h"
 #include "GameObject\Player\Player.h"
 
+#if _DEBUG
 //フリーカメラクラスの定義。
 class FreeCamera : public GameCamera
 {
@@ -51,4 +52,6 @@ private:
 	const float _DashSpeed = 70.0f;				//ダッシュ時のカメラのスピード。
 
 	const float _NormalSpeed = 10.0f;			//通常時のカメラのスピード。
-};				
+};
+
+#endif // _DEBUG

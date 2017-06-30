@@ -2,6 +2,8 @@
 #include "FreeCamera.h"
 #include "GameObject\Player\Player.h"
 #include "PlayerCamera.h"
+
+#if _DEBUG
 //デストラクタ。
 FreeCamera::~FreeCamera()
 {
@@ -147,3 +149,5 @@ void FreeCamera::Return()
 		transform->SetPosition(playercamera->transform->GetPosition());
 	}
 }
+
+#endif // _DEBUG

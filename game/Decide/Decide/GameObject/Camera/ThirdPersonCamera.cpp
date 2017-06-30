@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "PlayerCamera.h"
 
+#if _DEBUG
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
 {
@@ -137,3 +138,5 @@ void ThirdPersonCamera::Return()
 		transform->SetPosition(Vector3(playercamera->transform->GetPosition().x, transform->GetPosition().y, playercamera->transform->GetPosition().z));
 	}
 }
+
+#endif // _DEBUG
