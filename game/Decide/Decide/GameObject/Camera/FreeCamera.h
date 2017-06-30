@@ -39,11 +39,6 @@ private:
 	//フリーカメラの上下移動。
 	void FreeCameraMoveUpDown();
 
-	//フリーカメラの移動速度を決める。
-	//RBボタンが押されていたらダッシュスピードを設定。
-	//押されていなかった通常スピードを設定。
-	void CameraDash()override;
-
 	//プレイヤーカメラの位置に戻す。
 	void Return();
 private:

@@ -87,19 +87,15 @@ private:
 		_Player->SetIsStopUpdate(true);
 	}
 
-	//フリーカメラの移動速度を決める。
-	//RBボタンが押されていたらダッシュスピードを設定。
-	//押されていなかった通常スピードを設定。
-	void CameraDash()override;
-
 	//プレイヤーカメラの位置に戻す。
 	void Return();
 private:
 	
-	Camera_Height _NowHeight = Camera_Height::Low;	//今の高さ。
-	const float _LowCameraSpeed = 9.0f;				//低い高さでの移動スピード。
-	const float _MiddleCameraSpeed = 25.0f;			//中の高さでの移動スピード。
-	Vector3 _PrevCameraPos = Vector3::zero;			//切り替わる前のカメラの位置を保持。
-	const float _MiddleCameraDashSpeed = 100.0f;	//中の高さでのダッシュスピード。
+	Camera_Height _NowHeight = Camera_Height::Low;		//今の高さ。
+	const float _LowCameraSpeed = 9.0f;					//低い高さでの移動スピード。
+	const float _MiddleCameraSpeed = 25.0f;				//中の高さでの移動スピード。
+	const float _MiddleCameraDashSpeed = 100.0f;		//中の高さでのダッシュスピード。
+	Vector3 _PrevCameraPos = Vector3::zero;				//切り替わる前のカメラの位置を保持。
+	Vector3 _HeightPos = Vector3(0.0f, 5000.0f, 0.0f);	//高の高さ。
 };
 

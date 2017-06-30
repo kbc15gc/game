@@ -55,17 +55,14 @@ void ThirdPersonCamera::UpdateSubClass()
 	case ThirdPersonCamera::Camera_Height::Middle:
 		transform->SetPosition(transform->GetPosition().x, 500.0f, transform->GetPosition().z);
 
-		//中の高さの移動スピードを設定。
-		SetCameraSpeed(_MiddleCameraSpeed);
-
-		//ダッシュか通常時かを見てスピードを決める。
-		CameraDash();
+		//ダッシュのスピードと中の高さの移動スピードを設定。
+		DeicideCameraSpeed(_MiddleCameraDashSpeed, _MiddleCameraSpeed);
 
 		Move();
 		break;
 		//高さ:高。
 	case ThirdPersonCamera::Camera_Height::Height:
-		transform->SetPosition(0.0f, 5000.0f,0.0f);
+		transform->SetPosition(_HeightPos);
 		break;
 	default:
 		break;
@@ -136,21 +133,7 @@ void ThirdPersonCamera::Return()
 	if (KeyBoardInput->isPush(DIK_P))
 	{
 		PlayerCamera* playercamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
-		//切り替える前のプレイヤーカメラの位置に戻す。
-		transform->SetPosition(playercamera->transform->GetPosition());
-	}
-}
-
-void ThirdPersonCamera::CameraDash()
-{
-	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
-	{
-		//ダッシュ用のボタンが押されていればダッシュ用のスピードを設定。
-		SetCameraSpeed(_MiddleCameraDashSpeed);
-	}
-	else
-	{
-		//通常時のスピードを設定。
-		SetCameraSpeed(_MiddleCameraSpeed);
+		//プレイヤーがいる位置にふかんカメラを移動(XとZだけ)。
+		transform->SetPosition(Vector3(playercamera->transform->GetPosition().x, transform->GetPosition().y, playercamera->transform->GetPosition().z));
 	}
 }

@@ -52,10 +52,6 @@ public:
 	}
 	// 継承先の更新処理。
 	virtual void Move() = 0;
-
-	//カメラのダッシュ処理。
-	virtual void CameraDash() {};
-
 protected:
 	void ActivateFlg() {
 		_isActive = true;
@@ -69,6 +65,23 @@ protected:
 	void SetCameraSpeed(float speed)
 	{
 		_MoveSpeed = speed;
+	}
+
+	//カメラの移動スピードを決める。
+	//第一引数:ダッシュ時のスピード。
+	//第二引数:通常時のスピード。
+	void DeicideCameraSpeed(float DashSpeed, float NormalSpeed)
+	{
+		if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+		{
+			//ダッシュ用のボタンが押されていればダッシュ用のスピードを設定。
+			SetCameraSpeed(DashSpeed);
+		}
+		else
+		{
+			//通常時のスピードを設定。
+			SetCameraSpeed(NormalSpeed);
+		}
 	}
 
 private:
