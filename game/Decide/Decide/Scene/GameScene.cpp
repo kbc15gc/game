@@ -66,9 +66,6 @@ void GameScene::Start()
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
-
-	// 雑魚エネミープロト生成。
-	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 	
 	FOR(i,ChipID::ChipNum)
 	{

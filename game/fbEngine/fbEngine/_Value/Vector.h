@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 //二次元ベクトル
 class Vector2 {
 public:
@@ -402,6 +401,9 @@ public:
 	Vector4(float x, float y, float z, float w)
 	{
 		Set(x, y, z, w);
+	}
+	Vector4(const Vector3& vec3, float w) {
+		Set(vec3.x, vec3.y, vec3.z, w);
 	}
 	/*!
 	 *@brief	ベクトルの各要素を設定。

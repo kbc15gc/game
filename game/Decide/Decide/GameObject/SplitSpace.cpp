@@ -74,7 +74,7 @@ void SplitSpace::Update() {
 void SplitSpace::LateUpdate() {
 
 	// SetIsStopUpdate()‚ÍUpdate‚É‚Ì‚Ý‰e‹¿‚ð—^‚¦‚é‚à‚Ì‚ÅALateUpdate‚ÍŒÄ‚Ño‚³‚ê‚éB
-#ifdef DEBUG_SPLITSPACE
+#ifdef _DEBUG
 	if ((KeyBoardInput->isPush(DIK_N))) {
 		if (GetIsStopUpdate()) {
 			for (auto& x : _SpaceCollisions) {

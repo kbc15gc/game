@@ -25,9 +25,6 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false)
 {
-	char text[256];
-	sprintf(text, "Player address %x\n", *this);
-	OutputDebugString(text);
 }
 
 Player::~Player()
@@ -103,6 +100,8 @@ void Player::Awake()
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
+
+	_outputData = AddComponent<OutputData>();
 }
 
 void Player::Start()
@@ -139,16 +138,6 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//レベル初期化
 	_Level = 1;
-
-	//// とりあえずテスト。
-	//int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK);
-	//// 空間分割コリジョン生成。
-	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(GetComponent<SkinModel>()->GetModelData(), *transform, 3, 1, 3, attr);
-
-	// とりあえずテスト。
-	// 空間分割コリジョン生成。
-	//INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", 1)->Split(_Model->GetModelData(), *transform, 3, 4, 5);
-
 }
 
 void Player::Update()

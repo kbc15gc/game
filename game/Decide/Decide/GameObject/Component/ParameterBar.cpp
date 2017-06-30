@@ -168,8 +168,13 @@ void BarAdapter::ImageRender() {
 }
 
 void BarAdapter::_UpdateValue(float value) {
-	float work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
-
+	float work;
+	if (fabsf(value) < 0.0001f) {
+		work = 0.0f;
+	}
+	else {
+		work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
+	}
 	float Difference = _Value - value;	// 一瞬前の値との差分を算出。
 	if (fabsf(Difference) >= 0.0001f) {
 		// 一瞬前の値と違う値が設定された。
