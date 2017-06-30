@@ -127,5 +127,25 @@ Vector3 Camera::ScreenToWorld(Vector2 spos)
 	D3DXVec4Transform(&v, &v, &projInv);
 	D3DXVec4Transform(&v, &v, &viewInv);
 
-	return Vector3(v.x, v.y, v.z);
+	return Vector3(v.x / v.w, v.y / v.w, v.z / v.w);
+}
+
+Collision* Camera::GetClickCollision(float rayLength, int attribute)
+{
+	//左クリック
+	if (MouseInput->GetValue(MouseInE::L_CLICK))
+	{
+		//マウスカーソルのポジションをワールド座標に変換。始点とする。
+		Vector3 start = this->ScreenToWorld(MouseInput->GetCursorPosOnWindow(g_MainWindow));
+		//レイの方向計算。
+		Vector3 dir = start - this->transform->GetPosition();
+		dir.Normalize();
+		//終点を計算。
+		Vector3 end = start + (dir * rayLength);
+		//レイを飛ばす
+		fbPhysicsCallback::ClosestRayResultCallback callback = INSTANCE(PhysicsWorld)->ClosestRayTest(start, end, (const int)attribute);
+
+		return callback.hitObject;
+	}
+	return nullptr;
 }

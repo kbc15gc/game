@@ -1,6 +1,9 @@
 #pragma once
 #include "_Object\_Component\Component.h"
 
+
+class Collision;
+
 class Camera :public Component
 {
 public:
@@ -26,6 +29,11 @@ public:
 	Vector2 WorldToScreen(Vector3 wpos);
 	//受け取ったスクリーン座標をワールドポジションに変換(zは0になる。)
 	Vector3 ScreenToWorld(Vector2 spos);
+
+	//クリックしたコリジョンを取得
+	//[in] レイの長さ。
+	//[in] 当たり判定をとりたい属性。
+	Collision* GetClickCollision(float rayLength, int attribute);
 
 	const D3DXMATRIX& GetViewMat(){ return _View; }
 	const D3DXMATRIX& GetProjectionMat(){ return _Projection; }

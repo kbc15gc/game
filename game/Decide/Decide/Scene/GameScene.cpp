@@ -119,4 +119,10 @@ void GameScene::Update()
 		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);
 		return;
 	}
+
+	Collision *coll;
+	if(coll = INSTANCE(GameObjectManager)->mainCamera->GetClickCollision(1000.0f, (int)fbCollisionAttributeE::CHARACTER))
+	{
+		int a = 0;
+	}
 }
