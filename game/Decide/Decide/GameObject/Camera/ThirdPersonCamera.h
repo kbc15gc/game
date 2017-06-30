@@ -44,6 +44,8 @@ private:
 		if (height >= Camera_Height::Height)
 		{
 			height = Camera_Height::Height;
+			//高さが中から高になったのでカメラの位置を保存。
+			_PrevCameraPos = transform->GetPosition();
 			return height;
 		}
 
@@ -64,6 +66,13 @@ private:
 			return height;
 		}
 
+		//高さが中になったので保存していた位置を適用。
+		if (height==Camera_Height::Middle)
+		{
+			//切り替わる前の中のカメラ位置を設定。
+			transform->SetPosition(_PrevCameraPos);
+		}
+
 		//計算された高さを返す。
 		return height;
 	}
@@ -78,10 +87,19 @@ private:
 		_Player->SetIsStopUpdate(true);
 	}
 
+	//フリーカメラの移動速度を決める。
+	//RBボタンが押されていたらダッシュスピードを設定。
+	//押されていなかった通常スピードを設定。
+	void CameraDash()override;
+
+	//プレイヤーカメラの位置に戻す。
+	void Return();
 private:
 	
 	Camera_Height _NowHeight = Camera_Height::Low;	//今の高さ。
 	const float _LowCameraSpeed = 9.0f;				//低い高さでの移動スピード。
-	const float _MiddleCameraSpeed = 25.0f;			//中くらいの高さでの移動スピード。
+	const float _MiddleCameraSpeed = 25.0f;			//中の高さでの移動スピード。
+	Vector3 _PrevCameraPos = Vector3::zero;			//切り替わる前のカメラの位置を保持。
+	const float _MiddleCameraDashSpeed = 100.0f;	//中の高さでのダッシュスピード。
 };
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ThirdPersonCamera.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
+#include "PlayerCamera.h"
 
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
@@ -36,25 +37,30 @@ void ThirdPersonCamera::UpdateSubClass()
 {
 	ChangeHeight();
 
+	Return();
+
 	//今の高さを調べ、それに応じた処理をする。
 	switch (_NowHeight)
 	{
-	case ThirdPersonCamera::Camera_Height::Invalid:
-		break;
 		//高さ:低。
 	case ThirdPersonCamera::Camera_Height::Low:
 		transform->SetPosition(transform->GetPosition().x, 180.0f, transform->GetPosition().z);
 
 		//低い高さの移動スピードを設定。
 		SetCameraSpeed(_LowCameraSpeed);
+
 		Move();
 		break;
 		//高さ:中。
 	case ThirdPersonCamera::Camera_Height::Middle:
 		transform->SetPosition(transform->GetPosition().x, 500.0f, transform->GetPosition().z);
 
-		//中くらいの高さの移動スピードを設定。
+		//中の高さの移動スピードを設定。
 		SetCameraSpeed(_MiddleCameraSpeed);
+
+		//ダッシュか通常時かを見てスピードを決める。
+		CameraDash();
+
 		Move();
 		break;
 		//高さ:高。
@@ -105,19 +111,46 @@ void ThirdPersonCamera::Move()
 
 void ThirdPersonCamera::ChangeHeight()
 {
+	//高さを上げていく。
 	if ((KeyBoardInput->isPush(DIK_DOWN)))
 	{
 		_NowHeight = Add(_NowHeight);
 		if (_NowHeight != Camera_Height::Height) {
-			transform->SetPosition(_PlayerPos->x, 0.0f, _PlayerPos->z);
+			transform->SetPosition(transform->GetPosition().x, 0.0f, transform->GetPosition().z);
 		}
 	}
 
+	//高さを下げていく。
 	if ((KeyBoardInput->isPush(DIK_UP)))
 	{
 		_NowHeight = Subtract(_NowHeight);
 		if (_NowHeight != Camera_Height::Height) {
-			transform->SetPosition(_PlayerPos->x, 0.0f, _PlayerPos->z);
+			transform->SetPosition(transform->GetPosition().x, 0.0f, transform->GetPosition().z);
 		}
+	}
+}
+
+void ThirdPersonCamera::Return()
+{
+	//Pを押したらカメラの位置を変更。
+	if (KeyBoardInput->isPush(DIK_P))
+	{
+		PlayerCamera* playercamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+		//切り替える前のプレイヤーカメラの位置に戻す。
+		transform->SetPosition(playercamera->transform->GetPosition());
+	}
+}
+
+void ThirdPersonCamera::CameraDash()
+{
+	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+	{
+		//ダッシュ用のボタンが押されていればダッシュ用のスピードを設定。
+		SetCameraSpeed(_MiddleCameraDashSpeed);
+	}
+	else
+	{
+		//通常時のスピードを設定。
+		SetCameraSpeed(_MiddleCameraSpeed);
 	}
 }

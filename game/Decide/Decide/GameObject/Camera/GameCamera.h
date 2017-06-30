@@ -53,6 +53,9 @@ public:
 	// 継承先の更新処理。
 	virtual void Move() = 0;
 
+	//カメラのダッシュ処理。
+	virtual void CameraDash() {};
+
 protected:
 	void ActivateFlg() {
 		_isActive = true;
@@ -67,6 +70,7 @@ protected:
 	{
 		_MoveSpeed = speed;
 	}
+
 private:
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {}
@@ -91,5 +95,4 @@ protected:
 
 	//カメラの移動速度。
 	float _MoveSpeed = 0.0f;
-
 };

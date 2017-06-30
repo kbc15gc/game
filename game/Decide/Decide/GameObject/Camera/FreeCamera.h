@@ -42,9 +42,9 @@ private:
 	//フリーカメラの移動速度を決める。
 	//RBボタンが押されていたらダッシュスピードを設定。
 	//押されていなかった通常スピードを設定。
-	void DecideCameraSpeed();
+	void CameraDash()override;
 
-	//フリーカメラの位置を切り替える前のプレイヤーカメラの位置に戻す。
+	//プレイヤーカメラの位置に戻す。
 	void Return();
 private:
 
@@ -54,6 +54,6 @@ private:
 	const float _CameraRotationSpeed = 10.0f;	//カメラの回転スピード。
 
 	const float _DashSpeed = 70.0f;				//ダッシュ時のカメラのスピード。
-	const float _NormalSpeed = 10.0f;			//通常時のカメラのスピード。
-};
 
+	const float _NormalSpeed = 10.0f;			//通常時のカメラのスピード。
+};				

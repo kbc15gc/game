@@ -35,7 +35,7 @@ void FreeCamera::UpdateSubClass()
 {
 
 	//ダッシュか通常時かを見てスピードを決める。
-	DecideCameraSpeed();
+	CameraDash();
 
 	//切り替える前のプレイヤーカメラの位置に戻す。
 	Return();
@@ -137,7 +137,18 @@ void FreeCamera::FreeCameraMoveUpDown()
 	transform->SetPosition(pos);
 }
 
-void FreeCamera::DecideCameraSpeed()
+void FreeCamera::Return()
+{
+	//Pを押したらカメラの位置を変更。
+	if (KeyBoardInput->isPush(DIK_P))
+	{
+		PlayerCamera* playercamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+		//切り替える前のプレイヤーカメラの位置に戻す。
+		transform->SetPosition(playercamera->transform->GetPosition());
+	}
+}
+
+void FreeCamera::CameraDash()
 {
 	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 	{
@@ -148,15 +159,5 @@ void FreeCamera::DecideCameraSpeed()
 	{
 		//通常時のスピードを設定。
 		SetCameraSpeed(_NormalSpeed);
-	}
-}
-
-void FreeCamera::Return()
-{
-	//Pを押したらカメラの位置を変更。
-	if (KeyBoardInput->isPush(DIK_P))
-	{
-		PlayerCamera* playercamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
-		transform->SetPosition(playercamera->transform->GetPosition());
 	}
 }
