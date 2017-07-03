@@ -5,6 +5,10 @@ MeshCollider::MeshCollider(GameObject* g, Transform* t) :
 	Collider(g,t, typeid(this).name()),
 	stridingMeshInterface(NULL)
 {
+	_Type = ShapeType::Mesh;
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 

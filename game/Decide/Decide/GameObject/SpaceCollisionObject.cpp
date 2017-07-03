@@ -30,7 +30,7 @@ void SpaceCollisionObject::UpdateActiveSpace() {
 bool SpaceCollisionObject::isHitPlayer() {
 	if (GetCollision()) {
 		if (GetCollision()->GetCollisionObj()) {
-			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _GetAttachCollision(*_player))) {
+			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _player->GetAttachCollision())) {
 				// プレイヤーと衝突している。
 				_isHitPlayer = true;
 				return true;
@@ -75,7 +75,7 @@ void SpaceCollisionObject::RegistrationObject()
 }
 
 void SpaceCollisionObject::AddObjectHitSpace(GameObject& object) {
-	Collision* coll = _GetAttachCollision(object);
+	Collision* coll = object.GetAttachCollision();
 	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), coll),_attribute) {
 		// 衝突していたので追加。
 		_HitCollisions.push_back(coll->GetCollisionObj_shared());
@@ -136,23 +136,3 @@ void SpaceCollisionObject::DisableNotAdjacent(const SpaceCollisionObject* Obj) {
 	}
 }
 
-Collision* SpaceCollisionObject::_GetAttachCollision(GameObject& object) {
-	Collision* coll = nullptr;
-	coll = object.GetComponent<Collision>();
-	if (coll) {
-		return coll;
-	}
-	coll = object.GetComponent<GostCollision>();
-	if (coll) {
-		return coll;
-	}
-	coll = object.GetComponent<RigidBody>();
-	if (coll) {
-		return coll;
-	}
-
-	// どれかのコリジョンコンポーネントは追加した？。
-	abort();
-
-	return nullptr;
-}

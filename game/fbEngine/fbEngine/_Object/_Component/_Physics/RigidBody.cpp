@@ -5,7 +5,9 @@ RigidBody::RigidBody(GameObject* g, Transform* t) :
 	Collision(g,t,typeid(this).name()),
 	myMotionState(NULL)
 {
-	
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 RigidBody::~RigidBody()

@@ -31,7 +31,9 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW)),
 	_SkyBox(false)
 {
-	
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 SkinModel::~SkinModel()

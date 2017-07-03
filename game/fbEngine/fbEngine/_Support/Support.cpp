@@ -103,9 +103,17 @@ namespace Support
 			num /= 10;
 		} while (num != 0);
 
+		size_t size = l.size();
+		if (size == decimal) {
+			// 小数点以下しか積まれてない。
+
+			// ※int型は小数点以下を切り捨てするので、1.0未満の値が引数に入れられると小数点以下しか配列に積まれなくなる。
+			l.push_back(num + '0');
+			size++;
+		}
+
 		//逆から
 		list<char>::reverse_iterator it = l.rbegin();
-		size_t size = l.size();
 		while (it != l.rend())
 		{
 			if (size - i == _decimal)
@@ -118,6 +126,7 @@ namespace Support
 			it++;
 			i++;
 		}
+
 		//終端文字
 		s[i] = '\0';
 	}

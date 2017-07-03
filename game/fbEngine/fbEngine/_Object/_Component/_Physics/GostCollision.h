@@ -8,10 +8,16 @@ class GostCollision :public Collision
 public:
 	GostCollision(GameObject* g, Transform* t) :Collision(g, t, typeid(this).name())
 	{
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 
 	};
 	GostCollision(GameObject* g, Transform* t, const char* classname) :Collision(g, t, classname)
 	{
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 
 	};
 	virtual ~GostCollision();

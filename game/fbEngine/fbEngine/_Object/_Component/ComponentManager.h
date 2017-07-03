@@ -10,6 +10,9 @@ public:
 	void Start()const;
 	void Update()const;
 	void LateUpdate()const;
+#ifdef _DEBUG
+	void Debug()const;
+#endif
 	void PreRender()const;
 	void Render()const;
 	void PostRender()const;
@@ -41,6 +44,12 @@ public:
 
 	template <class T>
 	unique_ptr<vector<T*>> GetComponents();
+
+#ifdef _DEBUG
+	const vector<Component*>& GetComponentAll() const{
+		return _Components;
+	}
+#endif
 
 	template <class T>
 	void RemoveComponent()

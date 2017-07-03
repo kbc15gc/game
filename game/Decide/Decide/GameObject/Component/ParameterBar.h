@@ -142,6 +142,10 @@ class ParameterBar :
 public:
 	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
 		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar",9);
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
+
 	};
 	~ParameterBar();
 

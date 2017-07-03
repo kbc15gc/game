@@ -3,7 +3,12 @@
 
 class ObjectRotation :public Component {
 public:
-	ObjectRotation(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {};
+	ObjectRotation(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
+
+	};
 	~ObjectRotation() {};
 public:
 	// オブジェクトの方向を向く関数(Y軸無視)。

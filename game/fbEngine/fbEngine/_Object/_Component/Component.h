@@ -21,6 +21,12 @@ public:
 		return (this->_ExecutionOrder > right._ExecutionOrder);
 	}	
 
+#ifdef _DEBUG
+	inline wchar_t* GetDebugName() {
+		return name;
+	}
+#endif
+
 	/*virtual void Awake() {};
 	virtual void Start() {};
 	virtual void Update() {};
@@ -37,4 +43,9 @@ public:
 private:
 	//Às‡”Ô(Às‚É‚µ‚©İ’è‚Å‚«‚È‚¢)
 	int _ExecutionOrder;
+
+#ifdef _DEBUG
+protected:
+	wchar_t name[FILENAME_MAX];
+#endif
 };

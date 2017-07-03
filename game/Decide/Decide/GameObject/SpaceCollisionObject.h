@@ -72,9 +72,6 @@ private:
 	// この空間に属するオブジェクトにアクティブフラグ設定。
 	void _SetActives(bool flg);
 
-	// 引数に指定したオブジェクトからアタッチされたコリジョンコンポーネントを取得。
-	Collision* _GetAttachCollision(GameObject& object);
-
 	// 渡された番号の空間が隣接しているか。
 	inline bool IsAdjacent(const Vector3& num) {
 		return ((abs(static_cast<int>(_myNumber.x) - static_cast<int>(num.x)) <= 1) && (abs(static_cast<int>(_myNumber.y) - static_cast<int>(num.y)) <= 1) && (abs(static_cast<int>(_myNumber.z) - static_cast<int>(num.z)) <= 1));

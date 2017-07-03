@@ -12,7 +12,9 @@ public:
 
 	void Awake()override;
 	void Update()override;
-	void LateUpdate()override;
+#ifdef _DEBUG
+	void Debug()override;
+#endif
 	// 空間分割関数。
 	// 引数：	モデルデータ(このモデルを内包できるサイズのボックスを定義し、分割する)。
 	//			Transform情報(この情報をもとに生成したボックスを移動、回転、拡縮する。)。

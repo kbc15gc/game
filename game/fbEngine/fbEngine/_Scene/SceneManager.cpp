@@ -84,6 +84,7 @@ void SceneManager::UpdateScene()
 	INSTANCE(GameObjectManager)->UpdateObject();
 	PhysicsWorld::Instance()->Update();
 	INSTANCE(GameObjectManager)->LateUpdateObject();
+	INSTANCE(GameObjectManager)->DebugObject();
 
 	//シャドウマップの更新.
 	if (_Scenes[_NowScene]->GetIsShadowMap())
