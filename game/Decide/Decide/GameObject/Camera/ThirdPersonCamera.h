@@ -2,6 +2,7 @@
 #include "GameCamera.h"
 #include "GameObject\Player\Player.h"
 
+#if _DEBUG
 //ふかんカメラクラスの定義。
 class ThirdPersonCamera :	public GameCamera
 {
@@ -44,6 +45,8 @@ private:
 		if (height >= Camera_Height::Height)
 		{
 			height = Camera_Height::Height;
+			//高さが中から高になったのでカメラの位置を保存。
+			_PrevCameraPos = transform->GetPosition();
 			return height;
 		}
 
@@ -64,6 +67,13 @@ private:
 			return height;
 		}
 
+		//高さが中になったので保存していた位置を適用。
+		if (height==Camera_Height::Middle)
+		{
+			//切り替わる前の中のカメラ位置を設定。
+			transform->SetPosition(_PrevCameraPos);
+		}
+
 		//計算された高さを返す。
 		return height;
 	}
@@ -78,10 +88,16 @@ private:
 		_Player->SetIsStopUpdate(true);
 	}
 
+	//プレイヤーカメラの位置に戻す。
+	void Return();
 private:
 	
-	Camera_Height _NowHeight = Camera_Height::Low;	//今の高さ。
-	const float _LowCameraSpeed = 9.0f;				//低い高さでの移動スピード。
-	const float _MiddleCameraSpeed = 25.0f;			//中くらいの高さでの移動スピード。
+	Camera_Height _NowHeight = Camera_Height::Low;		//今の高さ。
+	const float _LowCameraSpeed = 9.0f;					//低い高さでの移動スピード。
+	const float _MiddleCameraSpeed = 25.0f;				//中の高さでの移動スピード。
+	const float _MiddleCameraDashSpeed = 100.0f;		//中の高さでのダッシュスピード。
+	Vector3 _PrevCameraPos = Vector3::zero;				//切り替わる前のカメラの位置を保持。
+	Vector3 _HeightPos = Vector3(0.0f, 5000.0f, 0.0f);	//高の高さ。
 };
 
+#endif // _DEBUG
