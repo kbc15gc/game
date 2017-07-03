@@ -121,7 +121,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 			npc->LoadModel(npcInfo[i]->filename);
 			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
 			npc->transform->SetLocalPosition(npcInfo[i]->pos);
-			npc->transform->SetLocalAngle(npcInfo[i]->ang);
+			npc->transform->SetRotation(npcInfo[i]->ang);
 			npc->transform->SetLocalScale(npcInfo[i]->sca);
 			//管理用の配列に追加。
 			_GameObjectList[(int)location].push_back(npc);
@@ -193,7 +193,8 @@ void HistoryManager::_CreateObject(int location,const char * path)
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
-			obj->transform->SetLocalAngle(objInfo[i]->ang);
+			obj->transform->SetRotation(objInfo[i]->ang);
+			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			obj->LoadModel(objInfo[i]->filename);
 
@@ -227,7 +228,12 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					Rinfo.coll = box;
 					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
 					Rinfo.offset = info->pos;
-					Quaternion q; q.SetEuler(info->ang);
+					/*Quaternion q; /*q.SetEuler(info->ang);*/
+					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
+					/*q.SetEuler(Vector3(0.0f, -90.0f, 0.0f));*/
+					//q.SetEuler(Vector3(0.0f, 180.0f, 0.0f));
+					q.SetRotation(Vector3::up, PI);
+					q.Multiply(info->ang);
 					Rinfo.rotation = q;
 					coll->SetKinematick(true);
 					coll->Create(Rinfo,false);
@@ -261,7 +267,7 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 		ContinentObject* coll = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("StageCollision", 2);
 		
 		coll->transform->SetLocalPosition(colls[i]->pos);
-		coll->transform->SetLocalAngle(colls[i]->ang);
+		coll->transform->SetRotation(colls[i]->ang);
 		coll->transform->SetLocalScale(colls[i]->sca);
 		//管理用の配列に追加。
 		if (location >= 0)

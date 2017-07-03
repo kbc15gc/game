@@ -80,7 +80,7 @@ public class CSVExportFunction : Editor
             //ポジション
             string pos = Vector3ToString(child.position, true);
             //回転
-            string ang = Vector3ToString(child.eulerAngles);
+            string ang = QuaternionToString(child.rotation);
             //スケール
             string sca = Vector3ToString(child.lossyScale);
 
@@ -135,7 +135,7 @@ public class CSVExportFunction : Editor
             //sw.Write(mesh.name.Replace(" Instance", "") + ".X");
             string filename = child.name + ".X";
             string pos = Vector3ToString(child.position, true);
-            string ang = Vector3ToString(child.eulerAngles);
+            string ang = QuaternionToString(child.rotation);
             string sca = Vector3ToString(child.lossyScale);
             NPC npc = child.GetComponent<NPC>();
             int type = Convert.ToInt32(npc.NPCType);
@@ -159,9 +159,9 @@ public class CSVExportFunction : Editor
         //名前書き出し
         string filename = "coll";
         //ポジション
-        string pos = Vector3ToString(coll.localPosition, true);
+        string pos = Vector3ToString(coll.localPosition,true);
         //回転
-        string ang = Vector3ToString(coll.localEulerAngles);
+        string ang = QuaternionToString(coll.rotation);
         //スケール
         string sca = Vector3ToString(coll.lossyScale);
 
