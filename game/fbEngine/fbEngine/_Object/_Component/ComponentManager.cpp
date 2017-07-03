@@ -39,6 +39,15 @@ void ComponentManager::LateUpdate() const
 	}
 }
 
+#ifdef _DEBUG
+void ComponentManager::Debug()const {
+	for each (Component* c in _Components)
+	{
+		c->Debug();
+	}
+}
+#endif
+
 void ComponentManager::PreRender() const
 {
 	for each (Component* c in _Components)

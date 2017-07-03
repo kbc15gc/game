@@ -3,6 +3,7 @@
 #include "_Object\_Component\ComponentManager.h"
 
 class Component;
+class Collision;
 
 //ゲームオブジェクトの基礎クラス
 class GameObject : public Object
@@ -18,6 +19,9 @@ public:
 	virtual void LateUpdate() {};
 	virtual void PreRender() {};
 	virtual void Render() {};*/
+
+	// アタッチされているコリジョンコンポーネントを取得。
+	Collision* GetAttachCollision();
 
 	//コンポーネント追加
 	template<class T>
@@ -47,6 +51,12 @@ public:
 	{
 		return _Components.GetComponents<T>();
 	}
+
+#ifdef _DEBUG
+	const vector<Component*>& GetComponentAll()const {
+		return _Components.GetComponentAll();
+	}
+#endif
 
 	//ゲームオブジェクトマネージャでしか使わない。(どうにかすべき)
 	const ComponentManager& GetComponentManager()

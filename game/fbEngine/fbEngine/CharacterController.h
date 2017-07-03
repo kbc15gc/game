@@ -14,7 +14,9 @@ public:
 	CCharacterController(GameObject* g, Transform* t) :
 		Component(g, t, typeid(this).name())
 	{
-		//m_collider = g->AddComponent<CCapsuleCollider>();
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 	}
 	~CCharacterController()
 	{

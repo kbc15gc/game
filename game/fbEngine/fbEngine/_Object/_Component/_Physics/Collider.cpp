@@ -2,6 +2,16 @@
 #include "_Object\_Component\_Physics\Collider.h"
 #include "_Object\_GameObject\ModelOject.h"
 
+#ifdef _DEBUG
+const wchar_t* Collider::ShapeName[] = {
+	L"Box",
+	L"Sphere",
+	L"Capsule",
+	L"Mesh",
+};
+#endif
+
+
 Collider::~Collider(){
 #ifdef _DEBUG
 	if (_CollisionModel) {
@@ -11,8 +21,8 @@ Collider::~Collider(){
 #endif //_DEBUG
 };
 
-void Collider::Update() {
 #ifdef _DEBUG
+void Collider::Debug(){
 	if ((KeyBoardInput->isPush(DIK_M))) {
 		if (GetIsRender()) {
 			// 空間分割のコリジョン描画オフ。
@@ -23,8 +33,8 @@ void Collider::Update() {
 			RenderEnable();
 		}
 	}
-#endif
 }
+#endif
 
 void Collider::CreateViewModel(const btTransform& collisionTr){
 #ifdef _DEBUG
@@ -76,6 +86,7 @@ void Collider::UpdateTransform(const btTransform& collisionTr) {
 	}
 }
 
+#ifdef _DEBUG
 bool Collider::GetIsRender() {
 	if (_CollisionModel) {
 		return _CollisionModel->GetSkinModel()->enable;
@@ -94,3 +105,4 @@ void Collider::RenderDisable() {
 		_CollisionModel->GetSkinModel()->enable = false;
 	}
 }
+#endif

@@ -2,6 +2,13 @@
 #include "Collision.h"
 #include "Collider.h"
 
+#ifdef _DEBUG
+const wchar_t* Collision::TypeName[] = {
+	L"Rigidbody",
+	L"GhostObject"
+};
+#endif
+
 Collision::~Collision()
 {
 	_Shape = nullptr;

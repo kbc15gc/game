@@ -16,6 +16,9 @@ Transform::Transform(GameObject * g, Transform * t) :
 	_Children.clear();
 	D3DXMatrixIdentity(&_RotateMatrix);
 	D3DXMatrixIdentity(&_WorldMatrix);
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 Transform::~Transform()

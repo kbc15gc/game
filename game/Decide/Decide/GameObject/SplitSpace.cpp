@@ -71,10 +71,8 @@ void SplitSpace::Update() {
 	}
 }
 
-void SplitSpace::LateUpdate() {
-
-	// SetIsStopUpdate()‚ÍUpdate‚É‚Ì‚Ý‰e‹¿‚ð—^‚¦‚é‚à‚Ì‚ÅALateUpdate‚ÍŒÄ‚Ño‚³‚ê‚éB
 #ifdef _DEBUG
+void SplitSpace::Debug() {
 	if ((KeyBoardInput->isPush(DIK_N))) {
 		if (GetIsStopUpdate()) {
 			for (auto& x : _SpaceCollisions) {
@@ -121,8 +119,8 @@ void SplitSpace::LateUpdate() {
 			SetIsStopUpdate(true);
 		}
 	}
-#endif
 }
+#endif
 
 void SplitSpace::Split(const SkinModelData* data, Transform* transform, int x, int y, int z, int attr,const Vector3& offset) {
 	if (data == nullptr) {

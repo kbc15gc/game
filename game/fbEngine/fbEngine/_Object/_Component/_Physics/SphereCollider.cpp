@@ -12,7 +12,10 @@ SphereCollider::SphereCollider(GameObject* g, Transform* t) :
 	Collider(g,t, typeid(this).name()),
 	shape(NULL)
 {
-
+	_Type = ShapeType::Sphere;
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 /*!
  * @brief	デストラクタ。

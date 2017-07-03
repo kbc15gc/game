@@ -9,6 +9,10 @@ BoxCollider::BoxCollider(GameObject* g, Transform* t) :
 	Collider(g,t),
 	_Shape(NULL)
 {
+	_Type = ShapeType::Box;
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 /*!
  * @brief	デストラクタ。

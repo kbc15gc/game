@@ -210,7 +210,15 @@ void Text::_UpdateLength()
 
 			//横幅更新
 			MaxLength.x = max(MaxLength.x, width);
+			if (MaxLength.x >= 3000.0f) {
+				OutputDebugString("あああああ。");
+
+			}
 			MaxLength.y = max(MaxLength.y, max(gm.gmBlackBoxY, gm.gmptGlyphOrigin.y));
+			if (MaxLength.y >= 5000.0f) {
+				OutputDebugString("あああああ。");
+
+			}
 			//最も大きいものを保持
 			_MostHeight = max(_MostHeight, gm.gmptGlyphOrigin.y);
 		}
@@ -218,10 +226,19 @@ void Text::_UpdateLength()
 		{
 			//改行文字だった。
 			width = 0.0f;
+			if (i == 0 && "\n") {
+				// 最初の1文字目が改行文字だった。
+				abort();
+			}
 			_Length.y += MaxLength.y;
 			//次の改行も使いまわすか？
-			if (_WString[i + 1] != '\n')
+			if (_WString[i + 1] != '\n') {
 				MaxLength.y = 0.0f;
+			}
+			else {
+				OutputDebugString("あああああ。");
+
+			}
 		}
 	}
 	//横幅は最大のものに

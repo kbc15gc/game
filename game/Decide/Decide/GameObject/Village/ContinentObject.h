@@ -8,7 +8,7 @@ namespace
 	{
 		char filename[256];	//モデルファイル名
 		Vector3 pos;	//ポジション
-		Vector3 ang;	//回転
+		Quaternion ang;	//回転
 		Vector3 sca;	//スケール
 	};
 
@@ -17,7 +17,7 @@ namespace
 	{
 		{ "filename",Support::DataTypeE::STRING, offsetof(struct ObjectInfo,filename),sizeof(char)*256 },
 		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,pos),sizeof(Vector3) },
-		{ "ang",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,ang),sizeof(Vector3) },
+		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct ObjectInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,sca),sizeof(Vector3) },
 	};
 
@@ -25,7 +25,7 @@ namespace
 	struct CollisionInfo
 	{
 		Vector3 pos;	//ポジション
-		Vector3 ang;	//回転
+		Quaternion ang;	//回転
 		Vector3 sca;	//スケール
 		int camerahit;	//カメラと当たるかどうかのフラグ。
 	};
@@ -34,7 +34,7 @@ namespace
 	const Support::DATARECORD CollisionInfoData[4] =
 	{
 		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,pos),sizeof(Vector3) },
-		{ "ang",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,ang),sizeof(Vector3) },
+		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct CollisionInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,sca),sizeof(Vector3) },
 		{ "camerahit",Support::DataTypeE::INT, offsetof(struct CollisionInfo,camerahit),sizeof(int) },
 	};

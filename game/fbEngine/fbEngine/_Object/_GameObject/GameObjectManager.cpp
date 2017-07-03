@@ -63,6 +63,20 @@ void GameObjectManager::LateUpdateObject()
 	}
 }
 
+#ifdef _DEBUG
+void GameObjectManager::DebugObject() {
+	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
+	{
+		for each (GameObject* obj in _GameObjects[priority])
+		{
+			obj->Debug();
+			obj->GetComponentManager().Debug();
+		}
+	}
+}
+#endif
+
+
 void GameObjectManager::PreRenderObject()
 {
 	//レンダーターゲットセット

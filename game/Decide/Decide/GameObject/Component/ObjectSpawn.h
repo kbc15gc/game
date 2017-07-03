@@ -55,6 +55,9 @@ private:
 class ObjectSpawn :public Component {
 public:
 	ObjectSpawn(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 	};
 	~ObjectSpawn() {
 		_respawner = nullptr;
