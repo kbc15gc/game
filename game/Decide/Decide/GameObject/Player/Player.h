@@ -13,9 +13,11 @@
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
 
+
 class SkinModel;
 class Animation;
 class ParameterBar;
+class HistoryBook;
 
 class Player : public GameObject
 {
@@ -40,8 +42,10 @@ public:
 		AnimationAttackStart,			
 		AnimationAttack01 = AnimationAttackStart,	//攻撃01
 		AnimationAttack02,							//攻撃02
-		AnimationAttack03,							//攻撃03
-		AnimationAttackEnd = AnimationAttack03,
+		AnimationAttack03,							//攻撃３
+		AnimationAttack04,							//攻撃04
+		AnimationAttack05,							//攻撃03
+		AnimationAttackEnd = AnimationAttack05,
 		AnimationDeath,								//死亡
 		AnimationNum,								//アニメーションの数
 	};
@@ -95,7 +99,7 @@ public:
 	{
 		return*_CharacterController;
 	}
-
+	//モデルを表示するかフラグをセット。
 	void SetEnable(bool is)
 	{
 		_Model->enable = is;
@@ -160,9 +164,12 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
+	//ヒストリーブック
+	HistoryBook* _HistoryBook = nullptr;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;
 #endif
+	//デバッグ
 	bool _Debug = false;
 };

@@ -22,7 +22,10 @@ void ThirdPersonCamera::Awake()
 
 void ThirdPersonCamera::Start()
 {
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 847738fc5b3880ce448cac1690f3b033a360ffe1
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 

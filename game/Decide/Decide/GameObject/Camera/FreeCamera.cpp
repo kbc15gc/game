@@ -47,7 +47,10 @@ void FreeCamera::Awake()
 
 void FreeCamera::Start()
 {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 847738fc5b3880ce448cac1690f3b033a360ffe1
 	transform->SetPosition(Vector3(0, 70, 0));
 
 	transform->SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
