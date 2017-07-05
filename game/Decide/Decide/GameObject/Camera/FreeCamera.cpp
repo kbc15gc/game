@@ -12,16 +12,41 @@ FreeCamera::~FreeCamera()
 
 void FreeCamera::Awake()
 {
+	GameCamera::Awake();
+
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 
+	//定点カメラ１。
+	PointCamera PointCamera1;
+	PointCamera1.pos = Vector3{ 2600.0f,600.0f,-2500.0f };
+	PointCamera1.rot = Vector2(-46.0f, -17.0f);
+	_PointCameraInfo.push_back(PointCamera1);
+
+	//定点カメラ２。
+	PointCamera PointCamera2;
+	PointCamera2.pos = Vector3{ 2600.0f,600.0f,2500.0f };
+	PointCamera2.rot = Vector2(-134.0f, -18.2f);
+	_PointCameraInfo.push_back(PointCamera2);
+
+	//定点カメラ３。
+	PointCamera PointCamera3;
+	PointCamera3.pos = Vector3{ -2600.0f,600.0f,2500.0f };
+	PointCamera3.rot = Vector2(135.5f, -12.6f);
+	_PointCameraInfo.push_back(PointCamera3);
+
+	//定点カメラ４。
+	PointCamera PointCamera4;
+	PointCamera4.pos = Vector3{ -2600.0f,600.0f,-2500.0f };
+	PointCamera4.rot = Vector2(46.0f, -12.6f);
+	_PointCameraInfo.push_back(PointCamera4);
+
 }
 
 void FreeCamera::Start()
 {
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
 	transform->SetPosition(Vector3(0, 70, 0));
 
@@ -50,6 +75,9 @@ void FreeCamera::UpdateSubClass()
 
 	//前後左右の移動。
 	Move();	
+
+	//定点カメラの切り替え。
+	ChangePointCamera();
 }
 
 void FreeCamera::Move()
@@ -60,7 +88,7 @@ void FreeCamera::Move()
 	//コントローラー移動。
 	dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f);
 	dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f);
-#ifdef _DEBUG
+
 	//キーボード(デバッグ用)。
 	if (KeyBoardInput->isPressed(DIK_W))
 	{
@@ -78,7 +106,7 @@ void FreeCamera::Move()
 	{
 		dir.x++;
 	}
-#endif
+
 	//移動したか。
 	if (dir.Length() != 0)
 	{
@@ -123,6 +151,16 @@ void FreeCamera::FreeCameraRotation()
 	//ゲームパッドから入力された値に_CameraRotationSpeedを掛けて回転速度を調整。
 	_R_STICK_Y += (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f)*_CameraRotationSpeed;
 	_R_STICK_X += (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f)*_CameraRotationSpeed;
+
+	//縦と横に一回転しきったら初期化。
+	if (fabs(_R_STICK_X) >= 360)
+	{
+		_R_STICK_X = 0.0f;
+	}
+	if (fabs(_R_STICK_Y) >= 360)
+	{
+		_R_STICK_Y = 0.0f;
+	}
 	Quaternion q;
 	//オイラー角からクォータニオンに変換。
 	q.SetEuler(Vector3(_R_STICK_X, -_R_STICK_Y, 0.0f));
@@ -147,6 +185,34 @@ void FreeCamera::Return()
 		PlayerCamera* playercamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 		//切り替える前のプレイヤーカメラの位置に戻す。
 		transform->SetPosition(playercamera->transform->GetPosition());
+	}
+}
+
+void FreeCamera::ChangePointCamera()
+{
+	//十字キー右で定点カメラを順繰りに切り替え。
+	if ((XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_RIGHT)))
+	{
+
+		//添え字が配列分を超えてないかチェック。
+		if (_InfoIndex < 4)
+		{
+			//定点カメラ用の向きと位置を設定。
+			_R_STICK_X = _PointCameraInfo[_InfoIndex].rot.x;
+			_R_STICK_Y = _PointCameraInfo[_InfoIndex].rot.y;
+			transform->SetPosition(_PointCameraInfo[_InfoIndex].pos);
+
+			//添え字を一つずらす。
+			_InfoIndex++;
+		}
+		else
+		{
+			//添え字が配列分を超えたので配列の一番最初に戻す。
+			_InfoIndex = 0;
+			_R_STICK_X = _PointCameraInfo[_InfoIndex].rot.x;
+			_R_STICK_Y = _PointCameraInfo[_InfoIndex].rot.y;
+			transform->SetPosition(_PointCameraInfo[_InfoIndex].pos);
+		}
 	}
 }
 
