@@ -70,28 +70,50 @@ void HistoryMenu::AddChip(ChipID chipID)
 */
 void HistoryMenu::EnableUpdate()
 {
-	//表示.
-	_LocationNameRender->SetActive(true);
-
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
 		//左トリガー.
-		_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+		//_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
 	}
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 	{
 		//右トリガー.
-		_NowSelectLocation = max(0, _NowSelectLocation - 1);
+		//_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
 
-	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
-
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_LEFT))
 	{
-		INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, 0, _Chip2DList[_NowSelectChip]->GetChipID());
-		auto& it = _Chip2DList.begin();
-		_Chip2DList.erase(it + _NowSelectChip);
+		_NowSelectChip = min(max(0,_Chip2DList.size() - 1), _NowSelectChip + 1);
 	}
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_RIGHT))
+	{
+		_NowSelectChip = max(0, _NowSelectChip - 1);
+	}
+
+	//Aボタン押.
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A) || KeyBoardInput->isPush(DIK_J))
+	{
+		//存在していれば.
+		if (_Chip2DList[_NowSelectChip] != nullptr)
+		{
+			//現在指定している場所にチップを設定.
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _NowSlot, _Chip2DList[_NowSelectChip]->GetChipID());
+			//搬入したチップを所持チップから削除.
+			auto it = _Chip2DList.begin();
+			it += _NowSelectChip;
+			INSTANCE(GameObjectManager)->AddRemoveList(*it);
+			_Chip2DList.erase(it);
+
+			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
+			_NowSelectChip = max(0, _NowSelectChip);
+		}
+	}
+
+	//表示.
+	_LocationNameRender->SetActive(true);
+
+	//場所名描画.
+	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
 
 	for (int i = 0; i < _Chip2DList.size(); i++)
 	{

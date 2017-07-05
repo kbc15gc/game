@@ -73,12 +73,10 @@ void PlayerCamera::UpdateSubClass()
 	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
 	{
 		_StandardBehavior();
-
 		Pint = 3.0f;
 	}
 	else
 	{
-		_StandardBehavior();
 		Vector3 CameraToHistory;
 		CameraToHistory.Subtract(_HistoryBook->transform->GetPosition(), transform->GetPosition());
 		Pint = min(3.0f, CameraToHistory.Length());
