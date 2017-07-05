@@ -19,4 +19,6 @@ enum Collision_ID
 };
 
 
+//#define DEBUG_SPLITSPACE	// 定義で空間分割デバッグオン。
 //#define OFF_SPLITSPACE	// 定義で空間分割無効化。
+

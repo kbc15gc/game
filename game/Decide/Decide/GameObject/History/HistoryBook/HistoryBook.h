@@ -3,7 +3,11 @@
 */
 #pragma once
 
+#include"..\HistoryInfo.h"
+
 #include"HFSM\HistoryBookState.h"
+
+#include"HistoryPage\HistoryPage.h"
 
 /** プレイヤークラス. */
 class Player;
@@ -89,6 +93,13 @@ public:
 	void SetEnable(bool flag)
 	{
 		_Model->enable = flag;
+		for (auto it : _HistoryPageList)
+		{
+			if (it != nullptr)
+			{
+				it->SetActive(flag);
+			}
+		}
 	}
 
 	/**
@@ -143,6 +154,17 @@ public:
 		return _IsOpenOrClose;
 	}
 
+	/**
+	* チップを追加.
+	*/
+	void PutInChip(ChipID chipID)
+	{
+		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",1);
+		page->SetHistoryBook(this);
+		page->Start(chipID);
+		_HistoryPageList.push_back(page);
+	}
+
 private:
 
 	/**
@@ -176,5 +198,8 @@ private:
 	Vector3 _DestPos = Vector3::zero;
 
 	bool _IsOpenOrClose = true;
+
+	/** ページクラスのポインタ. */
+	vector<HistoryPage*> _HistoryPageList;
 
 };

@@ -74,6 +74,22 @@ public:
 		}
 	}
 
+	bool SetChip(ChipID chipID, int slot)
+	{
+		if (_ChipSlot[slot] == ChipID::None)
+		{
+			_ChipSlot[slot] = chipID;
+		}
+		else
+		{
+			//å„ÇÎÇ…Ç∏ÇÁÇ∑.
+			//ñæÇÁÇ©Ç…ÉoÉO.
+			_ChipSlot[slot + 1] = _ChipSlot[slot];
+			_ChipSlot[slot] = chipID;
+		}
+		return 0;
+	}
+
 public:
 
 	/** èÍèäID. */

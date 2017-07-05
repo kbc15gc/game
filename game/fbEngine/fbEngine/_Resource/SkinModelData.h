@@ -6,6 +6,7 @@
 
 struct D3DXFRAME_DERIVED : public D3DXFRAME {
 	D3DXMATRIXA16	CombinedTransformationMatrix;	//合成済み行列。
+	D3DXMATRIX* RotationMatrix = nullptr;
 };
 //メッシュコンテナを継承した拡張メッシュコンテナ
 struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER {

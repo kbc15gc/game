@@ -8,6 +8,9 @@
 
 #include"..\HistoryBook\HistoryBook.h"
 
+#include "GameObject\History\HistoryManager.h"
+
+
 /**
 * 初期化.
 */
@@ -73,15 +76,22 @@ void HistoryMenu::EnableUpdate()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
 		//左トリガー.
-		_NowSelectLocation = max(0, _NowSelectLocation - 1);
+		_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
 	}
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 	{
 		//右トリガー.
-		_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+		_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
 
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
+
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+	{
+		INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, 0, _Chip2DList[_NowSelectChip]->GetChipID());
+		auto& it = _Chip2DList.begin();
+		_Chip2DList.erase(it + _NowSelectChip);
+	}
 
 	for (int i = 0; i < _Chip2DList.size(); i++)
 	{
@@ -96,7 +106,7 @@ void HistoryMenu::EnableUpdate()
 		}
 
 		int len = i - _NowSelectChip;
-		float offset = 150.0f;
+		float offset = -150.0f;
 		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
 		_Chip2DList[i]->transform->SetPosition(pos);
 	}
