@@ -99,7 +99,7 @@ public:
 	{
 		return*_CharacterController;
 	}
-
+	//モデルを表示するかフラグをセット。
 	void SetEnable(bool is)
 	{
 		_Model->enable = is;
@@ -170,5 +170,6 @@ private:
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;
 #endif
+	//デバッグ
 	bool _Debug = false;
 };

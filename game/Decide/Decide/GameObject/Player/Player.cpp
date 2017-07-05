@@ -7,6 +7,12 @@
 #include "GameObject\SplitSpace.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 
+namespace
+{
+	float NormalAnimationSpeed = 1.0f;
+	float AttackAnimationSpeed = 1.3f;
+}
+
 Player::Player(const char * name) :
 	GameObject(name),
 	//キャラクターコントローラーNULL
@@ -154,6 +160,14 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+	//本が開いているときにアイドルステートじゃない場合はアイドルステートに変更。
+	else if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Open)
+	{
+		if (_State != State::Idol)
+		{
+			ChangeState(State::Idol);
+		}
+	}
 	if (_HPBar != nullptr)
 	{
 		//HPバーの更新
@@ -219,7 +233,8 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
-	_Anim->SetAnimeSpeed(1);
+	//アニメーションスピードは基本１
+	_Anim->SetAnimeSpeed(NormalAnimationSpeed);
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
@@ -246,7 +261,8 @@ void Player::AnimationControl()
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
-			_Anim->SetAnimeSpeed(1.3f);
+			//攻撃の時はスピードを変更。
+			_Anim->SetAnimeSpeed(AttackAnimationSpeed);
 			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
 			{
 				//攻撃開始
@@ -279,6 +295,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	}
 }
 
+//解放。
 void Player::Releace()
 {
 	_CharacterController = nullptr;
@@ -290,6 +307,7 @@ void Player::Releace()
 	_MPBar = nullptr;
 }
 
+//攻撃を受けたとき
 void Player::_Damage()
 {
 	//死亡ステート以外の時。

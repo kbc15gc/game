@@ -37,6 +37,8 @@ void Chip::Awake()
 	//チップを取得したSEを初期化
 	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_SE->Init("Asset/Sound/coin.wav");
+	//プレイヤーを検索
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 /**
@@ -44,8 +46,7 @@ void Chip::Awake()
 */
 void Chip::Start()
 {
-	//プレイヤーを検索
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+	
 }
 
 /**
@@ -91,5 +92,23 @@ void Chip::SetChipID(ChipID chipID)
 	model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos[(int)_ChipID]);
+	transform->SetLocalScale(Vector3::one);
+}
+
+void Chip::SetDropChipID(ChipID chipID, Vector3 pos)
+{
+	//外部からセットしたIDを設定。
+	_ChipID = chipID;
+
+	//設定されたIDのモデルをロード。
+	SkinModel* model = AddComponent<SkinModel>();
+	SkinModelData* modeldata = new SkinModelData();
+	modeldata->CloneModelData(SkinModelManager::LoadModel(filename[(int)_ChipID]));
+	model->SetModelData(modeldata);
+	model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+	model->SetModelEffect(ModelEffectE::SPECULAR, true);
+	model->SetAllBlend(Color::white * 13);
+	//設定されたIDのモデルの位置と大きさを設定。
+	transform->SetLocalPosition(pos);
 	transform->SetLocalScale(Vector3::one);
 }
