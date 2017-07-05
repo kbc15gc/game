@@ -1,8 +1,7 @@
 #pragma once
 
 #include "fbEngine\_Object\_GameObject\GameObject.h"
-
-class SkinModel;
+#include "GameObject\Player\Player.h"
 
 //カメラの基底クラス。
 class GameCamera :public GameObject
@@ -41,6 +40,7 @@ public:
 			static_cast<GameCamera*>(cam->gameObject)->UnActivateFlg();
 		}
 		INSTANCE(GameObjectManager)->mainCamera = this->_Camera;
+		ChangeCameraReAction();
 		_isActivate = true;
 	}
 	
@@ -50,6 +50,8 @@ public:
 			_isActivate = false;
 		}
 	}
+	// 継承先の更新処理。
+	virtual void Move() = 0;
 
 protected:
 	void ActivateFlg() {
@@ -60,6 +62,14 @@ protected:
 		_isActivate = false;
 	}
 
+	//カメラの移動速度を設定。
+	void SetCameraSpeed(float speed)
+	{
+		_MoveSpeed = speed;
+	}
+private:
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {}
 protected:
 	//カメラコンポーネント。
 	Camera* _Camera = nullptr;
@@ -73,5 +83,13 @@ protected:
 	//このカメラをアクティブ化するか。
 	bool _isActivate = false;
 
-	SkinModel* _Model = nullptr;
+	//プレイヤーオブジェクト
+	Player* _Player = nullptr;
+
+	//プレイヤーのポジションへの参照
+	const Vector3* _PlayerPos = &Vector3::zero;
+
+	//カメラの移動速度。
+	float _MoveSpeed = 3.0f;
+
 };

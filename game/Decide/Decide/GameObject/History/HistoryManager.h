@@ -5,6 +5,7 @@
 
 #include"HistoryInfo.h"
 #include"HistoryMenu\HistoryMenu.h"
+#include"HistoryBook\HistoryBook.h"
 
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
@@ -125,6 +126,9 @@ private:
 
 	/** ヒストリ―メニュークラスのポインタ. */
 	HistoryMenu* _HistoryMenu = nullptr;
+
+	/** 歴史書クラスのポインタ. */
+	HistoryBook* _HistoryBook = nullptr;
 
 	/** 所持しているチップのID. */
 	vector<ChipID> _PossessionChipList;

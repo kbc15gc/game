@@ -76,6 +76,10 @@ public:
 	{
 		return _ModelDate->GetOrgMeshFirst();
 	}
+	LPD3DXFRAME GetFrameRoot() const
+	{
+		return _ModelDate->GetFrameRoot();
+	}
 	void SetSky(bool f)
 	{
 		_SkyBox = f;

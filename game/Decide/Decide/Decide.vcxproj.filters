@@ -120,9 +120,6 @@
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.cpp">
       <Filter>GameObject\History\HistoryBook\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage.cpp">
-      <Filter>GameObject\History\HistoryBook</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
@@ -130,6 +127,21 @@
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
     <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.cpp">
+      <Filter>GameObject\History\HistoryBook\HistoryPage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.cpp">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.cpp">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.cpp">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -262,9 +274,6 @@
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.h">
       <Filter>GameObject\History\HistoryBook\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage.h">
-      <Filter>GameObject\History\HistoryBook</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\History\HistoryMenu\HistoryMenu.h">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
@@ -272,6 +281,24 @@
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.h">
+      <Filter>GameObject\History\HistoryBook\HistoryPage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageState.h">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.h">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.h">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.h">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h">
+      <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -319,6 +346,12 @@
     </Filter>
     <Filter Include="GameObject\History\HistoryMenu">
       <UniqueIdentifier>{f5c9b85b-eab5-4e30-a8fc-22b0309088ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryBook\HistoryPage">
+      <UniqueIdentifier>{a55c92ac-00b1-4bac-a7d1-8b8c343ef8ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryBook\HistoryPage\HFSM">
+      <UniqueIdentifier>{fde9dedd-106b-455b-89e2-e2e04d4897c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

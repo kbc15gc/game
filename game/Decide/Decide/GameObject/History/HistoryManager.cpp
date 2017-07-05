@@ -30,6 +30,7 @@ HistoryManager::HistoryManager()
 void HistoryManager::Start()
 {
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
+	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 }
 
 /**
@@ -67,7 +68,8 @@ void HistoryManager::CreateObject()
 bool HistoryManager::SetHistoryChip(LocationCodeE location, UINT slot, ChipID chip)
 {
 	//‚Ğ‚Æ‚Ü‚¸“ü‚ê‚é‚¾‚¯‚Åã‘‚³‚ê‚Ä‚µ‚Ü‚¤.
-	_LocationHistoryList[(int)location]->_ChipSlot[slot] = chip;
+	_LocationHistoryList[(int)location]->SetChip(chip, slot);
+	_HistoryBook->PutInChip(chip);
 
 	//•ÏX‚µ‚½‚Ì‚Å—ğj‚ğ‰ü•Ï‚³‚¹‚é.
 	_ChangeLocation(location);

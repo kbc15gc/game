@@ -181,7 +181,12 @@
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateOpen.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HistoryBook.h" />
-    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageState.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.h" />
     <ClInclude Include="GameObject\History\HistoryInfo.h" />
     <ClInclude Include="GameObject\History\HistoryManager.h" />
     <ClInclude Include="GameObject\History\HistoryMenu\Chip2D.h" />
@@ -237,7 +242,11 @@
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateOpen.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryBook.cpp" />
-    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.cpp" />
     <ClCompile Include="GameObject\History\HistoryManager.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp" />

@@ -1,9 +1,9 @@
 #pragma once
 #include "GameCamera.h"
 #include "fbEngine\_Object\_GameObject\GameObject.h"
-
-class Player;
+#include "GameObject\Player\Player.h"
 class HistoryBook;
+
 
 class PlayerCamera : public GameCamera
 {
@@ -30,6 +30,9 @@ public:
 	*/
 	void UpdateSubClass()override;
 
+	//移動関数
+	void Move()override;
+
 private:
 
 	/**
@@ -46,19 +49,23 @@ private:
 	*/
 	void _RotLongitudinal(float rotx);
 
-	//移動関数
-	void _Move();
 	//通常時のカメラ挙動
 	void _StandardBehavior();
+
+	// このカメラに切り替わった時に呼ばれるコールバック。
+	virtual void ChangeCameraReAction() {
+		//プレイヤーの更新を止める。
+		_Player->SetIsStopUpdate(false);
+	}
 
 private:
 
 	//レイの形状
 	SphereCollider* _Sphere;
 	//プレイヤーオブジェクト
-	Player*		_Player;
+	//Player*		_Player;
 	//プレイヤーのポジションへの参照
-	const Vector3* _PlayerPos;
+	//const Vector3* _PlayerPos;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
 	//距離
