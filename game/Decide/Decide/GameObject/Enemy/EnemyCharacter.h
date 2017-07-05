@@ -7,6 +7,7 @@
 #include "AttackCollision.h"
 #include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\Component\ParameterBar.h"
+#include "GameObject\Component\ObjectSpawn.h"
 
 class SkinModel;
 class Animation;
@@ -18,17 +19,20 @@ class EnemyCharacter :
 	public GameObject
 {
 public:
+	// 自分がどの種類のエネミーか。
+	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
+	enum class EnemyType{Prot = 0};
+
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-
-	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall };
+	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall,Death };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Fall, Max };
+	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Fall, Death,Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
@@ -48,6 +52,7 @@ private:
 		ObjectRotation* RotationAction = nullptr;	// オブジェクトを回転させるクラス。
 		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
 		ParameterBar* HPBar = nullptr;			// ゲージHP用。
+		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
 	};
 
 public:
@@ -101,8 +106,9 @@ public:
 	//			コリジョン発生位置。
 	//			コリジョン回転。
 	//			コリジョンのサイズ。
+	//			コリジョンの寿命(デフォルトは無限)。
 	// ※生成されるコリジョン形状はボックスです。
-	void CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size);
+	void CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size, float life = -1.0f, float wait = 0.0f);
 
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ。
@@ -115,7 +121,7 @@ public:
 	// 引数：	アニメーションタイプ。
 	//			補間時間。
 	//			ループ回数。
-	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount) {
+	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1) {
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime, loopCount);
 	}
 
@@ -164,6 +170,28 @@ public:
 	// 視野角判定関数。
 	// 視野角判定を行うステートから呼び出す。
 	void SearchView();
+
+	// 全パラメーター設定。
+	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
+	//			HP。
+	//			HP最大値。
+	//			MP。
+	//			MP最大値。
+	//			攻撃力。
+	//			防御力。
+	//			命中力。
+	//			敏捷力。
+	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)const  {
+		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi);
+		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
+	}
+	// 全パラメーター設定。
+	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
+	//			各種パラメーター。
+	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
+		_MyComponent.Parameter->ParamInit(param);
+		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
+	}
 
 
 	// モデルファイルのパスを設定。
@@ -235,6 +263,10 @@ public:
 	inline bool GetIsGround() const {
 		return _MyComponent.CharacterController->IsOnGround();
 	}
+
+	inline ObjectSpawn* GetSpawner()const {
+		return _MyComponent.Spawner;
+	}
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -303,6 +335,7 @@ private:
 	// 継承先でアニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
 	virtual void _BuildAnimation() = 0;
+
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
 	float _Radius = 0.0f;	// コリジョンサイズ(幅)。
@@ -322,6 +355,7 @@ protected:
 	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
+
 private:
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 

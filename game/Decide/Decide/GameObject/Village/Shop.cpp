@@ -37,9 +37,9 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
 	//アイテムの情報を取得
-	for each (Product* pro in _ProductList)
+	for(int idx = 0;idx < _ProductList.size();idx++)
 	{
-		Item::ItemInfo* item = INSTANCE(ItemManager)->GetItem((unsigned int&)pro->ItemID, (unsigned int)pro->Type);
+		Item::ItemInfo* item = INSTANCE(ItemManager)->GetItem((unsigned int&)_ProductList[idx]->ItemID, (unsigned int)_ProductList[idx]->Type);
 
 		//nullチェック
 		if (item)

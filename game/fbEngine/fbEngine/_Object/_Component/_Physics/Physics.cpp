@@ -53,6 +53,7 @@ void PhysicsWorld::Start()
 }
 void PhysicsWorld::Update()
 {
+	//シュミレーション
 	dynamicWorld->stepSimulation((btScalar)Time::DeltaTime());
 	dynamicWorld->updateAabbs();
 }

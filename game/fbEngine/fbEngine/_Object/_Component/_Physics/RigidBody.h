@@ -1,6 +1,22 @@
 #pragma once
 #include "_Object\_Component\_Physics\Collision.h"
 
+struct RigidBodyInfo
+{
+	//質量。
+	float mass = 1.0f;
+	//コリジョンの形状。
+	Collider* coll;
+	//コリジョンの属性。
+	int id;
+	//物理現象以外の慣性(基本0)。
+	Vector3 inertia = Vector3::zero;
+	//ポジションからどれだけ移動させるか。
+	Vector3 offset = Vector3::zero;
+	//回転
+	Quaternion rotation = Quaternion::Identity;
+};
+
 //剛体クラス。
 class RigidBody:public Collision
 {
@@ -11,7 +27,7 @@ public:
 	void Update()override;
 	void LateUpdate()override;
 	void Release();
-	//void Create(RigidBodyInfo& rbInfo);
+	void Create(RigidBodyInfo& rbInfo, bool isAddWorld = true);
 	// コリジョン生成関数。
 	// 引数：	質量。
 	//			形状。
@@ -23,6 +39,9 @@ public:
 	void SetGravity(Vector3 set);
 	void SetGravity(btVector3& set);
 	void SetGravity(float x, float y, float z);
+
+	//眠るんじゃねぇぞ・・・
+	void NonSleep();
 
 	// ワールドに登録。
 	void _AddWorldSubClass()override;

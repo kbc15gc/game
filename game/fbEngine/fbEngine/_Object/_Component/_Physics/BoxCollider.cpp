@@ -9,6 +9,10 @@ BoxCollider::BoxCollider(GameObject* g, Transform* t) :
 	Collider(g,t),
 	_Shape(NULL)
 {
+	_Type = ShapeType::Box;
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 /*!
  * @brief	デストラクタ。
@@ -22,7 +26,11 @@ BoxCollider::~BoxCollider()
  */
 void BoxCollider::Create( const Vector3& size )
 {
-	_Shape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+	if (size.x < 0.0f || size.y < 0.0f || size.z < 0.0f) {
+		// コライダーサイズに0より小さい値が設定されてるよ。
+		abort();
+	}
+	_Shape = new btBoxShape(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
 }
 
 void BoxCollider::ColliderModelLoad() {

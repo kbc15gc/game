@@ -20,6 +20,9 @@ Enemy::~Enemy()
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
+
+	//パラメーター初期化。
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void Enemy::_StartSubClass(){
@@ -32,7 +35,7 @@ void Enemy::_StartSubClass(){
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
-	_WanderingRange = 10.0f;
+	_WanderingRange = 30.0f;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
@@ -41,14 +44,6 @@ void Enemy::_StartSubClass(){
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
-
-	//パラメーター設定。
-	_MyComponent.Parameter->ParamInit(10, 10, 0, 0, 5, 1, 1, 1);
-
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	_MyComponent.HPBar->Create(Color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(1.0f, 1.0f), false);
 
 }
 
@@ -158,6 +153,8 @@ void Enemy::_BuildAnimation() {
 		// 落下状態。
 		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
 	}
 }
 

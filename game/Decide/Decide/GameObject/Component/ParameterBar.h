@@ -2,7 +2,9 @@
 #include "fbEngine\_Object\_Component\Component.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 
-enum BarColor {  Red = 0, Yellow,Green,Blue};
+class ParameterBar;
+
+enum BarColor { Red = 0, Yellow, Green, Blue };
 
 // バーの中身。
 class BarElement:public ImageObject{
@@ -68,7 +70,7 @@ public:
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
 	//			HUDとして使用するか(デフォルトはtrue)。
 	void Create(const vector<BarColor>& colors, float max, float value, bool isRenderFrame, Transform* tr, const Vector3& pos, const Vector2& scale, bool isHud);
-	void Update()override;
+	void Update();
 	void ImageRender()override;
 
 private:
@@ -109,6 +111,9 @@ public:
 		return _NowBarNum;
 	}
 
+	inline void SetParentComponet(ParameterBar* parent) {
+		_parentComponent = parent;
+	}
 private:
 	short _MaxBarNum;	// 何ゲージ分重ねるか。
 	vector<unique_ptr<BarElement>> _BarElement;	// バー。
@@ -124,6 +129,8 @@ private:
 	bool _isHud;		// HUDとして使用するか。
 	bool _isRenderFrame;	// バーの枠を描画するか。
 	unique_ptr<ImageObject> _BarFrame;	// バーの枠。
+private:
+	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
 };
 
 // バー。
@@ -135,8 +142,15 @@ class ParameterBar :
 public:
 	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
 		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar",9);
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
+
 	};
 	~ParameterBar();
+
+	void Update()override;
+
 	// バー生成関数。
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
 	//			バーに設定する最大値(HP最大量など)。
@@ -148,6 +162,7 @@ public:
 	//			HUDとして使用するか(デフォルトはtrue)。
 	inline void Create(const vector<BarColor>& colors, float max, float value, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, bool isHud = true) {
 		_Object->Create(colors,max, value, isRenderFrame, tr, pos, scale, isHud);
+		_Object->SetParentComponet(this);	// 更新管理を行うためにこのクラスのポインタを渡す。
 	}
 public:
 	inline void SubValue(float value) {

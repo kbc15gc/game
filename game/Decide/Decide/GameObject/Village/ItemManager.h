@@ -36,7 +36,7 @@ public:
 	{
 		//範囲チェック
 		if (type < 2)
-			return _ItemList[type].at(id);
+			return _ItemList[type].at(id).get();
 		else
 			return nullptr;
 	}
@@ -51,7 +51,7 @@ public:
 	}
 private:
 	//アイテムのリスト
-	vector<Item::ItemInfo*> _ItemList[3];
+	vector<unique_ptr<Item::ItemInfo>> _ItemList[3];
 	
 	static ItemManager* _Instance;
 };

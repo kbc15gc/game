@@ -16,7 +16,7 @@ namespace Support
 		return hash;
 	}
 
-	void ToString(const int& dnum, char* s)
+	void ToString(const int dnum, char* s)
 	{
 		list<char> l;
 		//結局コピーしちゃった
@@ -45,7 +45,7 @@ namespace Support
 		s[i] = '\0';
 	}
 
-	void ToString(const int& dnum, wchar_t* s)
+	void ToString(const int dnum, wchar_t* s)
 	{
 		list<char> l;
 		//結局コピーしちゃった
@@ -74,10 +74,24 @@ namespace Support
 		s[i] = '\0';
 	}
 
-	void ToString(const float& fnum, wchar_t * s, const int& decimal)
+	void ToString(const float fnum, wchar_t * s, const int decimal)
 	{
+		short i = 0;
+		int _decimal = decimal;
+		if (fnum < 0.0f) {
+			// マイナスの値。
+			s[0] = '-';
+			i++;
+			_decimal--;
+		}
+		else if (fabsf(fnum) <= 0.00001f) {
+			// ほぼ0なので0.0fを入れて返却。
+			wcscpy_s(s,wcslen(L"0.0") + 1, L"0.0");
+			return;
+		}
+
 		//繰り上げ
-		int num = (int)(fnum * pow(10, decimal));
+		int num = (int)(fabsf(fnum) * pow(10, decimal));
 		list<char> l;
 		do
 		{
@@ -89,13 +103,20 @@ namespace Support
 			num /= 10;
 		} while (num != 0);
 
+		size_t size = l.size();
+		if (size == decimal) {
+			// 小数点以下しか積まれてない。
+
+			// ※int型は小数点以下を切り捨てするので、1.0未満の値が引数に入れられると小数点以下しか配列に積まれなくなる。
+			l.push_back(num + '0');
+			size++;
+		}
+
 		//逆から
 		list<char>::reverse_iterator it = l.rbegin();
-		short i = 0;
-		size_t size = l.size();
 		while (it != l.rend())
 		{
-			if (size - i == decimal)
+			if (size - i == _decimal)
 			{
 				s[i] = '.';
 				i++;
@@ -105,8 +126,27 @@ namespace Support
 			it++;
 			i++;
 		}
+
 		//終端文字
 		s[i] = '\0';
+	}
+
+	void ToString(const Vector4& vec4, wchar_t* s, const int decimal) {
+		wchar_t x[10];
+		ToString(vec4.x, x, decimal);
+		wcscpy_s(s,wcslen(x) + 1,x);
+		wcscat_s(s, wcslen(s) + wcslen(L", ") + 1, L", ");
+		wchar_t y[10];
+		ToString(vec4.y, y, decimal);
+		wcscat_s(s, wcslen(s) + wcslen(y) + 1, y);
+		wcscat_s(s, wcslen(s) + wcslen(L", ") + 1, L", ");
+		wchar_t z[10];
+		ToString(vec4.z, z, decimal);
+		wcscat_s(s, wcslen(s) + wcslen(z) + 1, z);
+		wcscat_s(s, wcslen(s) + wcslen(L", ") + 1, L", ");
+		wchar_t w[10];
+		ToString(vec4.w, w, decimal);
+		wcscat_s(s, wcslen(s) + wcslen(w) + 1, w);
 	}
 
 	double StringToDouble(const char * string)
@@ -151,7 +191,7 @@ namespace Support
 		return out * sign;
 	}
 
-	void Round(double & num, const int & decimal)
+	void Round(double& num, const int& decimal)
 	{
 		//べき乗計算
 		double multi = 1.0f;
@@ -193,7 +233,28 @@ namespace Support
 			}
 		}
 	}
+
+	void* ConvertFloatArrayFromString(char* word, void* pRet,const int dataNum) {
+		int offset = 0;
+		char copy[256];
+		strcpy(copy, word);
+		for (int idx = 0; idx < dataNum; idx++)
+		{
+			//数字の部分を取り出す。
+			char* num = strtok(copy + offset, "/");
+			//数字に変換する。
+			float value = Support::StringToDouble(num);
+			//値セット。
+			memcpy((char*)pRet + (sizeof(float) * idx), &value, sizeof(float));
+			//オフセット量を増やす。
+			offset += strlen(num) + 1;
+		}
+
+		return pRet;
+	}
 }
+
+
 
 
 

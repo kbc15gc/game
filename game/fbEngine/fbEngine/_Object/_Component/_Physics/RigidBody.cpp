@@ -5,7 +5,9 @@ RigidBody::RigidBody(GameObject* g, Transform* t) :
 	Collision(g,t,typeid(this).name()),
 	myMotionState(NULL)
 {
-	
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 RigidBody::~RigidBody()
@@ -31,22 +33,44 @@ void RigidBody::Update()
 
 void RigidBody::LateUpdate()
 {
-	//シュミレート後の結果を送る
-	btTransform trans = _CollisionObject->getWorldTransform();
-	
-	btVector3 pos = trans.getOrigin();
-	btQuaternion rot = trans.getRotation();
-	//ポジションはずらされているので戻す。
-	transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
-	//クォータニオンを各軸の回転量に変換
-	transform->SetRotation(Quaternion(rot.x(), rot.y(), rot.z(), rot.w()));
+	if (!_Kinematick)
+	{
+		//シュミレート後の結果を送る
+		btTransform trans = _CollisionObject->getWorldTransform();
+
+		btVector3 pos = trans.getOrigin();
+		btQuaternion rot = trans.getRotation();
+		//ポジションはずらされているので戻す。
+		transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
+		//クォータニオンを各軸の回転量に変換
+		transform->SetRotation(Quaternion(rot.x(), rot.y(), rot.z(), rot.w()));
+	}
+}
+void RigidBody::Create(RigidBodyInfo & rbInfo, bool isAddWorld)
+{
+	//前回の内容解放
+	Release();
+	_Offset = rbInfo.offset;
+	//回転と移動設定
+	btTransform StartTrans;
+	StartTrans.setIdentity();
+	//ポジション
+	StartTrans.setOrigin(btVector3(transform->GetPosition().x + _Offset.x, transform->GetPosition().y + _Offset.y, transform->GetPosition().z + _Offset.z));
+	//回転
+	StartTrans.setRotation(btQuaternion(rbInfo.rotation.x, rbInfo.rotation.y, rbInfo.rotation.z, rbInfo.rotation.w));
+	myMotionState = new btDefaultMotionState(StartTrans);
+	//剛体を作成。
+	btRigidBody::btRigidBodyConstructionInfo btRbInfo(rbInfo.mass, myMotionState, rbInfo.coll->GetBody(), btVector3(rbInfo.inertia.x, rbInfo.inertia.y, rbInfo.inertia.z));
+	Collision::Create(new btRigidBody(btRbInfo), rbInfo.coll, rbInfo.id, rbInfo.offset, isAddWorld);
+
+	_MyObjectType = CollisionObjectType::Rigid;
 }
 
-//void RigidBody::Create(RigidBodyInfo& rbInfo)
 void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vector3 off, bool isAddWorld)
 {
 	//前回の内容解放
 	Release();
+	_Offset = off;
 	//回転と移動設定
 	btTransform StartTrans;
 	StartTrans.setIdentity();
@@ -79,6 +103,11 @@ void RigidBody::SetGravity(float x, float y, float z)
 	//アップキャスト
 	btRigidBody* rigit = (btRigidBody*)_CollisionObject.get();
 	rigit->setGravity(btVector3(x, y, z));
+}
+
+void RigidBody::NonSleep()
+{
+	static_cast<btRigidBody*>(_CollisionObject.get())->setSleepingThresholds(0, 0);
 }
 
 void RigidBody::_AddWorldSubClass() {

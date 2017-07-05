@@ -8,16 +8,23 @@ class Collision:public Component
 {
 public:
 	enum class CollisionObjectType{Rigid = 0,Ghost};
+#ifdef _DEBUG
+	static const wchar_t* TypeName[];
+#endif
 public:
 	Collision(GameObject* g, Transform* t) :
 		Component(g, t, typeid(this).name())
 	{
-	
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 	};
 	Collision(GameObject* g, Transform* t,const char* classname) :
 		Component(g, t, classname)
 	{
-		
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 	};
 	virtual ~Collision();
 	void Awake()override;
@@ -101,6 +108,10 @@ public:
 		_CollisionObject->activate();
 	}
 
+	inline bool GetIsActive()const {
+		return _CollisionObject->getActivationState();
+	}
+
 	// 継承先によって異なる処理。
 	virtual void _AddWorldSubClass() = 0;
 	// ワールドに登録。
@@ -109,6 +120,27 @@ public:
 	virtual void _RemoveWorldSubClass() = 0;
 	// ワールドから削除。
 	void RemoveWorld();
+	void SetKinematick(bool flg)
+	{
+		_Kinematick = flg;
+	}
+	inline bool GetIsKinematick()const {
+		return _Kinematick;
+	}
+	inline CollisionObjectType GetCollisionType()const {
+		return _MyObjectType;
+	}
+	inline const Vector3& GetOffset()const {
+		return _Offset;
+	}
+
+	inline const Collider& GetShape()const {
+		return *_Shape;
+	}
+
+	inline bool GetIsAddWorld()const {
+		return _isAddWorld;
+	}
 
 protected:
 	//コリジョンの位置や回転を更新
@@ -126,4 +158,6 @@ protected:
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
 	bool _isAddWorld = false;	// ワールドに追加したか。
 	CollisionObjectType _MyObjectType;	// 剛体かゴーストか。
+	//動かないよ。
+	bool _Kinematick;
 };

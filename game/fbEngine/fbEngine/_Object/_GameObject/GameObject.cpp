@@ -1,5 +1,6 @@
 #include"fbstdafx.h"
 #include "GameObject.h"
+#include "_Object\_Component\_Physics\Collision.h"
 
 GameObject::GameObject():
 	Object(),
@@ -41,3 +42,21 @@ GameObject::~GameObject()
 //		}
 //	}
 //}
+
+Collision* GameObject::GetAttachCollision() {
+	Collision* coll = nullptr;
+	coll = GetComponent<Collision>();
+	if (coll) {
+		return coll;
+	}
+	coll = GetComponent<GostCollision>();
+	if (coll) {
+		return coll;
+	}
+	coll = GetComponent<RigidBody>();
+	if (coll) {
+		return coll;
+	}
+
+	return nullptr;
+}

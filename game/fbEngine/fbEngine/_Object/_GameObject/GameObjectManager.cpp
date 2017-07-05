@@ -28,6 +28,10 @@ void GameObjectManager::StartObject()
 
 void GameObjectManager::UpdateObject()
 {
+	//削除リストを削除
+	_RemoveObject();
+
+
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
 		for each (GameObject* obj in _GameObjects[priority])
@@ -57,10 +61,21 @@ void GameObjectManager::LateUpdateObject()
 			}
 		}
 	}
-
-	//削除リストを削除
-	_RemoveObject();
 }
+
+#ifdef _DEBUG
+void GameObjectManager::DebugObject() {
+	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
+	{
+		for each (GameObject* obj in _GameObjects[priority])
+		{
+			obj->Debug();
+			obj->GetComponentManager().Debug();
+		}
+	}
+}
+#endif
+
 
 void GameObjectManager::PreRenderObject()
 {
@@ -192,8 +207,9 @@ GameObject* GameObjectManager::FindObject(char* name)
 	return nullptr;
 }
 
-bool GameObjectManager::FindObjects(char* name, GameObject ** objArray)
+const vector<GameObject*>& GameObjectManager::FindObjects(char* name,vector<GameObject*>& objArray)
 {
+	objArray.clear();
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
 		list<GameObject*>::iterator it = _GameObjects[priority].begin();
@@ -203,13 +219,12 @@ bool GameObjectManager::FindObjects(char* name, GameObject ** objArray)
 			//名前の比較
 			if (strcmp(name, (*it)->GetName()) == 0)
 			{
-				objArray[0] = (*it);
+				objArray.push_back((*it));
 			}
-			else
-				it++;
+			it++;
 		}
 	}
-	return false;
+	return objArray;
 }
 
 bool GameObjectManager::_CheckUniqueRemoveList(GameObject * obj)

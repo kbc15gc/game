@@ -7,29 +7,49 @@ class ModelObject;
 class Collider :public Component
 {
 public:
+	enum class ShapeType { Box = 0, Sphere, Capsule, Mesh };
+#ifdef _DEBUG
+	static const wchar_t* ShapeName[];
+#endif
+public:
 	Collider(GameObject* g, Transform* t) :Component(g, t, typeid(this).name())
 	{
 		this->_CollisionModel = nullptr;
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 	};
 	Collider(GameObject* g, Transform* t,const char* classname) :Component(g, t, classname)
 	{
 		this->_CollisionModel = nullptr;
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 	};
 	~Collider();
 
-	void Update()override;
+#ifdef _DEBUG
+	void Debug()override;
+#endif
 	// コライダーの形状を視覚化するためのモデルを生成する関数。
 	// 引数：	コリジョンのTransform情報。
 	void CreateViewModel(const btTransform& collisionTr);
 	// コリジョン描画用モデルのTransform情報更新。
 	void UpdateTransform(const btTransform& collisionTr);
 
+#ifdef _DEBUG
 	// 描画中か。
 	bool GetIsRender();
 	// 描画オン。
 	void RenderEnable();
 	// 描画オフ。
 	void RenderDisable();
+#endif
+
+	inline ShapeType GetType()const {
+		return _Type;
+	}
+
 private:
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。
@@ -38,9 +58,13 @@ private:
 public:
 	virtual btCollisionShape* GetBody() = 0 ;
 protected:
+	ShapeType _Type;
+#ifdef _DEBUG
+protected:
 	//当たり判定を視覚化した3Dオブジェクト。
 	ModelObject* _CollisionModel = nullptr;
 	Vector3 _CollisionModelOffset = Vector3::zero;	// コリジョン視覚化用モデルの中心点とコリジョンの中心点の差分(継承先によって変更)。
 private:
 	unique_ptr<Transform> _CollisionTr;	// コリジョンのTransform情報。
+#endif
 };

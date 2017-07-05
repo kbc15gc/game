@@ -37,7 +37,9 @@ Animation::Animation(GameObject * g, Transform * t) :
 	_CurrentTrackNo(0),
 	_PlaySpeed(1.0f)
 {
-
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 Animation::~Animation()

@@ -9,7 +9,8 @@
 SceneManager*  SceneManager::_Instance;
 
 
-SceneManager::SceneManager()
+SceneManager::SceneManager():
+	_NextScene(-1)
 {
 	_OffScreen = new ImageObject("OffScreen");
 	_OffScreen->Awake();
@@ -74,10 +75,16 @@ void SceneManager::StartScene()
 
 void SceneManager::UpdateScene()
 {
+	//次のシーンが設定されている場合はシーン切り替え
+	if (_NextScene >= 0 &&
+		Scene::GetState() == fbScene::FadeStateE::WAIT)
+		_ChangeScene();
+
 	_Scenes[_NowScene]->Update();
 	INSTANCE(GameObjectManager)->UpdateObject();
 	PhysicsWorld::Instance()->Update();
 	INSTANCE(GameObjectManager)->LateUpdateObject();
+	INSTANCE(GameObjectManager)->DebugObject();
 
 	//シャドウマップの更新.
 	if (_Scenes[_NowScene]->GetIsShadowMap())
@@ -150,20 +157,17 @@ void SceneManager::DrawScene()
 	_Scenes[_NowScene]->Fade();
 }
 
-Scene* SceneManager::ChangeScene(int key)
+Scene* SceneManager::ChangeScene(int key, bool fade)
 {
-	//フェードが明ける
-	Scene::StartFade(false);
-	//シーンの添え字切り替え
-	_NowScene = key;
-	//オブジェクトリリース
-	INSTANCE(GameObjectManager)->Release();
-	//初期化する
-	SceneManager::StartScene();
-	return _Scenes[_NowScene];
+	if (fade)
+		//フェードが入る。
+		Scene::StartFade(true);
+	//次のシーンを
+	_NextScene = key;
+	return _Scenes[_NextScene];
 }
 
-Scene* SceneManager::ChangeScene(char * Scenename)
+Scene* SceneManager::ChangeScene(char * Scenename, bool fade)
 {
 	//クラス名
 	char* classname = new char[128];
@@ -176,7 +180,7 @@ Scene* SceneManager::ChangeScene(char * Scenename)
 		if (strcmp(classname, typeid(*s).name()) == 0)
 		{
 			//シーン切り替え
-			return ChangeScene(idx);
+			return ChangeScene(idx,fade);
 		}
 		idx++;
 	}
@@ -186,4 +190,17 @@ Scene* SceneManager::ChangeScene(char * Scenename)
 TEXTURE* SceneManager::GetOffScreenTexture()
 {
 	return _MainRT[CurrentMainRT_]->texture;
+}
+
+void SceneManager::_ChangeScene()
+{
+	//シーンの添え字切り替え
+	_NowScene = _NextScene;
+	_NextScene = -1;
+	//オブジェクトリリース
+	INSTANCE(GameObjectManager)->Release();
+	//初期化する
+	SceneManager::StartScene();
+	//初期化が終わったなら、フェードが明ける
+	Scene::StartFade(false);
 }

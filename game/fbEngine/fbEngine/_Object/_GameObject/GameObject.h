@@ -3,6 +3,7 @@
 #include "_Object\_Component\ComponentManager.h"
 
 class Component;
+class Collision;
 
 //ゲームオブジェクトの基礎クラス
 class GameObject : public Object
@@ -18,6 +19,9 @@ public:
 	virtual void LateUpdate() {};
 	virtual void PreRender() {};
 	virtual void Render() {};*/
+
+	// アタッチされているコリジョンコンポーネントを取得。
+	Collision* GetAttachCollision();
 
 	//コンポーネント追加
 	template<class T>
@@ -41,6 +45,18 @@ public:
 	{
 		return _Components.GetComponent<T>();
 	}
+
+	template <class T>
+	unique_ptr<vector<T*>> GetComponents()
+	{
+		return _Components.GetComponents<T>();
+	}
+
+#ifdef _DEBUG
+	const vector<Component*>& GetComponentAll()const {
+		return _Components.GetComponentAll();
+	}
+#endif
 
 	//ゲームオブジェクトマネージャでしか使わない。(どうにかすべき)
 	const ComponentManager& GetComponentManager()
@@ -89,9 +105,12 @@ public:
 	}
 
 	//優先度をセット(基本使用するな)
-	void SetPriority(const unsigned int& pri)
+	inline void SetPriority(const unsigned int& pri)
 	{
 		_Priority = pri;
+	}
+	inline const unsigned int GetPriorty()const {
+		return _Priority;
 	}
 
 	// trueを設定するとGameObjectManagerに登録しているオブジェクトの更新処理が停止する。
@@ -102,6 +121,7 @@ public:
 	inline bool GetIsStopUpdate()const {
 		return _isStopUpdate;
 	}
+
 public:
 	//トランスフォーム(簡単にアクセスしたかった。)
 	Transform* transform;	

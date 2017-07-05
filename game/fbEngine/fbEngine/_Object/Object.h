@@ -34,6 +34,12 @@ public:
 	//純粋仮想関数ではないので絶対オーバーライドしなくてもいい
 	virtual void LateUpdate(){};
 
+#ifdef _DEBUG
+	// デバッグ用のコードを呼び出す。
+	// オブジェクトのアクティブ非アクティブに関わらず呼び出される。
+	virtual void Debug() {};
+#endif
+
 	//描画の前に呼び出されます
 	virtual void PreRender(){};
 	//描画を行う

@@ -13,20 +13,27 @@ void AttackCollision::Awake()
 
 void AttackCollision::Update()
 {
-	time += Time::DeltaTime();
-	if (_lifeTime >= 0.0f && time > _lifeTime)
-	{
-		// 寿命が無限でないかつ寿命を過ぎた。
-		// かつ寿命が無限でない。
+	_time += Time::DeltaTime();
+	if (_isCreateCollision) {
+		// コリジョンが生成されている。
+		if (_lifeTime >= 0.0f && _time > _lifeTime)
+		{
+			// 寿命が無限でないかつ寿命を過ぎた。
+			// かつ寿命が無限でない。
 
-		// 削除。
-		INSTANCE(GameObjectManager)->AddRemoveList(this);
+			// 削除。
+			INSTANCE(GameObjectManager)->AddRemoveList(this);
+		}
+		else {
+			// 寿命がまだある。
+
+			// 衝突判定。
+			DetectionCollision();
+		}
 	}
 	else {
-		// 寿命がまだある。
-
-		// 衝突判定。
-		DetectionCollision();
+		// コリジョンが生成されていない。
+		CreateCollision();
 	}
 }
 
@@ -159,19 +166,34 @@ void AttackCollision::_CallBackExit(btCollisionObject* coll) {
 	}
 }
 
-GostCollision* AttackCollision::Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, Transform* Parent) {
+void AttackCollision::Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
+
+
 	_lifeTime = lifeTime;	// 寿命を保存。
 	_master = master;		// コリジョンの生成者を保存。
+	_waitTime = waitTime;	// 生成待ち時間保存。
+
 	static_cast<BoxCollider*>(_Colider)->Create(size);		// コライダー生成(※とりあえず暫定的にボックス固定)。
+
+	// コリジョンに設定するTransform情報設定。
 	if (Parent) {
 		transform->SetParent(Parent);
 	}
 	transform->SetLocalPosition(pos);
 	transform->SetLocalRotation(rotation);
 
-	transform->UpdateTransform();
-	_Gost->Create(_Colider, Collision_ID::ATTACK);	// ゴーストコリジョン生成。
+	_Damage = damage;	// ダメージ量保存。
 
-	_Damage = damage;
-	return _Gost;
+	// コリジョン生成。
+	CreateCollision();
+}
+
+void AttackCollision::CreateCollision() {
+	if (_time >= _waitTime) {
+		// 待ち時間をカウントし終えた。
+		transform->UpdateTransform();
+		_Gost->Create(_Colider, Collision_ID::ATTACK);	// ゴーストコリジョン生成。
+		_isCreateCollision = true;
+		_time = 0.0f;
+	}
 }

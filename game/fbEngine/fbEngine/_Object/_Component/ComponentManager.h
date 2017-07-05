@@ -10,6 +10,9 @@ public:
 	void Start()const;
 	void Update()const;
 	void LateUpdate()const;
+#ifdef _DEBUG
+	void Debug()const;
+#endif
 	void PreRender()const;
 	void Render()const;
 	void PostRender()const;
@@ -38,6 +41,15 @@ public:
 
 	template <class T>
 	T* GetComponent();
+
+	template <class T>
+	unique_ptr<vector<T*>> GetComponents();
+
+#ifdef _DEBUG
+	const vector<Component*>& GetComponentAll() const{
+		return _Components;
+	}
+#endif
 
 	template <class T>
 	void RemoveComponent()
@@ -83,5 +95,43 @@ inline T * ComponentManager::GetComponent()
 		it++;
 	}
 
+	return nullptr;
+}
+
+template<class T>
+inline unique_ptr<vector<T*>> ComponentManager::GetComponents()
+{
+	//テンプレート型の内部の型情報取得
+	const type_info& Ttype = typeid(T);
+	unique_ptr<vector<T*>> Tmp(new vector<T*>());
+
+	//foreachは内部で値をコピーしているので、ポインタを返すなら使えない。
+	vector<Component*>::const_iterator it = _Components.cbegin();
+	while (it != _Components.end())
+	{
+		//コンポーネント型の内部の型情報取得
+		const type_info& type = typeid(*(*it));
+		//型情報比較
+		if (Ttype == type)
+		{
+			Tmp->push_back((T*)*it);
+		}
+		it++;
+	}
+
+	return move(Tmp);
+
+	////配列。
+	//int size = Tmp.size();
+	//if (size > 0)
+	//{
+	//	T** Array = new T*[size];
+	//	for (size_t i = 0; i < Tmp.size(); i++)
+	//	{
+	//		Array[i] = Tmp[i];
+	//	}
+
+	//	return Array;
+	//}
 	return nullptr;
 }

@@ -122,6 +122,12 @@ public:
 			_ModelEffect = ModelEffectE(_ModelEffect + e);
 		}
 	}
+	//背面描画モードの設定。
+	//[in] 描画する面のフラグ
+	void SetCullMode(D3DCULL flg)
+	{
+		_CullMode = flg;
+	}
 	bool terain = false;
 private:
 	//子とか兄弟も一括で描画するための再帰関数
@@ -158,4 +164,6 @@ private:
 	/** 大気散乱. */
 	AtmosphereFunc _AtomosphereFunc = AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere;
 
+	//描画する面
+	D3DCULL _CullMode;
 };

@@ -7,15 +7,23 @@
 namespace Support
 {
 	//文字列からハッシュ値を求める(簡易)
-	extern int MakeHash(const char * s);
+	extern int MakeHash(const char* s);
 	//整数を文字列に
-	extern void ToString(const int& dnum, char* s);
+	extern void ToString(const int dnum, char* s);
 	//整数を文字列(wchar)に
-	extern void ToString(const int& dnum, wchar_t* s);
+	extern void ToString(const int dnum, wchar_t* s);
 	//小数を文字列に
-	extern void ToString(const float& fnum, wchar_t * s, const int& decimal = 1);
+	extern void ToString(const float fnum, wchar_t* s, const int decimal = 1);
+	// Vectorを文字列に
+	// 引数：	変換したい値。
+	//			変換後の文字列へのポインタ。
+	//			小数点第何位まで変換するか。
+	extern void ToString(const Vector4& vec4, wchar_t* s, const int decimal = 1);
 	//文字列を小数に
 	extern double StringToDouble(const char* string);
+	// 文字列をVectorやQuaternionやFloat配列に
+	extern void* ConvertFloatArrayFromString(char* word, void* pRet,const int dataNum);
+
 	//小数を四捨五入する
 	extern void Round(double& num, const int& decimal = 1);
 	//文字列中の指定文字列を別の文字列に置換
@@ -31,8 +39,12 @@ namespace Support {
 	enum DataTypeE
 	{
 		INT,	//整数
+		INTARRAY,	// 整数配列。
 		FLOAT,	//浮動小数
+		VECTOR2,	// Vector2。
 		VECTOR3,//Vector3
+		VECTOR4,// Vector4。
+		QUATERNION,//Quaternion。
 		STRING,	//文字
 	};
 	//メンバ変数の情報。
@@ -48,36 +60,123 @@ namespace Support {
 namespace
 {
 	//文字列を受け取って値に変換し、アドレスを返す。
-	void* ConvertValueFromString(char* word, Support::DataTypeE type)
+	void* ConvertValueFromString(char* word, Support::DataTypeE type,const int size)
 	{
 		if (type == Support::DataTypeE::INT)
 		{
 			int val = Support::StringToDouble(word);
 			return &val;
 		}
+		else if (type == Support::DataTypeE::INTARRAY) {
+			int offset = 0;
+			char copy[256];
+			strcpy(copy, word);
+			const int max = size / sizeof(int);
+			int val[999];	// とりあえず多めに取っておく。
+
+			for (int idx = 0; idx < max; idx++) {
+				//数字の部分を取り出す。
+				char* num = strtok(copy + offset, "/");
+				//数字に変換する。
+				val[idx] = Support::StringToDouble(num);
+				//オフセット量を増やす。
+				offset += strlen(num) + 1;
+			}
+
+			return val;
+		}
 		else if (type == Support::DataTypeE::FLOAT)
 		{
 			float val = Support::StringToDouble(word);
 			return &val;
 		}
+		else if (type == Support::DataTypeE::VECTOR2)
+		{
+			Vector2 v2 = Vector2(0.0f,0.0f);
+
+			Support::ConvertFloatArrayFromString(word, &v2,2);
+
+			//int offset = 0;
+			//char copy[256];
+			//strcpy(copy, word);
+			//FOR(i, 3)
+			//{
+			//	//数字の部分を取り出す。
+			//	char* num = strtok(copy + offset, "/");
+			//	//数字に変換する。
+			//	float value = Support::StringToDouble(num);
+			//	//値セット。
+			//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+			//	//オフセット量を増やす。
+			//	offset += strlen(num) + 1;
+			//}
+			return &v2;
+		}
 		else if (type == Support::DataTypeE::VECTOR3)
 		{
 			Vector3 v3 = Vector3::zero;
-			int offset = 0;
-			char copy[256];
-			strcpy(copy, word);
-			FOR(i, 3)
-			{
-				//数字の部分を取り出す。
-				char* num = strtok(copy + offset, "/");
-				//数字に変換する。
-				float value = Support::StringToDouble(num);
-				//値セット。
-				memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-				//オフセット量を増やす。
-				offset += strlen(num) + 1;
-			}
+
+			Support::ConvertFloatArrayFromString(word, &v3,3);
+
+			//int offset = 0;
+			//char copy[256];
+			//strcpy(copy, word);
+			//FOR(i, 3)
+			//{
+			//	//数字の部分を取り出す。
+			//	char* num = strtok(copy + offset, "/");
+			//	//数字に変換する。
+			//	float value = Support::StringToDouble(num);
+			//	//値セット。
+			//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+			//	//オフセット量を増やす。
+			//	offset += strlen(num) + 1;
+			//}
 			return &v3;
+		}
+		else if (type == Support::DataTypeE::VECTOR4)
+		{
+			Vector4 v4 = Vector4(0.0f,0.0f,0.0f,0.0f);
+
+			Support::ConvertFloatArrayFromString(word, &v4,4);
+
+			//int offset = 0;
+			//char copy[256];
+			//strcpy(copy, word);
+			//FOR(i, 3)
+			//{
+			//	//数字の部分を取り出す。
+			//	char* num = strtok(copy + offset, "/");
+			//	//数字に変換する。
+			//	float value = Support::StringToDouble(num);
+			//	//値セット。
+			//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+			//	//オフセット量を増やす。
+			//	offset += strlen(num) + 1;
+			//}
+			return &v4;
+		}
+		else if (type == Support::DataTypeE::QUATERNION)
+		{
+			Quaternion quat = Quaternion::Identity;
+
+			Support::ConvertFloatArrayFromString(word, &quat,4);
+
+			//int offset = 0;
+			//char copy[256];
+			//strcpy(copy, word);
+			//FOR(i, 4)
+			//{
+			//	//数字の部分を取り出す。
+			//	char* num = strtok(copy + offset, "/");
+			//	//数字に変換する。
+			//	float value = Support::StringToDouble(num);
+			//	//値セット。
+			//	memcpy((char*)&quat + (sizeof(float) * i), &value, sizeof(float));
+			//	//オフセット量を増やす。
+			//	offset += strlen(num) + 1;
+			//}
+			return &quat;
 		}
 		else if (type == Support::DataTypeE::STRING)
 		{
@@ -86,13 +185,14 @@ namespace
 
 		return nullptr;
 	}
+
 }
 
 namespace Support {
 	//CSVファイルから情報を読み取り、構造体に格納する。
 	//※仮想関数を実装した構造体を使うとメモリを破壊する可能性あり。
 	template<class T>
-	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<T*>& output)
+	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<unique_ptr<T>>& output)
 	{
 		//ファイル入力用
 		std::ifstream fin(filepath, std::ios::in);
@@ -139,7 +239,7 @@ namespace Support {
 				char* word = strtok(copy + offset, ",");
 
 				//単語から値(のアドレス)に変換する。
-				void* val = ConvertValueFromString(word, (DataTypeE)datas[idx].type);
+				void* val = ConvertValueFromString(word, (DataTypeE)datas[idx].type,datas[idx].size);
 				
 				//変数の先頭アドレスを求める。
 				//char*型(1byte)にキャストすることで1づつずらすことができる。
@@ -152,10 +252,20 @@ namespace Support {
 				idx++;
 			}
 			//要素追加
-			output.push_back(tmp);
+			output.push_back(unique_ptr<T>(tmp));
 		}
 		//読み込み終了
 		return true;
+	}
+
+	//テンプレートクラスから情報を読み取り、CSVファイルに出力する。
+	template<class T>
+	extern bool OutputCSV(const char* filepath, const Support::DATARECORD* datas, const int& datanum, const vector<unique_ptr<T>>& output) {
+		vector<T*> work;
+		for (int idx = 0; idx < output.size(); idx++) {
+			work.push_back(output[idx].get());
+		}
+		return OutputCSV(filepath, datas, datanum, work);
 	}
 
 	//テンプレートクラスから情報を読み取り、CSVファイルに出力する。
@@ -210,10 +320,40 @@ namespace Support {
 					sprintf(word, "%d", i);
 					//ToString(i, word);
 					break;
+				case DataTypeE::INTARRAY:	// 配列に対応?。
+					FOR(num, datas[idx].size / sizeof(int)){
+						memcpy(&i, addres, sizeof(int));
+						sprintf(word, "%d", i);
+						//ToString(i, word);
+						//配列の最後ではない
+						if (num < (datas[idx].size / sizeof(int)) - 1)
+						{
+							//"/"を追加
+							strcat(word, "/");
+						}
+						addres += sizeof(int);	// int一要素分ずらす。
+					}
+					break;
 				case DataTypeE::FLOAT:
 					memcpy(&f, addres, datas[idx].size);
 					sprintf(word, "%f", f);
 					//ToString(f, word);
+					break;
+				case DataTypeE::VECTOR2:
+				case DataTypeE::VECTOR3:
+				case DataTypeE::VECTOR4:
+				case DataTypeE::QUATERNION:
+					FOR(num, datas[idx].size / sizeof(float)){
+						memcpy(&f, addres, sizeof(float));
+						sprintf(word, "%f", f);
+						//Vectorの最後ではない
+						if (num < (datas[idx].size / sizeof(float)) - 1)
+						{
+							//"/"を追加
+							strcat(word, "/");
+						}
+						addres += sizeof(float);	// float一要素分ずらす。
+					}
 					break;
 				case DataTypeE::STRING:
 					memcpy(word, addres, datas[idx].size);

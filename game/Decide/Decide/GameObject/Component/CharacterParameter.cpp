@@ -1,6 +1,23 @@
 #include "stdafx.h"
 #include "CharacterParameter.h"
 
+#ifdef _DEBUG
+const wchar_t* CharacterParameter::ENUM_NAME[] = {
+	L"HP    ",
+	L"MAXHP ",
+	L"MP    ",
+	L"MAXMP ",
+	L"ATK   ",
+	L"DEF   ",
+	L"DEX   ",
+	L"AGI   ",
+};
+#endif
+
+void CharacterParameter::Awake() {
+	_Param = vector<int>(Param::MAX,0);
+}
+
 void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)
 {
 	//パラメーター設定。
@@ -12,6 +29,12 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::DEF]	= def;		//防御力。
 	_Param[Param::DEX]	= dex;		//命中力。
 	_Param[Param::AGI]	= agi;		//回避力。
+}
+
+void CharacterParameter::ParamInit(int param[Param::MAX]) {
+	for (int idx = 0; idx < Param::MAX; idx++) {
+		_Param[idx] = param[idx];
+	}
 }
 
 void CharacterParameter::Update() {

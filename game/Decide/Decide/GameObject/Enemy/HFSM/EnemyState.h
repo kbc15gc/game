@@ -1,6 +1,7 @@
 #pragma once
 
-class EnemyCharacter;
+#include "GameObject\Enemy\EnemyCharacter.h"
+#include "GameObject\Enemy\EnemyManager.h"
 
 // 基底クラス。
 // 雑魚とボスのステート。

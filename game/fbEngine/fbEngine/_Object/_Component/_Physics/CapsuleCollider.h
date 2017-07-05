@@ -18,6 +18,10 @@ public:
 	*/
 	void Create(float radius, float height)
 	{
+		if (radius < 0.0f || height < 0.0f) {
+			// コライダーサイズに0より小さい値が設定されてるよ。
+			abort();
+		}
 		shape = new btCapsuleShape(radius, height);
 	}
 

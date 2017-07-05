@@ -69,7 +69,7 @@ public:
 	*/
 	LocationHistoryInfo* GetHistory(LocationCodeE location)
 	{
-		return _LocationHistoryList.at((int)location);
+		return _LocationHistoryList.at((int)location).get();
 	}
 
 	/**
@@ -119,7 +119,7 @@ private:
 	static HistoryManager* _Instance;
 	
 	/** 全場所の歴史の情報リスト. */
-	vector<LocationHistoryInfo*> _LocationHistoryList;
+	vector<unique_ptr<LocationHistoryInfo>> _LocationHistoryList;
 
 	/** 全場所の歴史によって出されたオブジェクトへのポインタリスト. */
 	vector<vector<GameObject*>> _GameObjectList;

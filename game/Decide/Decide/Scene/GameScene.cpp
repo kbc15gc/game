@@ -6,9 +6,9 @@
 #include "fbEngine/_Object/_GameObject/SoundSource.h"
 
 #include "GameLight.h"
-#include "GameCamera.h"
+#include "GameObject\Camera\GameCamera.h"
 
-#include "Ground.h"
+#include "GameObject\Ground\Ground.h"
 #include "Ocean.h"
 
 #include "GameObject/Player/Player.h"
@@ -22,9 +22,11 @@
 #include "GameObject\Village\Shop.h"
 #include "GameObject\Village\ItemManager.h"
 
-#include "PlayerCamera.h"
-#include "ThirdPersonCamera.h"
-#include "FreeCamera.h"
+#include "GameObject\Camera\PlayerCamera.h"
+#include "GameObject\Camera\ThirdPersonCamera.h"
+#include "GameObject\Camera\FreeCamera.h"
+#include "GameObject\Enemy\EnemyManager.h"
+#include "GameObject\SplitSpace.h"
 
 ImageObject* g_depth;
 
@@ -35,6 +37,7 @@ void GameScene::Start()
 
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+
 
 	//プレイヤーカメラ生成
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
@@ -53,14 +56,16 @@ void GameScene::Start()
 	//フリーカメラの次のカメラはプレイヤーカメラを指定。
 	freeCamera->SetNextCamera(playerCamera);
 
+	// 空間分割生成。
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
-	
-	// 雑魚エネミープロト生成。
-	INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
+
+	// エネミーマネージャー初期化。
+	INSTANCE(EnemyManager)->Start();
 	
 	FOR(i,ChipID::ChipNum)
 	{
@@ -110,14 +115,14 @@ void GameScene::Update()
 	//エンターキー
 	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
-		//フェードイン開始
-		StartFade(true);
-	}
-	//フェードイン完了
-	if (_FadeState == fbScene::FadeStateE::INEND)
-	{
 		//タイトルシーンへ移行
-		INSTANCE(SceneManager)->ChangeScene("TitleScene");
+		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);
 		return;
+	}
+
+	Collision *coll;
+	if(coll = INSTANCE(GameObjectManager)->mainCamera->GetClickCollision(1000.0f, (int)fbCollisionAttributeE::CHARACTER))
+	{
+		int a = 0;
 	}
 }

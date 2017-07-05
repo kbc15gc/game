@@ -17,7 +17,6 @@ namespace
 	bool g_ShadowRender = false;
 	/** 環境マップ描画フラグ. */
 	bool g_EnvironmentRender = false;
-
 }
 
 SkinModel::SkinModel(GameObject * g, Transform * t) :
@@ -29,7 +28,8 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_TextureBlend(Color::white),
 	_AllBlend(Color::white),
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW)),
-	_SkyBox(false)
+	_SkyBox(false),
+	_CullMode(D3DCULL_CCW)
 {
 	
 }
@@ -267,7 +267,7 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);

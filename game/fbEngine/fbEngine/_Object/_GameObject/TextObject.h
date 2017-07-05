@@ -32,6 +32,9 @@ public:
 	{
 		return _Text->GetMaxCharNum();
 	}
+	inline void SetSpacing(const float spacing) {
+		_Text->SetSpacing(spacing);
+	}
 	Text* GetText()
 	{
 		return _Text;

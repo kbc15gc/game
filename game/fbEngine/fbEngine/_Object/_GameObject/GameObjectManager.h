@@ -65,9 +65,15 @@ public:
 
 	//毎フレーム呼び出される。
 	void UpdateObject();
-
 	//毎フレームUpdateよりも後に呼び出される。
 	void LateUpdateObject();
+
+#ifdef _DEBUG
+	// デバッグ用のコードを呼び出す。
+	// オブジェクトのアクティブ非アクティブに関わらず呼び出される。
+	void DebugObject();
+#endif
+
 	//描画の前に呼び出される
 	void PreRenderObject();
 
@@ -90,7 +96,7 @@ public:
 	GameObject* FindObject(char* name);
 
 	//未実装
-	bool FindObjects(char* name,GameObject** objArray);
+	const vector<GameObject*>& FindObjects(char* name,vector<GameObject*>& objArray);
 
 	//確保しているオブジェクトを解放
 	void Release();

@@ -12,7 +12,10 @@ SphereCollider::SphereCollider(GameObject* g, Transform* t) :
 	Collider(g,t, typeid(this).name()),
 	shape(NULL)
 {
-
+	_Type = ShapeType::Sphere;
+#ifdef _DEBUG
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 /*!
  * @brief	デストラクタ。
@@ -26,6 +29,10 @@ SphereCollider::~SphereCollider()
  */
 void SphereCollider::Create( const float radius )
 {
+	if (radius < 0.0f) {
+		// サイズに0より小さい値が設定されている。
+		abort();
+	}
 	shape = new btSphereShape(radius);
 }
 

@@ -115,9 +115,19 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 }
 
 void BarAdapter::Update() {
+	if (_parentComponent) {
+		if (_parentComponent->gameObject) {
+			if (!_parentComponent->gameObject->GetActive()) {
+				// このバーを持つオブジェクトが非アクティブになっていればこのアダプターも非アクティブにする。
+				this->SetActive(false);
+			}
+		}
+	}
+
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
 		_BarFrame->GetComponentManager().Update();
+
 		// Transform情報は毎フレーム更新されるため、毎フレームスクリーン座標にして上書きする。
 		_ToScreenPos();
 
@@ -158,8 +168,13 @@ void BarAdapter::ImageRender() {
 }
 
 void BarAdapter::_UpdateValue(float value) {
-	float work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
-
+	float work;
+	if (fabsf(value) < 0.0001f) {
+		work = 0.0f;
+	}
+	else {
+		work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
+	}
 	float Difference = _Value - value;	// 一瞬前の値との差分を算出。
 	if (fabsf(Difference) >= 0.0001f) {
 		// 一瞬前の値と違う値が設定された。
@@ -311,4 +326,9 @@ const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
 ParameterBar::~ParameterBar()
 {
 	INSTANCE(GameObjectManager)->AddRemoveList(_Object);
+}
+
+void ParameterBar::Update() {
+	//バーの更新処理が呼ばれているのでアダプターをアクティブにする。
+	_Object->SetActive(true);
 }
