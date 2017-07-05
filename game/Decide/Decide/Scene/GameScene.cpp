@@ -77,7 +77,7 @@ void GameScene::Start()
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 1);
+	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(HistoryManager)->Start();
 	//歴史で生成されるオブジェクト生成。

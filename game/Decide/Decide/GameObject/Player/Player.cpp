@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GameObject\SplitSpace.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -131,7 +132,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-912.0f, 221.0f, -1350.0f);
+	_StartPos = Vector3(344, 69, -1255);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -140,11 +141,15 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//レベル初期化
 	_Level = 1;
+
+	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 }
 
 void Player::Update()
 {
-	if (_CurrentState != nullptr)
+	//本が開いていないときは動ける。
+	if (_CurrentState != nullptr 
+		&& _HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
@@ -234,14 +239,14 @@ void Player::AnimationControl()
 			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
 		//アイドルアニメーション
-		else if(_State == State::Idol)
+		else if (_State == State::Idol)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
-			_Anim->SetAnimeSpeed(1.5f);
+			_Anim->SetAnimeSpeed(1.3f);
 			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
 			{
 				//攻撃開始
@@ -261,6 +266,7 @@ void Player::AnimationControl()
 			}
 		}
 	}
+
 }
 
 //攻撃を受けたとき。

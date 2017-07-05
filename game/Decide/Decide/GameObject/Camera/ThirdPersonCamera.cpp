@@ -12,6 +12,7 @@ ThirdPersonCamera::~ThirdPersonCamera()
 
 void ThirdPersonCamera::Awake()
 {
+	GameCamera::Awake();
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
@@ -20,7 +21,6 @@ void ThirdPersonCamera::Awake()
 
 void ThirdPersonCamera::Start()
 {
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 

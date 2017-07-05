@@ -12,6 +12,7 @@ FreeCamera::~FreeCamera()
 
 void FreeCamera::Awake()
 {
+	GameCamera::Awake();
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
@@ -21,8 +22,6 @@ void FreeCamera::Awake()
 
 void FreeCamera::Start()
 {
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
-
 	transform->SetPosition(Vector3(0, 70, 0));
 
 	transform->SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
