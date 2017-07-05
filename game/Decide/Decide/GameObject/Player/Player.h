@@ -40,8 +40,10 @@ public:
 		AnimationAttackStart,			
 		AnimationAttack01 = AnimationAttackStart,	//UŒ‚01
 		AnimationAttack02,							//UŒ‚02
-		AnimationAttack03,							//UŒ‚03
-		AnimationAttackEnd = AnimationAttack03,
+		AnimationAttack03,							//UŒ‚‚R
+		AnimationAttack04,							//UŒ‚04
+		AnimationAttack05,							//UŒ‚03
+		AnimationAttackEnd = AnimationAttack05,
 		AnimationDeath,								//€–S
 		AnimationNum,								//ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì”
 	};

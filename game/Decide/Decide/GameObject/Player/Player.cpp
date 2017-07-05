@@ -118,6 +118,8 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//攻撃1
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0f;		//攻撃2
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0f;		//攻撃3
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack04] = -1.0f;		//攻撃3
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack05] = -1.0f;		//攻撃3
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0f;		//死亡
 	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -129,7 +131,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(378, 69, -1286);
+	_StartPos = Vector3(-912.0f, 221.0f, -1350.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -212,6 +214,7 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	_Anim->SetAnimeSpeed(1);
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
@@ -238,6 +241,7 @@ void Player::AnimationControl()
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
+			_Anim->SetAnimeSpeed(1.5f);
 			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
 			{
 				//攻撃開始

@@ -9,7 +9,6 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 {
 	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_SE->Init("Asset/Sound/PlayerAttack_00.wav");
-
 	//çUåÇÇP
 	{
 		AttackCollisionParameter attackparam1;
@@ -36,9 +35,29 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam3.pos = Vector3(0.0f, 1.0f, 1.5f);
 		attackparam3.rot = Quaternion::Identity;
 		attackparam3.scale = Vector3(1.5f, 1.5f, 1.5f);
-		attackparam3.attackframe = 25;
+		attackparam3.attackframe = 10.0f;
 		attackparam3.lifetime = 0.5f;
 		_AttackPram.push_back(attackparam3);
+	}
+	//çUåÇÇS
+	{
+		AttackCollisionParameter attackparam4;
+		attackparam4.pos = Vector3(0.0f, 1.0f, 1.5f);
+		attackparam4.rot = Quaternion::Identity;
+		attackparam4.scale = Vector3(1.5f, 1.5f, 1.5f);
+		attackparam4.attackframe = 10;
+		attackparam4.lifetime = 0.5f;
+		_AttackPram.push_back(attackparam4);
+	}
+	//çUåÇÇT
+	{
+		AttackCollisionParameter attackparam5;
+		attackparam5.pos = Vector3(0.0f, 1.0f, 1.5f);
+		attackparam5.rot = Quaternion::Identity;
+		attackparam5.scale = Vector3(1.5f, 1.5f, 1.5f);
+		attackparam5.attackframe = 25;
+		attackparam5.lifetime = 0.5f;
+		_AttackPram.push_back(attackparam5);
 	}
 	
 }
@@ -91,6 +110,12 @@ void PlayerStateAttack::Update()
 		//çUåÇÇRÇÃéû
 	case (int)Player::AnimationNo::AnimationAttack03:
 		Attack(_AttackPram[2]);
+		break;
+	case (int)Player::AnimationNo::AnimationAttack04:
+		Attack(_AttackPram[3]);
+		break;
+	case (int)Player::AnimationNo::AnimationAttack05:
+		Attack(_AttackPram[4]);
 		break;
 	}
 	
