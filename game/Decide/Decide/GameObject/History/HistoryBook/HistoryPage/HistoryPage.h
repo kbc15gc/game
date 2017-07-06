@@ -20,13 +20,16 @@ class HistoryPage : public GameObject
 {
 public:
 
+	/** 状態コード. */
 	enum class StateCodeE
 	{
 		Invalid = -1,	//!< 無効.
 		PutIn,			//!< 挟む.
 		PutOut,			//!< 抜く.
 		Turn,			//!< 捲る.
+		TakeOff,		//!< 本を切り離す.
 		Close,			//!< 閉じる.
+		StateNum,		//!< 状態数.
 	};
 
 public:
@@ -54,7 +57,7 @@ public:
 	/**
 	* 初期化.
 	*/
-	void Start(ChipID chipID);
+	void Start(ChipID chipID, LocationCodeE code);
 
 	/**
 	* 更新.
@@ -98,6 +101,12 @@ public:
 	*/
 	void ChangeState(StateCodeE state);
 
+	//今どの場所にいるかを返す。
+	LocationCodeE GetNowLocation()
+	{
+		return _NowLocatuion;
+	}
+
 private:
 
 	/**
@@ -127,4 +136,7 @@ private:
 
 	/** マテリアル. */
 	Material* _Material = nullptr;
+
+	//今自分がどの場所にいるのか。
+	LocationCodeE _NowLocatuion;
 };

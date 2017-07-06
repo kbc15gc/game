@@ -4,11 +4,19 @@
 #include"stdafx.h"
 #include"HistoryPageStatePutOut.h"
 
+#include"..\HistoryPage.h"
+
 /**
 * ó‘Ô‚ÉØ‚è‘Ö‚¦‚½‚Æ‚«ŒÄ‚Î‚ê‚é.
 */
 void HistoryPageStatePutOut::Entry()
 {
+	_BefAngle = _HistoryPage->GetAngle();
+
+	_MoveSpeed = 1.2f;
+	_Angle = 0.0f;
+
+	_LerpRate = 0.0f;
 }
 
 /**
@@ -16,6 +24,16 @@ void HistoryPageStatePutOut::Entry()
 */
 void HistoryPageStatePutOut::Update()
 {
+	_LerpRate += _MoveSpeed * Time::DeltaTime();
+	_LerpRate = min(1.0f, _LerpRate);
+
+	float angle = _LerpRate *  _Angle + (1.0f - _LerpRate) *_BefAngle;
+
+	_HistoryPage->Rotation(angle);
+	if (_LerpRate >= 0.9f)
+	{
+		_HistoryPage->ChangeState(HistoryPage::StateCodeE::TakeOff);
+	}
 }
 
 /**

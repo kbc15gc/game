@@ -1,5 +1,5 @@
-/**
-* —ğj•ÏXƒƒjƒ…[‰æ–ÊƒNƒ‰ƒX‚ÌÀ‘•.
+ï»¿/**
+* æ­´å²å¤‰æ›´ãƒ¡ãƒ‹ãƒ¥ãƒ¼ç”»é¢ã‚¯ãƒ©ã‚¹ã®å®Ÿè£….
 */
 #include"stdafx.h"
 #include "HistoryMenu.h"
@@ -12,40 +12,40 @@
 
 
 /**
-* ‰Šú‰».
+* åˆæœŸåŒ–.
 */
 void HistoryMenu::Start()
 {
 
 	_LocationNameRender = INSTANCE(GameObjectManager)->AddNew<TextObject>("LocationNameRender", _Priority);
 
-	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::‚l‚r_–¾’©));
+	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::ï¼­ï¼³_æ˜æœ));
 	
 
-	//À•W‚ğİ’è.
+	//åº§æ¨™ã‚’è¨­å®š.
 	_LocationNameRender->transform->SetLocalPosition(Vector3(g_WindowSize.x / 2.0f, 50.0f, 0));
-	//•\¦–¼‚ğİ’è.
+	//è¡¨ç¤ºåã‚’è¨­å®š.
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
 
-	//—ğj‘‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾.
+	//æ­´å²æ›¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 }
 
 /**
-* XV.
+* æ›´æ–°.
 */
 void HistoryMenu::Update()
 {
 	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Idol)
 	{
-		//•\¦.
+		//è¡¨ç¤º.
 		EnableUpdate();
 	}
 	else
 	{
-		//”ñ•\¦.
+		//éè¡¨ç¤º.
 		_LocationNameRender->SetActive(false);
 
 		for (auto& it : _Chip2DList)
@@ -56,7 +56,7 @@ void HistoryMenu::Update()
 }
 
 /**
-* ƒ`ƒbƒv‚ğ’Ç‰Á.
+* ãƒãƒƒãƒ—ã‚’è¿½åŠ .
 */
 void HistoryMenu::AddChip(ChipID chipID)
 {
@@ -66,18 +66,18 @@ void HistoryMenu::AddChip(ChipID chipID)
 }
 
 /**
-* •\¦’†‚ÌXV.
+* è¡¨ç¤ºä¸­ã®æ›´æ–°.
 */
 void HistoryMenu::EnableUpdate()
 {
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
-		//¶ƒgƒŠƒK[.
+		//å·¦ãƒˆãƒªã‚¬ãƒ¼.
 		//_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
 	}
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 	{
-		//‰EƒgƒŠƒK[.
+		//å³ãƒˆãƒªã‚¬ãƒ¼.
 		//_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
 
@@ -90,15 +90,15 @@ void HistoryMenu::EnableUpdate()
 		_NowSelectChip = max(0, _NowSelectChip - 1);
 	}
 
-	//Aƒ{ƒ^ƒ“‰Ÿ.
+	//Aãƒœã‚¿ãƒ³æŠ¼.
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A) || KeyBoardInput->isPush(DIK_J))
 	{
-		//‘¶İ‚µ‚Ä‚¢‚ê‚Î.
-		if (_Chip2DList[_NowSelectChip] != nullptr)
+		//å­˜åœ¨ã—ã¦ã„ã‚Œã°.
+		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
 		{
-			//Œ»İw’è‚µ‚Ä‚¢‚éêŠ‚Éƒ`ƒbƒv‚ğİ’è.
+			//ç¾åœ¨æŒ‡å®šã—ã¦ã„ã‚‹å ´æ‰€ã«ãƒãƒƒãƒ—ã‚’è¨­å®š.
 			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _NowSlot, _Chip2DList[_NowSelectChip]->GetChipID());
-			//”À“ü‚µ‚½ƒ`ƒbƒv‚ğŠƒ`ƒbƒv‚©‚çíœ.
+			//æ¬å…¥ã—ãŸãƒãƒƒãƒ—ã‚’æ‰€æŒãƒãƒƒãƒ—ã‹ã‚‰å‰Šé™¤.
 			auto it = _Chip2DList.begin();
 			it += _NowSelectChip;
 			INSTANCE(GameObjectManager)->AddRemoveList(*it);
@@ -109,10 +109,25 @@ void HistoryMenu::EnableUpdate()
 		}
 	}
 
-	//•\¦.
+	//Bãƒœã‚¿ãƒ³ã‚‚ã—ãã¯â„ªkeyãŒæŠ¼ã•ã‚ŒãŸã‚‰ã€‚
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B) || KeyBoardInput->isPush(DIK_K))
+	{
+		//æ­´å²æ›¸ã‹ã‚‰ãƒªã‚¹ãƒˆã‚’å–å¾—ã€‚
+		vector<HistoryPage*> pagelist = _HistoryBook->GetPageList();
+		//å–å¾—ã—ãŸãƒªã‚¹ãƒˆã‚µã‚¤ã‚ºãŒ0ä»¥ä¸Šãªã‚‰å‰Šé™¤å‡¦ç†ã‚’è¡Œã†ã€‚
+		if (pagelist.size() > 0)
+		{
+			HistoryPage* page = *pagelist.begin();
+			page->ChangeState(HistoryPage::StateCodeE::PutOut);
+			//INSTANCE(HistoryManager)->PutOutPage(page);
+			//_HistoryBook->PutOutPage(page);
+		}
+	}
+
+	//è¡¨ç¤º.
 	_LocationNameRender->SetActive(true);
 
-	//êŠ–¼•`‰æ.
+	//å ´æ‰€åæç”».
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
 
 	for (int i = 0; i < _Chip2DList.size(); i++)
