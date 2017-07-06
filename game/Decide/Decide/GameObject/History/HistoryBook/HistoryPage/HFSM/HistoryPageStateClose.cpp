@@ -4,11 +4,19 @@
 #include"stdafx.h"
 #include"HistoryPageStateClose.h"
 
+#include"..\HistoryPage.h"
+
 /**
 * ó‘Ô‚ÉØ‚è‘Ö‚¦‚½‚Æ‚«ŒÄ‚Î‚ê‚é.
 */
 void HistoryPageStateClose::Entry()
 {
+	_BefAngle = _HistoryPage->GetAngle();
+
+	_MoveSpeed = 1.0f;
+	_Angle = 0.0f;
+
+	_LerpRate = 0.0f;
 }
 
 /**
@@ -16,6 +24,12 @@ void HistoryPageStateClose::Entry()
 */
 void HistoryPageStateClose::Update()
 {
+	_LerpRate += _MoveSpeed * Time::DeltaTime();
+	_LerpRate = min(1.0f, _LerpRate);
+
+	float angle = _LerpRate * _Angle + (1.0f - _LerpRate) * _BefAngle;
+
+	_HistoryPage->Rotation(angle);
 }
 
 /**

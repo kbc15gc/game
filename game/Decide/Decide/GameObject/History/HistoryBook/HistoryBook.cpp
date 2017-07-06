@@ -135,6 +135,14 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 		{
 			_IsOpenOrClose = false;
 			ChangeState(StateCodeE::Close);
+
+			for (auto it : _HistoryPageList)
+			{
+				if (it != nullptr)
+				{
+					it->ChangeState(HistoryPage::StateCodeE::Close);
+				}
+			}
 		}
 	}
 }

@@ -44,4 +44,15 @@ public:
 
 private:
 
+	/** 回転前の角度. */
+	float _BefAngle = 0.0f;
+	/** 目的の角度. */
+	float _Angle = 90.0f;
+
+	/** 移動速度. */
+	float _MoveSpeed = 1.0f;
+
+	/** 補間レート. */
+	float _LerpRate = 0;
+
 };
