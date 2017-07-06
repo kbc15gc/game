@@ -3,6 +3,8 @@
 */
 #pragma once
 
+class HistoryPage;
+
 /**
 * 歴史チップID.
 */
@@ -74,20 +76,16 @@ public:
 		}
 	}
 
-	bool SetChip(ChipID chipID, int slot)
+	void SetChip(HistoryPage* page, int slot)
 	{
-		if (_ChipSlot[slot] == ChipID::None)
-		{
-			_ChipSlot[slot] = chipID;
-		}
-		else
-		{
-			//後ろにずらす.
-			//明らかにバグ.
-			_ChipSlot[slot + 1] = _ChipSlot[slot];
-			_ChipSlot[slot] = chipID;
-		}
-		return 0;
+		_Page.insert(_Page.begin(), page);
+	}
+
+	void PutOutPage(HistoryPage* page)
+	{
+
+		auto itr = find(_Page.begin(), _Page.end(), page);
+		_Page.erase(itr);
 	}
 
 public:
@@ -97,6 +95,8 @@ public:
 	/** 登録されている歴史チップIDリスト. */
 	ChipID _ChipSlot[(int)ChipID::ChipNum];
 
+	//ページの配列。
+	list<HistoryPage*> _Page;
 };
 
 namespace

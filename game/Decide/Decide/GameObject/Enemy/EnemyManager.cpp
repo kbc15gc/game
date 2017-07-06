@@ -21,7 +21,7 @@ EnemyManager::~EnemyManager() {
 }
 
 void EnemyManager::Start() {
-	//CreateEnemy();
+	CreateEnemy();
 }
 
 void EnemyManager::LoadEnemyOrigin() {

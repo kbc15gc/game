@@ -7,6 +7,12 @@
 class FreeCamera : public GameCamera
 {
 public:
+	//定点カメラ。
+	struct PointCamera
+	{
+		Vector3 pos;//位置。
+		Vector2 rot;//回転量。
+	};
 	//コンストラクタ。
 	FreeCamera(const char* name) :
 		GameCamera(name)
@@ -42,6 +48,9 @@ private:
 
 	//プレイヤーカメラの位置に戻す。
 	void Return();
+
+	//定点カメラの切り替え。
+	void ChangePointCamera();
 private:
 
 	float _R_STICK_Y = 0.0f;					//入力された右スティックの上下成分を保持。
@@ -52,6 +61,10 @@ private:
 	const float _DashSpeed = 70.0f;				//ダッシュ時のカメラのスピード。
 
 	const float _NormalSpeed = 10.0f;			//通常時のカメラのスピード。
+
+	std::vector<PointCamera> _PointCameraInfo;	//定点カメラの位置と回転量。
+
+	int _InfoIndex = 0;							//_PointCameraInfoに使う添え字。
 };
 
 #endif // _DEBUG

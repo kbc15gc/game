@@ -157,12 +157,27 @@ public:
 	/**
 	* チップを追加.
 	*/
-	void PutInChip(ChipID chipID)
+	HistoryPage* PutInChip(ChipID chipID, LocationCodeE code)
 	{
 		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",1);
 		page->SetHistoryBook(this);
-		page->Start(chipID);
+		page->Start(chipID, code);
 		_HistoryPageList.push_back(page);
+		return page;
+	}
+
+	/**
+	*差し込まれたページのリストを取得。
+	*/
+	vector<HistoryPage*>& GetPageList()
+	{
+		return _HistoryPageList;
+	}
+
+	void PutOutPage(HistoryPage* page)
+	{
+		auto itr = find(_HistoryPageList.begin(), _HistoryPageList.end(), page);
+		_HistoryPageList.erase(itr);
 	}
 
 private:

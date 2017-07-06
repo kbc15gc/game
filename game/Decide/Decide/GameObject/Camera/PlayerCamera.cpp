@@ -26,13 +26,13 @@ PlayerCamera::~PlayerCamera()
 
 void PlayerCamera::Awake()
 {
+	GameCamera::Awake();
+
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 	INSTANCE(GameObjectManager)->mainCamera = _Camera;
-	
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
 	//カメラのコリジョンの半径設定
 	_Radius = 0.5f;
@@ -45,8 +45,6 @@ void PlayerCamera::Awake()
 
 void PlayerCamera::Start()
 {
-	//プレイヤーを検索
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を入れる

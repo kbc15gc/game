@@ -12,7 +12,6 @@
 #include "HFSM\EnemyDeathState.h"
 #include "AttackCollision.h"
 
-
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
 }

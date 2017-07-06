@@ -81,6 +81,9 @@ public:
 		_HistoryMenu->AddChip(chipID);
 	}
 
+	//歴史書から指定されたページを削除
+	void PutOutPage(HistoryPage* page);
+
 private:
 	
 	/**
