@@ -77,5 +77,6 @@ private:
 	int _NowSelectChip = 0;
 	/** 現在選択しているスロット. */
 	int _NowSlot = 0;
-
+	//現在見ているページ。
+	int _NowLookPage = 0;
 };

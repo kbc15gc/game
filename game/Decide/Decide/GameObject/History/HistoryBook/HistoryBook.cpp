@@ -34,7 +34,7 @@ void HistoryBook::Awake()
 	//ƒvƒŒƒCƒ„[‚ðŒŸõ
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
-	_HistoryPageList.resize((int)ChipID::ChipNum);
+	//_HistoryPageList.resize((int)ChipID::ChipNum);
 
 }
 

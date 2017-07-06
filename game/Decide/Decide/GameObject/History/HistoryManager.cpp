@@ -64,9 +64,10 @@ void HistoryManager::CreateObject()
 */
 bool HistoryManager::SetHistoryChip(LocationCodeE location, UINT slot, ChipID chip)
 {
+	HistoryPage* page = _HistoryBook->PutInChip(chip, location);
 	//‚Ð‚Æ‚Ü‚¸“ü‚ê‚é‚¾‚¯‚Åã‘‚³‚ê‚Ä‚µ‚Ü‚¤.
-	_LocationHistoryList[(int)location]->SetChip(chip, slot);
-	_HistoryBook->PutInChip(chip);
+	_LocationHistoryList[(int)location]->SetChip(page, slot);
+	
 
 	//•ÏX‚µ‚½‚Ì‚Å—ðŽj‚ð‰ü•Ï‚³‚¹‚é.
 	_ChangeLocation(location);
@@ -279,4 +280,9 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 	}
 
 	colls.clear();
+}
+
+void HistoryManager::PutOutPage(HistoryPage* page)
+{
+	_LocationHistoryList[(int)page->GetNowLocation()]->PutOutPage(page);
 }

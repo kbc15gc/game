@@ -43,7 +43,7 @@ void HistoryPage::Awake()
 /**
 * ‰Šú‰».
 */
-void HistoryPage::Start(ChipID chipID)
+void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 {
 	SkinModel* model = _HistoryBook->GetComponent<SkinModel>();
 	LPD3DXFRAME frame = model->GetFrameRoot();
@@ -58,6 +58,7 @@ void HistoryPage::Start(ChipID chipID)
 
 	_Material->SetTexture(Material::TextureHandleE::DiffuseMap, texture->pTexture);
 
+	_NowLocatuion = code;
 }
 
 /**

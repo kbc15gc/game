@@ -54,7 +54,7 @@ public:
 	/**
 	* 初期化.
 	*/
-	void Start(ChipID chipID);
+	void Start(ChipID chipID, LocationCodeE code);
 
 	/**
 	* 更新.
@@ -98,6 +98,12 @@ public:
 	*/
 	void ChangeState(StateCodeE state);
 
+	//今どの場所にいるかを返す。
+	LocationCodeE GetNowLocation()
+	{
+		return _NowLocatuion;
+	}
+
 private:
 
 	/**
@@ -127,4 +133,7 @@ private:
 
 	/** マテリアル. */
 	Material* _Material = nullptr;
+
+	//今自分がどの場所にいるのか。
+	LocationCodeE _NowLocatuion;
 };
