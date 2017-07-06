@@ -118,8 +118,9 @@ void HistoryMenu::EnableUpdate()
 		if (pagelist.size() > 0)
 		{
 			HistoryPage* page = *pagelist.begin();
-			INSTANCE(HistoryManager)->PutOutPage(page);
-			_HistoryBook->PutOutPage(page);
+			page->ChangeState(HistoryPage::StateCodeE::PutOut);
+			//INSTANCE(HistoryManager)->PutOutPage(page);
+			//_HistoryBook->PutOutPage(page);
 		}
 	}
 
