@@ -30,6 +30,10 @@ void HistoryPageStatePutOut::Update()
 	float angle = _LerpRate *  _Angle + (1.0f - _LerpRate) *_BefAngle;
 
 	_HistoryPage->Rotation(angle);
+	if (_LerpRate >= 0.9f)
+	{
+		_HistoryPage->ChangeState(HistoryPage::StateCodeE::TakeOff);
+	}
 }
 
 /**

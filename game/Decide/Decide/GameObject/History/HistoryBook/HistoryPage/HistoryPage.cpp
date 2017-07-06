@@ -10,6 +10,7 @@
 #include"HFSM\HistoryPageStatePutOut.h"
 #include"HFSM\HistoryPageStateTurn.h"
 #include"HFSM\HistoryPageStateClose.h"
+#include"HFSM\HistoryPageStateTakeOff.h"
 
 /**
 * コンストラクタ後の初期化.
@@ -107,8 +108,11 @@ void HistoryPage::InitState()
 	_StateList.push_back(unique_ptr<HistoryPageStatePutOut>(new HistoryPageStatePutOut(this)));
 	//捲る状態.
 	_StateList.push_back(unique_ptr<HistoryPageStateTurn>(new HistoryPageStateTurn(this)));
+	//本を切り離す状態.
+	_StateList.push_back(unique_ptr<HistoryPageStateTakeOff>(new HistoryPageStateTakeOff(this)));
 	//閉じる状態.
 	_StateList.push_back(unique_ptr<HistoryPageStateClose>(new HistoryPageStateClose(this)));
+	
 
 	//初期値は挟む.
 	ChangeState(StateCodeE::PutIn);
