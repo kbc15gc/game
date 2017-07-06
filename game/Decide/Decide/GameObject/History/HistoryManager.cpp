@@ -239,6 +239,12 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					Rinfo.rotation = q;
 					coll->SetKinematick(true);
 					coll->Create(Rinfo,false);
+					//カメラと当たらないコリジョンかどうか？
+					if((bool)info->hitcamera)
+					{
+						//コリジョンの属性に「カメラと当たらない」を追加する
+						//未実装。
+					}
 				}else
 				{
 					break;
