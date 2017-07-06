@@ -20,6 +20,7 @@ class HistoryPage : public GameObject
 {
 public:
 
+	/** ó‘ÔƒR[ƒh. */
 	enum class StateCodeE
 	{
 		Invalid = -1,	//!< –³Œø.
@@ -27,6 +28,7 @@ public:
 		PutOut,			//!< ”²‚­.
 		Turn,			//!< Œ‚é.
 		Close,			//!< •Â‚¶‚é.
+		StateNum,		//!< ó‘Ô”.
 	};
 
 public:
