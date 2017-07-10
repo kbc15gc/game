@@ -12,12 +12,23 @@ void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix
 {
 	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
 
+	D3DXMATRIX matrix = pFrame->TransformationMatrix;
+
+	//回転行列が存在していたら回転.
+	if (pFrame->RotationMatrix != nullptr)
+	{
+		D3DXMatrixMultiply(&matrix, &pFrame->TransformationMatrix, pFrame->RotationMatrix);
+	}
+
 	if (pParentMatrix != NULL)
+	{
 		//ワールド変換行列を作成
-		D3DXMatrixMultiply(&pFrame->CombinedTransformationMatrix, &pFrame->TransformationMatrix, pParentMatrix);
+		D3DXMatrixMultiply(&pFrame->CombinedTransformationMatrix, &matrix, pParentMatrix);
+	}
 	else
-		//そのまま
-		pFrame->CombinedTransformationMatrix = pFrame->TransformationMatrix;
+	{	//そのまま
+		pFrame->CombinedTransformationMatrix = matrix;
+	}
 
 	//兄弟更新
 	if (pFrame->pFrameSibling != NULL)

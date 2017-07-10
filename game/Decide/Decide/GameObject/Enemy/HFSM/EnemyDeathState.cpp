@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EnemyDeathState.h"
 #include "../EnemyCharacter.h"
+#include "GameObject\History\Chip.h"
 
 EnemyDeathState::EnemyDeathState(EnemyCharacter* Object):EnemyState(Object) {
 
@@ -14,10 +15,12 @@ void EnemyDeathState::_EntrySubClass() {
 	_isEndAnim = false;
 	_timeCounter = 0.0f;
 	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Death,0.5f);
+
+	Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
+	chip->SetDropChipID(ChipID(1), _EnemyObject->transform->GetPosition());
 }
 
 void EnemyDeathState::_Start() {
-
 }
 
 void EnemyDeathState::_UpdateSubClass() {

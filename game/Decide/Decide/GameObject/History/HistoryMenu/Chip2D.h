@@ -50,6 +50,12 @@ public:
 	* サイズを設定.
 	*/
 	void SetSize(SizeCodeE size);
+
+	ChipID GetChipID()
+	{
+		return _ChipID;
+	}
+
 private:
 
 	/** チップ表示クラス. */

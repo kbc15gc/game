@@ -31,6 +31,7 @@ HistoryManager::HistoryManager()
 void HistoryManager::Start()
 {
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
+	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 }
 
 /**
@@ -61,10 +62,11 @@ void HistoryManager::CreateObject()
 * @param slot		スロット番号.
 * @param chip		チップID.
 */
-bool HistoryManager::SetHistoryChip(LocationCodeE location, UINT slot, ChipID chip)
+bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip)
 {
+	_HistoryBook->PutInChip(chip, location);
 	//ひとまず入れるだけで上書されてしまう.
-	_LocationHistoryList[(int)location]->_ChipSlot[slot] = chip;
+	_LocationHistoryList[(int)location]->SetData(_HistoryBook->GetLocationList(location));
 
 	//変更したので歴史を改変させる.
 	_ChangeLocation(location);
@@ -277,4 +279,16 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 	}
 
 	colls.clear();
+}
+
+void HistoryManager::PutOutPage(LocationCodeE location,vector<HistoryPage*>& list)
+{
+	_LocationHistoryList[(int)location]->SetData(list);
+
+	//変更したので歴史を改変させる.
+	_ChangeLocation(location);
+
+	//データを保存.
+	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+
 }

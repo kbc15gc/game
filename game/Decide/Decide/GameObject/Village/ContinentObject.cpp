@@ -29,6 +29,7 @@ void ContinentObject::LoadModel(const char * filename)
 	SkinModelData* data= new SkinModelData();
 	data->CloneModelData(SkinModelManager::LoadModel(filename), _Anim);
 	_Model->SetModelData(data);
+	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
 
 	//“–‚½‚è”»’è’Ç‰ÁB
 	//RigidBody* rigid = AddComponent<RigidBody>();

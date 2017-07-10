@@ -5,6 +5,13 @@
 #include <string>
 #include <sstream>
 #include "GameObject\SplitSpace.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
+
+namespace
+{
+	float NormalAnimationSpeed = 1.0f;
+	float AttackAnimationSpeed = 1.3f;
+}
 
 Player::Player(const char * name) :
 	GameObject(name),
@@ -66,7 +73,7 @@ void Player::Awake()
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	_Model->SetAllBlend(Color::white * 13);
-
+	
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(this, transform, Vector3(0.0f, _Height * 0.5f, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
 	// 以下衝突を取りたい属性(横方向)を指定。
@@ -118,6 +125,8 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//攻撃1
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0f;		//攻撃2
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0f;		//攻撃3
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack04] = -1.0f;		//攻撃3
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack05] = -1.0f;		//攻撃3
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0f;		//死亡
 	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -129,7 +138,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(378, 69, -1286);
+	_StartPos = Vector3(344, 69, -1255);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -138,14 +147,26 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 	//レベル初期化
 	_Level = 1;
+
+	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 }
 
 void Player::Update()
 {
-	if (_CurrentState != nullptr)
+	//本が開いていないときは動ける。
+	if (_CurrentState != nullptr 
+		&& _HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
+	}
+	//本が開いているときにアイドルステートじゃない場合はアイドルステートに変更。
+	else if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Open)
+	{
+		if (_State != State::Idol)
+		{
+			ChangeState(State::Idol);
+		}
 	}
 	if (_HPBar != nullptr)
 	{
@@ -212,6 +233,8 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	//アニメーションスピードは基本１
+	_Anim->SetAnimeSpeed(NormalAnimationSpeed);
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
@@ -231,13 +254,15 @@ void Player::AnimationControl()
 			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
 		//アイドルアニメーション
-		else if(_State == State::Idol)
+		else if (_State == State::Idol)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
+			//攻撃の時はスピードを変更。
+			_Anim->SetAnimeSpeed(AttackAnimationSpeed);
 			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
 			{
 				//攻撃開始
@@ -257,6 +282,7 @@ void Player::AnimationControl()
 			}
 		}
 	}
+
 }
 
 //攻撃を受けたとき。
@@ -269,6 +295,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	}
 }
 
+//解放。
 void Player::Releace()
 {
 	_CharacterController = nullptr;
@@ -280,6 +307,7 @@ void Player::Releace()
 	_MPBar = nullptr;
 }
 
+//攻撃を受けたとき
 void Player::_Damage()
 {
 	//死亡ステート以外の時。

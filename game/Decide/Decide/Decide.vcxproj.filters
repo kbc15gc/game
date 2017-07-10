@@ -115,9 +115,6 @@
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.cpp">
       <Filter>GameObject\History\HistoryBook\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage.cpp">
-      <Filter>GameObject\History\HistoryBook</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClCompile>
@@ -151,11 +148,23 @@
     <ClCompile Include="GameObject\Component\OutputData.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossDrarian.cpp">
-      <Filter>GameObject\Enemy</Filter>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.cpp">
+      <Filter>GameObject\History\HistoryBook\Page</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Component\AnimationEvent.cpp">
-      <Filter>GameObject\Component</Filter>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.cpp">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.cpp">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.cpp">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.cpp">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -284,9 +293,6 @@
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateUnused.h">
       <Filter>GameObject\History\HistoryBook\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage.h">
-      <Filter>GameObject\History\HistoryBook</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\History\HistoryMenu\HistoryMenu.h">
       <Filter>GameObject\History\HistoryMenu</Filter>
     </ClInclude>
@@ -320,11 +326,26 @@
     <ClInclude Include="GameObject\Component\OutputData.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossDrarian.h">
-      <Filter>GameObject\Enemy</Filter>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.h">
+      <Filter>GameObject\History\HistoryBook\Page</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Component\AnimationEvent.h">
-      <Filter>GameObject\Component</Filter>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageState.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +400,12 @@
     </Filter>
     <Filter Include="GameObject\Ground">
       <UniqueIdentifier>{a2d108a1-7e0b-4c6e-a0fe-95d58856e151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryBook\Page">
+      <UniqueIdentifier>{ccc7fafc-dfd7-4075-9f6e-a8dcfef2dd1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\HistoryBook\Page\State">
+      <UniqueIdentifier>{ef2cac17-12ce-4df5-96f6-6e032d477818}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

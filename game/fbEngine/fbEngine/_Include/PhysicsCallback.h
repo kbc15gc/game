@@ -4,107 +4,107 @@
 namespace fbPhysicsCallback
 {
 	//ゴーストと重なっているペアを探すコールバック
-	struct MyGhostPairCallback : public btGhostPairCallback
-	{
-	public:
+struct MyGhostPairCallback : public btGhostPairCallback
+{
+public:
 		//重なったときに呼ばれる関数
-		btBroadphasePair*	addOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1)
-		{
-			btCollisionObject* colObj0 = (btCollisionObject*)proxy0->m_clientObject;
-			btCollisionObject* colObj1 = (btCollisionObject*)proxy1->m_clientObject;
-			//ゴーストオブジェクトにアップキャスト
-			//(元がゴーストオブジェクト以外ならnullになる)
-			btGhostObject* ghost0 = btGhostObject::upcast(colObj0);
-			btGhostObject* ghost1 = btGhostObject::upcast(colObj1);
-			Collision* coll0 = (Collision*)colObj0->getUserPointer();
-			Collision* coll1 = (Collision*)colObj1->getUserPointer();
-
-			if (ghost0)
-			{
-				//ペア追加
-				ghost0->addOverlappingObjectInternal(proxy1, proxy0);
-			}
-			if (ghost1)
-			{
-				//ペア追加
-				ghost1->addOverlappingObjectInternal(proxy0, proxy1);				
-			}
-			return 0;
-		}
-		//重なりから抜けた時に呼ばれる関数
-		void*	removeOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1, btDispatcher* dispatcher)
-		{
-			btCollisionObject* colObj0 = (btCollisionObject*)proxy0->m_clientObject;
-			btCollisionObject* colObj1 = (btCollisionObject*)proxy1->m_clientObject;
-			//ゴーストオブジェクトにアップキャスト
-			//(元がゴーストオブジェクト以外ならnullになる)
-			btGhostObject* ghost0 = btGhostObject::upcast(colObj0);
-			btGhostObject* ghost1 = btGhostObject::upcast(colObj1);
-			if (ghost0)
-			{
-				ghost0->removeOverlappingObjectInternal(proxy1, dispatcher, proxy0);
-			}
-			if (ghost1)
-			{
-				ghost1->removeOverlappingObjectInternal(proxy0, dispatcher, proxy1);
-			}
-			return 0;
-		}
-	};
-
-	//ヒットした中で最も近いものを返すコールバック
-	struct ClosestContactResultCallback : public btCollisionWorld::ContactResultCallback
+	btBroadphasePair*	addOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1)
 	{
-	public:
-		ClosestContactResultCallback()
-		{
+		btCollisionObject* colObj0 = (btCollisionObject*)proxy0->m_clientObject;
+		btCollisionObject* colObj1 = (btCollisionObject*)proxy1->m_clientObject;
+		//ゴーストオブジェクトにアップキャスト
+		//(元がゴーストオブジェクト以外ならnullになる)
+		btGhostObject* ghost0 = btGhostObject::upcast(colObj0);
+		btGhostObject* ghost1 = btGhostObject::upcast(colObj1);
+		Collision* coll0 = (Collision*)colObj0->getUserPointer();
+		Collision* coll1 = (Collision*)colObj1->getUserPointer();
 
+		if (ghost0)
+		{
+			//ペア追加
+			ghost0->addOverlappingObjectInternal(proxy1, proxy0);
 		}
-		//衝突された時の関数
-		virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1) override
+		if (ghost1)
 		{
+			//ペア追加
+			ghost1->addOverlappingObjectInternal(proxy0, proxy1);
+		}
+		return 0;
+	}
+		//重なりから抜けた時に呼ばれる関数
+	void*	removeOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1, btDispatcher* dispatcher)
+	{
+		btCollisionObject* colObj0 = (btCollisionObject*)proxy0->m_clientObject;
+		btCollisionObject* colObj1 = (btCollisionObject*)proxy1->m_clientObject;
+		//ゴーストオブジェクトにアップキャスト
+		//(元がゴーストオブジェクト以外ならnullになる)
+		btGhostObject* ghost0 = btGhostObject::upcast(colObj0);
+		btGhostObject* ghost1 = btGhostObject::upcast(colObj1);
+		if (ghost0)
+		{
+			ghost0->removeOverlappingObjectInternal(proxy1, dispatcher, proxy0);
+		}
+		if (ghost1)
+		{
+			ghost1->removeOverlappingObjectInternal(proxy0, dispatcher, proxy1);
+		}
+		return 0;
+	}
+};
 
-			//ポジション取得
-			const Vector3* vColl0Pos = (Vector3*)(&colObj0Wrap->getWorldTransform().getOrigin());
-			const Vector3* vColl1Pos = (Vector3*)(&colObj1Wrap->getWorldTransform().getOrigin());
-			Vector3 vDist;
-			//自身と当たったオブジェクトとの距離を計算
-			vDist.Subtract(*vColl0Pos, *vColl1Pos);
-			//距離(2乗のままなのは計算を省くため)
-			float distTmpSq = vDist.LengthSq();
-			//一時的(temporary)にコリジョンを格納する
-			Collision* hitObjectTmp;
-			//近いなら
-			if (distTmpSq < distSq) {
-				// col0 と col1 のどちらかは自分なのでアドレスを比較して確かめる
-				if (me->GetCollisionObj() == colObj0Wrap->getCollisionObject()) {
-					hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
-				}
-				else {
-					hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
-				}
-				//hitオブジェクトがある
-				if (hitObjectTmp)
+//ヒットした中で最も近いものを返すコールバック
+struct ClosestContactResultCallback : public btCollisionWorld::ContactResultCallback
+{
+public:
+	ClosestContactResultCallback()
+	{
+
+	}
+	//衝突された時の関数
+	virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1) override
+	{
+
+		//ポジション取得
+		const Vector3* vColl0Pos = (Vector3*)(&colObj0Wrap->getWorldTransform().getOrigin());
+		const Vector3* vColl1Pos = (Vector3*)(&colObj1Wrap->getWorldTransform().getOrigin());
+		Vector3 vDist;
+		//自身と当たったオブジェクトとの距離を計算
+		vDist.Subtract(*vColl0Pos, *vColl1Pos);
+		//距離(2乗のままなのは計算を省くため)
+		float distTmpSq = vDist.LengthSq();
+		//一時的(temporary)にコリジョンを格納する
+		Collision* hitObjectTmp;
+		//近いなら
+		if (distTmpSq < distSq) {
+			// col0 と col1 のどちらかは自分なのでアドレスを比較して確かめる
+			if (me->GetCollisionObj() == colObj0Wrap->getCollisionObject()) {
+				hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
+			}
+			else {
+				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
+			}
+			//hitオブジェクトがある
+			if (hitObjectTmp)
+			{
+				//属性が一致するか？マスクをとる
+				if ((attribute & hitObjectTmp->GetCollisionObj()->getUserIndex()) != 0)
 				{
-					//属性が一致するか？マスクをとる
-					if ((attribute & hitObjectTmp->GetCollisionObj()->getUserIndex()) != 0)
-					{
-						//距離を更新
-						distSq = distTmpSq;
-						//コリジョンを更新
-						hitObject = hitObjectTmp;
-					}
+					//距離を更新
+					distSq = distTmpSq;
+					//コリジョンを更新
+					hitObject = hitObjectTmp;
 				}
 			}
-
-			return 0.0f;
 		}
-	public:
-		int attribute;					//指定したコリジョン属性とのみ当たり判定をとる
-		float distSq = FLT_MAX;			//距離を保持
-		Collision* me = nullptr;		//自身のアドレス
-		Collision* hitObject = nullptr;	//ヒットしたオブジェクト
-	};
+
+		return 0.0f;
+	}
+public:
+	int attribute;					//指定したコリジョン属性とのみ当たり判定をとる
+	float distSq = FLT_MAX;			//距離を保持
+	Collision* me = nullptr;		//自身のアドレス
+	Collision* hitObject = nullptr;	//ヒットしたオブジェクト
+};
 
 	//ヒットしたもの全てを返すコールバック
 	struct AllHitsContactResultCallback : public btCollisionWorld::ContactResultCallback

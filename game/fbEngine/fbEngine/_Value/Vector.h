@@ -579,7 +579,7 @@ public:
 		(*this) = q;
 	}
 	//‰ñ“]s—ñæ“¾
-	D3DXMATRIX GetRotationMatrix()
+	const D3DXMATRIX& GetRotationMatrix()
 	{
 		D3DXMATRIX rot;
 		D3DXMatrixIdentity(&rot);

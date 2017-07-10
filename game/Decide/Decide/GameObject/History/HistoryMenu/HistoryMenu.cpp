@@ -1,5 +1,5 @@
-/**
-* óéjïœçXÉÅÉjÉÖÅ[âÊñ ÉNÉâÉXÇÃé¿ëï.
+Ôªø/**
+* Ê≠¥Âè≤Â§âÊõ¥„É°„Éã„É•„ÉºÁîªÈù¢„ÇØ„É©„Çπ„ÅÆÂÆüË£Ö.
 */
 #include"stdafx.h"
 #include "HistoryMenu.h"
@@ -8,41 +8,44 @@
 
 #include"..\HistoryBook\HistoryBook.h"
 
+#include "GameObject\History\HistoryManager.h"
+
+
 /**
-* èâä˙âª.
+* ÂàùÊúüÂåñ.
 */
 void HistoryMenu::Start()
 {
 
 	_LocationNameRender = INSTANCE(GameObjectManager)->AddNew<TextObject>("LocationNameRender", _Priority);
 
-	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::ÇlÇr_ñæí©));
+	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::Ôº≠Ôº≥_ÊòéÊúù));
 	
 
-	//ç¿ïWÇê›íË.
+	//Â∫ßÊ®ô„ÇíË®≠ÂÆö.
 	_LocationNameRender->transform->SetLocalPosition(Vector3(g_WindowSize.x / 2.0f, 50.0f, 0));
-	//ï\é¶ñºÇê›íË.
+	//Ë°®Á§∫Âêç„ÇíË®≠ÂÆö.
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
 
-	//óéjèëÇÃÉ|ÉCÉìÉ^ÇéÊìæ.
+	//Ê≠¥Âè≤Êõ∏„ÅÆ„Éù„Ç§„É≥„Çø„ÇíÂèñÂæó.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 }
 
 /**
-* çXêV.
+* Êõ¥Êñ∞.
 */
 void HistoryMenu::Update()
 {
 	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Idol)
 	{
-		//ï\é¶.
+		//Ë°®Á§∫.
 		EnableUpdate();
 	}
 	else
 	{
-		//îÒï\é¶.
+		//ÈùûË°®Á§∫.
 		_LocationNameRender->SetActive(false);
 
 		for (auto& it : _Chip2DList)
@@ -53,7 +56,7 @@ void HistoryMenu::Update()
 }
 
 /**
-* É`ÉbÉvÇí«â¡.
+* „ÉÅ„ÉÉ„Éó„ÇíËøΩÂä†.
 */
 void HistoryMenu::AddChip(ChipID chipID)
 {
@@ -63,24 +66,110 @@ void HistoryMenu::AddChip(ChipID chipID)
 }
 
 /**
-* ï\é¶íÜÇÃçXêV.
+* Ë°®Á§∫‰∏≠„ÅÆÊõ¥Êñ∞.
 */
 void HistoryMenu::EnableUpdate()
 {
-	//ï\é¶.
-	_LocationNameRender->SetActive(true);
-
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
-		//ç∂ÉgÉäÉKÅ[.
-		_NowSelectLocation = max(0, _NowSelectLocation - 1);
+		//Â∑¶„Éà„É™„Ç¨„Éº.
+		//_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
 	}
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 	{
-		//âEÉgÉäÉKÅ[.
-		_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+		//Âè≥„Éà„É™„Ç¨„Éº.
+		//_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
 
+	if (XboxInput(0)->IsPushAnalog(AnalogE::R_STICKL))
+	{
+		_NowSelectChip = min(max(0,_Chip2DList.size() - 1), _NowSelectChip + 1);
+	}
+	if (XboxInput(0)->IsPushAnalog(AnalogE::R_STICKR))
+	{
+		_NowSelectChip = max(0, _NowSelectChip - 1);
+	}
+
+	int BEFORE = _NowLookPage;
+
+	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+	{
+		_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+	}
+	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+	{
+		_NowLookPage = max(0, _NowLookPage - 1);
+	}
+
+	if (BEFORE < _NowLookPage)
+	{
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
+	}
+	else if(BEFORE > _NowLookPage)
+	{
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+	}
+
+	//A„Éú„Çø„É≥Êäº.
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A) || KeyBoardInput->isPush(DIK_J))
+	{
+		//Â≠òÂú®„Åó„Å¶„ÅÑ„Çå„Å∞.
+		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
+		{
+			//ÁèæÂú®ÊåáÂÆö„Åó„Å¶„ÅÑ„ÇãÂ†¥ÊâÄ„Å´„ÉÅ„ÉÉ„Éó„ÇíË®≠ÂÆö.
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID());
+			//Êê¨ÂÖ•„Åó„Åü„ÉÅ„ÉÉ„Éó„ÇíÊâÄÊåÅ„ÉÅ„ÉÉ„Éó„Åã„ÇâÂâäÈô§.
+			auto it = _Chip2DList.begin();
+			it += _NowSelectChip;
+			INSTANCE(GameObjectManager)->AddRemoveList(*it);
+			_Chip2DList.erase(it);
+
+			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
+			_NowSelectChip = max(0, _NowSelectChip);
+		}
+	}
+
+	//B„Éú„Çø„É≥„ÇÇ„Åó„Åè„ÅØ‚Ñ™key„ÅåÊäº„Åï„Çå„Åü„Çâ„ÄÇ
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B) || KeyBoardInput->isPush(DIK_K))
+	{
+		//Ê≠¥Âè≤Êõ∏„Åã„Çâ„É™„Çπ„Éà„ÇíÂèñÂæó„ÄÇ
+		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
+		//ÂèñÂæó„Åó„Åü„É™„Çπ„Éà„Çµ„Ç§„Ç∫„Åå0‰ª•‰∏ä„Å™„ÇâÂâäÈô§Âá¶ÁêÜ„ÇíË°å„ÅÜ„ÄÇ
+		if (pagelist.size() > 0)
+		{
+			HistoryPage* page = pagelist[_NowLookPage];
+
+			if (page != nullptr)
+			{
+				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
+
+				INSTANCE(GameObjectManager)->AddRemoveList(page);
+
+				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
+			
+				int BEFORE = _NowLookPage;
+				_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+				_NowLookPage = max(0, _NowLookPage - 1);
+				if (BEFORE < _NowLookPage)
+				{
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
+				}
+				else if (BEFORE > _NowLookPage)
+				{
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+				}
+
+			}
+		}
+	}
+	//Ë°®Á§∫.
+	_LocationNameRender->SetActive(true);
+
+	//Â†¥ÊâÄÂêçÊèèÁîª.
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
 
 	for (int i = 0; i < _Chip2DList.size(); i++)
@@ -96,7 +185,7 @@ void HistoryMenu::EnableUpdate()
 		}
 
 		int len = i - _NowSelectChip;
-		float offset = 150.0f;
+		float offset = -150.0f;
 		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
 		_Chip2DList[i]->transform->SetPosition(pos);
 	}

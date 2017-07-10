@@ -3,6 +3,8 @@
 */
 #pragma once
 
+class HistoryPage;
+
 /**
 * —ðŽjƒ`ƒbƒvID.
 */
@@ -73,6 +75,9 @@ public:
 			_ChipSlot[i] = ChipID::None;
 		}
 	}
+
+	void SetData(vector<HistoryPage*>& list);
+
 
 public:
 
