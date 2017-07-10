@@ -27,6 +27,7 @@ public:
 		PutIn,			//!< ‹²‚Þ.
 		PutOut,			//!< ”²‚­.
 		Turn,			//!< Œž‚é.
+		TakeOff,		//!< –{‚ðØ‚è—£‚·.
 		Close,			//!< •Â‚¶‚é.
 		StateNum,		//!< ó‘Ô”.
 	};

@@ -1,21 +1,16 @@
 /**
-* 歴史書のページの抜く状態クラスの定義.
+* 歴史書から抜いたページの状態クラスの定義.
 */
 #pragma once
-
 #include"HistoryPageState.h"
 
-/**
-* 歴史書のページの抜く状態クラス.
-*/
-class HistoryPageStatePutOut : public IHistoryPageState
+class HistoryPageStateTakeOff : public IHistoryPageState
 {
 public:
-
 	/**
 	* コンストラクタ.
 	*/
-	HistoryPageStatePutOut(HistoryPage* historyPage) :
+	HistoryPageStateTakeOff(HistoryPage* historyPage) :
 		IHistoryPageState(historyPage)
 	{
 	}
@@ -23,7 +18,7 @@ public:
 	/**
 	* デストラクタ.
 	*/
-	~HistoryPageStatePutOut()
+	~HistoryPageStateTakeOff()
 	{
 	}
 
@@ -43,10 +38,11 @@ public:
 	void Exit()override;
 
 private:
-	/** 回転前の角度. */
-	float _BefAngle = 0.0f;
-	/** 目的の角度. */
-	float _Angle = 90.0f;
+
+	/** 初期値. */
+	Vector3 _InitialPosition = Vector3(0.0f, 0.0f, 0.2f);
+	/** 移動先. */
+	Vector3 _MovePosition = Vector3(0.0f, 0.0f, 3.0f);
 
 	/** 移動速度. */
 	float _MoveSpeed = 1.0f;

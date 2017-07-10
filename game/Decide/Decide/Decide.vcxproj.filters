@@ -163,8 +163,8 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\History\HistoryInfo.cpp">
-      <Filter>GameObject\History</Filter>
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.cpp">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +342,9 @@
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h">
+      <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.h">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClInclude>
   </ItemGroup>
