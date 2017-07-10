@@ -23,6 +23,8 @@ public:
 			abort();
 		}
 		shape = new btCapsuleShape(radius, height);
+		btVector3 work = shape->getImplicitShapeDimensions();
+		_halfSize = Vector3(work.x(), work.y() + work.x(), work.z());
 	}
 
 private:

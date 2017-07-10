@@ -28,6 +28,11 @@ void EnemyDeathState::_UpdateSubClass() {
 
 	if (_isEndAnim) {
 		if (_timeCounter >= _waitTime) {
+			// ※死亡ステート終了後はステート切り替えが呼ばれない可能性があるため、Exit関数が呼ばれない可能性がある。
+			if (_EnemyObject) {
+				// 死亡ステートが終了したのでEnemyManagerの死亡処理を呼ぶ。
+				INSTANCE(EnemyManager)->DeathEnemy(_EnemyObject);
+			}
 			_EndState();
 			return;
 		}
@@ -36,10 +41,6 @@ void EnemyDeathState::_UpdateSubClass() {
 }
 
 void EnemyDeathState::Exit(EnemyCharacter::State next) {
-	if (_EnemyObject) {
-		// 死亡ステートが終了したのでEnemyManagerの死亡処理を呼ぶ。
-		INSTANCE(EnemyManager)->DeathEnemy(_EnemyObject);
-	}
 }
 
 void EnemyDeathState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

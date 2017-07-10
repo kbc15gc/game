@@ -224,6 +224,7 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					RigidBody* coll = obj->AddComponent<RigidBody>();
 					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
 					RigidBodyInfo Rinfo;
+					Rinfo.physicsType = Collision::PhysicsType::Static;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
 					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
@@ -235,7 +236,6 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					q.SetRotation(Vector3::up, PI);
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
-					coll->SetKinematick(true);
 					coll->Create(Rinfo,false);
 				}else
 				{

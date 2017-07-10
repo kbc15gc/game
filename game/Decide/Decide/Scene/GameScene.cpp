@@ -13,6 +13,7 @@
 
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
+#include "GameObject\Enemy\BossDrarian.h"
 
 #include "GameObject\History\HistoryManager.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
@@ -66,6 +67,9 @@ void GameScene::Start()
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
+
+	// ボス生成。
+	INSTANCE(GameObjectManager)->AddNew<BossDrarian>("Drarian", 1);
 	
 	FOR(i,ChipID::ChipNum)
 	{

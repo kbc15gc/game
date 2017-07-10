@@ -151,6 +151,12 @@
     <ClCompile Include="GameObject\Component\OutputData.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\BossDrarian.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Component\AnimationEvent.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -312,6 +318,12 @@
       <Filter>GameObject\Ground</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Component\OutputData.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BossDrarian.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\AnimationEvent.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>

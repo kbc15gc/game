@@ -127,19 +127,10 @@ namespace fbPhysicsCallback
 			else {
 				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
 			}
-
-			if (hitObjectTmp->GetCollisionObj()->getUserIndex() == BIT(3)) {
-				OutputDebugString("Enemyと衝突。");
-			}
 			
 			//hitオブジェクトがある
 			if (hitObjectTmp)
 			{
-				GameObject* enemy = INSTANCE(GameObjectManager)->FindObject("EnemyProt");
-
-				if (enemy == hitObjectTmp->gameObject) {
-					OutputDebugString("Enemyと衝突。");
-				}
 
 				//属性が一致するか？マスクをとる
 				if ((attribute & hitObjectTmp->GetCollisionObj()->getUserIndex()) != 0)
@@ -191,21 +182,21 @@ namespace fbPhysicsCallback
 			{
 				//始点から終点を0～1にした時のヒットした位置の割合。
 				_Fraction = m_closestHitFraction = fracTmp;
-//ヒットしたコリジョン
-m_collisionObject = rayResult.m_collisionObject;
-if (normalInWorldSpace)
-{
-	m_hitNormalWorld = rayResult.m_hitNormalLocal;
-}
-else
-{
-	///need to Transform normal into worldspace
-	m_hitNormalWorld = m_collisionObject->getWorldTransform().getBasis()*rayResult.m_hitNormalLocal;
-}
-//ヒットした位置を取得
-m_hitPointWorld.setInterpolate3(_fromPos, _toPos, rayResult.m_hitFraction);
-//ヒットしたコリジョン取得
-hitObject = (Collision*)m_collisionObject->getUserPointer();
+				//ヒットしたコリジョン
+				m_collisionObject = rayResult.m_collisionObject;
+				if (normalInWorldSpace)
+				{
+					m_hitNormalWorld = rayResult.m_hitNormalLocal;
+				}
+				else
+				{
+					///need to Transform normal into worldspace
+					m_hitNormalWorld = m_collisionObject->getWorldTransform().getBasis()*rayResult.m_hitNormalLocal;
+				}
+				//ヒットした位置を取得
+				m_hitPointWorld.setInterpolate3(_fromPos, _toPos, rayResult.m_hitFraction);
+				//ヒットしたコリジョン取得
+				hitObject = (Collision*)m_collisionObject->getUserPointer();
 			}
 			return rayResult.m_hitFraction;
 		}
@@ -280,16 +271,15 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		Vector3 hitNormal = Vector3::zero;				//衝突点の法線。
 		btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 		float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
+		Vector3 vDist = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
 		vector<unsigned int> Through_ID;		// 無視するコリジョン属性。
 		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
+		bool isSlip = false;	// 滑るか。
+		float SlipAngle = 90.0f;			// 上方向との角度がこの角度以上なら滑る(度)。
 
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)) {
-				OutputDebugString("あああ");
-			}
-
 			if (convexResult.m_hitCollisionObject == me) {
 				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 				return 0.0f;
@@ -301,29 +291,42 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 			}
 
 			//衝突点の法線を引っ張ってくる。
-			Vector3 hitNormalTmp = *(Vector3*)&convexResult.m_hitNormalLocal;
-			//上方向と法線のなす角度を求める。
-			float angle = hitNormalTmp.Dot(Vector3::up);
-			angle = fabsf(acosf(angle));
-			if (angle < D3DX_PI * 0.2f		//地面の傾斜が54度より小さいので地面とみなす。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND //もしくはコリジョン属性が地面と指定されている。
+			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
+			//// ワールド行列取得。
+			D3DXMATRIX worldMat;
+			worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
+			//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitNormalTmp), &hitNormalTmp, &worldMat);	// ワールド座標に変換。
+			//D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
+
+			//上方向と衝突点の法線のなす角度を求める。
+			float angle = fabsf(acosf(D3DXVec3Dot(&hitNormalTmp, &D3DXVECTOR3(0.0f, 1.0f, 0.0f))));
+
+			if (((angle < D3DXToRadian(54.0f))		//地面の傾斜が54度より小さいので地面とみなす。
+				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND) //もしくはコリジョン属性が地面と指定されている。
 				|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
 				) {
-
 
 				//衝突している。
 				isHit = true;
 
-				Vector3 hitPosTmp = *(Vector3*)&convexResult.m_hitPointLocal;
-				//衝突点の距離を求める。。
-				Vector3 vDist;
-				vDist.Subtract(hitPosTmp, startPos);
-				float distTmp = vDist.Length();
+				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
+				//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitPosTmp), &hitPosTmp, &worldMat);	// ワールド座標に変換。			
+
+				//交点との距離を調べる。
+				Vector3 vDistTmp;
+				vDistTmp.Subtract(Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z), startPos);
+				//vDistTmp.y = 0.0f;
+				float distTmp = vDistTmp.Length();
 				if (dist > distTmp) {
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
-					hitPos = hitPosTmp;
-					hitNormal = *(Vector3*)&convexResult.m_hitNormalLocal;
+					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
 					dist = distTmp;
+					vDist = vDistTmp;
+					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+					if (angle >= D3DXToRadian(SlipAngle)) {
+						// 指定角度以上なので滑らせる。
+						isSlip = true;
+					}
 				}
 			}
 
@@ -337,6 +340,7 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		Vector3 hitPos = Vector3::zero;		//衝突点。
 		Vector3 startPos = Vector3::zero;		//レイの始点。
 		float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
+		Vector3 vDist = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
 		Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
@@ -344,10 +348,7 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)) {
-				OutputDebugString("あああ");
-			}
-			if (convexResult.m_hitCollisionObject == me){
+			if (convexResult.m_hitCollisionObject == me) {
 				//自分に衝突した。
 				return 0.0f;
 			}
@@ -358,27 +359,34 @@ hitObject = (Collision*)m_collisionObject->getUserPointer();
 			}
 
 			//衝突点の法線を引っ張ってくる。
-			Vector3 hitNormalTmp;
-			hitNormalTmp.Set(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
+			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());		
+			//// ワールド行列取得。
+			D3DXMATRIX worldMat;
+			worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
+			//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitNormalTmp), &hitNormalTmp, &worldMat);	// ワールド座標に変換。
+			//D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
 			//上方向と衝突点の法線のなす角度を求める。
-			float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
-			if (angle >= 3.1415 * 0.3f		//地面の傾斜が54度以上なので壁とみなす。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER	//もしくはコリジョン属性がキャラクタなので壁とみなす。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
+			float angle = fabsf(acosf(D3DXVec3Dot(&hitNormalTmp,&D3DXVECTOR3(0.0f,1.0f,0.0f))));
+			if (((angle >= D3DXToRadian(54.0f))		//地面の傾斜が54度以上なので壁とみなす。
+				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND)
+					|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER
+					|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
 				) {
 				isHit = true;
-				Vector3 hitPosTmp;
-				hitPosTmp.Set(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
+
+				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
+				//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitPosTmp), &hitPosTmp, &worldMat);	// ワールド座標に変換。			
+
 				//交点との距離を調べる。
-				Vector3 vDist;
-				vDist.Subtract(hitPosTmp, startPos);
-				vDist.y = 0.0f;
-				float distTmp = vDist.Length();
+				Vector3 vDistTmp;
+				vDistTmp.Subtract(Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z), startPos);
+				float distTmp = Vector3(vDistTmp.x,0.0f, vDistTmp.z).Length();
 				if (distTmp < dist) {
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
-					hitPos = hitPosTmp;
+					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z) ;
 					dist = distTmp;
-					hitNormal = hitNormalTmp;
+					vDist = vDistTmp;
+					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
 				}
 			}
 
