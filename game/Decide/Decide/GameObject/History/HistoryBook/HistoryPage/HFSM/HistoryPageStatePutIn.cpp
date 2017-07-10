@@ -45,4 +45,5 @@ void HistoryPageStatePutIn::Update()
 */
 void HistoryPageStatePutIn::Exit()
 {
+	_HistoryPage->SetRotAngle(-90.0f);
 }

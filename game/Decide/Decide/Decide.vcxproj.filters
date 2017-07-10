@@ -163,6 +163,9 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryInfo.cpp">
+      <Filter>GameObject\History</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />

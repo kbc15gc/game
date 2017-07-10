@@ -95,6 +95,16 @@ public:
 		return _Angle;
 	}
 
+	void SetRotAngle(const float angle)
+	{
+		_RotAngle = angle;
+	}
+
+	float GetRotAngle() const
+	{
+		return _RotAngle;
+	}
+
 	/**
 	* 状態の変化. 
 	*/
@@ -104,6 +114,11 @@ public:
 	LocationCodeE GetNowLocation()
 	{
 		return _NowLocatuion;
+	}
+
+	ChipID GetChipID()
+	{
+		return _ChipID;
 	}
 
 private:
@@ -125,6 +140,8 @@ private:
 
 	/** 角度. */
 	float _Angle = 0.0f;
+	/** ここまで回転する角度. */
+	float _RotAngle = 0.0f;
 	/** 回転行列. */
 	D3DXMATRIX _RotationMatrix;
 
@@ -136,6 +153,8 @@ private:
 	/** マテリアル. */
 	Material* _Material = nullptr;
 
+	/** チップID. */
+	ChipID _ChipID;
 	//今自分がどの場所にいるのか。
 	LocationCodeE _NowLocatuion;
 };

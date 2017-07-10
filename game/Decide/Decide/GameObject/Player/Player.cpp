@@ -73,7 +73,7 @@ void Player::Awake()
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	_Model->SetAllBlend(Color::white * 13);
-
+	
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(this, transform, _Radius, _Height, Vector3(0.0f, _Height / 2, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
 	// 以下衝突を取りたい属性(横方向)を指定。
