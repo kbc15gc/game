@@ -172,7 +172,8 @@ void OutputData::OutputTextCollision() {
 		Collision* coll = gameObject->GetAttachCollision();
 		btTransform tr = coll->GetCollisionObj()->getWorldTransform();
 		btVector3 scale = coll->GetCollisionObj()->getCollisionShape()->getLocalScaling();
-	
+		Vector3 halfSize = coll->GetShape().GetHalfSize();
+
 		wchar_t out[FILENAME_MAX * 5];
 		wchar_t num[FILENAME_MAX];
 		wcscpy_s(out,wcslen(L"<Collision>\n") + 1 ,L"<Collision>\n");
@@ -195,10 +196,10 @@ void OutputData::OutputTextCollision() {
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
 		wcscat_s(out, wcslen(out) + wcslen(L"\nPhysics     : ") + 1, L"\nPhysics     : ");
-		if (coll->GetIsKinematick()) {
+		if (coll->GetPhysicsType() == Collision::PhysicsType::Kinematick) {
 			wcscpy_s(num, wcslen(L"kinematick") + 1,L"kinematick");
 		}
-		else if(coll->GetCollisionType() == Collision::CollisionObjectType::Rigid){
+		else if(coll->GetPhysicsType() == Collision::PhysicsType::Dynamic){
 			wcscpy_s(num, wcslen(L"Dynamic") + 1,L"Dynamic");
 		}
 		else {
@@ -216,7 +217,7 @@ void OutputData::OutputTextCollision() {
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
 
-		wcscat_s(out, wcslen(out) + wcslen(L"\nCollisionID : ") + 1, L"\nCollisionID : ");
+		wcscat_s(out, wcslen(out) + wcslen(L"\nCollisionID   : ") + 1, L"\nCollisionID   : ");
 		Support::ToString(coll->GetID(), num);
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
@@ -231,6 +232,9 @@ void OutputData::OutputTextCollision() {
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 		wcscat_s(out, wcslen(out) + wcslen(L"\nLocalScale   : ") + 1, L"\nLocalScale   : ");
 		Support::ToString(Vector4(scale.getX(), scale.getY(), scale.getZ(), 0.0f), num, 2);
+		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
+		wcscat_s(out, wcslen(out) + wcslen(L"\nHalfSize   : ") + 1, L"\nHalfSize   : ");
+		Support::ToString(Vector4(halfSize, 0.0f), num, 2);
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
 		_outputTexts[static_cast<int>(OutputInfo::Collision)]->SetString(out);

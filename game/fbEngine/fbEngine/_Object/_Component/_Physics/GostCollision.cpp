@@ -22,6 +22,7 @@ void GostCollision::Create(Collider * shape, int id, bool isAddWorld)
 	_GostObject->setCollisionFlags(flags | btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE);
 
 	_MyObjectType = CollisionObjectType::Ghost;
+	_physicsType = PhysicsType::Kinematick;	// ゴーストはとりあえずキネマティック剛体。
 }
 
 void GostCollision::Update()

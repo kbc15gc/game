@@ -22,7 +22,6 @@ void Collision::Awake()
 	_Offset = Vector3::zero;
 	_Shape = nullptr;
 	_CollisionObject = nullptr;
-	_Kinematick = false;
 	_FilterGroup = (short)fbCollisionFilterE::A;
 	_FilterMask = (short)fbCollisionFilterE::ALLFILTER;
 }
@@ -80,7 +79,7 @@ void Collision::SetFilterMask(short mask)
 void Collision::_UpdateCollisionTrans()
 {
 	//ゲームオブジェクトのトランスフォーム情報を物理エンジンに送る。
-	if (_CollisionObject.get() && !_Kinematick) {
+	if (_CollisionObject.get() && _physicsType == PhysicsType::Kinematick) {
 		//コリジョンのトランスフォームの参照を取得
 		btTransform& trans = _CollisionObject->getWorldTransform();
 		//移動を設定

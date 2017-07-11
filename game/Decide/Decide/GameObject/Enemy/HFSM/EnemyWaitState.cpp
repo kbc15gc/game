@@ -30,6 +30,9 @@ void EnemyWaitState::_UpdateSubClass() {
 		return;
 	}
 	else {
+		// ‹–ìŠp”»’è‚ğs‚¤B
+		_EnemyObject->SearchView();
+
 		// ŠÔ‰ÁZB
 		_TimeCounter += Time::DeltaTime();
 	}

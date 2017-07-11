@@ -4,10 +4,10 @@
 #include "SearchViewAngle.h"
 #include "../Component/ObjectRotation.h"
 #include "fbEngine\CharacterController.h"
-#include "AttackCollision.h"
 #include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\ObjectSpawn.h"
+#include "GameObject\Component\AnimationEvent.h"
 
 class SkinModel;
 class Animation;
@@ -21,7 +21,7 @@ class EnemyCharacter :
 public:
 	// 自分がどの種類のエネミーか。
 	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
-	enum class EnemyType{Prot = 0};
+	enum class EnemyType{Prot = 0,Drarian};
 
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
@@ -53,6 +53,7 @@ private:
 		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
 		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
+		AnimationEvent* AnimationEvent = nullptr;	// アニメーションにイベントを設定できる関数。
 	};
 
 public:
@@ -100,15 +101,6 @@ public:
 	// ※継承先で実装。
 	// ※複数攻撃パターンがある場合はここでローカルステートに遷移する際に分岐させる。
 	virtual EnemyCharacter::State AttackSelect() = 0;
-
-	// 攻撃判定用コリジョン作成関数。
-	// 引数：	コリジョンを発生させるフレーム。
-	//			コリジョン発生位置。
-	//			コリジョン回転。
-	//			コリジョンのサイズ。
-	//			コリジョンの寿命(デフォルトは無限)。
-	// ※生成されるコリジョン形状はボックスです。
-	void CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size, float life = -1.0f, float wait = 0.0f);
 
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ。
@@ -192,7 +184,13 @@ public:
 		_MyComponent.Parameter->ParamInit(param);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
-
+	// 全パラメーター設定。
+	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
+	//			各種パラメーター。
+	inline void SetParamAll(const vector<BarColor>& color, const vector<int>& param) const {
+		_MyComponent.Parameter->ParamInit(param);
+		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
+	}
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -335,6 +333,10 @@ private:
 	// 継承先でアニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
 	virtual void _BuildAnimation() = 0;
+
+	// アニメーションイベントを設定する関数。
+	// ※処理自体は継承先に委譲。
+	virtual void _ConfigAnimationEvent() = 0;
 
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。

@@ -34,6 +34,8 @@ void SphereCollider::Create( const float radius )
 		abort();
 	}
 	shape = new btSphereShape(radius);
+	btVector3 work = shape->getImplicitShapeDimensions();
+	_halfSize = Vector3(work.x(), work.y(), work.z());
 }
 
 void SphereCollider::ColliderModelLoad() {

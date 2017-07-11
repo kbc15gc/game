@@ -37,6 +37,12 @@ void CharacterParameter::ParamInit(int param[Param::MAX]) {
 	}
 }
 
+void CharacterParameter::ParamInit(const vector<int>& param) {
+	for (int idx = 0; idx < Param::MAX; idx++) {
+		_Param[idx] = param[idx];
+	}
+}
+
 void CharacterParameter::Update() {
 	//HP‚ª0ˆÈ‰º‚É‚È‚Á‚½‚Ì‚ÅŽ€‚ñ‚¾B
 	if (_Param[Param::HP] <= 0)
