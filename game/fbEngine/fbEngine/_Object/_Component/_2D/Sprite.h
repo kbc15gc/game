@@ -36,6 +36,12 @@ public:
 	{
 		_Size = size;
 	}
+
+	const Vector2& GetSize()
+	{
+		return _Size;
+	}
+
 	TEXTURE* GetTexture()
 	{
 		return _Texture;
