@@ -19,6 +19,33 @@ class Animation;
 class ParameterBar;
 class HistoryBook;
 
+namespace
+{
+	const int MAXLV = 100;
+
+	struct ExperiencePointTableInfo
+	{
+		int ExperiencePoint;	//レベルアップ毎に必要な経験値
+		int HP;					//レベルごとのHP
+		int MP;					//レベルごとのMP
+		int ATK;				//レベルごとのATK
+		int DEF;				//レベルごとのDEF
+		int DEX;				//レベルごとのDEX
+		int AGI;				//レベルごとのAGI
+	};
+
+	const Support::DATARECORD ExperiencePointTableInfoData[] =
+	{
+		{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
+		{ "HP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,HP),sizeof(int)},
+		{ "MP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MP),sizeof(int)},
+		{ "ATK", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int)},
+		{ "DEF", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int)},
+		{ "DEX", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEX),sizeof(int)},
+		{ "AGI", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,AGI),sizeof(int)},
+	};
+}
+
 class Player : public GameObject
 {
 public:
@@ -106,9 +133,16 @@ public:
 	}
 	//プレイヤー解放
 	void Releace();
+	//プレイヤーの経験値を増やす。
+	void EXPUp(int dropexp)
+	{
+		_PlayerParam->AddParam(CharacterParameter::EXP, dropexp);
+	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
+	//経験値テーブルをCSVからロード。
+	void _LoadEXPTable();
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
@@ -154,10 +188,10 @@ private:
 	PlayerStateDeath _DeathState;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSE = nullptr;
+	//レベルアップ時の音
+	SoundSource* _LevelUP = nullptr;
 	//プレイヤーのパラメーター
 	CharacterParameter* _PlayerParam = nullptr;
-	//プレイヤーのレベル
-	int _Level;
 	// 回転。
 	ObjectRotation* _Rotation = nullptr;
 	// HPバー。
@@ -172,4 +206,19 @@ private:
 #endif
 	//デバッグ
 	bool _Debug = false;
+
+	//経験値テーブル
+	std::vector<int> _EXPTable;
+	//レベルごとのHP
+	std::vector<int> _HPTable;
+	//レベルごとのMP
+	std::vector<int> _MPTable;
+	//レベルごとのATK
+	std::vector<int> _ATKTable;
+	//レベルごとのDEF
+	std::vector<int> _DEFTable;
+	//レベルごとのDEX
+	std::vector<int> _DEXTable;
+	//レベルごとのAGI
+	std::vector<int> _AGITable;
 };

@@ -163,6 +163,7 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\AttackValue2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -206,9 +207,6 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h">
       <Filter>GameObject\Enemy\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Player\Player.h">
-      <Filter>GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h">
       <Filter>GameObject\Player\PlayerState</Filter>
@@ -341,6 +339,10 @@
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Player\Player.h">
+      <Filter>GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\AttackValue2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

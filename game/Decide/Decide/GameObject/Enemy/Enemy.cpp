@@ -5,8 +5,6 @@
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
 
-
-
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
 
@@ -22,7 +20,7 @@ void Enemy::_AwakeSubClass() {
 	SetFileName("enemy_00.X");
 
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0);
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void Enemy::_StartSubClass(){
@@ -39,7 +37,6 @@ void Enemy::_StartSubClass(){
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
-
 
 	// 初期ステートに移行。
 	// ※暫定処理。
