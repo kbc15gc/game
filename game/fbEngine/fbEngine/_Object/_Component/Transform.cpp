@@ -332,6 +332,8 @@ void Transform::SetParent(Transform * _Parent)
 	else {
 		// 親を外すので、現在の親の子供リストから自分を外す。
 		this->_Parent->RemoveChild(this);
+		_LocalPosition = _Position;
+		_LocalAngle = _Angle;
 	}
 
 	//親に登録

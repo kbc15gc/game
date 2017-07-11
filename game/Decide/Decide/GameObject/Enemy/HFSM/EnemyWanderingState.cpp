@@ -41,8 +41,8 @@ void EnemyWanderingState::_EntrySubClass() {
 
 	// パラメータ設定。
 	float length = 5.0f;
-	float speed = 1.0f;
-	_TranslationPalam(_EnemyObject->transform->GetForward(), length, speed);
+	float speed = _EnemyObject->GetWalkSpeed();
+	_TranslationPalam(_EnemyObject->transform->GetForward(), speed * 5.0f, speed);
 }
 
 void EnemyWanderingState::_Start() {
