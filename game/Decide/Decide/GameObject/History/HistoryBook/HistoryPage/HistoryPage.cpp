@@ -31,7 +31,7 @@ void HistoryPage::Awake()
 	Quaternion Rot;
 	Rot.SetEuler(Vector3(-180.0f, 0.0f, 0.0f));
 	transform->SetRotation(Rot);
-	transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
+	transform->SetPosition(Vector3(0.0f, 0.0f, 1.0f));
 	transform->UpdateWolrdMatrix();
 
 	D3DXMatrixIdentity(&_RotationMatrix);
@@ -59,6 +59,7 @@ void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 
 	_Material->SetTexture(Material::TextureHandleE::DiffuseMap, texture->pTexture);
 
+	_ChipID = chipID;
 	_NowLocatuion = code;
 }
 

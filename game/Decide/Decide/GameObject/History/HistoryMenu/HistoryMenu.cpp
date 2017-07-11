@@ -81,13 +81,35 @@ void HistoryMenu::EnableUpdate()
 		//_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
 
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_LEFT))
+	if (XboxInput(0)->IsPushAnalog(AnalogE::R_STICKL))
 	{
 		_NowSelectChip = min(max(0,_Chip2DList.size() - 1), _NowSelectChip + 1);
 	}
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_RIGHT))
+	if (XboxInput(0)->IsPushAnalog(AnalogE::R_STICKR))
 	{
 		_NowSelectChip = max(0, _NowSelectChip - 1);
+	}
+
+	int BEFORE = _NowLookPage;
+
+	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+	{
+		_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+	}
+	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+	{
+		_NowLookPage = max(0, _NowLookPage - 1);
+	}
+
+	if (BEFORE < _NowLookPage)
+	{
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
+	}
+	else if(BEFORE > _NowLookPage)
+	{
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
 	}
 
 	//Aボタン押.
@@ -97,7 +119,7 @@ void HistoryMenu::EnableUpdate()
 		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
 		{
 			//現在指定している場所にチップを設定.
-			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _NowSlot, _Chip2DList[_NowSelectChip]->GetChipID());
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID());
 			//搬入したチップを所持チップから削除.
 			auto it = _Chip2DList.begin();
 			it += _NowSelectChip;
@@ -113,17 +135,37 @@ void HistoryMenu::EnableUpdate()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B) || KeyBoardInput->isPush(DIK_K))
 	{
 		//歴史書からリストを取得。
-		vector<HistoryPage*> pagelist = _HistoryBook->GetPageList();
+		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
 		//取得したリストサイズが0以上なら削除処理を行う。
 		if (pagelist.size() > 0)
 		{
-			HistoryPage* page = *pagelist.begin();
-			page->ChangeState(HistoryPage::StateCodeE::PutOut);
-			//INSTANCE(HistoryManager)->PutOutPage(page);
-			//_HistoryBook->PutOutPage(page);
+			HistoryPage* page = pagelist[_NowLookPage];
+
+			if (page != nullptr)
+			{
+				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
+
+				INSTANCE(GameObjectManager)->AddRemoveList(page);
+
+				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
+			
+				int BEFORE = _NowLookPage;
+				_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+				_NowLookPage = max(0, _NowLookPage - 1);
+				if (BEFORE < _NowLookPage)
+				{
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
+				}
+				else if (BEFORE > _NowLookPage)
+				{
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+				}
+
+			}
 		}
 	}
-
 	//表示.
 	_LocationNameRender->SetActive(true);
 

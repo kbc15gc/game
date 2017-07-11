@@ -75,8 +75,6 @@ private:
 
 	/** 現在選択している所持チップ. */
 	int _NowSelectChip = 0;
-	/** 現在選択しているスロット. */
-	int _NowSlot = 0;
-	//現在見ているページ。
+	/** 現在みているページ. */	
 	int _NowLookPage = 0;
 };

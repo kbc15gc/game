@@ -260,6 +260,7 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.cpp" />
+    <ClCompile Include="GameObject\History\HistoryInfo.cpp" />
     <ClCompile Include="GameObject\History\HistoryManager.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp" />

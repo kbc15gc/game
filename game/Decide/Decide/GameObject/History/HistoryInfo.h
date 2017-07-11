@@ -76,17 +76,8 @@ public:
 		}
 	}
 
-	void SetChip(HistoryPage* page, int slot)
-	{
-		_Page.insert(_Page.begin(), page);
-	}
+	void SetData(vector<HistoryPage*>& list);
 
-	void PutOutPage(HistoryPage* page)
-	{
-
-		auto itr = find(_Page.begin(), _Page.end(), page);
-		_Page.erase(itr);
-	}
 
 public:
 
@@ -95,8 +86,6 @@ public:
 	/** 登録されている歴史チップIDリスト. */
 	ChipID _ChipSlot[(int)ChipID::ChipNum];
 
-	//ページの配列。
-	list<HistoryPage*> _Page;
 };
 
 namespace

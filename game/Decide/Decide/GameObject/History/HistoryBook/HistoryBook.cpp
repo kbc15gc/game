@@ -34,7 +34,7 @@ void HistoryBook::Awake()
 	//ƒvƒŒƒCƒ„[‚ðŒŸõ
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
-	//_HistoryPageList.resize((int)ChipID::ChipNum);
+	_HistoryPageList.resize((int)LocationCodeE::LocationNum);
 
 }
 
@@ -136,11 +136,14 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 			_IsOpenOrClose = false;
 			ChangeState(StateCodeE::Close);
 
-			for (auto it : _HistoryPageList)
+			for (auto& locList : _HistoryPageList)
 			{
-				if (it != nullptr)
+				for (auto it : locList)
 				{
-					it->ChangeState(HistoryPage::StateCodeE::Close);
+					if (it != nullptr)
+					{
+						it->ChangeState(HistoryPage::StateCodeE::Close);
+					}
 				}
 			}
 		}

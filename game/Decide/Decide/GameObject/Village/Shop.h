@@ -3,6 +3,7 @@
 #include "GameObject\Village\ItemManager.h"
 
 class ImageObject;
+class TextObject;
 
 namespace
 {
@@ -61,8 +62,18 @@ private:
 	//お店の情報読み込み。
 	void _LoadShopData(const unsigned int& shopID);
 
+	//メニューを閉じる。
+	void _CloseMenu();
+
 	//ステート変更。
 	void _ChangeState(const ShopStateE& state);
+	//入るときの処理。
+	void _Enter(const ShopStateE& state);
+	//出るときの処理。
+	void _Exit(const ShopStateE& state);
+	
+	//メニュー生成。
+	void _CreateMenu();
 
 	//選択画面の更新。
 	void _SelectUpdate();
@@ -72,8 +83,8 @@ private:
 	//スタティック変数の初期化。
 	void _StaticInit();
 private:
-	//商品の品ぞろえ。
-	vector<unique_ptr<Product>> _ProductList;
+	//ショップの名前
+	vector<unique_ptr<testchar>> _ShopNameList;
 	//アイテムのリスト。
 	vector<Item::ItemInfo*> _ItemList;
 	//ショップのステート
@@ -81,13 +92,12 @@ private:
 	//ステートによって変わるアップデート
 	std::function<void()> _Update;
 
-	//どうせ全部同じ場所で同じ画像だろうからstatic変数。
 	//カーソルの画像
 	ImageObject* _Cursor[2];
 	//かう・うるの画像
 	ImageObject* _SelectWindow;
 	//本命のウィンドウ
 	ImageObject* _MainWindow;
-	//ショップの名前
-	vector<unique_ptr<testchar>> _ShopNameList;
+	//メニューのテキスト
+	vector<TextObject*> _MenuList;
 };
