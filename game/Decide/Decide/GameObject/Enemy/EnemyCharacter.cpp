@@ -11,6 +11,7 @@
 #include "HFSM\EnemyFallState.h"
 #include "HFSM\EnemyDeathState.h"
 #include "HFSM\EnemyDamageReactionState.h"
+#include "HFSM\EnemyThreatState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -128,8 +129,8 @@ void EnemyCharacter::SearchView() {
 	{
 		// 視線に入っている。
 
-		// 発見ステートに移行。
-		_ChangeState(State::Discovery);
+		// 威嚇ステートに移行。
+		_ChangeState(State::Threat);
 	}
 }
 
@@ -191,6 +192,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
 	// 発見ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
+	// 威嚇ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyThreatState>(new EnemyThreatState(this)));
 	// 攻撃開始ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyStartAttackState>(new EnemyStartAttackState(this)));
 	// 攻撃ステートを追加。

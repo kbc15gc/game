@@ -178,6 +178,7 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyFallState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyStartAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyThreatState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyFallState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyStartAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyThreatState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />

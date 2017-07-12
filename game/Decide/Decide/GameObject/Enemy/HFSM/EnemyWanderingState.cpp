@@ -55,7 +55,6 @@ void EnemyWanderingState::_UpdateSubClass() {
 }
 
 void EnemyWanderingState::Exit(EnemyCharacter::State next) {
-
 }
 
 void EnemyWanderingState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

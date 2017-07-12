@@ -28,16 +28,16 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death };
+	enum class State { Wandering = 0,Discovery, Threat, StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Barking, Attack, Fall,Damage, Death,Max };
+	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Threat, Attack, Fall,Damage, Death,Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
-		unsigned int No;	// アニメーション番号。
+		int No = -1;	// アニメーション番号。
 		float Time;	// 再生時間。
 	};
 
@@ -287,6 +287,11 @@ public:
 	inline float GetDashSpeed()const {
 		return _walkSpeed * 5.0f;
 	}
+
+	inline const AnimationData& GetAnimationData(AnimationType type)const {
+		return _AnimationData[static_cast<int>(type)];
+	}
+
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);

@@ -39,7 +39,7 @@ void AnimationEvent::Update() {
 				//フレームが一致した時あたり判定作成。
 			if (work->NowFrame() == eventData->createFrame)
 			{
-				//攻撃コリジョン作成
+				//攻撃コリジョン作成。
 				unsigned int priorty = 1;
 				AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
 				attack->Create(eventData->info.damage, eventData->info.pos, eventData->info.rot, eventData->info.size, eventData->info.master, eventData->info.life, eventData->info.wait, eventData->info.parent);

@@ -40,7 +40,7 @@ void BossDrarian::_StartSubClass() {
 	SetParamAll(Color, _MyComponent.Parameter->GetParams());
 
 	// 視野角生成。
-	_ViewAngle = 140.0f;
+	_ViewAngle = 100.0f;
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
@@ -119,6 +119,11 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 		// 発見状態に移行。
 		_ChangeState(State::Discovery);
 	}
+	else if (EndStateType == State::Threat) {
+		// 威嚇終了。
+		// 発見状態に移行。
+		_ChangeState(State::Discovery);
+	}
 }
 
 void BossDrarian::_ConfigCollision() {
@@ -166,7 +171,7 @@ void BossDrarian::_BuildAnimation() {
 		// 走行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationDrarian::Dash)].get());
 		// 吠える。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Barking, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
 		// 攻撃状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationDrarian::Attack)].get());
 		// ダメージ反応。

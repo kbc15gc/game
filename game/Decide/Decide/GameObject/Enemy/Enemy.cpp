@@ -108,6 +108,12 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 		// 発見状態に移行。
 		_ChangeState(State::Discovery);
 	}
+	else if (EndStateType == State::Threat) {
+		// 威嚇終了。
+		// 発見状態に移行。
+		_ChangeState(State::Discovery);
+	}
+
 }
 
 void Enemy::_ConfigCollision() {
