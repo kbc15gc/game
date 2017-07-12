@@ -45,6 +45,9 @@ void AnimationEvent::Update() {
 				attack->Create(eventData->info.damage, eventData->info.pos, eventData->info.rot, eventData->info.size, eventData->info.master, eventData->info.life, eventData->info.wait, eventData->info.parent);
 				if (eventData->info.isRemoveParent) {
 					attack->RemoveParent();
+					//もしモンスターの向きとコリジョンの向きを合わせたいのなら
+					//collison->transform->SetAngle(monster->transform->GetAngle());
+					//みたいなコードが必要。
 				}
 			}
 		}
