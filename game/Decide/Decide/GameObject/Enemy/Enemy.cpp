@@ -23,7 +23,7 @@ void Enemy::_AwakeSubClass() {
 	SetFileName("enemy_00.X");
 
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void Enemy::_StartSubClass(){

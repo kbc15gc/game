@@ -14,6 +14,7 @@ const wchar_t* CharacterParameter::ENUM_NAME[] = {
 	L"LV	",
 	L"EXP	",
 	L"DROPEXP",
+	L"MONEY",
 };
 #endif
 
@@ -21,7 +22,7 @@ void CharacterParameter::Awake() {
 	_Param = vector<int>(Param::MAX,0);
 }
 
-void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp)
+void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp,int money)
 {
 	//パラメーター設定。
 	_Param[Param::HP]		= hp;		//ヒットポイント。
@@ -35,6 +36,7 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::LV]		= lv;		//レベル。
 	_Param[Param::EXP]		= exp;		//現在の経験値。
 	_Param[Param::DROPEXP]	= dropexp;	//落とす経験値。
+	_Param[Param::MONEY]	= money;	//所持金。
 }
 
 void CharacterParameter::ParamInit(int param[Param::MAX]) {

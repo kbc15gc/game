@@ -22,14 +22,14 @@ void BossDrarian::_AwakeSubClass() {
 	SetFileName("DRARIAN.X");
 
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0);
 }
 
 void BossDrarian::_StartSubClass() {
 
 	transform->SetPosition(INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition());
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 75, 50, 100, 20,1,0,500);
+	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 75, 50, 100, 20, 1, 0, 500, 100);
 
 	// パラメーター設定。
 	vector<BarColor> Color;

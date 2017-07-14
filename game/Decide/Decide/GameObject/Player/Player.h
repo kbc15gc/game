@@ -133,10 +133,11 @@ public:
 	}
 	//プレイヤー解放
 	void Releace();
-	//プレイヤーの経験値を増やす。
-	void EXPUp(int dropexp)
+	//敵が落とした物(経験値、お金)を受け取る。
+	void TakeDrop(int dropexp,int money)
 	{
 		_PlayerParam->AddParam(CharacterParameter::EXP, dropexp);
+		_PlayerParam->AddParam(CharacterParameter::MONEY, money);
 	}
 private:
 	//プレイヤーがダメージを受ける処理

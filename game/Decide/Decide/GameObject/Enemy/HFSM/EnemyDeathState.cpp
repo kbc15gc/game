@@ -21,7 +21,7 @@ void EnemyDeathState::_EntrySubClass() {
 	Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 	chip->SetDropChipID(ChipID(1), _EnemyObject->transform->GetPosition());
 
-	_Player->EXPUp(_EnemyObject->GetDropEXP());
+	_Player->TakeDrop(_EnemyObject->GetDropEXP(), _EnemyObject->GetDropMoney());
 }
 
 void EnemyDeathState::_Start() {

@@ -180,8 +180,8 @@ public:
 	//			防御力。
 	//			命中力。
 	//			敏捷力。
-	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi,int lv, int exp, int dropexp)const  {
-		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi, lv, exp, dropexp);
+	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi,int lv, int exp, int dropexp,int money)const  {
+		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi, lv, exp, dropexp,money);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
 	// 全パラメーター設定。
@@ -281,6 +281,12 @@ public:
 	inline int GetDropEXP() const {
 		return _MyComponent.Parameter->GetParam(CharacterParameter::DROPEXP);
 	}
+
+	// ドロップする所持金。
+	inline int GetDropMoney() const {
+		return _MyComponent.Parameter->GetParam(CharacterParameter::MONEY);
+	}
+
 	inline float GetWalkSpeed()const {
 		return _walkSpeed;
 	}

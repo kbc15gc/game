@@ -39,7 +39,8 @@ public:
 	//			レベル。
 	//			経験値。
 	//			落とす経験値。
-	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, LV, EXP, DROPEXP, MAX };
+	//			所持金。
+	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, LV, EXP, DROPEXP, MONEY, MAX };
 	//初期化。
 	// 引数：	HP。
 	//			HP最大値。
@@ -52,7 +53,8 @@ public:
 	//			レベル。
 	//			経験値。
 	//			落とす経験値。
-	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp);
+	//			所持金。
+	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp,int money);
 	//初期化。
 	void ParamInit(int param[Param::MAX]);
 	void ParamInit(const vector<int>& param);

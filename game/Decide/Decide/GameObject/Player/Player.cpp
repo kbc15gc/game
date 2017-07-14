@@ -93,7 +93,7 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(_HPTable[0], _HPTable[0], _MPTable[0], _MPTable[0], _ATKTable[0], _DEFTable[0], _DEXTable[0], _AGITable[0], 1, 0, 0);
+	_PlayerParam->ParamInit(_HPTable[0], _HPTable[0], _MPTable[0], _MPTable[0], _ATKTable[0], _DEFTable[0], _DEXTable[0], _AGITable[0], 1, 0, 0, 0);
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
