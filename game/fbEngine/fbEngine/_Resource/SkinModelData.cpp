@@ -17,7 +17,7 @@ void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix
 	//‰ñ“]s—ñ‚ª‘¶Ý‚µ‚Ä‚¢‚½‚ç‰ñ“].
 	if (pFrame->RotationMatrix != nullptr)
 	{
-		D3DXMatrixMultiply(&matrix, &pFrame->TransformationMatrix, pFrame->RotationMatrix);
+		D3DXMatrixMultiply(&matrix, pFrame->RotationMatrix, &matrix);
 	}
 
 	if (pParentMatrix != NULL)

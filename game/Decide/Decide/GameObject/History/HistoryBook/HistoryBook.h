@@ -185,7 +185,11 @@ public:
 	void PutOutPage(LocationCodeE loc,HistoryPage* page)
 	{
 		auto itr = find(_HistoryPageList[(int)loc].begin(), _HistoryPageList[(int)loc].end(), page);
-		_HistoryPageList[(int)loc].erase(itr);
+		if (itr != _HistoryPageList[(int)loc].end())
+		{
+			(*itr)->ChangeState(HistoryPage::StateCodeE::PutOut);
+			_HistoryPageList[(int)loc].erase(itr);
+		}
 	}
 	void OpenPage()
 	{
@@ -199,6 +203,11 @@ public:
 				}
 			}
 		}
+	}
+
+	void SetIsOperation(const bool is)
+	{
+		_IsOperation = is;
 	}
 
 private:
@@ -238,4 +247,6 @@ private:
 	/** ページクラスのポインタ. */
 	vector<vector<HistoryPage*>> _HistoryPageList;
 
+	/** 操作可能フラグ. */
+	bool _IsOperation = true;
 };

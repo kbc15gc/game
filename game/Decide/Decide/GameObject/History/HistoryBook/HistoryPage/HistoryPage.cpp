@@ -27,7 +27,7 @@ void HistoryPage::Awake()
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 
-	transform->SetScale(Vector3(2.0f, 2.0f, 2.0f));
+	transform->SetScale(Vector3(2.2f, 2.2f, 2.2f));
 	Quaternion Rot;
 	Rot.SetEuler(Vector3(-180.0f, 0.0f, 0.0f));
 	transform->SetRotation(Rot);
@@ -55,9 +55,7 @@ void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 	D3DXFRAME_DERIVED* pageDerived = (D3DXFRAME_DERIVED*)D3DXFrameFind(pageFrame, "bone2");
 	pageDerived->RotationMatrix = &_RotationMatrix;
 
-	TEXTURE* texture = LOADTEXTURE((char*)ChipFileName[(int)chipID].c_str());
-
-	_Material->SetTexture(Material::TextureHandleE::DiffuseMap, texture->pTexture);
+	transform->UpdateWolrdMatrix();
 
 	_ChipID = chipID;
 	_NowLocatuion = code;
@@ -80,6 +78,15 @@ void HistoryPage::LateUpdate()
 	D3DXMATRIX world = transform->GetWorldMatrix();
 	D3DXMatrixMultiply(&world, &world, _ParentMatrix);
 	transform->SetWorldMatrix(world);
+}
+
+/**
+* •`‰æ.
+*/
+void HistoryPage::Render()
+{
+	TEXTURE* texture = LOADTEXTURE((char*)ChipFileName[(int)_ChipID].c_str());
+	_Material->SetTexture(Material::TextureHandleE::DiffuseMap, texture->pTexture);
 }
 
 /**
@@ -114,7 +121,6 @@ void HistoryPage::InitState()
 	//•Â‚¶‚éó‘Ô.
 	_StateList.push_back(unique_ptr<HistoryPageStateClose>(new HistoryPageStateClose(this)));
 	
-
 	//‰Šú’l‚Í‹²‚Ş.
 	ChangeState(StateCodeE::PutIn);
 

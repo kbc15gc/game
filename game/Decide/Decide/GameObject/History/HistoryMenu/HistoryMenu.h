@@ -16,8 +16,20 @@ class TextObject;
 * 歴史変更メニュー画面クラス.
 * 歴史書を開いたときに表示される.
 */
-class HistoryMenu:public GameObject
+class HistoryMenu : public GameObject
 {
+public:
+
+	/**
+	* 選択コード.
+	*/
+	enum class SelectCodeE
+	{
+		Location,	//!< 場所.
+		Page,		//!< ページ.
+		Chip,		//!< チップ.
+	};
+
 public:
 
 	/**
@@ -59,6 +71,9 @@ private:
 
 private:
 
+	/** 選択されているもの. */
+	int _SelectCode = (int)SelectCodeE::Location;
+
 	/** 場所名表示オブジェクト. */
 	TextObject* _LocationNameRender = nullptr;
 	/** 現在選択中の場所. */
@@ -77,4 +92,8 @@ private:
 	int _NowSelectChip = 0;
 	/** 現在みているページ. */	
 	int _NowLookPage = 0;
+
+	/** 操作可能フラグ. */
+	bool _IsOperation = true;
+
 };
