@@ -78,11 +78,11 @@ void BossDrarian::_LateUpdateSubClass()
 }
 
 
-EnemyCharacter::State BossDrarian::AttackSelect() {
+EnemyAttack* BossDrarian::AttackSelect() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
-	return State::Attack;
+	return &_singleAttack;
 }
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
