@@ -35,6 +35,7 @@ void EnemyCharacter::Awake() {
 
 	// 継承先により変わる処理。
 	_AwakeSubClass();
+
 }
 
 void EnemyCharacter::Start() {
@@ -62,7 +63,7 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) <= 0)
+	if (_MyComponent.Parameter->GetDeathFalg())
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);
@@ -232,6 +233,19 @@ void EnemyCharacter::_ChangeState(State next) {
 
 	// 現在のステートの添え字を保存。
 	_NowStateIdx = next;
+}
+
+void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
+	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
+	{
+		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) >= 0)
+		{
+			_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()));
+			AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+			attackvalue->Init(Vector3::zero, _MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()), 1.5f, Vector3(0.0f, _Height, 0.0f));
+			attackvalue->transform->SetParent(transform);
+		}
+	}
 }
 
 void EnemyCharacter::GiveDamage(float damage) {

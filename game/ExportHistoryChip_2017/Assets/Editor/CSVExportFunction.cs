@@ -189,7 +189,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("type,hp,mhp,mp,mmp,atk,def,dex,agi,pos,Quaternion,sca");
+        sw.WriteLine("type,hp,mhp,mp,mmp,atk,def,dex,agi,lv,exp,dropexp,pos,Quaternion,sca");
         foreach (Transform child in Children)
         {
             if (child.name == enemys.name)
@@ -206,13 +206,16 @@ public class CSVExportFunction : Editor
             string def = Convert.ToString(e._DEF);
             string dex = Convert.ToString(e._DEX);
             string agi = Convert.ToString(e._AGI);
+            string lv = Convert.ToString(e._LV);
+            string exp = Convert.ToString(e._EXP);
+            string dropexp = Convert.ToString(e._DROPEXP);
 
             string pos = Vector3ToString(child.position,true);
             string quaternion = QuaternionToString(child.rotation);
             string sca = Vector3ToString(child.lossyScale);
 
             //
-            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8},{9},{10},{11}", type, hp, mhp, mp, mmp, atk, def, dex, agi, pos, quaternion, sca);
+            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9}/{10}/{11},{12},{13},{14}", type, hp, mhp, mp, mmp, atk, def, dex, agi, lv, exp, dropexp, pos, quaternion, sca);
 
 
             //列書き出し

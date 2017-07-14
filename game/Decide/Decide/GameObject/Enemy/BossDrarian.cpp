@@ -22,46 +22,41 @@ void BossDrarian::_AwakeSubClass() {
 	SetFileName("DRARIAN.X");
 
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0);
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 }
 
 void BossDrarian::_StartSubClass() {
 
-	Vector3 work = INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition();
-	work.y += 3.0f;
-	transform->SetPosition(work);
+	transform->SetPosition(INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition());
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(100, 100, 0, 0, 20, 0, 100, 20);
+	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 75, 50, 100, 20,1,0,500);
 
 	// パラメーター設定。
 	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	SetParamAll(Color, _MyComponent.Parameter->GetParams());
 
 	// 視野角生成。
 	_ViewAngle = 140.0f;
-	_ViewRange = 30.0f;
+	_ViewRange = 20.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 5.0f;
+	_AttackRange = 1.3f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
 	_WanderingRange = 130.0f;
 
-	// 歩行速度設定。
-	_walkSpeed = 2.0f;
-
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
-	// 攻撃処理を定義。
-	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack)].No, 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Wandering);
+	_ChangeState(State::Wait);
 
 }
 
@@ -91,11 +86,12 @@ EnemyAttack* BossDrarian::AttackSelect() {
 }
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Wandering) {
-		// 徘徊挙動いったん終了。
+	if (EndStateType == State::Wait) {
+		// 待ちの挙動いったん終了。
 
-		// 再度徘徊。
-		_ChangeState(State::Wandering);
+		// 再度待ち。
+		_ChangeState(State::Wait);
+		static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
 	}
 	else if (EndStateType == State::Discovery) {
 		// 発見ステートの処理完了。
@@ -114,20 +110,18 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 		// 直前のステートに切り替え。
 		_ChangeState(_saveState);
 	}
-	else if (EndStateType == State::Damage) {
-		// 攻撃を受けた。
-		// 発見状態に移行。
-		_ChangeState(State::Discovery);
-	}
 }
 
 void BossDrarian::_ConfigCollision() {
+
+	// コリジョンのサイズを決定。
+	// ※キャラクターコントローラーで使用するためのもの。
+	_Radius = 0.5f;
+	_Height = 7.5f;
+
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。
-	// コリジョンのサイズを決定。
-	_Radius = 0.5f;
-	_Height = 2.4f;
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius, _Height);
 }
 
@@ -161,16 +155,13 @@ void BossDrarian::_BuildAnimation() {
 	{
 		// 待機状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationDrarian::Wait)].get());
-		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationDrarian::Walk)].get());
-		// 走行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationDrarian::Dash)].get());
-		// 吠える。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Barking, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
-		// 攻撃状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationDrarian::Attack)].get());
-		// ダメージ反応。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
+	//	// 歩行状態。
+	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
+	//	// 走行状態。
+	//	// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
+	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
+	//	// 攻撃状態。
+	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
 	//	// 落下状態。
 	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
@@ -180,16 +171,15 @@ void BossDrarian::_BuildAnimation() {
 }
 
 void BossDrarian::_ConfigAnimationEvent() {
-	int eventFrame = 15;
+	//int eventFrame = 30;
 
-	// 攻撃アニメーションにコリジョン生成イベント追加。
-	AnimationEvent::AttackEventInfo info(transform, true);
-	info.damage = _MyComponent.Parameter->GiveDamageMass();
-	info.master = AttackCollision::CollisionMaster::Enemy;
-	info.pos = Vector3(0.0f, 0.25f, 5.0f);
-	info.rot = Quaternion::Identity;
-	info.rot.SetRotation(Vector3::axisY, D3DXToRadian(40.0f));
-	info.size = Vector3(1.0f,2.0f,2.0f);
-	info.life = 0.25f;
-	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, info);
+	//// 攻撃アニメーションにコリジョン生成イベント追加。
+	//AnimationEvent::AttackEventInfo info(transform, true);
+	//info.damage = _MyComponent.Parameter->GiveDamageMass();
+	//info.master = AttackCollision::CollisionMaster::Enemy;
+	//info.pos = Vector3(1.5f, 0.5f, 0.0f);
+	//info.rot = Quaternion::Identity;
+	//info.size = Vector3::one;
+	//info.life = 0.25f;
+	//_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, info);
 }

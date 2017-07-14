@@ -36,7 +36,10 @@ public:
 	//			防御力。
 	//			命中力。
 	//			敏捷力。
-	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, MAX };
+	//			レベル。
+	//			経験値。
+	//			落とす経験値。
+	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, LV, EXP, DROPEXP, MAX };
 	//初期化。
 	// 引数：	HP。
 	//			HP最大値。
@@ -46,7 +49,10 @@ public:
 	//			防御力。
 	//			命中力。
 	//			敏捷力。
-	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi);
+	//			レベル。
+	//			経験値。
+	//			落とす経験値。
+	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp);
 	//初期化。
 	void ParamInit(int param[Param::MAX]);
 	void ParamInit(const vector<int>& param);
@@ -100,10 +106,13 @@ public:
 
 	//与ダメージ計算。
 	// 引数：		キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
-	inline int GiveDamageMass(int atk = 1)
+	inline int GiveDamageMass(float atk = 1)
 	{
 		return _Param[Param::ATK] * atk;
 	}
+	// レベルアップ。
+	// 引数：		レベルアップに必要な経験値の値。
+	void LevelUP(int lvupexp, int hp, int mp, int atk, int def, int dex, int agi);
 private:
 
 	// 配列外にアクセスしてないかチェック。

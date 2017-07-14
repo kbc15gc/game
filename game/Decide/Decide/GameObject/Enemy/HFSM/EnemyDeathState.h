@@ -2,6 +2,7 @@
 
 #include "EnemyState.h"
 
+class Player;
 
 // エネミー死亡ステート。
 class EnemyDeathState : public EnemyState {
@@ -29,4 +30,5 @@ private:
 	float _waitTime = 0.0f;	// 死亡モーション再生終了から削除までの待ち時間。
 	float _timeCounter = 0.0f;
 	bool _isEndAnim = false;	// 再生終了フラグ。
+	Player* _Player;			//プレイヤー
 };

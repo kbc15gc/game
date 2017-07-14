@@ -23,7 +23,7 @@ void Enemy::_AwakeSubClass() {
 	SetFileName("enemy_00.X");
 
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0);
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void Enemy::_StartSubClass(){
@@ -46,7 +46,7 @@ void Enemy::_StartSubClass(){
 
 	// 攻撃処理を定義。
 	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack)].No,0.2f);
-
+	
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
