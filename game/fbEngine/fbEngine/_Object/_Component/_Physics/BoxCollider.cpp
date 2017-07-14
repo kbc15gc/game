@@ -31,6 +31,8 @@ void BoxCollider::Create( const Vector3& size )
 		abort();
 	}
 	_Shape = new btBoxShape(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
+	btVector3 work = _Shape->getImplicitShapeDimensions();
+	_halfSize = Vector3(work.x(), work.y(), work.z());
 }
 
 void BoxCollider::ColliderModelLoad() {

@@ -609,7 +609,8 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
  */
 SkinModelData::SkinModelData():
 _FrameRoot(nullptr),
-m_pAnimationController(nullptr)
+m_pAnimationController(nullptr),
+_Instancing(false)
 {
 	
 }

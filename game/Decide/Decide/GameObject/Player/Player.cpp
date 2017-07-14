@@ -75,7 +75,7 @@ void Player::Awake()
 	_Model->SetAllBlend(Color::white * 13);
 	
 	//キャラクターコントローラー初期化
-	_CharacterController->Init(this, transform, _Radius, _Height, Vector3(0.0f, _Height / 2, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
+	_CharacterController->Init(this, transform, Vector3(0.0f, _Height * 0.5f, 0.0f), Collision_ID::PLAYER, coll, _Gravity);
 	// 以下衝突を取りたい属性(横方向)を指定。
 	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。

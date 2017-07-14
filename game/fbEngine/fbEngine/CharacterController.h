@@ -27,8 +27,6 @@ public:
 	* @brief	初期化。
 	* param		ゲームオブジェクト。
 	*			トランスフォーム。
-	*			半径。
-	*			高さ。
 	*			モデルの中心とコリジョンの中心の差分。
 	*			コリジョンの属性。
 	*			コリジョン形状。
@@ -37,7 +35,7 @@ public:
 	*			衝突を取りたい属性(上下方向、レイヤーマスクなのでビット演算)。
 	*			即時に物理ワールドにコリジョンを登録する(falseにした場合は後で登録関数を呼ばないと登録されない)。
 	*/
-	void Init(GameObject* Object, Transform* tramsform, float radius, float height, Vector3 off , int type, Collider* capsule , float gravity,int attributeXZ = -1, int attributeY = -1/*static_cast<int>(fbCollisionAttributeE::ALL)*/,bool isAddWorld = true);
+	void Init(GameObject* Object, Transform* tramsform, Vector3 off , int type, Collider* capsule , float gravity,int attributeXZ = -1, int attributeY = -1/*static_cast<int>(fbCollisionAttributeE::ALL)*/,bool isAddWorld = true);
 	
 	/*!
 	* @brief	実行。
@@ -172,8 +170,7 @@ private:
 	bool 					m_isJump = false;				//ジャンプ中？
 	bool					m_isOnGround = true;			//地面の上にいる？
 	Collider*				m_collider = nullptr;			//コライダー。
-	float					m_radius = 0.0f;				//半径。
-	float					m_height = 0.0f;				//高さ。
+	Vector3					_halfSize;							// コライダーのサイズ(実際のサイズの半分)。
 	RigidBody*				m_rigidBody = nullptr;			//剛体。
 	float					m_gravity = -9.8f;				//重力。
 	int						m_attributeXZ;					// 衝突を取りたい属性(左右方向、衝突解決の省略のみでワールドで判定は取れる)。

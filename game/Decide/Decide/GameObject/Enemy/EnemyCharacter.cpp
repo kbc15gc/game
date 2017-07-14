@@ -10,7 +10,7 @@
 #include "HFSM\EnemyStartAttackState.h"
 #include "HFSM\EnemyFallState.h"
 #include "HFSM\EnemyDeathState.h"
-#include "AttackCollision.h"
+#include "HFSM\EnemyDamageReactionState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -44,6 +44,8 @@ void EnemyCharacter::Start() {
 	_BuildModelData();
 	// アニメーションテーブル作成。
 	_BuildAnimation();
+	// アニメーションイベント設定。
+	_ConfigAnimationEvent();
 
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
@@ -62,8 +64,10 @@ void EnemyCharacter::Update() {
 
 	if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) <= 0)
 	{
-		_ChangeState(State::Death);
-		static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
+		if (_NowStateIdx != State::Death) {
+			_ChangeState(State::Death);
+			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
+		}
 	}
 
 	// 継承先により変わる処理。
@@ -93,20 +97,6 @@ void EnemyCharacter::LateUpdate() {
 	_MoveSpeed = Vector3::zero;	// 使い終わったので初期化。
 }
 
-
-void EnemyCharacter::CreateAttackCollision(const int eventFrame, const Vector3& pos, const Vector3& angle, const Vector3& size,float life,float wait) {
-	//現在のフレーム取得
-	const int nowFrame = _MyComponent.Animation->NowFrame();
-	//フレームが10の時あたり判定作成
-	if (nowFrame == eventFrame)
-	{
-		//攻撃コリジョン作成
-		unsigned int priorty = 1;
-		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack_enemy", priorty);
-		Quaternion rot = Quaternion::Identity;
-		attack->Create(_MyComponent.Parameter->GiveDamageMass(), pos, rot, size, AttackCollision::CollisionMaster::Enemy, life,wait);
-	}
-}
 
 bool EnemyCharacter::IsOutsideWandering() {
 	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
@@ -159,6 +149,8 @@ void EnemyCharacter::_BuildMyComponents() {
 	_MyComponent.Parameter = AddComponent<CharacterParameter>();
 	// スポナーコンポーネント追加。
 	_MyComponent.Spawner = AddComponent<ObjectSpawn>();
+	// アニメーションイベントコンポーネント追加。
+	_MyComponent.AnimationEvent = AddComponent<AnimationEvent>();
 }
 
 void EnemyCharacter::_BuildCollision() {
@@ -176,7 +168,7 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(this, transform, _Radius, _Height, Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
+	_MyComponent.CharacterController->Init(this, transform,Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
@@ -209,6 +201,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyTranslationState>(new EnemyTranslationState(this)));
 	// 落下ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyFallState>(new EnemyFallState(this)));
+	// ダメージ反応ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
 }
@@ -238,4 +232,15 @@ void EnemyCharacter::_ChangeState(State next) {
 
 	// 現在のステートの添え字を保存。
 	_NowStateIdx = next;
+}
+
+void EnemyCharacter::GiveDamage(float damage) {
+	if (_NowState->IsPossibleDamage()) {
+		// ダメージを与えられるステートだった。
+		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage));
+		if (_NowState->IsPossibleChangeState(State::Damage)) {
+			// ダメージ反応ステートに移行可能。
+			_ChangeState(State::Damage);
+		}
+	}
 }

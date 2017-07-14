@@ -90,21 +90,21 @@ public:
 	inline void SetScale(float x, float y, float z) {
 		SetScale(Vector3(x, y, z));
 	}
-	void SetLocalAngle(const Vector3& v);
-	inline void SetLocalAngle(float x, float y, float z) {
-		SetLocalAngle(Vector3(x, y, z));
+	void SetLocalAngle(const Vector3& v, bool update = true);
+	inline void SetLocalAngle(float x, float y, float z, bool update = true) {
+		SetLocalAngle(Vector3(x, y, z),update);
 	}
-	void SetAngle(const Vector3& v);
-	inline void SetAngle(float x, float y, float z) {
-		SetAngle(Vector3(x, y, z));
+	void SetAngle(const Vector3& v, bool update = true);
+	inline void SetAngle(float x, float y, float z, bool update = true) {
+		SetAngle(Vector3(x, y, z),update);
 	}
-	void SetLocalRotation(const Quaternion& q);
-	inline void SetLocalRotation(float x, float y, float z, float w) {
-		SetLocalRotation(Quaternion(x, y, z, w));
+	void SetLocalRotation(const Quaternion& q, bool update = true);
+	inline void SetLocalRotation(float x, float y, float z, float w, bool update = true) {
+		SetLocalRotation(Quaternion(x, y, z, w),update);
 	}
-	void SetRotation(const Quaternion& q);
-	inline void SetRotation(float x, float y, float z, float w) {
-		SetRotation(Quaternion(x, y, z, w));
+	void SetRotation(const Quaternion& q, bool update = true);
+	inline void SetRotation(float x, float y, float z, float w, bool update = true) {
+		SetRotation(Quaternion(x, y, z, w),update);
 	}
 	void SetRotateMatrix(const D3DXMATRIX r);
 	void SetWorldMatrix(D3DXMATRIX w);

@@ -16,31 +16,43 @@ void EnemyAttackState::_EntrySubClass() {
 }
 
 void EnemyAttackState::_Start() {
-	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Attack,0.2f,1);
+	if (_attack) {
+		// 攻撃処理が設定されている。
+
+		_attack->Start();	// 初期化。
+		if (_attack->GetAnimationType() >= 0) {
+			// 再生するアニメーション番号が設定されている。
+			if (_attack->GetAnimationLoopNum() < 0) {
+				// 無限ループ再生。
+			}
+			else if(_attack->GetAnimationLoopNum() > 0){
+				// 指定回数ループ再生。
+				_EnemyObject->PlayAnimation_OriginIndex(_attack->GetAnimationType(), _attack->GetInterpolate(), _attack->GetAnimationLoopNum());
+			}
+			else {
+				// 再生回数に0が設定された。
+				abort();
+			}
+		}
+	}
+	else {
+		// 攻撃処理設定されてない。
+		abort();
+	}
 }
 
 void EnemyAttackState::_UpdateSubClass() {
-	// 攻撃判定用のコリジョン生成。
-	// ※暫定処理。
-	// ※エネミーは複数種類いる可能性があるため、モーションによってコリジョン発生位置やタイミングを変える必要がある。
-	const int eventFrame = 30;
-	Vector3 pos = _EnemyObject->transform->GetPosition();
-	pos += _EnemyObject->transform->GetForward() * 1.5f;
-	pos.y += 0.5f;
-	_EnemyObject->CreateAttackCollision(
-		eventFrame,
-		pos,
-		Vector3::zero,
-		Vector3::one,
-		0.25f);
+	_attack->SetIsPlaying(_EnemyObject->GetIsPlaying());	// アニメーションの更新状況を通知。
 
-	if (!_EnemyObject->GetIsPlaying()) {
-		// 攻撃モーション一度終了。
+	// 更新処理(戻り値は終了したか)。
+	if (_attack->Update()) {
+		// 更新処理終了。
 		_EndState();
 	}
 }
 
 void EnemyAttackState::Exit(EnemyCharacter::State next) {
+	_attack->Exit();
 }
 
 void EnemyAttackState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

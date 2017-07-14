@@ -11,6 +11,7 @@ public:
 
 	void SetTexture(TEXTURE* t);
 	void SetSize(const Vector2& size);
+	const Vector2& GetSize();
 	TEXTURE* GetTexture();
 	void SetPivot(const Vector2& v);
 	void SetPivot(const float& x, const float& y);

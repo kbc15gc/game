@@ -2,6 +2,7 @@
 #include "../EnemyCharacter.h"
 #include "EnemyStartAttackState.h"
 #include "fbEngine\_Object\_GameObject\GameObjectManager.h"
+#include "EnemyAttackState.h"
 
 EnemyStartAttackState::EnemyStartAttackState(EnemyCharacter* Object) : EnemyState(Object)
 {
@@ -23,7 +24,7 @@ void EnemyStartAttackState::_Start() {
 	if (false) {
 		// プレイヤーが死亡した。
 	}
-	else if (EnemyToPlayer.Length() >= _EnemyObject->GetAttackRange()) {
+	else if (EnemyToPlayer.Length() > _EnemyObject->GetAttackRange()) {
 		// プレイヤーが攻撃範囲外に離脱した。
 
 		// 再び追跡させる。
@@ -32,10 +33,12 @@ void EnemyStartAttackState::_Start() {
 	else {
 		// プレイヤーを攻撃可能。
 
+		_ChangeLocalState(EnemyCharacter::State::Attack);
+
 		// エネミーにどの攻撃を行うかを判断させる。
 		// ※エネミーの攻撃パターンを選別するステートを作ってしまうと、
 		//   エネミーの種類に応じてステートが爆発的に増えてしまうため、攻撃パターンの選別は各自エネミーに行わせる。
-		_ChangeLocalState(_EnemyObject->AttackSelect());
+		static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(_EnemyObject->AttackSelect());
 	}
 }
 

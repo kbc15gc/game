@@ -96,6 +96,16 @@ public:
 	{
 		return _TerrainSize;
 	}
+	//インスタンシングフラグを設定。
+	void SetInstancing(bool flg)
+	{
+		_Instancing = flg;
+	}
+	//フラグを返す。
+	const bool& GetInstancing()
+	{
+		return _Instancing;
+	}
 private:
 	//最初のメッシュを返す？
 	LPD3DXMESH GetOrgMesh(LPD3DXFRAME frame) const;
@@ -117,4 +127,6 @@ private:
 	ID3DXAnimationController* m_pAnimationController;
 	//とりあえずほじさせたかった。いつか消す。
 	Vector4 _TerrainSize;
+	//インスタンシング描画フラグ。デフォルトはfalse。
+	bool _Instancing;
 };

@@ -7,8 +7,14 @@ bool SearchViewAngle::IsDiscovery(const Vector3& pos1, const Vector3& pos2, cons
 	if (Length <= range) {
 		// Œ©‚¦‚é‹——£‚É“ü‚Á‚½B
 
+		// YŽ²¬•ª‚ðœ‚­B
+		Vec.y = 0.0f;
 		Vec.Normalize();
-		float angle = fabsf(acosf(Vec.Dot(Direction)));	// Šp“xŽZoB
+		Vector3 dir = Direction;
+		dir.y = 0.0f;
+		dir.Normalize();
+
+		float angle = fabsf(acosf(Vec.Dot(dir)));	// Šp“xŽZoB
 		if (angle <= D3DXToRadian(viewAngle) * 0.5f) {
 			// Ž‹–ìŠp‚É“ü‚Á‚½B
 

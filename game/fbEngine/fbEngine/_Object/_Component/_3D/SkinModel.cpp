@@ -108,6 +108,13 @@ void SkinModel::PreRender()
 	{
 		INSTANCE(SceneManager)->GetEnvironmentMap()->EntryModel(this);
 	}
+	//インスタンシングフラグをチェック。
+	if(_ModelDate->GetInstancing())
+	{
+		//ワールド行列を積む。
+		//どこに積もうか・・・？
+		
+	}
 }
 
 void SkinModel::Render()

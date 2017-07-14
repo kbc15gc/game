@@ -119,26 +119,24 @@ void Transform::UpdateTransform()
 {
 	//親が居るなら
 	if (_Parent) {
-		//親がいる。
+		//親のワールド行列を取得。
 		D3DXMATRIX PWorld = _Parent->GetWorldMatrix();
-		//親のワールド行列を乗算して、ローカル座標をワールド座標に変換する。
+		//子のワールド座標。
 		D3DXVECTOR4 pos;
+		//子のローカル座標。
 		D3DXVECTOR3 lpos;
-		//ローカルをコピー
+		//ローカルをコピー。
 		_LocalPosition.CopyFrom(lpos);
-		//ローカル×ワールド
+		//親のワールド行列を乗算して、ローカル座標をワールド座標に変換する。
+		//子のローカル座標×親のワールド行列。
 		D3DXVec3Transform(&pos, &lpos, &PWorld);
-		//ポジション
-		_Position.x = pos.x;
-		_Position.y = pos.y;
-		_Position.z = pos.z;
+		//ワールド座標。
+		_Position = Vector3(pos.x, pos.y, pos.z);
 		//スケール値
-		_Scale = _LocalScale * _Parent->_Scale;
+		SetLocalScale(_LocalScale);
 		//オイラー角
-		Vector3 pang = _Parent->_Angle;
-		_Angle = _LocalAngle + pang;
-		//クォータニオン生成
-		//_Rotation.SetEuler(_Angle);
+		_Angle = _LocalAngle - _Parent->_Angle;
+		//クォータニオン計算。
 		_Rotation = _LocalRotation * _Parent->GetRotation();
 	}
 	else {
@@ -146,7 +144,7 @@ void Transform::UpdateTransform()
 		_Position = _LocalPosition;
 		_Scale = _LocalScale;
 		_Angle = _LocalAngle;
-		_Rotation.SetEuler(_Angle);
+		_Rotation = _LocalRotation;
 	}
 	//回転行列取得
 	_RotateMatrix = _Rotation.GetRotationMatrix();
@@ -314,28 +312,33 @@ void Transform::RemoveChild(Transform * t)
 	}
 }
 
-void Transform::SetParent(Transform * _Parent)
+void Transform::SetParent(Transform * parent)
 {
-	if (_Parent) {
+	if (parent) {
 		// 親が設定された。
 
 		// 親の子供に自分を追加。
-		_Parent->AddChild(this);
+		parent->AddChild(this);
 
 		//親の設定を取得
 		if (gameObject) {
-			if (_Parent->gameObject) {
-				gameObject->SetDiscard(_Parent->gameObject->GetDiscard());
+			if (parent->gameObject) {
+				gameObject->SetDiscard(parent->gameObject->GetDiscard());
 			}
 		}
 	}
-	else {
+	else if(_Parent)
+	{
+		_LocalPosition = _Position;
+		_LocalScale = _Scale;
+		_LocalAngle = _Angle + _Parent->_Angle;
+		_LocalRotation.SetEuler(_LocalAngle);
 		// 親を外すので、現在の親の子供リストから自分を外す。
 		this->_Parent->RemoveChild(this);
 	}
 
 	//親に登録
-	this->_Parent = _Parent;
+	this->_Parent = parent;
 
 	UpdateTransform();
 }
@@ -436,8 +439,9 @@ void Transform::SetScale(const Vector3& v)
 	UpdateWolrdMatrix();
 }
 
-void Transform::SetLocalAngle(const Vector3& v)
+void Transform::SetLocalAngle(const Vector3& v, bool update)
 {
+	//ローカルアングル決定。
 	_LocalAngle = v;
 	//ローカルから最終的な角度計算
 	if (_Parent) {
@@ -453,16 +457,21 @@ void Transform::SetLocalAngle(const Vector3& v)
 		//ローカルそのまま
 		_Angle = _LocalAngle;
 	}
-	//クォータニオン更新
-	_LocalRotation.SetEuler(_Angle);
-	//クォータニオン設定
-	SetLocalRotation(_LocalRotation);
+
+	//クォータニオン計算。
+	if (update)
+	{
+		//クォータニオン更新
+		_LocalRotation.SetEuler(_LocalAngle);
+		//クォータニオン設定
+		SetLocalRotation(_LocalRotation,false);
+	}
 }
 
-void Transform::SetAngle(const Vector3& v)
+void Transform::SetAngle(const Vector3& v, bool update)
 {
 	_Angle = v;
-	//ローカルから最終的な角度計算
+	//ローカルの角度逆算。
 	if (_Parent) {
 		//親のクォータニオン取得
 		Quaternion prot = _Parent->GetRotation();
@@ -476,13 +485,18 @@ void Transform::SetAngle(const Vector3& v)
 		//ローカルそのまま
 		_LocalAngle = _Angle;
 	}
-	//クォータニオン更新
-	_LocalRotation.SetEuler(_Angle);
-	//クォータニオン設定
-	SetLocalRotation(_LocalRotation);
+
+	//クォータニオン計算。
+	if (update)
+	{
+		//クォータニオン更新
+		_Rotation.SetEuler(_Angle);
+		//クォータニオン設定
+		SetRotation(_Rotation,false);
+	}
 }
 
-void Transform::SetLocalRotation(const Quaternion & q)
+void Transform::SetLocalRotation(const Quaternion & q, bool update)
 {
 	_LocalRotation = q;
 	//親がいるかどうか？
@@ -499,11 +513,18 @@ void Transform::SetLocalRotation(const Quaternion & q)
 	}
 	//回転行列更新
 	_RotateMatrix = _Rotation.GetRotationMatrix();
+
+	//オイラー角の更新。
+	if (update)
+	{
+		SetLocalAngle(_LocalRotation.GetAngle(), false);
+	}
+
 	//ワールド行列更新
 	UpdateWolrdMatrix();
 }
 
-void Transform::SetRotation(const Quaternion& q)
+void Transform::SetRotation(const Quaternion& q, bool update)
 {
 	_Rotation = q;
 	//親がいるかどうか？
@@ -514,6 +535,7 @@ void Transform::SetRotation(const Quaternion& q)
 		protInv.Inverse();
 		//ローカルを逆算
 		_LocalRotation = _Rotation * protInv;
+		_LocalRotation.GetAngle();
 	}
 	else
 	{
@@ -522,6 +544,11 @@ void Transform::SetRotation(const Quaternion& q)
 	}
 	//回転行列更新
 	_RotateMatrix = _Rotation.GetRotationMatrix();
+	//オイラー角の更新。
+	if (update)
+	{
+		SetAngle(_Rotation.GetAngle(), false);
+	}
 	//ワールド行列更新
 	UpdateWolrdMatrix();
 }
@@ -533,7 +560,7 @@ void Transform::SetRotateMatrix(const D3DXMATRIX r)
 	D3DXQUATERNION q;
 	D3DXQuaternionRotationMatrix(&q, &_RotateMatrix);
 	//メンバ変数のクォータニオンに
-	_Rotation = q;
+	SetRotation(q);
 	UpdateWolrdMatrix();
 }
 

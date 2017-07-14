@@ -8,6 +8,7 @@ class Collision:public Component
 {
 public:
 	enum class CollisionObjectType{Rigid = 0,Ghost};
+	enum class PhysicsType{Dynamic = 0,Kinematick,Static};
 #ifdef _DEBUG
 	static const wchar_t* TypeName[];
 #endif
@@ -120,12 +121,23 @@ public:
 	virtual void _RemoveWorldSubClass() = 0;
 	// ワールドから削除。
 	void RemoveWorld();
-	void SetKinematick(bool flg)
+	// 動的剛体にする。
+	inline void OnDynamic()
 	{
-		_Kinematick = flg;
+		_physicsType = PhysicsType::Dynamic;
 	}
-	inline bool GetIsKinematick()const {
-		return _Kinematick;
+	// キネマティック剛体にする。
+	inline void OnKinematick()
+	{
+		_physicsType = PhysicsType::Kinematick;
+	}
+	// 静的剛体にする。
+	inline void OnStatic()
+	{
+		_physicsType = PhysicsType::Static;
+	}
+	inline PhysicsType GetPhysicsType()const {
+		return _physicsType;
 	}
 	inline CollisionObjectType GetCollisionType()const {
 		return _MyObjectType;
@@ -158,6 +170,5 @@ protected:
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
 	bool _isAddWorld = false;	// ワールドに追加したか。
 	CollisionObjectType _MyObjectType;	// 剛体かゴーストか。
-	//動かないよ。
-	bool _Kinematick;
+	PhysicsType _physicsType;
 };
