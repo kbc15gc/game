@@ -102,6 +102,9 @@ public:
 	void AddValue(float value) {
 		_UpdateValue(_Value + value);
 	}
+	void SetValue(float value) {
+		_Value = value;
+	}
 	// 何ゲージ重ねるかを返却。
 	inline short GetMaxBarNum()const {
 		return _MaxBarNum;
@@ -170,6 +173,9 @@ public:
 	}
 	void AddValue(float value) {
 		_Object->AddValue(value);
+	}
+	void SetValue(float value) {
+		_Object->SetValue(value);
 	}
 	// 何ゲージ重ねるかを返却。
 	inline short GetMaxBarNum()const {

@@ -207,16 +207,16 @@ namespace Support {
 		}
 
 		//ファイルからデータを受け取るバッファ
-		char line[256], copy[256];
+		char line[512], copy[512];
 
 		//スキップする処理(要改善)
-		fin.getline(line, 256);
+		fin.getline(line, 512);
 
 		while (true)
 		{
 			//初期化してから新しい行を読み込む
-			ZeroMemory(line, sizeof(char) * 256);
-			fin.getline(line, 256);
+			ZeroMemory(line, sizeof(char) * 512);
+			fin.getline(line, 512);
 
 			//ファイルの終端になったなら抜ける。
 			if (fin.eof())
@@ -227,7 +227,7 @@ namespace Support {
 
 			int idx = 0;		//何番目の要素か？
 			int offset = 0;		//先頭からのoffset量
-			memcpy(copy, line, sizeof(char) * 256);
+			memcpy(copy, line, sizeof(char) * 512);
 			//アドレス確保
 			T* tmp = new T();
 			
