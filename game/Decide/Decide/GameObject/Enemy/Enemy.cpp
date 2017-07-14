@@ -5,6 +5,9 @@
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
 
+
+//EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
+
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
 
@@ -35,9 +38,15 @@ void Enemy::_StartSubClass(){
 	// ※暫定処理。
 	_WanderingRange = 30.0f;
 
+	// 歩行速度設定。
+	_walkSpeed = 1.0f;
+
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	// 攻撃処理を定義。
+	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack)].No,0.2f);
+	
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
@@ -63,11 +72,11 @@ void Enemy::_LateUpdateSubClass()
 }
 
 
-EnemyCharacter::State Enemy::AttackSelect() {
+EnemyAttack* Enemy::AttackSelect() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
-	return State::Attack;
+	return &_singleAttack;
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {
@@ -93,6 +102,11 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 		
 		// 直前のステートに切り替え。
 		_ChangeState(_saveState);
+	}
+	else if (EndStateType == State::Damage) {
+		// 攻撃を受けた。
+		// 発見状態に移行。
+		_ChangeState(State::Discovery);
 	}
 }
 
@@ -150,6 +164,8 @@ void Enemy::_BuildAnimation() {
 		// 落下状態。
 		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// ダメージ状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationProt::Damage)].get());
 		// 死亡状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
 	}
@@ -162,7 +178,7 @@ void Enemy::_ConfigAnimationEvent() {
 	AnimationEvent::AttackEventInfo info(transform,true);
 	info.damage = _MyComponent.Parameter->GiveDamageMass();
 	info.master = AttackCollision::CollisionMaster::Enemy;
-	info.pos = Vector3(1.5f, 0.5f, 0.0f);
+	info.pos = Vector3(0.0f, 0.5f, 1.5f);
 	info.rot = Quaternion::Identity;
 	info.size = Vector3::one;
 	info.life = 0.25f;

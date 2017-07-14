@@ -15,7 +15,7 @@ EnemyDiscoveryState::~EnemyDiscoveryState()
 
 void EnemyDiscoveryState::_EntrySubClass() {
 	_Player = INSTANCE(GameObjectManager)->FindObject("Player");
-	_Speed = 5.0f;	// 移動速度を設定。
+	_Speed = _EnemyObject->GetDashSpeed();	// 移動速度を設定。
 	_isOutside = false;
 }
 
@@ -36,7 +36,6 @@ void EnemyDiscoveryState::_UpdateSubClass() {
 			_EnemyObject->LookAtObject(*_Player);
 
 			Vector3 EnemyToPlayer = _Player->transform->GetPosition() - _EnemyObject->transform->GetPosition();
-			EnemyToPlayer.y = 0.0f;	// Y軸成分は除く。
 			if (EnemyToPlayer.Length() <= _EnemyObject->GetAttackRange()) {
 				// 攻撃範囲に入った。
 

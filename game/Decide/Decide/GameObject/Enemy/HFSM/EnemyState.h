@@ -31,6 +31,13 @@ public:
 		return true;
 	}
 
+	// このステート中にダメージを与えられるか。
+	// ※デフォルトはダメージを与えられる。
+	// ※継承先で上書きして実装。
+	inline virtual bool IsPossibleDamage() {
+		return true;
+	}
+
 	// ステート処理終了要請関数。
 	// ※外部から強制的にステート処理を終了させたい場合はこちらを呼ぶ。
 	inline void _EndStateRequest() {

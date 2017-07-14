@@ -85,7 +85,7 @@ public class CSVExportFunction : Editor
             string sca = Vector3ToString(child.lossyScale);
 
             string line;
-            line = string.Format("{0},{1},{2},{3}", filename, pos, ang, sca);
+            line = string.Format("{0},{1},{2},{3},{4}", filename, pos, ang, sca, "0");
             //1列書き出し。
             sw.WriteLine(line);
 

@@ -14,6 +14,10 @@ void ImageObject::SetSize(const Vector2 & size)
 {
 	_Sprite->SetSize(size);
 }
+const Vector2 & ImageObject::GetSize()
+{
+	return _Sprite->GetSize();
+}
 TEXTURE * ImageObject::GetTexture()
 {
 	return _Sprite->GetTexture();

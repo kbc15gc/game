@@ -18,12 +18,19 @@ void EnemyWaitState::_EntrySubClass() {
 
 void EnemyWaitState::_Start() {
 	float InterpolateTime = 0.5f;	// 補間時間。
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle, InterpolateTime);
+	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Idle, InterpolateTime);
 }
 
 void EnemyWaitState::_UpdateSubClass() {
-	if (_TimeCounter >= _Interval) {
-		// 設定されていた時間待機した。
+	//if (_TimeCounter >= _Interval) {
+	//	// 設定されていた時間待機した。
+
+	//	// ステート処理終了。
+	//	_EndState();
+	//	return;
+	//}
+	if (!_EnemyObject->GetIsPlaying()) {
+		// 待機アニメーション再生終了。
 
 		// ステート処理終了。
 		_EndState();
@@ -33,8 +40,8 @@ void EnemyWaitState::_UpdateSubClass() {
 		// 視野角判定を行う。
 		_EnemyObject->SearchView();
 
-		// 時間加算。
-		_TimeCounter += Time::DeltaTime();
+		//// 時間加算。
+		//_TimeCounter += Time::DeltaTime();
 	}
 }
 

@@ -10,15 +10,17 @@ namespace
 		Vector3 pos;	//ポジション
 		Quaternion ang;	//回転
 		Vector3 sca;	//スケール
+		int hitcamera;
 	};
 
 	//メンバ変数の情報設定
-	const Support::DATARECORD ObjectInfoData[4] =
+	const Support::DATARECORD ObjectInfoData[] =
 	{
-		{ "filename",Support::DataTypeE::STRING, offsetof(struct ObjectInfo,filename),sizeof(char)*256 },
+		{ "filename",Support::DataTypeE::STRING, offsetof(struct ObjectInfo,filename),sizeof(char) * 256 },
 		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,pos),sizeof(Vector3) },
 		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct ObjectInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,sca),sizeof(Vector3) },
+		{ "hitcamera",Support::DataTypeE::INT, offsetof(struct ObjectInfo,hitcamera),sizeof(int) },
 	};
 
 	//コリジョンの情報
@@ -31,7 +33,7 @@ namespace
 	};
 
 	//メンバ変数の情報設定
-	const Support::DATARECORD CollisionInfoData[4] =
+	const Support::DATARECORD CollisionInfoData[] =
 	{
 		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct CollisionInfo,pos),sizeof(Vector3) },
 		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct CollisionInfo,ang),sizeof(Quaternion) },

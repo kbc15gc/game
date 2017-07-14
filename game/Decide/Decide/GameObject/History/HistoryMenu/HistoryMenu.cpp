@@ -41,7 +41,10 @@ void HistoryMenu::Update()
 	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Idol)
 	{
 		//表示.
-		EnableUpdate();
+		if (_IsOperation)
+		{
+			EnableUpdate();
+		}
 	}
 	else
 	{
@@ -51,6 +54,19 @@ void HistoryMenu::Update()
 		for (auto& it : _Chip2DList)
 		{
 			it->SetActive(false);
+		}
+	}
+
+	if (!_IsOperation)
+	{
+		const float OperationTime = 2.0f;
+		static float LocalTime = 0.0f;
+		LocalTime += Time::DeltaTime();
+		if (LocalTime >= OperationTime)
+		{
+			_IsOperation = true;
+			_HistoryBook->SetIsOperation(_IsOperation);
+			LocalTime = 0.0f;
 		}
 	}
 }
@@ -63,6 +79,19 @@ void HistoryMenu::AddChip(ChipID chipID)
 	Chip2D* chip2D = INSTANCE(GameObjectManager)->AddNew<Chip2D>("Chip2D", 9);
 	chip2D->Start(chipID);
 	_Chip2DList.push_back(chip2D);
+
+	int len = _Chip2DList.size() - 1 - _NowSelectChip;
+	float offset = -150.0f;
+	Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
+	chip2D->transform->SetPosition(pos);
+	if (_Chip2DList.size() - 1 == _NowSelectChip)
+	{
+		chip2D->SetSize(Chip2D::SizeCodeE::Select);
+	}
+	else
+	{
+		chip2D->SetSize(Chip2D::SizeCodeE::NoSelect);
+	}
 }
 
 /**
@@ -70,6 +99,16 @@ void HistoryMenu::AddChip(ChipID chipID)
 */
 void HistoryMenu::EnableUpdate()
 {
+	switch ((SelectCodeE)_SelectCode)
+	{
+		case SelectCodeE::Location:
+			break;
+		case SelectCodeE::Page:
+			break;
+		case SelectCodeE::Chip:
+			break;
+	}
+
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
 		//左トリガー.
@@ -81,9 +120,10 @@ void HistoryMenu::EnableUpdate()
 		//_NowSelectLocation = max(0, _NowSelectLocation - 1);
 	}
 
+	//チップを左右選択.
 	if (XboxInput(0)->IsPushAnalog(AnalogE::R_STICKL))
 	{
-		_NowSelectChip = min(max(0,_Chip2DList.size() - 1), _NowSelectChip + 1);
+		_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
 	}
 	if (XboxInput(0)->IsPushAnalog(AnalogE::R_STICKR))
 	{
@@ -92,6 +132,7 @@ void HistoryMenu::EnableUpdate()
 
 	int BEFORE = _NowLookPage;
 
+	//ページを左右選択.
 	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
 	{
 		_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
@@ -101,15 +142,19 @@ void HistoryMenu::EnableUpdate()
 		_NowLookPage = max(0, _NowLookPage - 1);
 	}
 
-	if (BEFORE < _NowLookPage)
+	if (_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() > 0)
 	{
-		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
-		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
-	}
-	else if(BEFORE > _NowLookPage)
-	{
-		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
-		_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+		if (BEFORE < _NowLookPage)
+		{
+			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
+			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
+		}
+		else if (BEFORE > _NowLookPage)
+		{
+
+			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+		}
 	}
 
 	//Aボタン押.
@@ -128,6 +173,9 @@ void HistoryMenu::EnableUpdate()
 
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
 			_NowSelectChip = max(0, _NowSelectChip);
+
+			_IsOperation = false;
+			_HistoryBook->SetIsOperation(_IsOperation);
 		}
 	}
 
@@ -137,7 +185,7 @@ void HistoryMenu::EnableUpdate()
 		//歴史書からリストを取得。
 		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
 		//取得したリストサイズが0以上なら削除処理を行う。
-		if (pagelist.size() > 0)
+		if (pagelist.size() > 0 && 0 <= _NowLookPage  && _NowLookPage < pagelist.size())
 		{
 			HistoryPage* page = pagelist[_NowLookPage];
 
@@ -145,49 +193,36 @@ void HistoryMenu::EnableUpdate()
 			{
 				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
 
-				INSTANCE(GameObjectManager)->AddRemoveList(page);
-
 				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
-			
-				int BEFORE = _NowLookPage;
-				_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
-				_NowLookPage = max(0, _NowLookPage - 1);
-				if (BEFORE < _NowLookPage)
-				{
-					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->SetRotAngle(90.0f);
-					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[BEFORE]->ChangeState(HistoryPage::StateCodeE::Turn);
-				}
-				else if (BEFORE > _NowLookPage)
-				{
-					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
-					_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
-				}
 
+				_IsOperation = false;
+				_HistoryBook->SetIsOperation(_IsOperation);
 			}
 		}
 	}
+
 	//表示.
 	_LocationNameRender->SetActive(true);
 
 	//場所名描画.
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
 
+
 	for (int i = 0; i < _Chip2DList.size(); i++)
 	{
 		_Chip2DList[i]->SetActive(true);
-		if (i == _NowSelectChip)
-		{
-			_Chip2DList[i]->SetSize(Chip2D::SizeCodeE::Select);
-		}
-		else
-		{
-			_Chip2DList[i]->SetSize(Chip2D::SizeCodeE::NoSelect);
-		}
 
 		int len = i - _NowSelectChip;
 		float offset = -150.0f;
 		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
-		_Chip2DList[i]->transform->SetPosition(pos);
-	}
 
+		if (i == _NowSelectChip)
+		{
+			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::Select, pos);
+		}
+		else
+		{
+			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::NoSelect, pos);
+		}
+	}
 }

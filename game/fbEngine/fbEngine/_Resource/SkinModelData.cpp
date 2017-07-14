@@ -17,7 +17,7 @@ void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix
 	//‰ñ“]s—ñ‚ª‘¶Ý‚µ‚Ä‚¢‚½‚ç‰ñ“].
 	if (pFrame->RotationMatrix != nullptr)
 	{
-		D3DXMatrixMultiply(&matrix, &pFrame->TransformationMatrix, pFrame->RotationMatrix);
+		D3DXMatrixMultiply(&matrix, pFrame->RotationMatrix, &matrix);
 	}
 
 	if (pParentMatrix != NULL)
@@ -609,7 +609,8 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
  */
 SkinModelData::SkinModelData():
 _FrameRoot(nullptr),
-m_pAnimationController(nullptr)
+m_pAnimationController(nullptr),
+_Instancing(false)
 {
 	
 }

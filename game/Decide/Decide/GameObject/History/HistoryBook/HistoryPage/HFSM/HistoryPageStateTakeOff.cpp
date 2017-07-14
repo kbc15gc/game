@@ -32,6 +32,11 @@ void HistoryPageStateTakeOff::Update()
 	pos.Add(movePos, initPos);
 
 	_HistoryPage->transform->SetPosition(pos);
+
+	if (lerpRate >= 1.0f)
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(_HistoryPage);
+	}
 }
 
 /**

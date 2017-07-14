@@ -13,6 +13,7 @@
 class SkinModel;
 class Animation;
 class EnemyState;
+class EnemyAttack;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -28,12 +29,12 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall,Death };
+	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death };
 
 	// アニメーションデータ配列の添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { Idle = 0, Walk, Dash, Attack, Fall, Death,Max };
+	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Barking, Attack, Fall,Damage, Death,Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
@@ -99,23 +100,32 @@ public:
 	}
 
 	// 攻撃処理を決定する関数。
+	// 戻り値：	実行したい攻撃処理クラスのポインタ。
 	// ※継承先で実装。
-	// ※複数攻撃パターンがある場合はここでローカルステートに遷移する際に分岐させる。
-	virtual EnemyCharacter::State AttackSelect() = 0;
+	// ※複数攻撃パターンがある場合は攻撃処理を分岐させる。
+	virtual EnemyAttack* AttackSelect() = 0;
 
 	// エネミーのアニメーション再生関数(ループ)。
-	// 引数：	アニメーションタイプ。
+	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
 	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime) {
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
-	// 引数：	アニメーションタイプ。
+	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
 	//			ループ回数。
 	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1) {
 		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime, loopCount);
+	}
+
+	// エネミーのアニメーション再生関数(指定回数ループ)。
+	// 引数：	アニメーションタイプ(モデルごとのアニメーション番号)。
+	//			補間時間。
+	//			ループ回数。
+	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1) {
+		_MyComponent.Animation->PlayAnimation(animationNum, interpolateTime, loopCount);
 	}
 
 	// エネミーがアニメーションを再生しているか。
@@ -132,6 +142,7 @@ public:
 	// 自分が発生させたもの以外の攻撃コリジョンと衝突した瞬間呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
+
 	virtual void HitAttackCollisionEnter(AttackCollision* hitCollision);
 
 	// 自分が発生させたもの以外の攻撃コリジョンに衝突ている間呼ばれるコールバック。
@@ -187,6 +198,10 @@ public:
 		_MyComponent.Parameter->ParamInit(param);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
+
+	// エネミーにダメージを与える処理。
+	// 引数：	ダメージ量。
+	void GiveDamage(float damage);
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -265,6 +280,14 @@ public:
 	// ドロップする経験値。
 	inline int GetDropEXP() const {
 		return _MyComponent.Parameter->GetParam(CharacterParameter::DROPEXP);
+	}
+	inline float GetWalkSpeed()const {
+		return _walkSpeed;
+	}
+
+	inline float GetDashSpeed()const {
+		return _walkSpeed * 5.0f;
+
 	}
 protected:
 	// ステート切り替え関数。
@@ -359,10 +382,75 @@ protected:
 
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
 
+	float _walkSpeed = 0.0f;		// 歩行速度。
 private:
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
+};
+
+// エネミーの攻撃処理。
+// ※攻撃の種類ごとに作成。
+// ※継承先で各関数を実装。
+// ※このクラスのインスタンスを攻撃ステートに渡すことで各命令が呼び出される。
+// アニメーションが設定されていれば自動で再生される。
+class EnemyAttack {
+public:
+	virtual ~EnemyAttack() {
+
+	}
+
+	// 初期化関数。
+	// 引数：	再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
+	//			アニメーション補間時間(初期値は0)。
+	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
+	inline void Init(int animType = -1, float interpolate = 0.0f, int animLoopNum = 1) {
+		_animType = animType;
+		_interpolate = interpolate;
+		_animLoopNum = animLoopNum;
+	}
+	virtual void Start() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
+	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
+	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
+
+	// この攻撃中のステート遷移を許可するか。
+	// 引数：	切り替えようとしているステート。
+	// ※切り替えようとしているステートごとに処理を変えたい場合は継承先で上書き。
+	inline virtual bool IsPossibleChangeState(EnemyCharacter::State next) {
+		return true;
+	}
+
+	inline const int GetAnimationType()const {
+		return _animType;
+	}
+	inline const float GetInterpolate()const {
+		return _interpolate;
+	}
+	inline const int GetAnimationLoopNum() const {
+		return _animLoopNum;
+	}
+	inline void SetIsPlaying(bool flg) {
+		_isPlaying = flg;
+	}
+protected:
+	int _animType = -1;	// 再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
+	float _interpolate = 0.0f;	// アニメーション補間時間(初期値は0)。
+	int _animLoopNum = 1;	// アニメーションループ再生数(1でループなし、-1で無限ループ)。
+	bool _isPlaying = false;	// アニメーション再生中かのフラグ(更新処理時に攻撃ステートから設定される)。
+};
+
+// ※単攻撃(攻撃モーション一回分攻撃)。
+class EnemySingleAttack :public EnemyAttack{
+public:
+	void Start()override {};
+	bool Update()override {
+		if (!_isPlaying) {
+			// 攻撃モーション一度終了。
+			return true;
+		}
+		return false;
+	}
+	void Exit()override{};
 };

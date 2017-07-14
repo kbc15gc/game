@@ -10,6 +10,7 @@
 #include "HFSM\EnemyStartAttackState.h"
 #include "HFSM\EnemyFallState.h"
 #include "HFSM\EnemyDeathState.h"
+#include "HFSM\EnemyDamageReactionState.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -201,6 +202,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyTranslationState>(new EnemyTranslationState(this)));
 	// 落下ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyFallState>(new EnemyFallState(this)));
+	// ダメージ反応ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
 }
@@ -241,6 +244,17 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 			AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 			attackvalue->Init(Vector3::zero, _MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()), 1.5f, Vector3(0.0f, _Height, 0.0f));
 			attackvalue->transform->SetParent(transform);
+		}
+	}
+}
+
+void EnemyCharacter::GiveDamage(float damage) {
+	if (_NowState->IsPossibleDamage()) {
+		// ダメージを与えられるステートだった。
+		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage));
+		if (_NowState->IsPossibleChangeState(State::Damage)) {
+			// ダメージ反応ステートに移行可能。
+			_ChangeState(State::Damage);
 		}
 	}
 }

@@ -4,19 +4,6 @@
 #include"stdafx.h"
 #include"Chip2D.h"
 
-#include"fbEngine\_Object\_Component\_2D\Sprite.h"
-
-namespace
-{
-	/**
-	* サイズ.
-	*/
-	static const Vector2 SizeData[(int)Chip2D::SizeCodeE::SizeCodeNum] =
-	{
-		Vector2(117.0f, 192.0f),
-		Vector2(78.0f, 128.0f),
-	};
-}
 
 /**
 * 初期化.
@@ -41,9 +28,27 @@ void Chip2D::Start(ChipID chipID)
 }
 
 /**
-* サイズを設定.
+* 更新.
 */
-void Chip2D::SetSize(SizeCodeE size)
+void Chip2D::Update()
 {
-	_ChipSprite->SetSize(SizeData[(int)size]);
+	static float SPEED = 2.0f;
+	_LerpRate += SPEED * Time::DeltaTime();
+	_LerpRate = min(1.0f, _LerpRate);
+
+	Vector3 dest = _DestPos;
+	dest.Scale(_LerpRate);
+	Vector3 pos = _Pos;
+	pos.Scale(1.0f - _LerpRate);
+
+	//座標を設定.
+	transform->SetPosition(dest + pos);
+
+	Vector2 destSize = _DestSize;
+	destSize *= _LerpRate;
+	Vector2 size = _Size;
+	_Size *= (1.0f - _LerpRate);
+
+	_ChipSprite->SetSize(_Size + destSize);
 }
+

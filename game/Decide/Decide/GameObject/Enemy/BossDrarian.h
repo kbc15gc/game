@@ -10,6 +10,10 @@ private:
 	// ボス(歩行型ドラゴン)のアニメーション番号。
 	enum class AnimationDrarian {
 		Wait = 0,
+		Walk,
+		Dash,
+		Attack,
+		Barking,
 		Max
 	};
 public:
@@ -25,7 +29,7 @@ private:
 	void _LateUpdateSubClass()override;
 
 
-	EnemyCharacter::State AttackSelect()override;
+	EnemyAttack* AttackSelect()override;
 
 	// コリジョン定義関数。
 	// コリジョンの形状やパラメータを設定する関数。
@@ -44,5 +48,6 @@ private:
 
 private:
 	State _saveState;
+	/*static*/ EnemySingleAttack _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、今のところ静的メンバでオッケー)。
 };
 

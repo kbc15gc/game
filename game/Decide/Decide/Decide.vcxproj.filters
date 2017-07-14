@@ -166,6 +166,16 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.cpp">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\History\HistoryInfo.cpp" />
+    <ClCompile Include="GameObject\Component\AnimationEvent.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\BossDrarian.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.cpp">
+      <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -346,6 +356,15 @@
     </ClInclude>
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.h">
       <Filter>GameObject\History\HistoryBook\Page\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\AnimationEvent.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BossDrarian.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.h">
+      <Filter>GameObject\Enemy\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
