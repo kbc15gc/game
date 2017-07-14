@@ -62,11 +62,11 @@ void HistoryManager::CreateObject()
 * @param slot		スロット番号.
 * @param chip		チップID.
 */
-bool HistoryManager::SetHistoryChip(LocationCodeE location, UINT slot, ChipID chip)
+bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip)
 {
+	_HistoryBook->PutInChip(chip, location);
 	//ひとまず入れるだけで上書されてしまう.
-	_LocationHistoryList[(int)location]->SetChip(chip, slot);
-	_HistoryBook->PutInChip(chip);
+	_LocationHistoryList[(int)location]->SetData(_HistoryBook->GetLocationList(location));
 
 	//変更したので歴史を改変させる.
 	_ChangeLocation(location);
@@ -226,6 +226,7 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					RigidBody* coll = obj->AddComponent<RigidBody>();
 					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
 					RigidBodyInfo Rinfo;
+					Rinfo.physicsType = Collision::PhysicsType::Static;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
 					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
@@ -237,7 +238,6 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					q.SetRotation(Vector3::up, PI);
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
-					coll->SetKinematick(true);
 					coll->Create(Rinfo,false);
 				}else
 				{
@@ -279,4 +279,16 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 	}
 
 	colls.clear();
+}
+
+void HistoryManager::PutOutPage(LocationCodeE location,vector<HistoryPage*>& list)
+{
+	_LocationHistoryList[(int)location]->SetData(list);
+
+	//変更したので歴史を改変させる.
+	_ChangeLocation(location);
+
+	//データを保存.
+	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+
 }

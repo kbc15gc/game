@@ -33,7 +33,7 @@ void RigidBody::Update()
 
 void RigidBody::LateUpdate()
 {
-	if (!_Kinematick)
+	if (_physicsType == PhysicsType::Dynamic)
 	{
 		//シュミレート後の結果を送る
 		btTransform trans = _CollisionObject->getWorldTransform();
@@ -64,9 +64,10 @@ void RigidBody::Create(RigidBodyInfo & rbInfo, bool isAddWorld)
 	Collision::Create(new btRigidBody(btRbInfo), rbInfo.coll, rbInfo.id, rbInfo.offset, isAddWorld);
 
 	_MyObjectType = CollisionObjectType::Rigid;
+	_physicsType = rbInfo.physicsType;
 }
 
-void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vector3 off, bool isAddWorld)
+void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vector3 off,PhysicsType physicsType, bool isAddWorld)
 {
 	//前回の内容解放
 	Release();
@@ -82,6 +83,7 @@ void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vect
 	Collision::Create(new btRigidBody(btRbInfo), coll, id, off,isAddWorld);
 
 	_MyObjectType = CollisionObjectType::Rigid;
+	_physicsType = physicsType;
 }
 
 void RigidBody::SetGravity(Vector3 set)

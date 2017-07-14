@@ -13,6 +13,7 @@ ThirdPersonCamera::~ThirdPersonCamera()
 void ThirdPersonCamera::Awake()
 {
 	GameCamera::Awake();
+
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
@@ -77,8 +78,8 @@ void ThirdPersonCamera::Move()
 	//コントローラー移動。
 	dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f);
 	dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f);
-#ifdef _DEBUG
-	//キーボード(デバッグ用)。
+
+	//キーボード。
 	if (KeyBoardInput->isPressed(DIK_W))
 	{
 		dir.z++;
@@ -95,7 +96,7 @@ void ThirdPersonCamera::Move()
 	{
 		dir.x++;
 	}
-#endif
+
 	//移動したか。
 	if (dir.Length() != 0)
 	{

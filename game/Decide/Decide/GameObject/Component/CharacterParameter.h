@@ -55,6 +55,7 @@ public:
 	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp);
 	//‰Šú‰»B
 	void ParamInit(int param[Param::MAX]);
+	void ParamInit(const vector<int>& param);
 
 	void Update()override;
 

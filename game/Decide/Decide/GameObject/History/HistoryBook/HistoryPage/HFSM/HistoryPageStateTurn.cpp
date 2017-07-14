@@ -13,8 +13,8 @@ void HistoryPageStateTurn::Entry()
 {
 	_BefAngle = _HistoryPage->GetAngle();
 
-	_MoveSpeed = 1.2f;
-	_Angle = -90.0f;
+	_MoveSpeed = 2.0f;
+	_Angle = _HistoryPage->GetRotAngle();
 
 	_LerpRate = 0.0f;
 }

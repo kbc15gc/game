@@ -164,9 +164,10 @@ public class CSVExportFunction : Editor
         string ang = QuaternionToString(coll.rotation);
         //スケール
         string sca = Vector3ToString(coll.lossyScale);
-
+        ExportCollision c = coll.gameObject.GetComponent<ExportCollision>();
+        string hitcamera = (Convert.ToInt32(c.HitCamera)).ToString();
         string line;
-        line = string.Format("{0},{1},{2},{3}", filename, pos, ang, sca);
+        line = string.Format("{0},{1},{2},{3},{4}", filename, pos, ang, sca, hitcamera);
         sw.WriteLine(line);
     }
 

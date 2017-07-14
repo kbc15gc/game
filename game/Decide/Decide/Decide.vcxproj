@@ -162,11 +162,13 @@
     <ClInclude Include="GameObject\Camera\GameCamera.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
     <ClInclude Include="GameObject\Camera\ThirdPersonCamera.h" />
+    <ClInclude Include="GameObject\Component\AnimationEvent.h" />
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Component\ObjectSpawn.h" />
     <ClInclude Include="GameObject\Component\OutputData.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
+    <ClInclude Include="GameObject\Enemy\BossDrarian.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
     <ClInclude Include="GameObject\Enemy\EnemyManager.h" />
@@ -193,6 +195,7 @@
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.h" />
+    <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.h" />
     <ClInclude Include="GameObject\History\HistoryInfo.h" />
@@ -229,11 +232,13 @@
     <ClCompile Include="GameObject\Camera\GameCamera.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
     <ClCompile Include="GameObject\Camera\ThirdPersonCamera.cpp" />
+    <ClCompile Include="GameObject\Component\AnimationEvent.cpp" />
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp" />
     <ClCompile Include="GameObject\Component\OutputData.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp" />
+    <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyManager.cpp" />
@@ -258,8 +263,10 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateClose.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutIn.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStatePutOut.cpp" />
+    <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTakeOff.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HistoryPage.cpp" />
+    <ClCompile Include="GameObject\History\HistoryInfo.cpp" />
     <ClCompile Include="GameObject\History\HistoryManager.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp" />

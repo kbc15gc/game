@@ -93,11 +93,14 @@ public:
 	void SetEnable(bool flag)
 	{
 		_Model->enable = flag;
-		for (auto it : _HistoryPageList)
+		for (auto& locList : _HistoryPageList)
 		{
-			if (it != nullptr)
+			for (auto it : locList)
 			{
-				it->SetActive(flag);
+				if (it != nullptr)
+				{
+					it->SetActive(flag);
+				}
 			}
 		}
 	}
@@ -157,12 +160,45 @@ public:
 	/**
 	* チップを追加.
 	*/
-	void PutInChip(ChipID chipID)
+	HistoryPage* PutInChip(ChipID chipID, LocationCodeE code)
 	{
 		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",1);
 		page->SetHistoryBook(this);
-		page->Start(chipID);
-		_HistoryPageList.push_back(page);
+		page->Start(chipID, code);
+		_HistoryPageList[(int)code].push_back(page);
+		return page;
+	}
+
+	/**
+	*差し込まれたページのリストを取得。
+	*/
+	vector<vector<HistoryPage*>>& GetPageList()
+	{
+		return _HistoryPageList;
+	}
+
+	vector<HistoryPage*>& GetLocationList(LocationCodeE loc)
+	{
+		return _HistoryPageList[(int)loc];
+	}
+
+	void PutOutPage(LocationCodeE loc,HistoryPage* page)
+	{
+		auto itr = find(_HistoryPageList[(int)loc].begin(), _HistoryPageList[(int)loc].end(), page);
+		_HistoryPageList[(int)loc].erase(itr);
+	}
+	void OpenPage()
+	{
+		for (auto& locList : _HistoryPageList)
+		{
+			for (auto it : locList)
+			{
+				if (it != nullptr)
+				{
+					it->ChangeState(HistoryPage::StateCodeE::Turn);
+				}
+			}
+		}
 	}
 
 private:
@@ -200,6 +236,6 @@ private:
 	bool _IsOpenOrClose = true;
 
 	/** ページクラスのポインタ. */
-	vector<HistoryPage*> _HistoryPageList;
+	vector<vector<HistoryPage*>> _HistoryPageList;
 
 };

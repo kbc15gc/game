@@ -58,11 +58,11 @@ void EnemyManager::CreateEnemy() {
 			// Transform情報設定。
 			enemy->transform->SetPosition(info->InfoData->position);
 			enemy->transform->SetRotation(info->InfoData->rotation);
-			enemy->transform->SetScale(info->InfoData->scale);		
+			enemy->transform->SetScale(info->InfoData->scale);
 			// パラメーター設定。
 			vector<BarColor> Color;
 			Color.push_back(BarColor::Red);
-			enemy->SetParamAll(Color,info->InfoData->param);
+			enemy->SetParamAll(Color, info->InfoData->param);
 		}
 		else {
 			// 生成失敗。

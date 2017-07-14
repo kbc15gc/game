@@ -10,6 +10,7 @@
 #include"HFSM\HistoryPageStatePutOut.h"
 #include"HFSM\HistoryPageStateTurn.h"
 #include"HFSM\HistoryPageStateClose.h"
+#include"HFSM\HistoryPageStateTakeOff.h"
 
 /**
 * コンストラクタ後の初期化.
@@ -30,7 +31,7 @@ void HistoryPage::Awake()
 	Quaternion Rot;
 	Rot.SetEuler(Vector3(-180.0f, 0.0f, 0.0f));
 	transform->SetRotation(Rot);
-	transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
+	transform->SetPosition(Vector3(0.0f, 0.0f, 1.0f));
 	transform->UpdateWolrdMatrix();
 
 	D3DXMatrixIdentity(&_RotationMatrix);
@@ -43,7 +44,7 @@ void HistoryPage::Awake()
 /**
 * 初期化.
 */
-void HistoryPage::Start(ChipID chipID)
+void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 {
 	SkinModel* model = _HistoryBook->GetComponent<SkinModel>();
 	LPD3DXFRAME frame = model->GetFrameRoot();
@@ -58,6 +59,8 @@ void HistoryPage::Start(ChipID chipID)
 
 	_Material->SetTexture(Material::TextureHandleE::DiffuseMap, texture->pTexture);
 
+	_ChipID = chipID;
+	_NowLocatuion = code;
 }
 
 /**
@@ -106,8 +109,11 @@ void HistoryPage::InitState()
 	_StateList.push_back(unique_ptr<HistoryPageStatePutOut>(new HistoryPageStatePutOut(this)));
 	//捲る状態.
 	_StateList.push_back(unique_ptr<HistoryPageStateTurn>(new HistoryPageStateTurn(this)));
+	//本を切り離す状態.
+	_StateList.push_back(unique_ptr<HistoryPageStateTakeOff>(new HistoryPageStateTakeOff(this)));
 	//閉じる状態.
 	_StateList.push_back(unique_ptr<HistoryPageStateClose>(new HistoryPageStateClose(this)));
+	
 
 	//初期値は挟む.
 	ChangeState(StateCodeE::PutIn);

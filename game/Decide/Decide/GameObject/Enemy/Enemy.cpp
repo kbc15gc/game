@@ -155,3 +155,16 @@ void Enemy::_BuildAnimation() {
 	}
 }
 
+void Enemy::_ConfigAnimationEvent() {
+	int eventFrame = 30;
+
+	// 攻撃アニメーションにコリジョン生成イベント追加。
+	AnimationEvent::AttackEventInfo info(transform,true);
+	info.damage = _MyComponent.Parameter->GiveDamageMass();
+	info.master = AttackCollision::CollisionMaster::Enemy;
+	info.pos = Vector3(1.5f, 0.5f, 0.0f);
+	info.rot = Quaternion::Identity;
+	info.size = Vector3::one;
+	info.life = 0.25f;
+	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationProt::Attack), eventFrame,info);
+}

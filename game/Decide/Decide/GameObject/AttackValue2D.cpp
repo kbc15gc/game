@@ -14,7 +14,9 @@ void AttackValue2D::Update()
 	{
 		//ê∂ë∂éûä‘à»ì‡Ç»ÇÁ
 		if (_Time < _LifeTime)
-		{
+		{	
+			/*Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(_Pos);
+			_Pos = Vector3(_ScreenPos.x, _ScreenPos.y, 0.0f);*/
 			_AttackText->transform->SetPosition(_Pos.x, _Pos.y -= 1.0f, 0.0f);
 
 		}
@@ -22,15 +24,14 @@ void AttackValue2D::Update()
 		else
 		{
 			// çÌèúÅB
-			INSTANCE(GameObjectManager)->AddRemoveList(_AttackText);
-			INSTANCE(GameObjectManager)->AddRemoveList(this);
+			//INSTANCE(GameObjectManager)->AddRemoveList(_AttackText);
+			//INSTANCE(GameObjectManager)->AddRemoveList(this);
 		}
 	}
 }
 
 void AttackValue2D::LateUpdate()
 {
-
 }
 
 void AttackValue2D::Init(Vector3 pos, int damagevalue, float lifetime, Vector3 offset)
@@ -41,12 +42,9 @@ void AttackValue2D::Init(Vector3 pos, int damagevalue, float lifetime, Vector3 o
 	_AttackText->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
 	_Pos = pos + offset;
 
-	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
-
-	Vector2 _ScreenPos = camera->WorldToScreen(_Pos);
-	_Pos = Vector3(_ScreenPos.x, _ScreenPos.y, 0.0f);
-
-	_AttackText->transform->SetPosition(_Pos);
+	/*Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(_Pos);
+	_Pos = Vector3(_ScreenPos.x, _ScreenPos.y, 0.0f);*/
+	_AttackText->transform->SetLocalPosition(_Pos);
 	string attackvalue = to_string(damagevalue);
 	_AttackText->SetString(attackvalue.data());
 

@@ -60,17 +60,17 @@ public:
 	* @param slot		スロット番号.
 	* @param chip		チップID.
 	*/
-	bool SetHistoryChip(LocationCodeE location, UINT slot, ChipID chip);
+	bool SetHistoryChip(LocationCodeE location, ChipID chip);
 
 	/**
 	* 歴史情報を取得.
 	*
 	* @param location	場所ID.
 	*/
-	LocationHistoryInfo* GetHistory(LocationCodeE location)
+	/*LocationHistoryInfo* GetHistory(LocationCodeE location)
 	{
 		return _LocationHistoryList.at((int)location).get();
-	}
+	}*/
 
 	/**
 	* 新しいチップIDを追加.
@@ -80,6 +80,9 @@ public:
 		_PossessionChipList.push_back(chipID);
 		_HistoryMenu->AddChip(chipID);
 	}
+
+	//歴史書から指定されたページを削除
+	void PutOutPage(LocationCodeE location, vector<HistoryPage*>& list);
 
 private:
 	

@@ -27,6 +27,7 @@ PlayerCamera::~PlayerCamera()
 void PlayerCamera::Awake()
 {
 	GameCamera::Awake();
+
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);

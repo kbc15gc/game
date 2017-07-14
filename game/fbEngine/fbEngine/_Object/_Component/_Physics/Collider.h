@@ -49,7 +49,9 @@ public:
 	inline ShapeType GetType()const {
 		return _Type;
 	}
-
+	inline const Vector3& GetHalfSize()const {
+		return _halfSize;
+	}
 private:
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。
@@ -59,6 +61,7 @@ public:
 	virtual btCollisionShape* GetBody() = 0 ;
 protected:
 	ShapeType _Type;
+	Vector3 _halfSize;
 #ifdef _DEBUG
 protected:
 	//当たり判定を視覚化した3Dオブジェクト。

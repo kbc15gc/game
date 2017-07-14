@@ -3,6 +3,8 @@
 
 struct RigidBodyInfo
 {
+	// 剛体ダイナミクス(物理挙動するか、ゲーム内での移動などを反映するか)。
+	Collision::PhysicsType physicsType = Collision::PhysicsType::Dynamic;
 	//質量。
 	float mass = 1.0f;
 	//コリジョンの形状。
@@ -34,8 +36,9 @@ public:
 	//			コリジョン属性。
 	//			物理現象以外の慣性(基本0)。
 	//			差分。
+	//			剛体ダイナミクス(物理挙動するか、ゲーム内での移動などを反映するか)。
 	//			生成時にワールドに登録するか(登録した瞬間のTransformの値でAABBのバウンディングボックスが生成される)。
-	void Create(float mass,Collider* coll, int id, Vector3 inertia = Vector3::zero,Vector3 off = Vector3::zero, bool isAddWorld = true);
+	void Create(float mass,Collider* coll, int id, Vector3 inertia = Vector3::zero,Vector3 off = Vector3::zero, PhysicsType physicsType = PhysicsType::Dynamic, bool isAddWorld = true);
 	void SetGravity(Vector3 set);
 	void SetGravity(btVector3& set);
 	void SetGravity(float x, float y, float z);

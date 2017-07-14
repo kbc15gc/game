@@ -3,6 +3,8 @@
 */
 #pragma once
 
+class HistoryPage;
+
 /**
 * 歴史チップID.
 */
@@ -74,21 +76,8 @@ public:
 		}
 	}
 
-	bool SetChip(ChipID chipID, int slot)
-	{
-		if (_ChipSlot[slot] == ChipID::None)
-		{
-			_ChipSlot[slot] = chipID;
-		}
-		else
-		{
-			//後ろにずらす.
-			//明らかにバグ.
-			_ChipSlot[slot + 1] = _ChipSlot[slot];
-			_ChipSlot[slot] = chipID;
-		}
-		return 0;
-	}
+	void SetData(vector<HistoryPage*>& list);
+
 
 public:
 
