@@ -69,7 +69,25 @@ private:
 	*/
 	void EnableUpdate();
 
+	/**
+	* 場所選択中の更新.
+	*/
+	void SelectLocationUpdate();
+
+	/**
+	* ページ選択中の更新.
+	*/
+	void SelectPageUpdate();
+
+	/**
+	* Chip選択中の更新
+	*/
+	void SelectChipUpdate();
+
 private:
+
+	/** カーソル表示クラス. */
+	Sprite* _CursorSprite = nullptr;
 
 	/** 選択されているもの. */
 	int _SelectCode = (int)SelectCodeE::Location;

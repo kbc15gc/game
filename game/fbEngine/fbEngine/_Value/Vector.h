@@ -126,6 +126,13 @@ public:
 		this->y *= in;
 		return *this;
 	}
+
+	Vector2 operator /= (const float& in)
+	{
+		this->x /= in;
+		this->y /= in;
+		return *this;
+	}
 };
 
 //三次元ベクトル
