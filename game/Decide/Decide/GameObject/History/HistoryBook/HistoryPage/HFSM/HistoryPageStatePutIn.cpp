@@ -12,6 +12,8 @@
 void HistoryPageStatePutIn::Entry()
 {
 	_LerpRate = 0.0f;
+
+	_MovePosition = Vector3(0.0f, 0.0f, 0.2f);
 }
 
 /**

@@ -7,6 +7,7 @@
 #include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\ObjectSpawn.h"
+#include "GameObject\AttackValue2D.h"
 #include "GameObject\Component\AnimationEvent.h"
 
 class SkinModel;
@@ -141,12 +142,8 @@ public:
 	// 自分が発生させたもの以外の攻撃コリジョンと衝突した瞬間呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
 	// ※処理が少ないうちはinlineのままでいいよ(だいたい3行以上の処理をするようになるまで)。
-	inline virtual void HitAttackCollisionEnter(AttackCollision* hitCollision) {
-		if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
-		{
-			this->GiveDamage(hitCollision->GetDamage());
-		}
-	}
+
+	virtual void HitAttackCollisionEnter(AttackCollision* hitCollision);
 
 	// 自分が発生させたもの以外の攻撃コリジョンに衝突ている間呼ばれるコールバック。
 	// ※引数は衝突した攻撃コリジョン。
@@ -183,8 +180,8 @@ public:
 	//			防御力。
 	//			命中力。
 	//			敏捷力。
-	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)const  {
-		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi);
+	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi,int lv, int exp, int dropexp,int money)const  {
+		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi, lv, exp, dropexp,money);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
 	// 全パラメーター設定。
@@ -280,12 +277,23 @@ public:
 		return _MyComponent.Spawner;
 	}
 
+	// ドロップする経験値。
+	inline int GetDropEXP() const {
+		return _MyComponent.Parameter->GetParam(CharacterParameter::DROPEXP);
+	}
+
+	// ドロップする所持金。
+	inline int GetDropMoney() const {
+		return _MyComponent.Parameter->GetParam(CharacterParameter::MONEY);
+	}
+
 	inline float GetWalkSpeed()const {
 		return _walkSpeed;
 	}
 
 	inline float GetDashSpeed()const {
 		return _walkSpeed * 5.0f;
+
 	}
 protected:
 	// ステート切り替え関数。

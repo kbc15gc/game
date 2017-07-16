@@ -6,6 +6,7 @@
 #include <sstream>
 #include "GameObject\SplitSpace.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
+#include "GameObject\AttackValue2D.h"
 
 namespace
 {
@@ -32,6 +33,7 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false)
 {
+	_LoadEXPTable();
 }
 
 Player::~Player()
@@ -91,7 +93,7 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(100, 100, 50, 50, 5, 3, 3, 1);
+	_PlayerParam->ParamInit(_HPTable[0], _HPTable[0], _MPTable[0], _MPTable[0], _ATKTable[0], _DEFTable[0], _DEXTable[0], _AGITable[0], 1, 0, 0, 0);
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
@@ -107,6 +109,10 @@ void Player::Awake()
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
+	//レベルアップ音初期化
+	_LevelUP = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
+	_LevelUP->Init("Asset/Sound/levelup.wav");
+	_LevelUP->SetVolume(2.0f);
 
 	_outputData = AddComponent<OutputData>();
 }
@@ -138,15 +144,13 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(344, 69, -1255);
+	_StartPos = Vector3(61, 69, -1387);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//攻撃アニメーションステートの初期化
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
-	//レベル初期化
-	_Level = 1;
 
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 }
@@ -177,6 +181,34 @@ void Player::Update()
 	{
 		//MPバーの更新
 		_MPBar->Update();
+	}
+	//レベルアップするか。
+	if (_EXPTable.size() > 0 &&
+		_PlayerParam->GetParam(CharacterParameter::EXP) >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)])
+	{
+		//レベルアップするか。
+		//何レベルのテーブルか。
+		//レベルアップに必要な経験値。
+		//レベルアップする場合のHP
+		//レベルアップする場合のMP
+		//レベルアップする場合のATK
+		//レベルアップする場合のDEF
+		//レベルアップする場合のDEX
+		//レベルアップする場合のAGI
+		_PlayerParam->LevelUP(_EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+			_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+			_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+			_ATKTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+			_DEFTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+			_DEXTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+			_AGITable[_PlayerParam->GetParam(CharacterParameter::LV)]
+			);
+		//HPが上がったのでHPバーのHP設定しなおす。
+		_HPBar->SetValue(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
+		//MPが上がったのでMPバーのMP設定しなおす。
+		_MPBar->SetValue(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
+		//レベルアップ時の音再生。
+		_LevelUP->Play(false);
 	}
 	//ダメージを受ける処理。
 	_Damage();
@@ -282,7 +314,6 @@ void Player::AnimationControl()
 			}
 		}
 	}
-
 }
 
 //攻撃を受けたとき。
@@ -292,6 +323,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	{
 		_HPBar->SubValue(_PlayerParam->ReciveDamage(hitCollision->GetDamage()));
 		_DamageSE->Play(false);//ダメージを受けたときのSE
+		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+		attackvalue->Init(transform->GetPosition(), _PlayerParam->ReciveDamage(hitCollision->GetDamage()), 1.5f, Vector3(0.0f, _Height, 0.0f));
 	}
 }
 
@@ -312,7 +345,7 @@ void Player::_Damage()
 {
 	//死亡ステート以外の時。
 	//ライフが0になると死亡する。
-	if (_PlayerParam->GetParam(CharacterParameter::HP) <= 0 && _State != State::Death)
+	if (_PlayerParam->GetDeathFalg() == true && _State != State::Death)
 	{
 		ChangeState(State::Death);
 	}
@@ -320,9 +353,26 @@ void Player::_Damage()
 	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
 	*/
 	if (transform->GetLocalPosition().y < 48.5f 
-		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 &&_Debug == false)
+		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
 		_PlayerParam->SubParam(CharacterParameter::HP, 2);
 		_HPBar->SubValue(2);
+	}
+}
+
+void Player::_LoadEXPTable()
+{
+	std::vector<std::unique_ptr<ExperiencePointTableInfo>> exptbaleinfo;
+	Support::LoadCSVData<ExperiencePointTableInfo>("Asset/Data/PlayerParameter.csv", ExperiencePointTableInfoData, ARRAYSIZE(ExperiencePointTableInfoData), exptbaleinfo);
+	
+	for (int i = 0; i < exptbaleinfo.size(); i++)
+	{
+		_EXPTable.push_back(exptbaleinfo[i]->ExperiencePoint);
+		_HPTable.push_back(exptbaleinfo[i]->HP);
+		_MPTable.push_back(exptbaleinfo[i]->MP);
+		_ATKTable.push_back(exptbaleinfo[i]->ATK);
+		_DEFTable.push_back(exptbaleinfo[i]->DEF);
+		_DEXTable.push_back(exptbaleinfo[i]->DEX);
+		_AGITable.push_back(exptbaleinfo[i]->AGI);
 	}
 }

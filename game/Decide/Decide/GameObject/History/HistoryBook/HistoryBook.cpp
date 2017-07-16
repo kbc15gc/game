@@ -71,8 +71,11 @@ void HistoryBook::Start()
 */
 void HistoryBook::Update()
 {
-	//歴史書を見ているフラグを変える操作。
-	_ChangeIsLookAtHistoryFlag();
+	if (_IsOperation)
+	{
+		//歴史書を見ているフラグを変える操作。
+		_ChangeIsLookAtHistoryFlag();
+	}
 
 	//状態の更新。
 	_StateList[_NowState]->Update();
@@ -124,7 +127,6 @@ void HistoryBook::_ChangeIsLookAtHistoryFlag()
 	//スタートボタン又はEキーが押された.
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
 	{
-
 		//未使用なら表示。使用状態なら閉じる.
 		if (_NowState == (int)StateCodeE::Unused)
 		{

@@ -11,6 +11,10 @@ const wchar_t* CharacterParameter::ENUM_NAME[] = {
 	L"DEF   ",
 	L"DEX   ",
 	L"AGI   ",
+	L"LV	",
+	L"EXP	",
+	L"DROPEXP",
+	L"MONEY",
 };
 #endif
 
@@ -18,17 +22,21 @@ void CharacterParameter::Awake() {
 	_Param = vector<int>(Param::MAX,0);
 }
 
-void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi)
+void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp,int money)
 {
 	//パラメーター設定。
-	_Param[Param::HP]	= hp;		//ヒットポイント。
-	_Param[Param::MAXHP]= maxhp;	//ヒットポイント。
-	_Param[Param::MP]	= mp;		//マジックポイント。
-	_Param[Param::MAXMP]= maxmp;	//ヒットポイント。
-	_Param[Param::ATK]	= atk;		//攻撃力。
-	_Param[Param::DEF]	= def;		//防御力。
-	_Param[Param::DEX]	= dex;		//命中力。
-	_Param[Param::AGI]	= agi;		//回避力。
+	_Param[Param::HP]		= hp;		//ヒットポイント。
+	_Param[Param::MAXHP]	= maxhp;	//ヒットポイント。
+	_Param[Param::MP]		= mp;		//マジックポイント。
+	_Param[Param::MAXMP]	= maxmp;	//ヒットポイント。
+	_Param[Param::ATK]		= atk;		//攻撃力。
+	_Param[Param::DEF]		= def;		//防御力。
+	_Param[Param::DEX]		= dex;		//命中力。
+	_Param[Param::AGI]		= agi;		//回避力。
+	_Param[Param::LV]		= lv;		//レベル。
+	_Param[Param::EXP]		= exp;		//現在の経験値。
+	_Param[Param::DROPEXP]	= dropexp;	//落とす経験値。
+	_Param[Param::MONEY]	= money;	//所持金。
 }
 
 void CharacterParameter::ParamInit(int param[Param::MAX]) {
@@ -65,4 +73,21 @@ int CharacterParameter::ReceiveDamageMass(int defaultDamage, int defidx, int Equ
 	int damage = max(0, defaultDamage - ((_Param[Param::DEF] + Equipment) * element * defidx));
 
 	return damage;
+}
+
+void CharacterParameter::LevelUP(int lvupexp,int hp,int mp,int atk, int def, int dex, int agi)
+{
+	//レベルアップに必要な経験値を超えるとレベルアップする。
+	
+		_Param[Param::LV] += 1;
+		_Param[Param::EXP] = _Param[Param::EXP] - lvupexp;
+		_Param[Param::HP] = hp;
+		_Param[Param::MAXHP] = hp;
+		_Param[Param::MP] = mp;
+		_Param[Param::MAXMP] = mp;
+		_Param[Param::ATK] = atk;
+		_Param[Param::DEF] = def;
+		_Param[Param::DEX] = dex;
+		_Param[Param::AGI] = agi;
+	
 }
