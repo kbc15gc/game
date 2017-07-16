@@ -111,9 +111,11 @@ FontData * FontManager::_CreateFontTexture(const int & code)
 	TEXTMETRIC tm;
 	GetTextMetrics(_HDC, &tm);
 	GLYPHMETRICS gm;
+	//変換行列(この場合は変換なし。)
 	CONST MAT2 mat = { { 0, 1 },{ 0, 0 },{ 0, 0 },{ 0, 1 } };
 	//サイズが不明なので戻り値でサイズを取得
 	DWORD size = GetGlyphOutlineW(_HDC, code, _GradFlg, &gm, 0, NULL, &mat);
+	//ビット情報を受け取る配列。
 	BYTE *pMono = new BYTE[size];
 	//文字情報のポインタ取得
 	GetGlyphOutlineW(_HDC, code, _GradFlg, &gm, size, pMono, &mat);

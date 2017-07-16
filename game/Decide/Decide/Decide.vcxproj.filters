@@ -176,6 +176,9 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.cpp">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Village\EventManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -365,6 +368,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.h">
       <Filter>GameObject\Enemy\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\EventManager.h">
+      <Filter>GameObject\Village</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

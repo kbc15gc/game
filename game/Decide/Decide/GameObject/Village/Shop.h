@@ -100,4 +100,6 @@ private:
 	ImageObject* _MainWindow;
 	//メニューのテキスト
 	vector<TextObject*> _MenuList;
+	//メニューのリストの縦幅。
+	float _MenuListHeight;
 };

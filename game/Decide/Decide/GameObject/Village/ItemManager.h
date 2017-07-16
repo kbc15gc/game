@@ -46,6 +46,8 @@ public:
 		if (_Instance == nullptr)
 		{
 			_Instance = new ItemManager();
+			//アイテムの情報を読み込み。
+			_Instance->LoadItemData();
 		}
 		return _Instance;
 	}

@@ -211,6 +211,7 @@
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
+    <ClInclude Include="GameObject\Village\EventManager.h" />
     <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
+    <ClCompile Include="GameObject\Village\EventManager.cpp" />
     <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
