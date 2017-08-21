@@ -76,16 +76,16 @@ class ItemManager
 public:
 	ItemManager();
 
-	void LoadAllData();
+	void LoadAllItemData();
 
 	//アイテムの情報を読み込み。
-	void LoadItemData();
+	//void LoadItemData();
 
 	//防具の情報を読み込み。
-	void LoadArmorData();
+	//void LoadArmorData();
 
 	//武器の情報を読み込み。
-	void LoadWeaponData();
+	//void LoadWeaponData();
 
 	Item::ItemInfo* GetItem(const unsigned int& id,const unsigned int& type)
 	{
@@ -102,7 +102,7 @@ public:
 		{
 			_Instance = new ItemManager();
 			//アイテムの情報を読み込み。
-			_Instance->LoadItemData();
+			_Instance->LoadAllItemData();
 		}
 		return _Instance;
 	}

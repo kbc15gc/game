@@ -29,6 +29,8 @@
 #include "GameObject\Enemy\EnemyManager.h"
 #include "GameObject\SplitSpace.h"
 
+#include "GameObject\Village\Shop.h"
+
 ImageObject* g_depth;
 
 void GameScene::Start()
@@ -88,7 +90,7 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->CreateObject();
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
-	INSTANCE(ItemManager)->LoadAllData();
+	INSTANCE(ItemManager)->LoadAllItemData();
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	shop->OpenShop(0);
 

@@ -140,7 +140,7 @@ void Shop::_CreateMenu()
 		
 		//テキスト設定。
 		char t[256];
-		sprintf(t, "名前:%s,  値段:%d$,  攻撃力:%d", _ItemList[i]->Name, _ItemList[i]->Value, _ItemList[i]->ATK);
+		sprintf(t, "名前:%s,  値段:%d$", _ItemList[i]->Name, _ItemList[i]->Value);
 		text->SetString(t);
 		text->SetFontSize(50);
 		text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
