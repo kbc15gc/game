@@ -88,7 +88,7 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->CreateObject();
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
-	INSTANCE(ItemManager)->LoadItemData();
+	INSTANCE(ItemManager)->LoadAllData();
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	shop->OpenShop(0);
 

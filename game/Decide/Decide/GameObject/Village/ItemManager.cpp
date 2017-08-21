@@ -7,7 +7,7 @@ ItemManager::ItemManager()
 {
 }
 
-void ItemManager::LoadItemData()
+void ItemManager::LoadAllData()
 {
 	//ファイルネーム
 	const char* filename[] = { "ItemData","WeaponData","ArmorData", };
@@ -19,4 +19,19 @@ void ItemManager::LoadItemData()
 		//ファイルからアイテム情報読み込み
 		Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemList[i]);
 	}
+}
+
+void ItemManager::LoadItemData()
+{
+
+}
+
+void ItemManager::LoadArmorData()
+{
+
+}
+
+void ItemManager::LoadWeaponData()
+{
+
 }
