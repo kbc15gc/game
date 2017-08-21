@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include "TextBox.h"
+#include "GameObject\Village\EventManager.h"
 
 TextBox::TextBox(const char * name):
 	GameObject(name),
@@ -184,6 +185,7 @@ void TextBox::_SetMessage(const int & id)
 {
 	if (id >= 0)
 	{
+		INSTANCE(EventManager)->Execute(Event::EventID::Shop, 0);
 		//メッセージ情報取得
 		_Message = INSTANCE(MessageManager)->GetMess(id);
 		if (_Message)
