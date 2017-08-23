@@ -111,21 +111,26 @@ public:
 	//プレイヤーの所持品にアイテムを追加。第1引数:追加するアイテムの種類、第2引数:アイテムID、第3引数:名前、第4引数:アイテムの説明、第5引数:値段、、第6引数:攻撃力、第7引数:防御力。
 	void AddPlayerItemList(ItemKodeE kode, int* id = nullptr, const char* name = nullptr, const char* des = nullptr, int* value = nullptr, int* atk = nullptr, int* def = nullptr);
 
-	//プレイヤーが所持している防具のリストを取得。
-	//Armor::ArmorInfo *GetPlayerAromorInfo();
+	//プレイヤーが所持しているアイテムのリストの先頭を取得。
+	Item::ItemInfo *GetPlayerItemInfo();
 
+	//プレイヤーが所持している防具のリストの先頭を取得。
+	Armor::ArmorInfo *GetPlayerAromorInfo();
+
+	//プレイヤーが所持している武器のリストの先頭を取得。
+	Weapon::WeaponInfo *GetPlayerWeaponInfo();
 
 private:
 	//アイテムのリスト。
 	vector<unique_ptr<Item::ItemInfo>> _ItemList[3];
 
-	//アイテムのリスト。
+	//ゲームで使うアイテムのリスト。
 	vector<unique_ptr<Item::ItemInfo>> _ItemListVec;
 
-	//防具のリスト。
+	//ゲームで使う防具のリスト。
 	vector<unique_ptr<Armor::ArmorInfo>> _ArmorList;
 
-	//武器のリスト。
+	//ゲームで使う武器のリスト。
 	vector<unique_ptr<Weapon::WeaponInfo>> _WeaponList;
 
 	//プレイヤーが所持しているアイテムのリスト。
@@ -134,15 +139,13 @@ private:
 	//プレイヤーが所持している防具のリスト。
 	Armor::ArmorInfo _PlayerArmorList[5];
 
-	Armor::ArmorInfo arm[2];
-
 	//プレイヤーが所持している武器のリスト。
 	Weapon::WeaponInfo _PlayerWeaponList[5];
 
-	//所持品を格納するリストの最大数。
+	//アイテムを格納するリストの最大数。
 	int ListNum = 5;
 
-	//プレイヤーが持っているアイテム、防具、武器の数。
+	//プレイヤーが現在持っているアイテム、防具、武器のそれぞれの数。
 	int ItemCounter, ArmorCounter, WeapoCounter = 0;
 	
 	static ItemManager* _Instance;
