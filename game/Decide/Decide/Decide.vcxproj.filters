@@ -81,7 +81,6 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -179,6 +178,13 @@
     <ClCompile Include="GameObject\Village\EventManager.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\AttackValue2D.cpp" />
+    <ClCompile Include="GameObject\Village\ItemManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Inventory.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -266,7 +272,6 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Ocean.h" />
-    <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
@@ -370,6 +375,13 @@
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\EventManager.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\AttackValue2D.h" />
+    <ClInclude Include="GameObject\Village\ItemManager.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Inventory.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
   </ItemGroup>

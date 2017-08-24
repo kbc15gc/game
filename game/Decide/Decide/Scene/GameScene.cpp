@@ -23,6 +23,8 @@
 #include "GameObject\Village\EventManager.h"
 #include "GameObject\Village\ItemManager.h"
 
+#include "GameObject\Village\Inventory.h"
+
 #include "GameObject\Camera\PlayerCamera.h"
 #include "GameObject\Camera\ThirdPersonCamera.h"
 #include "GameObject\Camera\FreeCamera.h"
@@ -91,6 +93,7 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
+	INSTANCE(Inventory)->ListInitalize();
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	shop->OpenShop(0);
 
