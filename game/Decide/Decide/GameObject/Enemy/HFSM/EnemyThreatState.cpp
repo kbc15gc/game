@@ -6,9 +6,17 @@ void EnemyThreatState::_EntrySubClass() {
 		// テーブルにアニメーションが設定されている。
 		_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Threat, 0.5f);
 	}
-	else {
-		_EndState();
-	}
+	//else {
+	//	_EndState();
+	//}
+}
+
+void EnemyThreatState::Start() {
+	// てすと
+	//if (_EnemyObject->GetAnimationData(EnemyCharacter::AnimationType::Threat).No >= 0) {
+	//	// テーブルにアニメーションが設定されている。
+	//	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Threat, 0.5f);
+	//}
 }
 
 void EnemyThreatState::_UpdateSubClass() {

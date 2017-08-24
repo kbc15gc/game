@@ -18,6 +18,13 @@ private:
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
+	inline bool IsPossibleChangeState(EnemyCharacter::State next)override {
+		if (_NowLocalState) {
+			return _NowLocalState->IsPossibleChangeState(next);
+		}
+		return true;
+	}
+
 private:
 	GameObject* _Player = nullptr;
 };

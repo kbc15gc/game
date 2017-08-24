@@ -154,7 +154,7 @@ void Particle::Render()
 	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
-void Particle::Init(const ParicleParameter & param,const Vector3 & emitPosition)
+void Particle::Init(const ParticleParameter & param,const Vector3 & emitPosition)
 {
 	_Texture = LOADTEXTURE((char*)param.texturePath);
 	_Effect = EffectManager::LoadEffect("Particle.fx");

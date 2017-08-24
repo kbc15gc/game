@@ -332,7 +332,7 @@ void Transform::SetParent(Transform * parent)
 		_LocalPosition = _Position;
 		_LocalScale = _Scale;
 		_LocalAngle = _Angle + _Parent->_Angle;
-		_LocalRotation.SetEuler(_LocalAngle);
+		_LocalRotation = _Rotation;
 		// 親を外すので、現在の親の子供リストから自分を外す。
 		this->_Parent->RemoveChild(this);
 	}

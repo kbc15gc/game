@@ -3,11 +3,11 @@
 class Particle;
 
 //パーティクル生成パラメータ
-struct ParicleParameter {
+struct ParticleParameter {
 	//初期化。
 	void Init()
 	{
-		memset(this, 0, sizeof(ParicleParameter));
+		memset(this, 0, sizeof(ParticleParameter));
 		size = Vector2(1, 1);
 		initAlpha = 1.0f;
 		brightness = 1.0f;
@@ -44,7 +44,7 @@ public:
 	 *@_Param[in]	_Param		パーティクル生成用のパラメータ。
 	 *@_Param[in]	emitPosition	エミッターの座標。
 	 */
-	void Init(const ParicleParameter& _Param);
+	void Init(const ParticleParameter& _Param);
 	void Start() override;
 	void Update() override;
 	void Render() override;
@@ -60,6 +60,6 @@ private:
 private:
 	bool	emit;//生成フラグ
 	float					_Timer;			//!<タイマー
-	ParicleParameter		_Param;			//!<パラメータ。
+	ParticleParameter		_Param;			//!<パラメータ。
 	std::list<Particle*>	_ParticleList;	//!<パーティクルのリスト。
 };

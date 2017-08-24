@@ -57,7 +57,9 @@ void BossDrarian::_StartSubClass() {
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
-	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack)].No, 0.2f);
+	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
+	_tailAttack.Init(static_cast<int>(AnimationDrarian::TailAttackRight), 0.2f);
+
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -88,6 +90,15 @@ EnemyAttack* BossDrarian::AttackSelect() {
 
 	// ※とりあえず暫定処理。
 	return &_singleAttack;
+	//return &_tailAttack;
+}
+
+void BossDrarian::CreateAttackCollision_Kamituki() {
+	//攻撃コリジョン作成。
+	unsigned int priorty = 1;
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.25f, 5.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
+	attack->RemoveParent();
 }
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
@@ -105,8 +116,8 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
-		// プレイヤーとの位置関係再調整。
-		_ChangeState(State::Discovery);
+		// もう一度攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 	else if (EndStateType == State::Fall) {
 		// 落下ステート終了。
@@ -172,29 +183,107 @@ void BossDrarian::_BuildAnimation() {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationDrarian::Dash)].get());
 		// 吠える。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
-		// 攻撃状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationDrarian::Attack)].get());
+		// 攻撃状態(噛みつき)。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationDrarian::Attack)].get());
+		// 攻撃状態(しっぽ)。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack2, *Datas[static_cast<int>(AnimationDrarian::TailAttackRight)].get());
 		// ダメージ反応。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
-	//	// 落下状態。
-	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
-	//	// 死亡状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
+		Datas[static_cast<int>(AnimationDrarian::Damage)]->Time = 8.0f / 30.0f;
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationDrarian::Damage)].get());
+		//// 落下状態。
+		//// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
+		//_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationDrarian::Death)].get());
 	}
 }
 
 void BossDrarian::_ConfigAnimationEvent() {
-	int eventFrame = 15;
+	// かみつき攻撃。
+	{
+		////攻撃コリジョン作成。
+		//unsigned int priorty = 1;
+		//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+		//attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.25f, 5.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
+		//attack->RemoveParent(); 
 
-	// 攻撃アニメーションにコリジョン生成イベント追加。
-	AnimationEvent::AttackEventInfo info(transform, true);
-	info.damage = _MyComponent.Parameter->GiveDamageMass();
-	info.master = AttackCollision::CollisionMaster::Enemy;
-	info.pos = Vector3(0.0f, 0.25f, 5.0f);
-	info.rot = Quaternion::Identity;
-	info.rot.SetRotation(Vector3::axisY, D3DXToRadian(40.0f));
-	info.size = Vector3(1.0f,2.0f,2.0f);
-	info.life = 0.25f;
-	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, info);
+		int eventFrame = 15;
+		AnimationEvent p = static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_Kamituki);
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, this,p);
+
+		//	// 攻撃アニメーションにコリジョン生成イベント追加。
+	//	AnimationEvent::AttackEventInfo info(transform, true);
+	//	info.damage = _MyComponent.Parameter->GiveDamageMass();
+	//	info.master = AttackCollision::CollisionMaster::Enemy;
+	//	info.pos = Vector3(0.0f, 0.25f, 5.0f);
+	//	info.rot = Quaternion::Identity;
+	//	//info.rot.SetRotation(Vector3::axisY, D3DXToRadian(40.0f));
+	//	info.size = Vector3(1.0f, 2.0f, 2.0f);
+	//	info.life = 0.25f;
+	//	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, info);
+	//}
+	//// しっぽ攻撃。
+	//{
+
+	//	int eventFrame = 60;
+	//	// 攻撃アニメーションにコリジョン生成イベント追加。
+	//	AnimationEvent::AttackEventInfo info(transform, true);
+	//	info.damage = _MyComponent.Parameter->GiveDamageMass();
+	//	info.master = AttackCollision::CollisionMaster::Enemy;
+	//	info.pos = Vector3(2.0f, 0.0f, -2.0f);
+	//	info.rot = Quaternion::Identity;
+	//	info.rot.SetRotation(Vector3::axisY, D3DXToRadian(-40.0f));
+	//	info.size = Vector3(2.0f, 2.0f, 5.0f);
+	//	info.life = 0.15f;
+	//	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, info);
+
+	//	eventFrame = 62;
+	//	// 攻撃アニメーションにコリジョン生成イベント追加。
+	//	AnimationEvent::AttackEventInfo info2(transform, true);
+	//	info2.damage = _MyComponent.Parameter->GiveDamageMass();
+	//	info2.master = AttackCollision::CollisionMaster::Enemy;
+	//	info2.pos = Vector3(3.0f, 0.0f, 0.0f);
+	//	info2.rot = Quaternion::Identity;
+	//	info2.rot.SetRotation(Vector3::axisY, D3DXToRadian(-60.0f));
+	//	info2.size = Vector3(2.0f, 2.0f, 5.0f);
+	//	info2.life = 0.15f;
+	//	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, info2);
+
+	//	eventFrame = 65;
+	//	// 攻撃アニメーションにコリジョン生成イベント追加。
+	//	AnimationEvent::AttackEventInfo info3(transform, true);
+	//	info3.damage = _MyComponent.Parameter->GiveDamageMass();
+	//	info3.master = AttackCollision::CollisionMaster::Enemy;
+	//	info3.pos = Vector3(4.0f, 0.0f, 2.0f);
+	//	info3.rot = Quaternion::Identity;
+	//	//info.rot.SetRotation(Vector3::axisY, D3DXToRadian(40.0f));
+	//	info3.size = Vector3(4.0f, 2.0f, 2.0f);
+	//	info3.life = 0.15f;
+	//	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, info3);
+
+	//	eventFrame = 70;
+	//	// 攻撃アニメーションにコリジョン生成イベント追加。
+	//	AnimationEvent::AttackEventInfo info4(transform, true);
+	//	info4.damage = _MyComponent.Parameter->GiveDamageMass();
+	//	info4.master = AttackCollision::CollisionMaster::Enemy;
+	//	info4.pos = Vector3(3.0f, 0.0f, 4.5f);
+	//	info4.rot = Quaternion::Identity;
+	//	//info.rot.SetRotation(Vector3::axisY, D3DXToRadian(40.0f));
+	//	info4.size = Vector3(2.0f, 2.0f, 3.0f);
+	//	info4.life = 0.15f;
+	//	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, info4);
+
+	}
+}
+
+void BossDrarian::_BuildSoundTable() {
+	// 攻撃音登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack, "Damage_01.wav", false, false);
+}
+
+
+// EnemyBreathAttack。
+
+bool EnemyBreathAttack::Update() {
+	return true;
 }

@@ -12,6 +12,7 @@
 #include "HFSM\EnemyDeathState.h"
 #include "HFSM\EnemyDamageReactionState.h"
 #include "HFSM\EnemyThreatState.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -47,6 +48,8 @@ void EnemyCharacter::Start() {
 	_BuildAnimation();
 	// アニメーションイベント設定。
 	_ConfigAnimationEvent();
+	// サウンドテーブル作成。
+	_BuildSoundTable();
 
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
@@ -134,6 +137,20 @@ void EnemyCharacter::SearchView() {
 	}
 }
 
+void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probability) {
+	_isDamageMotion = isMotion;
+	if (isMotion) {
+		if (probability <= 1) {
+			_isDamageMotionRandom = false;
+		}
+		else {
+			_isDamageMotionRandom = true;
+			_damageMotionProbability = probability;
+		}
+	}
+}
+
+
 
 void EnemyCharacter::_BuildMyComponents() {
 	// モデル情報を追加。
@@ -151,7 +168,7 @@ void EnemyCharacter::_BuildMyComponents() {
 	// スポナーコンポーネント追加。
 	_MyComponent.Spawner = AddComponent<ObjectSpawn>();
 	// アニメーションイベントコンポーネント追加。
-	_MyComponent.AnimationEvent = AddComponent<AnimationEvent>();
+	_MyComponent.AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 }
 
 void EnemyCharacter::_BuildCollision() {
@@ -237,13 +254,63 @@ void EnemyCharacter::_ChangeState(State next) {
 	_NowStateIdx = next;
 }
 
+void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+	strcpy(_SoundData[static_cast<int>(idx)].Path, filePath);
+	_SoundData[static_cast<int>(idx)].Is3D = is3D;
+	_SoundData[static_cast<int>(idx)].IsLoop = isLoop;
+	_SoundData[static_cast<int>(idx)].Source = INSTANCE(GameObjectManager)->AddNew<SoundSource>(filePath, 0);
+	string work = "Asset/Sound/";
+	work = work + filePath;
+	_SoundData[static_cast<int>(idx)].Source->Init(work.c_str(), is3D);
+}
+
 void EnemyCharacter::GiveDamage(float damage) {
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
+
+		// ダメージ値をもとにパラメーター更新。
 		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage));
-		if (_NowState->IsPossibleChangeState(State::Damage)) {
-			// ダメージ反応ステートに移行可能。
-			_ChangeState(State::Damage);
+
+		if (_isDamageMotion) {
+			// のけぞるか。
+
+			if (_isDamageMotionRandom) {
+				// のけぞりモーションの再生をランダムにする。
+
+				if (rand() % _damageMotionProbability == 0) {
+					// のけぞり。
+
+					// ダメージ反応ステートに移行可能。
+					_ChangeState(State::Damage);
+				}
+			}
+			else {
+				// 確定でのけぞりモーションを再生する。
+
+				// ダメージ反応ステートに移行可能。
+				_ChangeState(State::Damage);
+			}
 		}
 	}
+}
+
+
+// EnemyAttack。
+
+void EnemyAttack::Init(int animType, float interpolate, int animLoopNum) {
+	_animType = animType;
+	_interpolate = interpolate;
+	_animLoopNum = animLoopNum;
+}
+
+
+
+// EnemySingleAttack。
+
+bool EnemySingleAttack::Update(){
+	if (!_isPlaying) {
+		// 攻撃モーション一度終了。
+		return true;
+	}
+	return false;
 }

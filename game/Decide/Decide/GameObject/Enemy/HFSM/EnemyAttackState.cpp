@@ -19,6 +19,7 @@ void EnemyAttackState::_Start() {
 	if (_attack) {
 		// 攻撃処理が設定されている。
 
+		_attack->SetObject(_EnemyObject);
 		_attack->Start();	// 初期化。
 		if (_attack->GetAnimationType() >= 0) {
 			// 再生するアニメーション番号が設定されている。
@@ -39,6 +40,9 @@ void EnemyAttackState::_Start() {
 		// 攻撃処理設定されてない。
 		abort();
 	}
+
+	// ※暫定処理。
+	_EnemyObject->EnemyPlaySound(EnemyCharacter::SoundIndex::Attack);
 }
 
 void EnemyAttackState::_UpdateSubClass() {

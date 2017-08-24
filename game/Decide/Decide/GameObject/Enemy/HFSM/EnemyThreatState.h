@@ -8,6 +8,7 @@ public:
 	EnemyThreatState(EnemyCharacter* Object) :EnemyState(Object) {};
 	~EnemyThreatState() {};
 
+	void Start();
 	void Exit(EnemyCharacter::State next)override {};
 
 private:

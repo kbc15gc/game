@@ -45,7 +45,7 @@ void Enemy::_StartSubClass(){
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
-	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack)].No,0.2f);
+	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No,0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -166,7 +166,7 @@ void Enemy::_BuildAnimation() {
 		// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 		// 攻撃状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationProt::Attack)].get());
 		// 落下状態。
 		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
@@ -179,14 +179,19 @@ void Enemy::_BuildAnimation() {
 
 void Enemy::_ConfigAnimationEvent() {
 	int eventFrame = 30;
+	//
+	//// 攻撃アニメーションにコリジョン生成イベント追加。
+	//AnimationEvent::AttackEventInfo info(transform,true);
+	//info.damage = _MyComponent.Parameter->GiveDamageMass();
+	//info.master = AttackCollision::CollisionMaster::Enemy;
+	//info.pos = Vector3(0.0f, 0.5f, 1.5f);
+	//info.rot = Quaternion::Identity;
+	//info.size = Vector3::one;
+	//info.life = 0.25f;
+	//_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationProt::Attack), eventFrame,info);
+}
 
-	// 攻撃アニメーションにコリジョン生成イベント追加。
-	AnimationEvent::AttackEventInfo info(transform,true);
-	info.damage = _MyComponent.Parameter->GiveDamageMass();
-	info.master = AttackCollision::CollisionMaster::Enemy;
-	info.pos = Vector3(0.0f, 0.5f, 1.5f);
-	info.rot = Quaternion::Identity;
-	info.size = Vector3::one;
-	info.life = 0.25f;
-	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationProt::Attack), eventFrame,info);
+void Enemy::_BuildSoundTable() {
+	// 攻撃音登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack,"Damage_01.wav",false,false);
 }

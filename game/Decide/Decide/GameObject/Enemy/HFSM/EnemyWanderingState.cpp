@@ -46,7 +46,8 @@ void EnemyWanderingState::_EntrySubClass() {
 }
 
 void EnemyWanderingState::_Start() {
-
+	// ‚Ì‚¯‚¼‚èÝ’èB
+	_EnemyObject->ConfigDamageReaction(true, 1);
 }
 
 void EnemyWanderingState::_UpdateSubClass() {

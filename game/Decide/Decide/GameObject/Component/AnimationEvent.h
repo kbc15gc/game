@@ -3,7 +3,17 @@
 #include "fbEngine\fbstdafx.h"
 #include "AttackCollision.h"
 
-class AnimationEvent : public Component {
+
+class GameObject;
+
+
+// 関数ポインタを新しい型名で定義。
+// ※新しい名前はAnimationEvent。
+// ※戻り値はvoid、引数はなし。
+typedef void(GameObject::*AnimationEvent)();
+
+// アニメーションイベント再生関数。
+class AnimationEventPlayer : public Component {
 public:
 	// 攻撃コリジョンのパラメータ。
 	// ※ConfigAnimationEvent呼び出し時に使ってね。
@@ -26,37 +36,45 @@ public:
 		bool isRemoveParent = true;		// 生成直後に親子関係を外すか。
 	};
 
+	struct SoundEventInfo {
+		SoundSource* source = nullptr;
+		bool is3D = false;
+		bool isLoop = false;
+	};
 private:
 	struct EventData {
-		int createFrame;		// 生成するフレーム。
-		AttackEventInfo info = AttackEventInfo(nullptr,true);	// 生成するコリジョンのパラメータ。
+		int playFrame;		// イベントが発生するフレーム。
+		GameObject* object = nullptr;
+		AnimationEvent Event;	// イベント(関数ポインタ)。
 	};
+
 public:
-	AnimationEvent(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+	AnimationEventPlayer(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
 #ifdef _DEBUG
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 	};
-	~AnimationEvent();
+	~AnimationEventPlayer();
 
 	void Update()override;
 
 	void Init();
 
-	// 指定したフレームに攻撃判定用コリジョン作成イベントを追加する関数。
-	// 引数：	イベントを発生させたいアニメーション番号。
-	//			コリジョンを発生させるフレーム。
-	//			作成するコリジョンのパラメータ。
+	// 指定したフレームにアニメーションイベントを設定する関数。
+	// 引数：	イベントを設定するアニメーション番号。
+	//			イベントを設定するフレーム。
+	//			アニメーションイベント(関数ポインタvoid(*AnimationEvent)(void))。
 	// ※生成されるコリジョン形状はボックスです。
-	void AddAnimationEvent(int animationNo,const int eventFrame, const AttackEventInfo& info) {
+	void AddAnimationEvent(int animationNo, const int eventFrame,GameObject* object, AnimationEvent Event) {
 		if (_isFirst) {
 			Init();
 		}
 		EventData* work = nullptr;
 		work = new EventData;
-		work->createFrame = eventFrame;
-		work->info = info;
-		_animationEvents[animationNo].push_back(move(work));
+		work->playFrame = eventFrame;
+		work->object = object;
+		work->Event = Event;
+		_animationEvents[animationNo].push_back(work);
 	}
 
 private:

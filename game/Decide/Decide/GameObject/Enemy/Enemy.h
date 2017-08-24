@@ -46,6 +46,8 @@ private:
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
 
+	// 効果音のテーブル作成関数。
+	void _BuildSoundTable()override;
 private:
 	State _saveState;
 	/*static*/ EnemySingleAttack _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、今のところ静的メンバでオッケー)。
