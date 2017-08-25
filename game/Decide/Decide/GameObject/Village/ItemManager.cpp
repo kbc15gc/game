@@ -17,21 +17,21 @@ void ItemManager::LoadAllItemData()
 		char filepath[256] = "";
 		sprintf(filepath, "Asset/Data/ItemData/%s.csv", filename[i]);
 		//ファイルからアイテム情報読み込み
-		Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemList[i]);
+		Support::LoadCSVData<ItemBase::Item::ItemInfo>(filepath, ItemBase::Item::Itemdata, ARRAY_SIZE(ItemBase::Item::Itemdata), _ItemList[i]);
 
 		switch (i)
 		{
-		case 0:
+		case (int)ItemKodeE::Item:
 			//ファイルからアイテム情報読み込み。
-			Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemListVec);
+			Support::LoadCSVData<ItemBase::Item::ItemInfo>(filepath, ItemBase::Item::Itemdata, ARRAY_SIZE(ItemBase::Item::Itemdata), _ItemListVec);
 			break;
-		case 1:
-			//ファイルから武器情報読み込み。
-			Support::LoadCSVData<Weapon::WeaponInfo>(filepath, Weapon::Weapondata, ARRAY_SIZE(Weapon::Weapondata), _WeaponList);
-			break;
-		case 2:
+		case (int)ItemKodeE::Armor:
 			//ファイルから防具情報読み込み。
-			Support::LoadCSVData<Armor::ArmorInfo>(filepath, Armor::Armordata, ARRAY_SIZE(Armor::Armordata), _ArmorList);
+			Support::LoadCSVData<ItemBase::Armor::ArmorInfo>(filepath, ItemBase::Armor::Armordata, ARRAY_SIZE(ItemBase::Armor::Armordata), _ArmorList);
+			break;	
+		case (int)ItemKodeE::Weapon:	
+			//ファイルから武器情報読み込み。
+			Support::LoadCSVData<ItemBase::Weapon::WeaponInfo>(filepath, ItemBase::Weapon::Weapondata, ARRAY_SIZE(ItemBase::Weapon::Weapondata), _WeaponList);
 			break;
 		}
 	}

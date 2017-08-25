@@ -44,7 +44,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
 	{
-		Item::ItemInfo* item = INSTANCE(ItemManager)->GetItem((unsigned int&)_ProductList[idx]->ItemID, (unsigned int)_ProductList[idx]->Type);
+		ItemBase::Item::ItemInfo* item = INSTANCE(ItemManager)->GetItem((unsigned int&)_ProductList[idx]->ItemID, (unsigned int)_ProductList[idx]->Type);
 
 		//nullチェック
 		if (item)
