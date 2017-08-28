@@ -113,8 +113,10 @@ void Player::Awake()
 	_LevelUP = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
 	_LevelUP->Init("Asset/Sound/levelup.wav");
 	_LevelUP->SetVolume(2.0f);
+#ifdef _DEBUG
 
 	_outputData = AddComponent<OutputData>();
+#endif
 }
 
 void Player::Start()

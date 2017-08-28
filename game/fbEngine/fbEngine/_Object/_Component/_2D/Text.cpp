@@ -148,6 +148,11 @@ void Text::SetFormat(const unsigned int& format)
 	_TextFormat = (fbText::TextFormatE)format;
 }
 
+void Text::SetFormat(fbText::TextFormatE format)
+{
+	_TextFormat = format;
+}
+
 void Text::SetKerning(const bool & kerning)
 {
 	_Kerning = kerning;
@@ -253,6 +258,8 @@ void Text::_RenderText(const Vector3 & base)
 	Vector3 offset(0, 0, 0);
 	//高さ
 	float maxHeight = 0;
+	if (_WString == nullptr)
+		return;
 	//フォントをセットして文字数分描画するっていうのは重い！
 	for (short i = 0; _WString[i] != '\0'; i++)
 	{

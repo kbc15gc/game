@@ -39,7 +39,10 @@ void SphereCollider::Create( const float radius )
 }
 
 void SphereCollider::ColliderModelLoad() {
+#ifdef _DEBUG
+
 	//当たり判定を視覚化したオブジェクト生成
 	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
 	_CollisionModel->LoadModel("SphereCollision.X");
+#endif
 }

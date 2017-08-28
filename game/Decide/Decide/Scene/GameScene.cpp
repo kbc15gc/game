@@ -31,7 +31,7 @@
 #include "GameObject\Enemy\EnemyManager.h"
 #include "GameObject\SplitSpace.h"
 
-#include "GameObject\Village\Shop.h"
+#include "GameObject\Village\Shop\Shop.h"
 
 ImageObject* g_depth;
 
@@ -48,6 +48,8 @@ void GameScene::Start()
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	playerCamera->ActiveCamera();
 
+#ifdef _DEBUG
+
 	//ふかんカメラの生成。
 	GameCamera* thirdPersonCamera = INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
 	//プレイヤーカメラの次のカメラはふかんカメラを指定。
@@ -60,6 +62,7 @@ void GameScene::Start()
 
 	//フリーカメラの次のカメラはプレイヤーカメラを指定。
 	freeCamera->SetNextCamera(playerCamera);
+#endif
 
 	// 空間分割生成。
 	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);

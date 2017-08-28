@@ -21,6 +21,7 @@ public:
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f);
 	//書式設定
 	void SetFormat(const unsigned int& format);
+	void SetFormat(fbText::TextFormatE format);
 	//カーニング設定
 	void SetKerning(const bool& kerning);
 	void SetCharNum(const unsigned int& num)

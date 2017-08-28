@@ -149,6 +149,33 @@ namespace Support
 		wcscat_s(s, wcslen(s) + wcslen(w) + 1, w);
 	}
 
+	int StringToInt(const char * string)
+	{
+		//符号チェック
+		bool isminus = (string[0] == '-');
+		int sign = isminus ? -1 : 1;
+		char copy[256];
+		ZeroMemory(copy, sizeof(char) * 256);
+		//1文字ずらす。
+		strcpy(copy, string + (isminus));
+
+		//整数部の文字列
+		char* intS = strtok(copy, ".");
+
+		//整数部分
+		int integer = 0;
+		//長さを調べる
+		int intL = strlen(intS);
+		//整数部ループ
+		for (short i = 0; i < intL; i++)
+		{
+			int val = *(intS + i) - '0';
+			integer = (integer * 10) + val;
+		}
+
+		return integer * sign;
+	}
+
 	double StringToDouble(const char * string)
 	{
 		//符号チェック

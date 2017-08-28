@@ -19,6 +19,8 @@ namespace Support
 	//			変換後の文字列へのポインタ。
 	//			小数点第何位まで変換するか。
 	extern void ToString(const Vector4& vec4, wchar_t* s, const int decimal = 1);
+	//文字列を整数にする。
+	extern int StringToInt(const char* string);
 	//文字列を小数に
 	extern double StringToDouble(const char* string);
 	// 文字列をVectorやQuaternionやFloat配列に
@@ -60,11 +62,12 @@ namespace Support {
 namespace
 {
 	//文字列を受け取って値に変換し、アドレスを返す。
-	void* ConvertValueFromString(char* word, Support::DataTypeE type,const int size)
+	//こいつはクビや。
+	void* ConvertValueFromString(char* word, Support::DataTypeE type, const int size)
 	{
 		if (type == Support::DataTypeE::INT)
 		{
-			int val = Support::StringToDouble(word);
+			int val = Support::StringToInt(word);
 			return &val;
 		}
 		else if (type == Support::DataTypeE::INTARRAY) {
@@ -72,18 +75,19 @@ namespace
 			char copy[256];
 			strcpy(copy, word);
 			const int max = size / sizeof(int);
-			int val[999];	// とりあえず多めに取っておく。
+			int Array[999];	// とりあえず多めに取っておく。
+			ZeroMemory(Array, sizeof(Array));
 
 			for (int idx = 0; idx < max; idx++) {
 				//数字の部分を取り出す。
 				char* num = strtok(copy + offset, "/");
 				//数字に変換する。
-				val[idx] = Support::StringToDouble(num);
+				Array[idx] = Support::StringToInt(num);
 				//オフセット量を増やす。
 				offset += strlen(num) + 1;
 			}
 
-			return val;
+			return Array;
 		}
 		else if (type == Support::DataTypeE::FLOAT)
 		{
@@ -92,9 +96,9 @@ namespace
 		}
 		else if (type == Support::DataTypeE::VECTOR2)
 		{
-			Vector2 v2 = Vector2(0.0f,0.0f);
+			Vector2 v2 = Vector2(0.0f, 0.0f);
 
-			Support::ConvertFloatArrayFromString(word, &v2,2);
+			Support::ConvertFloatArrayFromString(word, &v2, 2);
 
 			//int offset = 0;
 			//char copy[256];
@@ -116,7 +120,7 @@ namespace
 		{
 			Vector3 v3 = Vector3::zero;
 
-			Support::ConvertFloatArrayFromString(word, &v3,3);
+			Support::ConvertFloatArrayFromString(word, &v3, 3);
 
 			//int offset = 0;
 			//char copy[256];
@@ -136,9 +140,9 @@ namespace
 		}
 		else if (type == Support::DataTypeE::VECTOR4)
 		{
-			Vector4 v4 = Vector4(0.0f,0.0f,0.0f,0.0f);
+			Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
-			Support::ConvertFloatArrayFromString(word, &v4,4);
+			Support::ConvertFloatArrayFromString(word, &v4, 4);
 
 			//int offset = 0;
 			//char copy[256];
@@ -160,7 +164,7 @@ namespace
 		{
 			Quaternion quat = Quaternion::Identity;
 
-			Support::ConvertFloatArrayFromString(word, &quat,4);
+			Support::ConvertFloatArrayFromString(word, &quat, 4);
 
 			//int offset = 0;
 			//char copy[256];
@@ -186,6 +190,74 @@ namespace
 		return nullptr;
 	}
 
+	//文字列を数字に変換し、受け取ったアドレスに設定。
+	void SetValue(char* addres, char* word, Support::DataTypeE type, const int size)
+	{
+		if (type == Support::DataTypeE::INT)
+		{
+			int val = Support::StringToInt(word);
+			memcpy(addres, &val, size);
+		}
+		else if (type == Support::DataTypeE::INTARRAY) {
+			int offset = 0;
+			char copy[256];
+			strcpy(copy, word);
+			const int max = size / sizeof(int);
+			int Array[999];	// とりあえず多めに取っておく。
+			ZeroMemory(Array, sizeof(Array));
+
+			for (int idx = 0; idx < max; idx++) {
+				//数字の部分を取り出す。
+				char* num = strtok(copy + offset, "/");
+				//数字に変換する。
+				Array[idx] = Support::StringToInt(num);
+				//オフセット量を増やす。
+				offset += strlen(num) + 1;
+			}
+
+			memcpy(addres, &Array, size);
+		}
+		else if (type == Support::DataTypeE::FLOAT)
+		{
+			float val = Support::StringToDouble(word);
+			memcpy(addres, &val, size);
+		}
+		else if (type == Support::DataTypeE::VECTOR2)
+		{
+			Vector2 v2 = Vector2(0.0f, 0.0f);
+
+			Support::ConvertFloatArrayFromString(word, &v2, 2);
+			memcpy(addres, &v2, size);
+		}
+		else if (type == Support::DataTypeE::VECTOR3)
+		{
+			Vector3 v3 = Vector3::zero;
+
+			Support::ConvertFloatArrayFromString(word, &v3, 3);
+
+			memcpy(addres, &v3, size);
+		}
+		else if (type == Support::DataTypeE::VECTOR4)
+		{
+			Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+
+			Support::ConvertFloatArrayFromString(word, &v4, 4);
+
+			memcpy(addres, &v4, size);
+		}
+		else if (type == Support::DataTypeE::QUATERNION)
+		{
+			Quaternion quat = Quaternion::Identity;
+
+			Support::ConvertFloatArrayFromString(word, &quat, 4);
+
+			memcpy(addres, &quat, size);
+		}
+		else if (type == Support::DataTypeE::STRING)
+		{
+			memcpy(addres, &word, size);
+		}
+	}
 }
 
 namespace Support {
@@ -238,14 +310,11 @@ namespace Support {
 				//","の部分には'\0'が埋め込まれるのでコピーを使う
 				char* word = strtok(copy + offset, ",");
 
-				//単語から値(のアドレス)に変換する。
-				void* val = ConvertValueFromString(word, (DataTypeE)datas[idx].type,datas[idx].size);
-				
 				//変数の先頭アドレスを求める。
 				//char*型(1byte)にキャストすることで1づつずらすことができる。
 				auto addres = (char*)tmp + datas[idx].offset;
-				//アドレスに値をコピー
-				memcpy(addres, val, datas[idx].size);
+				//アドレスに値を設定。
+				SetValue(addres, word, (DataTypeE)datas[idx].type, datas[idx].size);
 
 				//単語の長さ+1(","分)をオフセット量に加算
 				offset += strlen(word) + 1;

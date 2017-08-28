@@ -60,7 +60,7 @@ void Inventory::AddPlayerInventoryItem(Item::ItemInfo *item)
 	//if (_AddCheck(item, NULL, NULL) != false) {
 
 		//追加するアイテムの情報を追加。
-		_AddItem(item);
+	//	_AddItem(item);
 
 	//}
 
@@ -84,7 +84,7 @@ void Inventory::AddPlayerInventoryIArmor(Item::ArmorInfo *armor)
 	//if (_AddCheck(NULL, armor, NULL) != false) {
 
 		//追加する防具の情報を追加。
-		_AddArmor(armor);
+	//	_AddArmor(armor);
 
 	//}
 }
@@ -106,7 +106,7 @@ void Inventory::AddPlayerInventoryWeapon(Item::WeaponInfo *weapon)
 	//if (_AddCheck(NULL, NULL,weapon) != false) {
 
 		//追加する武器の情報を追加。
-		_AddWeapon(weapon);
+	//	_AddWeapon(weapon);
 	//}
 	
 }
@@ -118,9 +118,11 @@ void Inventory::AddInventory(ItemManager::ItemKodeE kode ,Item::BaseInfo * item)
 	case ItemManager::ItemKodeE::Item:
 		_AddItem((Item::ItemInfo*)item);
 		break;
+
 	case ItemManager::ItemKodeE::Armor:
 		_AddArmor((Item::ArmorInfo*)item);
 		break;
+
 	case ItemManager::ItemKodeE::Weapon:
 		_AddWeapon((Item::WeaponInfo*)item);
 		break;
@@ -138,8 +140,8 @@ void Inventory::_PlayerItemListInitialize(int i) {
 	_PlayerItemList[i].Recovery = -1;
 	_PlayerItemList[i].AtkBuff = -1;
 	_PlayerItemList[i].DefBuff = -1;
-	_PlayerItemList[i].HoldNum = 0;
 	_PlayerItemList[i].SpeedBuff = -1;
+	_PlayerItemList[i].HoldNum = 0;
 }
 
 //プレイヤーの防具のインベントリを初期化。
@@ -174,9 +176,9 @@ void Inventory::_AddItem(Item::ItemInfo *item)
 	strcpy(_PlayerItemList[UseItemListCounter].Description, item->Description);
 	_PlayerItemList[UseItemListCounter].Value = item->Value;
 	_PlayerItemList[UseItemListCounter].Recovery = item->Recovery;
-	//_PlayerItemList[UseItemListCounter].AtkBuff = item->AtkBuff;
-	//_PlayerItemList[UseItemListCounter].DefBuff = item->DefBuff;
-	//_PlayerItemList[UseItemListCounter].SpeedBuff = item->SpeedBuff;
+	_PlayerItemList[UseItemListCounter].AtkBuff = item->AtkBuff;
+	_PlayerItemList[UseItemListCounter].DefBuff = item->DefBuff;
+	_PlayerItemList[UseItemListCounter].SpeedBuff = item->SpeedBuff;
 	_PlayerItemList[UseItemListCounter].HoldNum++;
 	UseItemListCounter++;
 
