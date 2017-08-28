@@ -29,7 +29,7 @@ void BossDrarian::_StartSubClass() {
 
 	transform->SetPosition(INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition());
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 75, 50, 100, 20, 1, 0, 500, 100);
+	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 5, 5, 100, 20, 1, 0, 500, 100);
 
 	// パラメーター設定。
 	vector<BarColor> Color;
@@ -44,7 +44,10 @@ void BossDrarian::_StartSubClass() {
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 1.3f;
+	_AttackRange = 3.5f;
+
+	// 歩行速度設定。
+	_walkSpeed = 2.5f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
@@ -85,7 +88,7 @@ void BossDrarian::_StartSubClass() {
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Wait);
+	_ChangeState(State::Wandering);
 
 }
 
@@ -180,12 +183,9 @@ void BossDrarian::AnimationEvent_BreathEnd() {
 
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Wait) {
-		// 待ちの挙動いったん終了。
-
-		// 再度待ち。
-		_ChangeState(State::Wait);
-		static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
+	if (EndStateType == State::Wandering) {
+		// 徘徊ステート終了。
+		_ChangeState(State::Wandering);
 	}
 	else if (EndStateType == State::Discovery) {
 		// 発見ステートの処理完了。
@@ -221,9 +221,13 @@ void BossDrarian::_ConfigCollision() {
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
 	_Radius = 0.5f;
-	_Height = 7.5f;
+	_Height = 2.5f;
+
+	// 重力設定。
+	_Gravity = -9.8f;
 
 	// コンポーネントにカプセルコライダーを追加。
+
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius, _Height);
@@ -240,6 +244,7 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+
 }
 
 void BossDrarian::_BuildAnimation() {

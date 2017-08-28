@@ -204,9 +204,9 @@ void Player::Update()
 			_AGITable[_PlayerParam->GetParam(CharacterParameter::LV)]
 			);
 		//HPが上がったのでHPバーのHP設定しなおす。
-		_HPBar->SetValue(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
+		_HPBar->Reset(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)], _HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
 		//MPが上がったのでMPバーのMP設定しなおす。
-		_MPBar->SetValue(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
+		_MPBar->Reset(_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)], _MPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
 		//レベルアップ時の音再生。
 		_LevelUP->Play(false);
 	}
@@ -321,10 +321,11 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		_HPBar->SubValue(_PlayerParam->ReciveDamage(hitCollision->GetDamage()));
+		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage());
+		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(transform->GetPosition(), _PlayerParam->ReciveDamage(hitCollision->GetDamage()), 1.5f, Vector3(0.0f, _Height, 0.0f));
+		attackvalue->Init(transform->GetPosition(), damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
 	}
 }
 

@@ -101,8 +101,27 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 	// ※親子関係を作成すると勝手に更新されるため、ここでは親子関係のない絶対座標を渡す。
 	_CreateBarFrame(transform->GetPosition(), transform->GetScale(), isHud);
 
+
 	// 指定された色の順と数に従ってバーを生成。
 	_ActiveBarColor(BarColorArray, max, value, _BarFrame->transform);
+
+	// 最初のバーを決定。
+	_NowBarNum = _NowSettingNum = 0;
+	_NowBar = _NowSettingBar = _BarElement[_NowBarNum].get();
+
+	// 各値の初期値設定。
+	_MaxValue = max;
+	_Value = max;
+
+	_UpdateValue(value);	// 初期値を各バーに分配して設定。
+}
+
+void BarAdapter::Reset(float max, float value) {
+	for (auto& element : _BarElement) {
+		// 全てのバーを新しい最大値で初期化。
+		element->Reset(max / _MaxBarNum);
+	}
+
 	// 最初のバーを決定。
 	_NowBarNum = _NowSettingNum = 0;
 	_NowBar = _NowSettingBar = _BarElement[_NowBarNum].get();
@@ -301,7 +320,7 @@ void BarAdapter::_ActiveBarColor(const vector<BarColor>& BarColorArray, float ma
 		BarElement* bar = new BarElement("BarElement")/*INSTANCE(GameObjectManager)->AddNew<CBarElement>("BarElement", idx)*/;
 		bar->Awake(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 
-					  // バーを重ねる場合は値を重ねるバーの数分だけ分割する。
+		// バーを重ねる場合は値を重ねるバーの数分だけ分割する。
 		bar->Create(BarColor, max / _MaxBarNum, tr);
 		_BarElement.push_back(unique_ptr<BarElement>(bar));
 	}
