@@ -16,7 +16,7 @@ void Inventory::ListInitalize()
 		switch (i)
 		{
 			//プレイヤーのアイテムのインベントリ。
-		case (int)InventoryKodeE::ItemList:
+		case (int)ItemManager::ItemKodeE::Item:
 
 			for (int j = 0; j < INVENTORYLISTNUM; j++)
 			{
@@ -24,7 +24,7 @@ void Inventory::ListInitalize()
 			}
 			break;
 			//プレイヤーの防具のインベントリ。
-		case (int)InventoryKodeE::ArmorList:
+		case (int)ItemManager::ItemKodeE::Armor:
 
 			for (int j = 0; j < INVENTORYLISTNUM; j++)
 			{
@@ -32,7 +32,7 @@ void Inventory::ListInitalize()
 			}
 			break;
 			//プレイヤーの武器のインベントリ。
-		case (int)InventoryKodeE::WeaponList:
+		case (int)ItemManager::ItemKodeE::Weapon:
 
 			for (int j = 0; j < INVENTORYLISTNUM; j++)
 			{
@@ -44,7 +44,7 @@ void Inventory::ListInitalize()
 }
 
 //プレイヤーのアイテムのインベントリに追加。
-void Inventory::AddPlayerInventoryItem(ItemBase::Item::ItemInfo *item)
+void Inventory::AddPlayerInventoryItem(Item::BaseInfo *item)
 {
 	////所持しているアイテムの中に追加するアイテムと同じものがないかチェック。
 	//for (int i = 0; i < UseItemListCounter; i++)
@@ -57,18 +57,18 @@ void Inventory::AddPlayerInventoryItem(ItemBase::Item::ItemInfo *item)
 	//	}
 	//}
 
-	if (_AddCheck(item, NULL, NULL) != false) {
+	//if (_AddCheck(item, NULL, NULL) != false) {
 
 		//追加するアイテムの情報を追加。
 		_AddItem(item);
 
-	}
+	//}
 
 	
 }
 
 //プレイヤーの防具のインベントリに追加。
-void Inventory::AddPlayerInventoryIArmor(ItemBase::Armor::ArmorInfo *armor)
+void Inventory::AddPlayerInventoryIArmor(Item::BaseInfo *armor)
 {
 	////所持している防具の中に追加する防具と同じものがないかチェック。
 	//for (int i = 0; i < UseArmorListCounter; i++)
@@ -81,16 +81,16 @@ void Inventory::AddPlayerInventoryIArmor(ItemBase::Armor::ArmorInfo *armor)
 	//	}
 	//}
 
-	if (_AddCheck(NULL, armor, NULL) != false) {
+	//if (_AddCheck(NULL, armor, NULL) != false) {
 
 		//追加する防具の情報を追加。
 		_AddArmor(armor);
 
-	}
+	//}
 }
 
 //プレイヤーの武器のインベントリに追加。
-void Inventory::AddPlayerInventoryWeapon(ItemBase::Weapon::WeaponInfo *weapon)
+void Inventory::AddPlayerInventoryWeapon(Item::BaseInfo *weapon)
 {
 	////所持している武器の中に追加する武器と同じものがないかチェック。
 	//for (int i = 0; i < UseArmorListCounter; i++)
@@ -103,12 +103,30 @@ void Inventory::AddPlayerInventoryWeapon(ItemBase::Weapon::WeaponInfo *weapon)
 	//	}
 	//}
 
-	if (_AddCheck(NULL, NULL,weapon) != false) {
+	//if (_AddCheck(NULL, NULL,weapon) != false) {
 
 		//追加する武器の情報を追加。
 		_AddWeapon(weapon);
-	}
+	//}
 	
+}
+
+void Inventory::AddInventory(ItemManager::ItemKodeE kode ,Item::BaseInfo * item)
+{
+	switch (kode)
+	{
+	case ItemManager::ItemKodeE::Item:
+		_AddItem(item);
+		break;
+	case ItemManager::ItemKodeE::Armor:
+		_AddArmor(item);
+		break;
+	case ItemManager::ItemKodeE::Weapon:
+		_AddWeapon(item);
+		break;
+	default:
+		break;
+	}
 }
 
 //プレイヤーのアイテムのインベントリを初期化。
@@ -148,49 +166,49 @@ void Inventory::_PlayerWeaponListInitialize(int i)
 }
 
 //アイテムをインベントリに追加。
-void Inventory::_AddItem(ItemBase::Item::ItemInfo *item) 
+void Inventory::_AddItem(Item::BaseInfo *item)
 {
 	_PlayerItemList[UseItemListCounter].TypeID = item->TypeID;
 	_PlayerItemList[UseItemListCounter].ID = item->ID;
 	strcpy(_PlayerItemList[UseItemListCounter].Name, item->Name);
 	strcpy(_PlayerItemList[UseItemListCounter].Description, item->Description);
 	_PlayerItemList[UseItemListCounter].Value = item->Value;
-	_PlayerItemList[UseItemListCounter].Recovery = item->Recovery;
-	_PlayerItemList[UseItemListCounter].AtkBuff = item->AtkBuff;
-	_PlayerItemList[UseItemListCounter].DefBuff = item->DefBuff;
-	_PlayerItemList[UseItemListCounter].SpeedBuff = item->SpeedBuff;
+	//_PlayerItemList[UseItemListCounter].Recovery = item->Recovery;
+	//_PlayerItemList[UseItemListCounter].AtkBuff = item->AtkBuff;
+	//_PlayerItemList[UseItemListCounter].DefBuff = item->DefBuff;
+	//_PlayerItemList[UseItemListCounter].SpeedBuff = item->SpeedBuff;
 	_PlayerItemList[UseItemListCounter].HoldNum++;
 	UseItemListCounter++;
 
 }
 
 //防具をインベントリに追加。
-void Inventory::_AddArmor(ItemBase::Armor::ArmorInfo *armor)
+void Inventory::_AddArmor(Item::BaseInfo *armor)
 {
 	_PlayerArmorList[UseArmorListCounter].TypeID = armor->TypeID;
 	_PlayerArmorList[UseArmorListCounter].ID = armor->ID;
 	strcpy(_PlayerArmorList[UseArmorListCounter].Name, armor->Name);
 	strcpy(_PlayerArmorList[UseArmorListCounter].Description, armor->Description);
 	_PlayerArmorList[UseArmorListCounter].Value = armor->Value;
-	_PlayerArmorList[UseArmorListCounter].ATK = armor->ATK;
-	_PlayerArmorList[UseArmorListCounter].DEF = armor->DEF;
+	//_PlayerArmorList[UseArmorListCounter].ATK = armor->ATK;
+	//_PlayerArmorList[UseArmorListCounter].DEF = armor->DEF;
 	UseArmorListCounter++;
 }
 
 //武器をインベントリに追加。
-void Inventory::_AddWeapon(ItemBase::Weapon::WeaponInfo *weapon)
+void Inventory::_AddWeapon(Item::BaseInfo *weapon)
 {
 	_PlayerWeapon[UseWeaponListCounter].TypeID = weapon->TypeID;
 	_PlayerWeapon[UseWeaponListCounter].ID = weapon->ID;
 	strcpy(_PlayerWeapon[UseWeaponListCounter].Name, weapon->Name);
 	strcpy(_PlayerArmorList[UseWeaponListCounter].Description, weapon->Description);
 	_PlayerWeapon[UseWeaponListCounter].Value = weapon->Value;
-	_PlayerWeapon[UseWeaponListCounter].ATK = weapon->ATK;
+	//_PlayerWeapon[UseWeaponListCounter].ATK = weapon->ATK;
 	UseWeaponListCounter++;
 }
 
 //追加するアイテムがすでに追加されているかチェックし無ければtrueを返す
-bool Inventory::_AddCheck(ItemBase::Item::ItemInfo *item , ItemBase::Armor::ArmorInfo *armor, ItemBase::Weapon::WeaponInfo *weapon)
+bool Inventory::_AddCheck(Item::ItemInfo *item , Item::ArmorInfo *armor, Item::WeaponInfo *weapon)
 {
 	//アイテムのチェック。
 	if (NULL != item) 

@@ -1,62 +1,53 @@
 #pragma once
 
-namespace InventoryBase
+namespace PlayerInventory
 {
-	struct InventoryBasemInfo :public Noncopyable
+	struct BaseInfo :public Noncopyable
 	{
 
 	};
 	//インベントリ内にあるアイテム。
-	namespace InventoryItem
+	//アイテムの情報をまとめた構造体。
+	struct ItemInfo :BaseInfo
 	{
-		//アイテムの情報をまとめた構造体。
-		struct ItemInfo :InventoryBasemInfo
-		{
-			int TypeID;				//種類。
-			int ID;					//アイテムID。
-			char Name[256];			//アイテム名。
-			char Description[256];	//アイテムの説。
-			int Value;				//値段。
-			int Recovery;			//薬草を使った時の回復量。
-			int AtkBuff;			//薬草を使った時の攻撃力の上昇量。
-			int DefBuff;			//薬草を使った時の防御力の上昇量。
-			int SpeedBuff;			//薬草を使った時の移動速度の上昇量。
-			int HoldNum;			//所持数。
-		};
-	}
+		int TypeID;				//種類。
+		int ID;					//アイテムID。
+		char Name[256];			//アイテム名。
+		char Description[256];	//アイテムの説。
+		int Value;				//値段。
+		int Recovery;			//薬草を使った時の回復量。
+		int AtkBuff;			//薬草を使った時の攻撃力の上昇量。
+		int DefBuff;			//薬草を使った時の防御力の上昇量。
+		int SpeedBuff;			//薬草を使った時の移動速度の上昇量。
+		int HoldNum;			//所持数。
+	};
 
 	//インベントリ内にある防具。
-	namespace InventoryArmor
+	//防具の情報をまとめた構造体。
+	struct ArmorInfo :BaseInfo
 	{
-		//防具の情報をまとめた構造体。
-		struct ArmorInfo :InventoryBasemInfo
-		{
-			int TypeID;				//種類。
-			int ID;					//防具ID。
-			char Name[256];			//防具名。
-			char Description[256];	//防具の説。
-			int Value;				//値段。
-			int ATK;				//防具を装備した時に上がる攻撃力。
-			int DEF;				//防具を装備した時に上がる防御力。
-			int HoldNum;			//所持数。
-		};
-	}
+		int TypeID;				//種類。
+		int ID;					//防具ID。
+		char Name[256];			//防具名。
+		char Description[256];	//防具の説。
+		int Value;				//値段。
+		int ATK;				//防具を装備した時に上がる攻撃力。
+		int DEF;				//防具を装備した時に上がる防御力。
+		int HoldNum;			//所持数。
+	};
 
 	//インベントリ内にある武器。。
-	namespace InventoryWeapon
+	//プレイヤーが持っている武器の情報をまとめた構造体。
+	struct WeaponInfo :BaseInfo
 	{
-		//プレイヤーが持っている武器の情報をまとめた構造体。
-		struct WeaponInfo :InventoryBasemInfo
-		{
-			int TypeID;				//種類。
-			int ID;					//武器ID。
-			char Name[256];			//武器名。
-			char Description[256];	//武器の説。
-			int Value;				//値段。
-			int ATK;				//武器を装備した時に上がる攻撃力。
-			int HoldNum;			//所持数。
-		};
-	}
+		int TypeID;				//種類。
+		int ID;					//武器ID。
+		char Name[256];			//武器名。
+		char Description[256];	//武器の説。
+		int Value;				//値段。
+		int ATK;				//武器を装備した時に上がる攻撃力。
+		int HoldNum;			//所持数。
+	};
 }
 //インベントリの枠数。
 const int INVENTORYLISTNUM = 5;
@@ -79,26 +70,18 @@ private:
 	void _PlayerWeaponListInitialize(int i);
 
 	//アイテムをインベントリに追加。
-	void _AddItem(ItemBase::Item::ItemInfo *item = nullptr);
+	void _AddItem(Item::BaseInfo *item = nullptr);
 
 	//防具をインベントリに追加。
-	void _AddArmor(ItemBase::Armor::ArmorInfo *armor = nullptr);
+	void _AddArmor(Item::BaseInfo *armor = nullptr);
 
 	//武器をインベントリに追加。
-	void _AddWeapon(ItemBase::Weapon::WeaponInfo *weapon = nullptr);
+	void _AddWeapon(Item::BaseInfo *weapon = nullptr);
 
 	//追加するアイテムがすでに追加されているかチェックし無ければtrueを返す。
 	//第1引数:アイテム、第2引数:防具、第3引数:武器。
-	bool _AddCheck(ItemBase::Item::ItemInfo *item = nullptr, ItemBase::Armor::ArmorInfo *armor = nullptr, ItemBase::Weapon::WeaponInfo *weapon = nullptr);
+	bool _AddCheck(Item::ItemInfo *item = nullptr, Item::ArmorInfo *armor = nullptr, Item::WeaponInfo *weapon = nullptr);
 public:
-
-	//インベントリの種類。
-	enum class InventoryKodeE
-	{
-		ItemList = 0,
-		ArmorList,
-		WeaponList,
-	};
 
 	static Inventory* Instance()
 	{
@@ -115,44 +98,47 @@ public:
 
 
 	//受け取った情報を元にプレイヤーのアイテムのインベントリに追加。
-	void AddPlayerInventoryItem(ItemBase::Item::ItemInfo *item = nullptr);
+	void AddPlayerInventoryItem(Item::BaseInfo *item = nullptr);
 
 	//受け取った情報を元にプレイヤーの防具のインベントリに追加。
-	void AddPlayerInventoryIArmor(ItemBase::Armor::ArmorInfo *armor = nullptr);
+	void AddPlayerInventoryIArmor(Item::BaseInfo *armor = nullptr);
 
 	//受け取った情報を元にプレイヤーの武器のインベントリに追加。
-	void AddPlayerInventoryWeapon(ItemBase::Weapon::WeaponInfo *weapon = nullptr);
+	void AddPlayerInventoryWeapon(Item::BaseInfo *weapon = nullptr);
+
+	//インベントリにアイテムを追加する。
+	void AddInventory(ItemManager::ItemKodeE kode, Item::BaseInfo *item = nullptr);
 
 	//プレイヤーのアイテムのインベントリを取得。
-	InventoryBase::InventoryItem::ItemInfo* GetPlayerItemList() {
+	PlayerInventory::ItemInfo* GetPlayerItemList() {
 		return &_PlayerItemList[0];
 	}
 
 	//プレイヤーの防具のインベントリを取得。
-	InventoryBase::InventoryArmor::ArmorInfo* GetPlayerAromorList()
+	PlayerInventory::ArmorInfo* GetPlayerAromorList()
 	{
 		return &_PlayerArmorList[0];
 	}
 
 	//プレイヤーの武器のインベントリを取得。
-	InventoryBase::InventoryWeapon::WeaponInfo* GetPlayerWeaponList()
+	PlayerInventory::WeaponInfo* GetPlayerWeaponList()
 	{
 
 		return &_PlayerWeapon[0];
 	}
 
 	//欲しいインベントリを指定するとそのインベントリを取得。
-	InventoryBase::InventoryBasemInfo* GetInventory(InventoryKodeE kode)
+	PlayerInventory::BaseInfo* GetInventory(ItemManager::ItemKodeE kode)
 	{
 		switch (kode)
 		{
-		case Inventory::InventoryKodeE::ItemList:
+		case ItemManager::ItemKodeE::Item:
 			return &_PlayerItemList[0];
 			break;
-		case Inventory::InventoryKodeE::ArmorList:
+		case ItemManager::ItemKodeE::Armor:
 			return &_PlayerArmorList[0];
 			break;
-		case Inventory::InventoryKodeE::WeaponList:
+		case ItemManager::ItemKodeE::Weapon:
 			return &_PlayerWeapon[0];
 			break;
 		default:
@@ -165,13 +151,13 @@ public:
 
 private:
 	//プレイヤーのアイテムのインベントリ。
-	InventoryBase::InventoryItem::ItemInfo	_PlayerItemList[INVENTORYLISTNUM];
+	PlayerInventory::ItemInfo	_PlayerItemList[INVENTORYLISTNUM];
 
 	//プレイヤーの防具のインベントリ。
-	InventoryBase::InventoryArmor::ArmorInfo	_PlayerArmorList[INVENTORYLISTNUM];
+	PlayerInventory::ArmorInfo	_PlayerArmorList[INVENTORYLISTNUM];
 
 	//プレイヤーの武器のインベントリ。
-	InventoryBase::InventoryWeapon::WeaponInfo	_PlayerWeapon[INVENTORYLISTNUM];
+	PlayerInventory::WeaponInfo	_PlayerWeapon[INVENTORYLISTNUM];
 
 	//アイテム、防具、武器の各インベントリを現在どれだけ使っているかを数える変数。
 	int UseItemListCounter, UseArmorListCounter, UseWeaponListCounter = 0;
