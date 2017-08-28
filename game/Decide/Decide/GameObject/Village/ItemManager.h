@@ -4,16 +4,16 @@ namespace Item {
 
 	struct BaseInfo :public Noncopyable
 	{
-
-	};
-	//アイテムの情報をまとめた構造体。
-	struct ItemInfo :public BaseInfo
-	{
 		int TypeID;				//種類(アイテムは0)。
 		int ID;					//アイテムID。
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説。
 		int Value;				//値段。
+	};
+	//アイテムの情報をまとめた構造体。
+	struct ItemInfo :public BaseInfo
+	{
+		
 		int Recovery;			//薬草を使った時の回復量。
 		int AtkBuff;			//薬草を使った時の攻撃力の上昇量。
 		int DefBuff;			//薬草を使った時の防御力の上昇量。
@@ -37,11 +37,11 @@ namespace Item {
 	//防具の情報をまとめた構造体。
 	struct ArmorInfo :public BaseInfo
 	{
-		int TypeID;				//種類(防具は1)。
-		int ID;					//防具ID。
-		char Name[256];			//防具名。
-		char Description[256];	//防具の説。
-		int Value;				//値段。
+		//int TypeID;				//種類(防具は1)。
+		//int ID;					//防具ID。
+		//char Name[256];			//防具名。
+		//char Description[256];	//防具の説。
+		//int Value;				//値段。
 		int ATK;				//防具を装備した時に上がる攻撃力。
 		int DEF;				//防具を装備した時に上がる防御力。
 	};
@@ -62,11 +62,11 @@ namespace Item {
 	//武器の情報をまとめた構造体。
 	struct WeaponInfo :public BaseInfo
 	{
-		int TypeID;				//種類(武器は2)。
-		int ID;					//武器ID。
-		char Name[256];			//武器名。
-		char Description[256];	//武器の説。
-		int Value;				//値段。
+		//int TypeID;				//種類(武器は2)。
+		//int ID;					//武器ID。
+		//char Name[256];			//武器名。
+		//char Description[256];	//武器の説。
+		//int Value;				//値段。
 		int ATK;				//武器を装備した時に上がる攻撃力。
 	};
 
