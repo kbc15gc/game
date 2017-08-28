@@ -19,6 +19,8 @@ private:
 public:
 	Enemy(const char* name);
 	~Enemy();
+
+	void CreateAttackCollision();
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -50,6 +52,6 @@ private:
 	void _BuildSoundTable()override;
 private:
 	State _saveState;
-	/*static*/ EnemySingleAttack _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、今のところ静的メンバでオッケー)。
+	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理。
 };
 

@@ -138,6 +138,7 @@ void Particle::Render()
 	_Effect->SetMatrix("g_mWVP", &wvp);
 	_Effect->SetTexture("g_texture", _Texture->pTexture);
 	_Effect->SetFloat("g_alpha", _Alpha);
+	_Effect->SetFloat("g_brightness", _Brightness);
 	_Effect->SetValue("g_mulColor", _MulColor, sizeof(Vector4));
 	_Effect->CommitChanges();
 

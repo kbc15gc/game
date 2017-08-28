@@ -43,27 +43,9 @@ void AnimationEventPlayer::Update() {
 			if (work->NowFrame() == eventData->playFrame)
 			{
 				// 関数ポインタに設定された関数を実行。
-				(eventData->object->*(eventData->Event))();
-
-				////攻撃コリジョン作成。
-				//unsigned int priorty = 1;
-				//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-				//attack->Create(eventData->info.damage, eventData->info.pos, eventData->info.rot, eventData->info.size, eventData->info.master, eventData->info.life, eventData->info.wait, eventData->info.parent);
-				//if (eventData->info.isRemoveParent) {
-				//	attack->RemoveParent();
-				//	//もしモンスターの向きとコリジョンの向きを合わせたいのなら
-				//	//collison->transform->SetAngle(monster->transform->GetAngle());
-				//	//みたいなコードが必要。
-				//}
+				(gameObject->*(eventData->Event))();
 			}
 		}
-		//for (auto soundData : _soundEvents[nowAnim]) {
-		//	//フレームが一致した時音再生。
-		//	if (work->NowFrame() == soundData->playFrame)
-		//	{
-		//		soundData->info.source->Play(soundData->info.isLoop);
-		//	}
-		//}
 	}
 	else {
 		// Animationコンポーネントがアタッチされていない。

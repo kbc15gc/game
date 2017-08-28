@@ -445,6 +445,9 @@ private:
 // アニメーションが設定されていれば自動で再生される。
 class EnemyAttack {
 public:
+	EnemyAttack(EnemyCharacter* object) {
+		_enemyObject = object;
+	}
 	virtual ~EnemyAttack() {
 
 	}
@@ -478,9 +481,6 @@ public:
 	inline void SetIsPlaying(bool flg) {
 		_isPlaying = flg;
 	}
-	inline void SetObject(EnemyCharacter* obj) {
-		_enemyObject = obj;
-	}
 protected:
 	int _animType = -1;	// 再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
 	float _interpolate = 0.0f;	// アニメーション補間時間(初期値は0)。
@@ -492,7 +492,7 @@ protected:
 // ※単攻撃(攻撃モーション一回分攻撃)。
 class EnemySingleAttack :public EnemyAttack{
 public:
-	EnemySingleAttack() {
+	EnemySingleAttack(EnemyCharacter* object):EnemyAttack(object) {
 		_player = INSTANCE(GameObjectManager)->FindObject("Player");
 	}
 	void Start()override {
