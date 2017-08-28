@@ -70,13 +70,13 @@ private:
 	void _PlayerWeaponListInitialize(int i);
 
 	//アイテムをインベントリに追加。
-	void _AddItem(Item::BaseInfo *item = nullptr);
+	void _AddItem(Item::ItemInfo *item = nullptr);
 
 	//防具をインベントリに追加。
-	void _AddArmor(Item::BaseInfo *armor = nullptr);
+	void _AddArmor(Item::ArmorInfo *armor = nullptr);
 
 	//武器をインベントリに追加。
-	void _AddWeapon(Item::BaseInfo *weapon = nullptr);
+	void _AddWeapon(Item::WeaponInfo *weapon = nullptr);
 
 	//追加するアイテムがすでに追加されているかチェックし無ければtrueを返す。
 	//第1引数:アイテム、第2引数:防具、第3引数:武器。
@@ -98,13 +98,13 @@ public:
 
 
 	//受け取った情報を元にプレイヤーのアイテムのインベントリに追加。
-	void AddPlayerInventoryItem(Item::BaseInfo *item = nullptr);
+	void AddPlayerInventoryItem(Item::ItemInfo *item = nullptr);
 
 	//受け取った情報を元にプレイヤーの防具のインベントリに追加。
-	void AddPlayerInventoryIArmor(Item::BaseInfo *armor = nullptr);
+	void AddPlayerInventoryIArmor(Item::ArmorInfo *armor = nullptr);
 
 	//受け取った情報を元にプレイヤーの武器のインベントリに追加。
-	void AddPlayerInventoryWeapon(Item::BaseInfo *weapon = nullptr);
+	void AddPlayerInventoryWeapon(Item::WeaponInfo *weapon = nullptr);
 
 	//インベントリにアイテムを追加する。
 	void AddInventory(ItemManager::ItemKodeE kode, Item::BaseInfo *item = nullptr);

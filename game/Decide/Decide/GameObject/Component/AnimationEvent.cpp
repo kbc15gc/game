@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "GameObject\Component\AnimationEvent.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
+#include "fbEngine\_Object\_GameObject\GameObject.h"
 
-AnimationEvent::~AnimationEvent() {
+
+AnimationEventPlayer::~AnimationEventPlayer() {
 	for (auto& work : _animationEvents) {
 		for (auto Event : work) {
 			SAFE_DELETE(Event);
@@ -11,7 +14,7 @@ AnimationEvent::~AnimationEvent() {
 	_animationEvents.clear();
 };
 
-void AnimationEvent::Init()
+void AnimationEventPlayer::Init()
 {
 	// アニメーションの数だけ配列追加。
 	if (gameObject->GetComponent<Animation>()) {
@@ -26,7 +29,7 @@ void AnimationEvent::Init()
 	_isFirst = false;
 }
 
-void AnimationEvent::Update() {
+void AnimationEventPlayer::Update() {
 	if (_animationEvents.size() <= 0) {
 		// アニメーションイベントが一つも設定されていない。
 		return;
@@ -36,19 +39,11 @@ void AnimationEvent::Update() {
 		//現在再生中のアニメーション番号取得。
 		int nowAnim = work->GetPlayAnimNo();
 		for (auto eventData : _animationEvents[nowAnim]) {
-				//フレームが一致した時あたり判定作成。
-			if (work->NowFrame() == eventData->createFrame)
+				//フレームが一致した時イベント呼び出し。
+			if (work->NowFrame() == eventData->playFrame)
 			{
-				//攻撃コリジョン作成
-				unsigned int priorty = 1;
-				AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-				attack->Create(eventData->info.damage, eventData->info.pos, eventData->info.rot, eventData->info.size, eventData->info.master, eventData->info.life, eventData->info.wait, eventData->info.parent);
-				if (eventData->info.isRemoveParent) {
-					attack->RemoveParent();
-					//もしモンスターの向きとコリジョンの向きを合わせたいのなら
-					//collison->transform->SetAngle(monster->transform->GetAngle());
-					//みたいなコードが必要。
-				}
+				// 関数ポインタに設定された関数を実行。
+				(gameObject->*(eventData->Event))();
 			}
 		}
 	}

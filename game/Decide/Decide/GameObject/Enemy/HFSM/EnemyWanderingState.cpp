@@ -46,7 +46,8 @@ void EnemyWanderingState::_EntrySubClass() {
 }
 
 void EnemyWanderingState::_Start() {
-
+	// ‚Ì‚¯‚¼‚èÝ’èB
+	_EnemyObject->ConfigDamageReaction(true, 1);
 }
 
 void EnemyWanderingState::_UpdateSubClass() {
@@ -55,7 +56,6 @@ void EnemyWanderingState::_UpdateSubClass() {
 }
 
 void EnemyWanderingState::Exit(EnemyCharacter::State next) {
-
 }
 
 void EnemyWanderingState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

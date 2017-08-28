@@ -19,6 +19,8 @@ namespace Support
 	//			変換後の文字列へのポインタ。
 	//			小数点第何位まで変換するか。
 	extern void ToString(const Vector4& vec4, wchar_t* s, const int decimal = 1);
+	//文字列を整数にする。
+	extern int StringToInt(const char* string);
 	//文字列を小数に
 	extern double StringToDouble(const char* string);
 	// 文字列をVectorやQuaternionやFloat配列に
@@ -64,7 +66,7 @@ namespace
 	{
 		if (type == Support::DataTypeE::INT)
 		{
-			int val = Support::StringToDouble(word);
+			int val = Support::StringToInt(word);
 			return &val;
 		}
 		else if (type == Support::DataTypeE::INTARRAY) {
@@ -72,18 +74,19 @@ namespace
 			char copy[256];
 			strcpy(copy, word);
 			const int max = size / sizeof(int);
-			int val[999];	// とりあえず多めに取っておく。
+			int Array[999];	// とりあえず多めに取っておく。
+			ZeroMemory(Array, sizeof(Array));
 
 			for (int idx = 0; idx < max; idx++) {
 				//数字の部分を取り出す。
 				char* num = strtok(copy + offset, "/");
 				//数字に変換する。
-				val[idx] = Support::StringToDouble(num);
+				Array[idx] = Support::StringToInt(num);
 				//オフセット量を増やす。
 				offset += strlen(num) + 1;
 			}
 
-			return val;
+			return Array;
 		}
 		else if (type == Support::DataTypeE::FLOAT)
 		{

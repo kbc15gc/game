@@ -14,17 +14,20 @@ EnemyTranslationState::~EnemyTranslationState()
 
 void EnemyTranslationState::_EntrySubClass() {
 	_isWandering = false;
-
+	float InterpolateTime = 0.5f;	// 補間時間。
+	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Walk, InterpolateTime);
 }
 
 void EnemyTranslationState::_Start() {
-	float InterpolateTime = 0.5f;	// 補間時間。
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Walk, InterpolateTime);
+	//float InterpolateTime = 0.5f;	// 補間時間。
+	//_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Walk, InterpolateTime);
+
 	_InitPos = _EnemyObject->transform->GetLocalPosition();	// 初期位置を保存しておく。
 	_isOutsideRange = false;
 }
 
 void EnemyTranslationState::_UpdateSubClass() {
+
 	//if (!_isOutsideRange) {
 		// 徘徊範囲から外れてない。
 

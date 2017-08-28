@@ -14,15 +14,15 @@ public:
 public:
 	Collider(GameObject* g, Transform* t) :Component(g, t, typeid(this).name())
 	{
-		this->_CollisionModel = nullptr;
 #ifdef _DEBUG
+		this->_CollisionModel = nullptr;
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 	};
 	Collider(GameObject* g, Transform* t,const char* classname) :Component(g, t, classname)
 	{
-		this->_CollisionModel = nullptr;
 #ifdef _DEBUG
+		this->_CollisionModel = nullptr;
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 	};

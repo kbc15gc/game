@@ -1,5 +1,8 @@
 #pragma once
 #include "EnemyCharacter.h"
+#include "fbEngine\_Object\_GameObject\ParticleEmitter.h"
+
+class EnemyBreathAttack;
 
 // 継承クラス。
 // ボスエネミー(歩行型ドラゴン)。
@@ -14,11 +17,25 @@ private:
 		Dash,
 		Attack,
 		Barking,
+		TailAttackRight,
+		Breath,
+		Damage,
+		Death,
 		Max
 	};
 public:
 	BossDrarian(const char* name);
 	~BossDrarian();
+
+	// アニメーションイベント関連。
+	void AnimationEvent_Kamituki();
+	void CreateAttackCollision_TailAttack1();
+	void CreateAttackCollision_TailAttack2();
+	void CreateAttackCollision_TailAttack3();
+	void CreateAttackCollision_TailAttack4();
+	void AnimationEvent_BreathStart();
+	void AnimationEvent_BreathEnd();
+
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -46,8 +63,47 @@ private:
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
 
+	// 効果音のテーブル作成関数。
+	void _BuildSoundTable()override;
 private:
 	State _saveState;
-	/*static*/ EnemySingleAttack _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、今のところ静的メンバでオッケー)。
+	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
+	unique_ptr<EnemySingleAttack> _tailAttack;
+	unique_ptr<EnemyBreathAttack> _breathAttack;
 };
 
+
+class EnemyBreathAttack : public EnemyAttack {
+public:
+	EnemyBreathAttack(EnemyCharacter* object);
+
+	// パーティクルのパラメーターを設定。
+	void ConfigParticleParameter(ParticleParameter param) {
+		_particleEmitter->Init(param);
+	}
+
+	void Start()override {
+		_enemyObject->LookAtObject(*_player);
+		_particleEmitter->ResetInitVelocity(_enemyObject->transform->GetForward() * _particleEmitter->GetInitVelocity().Length());	// パーティクルの飛ぶ方向をえねみーの向きに再設定。
+	};
+	bool Update()override;
+
+	void Exit()override {
+		BreathEnd();
+	};
+
+
+	// ブレス開始。
+	inline void BreathStart() {
+		_particleEmitter->SetEmitFlg(true);
+	}
+
+	// ブレス終了。
+	inline void BreathEnd() {
+		_particleEmitter->SetEmitFlg(false);
+	}
+private:
+	GameObject* _player = nullptr;
+	ParticleEmitter* _particleEmitter = nullptr;
+	ParticleParameter _particleParam;
+};
