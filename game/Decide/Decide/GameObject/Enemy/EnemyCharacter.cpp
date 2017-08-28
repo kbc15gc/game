@@ -37,6 +37,7 @@ void EnemyCharacter::Awake() {
 
 	// 継承先により変わる処理。
 	_AwakeSubClass();
+
 }
 
 void EnemyCharacter::Start() {
@@ -66,7 +67,7 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) <= 0)
+	if (_MyComponent.Parameter->GetDeathFalg())
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);
@@ -254,7 +255,7 @@ void EnemyCharacter::_ChangeState(State next) {
 	_NowStateIdx = next;
 }
 
-void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+	void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
 	strcpy(_SoundData[static_cast<int>(idx)].Path, filePath);
 	_SoundData[static_cast<int>(idx)].Is3D = is3D;
 	_SoundData[static_cast<int>(idx)].IsLoop = isLoop;
@@ -264,12 +265,25 @@ void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D,
 	_SoundData[static_cast<int>(idx)].Source->Init(work.c_str(), is3D);
 }
 
-void EnemyCharacter::GiveDamage(float damage) {
+void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
+	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
+	{
+		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) >= 0)
+		{
+			_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()));
+			GiveDamage(hitCollision->GetDamage());
+		}
+	}
+}
+
+void EnemyCharacter::GiveDamage(int damage) {
+	int _damage;
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
 
 		// ダメージ値をもとにパラメーター更新。
 		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage));
+		_damage = damage;
 
 		if (_isDamageMotion) {
 			// のけぞるか。
@@ -292,6 +306,13 @@ void EnemyCharacter::GiveDamage(float damage) {
 			}
 		}
 	}
+	else {
+		_damage = 0;
+	}
+
+	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+	attackvalue->Init(Vector3::zero,_damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+	attackvalue->transform->SetParent(transform);
 }
 
 
@@ -314,3 +335,6 @@ bool EnemySingleAttack::Update(){
 	}
 	return false;
 }
+=======
+}
+>>>>>>> c38421cd1207074941b60b76756a5dbe764cc97d

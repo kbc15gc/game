@@ -81,7 +81,6 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Ocean.cpp" />
-    <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -176,8 +175,20 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.cpp">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyThreatState.cpp">
       <Filter>GameObject\Enemy\HFSM</Filter>
+=======
+    <ClCompile Include="GameObject\Village\EventManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\AttackValue2D.cpp" />
+    <ClCompile Include="GameObject\Village\ItemManager.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Inventory.cpp">
+      <Filter>GameObject\Village</Filter>
+>>>>>>> c38421cd1207074941b60b76756a5dbe764cc97d
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,7 +277,6 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Ocean.h" />
-    <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
@@ -369,8 +379,20 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.h">
       <Filter>GameObject\Enemy\HFSM</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyThreatState.h">
       <Filter>GameObject\Enemy\HFSM</Filter>
+=======
+    <ClInclude Include="GameObject\Village\EventManager.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\AttackValue2D.h" />
+    <ClInclude Include="GameObject\Village\ItemManager.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Inventory.h">
+      <Filter>GameObject\Village</Filter>
+>>>>>>> c38421cd1207074941b60b76756a5dbe764cc97d
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

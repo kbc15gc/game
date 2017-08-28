@@ -2,9 +2,11 @@
 #include "EnemyDeathState.h"
 #include "../EnemyCharacter.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\Player\Player.h"
 
 EnemyDeathState::EnemyDeathState(EnemyCharacter* Object):EnemyState(Object) {
-
+	//ƒvƒŒƒCƒ„[
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 EnemyDeathState::~EnemyDeathState() {
@@ -18,6 +20,8 @@ void EnemyDeathState::_EntrySubClass() {
 
 	Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 	chip->SetDropChipID(ChipID(1), _EnemyObject->transform->GetPosition());
+
+	_Player->TakeDrop(_EnemyObject->GetDropEXP(), _EnemyObject->GetDropMoney());
 }
 
 void EnemyDeathState::_Start() {

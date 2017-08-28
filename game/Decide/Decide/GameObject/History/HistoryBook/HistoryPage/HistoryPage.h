@@ -70,6 +70,11 @@ public:
 	void LateUpdate()override;
 
 	/**
+	* •`‰æ.
+	*/
+	void Render()override;
+
+	/**
 	* —ğj‘‚Ìƒ|ƒCƒ“ƒ^‚ğİ’è.
 	*/
 	void SetHistoryBook(HistoryBook* book)

@@ -97,7 +97,7 @@ void Shop::_Enter(const ShopStateE & state)
 		_MainWindow->SetActive(true, true);
 		break;
 	case Shop::ShopStateE::SELL:
-		_Update = nullptr;
+		_Update = std::bind(&Shop::_SelectUpdate, this);;
 		break;
 	default:
 		break;
@@ -131,21 +131,28 @@ void Shop::_Exit(const ShopStateE & state)
 
 void Shop::_CreateMenu()
 {
-	float Y = 0.0f;
+	float height = 0.0f;
+	_MenuListHeight = 0.0f;
 	FOR(i,_ItemList.size())
 	{
 		//インスタンス化。
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _MainWindow->GetPriorty());
-		text->transform->SetParent(_MainWindow->transform);
-		//文字設定。
-		char t[512];
-		sprintf(t, "%s", _ItemList[i]->Name);
+		
+		//テキスト設定。
+		char t[256];
+		sprintf(t, "名前:%s,  値段:%d$", _ItemList[i]->Name, _ItemList[i]->Value);
 		text->SetString(t);
-		text->SetFontSize(40.0f);
+		text->SetFontSize(50);
 		text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
+
 		//高さ設定。
-		Y += text->GetLength().y;
-		text->transform->SetLocalPosition(100 + -(_MainWindow->GetSize().x / 2), Y, 0);
+		height += text->GetLength().y;
+		_MenuListHeight = max(_MenuListHeight, text->GetLength().y);
+		//左端+アイコンの横幅。
+		float posx = -(_MainWindow->GetSize().x / 2) + _Cursor[1]->GetSize().x;
+		text->transform->SetLocalPosition(posx, height, 0);
+		text->transform->SetParent(_MainWindow->transform);
+
 		//リストに追加。
 		_MenuList.push_back(text);
 	}
@@ -154,14 +161,15 @@ void Shop::_CreateMenu()
 void Shop::_SelectUpdate()
 {
 	//現在選択している項目
+	int max = 2;
 	static int select = 0;
 	if(KeyBoardInput->isPush(DIK_UP)|| XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 	{
-		select = select > 0 ? select - 1 : 1;
+		select = select > 0 ? select - 1 : max - 1;
 	}
 	else if (KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 	{
-		select = (select + 1) % 2;
+		select = (select + 1) % max;
 	}
 	//カーソルをずらす。
 	_Cursor[0]->transform->SetLocalPosition(Vector3(-60, 40 + -80 * select, 0));
@@ -169,12 +177,18 @@ void Shop::_SelectUpdate()
 	//決定(仮)
 	if(KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
-		if(select)
+		switch (select)
 		{
+		case 0:
 			_ChangeState(Shop::ShopStateE::BUY);
-		}else
-		{
+			break;
+		case 1:
 			_ChangeState(Shop::ShopStateE::SELL);
+			break;
+		case 2:
+			break;
+		default:
+			break;
 		}
 	}
 	//キャンセル。
@@ -188,16 +202,35 @@ void Shop::_BuyUpdate()
 {
 	//現在選択している項目
 	static int select = 0;
+	//項目が変更されたか？
+	bool change = false;
 	if (KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 	{
-		select = select > 0 ? select - 1 : 1;
+		select = (select > 0) ? select - 1 : _MenuList.size() - 1;
+		change = true;
 	}
 	else if (KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 	{
 		select = (select + 1) % _MenuList.size();
+		change = true;
 	}
-	//カーソルをずらす。
-	_Cursor[1]->transform->SetLocalPosition(Vector3(-(_MainWindow->GetSize().x / 2), 40 + -80 * select, 0));
+	//変更されたか？
+	if (change)
+	{
+		//カーソルをずらす。
+		float posx = -(_MainWindow->GetSize().x / 2) + _Cursor[1]->GetSize().x / 2;
+		float posy = _MenuListHeight * (select + 1) + _MenuListHeight*0.5f;
+		_Cursor[1]->transform->SetLocalPosition(posx, posy, 0);
+		//アイテムの情報を送る。
+		_ItemList[select]->Description;
+	}
+
+
+	//決定(仮)
+	if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+	{
+		//購入確認画面を出す。
+	}
 	//キャンセル。
 	if (KeyBoardInput->isPush(DIK_B) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
 	{
@@ -212,7 +245,7 @@ void Shop::_StaticInit()
 	{
 		_SelectWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ShopBuySell", 8);
 		_SelectWindow->SetTexture(LOADTEXTURE("ShopSelect.png"));
-		_SelectWindow->transform->SetPosition(Vector3(800, 200, 0));
+		_SelectWindow->transform->SetPosition(Vector3(1050, 100, 0));
 	}
 	//背景
 	if (_MainWindow == nullptr)
@@ -220,7 +253,7 @@ void Shop::_StaticInit()
 		_MainWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ShopMainWindouw", 8);
 		_MainWindow->SetTexture(LOADTEXTURE("window.png"));
 		_MainWindow->SetSize(Vector2(800, 600));
-		_MainWindow->transform->SetPosition(Vector3(600, 100, 0));
+		_MainWindow->transform->SetPosition(Vector3(450, 50, 0));
 		_MainWindow->SetPivot(Vector2(0.5f, 0.0f));
 	}
 	//カーソル

@@ -7,7 +7,7 @@ ItemManager::ItemManager()
 {
 }
 
-void ItemManager::LoadItemData()
+void ItemManager::LoadAllItemData()
 {
 	//ファイルネーム
 	const char* filename[] = { "ItemData","WeaponData","ArmorData", };
@@ -18,5 +18,109 @@ void ItemManager::LoadItemData()
 		sprintf(filepath, "Asset/Data/ItemData/%s.csv", filename[i]);
 		//ファイルからアイテム情報読み込み
 		Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemList[i]);
+
+		switch (i)
+		{
+		case (int)ItemKodeE::Item:
+			//ファイルからアイテム情報読み込み。
+			Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemListVec);
+			break;
+		case (int)ItemKodeE::Armor:
+			//ファイルから防具情報読み込み。
+			Support::LoadCSVData<Item::ArmorInfo>(filepath, Item::Armordata, ARRAY_SIZE(Item::Armordata), _ArmorList);
+			break;	
+		case (int)ItemKodeE::Weapon:	
+			//ファイルから武器情報読み込み。
+			Support::LoadCSVData<Item::WeaponInfo>(filepath, Item::Weapondata, ARRAY_SIZE(Item::Weapondata), _WeaponList);
+			break;
+		}
 	}
+	/*AddPlayerItemList(ItemKodeE::Item, &_ItemListVec[0]->ID, _ItemListVec[0]->Name, _ItemListVec[0]->Description, &_ItemListVec[0]->Value,  nullptr, nullptr);
+	AddPlayerItemList(ItemKodeE::Weapon, &_WeaponList[0]->ID, _ItemListVec[0]->Name, _ItemListVec[0]->Description, &_ItemListVec[0]->Value, &_WeaponList[0]->ATK, nullptr);
+	AddPlayerItemList(ItemKodeE::Armor, &_ArmorList[0]->ID, _ArmorList[0]->Name, _ArmorList[0]->Description, &_ArmorList[0]->Value, &_ArmorList[0]->ATK, &_ArmorList[0]->DEF);*/
 }
+
+//void ItemManager::AddPlayerItemList(ItemKodeE kode, int* id, const char* name, const char* des, int* value,  int* atk, int* def)
+//{
+//	//追加するアイテムの種類を判別。
+//	switch (kode)
+//	{
+//		//アイテムを追加。
+//	case ItemManager::ItemKodeE::Item:
+//
+//		//最大数に達していないかチェック。
+//		if (ItemCounter < ListNum)
+//		{
+//			//渡された情報を元にアイデアの情報を追加。
+//			_PlayerItemList[ItemCounter].ID = *id;
+//			strcpy(_PlayerItemList[ItemCounter].Name, name);
+//			strcpy(_PlayerItemList[ItemCounter].Description, des);
+//			_PlayerItemList[ItemCounter].Value = *value;
+//
+//			//追加されたので所持数を更新。
+//			ItemCounter++;
+//			break;
+//		}
+//		else
+//		{
+//			//char error[256];
+//			//sprintf(error, "プレイヤーのアイテムリストにアイテムを追加できませんでした。");
+//			//MessageBoxA(0, error, "アイテムの追加失敗", MB_ICONWARNING);
+//			break;
+//		}
+//		//防具を追加。
+//	case ItemManager::ItemKodeE::Armor:
+//
+//		//最大数に達していないかチェック。
+//		if (ArmorCounter < ListNum)
+//		{
+//			//渡された情報を元にアイデアの情報を追加。
+//			_PlayerArmorList[ArmorCounter].ID = *id;
+//			strcpy(_PlayerArmorList[ArmorCounter].Name, name);
+//			strcpy(_PlayerArmorList[ArmorCounter].Description, des);
+//			_PlayerArmorList[ItemCounter].Value = *value;
+//			_PlayerArmorList[ArmorCounter].ATK = *atk;
+//			_PlayerArmorList[ArmorCounter].DEF = *def;
+//
+//			//追加されたので所持数を更新。
+//			ArmorCounter++;
+//			break;
+//		}
+//		else
+//		{
+//			//char error[256];
+//			//sprintf(error, "プレイヤーのアイテムリストにアイテムを追加できませんでした。");
+//			//MessageBoxA(0, error, "アイテムの追加失敗", MB_ICONWARNING);
+//			break;
+//		}
+//		//武器を追加。
+//	case ItemManager::ItemKodeE::Weapon:
+//
+//		//最大数に達していないかチェック。
+//		if (WeapoCounter < ListNum)
+//		{
+//			//渡された情報を元にアイデアの情報を追加。
+//			_PlayerWeaponList[WeapoCounter].ID = *id;
+//			strcpy(_PlayerWeaponList[WeapoCounter].Name, name);
+//			strcpy(_PlayerWeaponList[WeapoCounter].Description, des);
+//			_PlayerWeaponList[WeapoCounter].Value = *value;
+//			_PlayerWeaponList[WeapoCounter].ATK = *atk;
+//
+//			//追加されたので所持数を更新。
+//			WeapoCounter++;
+//			break;
+//		}
+//		else
+//		{
+//			//char error[256];
+//			//sprintf(error, "プレイヤーのアイテムリストにアイテムを追加できませんでした。");
+//			//MessageBoxA(0, error, "アイテムの追加失敗", MB_ICONWARNING);
+//			break;
+//		}
+//	default:
+//		char error[256];
+//		sprintf(error, "指定したアイテムコードが無効です。");
+//		MessageBoxA(0, error, "アイテムコードの指定を失敗", MB_ICONWARNING);
+//		break;
+//	}
+//}

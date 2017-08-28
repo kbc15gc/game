@@ -22,19 +22,19 @@ void BossDrarian::_AwakeSubClass() {
 	SetFileName("DRARIAN.X");
 
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0);
+	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0);
 }
 
 void BossDrarian::_StartSubClass() {
 
-	Vector3 work = INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition();
-	work.y += 3.0f;
-	transform->SetPosition(work);
+	transform->SetPosition(INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition());
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(100, 100, 0, 0, 20, 0, 100, 20);
+	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 75, 50, 100, 20, 1, 0, 500, 100);
 
 	// パラメーター設定。
 	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	SetParamAll(Color, _MyComponent.Parameter->GetParams());
@@ -44,14 +44,11 @@ void BossDrarian::_StartSubClass() {
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 5.0f;
+	_AttackRange = 1.3f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
 	_WanderingRange = 130.0f;
-
-	// 歩行速度設定。
-	_walkSpeed = 2.0f;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
@@ -86,10 +83,9 @@ void BossDrarian::_StartSubClass() {
 	_breathAttack->ConfigParticleParameter(param);
 	_breathAttack->BreathEnd();	// とりあえず最初はパーティクルを生成しないように設定。
 
-
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Wandering);
+	_ChangeState(State::Wait);
 
 }
 
@@ -184,11 +180,12 @@ void BossDrarian::AnimationEvent_BreathEnd() {
 
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Wandering) {
-		// 徘徊挙動いったん終了。
+	if (EndStateType == State::Wait) {
+		// 待ちの挙動いったん終了。
 
-		// 再度徘徊。
-		_ChangeState(State::Wandering);
+		// 再度待ち。
+		_ChangeState(State::Wait);
+		static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
 	}
 	else if (EndStateType == State::Discovery) {
 		// 発見ステートの処理完了。
@@ -220,12 +217,15 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 }
 
 void BossDrarian::_ConfigCollision() {
+
+	// コリジョンのサイズを決定。
+	// ※キャラクターコントローラーで使用するためのもの。
+	_Radius = 0.5f;
+	_Height = 7.5f;
+
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。
-	// コリジョンのサイズを決定。
-	_Radius = 0.5f;
-	_Height = 2.4f;
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius, _Height);
 }
 

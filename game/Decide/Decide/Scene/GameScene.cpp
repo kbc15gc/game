@@ -20,14 +20,18 @@
 #include "GameObject\History\HistoryMenu\HistoryMenu.h"
 #include "GameObject\History\Chip.h"
 
-#include "GameObject\Village\Shop.h"
+#include "GameObject\Village\EventManager.h"
 #include "GameObject\Village\ItemManager.h"
+
+#include "GameObject\Village\Inventory.h"
 
 #include "GameObject\Camera\PlayerCamera.h"
 #include "GameObject\Camera\ThirdPersonCamera.h"
 #include "GameObject\Camera\FreeCamera.h"
 #include "GameObject\Enemy\EnemyManager.h"
 #include "GameObject\SplitSpace.h"
+
+#include "GameObject\Village\Shop.h"
 
 ImageObject* g_depth;
 
@@ -88,9 +92,12 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->CreateObject();
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
-	INSTANCE(ItemManager)->LoadItemData();
+	INSTANCE(ItemManager)->LoadAllItemData();
+	INSTANCE(Inventory)->ListInitalize();
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	shop->OpenShop(0);
+
+	INSTANCE(EventManager)->Execute(Event::EventID::Shop, 0);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");

@@ -56,6 +56,7 @@ using namespace std;
 #include <algorithm>
 #include <fstream>		//ファイル操作
 #include <functional>	//関数ポインタ
+#include <string>
 
 static const float FontSize = 300.0f;
 
