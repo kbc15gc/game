@@ -335,6 +335,3 @@ bool EnemySingleAttack::Update(){
 	}
 	return false;
 }
-=======
-}
->>>>>>> c38421cd1207074941b60b76756a5dbe764cc97d
