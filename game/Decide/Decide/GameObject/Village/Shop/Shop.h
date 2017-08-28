@@ -4,6 +4,7 @@
 
 class ImageObject;
 class TextObject;
+class IShopState;
 
 namespace
 {
@@ -32,74 +33,70 @@ namespace
 namespace
 {
 	//仮
-	struct testchar
+	struct ShopName
 	{
 		char name[256];
 	};
-	
 }
+
+//using句はc++11からtypedefのように型名を変えることもできる。
+using ShopSPtr = shared_ptr<IShopState>;
 
 //お店。
 class Shop:public GameObject
 {
+public:
 	//ショップのステート
-	enum ShopStateE
+	enum class ShopStateE
 	{
-		CLOSE,		//閉じている
-		SELECT,		//選択画面(買うか売るか？)
-		BUY,		//購入画面。
-		SELL,		//販売画面。ないかもしれない。
+		None = -1,
+		Close,		//閉じている。
+		Select,		//選択画面。
+		Buy,		//購入画面。
+		Sell,		//販売画面。
+		Confirmation,//確認画面。
 	};
 public:
 	Shop(const char* name);
 	~Shop();
 
+	void Awake()override;
 	void Update()override;
 
 	//ショップメニューを開く。
 	void OpenShop(const unsigned int& shopID);
 private:
+	//
+	void Close();
+
+	//ステートをリストに追加。
+	void SetState();
 	//お店の情報読み込み。
 	void _LoadShopData(const unsigned int& shopID);
 
-	//メニューを閉じる。
-	void _CloseMenu();
-
 	//ステート変更。
 	void _ChangeState(const ShopStateE& state);
-	//入るときの処理。
-	void _Enter(const ShopStateE& state);
-	//出るときの処理。
-	void _Exit(const ShopStateE& state);
-	
-	//メニュー生成。
-	void _CreateMenu();
 
-	//選択画面の更新。
-	void _SelectUpdate();
-	//購入画面の更新。
-	void _BuyUpdate();
-
-	//スタティック変数の初期化。
-	void _StaticInit();
+	//説明テキストに文字を設定する。
+	void SetDescriptionText(string text);
 private:
+	//ふれんず。
+	friend class ShopS_Close;
+	friend class ShopS_Select;
+	friend class ShopS_Buy;
+	friend class ShopS_Confirmation;
+
 	//ショップの名前
-	vector<unique_ptr<testchar>> _ShopNameList;
+	vector<unique_ptr<ShopName>> _ShopNameList;
 	//アイテムのリスト。
 	vector<Item::ItemInfo*> _ItemList;
 	//ショップのステート
 	ShopStateE _State;
-	//ステートによって変わるアップデート
-	std::function<void()> _Update;
+	//ショップのステートリスト。
+	vector<ShopSPtr> _StateList;
 
-	//カーソルの画像
-	ImageObject* _Cursor[2];
-	//かう・うるの画像
-	ImageObject* _SelectWindow;
-	//本命のウィンドウ
-	ImageObject* _MainWindow;
-	//メニューのテキスト
-	vector<TextObject*> _MenuList;
-	//メニューのリストの縦幅。
-	float _MenuListHeight;
+	//説明のウィンドウの画像。
+	ImageObject* _DescriptionWindow;
+	//説明テキスト。
+	TextObject* _DescriptionText;
 };
