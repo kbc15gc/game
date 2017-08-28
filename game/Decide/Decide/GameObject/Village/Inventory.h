@@ -70,26 +70,18 @@ private:
 	void _PlayerWeaponListInitialize(int i);
 
 	//アイテムをインベントリに追加。
-	void _AddItem(Item::ItemInfo *item = nullptr);
+	void _AddItem(Item::BaseInfo *item = nullptr);
 
 	//防具をインベントリに追加。
-	void _AddArmor(Item::ArmorInfo *armor = nullptr);
+	void _AddArmor(Item::BaseInfo *armor = nullptr);
 
 	//武器をインベントリに追加。
-	void _AddWeapon(Item::WeaponInfo *weapon = nullptr);
+	void _AddWeapon(Item::BaseInfo *weapon = nullptr);
 
 	//追加するアイテムがすでに追加されているかチェックし無ければtrueを返す。
 	//第1引数:アイテム、第2引数:防具、第3引数:武器。
 	bool _AddCheck(Item::ItemInfo *item = nullptr, Item::ArmorInfo *armor = nullptr, Item::WeaponInfo *weapon = nullptr);
 public:
-
-	//インベントリの種類。
-	enum class InventoryKodeE
-	{
-		ItemList = 0,
-		ArmorList,
-		WeaponList,
-	};
 
 	static Inventory* Instance()
 	{
@@ -106,13 +98,16 @@ public:
 
 
 	//受け取った情報を元にプレイヤーのアイテムのインベントリに追加。
-	void AddPlayerInventoryItem(Item::ItemInfo *item = nullptr);
+	void AddPlayerInventoryItem(Item::BaseInfo *item = nullptr);
 
 	//受け取った情報を元にプレイヤーの防具のインベントリに追加。
-	void AddPlayerInventoryIArmor(Item::ArmorInfo *armor = nullptr);
+	void AddPlayerInventoryIArmor(Item::BaseInfo *armor = nullptr);
 
 	//受け取った情報を元にプレイヤーの武器のインベントリに追加。
-	void AddPlayerInventoryWeapon(Item::WeaponInfo *weapon = nullptr);
+	void AddPlayerInventoryWeapon(Item::BaseInfo *weapon = nullptr);
+
+	//インベントリにアイテムを追加する。
+	void AddInventory(ItemManager::ItemKodeE kode, Item::BaseInfo *item = nullptr);
 
 	//プレイヤーのアイテムのインベントリを取得。
 	PlayerInventory::ItemInfo* GetPlayerItemList() {
@@ -133,17 +128,17 @@ public:
 	}
 
 	//欲しいインベントリを指定するとそのインベントリを取得。
-	PlayerInventory::BaseInfo* GetInventory(InventoryKodeE kode)
+	PlayerInventory::BaseInfo* GetInventory(ItemManager::ItemKodeE kode)
 	{
 		switch (kode)
 		{
-		case Inventory::InventoryKodeE::ItemList:
+		case ItemManager::ItemKodeE::Item:
 			return &_PlayerItemList[0];
 			break;
-		case Inventory::InventoryKodeE::ArmorList:
+		case ItemManager::ItemKodeE::Armor:
 			return &_PlayerArmorList[0];
 			break;
-		case Inventory::InventoryKodeE::WeaponList:
+		case ItemManager::ItemKodeE::Weapon:
 			return &_PlayerWeapon[0];
 			break;
 		default:
