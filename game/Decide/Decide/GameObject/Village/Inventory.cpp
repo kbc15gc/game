@@ -44,7 +44,7 @@ void Inventory::ListInitalize()
 }
 
 //プレイヤーのアイテムのインベントリに追加。
-void Inventory::AddPlayerInventoryItem(ItemBase::Item::ItemInfo *item)
+void Inventory::AddPlayerInventoryItem(Item::ItemInfo *item)
 {
 	////所持しているアイテムの中に追加するアイテムと同じものがないかチェック。
 	//for (int i = 0; i < UseItemListCounter; i++)
@@ -68,7 +68,7 @@ void Inventory::AddPlayerInventoryItem(ItemBase::Item::ItemInfo *item)
 }
 
 //プレイヤーの防具のインベントリに追加。
-void Inventory::AddPlayerInventoryIArmor(ItemBase::Armor::ArmorInfo *armor)
+void Inventory::AddPlayerInventoryIArmor(Item::ArmorInfo *armor)
 {
 	////所持している防具の中に追加する防具と同じものがないかチェック。
 	//for (int i = 0; i < UseArmorListCounter; i++)
@@ -90,7 +90,7 @@ void Inventory::AddPlayerInventoryIArmor(ItemBase::Armor::ArmorInfo *armor)
 }
 
 //プレイヤーの武器のインベントリに追加。
-void Inventory::AddPlayerInventoryWeapon(ItemBase::Weapon::WeaponInfo *weapon)
+void Inventory::AddPlayerInventoryWeapon(Item::WeaponInfo *weapon)
 {
 	////所持している武器の中に追加する武器と同じものがないかチェック。
 	//for (int i = 0; i < UseArmorListCounter; i++)
@@ -148,7 +148,7 @@ void Inventory::_PlayerWeaponListInitialize(int i)
 }
 
 //アイテムをインベントリに追加。
-void Inventory::_AddItem(ItemBase::Item::ItemInfo *item) 
+void Inventory::_AddItem(Item::ItemInfo *item) 
 {
 	_PlayerItemList[UseItemListCounter].TypeID = item->TypeID;
 	_PlayerItemList[UseItemListCounter].ID = item->ID;
@@ -165,7 +165,7 @@ void Inventory::_AddItem(ItemBase::Item::ItemInfo *item)
 }
 
 //防具をインベントリに追加。
-void Inventory::_AddArmor(ItemBase::Armor::ArmorInfo *armor)
+void Inventory::_AddArmor(Item::ArmorInfo *armor)
 {
 	_PlayerArmorList[UseArmorListCounter].TypeID = armor->TypeID;
 	_PlayerArmorList[UseArmorListCounter].ID = armor->ID;
@@ -178,7 +178,7 @@ void Inventory::_AddArmor(ItemBase::Armor::ArmorInfo *armor)
 }
 
 //武器をインベントリに追加。
-void Inventory::_AddWeapon(ItemBase::Weapon::WeaponInfo *weapon)
+void Inventory::_AddWeapon(Item::WeaponInfo *weapon)
 {
 	_PlayerWeapon[UseWeaponListCounter].TypeID = weapon->TypeID;
 	_PlayerWeapon[UseWeaponListCounter].ID = weapon->ID;
@@ -190,7 +190,7 @@ void Inventory::_AddWeapon(ItemBase::Weapon::WeaponInfo *weapon)
 }
 
 //追加するアイテムがすでに追加されているかチェックし無ければtrueを返す
-bool Inventory::_AddCheck(ItemBase::Item::ItemInfo *item , ItemBase::Armor::ArmorInfo *armor, ItemBase::Weapon::WeaponInfo *weapon)
+bool Inventory::_AddCheck(Item::ItemInfo *item , Item::ArmorInfo *armor, Item::WeaponInfo *weapon)
 {
 	//アイテムのチェック。
 	if (NULL != item) 
