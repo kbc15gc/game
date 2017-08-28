@@ -51,6 +51,11 @@ void TextObject::SetFormat(const unsigned int& format)
 	_Text->SetFormat(format);
 }
 
+void TextObject::SetFormat(fbText::TextFormatE format)
+{
+	_Text->SetFormat(format);
+}
+
 void TextObject::SetKerning(const bool & kerning)
 {
 	_Text->SetKerning(kerning);
