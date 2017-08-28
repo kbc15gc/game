@@ -255,7 +255,7 @@ namespace
 		}
 		else if (type == Support::DataTypeE::STRING)
 		{
-			memcpy(addres, &word, size);
+			memcpy(addres, word, size);
 		}
 	}
 }
