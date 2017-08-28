@@ -60,7 +60,7 @@ void Inventory::AddPlayerInventoryItem(Item::ItemInfo *item)
 	//if (_AddCheck(item, NULL, NULL) != false) {
 
 		//追加するアイテムの情報を追加。
-		_AddItem(item);
+	//	_AddItem(item);
 
 	//}
 
@@ -84,7 +84,7 @@ void Inventory::AddPlayerInventoryIArmor(Item::ArmorInfo *armor)
 	//if (_AddCheck(NULL, armor, NULL) != false) {
 
 		//追加する防具の情報を追加。
-		_AddArmor(armor);
+	//	_AddArmor(armor);
 
 	//}
 }
@@ -106,7 +106,7 @@ void Inventory::AddPlayerInventoryWeapon(Item::WeaponInfo *weapon)
 	//if (_AddCheck(NULL, NULL,weapon) != false) {
 
 		//追加する武器の情報を追加。
-		_AddWeapon(weapon);
+	//	_AddWeapon(weapon);
 	//}
 	
 }
@@ -140,8 +140,8 @@ void Inventory::_PlayerItemListInitialize(int i) {
 	_PlayerItemList[i].Recovery = -1;
 	_PlayerItemList[i].AtkBuff = -1;
 	_PlayerItemList[i].DefBuff = -1;
-	_PlayerItemList[i].HoldNum = 0;
 	_PlayerItemList[i].SpeedBuff = -1;
+	_PlayerItemList[i].HoldNum = 0;
 }
 
 //プレイヤーの防具のインベントリを初期化。
