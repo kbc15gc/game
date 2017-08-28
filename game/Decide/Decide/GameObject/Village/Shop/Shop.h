@@ -89,7 +89,7 @@ private:
 	//ショップの名前
 	vector<unique_ptr<ShopName>> _ShopNameList;
 	//アイテムのリスト。
-	vector<Item::ItemInfo*> _ItemList;
+	vector<ItemBase::Item::ItemInfo*> _ItemList;
 	//ショップのステート
 	ShopStateE _State;
 	//ショップのステートリスト。
