@@ -118,9 +118,11 @@ void Inventory::AddInventory(ItemManager::ItemKodeE kode ,Item::BaseInfo * item)
 	case ItemManager::ItemKodeE::Item:
 		_AddItem((Item::ItemInfo*)item);
 		break;
+
 	case ItemManager::ItemKodeE::Armor:
 		_AddArmor((Item::ArmorInfo*)item);
 		break;
+
 	case ItemManager::ItemKodeE::Weapon:
 		_AddWeapon((Item::WeaponInfo*)item);
 		break;
@@ -174,9 +176,9 @@ void Inventory::_AddItem(Item::ItemInfo *item)
 	strcpy(_PlayerItemList[UseItemListCounter].Description, item->Description);
 	_PlayerItemList[UseItemListCounter].Value = item->Value;
 	_PlayerItemList[UseItemListCounter].Recovery = item->Recovery;
-	//_PlayerItemList[UseItemListCounter].AtkBuff = item->AtkBuff;
-	//_PlayerItemList[UseItemListCounter].DefBuff = item->DefBuff;
-	//_PlayerItemList[UseItemListCounter].SpeedBuff = item->SpeedBuff;
+	_PlayerItemList[UseItemListCounter].AtkBuff = item->AtkBuff;
+	_PlayerItemList[UseItemListCounter].DefBuff = item->DefBuff;
+	_PlayerItemList[UseItemListCounter].SpeedBuff = item->SpeedBuff;
 	_PlayerItemList[UseItemListCounter].HoldNum++;
 	UseItemListCounter++;
 

@@ -74,6 +74,8 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 }
 
 void Collider::UpdateTransform(const btTransform& collisionTr) {
+#ifdef _DEBUG
+
 	if (_CollisionTr.get()) {
 		// 位置情報設定。
 		btVector3 pos = collisionTr.getOrigin();
@@ -84,6 +86,7 @@ void Collider::UpdateTransform(const btTransform& collisionTr) {
 		// コリジョンのTransform情報を親に設定。
 		_CollisionModel->transform->SetParent(_CollisionTr.get());
 	}
+#endif
 }
 
 #ifdef _DEBUG

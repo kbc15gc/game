@@ -36,7 +36,10 @@ void BoxCollider::Create( const Vector3& size )
 }
 
 void BoxCollider::ColliderModelLoad() {
+#ifdef _DEBUG
+
 	//当たり判定を視覚化したオブジェクト生成
 	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
 	_CollisionModel->LoadModel("BoxCollision.X");
+#endif
 }
