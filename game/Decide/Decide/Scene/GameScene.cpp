@@ -31,7 +31,7 @@
 #include "GameObject\Enemy\EnemyManager.h"
 #include "GameObject\SplitSpace.h"
 
-#include "GameObject\Village\Shop.h"
+#include "GameObject\Village\Shop\Shop.h"
 
 ImageObject* g_depth;
 
