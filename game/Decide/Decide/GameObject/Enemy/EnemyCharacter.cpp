@@ -11,6 +11,8 @@
 #include "HFSM\EnemyFallState.h"
 #include "HFSM\EnemyDeathState.h"
 #include "HFSM\EnemyDamageReactionState.h"
+#include "HFSM\EnemyThreatState.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -47,6 +49,8 @@ void EnemyCharacter::Start() {
 	_BuildAnimation();
 	// アニメーションイベント設定。
 	_ConfigAnimationEvent();
+	// サウンドテーブル作成。
+	_BuildSoundTable();
 
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
@@ -129,10 +133,24 @@ void EnemyCharacter::SearchView() {
 	{
 		// 視線に入っている。
 
-		// 発見ステートに移行。
-		_ChangeState(State::Discovery);
+		// 威嚇ステートに移行。
+		_ChangeState(State::Threat);
 	}
 }
+
+void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probability) {
+	_isDamageMotion = isMotion;
+	if (isMotion) {
+		if (probability <= 1) {
+			_isDamageMotionRandom = false;
+		}
+		else {
+			_isDamageMotionRandom = true;
+			_damageMotionProbability = probability;
+		}
+	}
+}
+
 
 
 void EnemyCharacter::_BuildMyComponents() {
@@ -151,7 +169,7 @@ void EnemyCharacter::_BuildMyComponents() {
 	// スポナーコンポーネント追加。
 	_MyComponent.Spawner = AddComponent<ObjectSpawn>();
 	// アニメーションイベントコンポーネント追加。
-	_MyComponent.AnimationEvent = AddComponent<AnimationEvent>();
+	_MyComponent.AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 }
 
 void EnemyCharacter::_BuildCollision() {
@@ -192,6 +210,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
 	// 発見ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
+	// 威嚇ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyThreatState>(new EnemyThreatState(this)));
 	// 攻撃開始ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyStartAttackState>(new EnemyStartAttackState(this)));
 	// 攻撃ステートを追加。
@@ -235,26 +255,86 @@ void EnemyCharacter::_ChangeState(State next) {
 	_NowStateIdx = next;
 }
 
+	void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+	strcpy(_SoundData[static_cast<int>(idx)].Path, filePath);
+	_SoundData[static_cast<int>(idx)].Is3D = is3D;
+	_SoundData[static_cast<int>(idx)].IsLoop = isLoop;
+	_SoundData[static_cast<int>(idx)].Source = INSTANCE(GameObjectManager)->AddNew<SoundSource>(filePath, 0);
+	string work = "Asset/Sound/";
+	work = work + filePath;
+	_SoundData[static_cast<int>(idx)].Source->Init(work.c_str(), is3D);
+}
+
 void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
 	{
 		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) >= 0)
 		{
 			_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()));
-			AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-			attackvalue->Init(Vector3::zero, _MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()), 1.5f, Vector3(0.0f, _Height, 0.0f));
-			attackvalue->transform->SetParent(transform);
+			GiveDamage(hitCollision->GetDamage());
 		}
 	}
 }
 
-void EnemyCharacter::GiveDamage(float damage) {
+void EnemyCharacter::GiveDamage(int damage) {
+	int _damage;
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
+
+		// ダメージ値をもとにパラメーター更新。
 		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage));
-		if (_NowState->IsPossibleChangeState(State::Damage)) {
-			// ダメージ反応ステートに移行可能。
-			_ChangeState(State::Damage);
+		_damage = damage;
+
+		if (_isDamageMotion) {
+			// のけぞるか。
+
+			if (_isDamageMotionRandom) {
+				// のけぞりモーションの再生をランダムにする。
+
+				if (rand() % _damageMotionProbability == 0) {
+					// のけぞり。
+
+					// ダメージ反応ステートに移行可能。
+					_ChangeState(State::Damage);
+				}
+			}
+			else {
+				// 確定でのけぞりモーションを再生する。
+
+				// ダメージ反応ステートに移行可能。
+				_ChangeState(State::Damage);
+			}
 		}
 	}
+	else {
+		_damage = 0;
+	}
+
+	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+	attackvalue->Init(Vector3::zero,_damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+	attackvalue->transform->SetParent(transform);
 }
+
+
+// EnemyAttack。
+
+void EnemyAttack::Init(int animType, float interpolate, int animLoopNum) {
+	_animType = animType;
+	_interpolate = interpolate;
+	_animLoopNum = animLoopNum;
+}
+
+
+
+// EnemySingleAttack。
+
+bool EnemySingleAttack::Update(){
+	if (!_isPlaying) {
+		// 攻撃モーション一度終了。
+		return true;
+	}
+	return false;
+}
+=======
+}
+>>>>>>> c38421cd1207074941b60b76756a5dbe764cc97d

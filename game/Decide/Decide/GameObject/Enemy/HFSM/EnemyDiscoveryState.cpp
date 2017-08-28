@@ -22,6 +22,8 @@ void EnemyDiscoveryState::_EntrySubClass() {
 void EnemyDiscoveryState::_Start() {
 	// アニメーション再生。
 	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Dash,0.2f);
+	// のけぞり設定。
+	_EnemyObject->ConfigDamageReaction(true, 3);
 }
 
 void EnemyDiscoveryState::_UpdateSubClass() {

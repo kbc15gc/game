@@ -5,7 +5,7 @@
 /*!
  * @brief	パーティクル生成機
  */
-void ParticleEmitter::Init(const ParicleParameter& _Param )
+void ParticleEmitter::Init(const ParticleParameter& _Param )
 {
 		this->_Param = _Param;
 		_Timer = _Param.intervalTime;
