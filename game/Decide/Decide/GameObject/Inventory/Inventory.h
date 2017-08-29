@@ -52,7 +52,7 @@ namespace PlayerInventory
 //インベントリの枠数。
 const int INVENTORYLISTNUM = 5;
 
-#include"GameObject\Village\ItemManager.h"
+#include"GameObject\ItemManager\ItemManager.h"
 
 //インベントリクラス。
 class Inventory

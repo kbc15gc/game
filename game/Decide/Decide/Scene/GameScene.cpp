@@ -21,9 +21,9 @@
 #include "GameObject\History\Chip.h"
 
 #include "GameObject\Village\EventManager.h"
-#include "GameObject\Village\ItemManager.h"
 
-#include "GameObject\Village\Inventory.h"
+#include "GameObject\ItemManager\ItemManager.h"
+#include "GameObject\Inventory\Inventory.h"
 
 #include "GameObject\Camera\PlayerCamera.h"
 #include "GameObject\Camera\ThirdPersonCamera.h"
@@ -31,7 +31,7 @@
 #include "GameObject\Enemy\EnemyManager.h"
 #include "GameObject\SplitSpace.h"
 
-#include "GameObject\Village\Shop.h"
+#include "GameObject\Village\Shop\Shop.h"
 
 ImageObject* g_depth;
 

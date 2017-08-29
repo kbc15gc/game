@@ -171,19 +171,10 @@
     <ClCompile Include="GameObject\Village\EventManager.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Village\Inventory.cpp">
-      <Filter>GameObject\Village</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Village\ItemManager.cpp">
-      <Filter>GameObject\Village</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Village\MessageManager.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\NPC.cpp">
-      <Filter>GameObject\Village</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Village\Shop.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\TextBox.cpp">
@@ -194,6 +185,30 @@
     </ClCompile>
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp">
       <Filter>GameObject\History\HistoryMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\Shop.cpp">
+      <Filter>GameObject\Village\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Buy.cpp">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Close.cpp">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Confirmation.cpp">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Sell.cpp">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\ItemManager.cpp">
+      <Filter>GameObject\ItemManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Inventory\Inventory.cpp">
+      <Filter>GameObject\Inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -375,19 +390,10 @@
     <ClInclude Include="GameObject\Village\EventManager.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\Inventory.h">
-      <Filter>GameObject\Village</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\ItemManager.h">
-      <Filter>GameObject\Village</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Village\MessageManager.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\NPC.h">
-      <Filter>GameObject\Village</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\Shop.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\TextBox.h">
@@ -398,6 +404,33 @@
     </ClInclude>
     <ClInclude Include="GameObject\History\HistoryMenu\HistoryMenu.h">
       <Filter>GameObject\History\HistoryMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\Shop.h">
+      <Filter>GameObject\Village\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Buy.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Close.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Confirmation.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Select.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Sell.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopState.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\ItemManager.h">
+      <Filter>GameObject\ItemManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Inventory\Inventory.h">
+      <Filter>GameObject\Inventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -455,6 +488,18 @@
     </Filter>
     <Filter Include="GameObject\Player\PlayerState">
       <UniqueIdentifier>{66986ffb-7dbc-4d0b-a840-9052ad3bfece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Village\Shop">
+      <UniqueIdentifier>{b2f8aabb-1a64-4973-b8ba-cc02aef640db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Village\Shop\HFSM">
+      <UniqueIdentifier>{3b97e70d-9c0f-4e78-bb79-0cbdc632e301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager">
+      <UniqueIdentifier>{8defc3bd-446e-4734-b148-392e9395a413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Inventory">
+      <UniqueIdentifier>{cef64e17-71d3-4bb3-8978-4922156435b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
