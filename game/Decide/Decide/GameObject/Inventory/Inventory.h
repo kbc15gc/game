@@ -69,18 +69,24 @@ private:
 	//プレイヤーの武器のインベントリを初期化。
 	void _PlayerWeaponListInitialize(int i);
 
-	//アイテムをインベントリに追加。
-	void _AddItem(Item::ItemInfo *item = nullptr);
+	//アイテムをインベントリの空いている場所に追加。
+	void _AddItem(int AddPos, Item::ItemInfo *item = nullptr);
 
 	//防具をインベントリに追加。
-	void _AddArmor(Item::ArmorInfo *armor = nullptr);
+	void _AddArmor(int AddPos, Item::ArmorInfo *armor = nullptr);
 
 	//武器をインベントリに追加。
-	void _AddWeapon(Item::WeaponInfo *weapon = nullptr);
+	void _AddWeapon(int AddPos, Item::WeaponInfo *weapon = nullptr);
 
-	//追加するアイテムがすでに追加されているかチェックし無ければtrueを返す。
-	//第1引数:アイテム、第2引数:防具、第3引数:武器。
-	bool _AddCheck(Item::ItemInfo *item = nullptr, Item::ArmorInfo *armor = nullptr, Item::WeaponInfo *weapon = nullptr);
+	//追加するアイテムをアイテムのインベントリから探しあれば所持数だけを増やし、なければ空いている場所に追加し、どちらでもなければエラーを出す。
+	void _ItemAddCheckAndPos(Item::ItemInfo *item = nullptr);
+
+	//追加する防具を防具のインベントリから探しあれば所持数だけを増やし、なければ空いている場所に追加し、どちらでもなければエラーを出す。
+	void _ArmorAddCheckAndPos(Item::ArmorInfo *item = nullptr);
+
+	//追加する武器を武器のインベントリから探しあれば所持数だけを増やし、なければ空いている場所に追加し、どちらでもなければエラーを出す。
+	void _WeaponAddCheckAndPos(Item::WeaponInfo *item = nullptr);
+
 public:
 
 	static Inventory* Instance()
@@ -95,16 +101,6 @@ public:
 
 	//各インベントリの初期化。
 	void ListInitalize();
-
-
-	//受け取った情報を元にプレイヤーのアイテムのインベントリに追加。
-	void AddPlayerInventoryItem(Item::ItemInfo *item = nullptr);
-
-	//受け取った情報を元にプレイヤーの防具のインベントリに追加。
-	void AddPlayerInventoryIArmor(Item::ArmorInfo *armor = nullptr);
-
-	//受け取った情報を元にプレイヤーの武器のインベントリに追加。
-	void AddPlayerInventoryWeapon(Item::WeaponInfo *weapon = nullptr);
 
 	//インベントリにアイテムを追加する。
 	void AddInventory(ItemManager::ItemKodeE kode, Item::BaseInfo *item = nullptr);
@@ -124,7 +120,7 @@ public:
 	PlayerInventory::WeaponInfo* GetPlayerWeaponList()
 	{
 
-		return &_PlayerWeapon[0];
+		return &_PlayerWeaponList[0];
 	}
 
 	//欲しいインベントリを指定するとそのインベントリを取得。
@@ -132,19 +128,26 @@ public:
 	{
 		switch (kode)
 		{
+			//アイテムのインベントリを取得。
 		case ItemManager::ItemKodeE::Item:
 			return &_PlayerItemList[0];
 			break;
+
+			//防具のインベントリを取得。
 		case ItemManager::ItemKodeE::Armor:
 			return &_PlayerArmorList[0];
 			break;
+
+			//武器のインベントリを取得。
 		case ItemManager::ItemKodeE::Weapon:
-			return &_PlayerWeapon[0];
+			return &_PlayerWeaponList[0];
 			break;
+
+			//例外処理。
 		default:
 			char error[256];
-			sprintf(error, "指定したインベントリコードコードが無効です。");
-			MessageBoxA(0, error, "インベントリ取得失敗", MB_ICONWARNING);
+			sprintf(error, "指定されたアイテムコードが無効です。");
+			MessageBoxA(0, error, "指定されたアイテムのインベントリ取得失敗", MB_ICONWARNING);
 			break;
 		}
 	}
@@ -157,7 +160,7 @@ private:
 	PlayerInventory::ArmorInfo	_PlayerArmorList[INVENTORYLISTNUM];
 
 	//プレイヤーの武器のインベントリ。
-	PlayerInventory::WeaponInfo	_PlayerWeapon[INVENTORYLISTNUM];
+	PlayerInventory::WeaponInfo	_PlayerWeaponList[INVENTORYLISTNUM];
 
 	//アイテム、防具、武器の各インベントリを現在どれだけ使っているかを数える変数。
 	int UseItemListCounter, UseArmorListCounter, UseWeaponListCounter = 0;
