@@ -240,5 +240,9 @@ void Inventory::_AddWeapon(int AddPos, Item::WeaponInfo *weapon)
 	strcpy(_PlayerArmorList[AddPos].Description, weapon->Description);
 	_PlayerWeaponList[AddPos].Value = weapon->Value;
 	_PlayerWeaponList[AddPos].ATK = weapon->ATK;
-	UseWeaponListCounter++;
+}
+
+//アイテムを使う。
+tuple<int, int, int, int>Inventory::UseItem(int pos) {
+	return forward_as_tuple(_PlayerItemList[pos].Recovery, _PlayerItemList[pos].AtkBuff, _PlayerItemList[pos].DefBuff, _PlayerItemList[pos].SpeedBuff);
 }

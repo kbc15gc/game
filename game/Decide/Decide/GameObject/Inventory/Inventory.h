@@ -53,6 +53,7 @@ namespace PlayerInventory
 const int INVENTORYLISTNUM = 5;
 
 #include"GameObject\ItemManager\ItemManager.h"
+#include <tuple>
 
 //インベントリクラス。
 class Inventory
@@ -152,6 +153,72 @@ public:
 		}
 	}
 
+	//指定された場所のアイテムを捨てる。
+	void ItemThrowAway(int pos) {
+		_PlayerItemListInitialize(pos);
+	}
+
+	//指定された場所の防具を捨てる。
+	void ArmorThrowAway(int pos) {
+		_PlayerArmorListInitialize(pos);
+	}
+
+	//指定された場所の武器を捨てる。
+	void WeaponThrowAway(int pos) {
+		_PlayerWeaponListInitialize(pos);
+	}
+
+	//アイテムを使う。
+	//戻り値は左から回復量、攻撃力バフ、防御力バフ、移動速度バフ。
+	//戻り値の受け取り方:int recover,int atk,int def,int speed;tie(recover,atk,def,speed)=UseItem();
+	tuple<int, int, int, int> UseItem(int pos);
+
+	//選択されたアイテムのインベントリをずらす。
+	void UpItemListSelectPos() {
+		_ItemListSelectPos++;
+	}
+
+	//選択されたアイテムのインベントリをずらす。
+	void DownItemListSelectPos() {
+		_ItemListSelectPos--;
+	}
+
+	//選択された防具のインベントリをずらす。
+	void UpArmorListSelectPos() {
+		_ArmorListSelectPos++;
+	}
+
+	//選択された防具のインベントリをずらす。
+	void DownArmorListSelectPos() {
+		_ArmorListSelectPos--;
+	}
+
+	//選択された武器のインベントリをずらす。
+	void UpWeaponListSelectPos() {
+		_WeaponListSelectPos++;
+	}
+
+	//選択された武器のインベントリをずらす。
+	void DownWeaponListSelectPos() {
+		_WeaponListSelectPos--;
+	}
+
+	//プレイヤーの所持金を取得。
+	int GetPlayerMoney() {
+		return _PlayerMoney;
+	}
+
+	//プレイヤーの所持金に加算。
+	void AddPlayerMoney(int add)
+	{
+		_PlayerMoney += add;
+	}
+
+	//プレイヤーの所持金から減算。
+	void SubtractPlayerMoney(int sub) {
+		_PlayerMoney -= sub;
+	}
+
 private:
 	//プレイヤーのアイテムのインベントリ。
 	PlayerInventory::ItemInfo	_PlayerItemList[INVENTORYLISTNUM];
@@ -162,8 +229,11 @@ private:
 	//プレイヤーの武器のインベントリ。
 	PlayerInventory::WeaponInfo	_PlayerWeaponList[INVENTORYLISTNUM];
 
-	//アイテム、防具、武器の各インベントリを現在どれだけ使っているかを数える変数。
-	int UseItemListCounter, UseArmorListCounter, UseWeaponListCounter = 0;
+	//今インベントリのどこを選択しているか。
+	int _ItemListSelectPos, _ArmorListSelectPos, _WeaponListSelectPos = 0;
+
+	//所持金。
+	int _PlayerMoney = 0;
 
 	static Inventory* _InventoryInstance;
 };
