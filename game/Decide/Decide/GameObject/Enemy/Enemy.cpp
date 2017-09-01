@@ -133,7 +133,7 @@ void Enemy::_ConfigCollision() {
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
 	_Radius = 0.5f;
-	_Height = 1.5f;
+	_Height = 0.5f;
 
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
