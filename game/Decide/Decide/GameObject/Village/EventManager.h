@@ -21,11 +21,13 @@ public:
 		if (_Instance == nullptr)
 		{
 			_Instance = new EventManager();
+			//イベント追加。
 			_Instance->AddEvent();
 		}
 		return _Instance;
 	}
 private:
+	//最初にイベントを追加する処理。
 	void AddEvent();
 private:
 	typedef std::function<void (int)> EventFunc;

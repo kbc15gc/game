@@ -11,7 +11,7 @@
 
 Shop::Shop(const char * name):
 	GameObject(name),
-	_State(ShopStateE::Close)
+	_State(ShopStateE::Select)
 {
 }
 
@@ -43,6 +43,8 @@ void Shop::Awake()
 	_DescriptionText->SetFormat((UINT)fbText::TextFormatE::LEFT | (UINT)fbText::TextFormatE::UP);
 	//ステートの初期化。
 	SetState();
+
+	_ChangeState(Shop::ShopStateE::Close);
 }
 
 void Shop::Update()
