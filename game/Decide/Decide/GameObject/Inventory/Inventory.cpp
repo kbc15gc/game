@@ -8,8 +8,13 @@ Inventory::Inventory()
 }
 
 //各インベントリの初期化。
-void Inventory::ListInitalize()
+void Inventory::Initalize()
 {
+	//追加or取り出す音の初期化。
+	_AddOrOutSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("_AddOrOutSE", 0);
+	_AddOrOutSE->Init("Asset/Sound/Inventory_AddOrOutSE.wav");
+	_AddOrOutSE->SetVolume(2.0f);
+
 	//ファイルネーム
 	const char* filename[] = { "Item","Armor","Weapon", };
 	FOR(i, ARRAY_SIZE(filename)) {
@@ -82,27 +87,27 @@ void Inventory::_PlayerWeaponListInitialize(int i)
 }
 
 //インベントリにアイテムを追加する。
-void Inventory::AddInventory(ItemManager::ItemKodeE kode, Item::BaseInfo * item)
+void Inventory::AddInventory(Item::BaseInfo * item)
 {
 	//NULLチェック。
 	if (NULL != item)
 	{
-		switch (kode)
+		switch (item->TypeID)
 		{
 			//アイテムの追加。
-		case ItemManager::ItemKodeE::Item:
+		case (int)ItemManager::ItemKodeE::Item:
 			//追加するアイテムか所持数を増やすアイテムかチェック。
 			_ItemAddCheckAndPos((Item::ItemInfo*)item);	
 			break;
 
 			//防具の追加。
-		case ItemManager::ItemKodeE::Armor:
+		case (int)ItemManager::ItemKodeE::Armor:
 			//追加する防具か所持数を増やすアイテムかチェック。
 			_ArmorAddCheckAndPos((Item::ArmorInfo*)item);
 			break;
 
 			//武器の追加。
-		case ItemManager::ItemKodeE::Weapon:
+		case (int)ItemManager::ItemKodeE::Weapon:
 			//追加する武器か所持数を増やすアイテムかチェック。
 			_WeaponAddCheckAndPos((Item::WeaponInfo*)item);
 			break;
@@ -134,6 +139,9 @@ void Inventory::_ItemAddCheckAndPos(Item::ItemInfo *item)
 
 			//追加処理。
 			_AddItem(i, item);
+
+			//音再生。
+			_AddOrOutSE->Play(false);
 			return;
 
 		}
@@ -142,6 +150,9 @@ void Inventory::_ItemAddCheckAndPos(Item::ItemInfo *item)
 		{
 			//所持数を増加。
 			_PlayerItemList[i].HoldNum++;
+
+			//音再生。
+			_AddOrOutSE->Play(false);
 			return;
 		}
 	}
@@ -161,6 +172,9 @@ void Inventory::_ArmorAddCheckAndPos(Item::ArmorInfo *armor)
 
 			//追加処理。
 			_AddArmor(i, armor);
+
+			//音再生。
+			_AddOrOutSE->Play(false);
 			return;
 
 		}
@@ -169,6 +183,9 @@ void Inventory::_ArmorAddCheckAndPos(Item::ArmorInfo *armor)
 		{
 			//所持数を増加。
 			_PlayerArmorList[i].HoldNum++;
+
+			//音再生。
+			_AddOrOutSE->Play(false);
 			return;
 		}
 	}
@@ -188,6 +205,7 @@ void Inventory::_WeaponAddCheckAndPos(Item::WeaponInfo* weapon)
 
 			//追加処理。
 			_AddWeapon(i, weapon);
+			_AddOrOutSE->Play(false);
 			return;
 
 		}
@@ -196,6 +214,7 @@ void Inventory::_WeaponAddCheckAndPos(Item::WeaponInfo* weapon)
 		{
 			//所持数を増加。
 			_PlayerArmorList[i].HoldNum++;
+			_AddOrOutSE->Play(false);
 			return;
 		}
 	}
@@ -244,5 +263,12 @@ void Inventory::_AddWeapon(int AddPos, Item::WeaponInfo *weapon)
 
 //アイテムを使う。
 tuple<int, int, int, int>Inventory::UseItem(int pos) {
-	return forward_as_tuple(_PlayerItemList[pos].Recovery, _PlayerItemList[pos].AtkBuff, _PlayerItemList[pos].DefBuff, _PlayerItemList[pos].SpeedBuff);
+	if (_PlayerItemList[pos].HoldNum > 0) {
+		_PlayerItemList[pos].HoldNum--;
+		return forward_as_tuple(_PlayerItemList[pos].Recovery, _PlayerItemList[pos].AtkBuff, _PlayerItemList[pos].DefBuff, _PlayerItemList[pos].SpeedBuff);
+	}
+	else
+	{
+		return forward_as_tuple(0, 0, 0, 0);
+	}
 }

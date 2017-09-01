@@ -4,56 +4,59 @@ namespace PlayerInventory
 {
 	struct BaseInfo :public Noncopyable
 	{
-
-	};
-	//インベントリ内にあるアイテム。
-	//アイテムの情報をまとめた構造体。
-	struct ItemInfo :BaseInfo
-	{
 		int TypeID;				//種類。
 		int ID;					//アイテムID。
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説。
 		int Value;				//値段。
+		int HoldNum;			//所持数。
+	};
+	//インベントリ内にあるアイテム。
+	//アイテムの情報をまとめた構造体。
+	struct ItemInfo :BaseInfo
+	{
+		
 		int Recovery;			//薬草を使った時の回復量。
 		int AtkBuff;			//薬草を使った時の攻撃力の上昇量。
 		int DefBuff;			//薬草を使った時の防御力の上昇量。
 		int SpeedBuff;			//薬草を使った時の移動速度の上昇量。
-		int HoldNum;			//所持数。
+		
 	};
 
 	//インベントリ内にある防具。
 	//防具の情報をまとめた構造体。
 	struct ArmorInfo :BaseInfo
 	{
-		int TypeID;				//種類。
-		int ID;					//防具ID。
-		char Name[256];			//防具名。
-		char Description[256];	//防具の説。
-		int Value;				//値段。
+		//int TypeID;				//種類。
+		//int ID;					//防具ID。
+		//char Name[256];			//防具名。
+		//char Description[256];	//防具の説。
+		//int Value;				//値段。
 		int ATK;				//防具を装備した時に上がる攻撃力。
 		int DEF;				//防具を装備した時に上がる防御力。
-		int HoldNum;			//所持数。
+		//int HoldNum;			//所持数。
 	};
 
 	//インベントリ内にある武器。。
 	//プレイヤーが持っている武器の情報をまとめた構造体。
 	struct WeaponInfo :BaseInfo
 	{
-		int TypeID;				//種類。
-		int ID;					//武器ID。
-		char Name[256];			//武器名。
-		char Description[256];	//武器の説。
-		int Value;				//値段。
+		//int TypeID;				//種類。
+		//int ID;					//武器ID。
+		//char Name[256];			//武器名。
+		//char Description[256];	//武器の説。
+		//int Value;				//値段。
 		int ATK;				//武器を装備した時に上がる攻撃力。
-		int HoldNum;			//所持数。
+		//int HoldNum;			//所持数。
 	};
 }
 //インベントリの枠数。
 const int INVENTORYLISTNUM = 5;
 
 #include"GameObject\ItemManager\ItemManager.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include <tuple>
+
 
 //インベントリクラス。
 class Inventory
@@ -95,16 +98,16 @@ public:
 		if (_InventoryInstance == nullptr)
 		{
 			_InventoryInstance = new Inventory();
-			_InventoryInstance->ListInitalize();
+			_InventoryInstance->Initalize();
 		}
 		return _InventoryInstance;
 	}
 
 	//各インベントリの初期化。
-	void ListInitalize();
+	void Initalize();
 
 	//インベントリにアイテムを追加する。
-	void AddInventory(ItemManager::ItemKodeE kode, Item::BaseInfo *item = nullptr);
+	void AddInventory(Item::BaseInfo *item = nullptr);
 
 	//プレイヤーのアイテムのインベントリを取得。
 	PlayerInventory::ItemInfo* GetPlayerItemList() {
@@ -156,16 +159,25 @@ public:
 	//指定された場所のアイテムを捨てる。
 	void ItemThrowAway(int pos) {
 		_PlayerItemListInitialize(pos);
+
+		//音再生。
+		_AddOrOutSE->Play(false);
 	}
 
 	//指定された場所の防具を捨てる。
 	void ArmorThrowAway(int pos) {
 		_PlayerArmorListInitialize(pos);
+
+		//音再生。
+		_AddOrOutSE->Play(false);
 	}
 
 	//指定された場所の武器を捨てる。
 	void WeaponThrowAway(int pos) {
 		_PlayerWeaponListInitialize(pos);
+
+		//音再生。
+		_AddOrOutSE->Play(false);
 	}
 
 	//アイテムを使う。
@@ -174,32 +186,32 @@ public:
 	tuple<int, int, int, int> UseItem(int pos);
 
 	//選択されたアイテムのインベントリをずらす。
-	void UpItemListSelectPos() {
+	void ItemListSelectPosUp() {
 		_ItemListSelectPos++;
 	}
 
 	//選択されたアイテムのインベントリをずらす。
-	void DownItemListSelectPos() {
+	void ItemListSelectPosDown() {
 		_ItemListSelectPos--;
 	}
 
 	//選択された防具のインベントリをずらす。
-	void UpArmorListSelectPos() {
+	void ArmorListSelectPosUp() {
 		_ArmorListSelectPos++;
 	}
 
 	//選択された防具のインベントリをずらす。
-	void DownArmorListSelectPos() {
+	void ArmorListSelectPosDown() {
 		_ArmorListSelectPos--;
 	}
 
 	//選択された武器のインベントリをずらす。
-	void UpWeaponListSelectPos() {
+	void WeaponListSelectPosUp() {
 		_WeaponListSelectPos++;
 	}
 
 	//選択された武器のインベントリをずらす。
-	void DownWeaponListSelectPos() {
+	void WeaponListSelectPosDown() {
 		_WeaponListSelectPos--;
 	}
 
@@ -234,6 +246,9 @@ private:
 
 	//所持金。
 	int _PlayerMoney = 0;
+
+	//インベントリに追加or取り出す時の音。
+	SoundSource* _AddOrOutSE = nullptr;
 
 	static Inventory* _InventoryInstance;
 };

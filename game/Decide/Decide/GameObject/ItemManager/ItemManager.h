@@ -78,8 +78,7 @@ class ItemManager
 private:
 	ItemManager();
 public:
-	//ItemManager();
-
+	
 	enum class ItemKodeE
 	{
 		Item = 0,		//アイテム。
