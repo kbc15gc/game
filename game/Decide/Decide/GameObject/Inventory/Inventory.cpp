@@ -252,6 +252,7 @@ void Inventory::_AddArmor(int AddPos, Item::ArmorInfo *armor)
 	_PlayerArmorList[AddPos].Value = armor->Value;
 	_PlayerArmorList[AddPos].ATK = armor->ATK;
 	_PlayerArmorList[AddPos].DEF = armor->DEF;
+	_PlayerArmorList[AddPos].HoldNum++;
 }
 
 //武器をインベントリに追加。
@@ -263,6 +264,7 @@ void Inventory::_AddWeapon(int AddPos, Item::WeaponInfo *weapon)
 	strcpy(_PlayerArmorList[AddPos].Description, weapon->Description);
 	_PlayerWeaponList[AddPos].Value = weapon->Value;
 	_PlayerWeaponList[AddPos].ATK = weapon->ATK;
+	_PlayerArmorList[AddPos].HoldNum++;
 }
 
 //アイテムを使う。

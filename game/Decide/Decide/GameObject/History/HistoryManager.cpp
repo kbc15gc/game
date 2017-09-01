@@ -32,6 +32,17 @@ void HistoryManager::Start()
 {
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+
+	FOR(i, _LocationHistoryList.size())
+	{
+		// 本にチップをセット。
+		SetHistoryChip(_LocationHistoryList.at(i)->_LocationID,
+			_LocationHistoryList.at(i)->_ChipSlot[i]
+		);
+	}
+
+	//歴史で生成されるオブジェクト生成。
+	CreateObject();
 }
 
 /**
