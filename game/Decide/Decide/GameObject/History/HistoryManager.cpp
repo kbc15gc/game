@@ -35,10 +35,15 @@ void HistoryManager::Start()
 
 	FOR(i, _LocationHistoryList.size())
 	{
-		// 本にチップをセット。
-		SetHistoryChip(_LocationHistoryList.at(i)->_LocationID,
-			_LocationHistoryList.at(i)->_ChipSlot[i]
-		);
+		for (int j = 0; j< (int)ChipID::ChipNum; j++)
+		{
+			//読み込んだデータを元に歴史書にページをあらかじめ追加。
+			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j],
+				_LocationHistoryList.at(i)->_LocationID);
+			//page->transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
+			//page->ChangeState(HistoryPage::StateCodeE::Turn);
+		}
+		
 	}
 
 	//歴史で生成されるオブジェクト生成。
