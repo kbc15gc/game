@@ -21,9 +21,9 @@
 #include "GameObject\History\Chip.h"
 
 #include "GameObject\Village\EventManager.h"
-#include "GameObject\Village\ItemManager.h"
 
-#include "GameObject\Village\Inventory.h"
+#include "GameObject\ItemManager\ItemManager.h"
+#include "GameObject\Inventory\Inventory.h"
 
 #include "GameObject\Camera\PlayerCamera.h"
 #include "GameObject\Camera\ThirdPersonCamera.h"
@@ -96,7 +96,7 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
-	INSTANCE(Inventory)->ListInitalize();
+	INSTANCE(Inventory)->Initalize();
 	//Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	//shop->OpenShop(0);
 

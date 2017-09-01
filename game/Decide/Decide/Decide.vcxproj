@@ -206,6 +206,8 @@
     <ClInclude Include="GameObject\History\HistoryManager.h" />
     <ClInclude Include="GameObject\History\HistoryMenu\Chip2D.h" />
     <ClInclude Include="GameObject\History\HistoryMenu\HistoryMenu.h" />
+    <ClInclude Include="GameObject\Inventory\Inventory.h" />
+    <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
@@ -216,8 +218,6 @@
     <ClInclude Include="GameObject\SplitSpace.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
     <ClInclude Include="GameObject\Village\EventManager.h" />
-    <ClInclude Include="GameObject\Village\Inventory.h" />
-    <ClInclude Include="GameObject\Village\ItemManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopState.h" />
@@ -284,6 +284,8 @@
     <ClCompile Include="GameObject\History\HistoryManager.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp" />
+    <ClCompile Include="GameObject\Inventory\Inventory.cpp" />
+    <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
@@ -293,8 +295,6 @@
     <ClCompile Include="GameObject\SplitSpace.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\EventManager.cpp" />
-    <ClCompile Include="GameObject\Village\Inventory.cpp" />
-    <ClCompile Include="GameObject\Village\ItemManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Buy.cpp" />
