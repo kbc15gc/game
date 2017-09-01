@@ -157,6 +157,9 @@ void TextBox::_NextMessage()
 		{
 			//次のメッセージを再生
 			_SetMessage(_Message->NextID);
+			//0異常なら
+			if (_Message->EventID >= 0)
+				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), 0);
 		}
 	}
 }

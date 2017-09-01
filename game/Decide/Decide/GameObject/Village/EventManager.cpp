@@ -11,6 +11,7 @@ EventManager::EventManager()
 bool EventManager::Execute(Event::EventID event, int idx)
 {
 	EventFunc func;
+	//範囲外アクセスをチェック。
 	try {
 		func = _EventList.at((int)event);
 	}
@@ -26,6 +27,7 @@ void EventManager::AddEvent()
 {
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("Shop", 0);
 	//関数を追加。
+
+	//ショップを開く処理。
 	_EventList.push_back(std::bind(&Shop::OpenShop, shop, std::placeholders::_1));
-	Execute(Event::EventID::Shop, 0);
 }
