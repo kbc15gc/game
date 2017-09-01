@@ -172,7 +172,7 @@ void OutputData::OutputTextCollision() {
 		Collision* coll = gameObject->GetAttachCollision();
 		btTransform tr = coll->GetCollisionObj()->getWorldTransform();
 		btVector3 scale = coll->GetCollisionObj()->getCollisionShape()->getLocalScaling();
-		Vector3 halfSize = coll->GetShape().GetHalfSize();
+		Vector3 halfSize = coll->GetShape()->GetHalfSize();
 
 		wchar_t out[FILENAME_MAX * 5];
 		wchar_t num[FILENAME_MAX];
@@ -182,7 +182,7 @@ void OutputData::OutputTextCollision() {
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
 		wcscat_s(out, wcslen(out) + wcslen(L"\nShape        : ") + 1, L"\nShape        : ");
-		wcscpy_s(num, wcslen(Collider::ShapeName[static_cast<int>(coll->GetShape().GetType())]) + 1, Collider::ShapeName[static_cast<int>(coll->GetShape().GetType())]);
+		wcscpy_s(num, wcslen(Collider::ShapeName[static_cast<int>(coll->GetShape()->GetType())]) + 1, Collider::ShapeName[static_cast<int>(coll->GetShape()->GetType())]);
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
 

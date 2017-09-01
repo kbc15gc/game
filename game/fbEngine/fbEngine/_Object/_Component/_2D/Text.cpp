@@ -215,15 +215,7 @@ void Text::_UpdateLength()
 
 			//横幅更新
 			MaxLength.x = max(MaxLength.x, width);
-			if (MaxLength.x >= 3000.0f) {
-				OutputDebugString("あああああ。");
-
-			}
 			MaxLength.y = max(MaxLength.y, max(gm.gmBlackBoxY, gm.gmptGlyphOrigin.y));
-			if (MaxLength.y >= 5000.0f) {
-				OutputDebugString("あああああ。");
-
-			}
 			//最も大きいものを保持
 			_MostHeight = max(_MostHeight, gm.gmptGlyphOrigin.y);
 		}

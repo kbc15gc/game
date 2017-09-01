@@ -44,7 +44,7 @@ public:
 	};
 
 	// サウンドデータテーブルの添え字。
-	enum class SoundIndex{None = -1, Attack = 0, Threat,Damage,Death, Max};
+	enum class SoundIndex{None = -1, Attack1 = 0, Attack2, Attack3, Threat,Damage,Death, Max};
 
 	// サウンドデータ構造体。
 	struct SoundData {
@@ -195,6 +195,26 @@ public:
 	//			何回に一回のけぞるか(デフォルトは1)。
 	void ConfigDamageReaction(bool isMotion, unsigned short probability = 1);
 
+	// エネミーにダメージを与える処理。
+	// 引数：	ダメージ量。
+	void GiveDamage(int damage);
+
+	// 攻撃生成関数。
+	// 引数：	位置(ローカル座標)。
+	//			回転(ローカル座標)。
+	//			拡縮。
+	//			寿命(0.0より小さい値で無限)。
+	//			親(デフォルトはnull)。
+	//			コリジョン生成待ち時間。
+	// 戻り値:  生成した攻撃。
+	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& localRot, const Vector3& scale, float life, Transform* parent = nullptr, float interval = 0.0f) {
+		//攻撃コリジョン作成。
+		unsigned int priorty = 1;
+		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+		attack->Create(_MyComponent.Parameter->GiveDamageMass(), localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
+		return attack;
+	}
+
 
 	// 全パラメーター設定。
 	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
@@ -224,10 +244,6 @@ public:
 		_MyComponent.Parameter->ParamInit(param);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
-
-	// エネミーにダメージを与える処理。
-	// 引数：	ダメージ量。
-	void GiveDamage(int damage);
 
 
 	// モデルファイルのパスを設定。
@@ -465,7 +481,7 @@ public:
 	//			アニメーション補間時間(初期値は0)。
 	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	void Init(int animType = -1, float interpolate = 0.0f, int animLoopNum = 1);
-	virtual void Start() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
+	virtual void Entry() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
 	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
 	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
 
@@ -503,7 +519,7 @@ public:
 	EnemySingleAttack(EnemyCharacter* object):EnemyAttack(object) {
 		_player = INSTANCE(GameObjectManager)->FindObject("Player");
 	}
-	void Start()override {
+	void Entry()override {
 		_enemyObject->LookAtObject(*_player);
 	};
 	bool Update()override;

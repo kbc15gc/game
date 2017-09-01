@@ -24,6 +24,9 @@ void Enemy::CreateAttackCollision() {
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
 	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
 	attack->RemoveParent();
+
+	// UŒ‚‰¹Ä¶B
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
 void Enemy::_AwakeSubClass() {
@@ -194,5 +197,5 @@ void Enemy::_ConfigAnimationEvent() {
 
 void Enemy::_BuildSoundTable() {
 	// UŒ‚‰¹“o˜^B
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack,"Damage_01.wav",false,false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1,"Damage_01.wav",false,false);
 }

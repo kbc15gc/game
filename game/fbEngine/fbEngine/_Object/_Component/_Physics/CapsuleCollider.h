@@ -16,16 +16,12 @@ public:
 	/*!
 	* @brief	作成。
 	*/
-	void Create(float radius, float height)
-	{
-		if (radius < 0.0f || height < 0.0f) {
-			// コライダーサイズに0より小さい値が設定されてるよ。
-			abort();
-		}
-		shape = new btCapsuleShape(radius, height);
-		btVector3 work = shape->getImplicitShapeDimensions();
-		_halfSize = Vector3(work.x(), work.y() + work.x(), work.z());
-	}
+	void Create(float radius, float height);
+
+	// コリジョンの大きさを再設定する関数。
+	// 引数：	半径。
+	//			高さ。
+	void Resize(float radius, float height);
 
 private:
 	// 形状に応じたモデルデータをロード。

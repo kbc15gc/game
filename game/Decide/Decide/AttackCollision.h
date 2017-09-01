@@ -45,6 +45,10 @@ public:
 	{
 		return _Damage;
 	}
+
+	inline GostCollision* GetGostCollision()const {
+		return _Gost;
+	}
 private:	
 	// UŒ‚ƒRƒŠƒWƒ‡ƒ“¶¬ŠÖ”B
 	void CreateCollision();
