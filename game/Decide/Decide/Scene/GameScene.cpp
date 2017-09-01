@@ -127,7 +127,7 @@ void GameScene::Update()
 	//スタートボタンの押下確認
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
 	//エンターキー
-	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
+	if ((flag || KeyBoardInput->isPush(DIK_DELETE)))
 	{
 		//タイトルシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);
