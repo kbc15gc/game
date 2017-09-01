@@ -59,12 +59,22 @@ public:
 	}
 
 	void SetEmitFlg(bool b);
+
 	inline bool GetEmitFlg()const {
 		return emit;
 	}
-	const Vector3& GetInitVelocity() const{
+	inline const Vector3& GetInitVelocity() const{
 		return _Param.initVelocity;
 	}
+	
+	// 生存しているパーティクルのうち、最初に生成されたものを返却する関数。
+	// ※リストにパーティクルが格納されてない場合はnullが返却される。
+	Particle* GetParticleBegin()const;
+	// 生存しているパーティクルのうち、最後に生成されたものを返却する関数。
+	// ※リストにパーティクルが格納されてない場合はnullが返却される。
+	Particle* GetParticleEnd()const;
+
+
 private:
 	//パーティクル生成
 	void Emit();

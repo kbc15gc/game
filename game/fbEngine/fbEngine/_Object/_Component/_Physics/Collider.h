@@ -2,6 +2,7 @@
 #include "_Object\_Component\Component.h"
 
 class ModelObject;
+class Collision;
 
 //あたり判定の形状
 class Collider :public Component
@@ -52,6 +53,9 @@ public:
 	inline const Vector3& GetHalfSize()const {
 		return _halfSize;
 	}
+	inline void SetCollision(Collision* collision) {
+		_collision = collision;
+	}
 private:
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。
@@ -62,6 +66,7 @@ public:
 protected:
 	ShapeType _Type;
 	Vector3 _halfSize;
+	Collision* _collision = nullptr;	// このコライダーを保持するコリジョン。
 #ifdef _DEBUG
 protected:
 	//当たり判定を視覚化した3Dオブジェクト。

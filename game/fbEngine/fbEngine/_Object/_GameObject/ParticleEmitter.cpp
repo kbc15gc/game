@@ -54,6 +54,25 @@ void ParticleEmitter::SetEmitFlg(bool b)
 {
 	emit = b;
 }
+Particle* ParticleEmitter::GetParticleBegin()const {
+	if (_ParticleList.size() >= 1) {
+		// パーティクルは生成順に格納されているので、先頭パーティクルを取得。
+		return (*(_ParticleList.begin()));
+	}
+	else {
+		return nullptr;
+	}
+}
+Particle* ParticleEmitter::GetParticleEnd()const {
+	if (_ParticleList.size() >= 1) {
+		// パーティクルは生成順に格納されているので、リストの終端の一つ前を取得。
+		return (*(--_ParticleList.end()));
+	}
+	else {
+		return nullptr;
+	}
+}
+
 void ParticleEmitter::Emit()
 {
 	//生成

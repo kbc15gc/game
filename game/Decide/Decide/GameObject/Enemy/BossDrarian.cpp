@@ -4,6 +4,7 @@
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
+#include "fbEngine\_Object\_GameObject\Particle.h"
 
 
 
@@ -67,7 +68,7 @@ void BossDrarian::_StartSubClass() {
 	// 攻撃処理に使用するパーティクル設定。
 	ParticleParameter param;
 	param.Init();
-	param.texturePath = "test.png";
+	param.texturePath = "t1.png";
 	param.alphaBlendMode = 1;
 	param.addVelocityRandomMargih = Vector3::zero;
 	param.brightness = 7.0f;
@@ -82,7 +83,7 @@ void BossDrarian::_StartSubClass() {
 	param.isFade = true;
 	param.life = 2.0f;
 	param.size = Vector2(0.5f, 0.5f);
-	param.mulColor = Color::red;
+	//param.mulColor = Color::red;
 	_breathAttack->ConfigParticleParameter(param);
 	_breathAttack->BreathEnd();	// とりあえず最初はパーティクルを生成しないように設定。
 
@@ -128,49 +129,51 @@ EnemyAttack* BossDrarian::AttackSelect() {
 
 void BossDrarian::AnimationEvent_Kamituki() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.25f, 5.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 5.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 
 	// 攻撃音再生。
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack1() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
 	Quaternion rot = Quaternion::Identity;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-40.0f));
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(2.0f, 0.0f, -2.0f), rot, Vector3(2.0f, 2.0f, 5.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(2.0f, 0.0f, -2.0f), rot, Vector3(2.0f, 2.0f, 5.0f), 0.15f, transform);
 	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack2() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
 	Quaternion rot = Quaternion::Identity;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-60.0f));
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(3.0f, 0.0f, 0.0f), rot, Vector3(2.0f, 2.0f, 5.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 0.0f), rot, Vector3(2.0f, 2.0f, 5.0f), 0.15f, transform);
 	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack3() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(4.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(4.0f, 2.0f, 2.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(4.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(4.0f, 2.0f, 2.0f), 0.15f, transform);
 	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack4() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(3.0f, 0.0f, 4.5f), Quaternion::Identity, Vector3(2.0f, 2.0f, 3.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 4.5f), Quaternion::Identity, Vector3(2.0f, 2.0f, 3.0f), 0.15f, transform);
 	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::AnimationEvent_BreathStart() {
@@ -320,7 +323,9 @@ void BossDrarian::_ConfigAnimationEvent() {
 
 void BossDrarian::_BuildSoundTable() {
 	// 攻撃音登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack, "Damage_01.wav", false, false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack2, "Buoonn.wav", false, false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack3, "Buoonn.wav", false, false);
 }
 
 
@@ -334,12 +339,67 @@ EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object) : EnemyAttack(objec
 }
 
 bool EnemyBreathAttack::Update() {
-	if (_particleEmitter->GetEmitFlg()) {
+	// 衝突判定コリジョンの更新。
+	UpdateCollision();
 
-	}
 	if (!_isPlaying) {
 		// モーション再生終了。
 		return true;
 	}
 	return false;
+}
+
+void EnemyBreathAttack::UpdateCollision() {
+
+	if (_attack) {
+		GostCollision* Gost = _attack->GetGostCollision();
+		if (Gost) {
+			Particle* start = nullptr;
+			start = _particleEmitter->GetParticleBegin();	// 最初に生成されたパーティクルを取得。
+			if (start) {
+				// パーティクルが生成されている。
+
+				Particle* end = _particleEmitter->GetParticleEnd();	// 最後に生成されたパーティクルを取得。
+				if (start != end) {
+					// パーティクルの先頭と終端が同一のパーティクルではない。
+
+					Vector3 breathEndPos = start->transform->GetPosition();	// ブレスの終端位置は最初に生成されたパーティクルの位置。
+					Vector3 breathStartPos = end->transform->GetPosition(); // ブレスの開始位置は最後に生成されたパーティクルの位置。
+
+					// ブレス開始位置から終端位置までの距離をコリジョンの奥行サイズとする。
+					float sizeZ = Vector3(breathEndPos - breathStartPos).Length();
+
+					// 判定コリジョンのサイズを変更。
+					if (start != _start || end != _end) {
+						// ブレスの大きさが変わっている。
+
+						// 直前の値を破棄し、現在の値を新しく保存。
+						_start = start;
+						_end = end;
+
+						static_cast<BoxCollider*>(const_cast<Collider*>(Gost->GetShape()))->Resize(Vector3(1.0f, 1.0f, sizeZ));
+					}
+					//const_cast<Collider*>(Gost->GetShape())->RenderDisable();
+
+					// 位置設定。
+					Gost->transform->SetPosition(breathEndPos);
+					// 位置をサイズの半分だけずらすことでコリジョンの中心を指定する。
+					Vector3 pos = Gost->transform->GetLocalPosition();
+					pos.z -= sizeZ * 0.5f;
+					Gost->transform->SetLocalPosition(pos);
+
+					_isStartCollision = true;	// 衝突判定を開始。
+				}
+				else {
+					// ブレスの開始点と終点が同じ。
+					if (_isStartCollision) {
+						// 衝突判定が開始している。
+
+						INSTANCE(GameObjectManager)->AddRemoveList(_attack);
+						_attack = nullptr;
+					}
+				}
+			}
+		}
+	}
 }
