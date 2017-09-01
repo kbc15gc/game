@@ -24,3 +24,20 @@ CCapsuleCollider::~CCapsuleCollider()
 {
 	delete shape;
 }
+
+void CCapsuleCollider::Create(float radius, float height)
+{
+	if (radius < 0.0f || height < 0.0f) {
+		// コライダーサイズに0より小さい値が設定されてるよ。
+		abort();
+	}
+	shape = new btCapsuleShape(radius, height);
+	btVector3 work = shape->getImplicitShapeDimensions();
+	_halfSize = Vector3(work.x(), work.y() + work.x(), work.z());
+}
+
+void CCapsuleCollider::Resize(float radius, float height) {
+	shape->setImplicitShapeDimensions(btVector3(radius, height * 0.5f, radius));
+	_halfSize = Vector3(radius, height + radius, radius);
+	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+}

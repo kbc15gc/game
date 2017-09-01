@@ -38,6 +38,12 @@ void SphereCollider::Create( const float radius )
 	_halfSize = Vector3(work.x(), work.y(), work.z());
 }
 
+void SphereCollider::Resize(float radius) {
+	shape->setImplicitShapeDimensions(btVector3(radius, radius, radius));
+	_halfSize = Vector3(radius, radius, radius);
+	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+}
+
 void SphereCollider::ColliderModelLoad() {
 #ifdef _DEBUG
 

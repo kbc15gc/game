@@ -205,6 +205,8 @@ void Inventory::_WeaponAddCheckAndPos(Item::WeaponInfo* weapon)
 
 			//追加処理。
 			_AddWeapon(i, weapon);
+
+			//音再生。
 			_AddOrOutSE->Play(false);
 			return;
 
@@ -214,6 +216,8 @@ void Inventory::_WeaponAddCheckAndPos(Item::WeaponInfo* weapon)
 		{
 			//所持数を増加。
 			_PlayerArmorList[i].HoldNum++;
+
+			//音再生。
 			_AddOrOutSE->Play(false);
 			return;
 		}

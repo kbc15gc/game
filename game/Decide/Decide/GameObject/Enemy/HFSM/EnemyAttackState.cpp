@@ -19,7 +19,7 @@ void EnemyAttackState::_Start() {
 	if (_attack) {
 		// 攻撃処理が設定されている。
 
-		_attack->Start();	// 初期化。
+		_attack->Entry();	// 初期化。
 		if (_attack->GetAnimationType() >= 0) {
 			// 再生するアニメーション番号が設定されている。
 			if (_attack->GetAnimationLoopNum() < 0) {
