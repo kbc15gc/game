@@ -134,7 +134,7 @@ public class CSVExportFunction : Editor
             //メッシュ名を書き出し
             //sw.Write(mesh.name.Replace(" Instance", "") + ".X");
             string filename = child.name + ".X";
-            string pos = Vector3ToString(child.position, true);
+            string pos = Vector3ToString(child.localPosition, true);
             string ang = QuaternionToString(child.rotation);
             string sca = Vector3ToString(child.lossyScale);
             NPC npc = child.GetComponent<NPC>();
