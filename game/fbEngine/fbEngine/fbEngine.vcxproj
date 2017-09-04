@@ -57,6 +57,7 @@
     <ClCompile Include="_Object\_Component\_3D\SkinModel.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\BoxCollider.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\CapsuleCollider.cpp" />
+    <ClCompile Include="_Object\_Component\_Physics\CapsuleColliderZ.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\Collider.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\Collision.cpp" />
     <ClCompile Include="_Object\_Component\_Physics\GostCollision.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="_Object\_Component\_3D\SkinModel.h" />
     <ClInclude Include="_Object\_Component\_Physics\BoxCollider.h" />
     <ClInclude Include="_Object\_Component\_Physics\CapsuleCollider.h" />
+    <ClInclude Include="_Object\_Component\_Physics\CapsuleColliderZ.h" />
     <ClInclude Include="_Object\_Component\_Physics\Collider.h" />
     <ClInclude Include="_Object\_Component\_Physics\Collision.h" />
     <ClInclude Include="_Object\_Component\_Physics\GostCollision.h" />
