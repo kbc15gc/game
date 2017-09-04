@@ -18,6 +18,17 @@ Enemy::~Enemy()
 {
 }
 
+void Enemy::CreateAttackCollision() {
+	//攻撃コリジョン作成。
+	unsigned int priorty = 1;
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+}
+
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
@@ -45,8 +56,9 @@ void Enemy::_StartSubClass(){
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
-	_singleAttack.Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack)].No,0.2f);
-	
+	_singleAttack.reset(new EnemySingleAttack(this));
+	_singleAttack->Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No,0.2f);
+
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
@@ -76,7 +88,7 @@ EnemyAttack* Enemy::AttackSelect() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
-	return &_singleAttack;
+	return _singleAttack.get();
 }
 
 void Enemy::_EndNowStateCallback(State EndStateType) {
@@ -108,6 +120,12 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 		// 発見状態に移行。
 		_ChangeState(State::Discovery);
 	}
+	else if (EndStateType == State::Threat) {
+		// 威嚇終了。
+		// 発見状態に移行。
+		_ChangeState(State::Discovery);
+	}
+
 }
 
 void Enemy::_ConfigCollision() {
@@ -115,7 +133,7 @@ void Enemy::_ConfigCollision() {
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
 	_Radius = 0.5f;
-	_Height = 1.5f;
+	_Height = 0.5f;
 
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
@@ -160,7 +178,7 @@ void Enemy::_BuildAnimation() {
 		// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
 		// 攻撃状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationProt::Attack)].get());
 		// 落下状態。
 		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
@@ -173,14 +191,11 @@ void Enemy::_BuildAnimation() {
 
 void Enemy::_ConfigAnimationEvent() {
 	int eventFrame = 30;
+	
+	_MyComponent.AnimationEventPlayer->AddAnimationEvent(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, eventFrame, static_cast<AnimationEvent>(&Enemy::CreateAttackCollision));
+}
 
-	// 攻撃アニメーションにコリジョン生成イベント追加。
-	AnimationEvent::AttackEventInfo info(transform,true);
-	info.damage = _MyComponent.Parameter->GiveDamageMass();
-	info.master = AttackCollision::CollisionMaster::Enemy;
-	info.pos = Vector3(0.0f, 0.5f, 1.5f);
-	info.rot = Quaternion::Identity;
-	info.size = Vector3::one;
-	info.life = 0.25f;
-	_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationProt::Attack), eventFrame,info);
+void Enemy::_BuildSoundTable() {
+	// 攻撃音登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1,"Damage_01.wav",false,false);
 }

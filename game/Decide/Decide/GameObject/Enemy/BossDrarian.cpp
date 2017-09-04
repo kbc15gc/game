@@ -4,6 +4,7 @@
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
+#include "fbEngine\_Object\_GameObject\Particle.h"
 
 
 
@@ -29,7 +30,7 @@ void BossDrarian::_StartSubClass() {
 
 	transform->SetPosition(INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition());
 	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 75, 50, 100, 20, 1, 0, 500, 100);
+	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 5, 5, 100, 20, 1, 0, 500, 100);
 
 	// パラメーター設定。
 	vector<BarColor> Color;
@@ -40,11 +41,14 @@ void BossDrarian::_StartSubClass() {
 	SetParamAll(Color, _MyComponent.Parameter->GetParams());
 
 	// 視野角生成。
-	_ViewAngle = 140.0f;
-	_ViewRange = 20.0f;
+	_ViewAngle = 100.0f;
+	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 1.3f;
+	_AttackRange = 3.5f;
+
+	// 歩行速度設定。
+	_walkSpeed = 2.5f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
@@ -53,10 +57,39 @@ void BossDrarian::_StartSubClass() {
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	// 攻撃処理を定義。
+	_singleAttack.reset(new EnemySingleAttack(this));
+	_singleAttack->Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
+	_tailAttack.reset(new EnemySingleAttack(this));
+	_tailAttack->Init(static_cast<int>(AnimationDrarian::TailAttackRight), 0.2f);
+	_breathAttack.reset(new EnemyBreathAttack(this));
+	_breathAttack->Init(static_cast<int>(AnimationDrarian::Breath), 0.2f);
+
+	// 攻撃処理に使用するパーティクル設定。
+	ParticleParameter param;
+	param.Init();
+	param.texturePath = "t1.png";
+	param.alphaBlendMode = 1;
+	param.addVelocityRandomMargih = Vector3::zero;
+	param.brightness = 7.0f;
+	param.fadeTime = 0.2f;
+	param.gravity = 0.0f;
+	param.initAlpha = 1.0f;
+	param.initPositionRandomMargin = Vector3::zero;
+	param.initVelocity = Vector3::front * 10.0f;
+	param.initVelocityVelocityRandomMargin = Vector3::zero;
+	param.intervalTime = 0.001f;
+	param.isBillboard = true;
+	param.isFade = true;
+	param.life = 2.0f;
+	param.size = Vector2(0.5f, 0.5f);
+	//param.mulColor = Color::red;
+	_breathAttack->ConfigParticleParameter(param);
+	_breathAttack->BreathEnd();	// とりあえず最初はパーティクルを生成しないように設定。
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Wait);
+	_ChangeState(State::Wandering);
 
 }
 
@@ -82,16 +115,80 @@ EnemyAttack* BossDrarian::AttackSelect() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
-	return &_singleAttack;
+	int rnd = rand() % 3;
+	if (rnd == 0) {
+		return _singleAttack.get();
+	}
+	else if (rnd == 1) {
+		return _breathAttack.get();
+	}
+	else {
+		return _tailAttack.get();
+	}
 }
 
-void BossDrarian::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Wait) {
-		// 待ちの挙動いったん終了。
+void BossDrarian::AnimationEvent_Kamituki() {
+	//攻撃コリジョン作成。
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 5.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+	attack->RemoveParent();
 
-		// 再度待ち。
-		_ChangeState(State::Wait);
-		static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+}
+
+void BossDrarian::CreateAttackCollision_TailAttack1() {
+	//攻撃コリジョン作成。
+	Quaternion rot = Quaternion::Identity;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(-40.0f));
+	AttackCollision* attack = CreateAttack(Vector3(2.0f, 0.0f, -2.0f), rot, Vector3(2.0f, 2.0f, 5.0f), 0.15f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
+}
+
+void BossDrarian::CreateAttackCollision_TailAttack2() {
+	//攻撃コリジョン作成。
+	Quaternion rot = Quaternion::Identity;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(-60.0f));
+	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 0.0f), rot, Vector3(2.0f, 2.0f, 5.0f), 0.15f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
+}
+
+void BossDrarian::CreateAttackCollision_TailAttack3() {
+	//攻撃コリジョン作成。
+	AttackCollision* attack = CreateAttack(Vector3(4.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(4.0f, 2.0f, 2.0f), 0.15f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
+}
+
+void BossDrarian::CreateAttackCollision_TailAttack4() {
+	//攻撃コリジョン作成。
+	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 4.5f), Quaternion::Identity, Vector3(2.0f, 2.0f, 3.0f), 0.15f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
+}
+
+void BossDrarian::AnimationEvent_BreathStart() {
+	_breathAttack->BreathStart();
+}
+
+void BossDrarian::AnimationEvent_BreathEnd() {
+	_breathAttack->BreathEnd();
+}
+
+
+void BossDrarian::_EndNowStateCallback(State EndStateType) {
+	if (EndStateType == State::Wandering) {
+		// 徘徊ステート終了。
+		_ChangeState(State::Wandering);
 	}
 	else if (EndStateType == State::Discovery) {
 		// 発見ステートの処理完了。
@@ -101,14 +198,24 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
-		// プレイヤーとの位置関係再調整。
-		_ChangeState(State::Discovery);
+		// もう一度攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 	else if (EndStateType == State::Fall) {
 		// 落下ステート終了。
 
 		// 直前のステートに切り替え。
 		_ChangeState(_saveState);
+	}
+	else if (EndStateType == State::Damage) {
+		// 攻撃を受けた。
+		// 発見状態に移行。
+		_ChangeState(State::Discovery);
+	}
+	else if (EndStateType == State::Threat) {
+		// 威嚇終了。
+		// 発見状態に移行。
+		_ChangeState(State::Discovery);
 	}
 }
 
@@ -117,9 +224,13 @@ void BossDrarian::_ConfigCollision() {
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
 	_Radius = 0.5f;
-	_Height = 7.5f;
+	_Height = 2.5f;
+
+	// 重力設定。
+	_Gravity = -9.8f;
 
 	// コンポーネントにカプセルコライダーを追加。
+
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius, _Height);
@@ -136,6 +247,7 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+
 }
 
 void BossDrarian::_BuildAnimation() {
@@ -155,31 +267,139 @@ void BossDrarian::_BuildAnimation() {
 	{
 		// 待機状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationDrarian::Wait)].get());
-	//	// 歩行状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
-	//	// 走行状態。
-	//	// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
-	//	// 攻撃状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Attack, *Datas[static_cast<int>(AnimationProt::Attack)].get());
-	//	// 落下状態。
-	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
-	//	// 死亡状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
+		// 歩行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationDrarian::Walk)].get());
+		// 走行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationDrarian::Dash)].get());
+		// 吠える。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, *Datas[static_cast<int>(AnimationDrarian::Barking)].get());
+		// 攻撃状態(噛みつき)。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationDrarian::Attack)].get());
+		// 攻撃状態(しっぽ)。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack2, *Datas[static_cast<int>(AnimationDrarian::TailAttackRight)].get());
+		// 攻撃状態(ブレス)。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack3, *Datas[static_cast<int>(AnimationDrarian::Breath)].get());
+		// ダメージ反応。
+		Datas[static_cast<int>(AnimationDrarian::Damage)]->Time = 8.0f / 30.0f;
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationDrarian::Damage)].get());
+		//// 落下状態。
+		//// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
+		//_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationDrarian::Death)].get());
 	}
 }
 
 void BossDrarian::_ConfigAnimationEvent() {
-	//int eventFrame = 30;
+	// かみつき攻撃。
+	{
+		int eventFrame = 15;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_Kamituki));
+	}
+	// しっぽ攻撃。
+	{
 
-	//// 攻撃アニメーションにコリジョン生成イベント追加。
-	//AnimationEvent::AttackEventInfo info(transform, true);
-	//info.damage = _MyComponent.Parameter->GiveDamageMass();
-	//info.master = AttackCollision::CollisionMaster::Enemy;
-	//info.pos = Vector3(1.5f, 0.5f, 0.0f);
-	//info.rot = Quaternion::Identity;
-	//info.size = Vector3::one;
-	//info.life = 0.25f;
-	//_MyComponent.AnimationEvent->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, info);
+		int eventFrame = 60;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack1));
+
+		eventFrame = 62;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack2));
+
+		eventFrame = 65;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack3));
+
+		eventFrame = 70;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack4));
+	}
+	// ブレス攻撃。
+	{
+		int eventFrame = 80.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathStart));
+
+		eventFrame = 120.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathEnd));
+	}
+}
+
+void BossDrarian::_BuildSoundTable() {
+	// 攻撃音登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack2, "Buoonn.wav", false, false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack3, "Buoonn.wav", false, false);
+}
+
+
+// EnemyBreathAttack。
+
+EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object) : EnemyAttack(object){
+	_player = INSTANCE(GameObjectManager)->FindObject("Player");
+	_particleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BreathEmitter", 8);
+	_particleEmitter->transform->SetParent(_enemyObject->transform);
+	_particleEmitter->transform->SetLocalPosition(Vector3(0.0f,0.0f,5.0f));
+}
+
+bool EnemyBreathAttack::Update() {
+	// 衝突判定コリジョンの更新。
+	UpdateCollision();
+
+	if (!_isPlaying) {
+		// モーション再生終了。
+		return true;
+	}
+	return false;
+}
+
+void EnemyBreathAttack::UpdateCollision() {
+
+	if (_attack) {
+		GostCollision* Gost = _attack->GetGostCollision();
+		if (Gost) {
+			Particle* start = nullptr;
+			start = _particleEmitter->GetParticleBegin();	// 最初に生成されたパーティクルを取得。
+			if (start) {
+				// パーティクルが生成されている。
+
+				Particle* end = _particleEmitter->GetParticleEnd();	// 最後に生成されたパーティクルを取得。
+				if (start != end) {
+					// パーティクルの先頭と終端が同一のパーティクルではない。
+
+					Vector3 breathEndPos = start->transform->GetPosition();	// ブレスの終端位置は最初に生成されたパーティクルの位置。
+					Vector3 breathStartPos = end->transform->GetPosition(); // ブレスの開始位置は最後に生成されたパーティクルの位置。
+
+					// ブレス開始位置から終端位置までの距離をコリジョンの奥行サイズとする。
+					float sizeZ = Vector3(breathEndPos - breathStartPos).Length();
+
+					// 判定コリジョンのサイズを変更。
+					if (start != _start || end != _end) {
+						// ブレスの大きさが変わっている。
+
+						// 直前の値を破棄し、現在の値を新しく保存。
+						_start = start;
+						_end = end;
+
+						static_cast<BoxCollider*>(const_cast<Collider*>(Gost->GetShape()))->Resize(Vector3(1.0f, 1.0f, sizeZ));
+					}
+					//const_cast<Collider*>(Gost->GetShape())->RenderDisable();
+
+					// 位置設定。
+					Gost->transform->SetPosition(breathEndPos);
+					// 位置をサイズの半分だけずらすことでコリジョンの中心を指定する。
+					Vector3 pos = Gost->transform->GetLocalPosition();
+					pos.z -= sizeZ * 0.5f;
+					Gost->transform->SetLocalPosition(pos);
+
+					_isStartCollision = true;	// 衝突判定を開始。
+				}
+				else {
+					// ブレスの開始点と終点が同じ。
+					if (_isStartCollision) {
+						// 衝突判定が開始している。
+
+						INSTANCE(GameObjectManager)->AddRemoveList(_attack);
+						_attack = nullptr;
+					}
+				}
+			}
+		}
+	}
 }

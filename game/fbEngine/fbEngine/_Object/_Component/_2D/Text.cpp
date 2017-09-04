@@ -148,6 +148,11 @@ void Text::SetFormat(const unsigned int& format)
 	_TextFormat = (fbText::TextFormatE)format;
 }
 
+void Text::SetFormat(fbText::TextFormatE format)
+{
+	_TextFormat = format;
+}
+
 void Text::SetKerning(const bool & kerning)
 {
 	_Kerning = kerning;
@@ -210,15 +215,7 @@ void Text::_UpdateLength()
 
 			//横幅更新
 			MaxLength.x = max(MaxLength.x, width);
-			if (MaxLength.x >= 3000.0f) {
-				OutputDebugString("あああああ。");
-
-			}
 			MaxLength.y = max(MaxLength.y, max(gm.gmBlackBoxY, gm.gmptGlyphOrigin.y));
-			if (MaxLength.y >= 5000.0f) {
-				OutputDebugString("あああああ。");
-
-			}
 			//最も大きいものを保持
 			_MostHeight = max(_MostHeight, gm.gmptGlyphOrigin.y);
 		}
@@ -253,6 +250,8 @@ void Text::_RenderText(const Vector3 & base)
 	Vector3 offset(0, 0, 0);
 	//高さ
 	float maxHeight = 0;
+	if (_WString == nullptr)
+		return;
 	//フォントをセットして文字数分描画するっていうのは重い！
 	for (short i = 0; _WString[i] != '\0'; i++)
 	{

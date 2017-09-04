@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include "TextBox.h"
+#include "GameObject\Village\EventManager.h"
 
 TextBox::TextBox(const char * name):
 	GameObject(name),
@@ -156,6 +157,9 @@ void TextBox::_NextMessage()
 		{
 			//次のメッセージを再生
 			_SetMessage(_Message->NextID);
+			//0異常なら
+			if (_Message->EventID >= 0)
+				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), 0);
 		}
 	}
 }
@@ -184,6 +188,7 @@ void TextBox::_SetMessage(const int & id)
 {
 	if (id >= 0)
 	{
+		INSTANCE(EventManager)->Execute(Event::EventID::Shop, 0);
 		//メッセージ情報取得
 		_Message = INSTANCE(MessageManager)->GetMess(id);
 		if (_Message)

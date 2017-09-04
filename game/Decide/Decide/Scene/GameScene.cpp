@@ -20,14 +20,18 @@
 #include "GameObject\History\HistoryMenu\HistoryMenu.h"
 #include "GameObject\History\Chip.h"
 
-#include "GameObject\Village\Shop.h"
-#include "GameObject\Village\ItemManager.h"
+#include "GameObject\Village\EventManager.h"
+
+#include "GameObject\ItemManager\ItemManager.h"
+#include "GameObject\Inventory\Inventory.h"
 
 #include "GameObject\Camera\PlayerCamera.h"
 #include "GameObject\Camera\ThirdPersonCamera.h"
 #include "GameObject\Camera\FreeCamera.h"
 #include "GameObject\Enemy\EnemyManager.h"
 #include "GameObject\SplitSpace.h"
+
+#include "GameObject\Village\Shop\Shop.h"
 
 ImageObject* g_depth;
 
@@ -44,6 +48,8 @@ void GameScene::Start()
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	playerCamera->ActiveCamera();
 
+#ifdef _DEBUG
+
 	//ふかんカメラの生成。
 	GameCamera* thirdPersonCamera = INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
 	//プレイヤーカメラの次のカメラはふかんカメラを指定。
@@ -56,6 +62,7 @@ void GameScene::Start()
 
 	//フリーカメラの次のカメラはプレイヤーカメラを指定。
 	freeCamera->SetNextCamera(playerCamera);
+#endif
 
 	// 空間分割生成。
 	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
@@ -84,13 +91,10 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(HistoryManager)->Start();
-	//歴史で生成されるオブジェクト生成。
-	INSTANCE(HistoryManager)->CreateObject();
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
-	INSTANCE(ItemManager)->LoadItemData();
-	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
-	shop->OpenShop(0);
+	INSTANCE(ItemManager)->LoadAllItemData();
+	INSTANCE(Inventory)->Initalize();
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
@@ -117,7 +121,7 @@ void GameScene::Update()
 	//スタートボタンの押下確認
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
 	//エンターキー
-	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
+	if ((flag || KeyBoardInput->isPush(DIK_DELETE)))
 	{
 		//タイトルシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);

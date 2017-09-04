@@ -19,7 +19,6 @@ void AttackCollision::Update()
 		if (_lifeTime >= 0.0f && _time > _lifeTime)
 		{
 			// Žõ–½‚ª–³ŒÀ‚Å‚È‚¢‚©‚ÂŽõ–½‚ð‰ß‚¬‚½B
-			// ‚©‚ÂŽõ–½‚ª–³ŒÀ‚Å‚È‚¢B
 
 			// íœB
 			INSTANCE(GameObjectManager)->AddRemoveList(this);

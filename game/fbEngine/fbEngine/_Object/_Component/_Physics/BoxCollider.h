@@ -18,6 +18,10 @@ public:
 	 */
 	void Create( const Vector3& size );
 
+	// コリジョンの大きさを再設定する関数。
+	// 引数：	再設定する大きさ(直径)。
+	void Resize(const Vector3& size);
+
 private:
 	// 形状に応じたモデルデータをロード。
 	void ColliderModelLoad()override;

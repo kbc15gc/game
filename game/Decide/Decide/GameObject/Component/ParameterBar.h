@@ -11,12 +11,24 @@ class BarElement:public ImageObject{
 public:
 	BarElement(char* name): ImageObject(name) {
 	};
-	~BarElement() {};
+	~BarElement() {
+	};
 	// 初期化時にゲージの色を決める。
 	void Create(BarColor,float, Transform*);
 	void Start()override;
 	void Update()override;
 	void ImageRender()override;
+
+	// バーを新しい値で再初期化。
+	void Reset(float max) {
+		_MaxValue = max;
+		_TargetValue = max;
+		_Value = max;
+		transform->SetLocalPosition(Vector3(-0.9f, 0.0f, 0.0f));
+		transform->SetLocalScale(Vector3(2.54f, 1.0f, 1.0f));
+	}
+
+
 	void SetValue(float value) {
 		_TargetValue = value;
 		_WorkValue = (_TargetValue - _Value) / (60.0f * _Time);
@@ -73,6 +85,11 @@ public:
 	void Update();
 	void ImageRender()override;
 
+	// 作成済みのバーに値を設定しなおす関数。
+	// 引数：	最大値。
+	//			現在値。
+	void Reset(float max, float value);
+
 private:
 	// バーの枠を生成する関数。
 	// 引数：	位置(ワールド座標)。
@@ -101,9 +118,6 @@ public:
 	}
 	void AddValue(float value) {
 		_UpdateValue(_Value + value);
-	}
-	void SetValue(float value) {
-		_Value = value;
 	}
 	// 何ゲージ重ねるかを返却。
 	inline short GetMaxBarNum()const {
@@ -167,15 +181,19 @@ public:
 		_Object->Create(colors,max, value, isRenderFrame, tr, pos, scale, isHud);
 		_Object->SetParentComponet(this);	// 更新管理を行うためにこのクラスのポインタを渡す。
 	}
+
+	// 作成済みのバーに値を設定しなおす関数。
+	// 引数：	最大値。
+	//			現在値。
+	inline void Reset(float max, float value) {
+		_Object->Reset(max,value);
+	}
 public:
 	inline void SubValue(float value) {
 		_Object->SubValue(value);
 	}
 	void AddValue(float value) {
 		_Object->AddValue(value);
-	}
-	void SetValue(float value) {
-		_Object->SetValue(value);
 	}
 	// 何ゲージ重ねるかを返却。
 	inline short GetMaxBarNum()const {

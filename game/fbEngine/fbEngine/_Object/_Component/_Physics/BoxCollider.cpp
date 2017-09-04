@@ -1,6 +1,7 @@
 #include"fbstdafx.h"
 #include "BoxCollider.h"
 #include "_Object\_GameObject\ModelOject.h"
+#include "_Object\_Component\_Physics\Collision.h"
 
 /*!
  * @brief	コンストラクタ。
@@ -35,8 +36,17 @@ void BoxCollider::Create( const Vector3& size )
 	_halfSize = Vector3(work.x(), work.y(), work.z());
 }
 
+void BoxCollider::Resize(const Vector3& size) {
+	_Shape->setImplicitShapeDimensions(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
+	_halfSize = size * 0.5f;
+	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+}
+
 void BoxCollider::ColliderModelLoad() {
+#ifdef _DEBUG
+
 	//当たり判定を視覚化したオブジェクト生成
 	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
 	_CollisionModel->LoadModel("BoxCollision.X");
+#endif
 }

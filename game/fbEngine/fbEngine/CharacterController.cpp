@@ -31,7 +31,7 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, Vector
 	btVector3 size(0.0f,0.0f,0.0f);	// コライダーサイズ。
 	btVector3 localScaling(1.0f,1.0f,1.0f); // Transformのスケール値。
 	localScaling = m_collider->GetBody()->getLocalScaling();
-	_halfSize = m_rigidBody->GetShape().GetHalfSize();
+	_halfSize = m_rigidBody->GetShape()->GetHalfSize();
 	_halfSize.x *= localScaling.getX();
 	_halfSize.y *= localScaling.getY();
 	_halfSize.z *= localScaling.getZ();

@@ -47,6 +47,9 @@ void EnemyStartAttackState::_UpdateSubClass() {
 }
 
 void EnemyStartAttackState::Exit(EnemyCharacter::State next) {
+	if (_NowLocalState) {
+		_NowLocalState->Exit(next);
+	}
 }
 
 void EnemyStartAttackState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

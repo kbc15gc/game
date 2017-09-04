@@ -43,6 +43,8 @@ public:
 	{
 		return _CollisionObject.get();
 	}
+
+
 	// シェアードポインタで取得。
 	// コリジョンが削除されたときにNullチェックしたいときなどにシェアードポインタでコリジョンオブジェクトを保管しておくといい。
 	// ※Nullチェックの仕方は下記。
@@ -146,8 +148,8 @@ public:
 		return _Offset;
 	}
 
-	inline const Collider& GetShape()const {
-		return *_Shape;
+	inline const Collider* GetShape()const {
+		return _Shape;
 	}
 
 	inline bool GetIsAddWorld()const {

@@ -2,6 +2,7 @@
 #include "_Object\_Component\Component.h"
 
 class ModelObject;
+class Collision;
 
 //あたり判定の形状
 class Collider :public Component
@@ -14,15 +15,15 @@ public:
 public:
 	Collider(GameObject* g, Transform* t) :Component(g, t, typeid(this).name())
 	{
-		this->_CollisionModel = nullptr;
 #ifdef _DEBUG
+		this->_CollisionModel = nullptr;
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 	};
 	Collider(GameObject* g, Transform* t,const char* classname) :Component(g, t, classname)
 	{
-		this->_CollisionModel = nullptr;
 #ifdef _DEBUG
+		this->_CollisionModel = nullptr;
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 	};
@@ -52,6 +53,9 @@ public:
 	inline const Vector3& GetHalfSize()const {
 		return _halfSize;
 	}
+	inline void SetCollision(Collision* collision) {
+		_collision = collision;
+	}
 private:
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。
@@ -62,6 +66,7 @@ public:
 protected:
 	ShapeType _Type;
 	Vector3 _halfSize;
+	Collision* _collision = nullptr;	// このコライダーを保持するコリジョン。
 #ifdef _DEBUG
 protected:
 	//当たり判定を視覚化した3Dオブジェクト。

@@ -44,6 +44,7 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 {
 	_Offset = offset;
 	_Shape = shape;
+	_Shape->SetCollision(this);
 	//コリジョンオブジェクト設定
 	_CollisionObject.reset(collision);
 	_CollisionObject->setCollisionShape(_Shape->GetBody());
@@ -56,8 +57,10 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 		AddWorld(); 
 	}
 
+#ifdef _DEBUG
 	// とりあえずここでコライダーの描画をオンにする。
 	_Shape->CreateViewModel(_CollisionObject->getWorldTransform());
+#endif
 }
 
 void Collision::SetFilter(short group, short mask)

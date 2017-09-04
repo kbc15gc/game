@@ -18,6 +18,11 @@ public:
 	 */
 	void Create( const float radius );
 
+	// コリジョンの大きさを再設定する関数。
+	// 引数：	再設定する大きさ(半径)。
+	void Resize(float radius);
+
+
 private:
 //	 形状に応じたモデルデータをロード。
 	void ColliderModelLoad()override;

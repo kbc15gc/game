@@ -9,6 +9,7 @@
 #include "GameObject\Component\ObjectSpawn.h"
 #include "GameObject\AttackValue2D.h"
 #include "GameObject\Component\AnimationEvent.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 class SkinModel;
 class Animation;
@@ -29,19 +30,29 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State { Wandering = 0,Discovery, StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death };
+	enum class State { Wandering = 0,Discovery, Threat, StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death };
 
-	// アニメーションデータ配列の添え字。
+	// アニメーションデータテーブルの添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
-	// ※この列挙子を添え字として、継承先のクラスでアニメーショ番号のテーブルを作成する。
-	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Barking, Attack, Fall,Damage, Death,Max };
+	// ※この列挙子を添え字として、継承先のクラスでアニメーション番号のテーブルを作成する。
+	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Threat, Attack1,Attack2,Attack3,Attack4, Fall,Damage, Death,Max };
 
 	// アニメーションデータ構造体。
 	struct AnimationData {
-		unsigned int No;	// アニメーション番号。
+		int No = -1;	// アニメーション番号。
 		float Time;	// 再生時間。
 	};
 
+	// サウンドデータテーブルの添え字。
+	enum class SoundIndex{None = -1, Attack1 = 0, Attack2, Attack3, Threat,Damage,Death, Max};
+
+	// サウンドデータ構造体。
+	struct SoundData {
+		char Path[FILENAME_MAX];	// サウンド名(.wavも入れてね)。
+		bool Is3D = false;		// 3Dサウンドか。
+		bool IsLoop = false;	// ループ再生か。
+		SoundSource* Source = nullptr;	// サウンド再生オブジェクト。
+	};
 private:
 	// このクラスで使用するコンポーネント。
 	// ※コンポーネントは勝手に削除されるため、このクラスでは削除しない。
@@ -55,7 +66,7 @@ private:
 		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
 		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
-		AnimationEvent* AnimationEvent = nullptr;	// アニメーションにイベントを設定できる関数。
+		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる関数。
 	};
 
 public:
@@ -128,6 +139,15 @@ public:
 		_MyComponent.Animation->PlayAnimation(animationNum, interpolateTime, loopCount);
 	}
 
+	// 音再生関数。
+	// 引数：	効果音テーブルの添え字。
+	inline void EnemyPlaySound(const SoundIndex idx) {
+		if (_SoundData[static_cast<int>(idx)].Source) {
+			// サウンドソースが作成されている。
+			_SoundData[static_cast<int>(idx)].Source->Play(_SoundData[static_cast<int>(idx)].IsLoop);
+		}
+	}
+
 	// エネミーがアニメーションを再生しているか。
 	inline bool GetIsPlaying() {
 		return _MyComponent.Animation->GetPlaying();
@@ -170,6 +190,32 @@ public:
 	// 視野角判定を行うステートから呼び出す。
 	void SearchView();
 
+	// ダメージのけぞり設定関数。
+	// 引数：	のけぞるか。
+	//			何回に一回のけぞるか(デフォルトは1)。
+	void ConfigDamageReaction(bool isMotion, unsigned short probability = 1);
+
+	// エネミーにダメージを与える処理。
+	// 引数：	ダメージ量。
+	void GiveDamage(int damage);
+
+	// 攻撃生成関数。
+	// 引数：	位置(ローカル座標)。
+	//			回転(ローカル座標)。
+	//			拡縮。
+	//			寿命(0.0より小さい値で無限)。
+	//			親(デフォルトはnull)。
+	//			コリジョン生成待ち時間。
+	// 戻り値:  生成した攻撃。
+	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& localRot, const Vector3& scale, float life, Transform* parent = nullptr, float interval = 0.0f) {
+		//攻撃コリジョン作成。
+		unsigned int priorty = 1;
+		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+		attack->Create(_MyComponent.Parameter->GiveDamageMass(), localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
+		return attack;
+	}
+
+
 	// 全パラメーター設定。
 	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
 	//			HP。
@@ -199,9 +245,6 @@ public:
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
 	}
 
-	// エネミーにダメージを与える処理。
-	// 引数：	ダメージ量。
-	void GiveDamage(float damage);
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -295,6 +338,11 @@ public:
 		return _walkSpeed * 5.0f;
 
 	}
+
+	inline const AnimationData& GetAnimationData(AnimationType type)const {
+		return _AnimationData[static_cast<int>(type)];
+	}
+
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -308,6 +356,13 @@ protected:
 		// アニメーションコンポーネントにアニメーションの終了時間設定。
 		_MyComponent.Animation->SetAnimationEndTime(Data.No,Data.Time);
 	}
+
+	// 引数のパラメータをサウンドテーブルに登録する関数。
+	// 引数：	登録するサウンドのタイプ(列挙子)。
+	//			waveファイルの名前(.wavまで含めて)。
+	//			3Dサウンドにするか。
+	//			ループ再生するか。
+	void _ConfigSoundData(SoundIndex idx, char* filePath, bool is3D = false, bool isLoop = false);
 
 	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
 	// 引数は終了したステートのタイプ。
@@ -368,11 +423,16 @@ private:
 	// ※処理自体は継承先に委譲。
 	virtual void _ConfigAnimationEvent() = 0;
 
+	// 効果音のテーブル作成。
+	// ※処理自体は継承先に委譲。
+	virtual void _BuildSoundTable() = 0;
+
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
 	float _Radius = 0.0f;	// コリジョンサイズ(幅)。
 	float _Height = 0.0f;	// コリジョンサイズ(高さ)。
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
+	SoundData _SoundData[static_cast<int>(SoundIndex::Max)];
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
 
@@ -389,6 +449,11 @@ protected:
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
 
 	float _walkSpeed = 0.0f;		// 歩行速度。
+
+	bool _isDamageMotion = true;			// のけぞりモーションを再生するか。
+	bool _isDamageMotionRandom = true;		// のけぞりモーションをランダムで再生するか(ランダムにしない場合は必ずのけぞる)。
+	unsigned short _damageMotionProbability = 1;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
+
 private:
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
@@ -404,6 +469,9 @@ private:
 // アニメーションが設定されていれば自動で再生される。
 class EnemyAttack {
 public:
+	EnemyAttack(EnemyCharacter* object) {
+		_enemyObject = object;
+	}
 	virtual ~EnemyAttack() {
 
 	}
@@ -412,21 +480,18 @@ public:
 	// 引数：	再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
 	//			アニメーション補間時間(初期値は0)。
 	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
-	inline void Init(int animType = -1, float interpolate = 0.0f, int animLoopNum = 1) {
-		_animType = animType;
-		_interpolate = interpolate;
-		_animLoopNum = animLoopNum;
-	}
-	virtual void Start() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
+	void Init(int animType = -1, float interpolate = 0.0f, int animLoopNum = 1);
+	virtual void Entry() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
 	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
 	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
 
 	// この攻撃中のステート遷移を許可するか。
 	// 引数：	切り替えようとしているステート。
-	// ※切り替えようとしているステートごとに処理を変えたい場合は継承先で上書き。
-	inline virtual bool IsPossibleChangeState(EnemyCharacter::State next) {
+	// ※ダメージモーションの再生許可関連だけにしようかと思ったが、ジャンプ攻撃などの実行中に落下ステートに遷移しないよう制御することを考慮した。
+	inline virtual bool EnemyAttack::IsPossibleChangeState(EnemyCharacter::State next)const {
 		return true;
 	}
+
 
 	inline const int GetAnimationType()const {
 		return _animType;
@@ -445,18 +510,22 @@ protected:
 	float _interpolate = 0.0f;	// アニメーション補間時間(初期値は0)。
 	int _animLoopNum = 1;	// アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	bool _isPlaying = false;	// アニメーション再生中かのフラグ(更新処理時に攻撃ステートから設定される)。
+	EnemyCharacter* _enemyObject = nullptr;
 };
 
 // ※単攻撃(攻撃モーション一回分攻撃)。
 class EnemySingleAttack :public EnemyAttack{
 public:
-	void Start()override {};
-	bool Update()override {
-		if (!_isPlaying) {
-			// 攻撃モーション一度終了。
-			return true;
-		}
-		return false;
+	EnemySingleAttack(EnemyCharacter* object):EnemyAttack(object) {
+		_player = INSTANCE(GameObjectManager)->FindObject("Player");
 	}
+	void Entry()override {
+		_enemyObject->LookAtObject(*_player);
+	};
+	bool Update()override;
+
 	void Exit()override{};
+
+private:
+	GameObject* _player = nullptr;
 };
