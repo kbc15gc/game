@@ -91,8 +91,6 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(HistoryManager)->Start();
-	//歴史で生成されるオブジェクト生成。
-	INSTANCE(HistoryManager)->CreateObject();
 
 	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();

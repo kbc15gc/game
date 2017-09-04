@@ -7,7 +7,7 @@
 NPC::NPC(const char * name):
 	ContinentObject(name),
 	_Height(1.5f),
-	_Radius(2.0f)
+	_Radius(4.0f)
 {
 }
 
@@ -71,7 +71,7 @@ void NPC::_Speak()
 				_TextBox->Title(true);
 			}
 			//本来は外部から呼び出す。
-			if (KeyBoardInput->isPush(DIK_SPACE) && XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+			if (KeyBoardInput->isPush(DIK_SPACE) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 			{
 				//会話する。
 				_TextBox->Speak();
