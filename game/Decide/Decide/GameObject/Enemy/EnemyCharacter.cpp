@@ -176,7 +176,7 @@ void EnemyCharacter::_BuildCollision() {
 	// コリジョンのパラメータを決定。
 	_ConfigCollision();
 
-	if (_Radius <= 0.0f || _Height <= 0.0f) {
+	if (_collisionInfo.radius <= 0.0f || _collisionInfo.height <= 0.0f) {
 		// 継承先でサイズ設定してる？。
 		abort();
 	}
@@ -187,7 +187,7 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(this, transform,Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
+	_MyComponent.CharacterController->Init(this, transform,_collisionInfo.offset, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
@@ -311,7 +311,7 @@ void EnemyCharacter::GiveDamage(int damage) {
 	}
 
 	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-	attackvalue->Init(Vector3::zero,_damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+	attackvalue->Init(Vector3::zero,_damage, 1.5f, Vector3(0.0f, _collisionInfo.height, 0.0f));
 	attackvalue->transform->SetParent(transform);
 }
 

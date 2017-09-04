@@ -5,12 +5,11 @@
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
 #include "fbEngine\_Object\_GameObject\Particle.h"
-
+#include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
 
 
 BossDrarian::BossDrarian(const char* name) : EnemyCharacter(name)
 {
-
 }
 
 
@@ -27,8 +26,8 @@ void BossDrarian::_AwakeSubClass() {
 }
 
 void BossDrarian::_StartSubClass() {
-
-	transform->SetPosition(INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition());
+	Vector3 pos = INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition();
+	transform->SetPosition(pos.x,pos.y - 0.25f,pos.z);
 	//パラメーター初期化。
 	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 5, 5, 100, 20, 1, 0, 500, 100);
 
@@ -90,10 +89,10 @@ void BossDrarian::_StartSubClass() {
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_ChangeState(State::Wandering);
-
 }
 
 void BossDrarian::_UpdateSubClass() {
+
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
 		if (_NowStateIdx != State::Fall) {
@@ -223,17 +222,17 @@ void BossDrarian::_ConfigCollision() {
 
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
-	_Radius = 0.5f;
-	_Height = 2.5f;
+	_collisionInfo.radius = 1.8f;
+	_collisionInfo.height = 6.0f;
 
-	// 重力設定。
-	_Gravity = -9.8f;
+	//// 重力設定。
+	//_Gravity = -9.8f;
 
 	// コンポーネントにカプセルコライダーを追加。
 
-	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
+	_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
 	// カプセルコライダーを作成。
-	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius, _Height);
+	static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
 }
 
 void BossDrarian::_ConfigCharacterController() {

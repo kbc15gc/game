@@ -69,6 +69,12 @@ private:
 		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる関数。
 	};
 
+	struct CollisionInfo {
+		float radius = 0.0f;	// コリジョンサイズ(幅)。
+		float height = 0.0f;	// コリジョンサイズ(高さ)。
+		Vector3 offset = Vector3::zero;	// 差分。
+	};
+
 public:
 	// 引数はオブジェクトの名前。
 	EnemyCharacter(const char* name);
@@ -429,10 +435,12 @@ private:
 
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
-	float _Radius = 0.0f;	// コリジョンサイズ(幅)。
-	float _Height = 0.0f;	// コリジョンサイズ(高さ)。
+
+	CollisionInfo _collisionInfo;
+
 	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	SoundData _SoundData[static_cast<int>(SoundIndex::Max)];
+
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
 

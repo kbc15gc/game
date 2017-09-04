@@ -8,7 +8,7 @@ class Collision;
 class Collider :public Component
 {
 public:
-	enum class ShapeType { Box = 0, Sphere, Capsule, Mesh };
+	enum class ShapeType { Box = 0, Sphere, Capsule, CapsuleX, CapsuleZ, Mesh };
 #ifdef _DEBUG
 	static const wchar_t* ShapeName[];
 #endif
