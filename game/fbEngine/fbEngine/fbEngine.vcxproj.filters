@@ -267,6 +267,9 @@
     <ClCompile Include="_Nature\Sky.cpp">
       <Filter>Nature</Filter>
     </ClCompile>
+    <ClCompile Include="_Object\_Component\_Physics\CapsuleColliderZ.cpp">
+      <Filter>Object\Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -517,6 +520,9 @@
     </ClInclude>
     <ClInclude Include="_Nature\Sky.h">
       <Filter>Nature</Filter>
+    </ClInclude>
+    <ClInclude Include="_Object\_Component\_Physics\CapsuleColliderZ.h">
+      <Filter>Object\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
