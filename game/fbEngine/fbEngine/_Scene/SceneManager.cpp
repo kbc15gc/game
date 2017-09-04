@@ -32,16 +32,16 @@ SceneManager::SceneManager():
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
 	//アンチエイリアスの作成.
-	_AntiAliasing.Create();
 	_AntiAliasing.SetEnable(true);
+	_AntiAliasing.Create();
 
 	//被写界深度の作成
-	_DepthofField.Create();
 	_DepthofField.SetEnable(true);
+	_DepthofField.Create();
 
 	//ブルームの準備
-	_Bloom.Create();
 	_Bloom.SetEnable(true);
+	_Bloom.Create();
 
 	//シャドウマップの初期化.
 	_ShadowMap.Create();

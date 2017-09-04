@@ -28,7 +28,7 @@ private:
 	//
 	Vertex* _Vertex;
 	//有効フラグ. 
-	bool _IsEnable;
+	bool _IsEnable = true;
 
 	//重みの数
 	static const int NUM_WEIGHTS = 8;
