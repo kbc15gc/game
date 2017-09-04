@@ -217,6 +217,40 @@ void HistoryMenu::SelectPageUpdate()
 	{
 		_NowLookPage = max(0, _NowLookPage - 1);
 	}
+	
+	//ローカルタイム.
+	static Vector2 LOCAL_TIME = Vector2(0.0f, 0.0f);
+	//キーリピートタイム.
+	const float KEY_REPEAT_TIME = 0.8f;
+	Vector2 InputAnalog = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+	if (InputAnalog.x)
+	{
+		//ローカルタイムを計算.
+		LOCAL_TIME.x += Time::DeltaTime();
+
+		if (LOCAL_TIME.x >= KEY_REPEAT_TIME)
+		{
+			_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+		}
+	}
+	else
+	{
+		LOCAL_TIME.x = 0.0f;
+	}
+	if (InputAnalog.y)
+	{
+		//ローカルタイムを計算.
+		LOCAL_TIME.y += Time::DeltaTime();
+
+		if (LOCAL_TIME.y >= KEY_REPEAT_TIME)
+		{
+			_NowLookPage = max(0, _NowLookPage - 1);
+		}
+	}
+	else
+	{
+		LOCAL_TIME.y = 0.0f;
+	}
 
 	if (_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() > 0)
 	{

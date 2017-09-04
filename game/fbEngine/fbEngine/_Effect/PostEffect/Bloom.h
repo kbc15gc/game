@@ -13,6 +13,14 @@ public:
 	void Render();
 	void Release();
 
+	/**
+	* —LŒøƒtƒ‰ƒO‚ğİ’è.
+	*/
+	void SetEnable(bool value)
+	{
+		_IsEnable = value;
+	}
+
 private:
 	void _UpdateWeight(const float& dis);
 

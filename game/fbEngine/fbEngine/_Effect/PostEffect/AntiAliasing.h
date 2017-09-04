@@ -36,6 +36,14 @@ public:
 	*/
 	void Render();
 
+	/**
+	* 有効フラグを設定.
+	*/
+	void SetEnable(bool value)
+	{
+		_isEnable = value;
+	}
+
 private:
 
 	/** 有効フラグ. */
