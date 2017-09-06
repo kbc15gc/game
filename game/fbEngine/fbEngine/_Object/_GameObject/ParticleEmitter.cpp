@@ -16,17 +16,30 @@ void ParticleEmitter::Start()
 void ParticleEmitter::Update()
 {
 	Emit();
-	//パーティクルのアップデート
+
+	//パーティクルの削除。
+
+	if (_achievedArray) {
+		// パーティクル取得処理中。
+		// 取得中に削除されたパーティクルは除く。
+		for (auto itr = _achievedArray->begin();itr != _achievedArray->end();) {
+			if ((*itr)->IsDead()) {
+				itr = _achievedArray->erase(itr);
+			}
+			else {
+				itr++;
+			}
+		}
+	}
 	list<Particle*>::iterator p = _ParticleList.begin();
 	while (p != _ParticleList.end()) {
 		//死
 		if ((*p)->IsDead()) {
-			SAFE_DELETE(*p);
+			INSTANCE(GameObjectManager)->AddRemoveList(*p);
 			p = _ParticleList.erase(p);
 		}
 		//生
 		else {
-			(*p)->Update();
 			p++;
 		}
 	}
@@ -50,6 +63,14 @@ void ParticleEmitter::ApplyForce(Vector3& applyForce)
 		p->ApplyForce(applyForce);
 	}
 }
+
+void ParticleEmitter::ResetParameterAlreadyCreated(const ParticleParameter& param) {
+	_Param = param;
+	for (auto particle : _ParticleList) {
+		particle->SetParam(param);
+	}
+}
+
 void ParticleEmitter::SetEmitFlg(bool b)
 {
 	emit = b;
@@ -73,6 +94,17 @@ Particle* ParticleEmitter::GetParticleEnd()const {
 	}
 }
 
+void ParticleEmitter::ReleaseParticleAll() {
+	if (_achievedArray) {
+		_achievedArray->clear();
+		_achievedArray = nullptr;
+	}
+	for (auto particle : _ParticleList) {
+		INSTANCE(GameObjectManager)->AddRemoveList(particle);
+	}
+	_ParticleList.clear();
+}
+
 void ParticleEmitter::Emit()
 {
 	//生成
@@ -81,11 +113,13 @@ void ParticleEmitter::Emit()
 		_Timer += Time::DeltaTime();
 		if (_Timer >= _Param.intervalTime) {
 			//パーティクルを生成。
-			Particle* p = new Particle("particle");
-			p->Awake();
+			Particle* p = INSTANCE(GameObjectManager)->AddNew<Particle>("particle",8);
 			p->Init(_Param, transform->GetPosition());
 			_Timer = 0.0f;
 			_ParticleList.push_back(p);
+			if (_achievedArray) {
+				_achievedArray->push_back(p);
+			}
 		}
 	}
 }

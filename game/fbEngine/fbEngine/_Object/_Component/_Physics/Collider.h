@@ -31,14 +31,15 @@ public:
 
 #ifdef _DEBUG
 	void Debug()override;
-#endif
 	// コライダーの形状を視覚化するためのモデルを生成する関数。
 	// 引数：	コリジョンのTransform情報。
 	void CreateViewModel(const btTransform& collisionTr);
+	// コライダーの描画を再作成。
+	void RecreateViewModel();
+
 	// コリジョン描画用モデルのTransform情報更新。
 	void UpdateTransform(const btTransform& collisionTr);
 
-#ifdef _DEBUG
 	// 描画中か。
 	bool GetIsRender();
 	// 描画オン。
@@ -57,10 +58,11 @@ public:
 		_collision = collision;
 	}
 private:
+#ifdef _DEBUG
 	// 形状に応じたモデルデータをロード。
 	// ※継承先で実装。
 	virtual void ColliderModelLoad() = 0;
-
+#endif
 public:
 	virtual btCollisionShape* GetBody() = 0 ;
 protected:

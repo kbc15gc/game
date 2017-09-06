@@ -24,9 +24,10 @@ public:
 
 
 private:
-//	 形状に応じたモデルデータをロード。
+#ifdef _DEBUG
+	// 形状に応じたモデルデータをロード。
 	void ColliderModelLoad()override;
-
+#endif
 public:
 	btCollisionShape* GetBody() override
 	{

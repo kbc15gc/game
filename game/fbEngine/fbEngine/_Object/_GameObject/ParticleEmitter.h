@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+
 class Particle;
 
 //パーティクル生成パラメータ
@@ -17,7 +18,7 @@ struct ParticleParameter {
 	const char* texturePath;						//!<テクスチャのファイルパス(Asset/Textureの中にあるもの(Asset/Textureよりも先のパスの指定のみでOK))。
 	Vector3		initVelocity;						//!<初速度。
 	Vector2		size;								//パーティクルサイズ
-	float		life;								//!<寿命。単位は秒。
+	float		life;								//!<寿命。単位は秒(0より小さい値で無限)。
 	float		intervalTime;						//!<発生時間。単位は秒。
 	Vector3		initPositionRandomMargin;			//!<初期位置のランダム幅。
 	Vector3		initVelocityVelocityRandomMargin;	//!<初速度のランダム幅。
@@ -36,7 +37,9 @@ struct ParticleParameter {
 class ParticleEmitter : public GameObject {
 public:
 	ParticleEmitter(char* name) :GameObject(name) {};
-	~ParticleEmitter() {};
+	~ParticleEmitter() {
+		ReleaseParticleAll();
+	};
 	/*!
 	 *@brief	初期化。
 	 *@_Param[in]	random		乱数生成に使用する乱数生成機。
@@ -53,9 +56,26 @@ public:
 	*@_Param[in]	applyForce		乱数生成に使用する乱数生成機。
 	*/
 	void ApplyForce(Vector3& applyForce);
+
 	// 初速度再設定。
+	// ※既に作成されたパーティクルに対しては無効。
+	// ※これから作成されるものに対してのみ有効。
 	inline void ResetInitVelocity(const Vector3& newVelocity) {
 		_Param.initVelocity = newVelocity;
+	}
+
+	// パラメーター再設定(作成済みのパーティクルのパラメーターも変更)。
+	void ResetParameterAlreadyCreated(const ParticleParameter& param);
+
+	// この関数を呼んでからAchievedCreateParticleEnd関数が呼ばれるまでに生成されたパーティクルへのポインタを取得し続ける関数。
+	// 引数：	生成したパーティクルを格納する配列へのポインタ。
+	inline void AchievedCreateParticleStart(vector<Particle*>* array) {
+		_achievedArray = array;
+	}
+
+	// 生成したパーティクルの取得終了。
+	inline void AchievedCreateParticleEnd() {
+		_achievedArray = nullptr;
 	}
 
 	void SetEmitFlg(bool b);
@@ -63,6 +83,15 @@ public:
 	inline bool GetEmitFlg()const {
 		return emit;
 	}
+
+	// パラメーター設定(作成済みのパーティクルには無効)。
+	inline void SetParam(const ParticleParameter& param) {
+		_Param = param;
+	}
+	inline const ParticleParameter& GetParam()const {
+		return _Param;
+	}
+
 	inline const Vector3& GetInitVelocity() const{
 		return _Param.initVelocity;
 	}
@@ -74,7 +103,7 @@ public:
 	// ※リストにパーティクルが格納されてない場合はnullが返却される。
 	Particle* GetParticleEnd()const;
 
-
+	void ReleaseParticleAll();
 private:
 	//パーティクル生成
 	void Emit();
@@ -83,4 +112,5 @@ private:
 	float					_Timer;			//!<タイマー
 	ParticleParameter		_Param;			//!<パラメータ。
 	std::list<Particle*>	_ParticleList;	//!<パーティクルのリスト。
+	vector<Particle*>* _achievedArray = nullptr;
 };

@@ -210,6 +210,9 @@
     <ClCompile Include="GameObject\Inventory\Inventory.cpp">
       <Filter>GameObject\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -431,6 +434,12 @@
     </ClInclude>
     <ClInclude Include="GameObject\Inventory\Inventory.h">
       <Filter>GameObject\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BreathObject.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\LaserBreath.h">
+      <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

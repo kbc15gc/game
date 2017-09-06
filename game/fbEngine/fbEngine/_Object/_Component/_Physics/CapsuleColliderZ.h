@@ -25,10 +25,11 @@ public:
 
 private:
 	// 形状に応じたモデルデータをロード。
+#ifdef _DEBUG
 	void ColliderModelLoad()override {
 		// カプセルはまだないので生成しない。
 	}
-
+#endif
 
 public:
 	btCollisionShape* GetBody() override
