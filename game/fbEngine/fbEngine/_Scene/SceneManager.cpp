@@ -6,7 +6,7 @@
 #include "_Object\_GameObject\FPS.h"
 #include "_Object\_Component\_Physics\Physics.h"
 
-SceneManager*  SceneManager::_Instance;
+SceneManager* SceneManager::_Instance;
 
 
 SceneManager::SceneManager():
@@ -32,12 +32,15 @@ SceneManager::SceneManager():
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
 	//アンチエイリアスの作成.
+	_AntiAliasing.SetEnable(true);
 	_AntiAliasing.Create();
 
 	//被写界深度の作成
+	_DepthofField.SetEnable(true);
 	_DepthofField.Create();
 
 	//ブルームの準備
+	_Bloom.SetEnable(true);
 	_Bloom.Create();
 
 	//シャドウマップの初期化.
@@ -46,7 +49,6 @@ SceneManager::SceneManager():
 	//環境マップの初期化.
 	_EnvironmentMap.Create();
 
-	
 }
 
 SceneManager::~SceneManager()
