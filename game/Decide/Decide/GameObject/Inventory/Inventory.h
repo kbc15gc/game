@@ -220,6 +220,11 @@ public:
 		return _PlayerMoney;
 	}
 
+	int* GetPlayerMoneyPt()
+	{
+		return &_PlayerMoney;
+	}
+
 	//プレイヤーの所持金に加算。
 	void AddPlayerMoney(int add)
 	{

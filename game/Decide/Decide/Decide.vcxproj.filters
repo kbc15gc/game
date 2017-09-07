@@ -213,6 +213,13 @@
     <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\GameManager.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -441,6 +448,13 @@
     <ClInclude Include="GameObject\Enemy\LaserBreath.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\GameManager.h" />
+    <ClInclude Include="GameObject\StatusWindow\StatusWindow.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -509,6 +523,9 @@
     </Filter>
     <Filter Include="GameObject\Inventory">
       <UniqueIdentifier>{cef64e17-71d3-4bb3-8978-4922156435b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\StatusWindow">
+      <UniqueIdentifier>{80a2bee9-ac93-4dbf-b2e9-ee7189ce6176}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
