@@ -210,6 +210,15 @@
     <ClCompile Include="GameObject\Inventory\Inventory.cpp">
       <Filter>GameObject\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameManager.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
+      <Filter>GameObject\StatusWindow\Parameter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -432,6 +441,15 @@
     <ClInclude Include="GameObject\Inventory\Inventory.h">
       <Filter>GameObject\Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\StatusWindow.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameManager.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h">
+      <Filter>GameObject\StatusWindow\Parameter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -500,6 +518,12 @@
     </Filter>
     <Filter Include="GameObject\Inventory">
       <UniqueIdentifier>{cef64e17-71d3-4bb3-8978-4922156435b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\StatusWindow">
+      <UniqueIdentifier>{ba2cad92-3137-4ea9-afd7-3bb2b066047b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\StatusWindow\Parameter">
+      <UniqueIdentifier>{19c47435-196d-4f82-a5fe-a9a71e73bab5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

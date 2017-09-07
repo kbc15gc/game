@@ -127,7 +127,7 @@ void HistoryMenu::EnableUpdate()
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.y >= 1.0f)
+	if (LStick.y >= 0.9f)
 	{
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -138,7 +138,7 @@ void HistoryMenu::EnableUpdate()
 			ChangeTime = 0.1f;
 		}
 	}
-	else if (LStick.y <= -1.0f)
+	else if (LStick.y <= -0.9f)
 	{
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -196,7 +196,8 @@ void HistoryMenu::EnableUpdate()
 	{
 		//位置.
 		int pos = i - size / 2;
-		pageList[i]->transform->SetPosition(Vector3(-0.01f * i, 0.0f, 0.2f - 0.001f * abs(pos)));
+		Vector3 posVec = Vector3(-0.01f * pos, 0.0f, 0.2f - 0.005f * i);
+		pageList[i]->transform->SetPosition(posVec);
 	}
 
 }
@@ -232,7 +233,7 @@ void HistoryMenu::SelectPageUpdate()
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.x >= 1.0f)
+	if (LStick.x >= 0.2f)
 	{
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -243,7 +244,7 @@ void HistoryMenu::SelectPageUpdate()
 			ChangeTime = 0.1f;
 		}
 	}
-	else if (LStick.x <= -1.0f)
+	else if (LStick.x <= -0.2f)
 	{
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -311,7 +312,7 @@ void HistoryMenu::SelectChipUpdate()
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.x >= 1.0f)
+	if (LStick.x >= 0.2f)
 	{
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -322,7 +323,7 @@ void HistoryMenu::SelectChipUpdate()
 			ChangeTime = 0.1f;
 		}
 	}
-	else if (LStick.x <= -1.0f)
+	else if (LStick.x <= -0.2f)
 	{
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
