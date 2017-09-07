@@ -4,6 +4,7 @@
 
 class Vertex;
 
+
 //パーティクルクラス
 class Particle :public GameObject
 {
@@ -36,6 +37,10 @@ public:
 	}
 
 	void SetParam(const ParticleParameter& param);
+
+	inline const Vector3& GetVelocity() {
+		return _Velocity;
+	}
 
 private:		
 	static Vertex* _Vertex;						//頂点

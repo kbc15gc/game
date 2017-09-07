@@ -50,6 +50,10 @@ private:
 
 	// 効果音のテーブル作成関数。
 	void _BuildSoundTable()override;
+
+	inline void _DropSubClass()override {
+	}
+
 private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理。
