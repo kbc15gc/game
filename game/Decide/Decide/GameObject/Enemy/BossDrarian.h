@@ -1,6 +1,7 @@
 #pragma once
 #include "EnemyCharacter.h"
 #include "fbEngine\_Object\_GameObject\ParticleEmitter.h"
+#include "GameObject\Enemy\LaserBreath.h"
 
 class EnemyBreathAttack;
 
@@ -75,52 +76,76 @@ private:
 
 
 class EnemyBreathAttack : public EnemyAttack {
+private:
+	EnemyBreathAttack(EnemyCharacter* object):EnemyAttack(object) {};
 public:
-	EnemyBreathAttack(EnemyCharacter* object);
+	// 引数：	このブレス攻撃を行うエネミー。
+	//			生成するパーティクルのパラメータ。
+	//			生成位置(ローカル座標、親はブレスを発射するエネミー)。	
+	EnemyBreathAttack(EnemyCharacter* object, ParticleParameter& param, const Vector3& emitPos);
 
-	// パーティクルのパラメーターを設定。
-	void ConfigParticleParameter(ParticleParameter param) {
-		_particleEmitter->Init(param);
+	~EnemyBreathAttack() {
+		ReleaceEmitterAll();
 	}
 
 	void Entry()override {
+		_breath = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+		_breath->Init(_enemyObject);
 		_enemyObject->LookAtObject(*_player);
-		_particleEmitter->ResetInitVelocity(_enemyObject->transform->GetForward() * _particleEmitter->GetInitVelocity().Length());	// パーティクルの飛ぶ方向をえねみーの向きに再設定。
-		_isStartCollision = false;
-	};
+		// パーティクルの飛ぶ方向をエネミーの向きに再設定。
+		Vector3 initVelocity = _enemyObject->transform->GetForward();
+		initVelocity.Normalize();
+		_initParticleParam.initVelocity = initVelocity * _particleEmitter[0]->GetInitVelocity().Length();
+		_particleEmitter[0]->SetParam(_initParticleParam);
+	}
+
 	bool Update()override;
 
 	void Exit()override {
 		BreathEnd();
-		INSTANCE(GameObjectManager)->AddRemoveList(_attack);
-		_attack = nullptr;
-		_start = nullptr;
-		_end = nullptr;
+		_breath = nullptr;	// ブレスオブジェクトは自発的に消滅するため放置。
 	};
 
+	// パーティクルエミッター追加。
+	// 生成するパーティクルのパラメータ。
+	// 生成位置。
+	// 親(デフォルトはnull)。
+	// ※この関数を呼んだだけではエミットは開始されない。
+	// ※エミットする際はエミッターのSetEmitFlg関数を呼ぶ。
+	void AddParticleEmitter(const ParticleParameter& param, const Vector3& emitPos, Transform* parent = nullptr) {
+		ParticleEmitter* p = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BreathEmitter", 8);
+		p->transform->SetParent(parent);
+		p->transform->SetLocalPosition(emitPos);
+		p->Init(param);
+		p->SetEmitFlg(false);
+		_particleEmitter.push_back(p);
+	}
 
 	// ブレス開始。
 	inline void BreathStart() {
-		_particleEmitter->SetEmitFlg(true);
-		//攻撃コリジョン作成。
-		_attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(0.0f, 0.0f, 0.0f), -1.0f, _enemyObject->transform);
+		unique_ptr<vector<Particle*>> list;
+		list.reset(new vector<Particle*>);
+		_particleEmitter[0]->AchievedCreateParticleStart(list.get());
+		_breath->SetParticleList(move(list));
+		_particleEmitter[0]->SetEmitFlg(true);
+		_breath->BreathStart();
 	}
 
 	// ブレス終了。
 	inline void BreathEnd() {
-		_particleEmitter->SetEmitFlg(false);
+		_particleEmitter[0]->SetEmitFlg(false);
+		_particleEmitter[0]->AchievedCreateParticleEnd();
 	}
 
-	// 衝突判定コリジョンの更新。
-	void UpdateCollision();
-
-
+	void ReleaceEmitterAll() {
+		for (auto emitter : _particleEmitter) {
+			INSTANCE(GameObjectManager)->AddRemoveList(emitter);
+		}
+		_particleEmitter.clear();
+	}
 private:
 	GameObject* _player = nullptr;
-	ParticleEmitter* _particleEmitter = nullptr;
-	ParticleParameter _particleParam;
-	AttackCollision* _attack = nullptr;
-	Particle* _start = nullptr;	// 攻撃時、最初に生成されたパーティクル(ブレスの先頭)。
-	Particle* _end = nullptr;	// 攻撃時、最後に生成されたパーティクル(ブレスの終端)。
-	bool _isStartCollision = false;
+	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。
+	vector<ParticleEmitter*> _particleEmitter;
+	ParticleParameter _initParticleParam;
 };

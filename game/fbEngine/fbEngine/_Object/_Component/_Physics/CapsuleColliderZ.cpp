@@ -39,5 +39,7 @@ void CCapsuleColliderZ::Create(float radius, float height)
 void CCapsuleColliderZ::Resize(float radius, float height) {
 	shape->setImplicitShapeDimensions(btVector3(radius, radius, height * 0.5f));
 	_halfSize = Vector3(radius, radius, height * 0.5f + radius);
-	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+#ifdef _DEBUG
+	RecreateViewModel();
+#endif
 }

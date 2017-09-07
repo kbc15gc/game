@@ -41,14 +41,16 @@ void SphereCollider::Create( const float radius )
 void SphereCollider::Resize(float radius) {
 	shape->setImplicitShapeDimensions(btVector3(radius, radius, radius));
 	_halfSize = Vector3(radius, radius, radius);
-	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+#ifdef _DEBUG
+	RecreateViewModel();
+#endif
 }
 
-void SphereCollider::ColliderModelLoad() {
 #ifdef _DEBUG
+void SphereCollider::ColliderModelLoad() {
 
 	//当たり判定を視覚化したオブジェクト生成
 	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
 	_CollisionModel->LoadModel("SphereCollision.X");
-#endif
 }
+#endif
