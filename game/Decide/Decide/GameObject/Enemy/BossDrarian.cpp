@@ -27,7 +27,7 @@ void BossDrarian::_AwakeSubClass() {
 
 void BossDrarian::_StartSubClass() {
 	Vector3 pos = INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition();
-	transform->SetPosition(pos.x,pos.y - 0.25f,pos.z);
+	transform->SetPosition(479.19f, 68.36f, -1699.16);
 	//パラメーター初期化。
 	_MyComponent.Parameter->ParamInit(500, 500, 500, 500, 5, 5, 100, 20, 1, 0, 500, 100);
 
