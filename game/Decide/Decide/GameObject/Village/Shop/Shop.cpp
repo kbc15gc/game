@@ -94,7 +94,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	for(int idx = 0;idx < _ProductList.size();idx++)
 	{
 		//アイテムの情報を取得。
-		auto item = INSTANCE(ItemManager)->GetItemInfo((unsigned int&)_ProductList[idx]->ItemID, (ItemManager::ItemKodeE)_ProductList[idx]->Type);
+		auto item = INSTANCE(ItemManager)->GetItemInfo((unsigned int&)_ProductList[idx]->ItemID, (ItemManager::ItemCodeE)_ProductList[idx]->Type);
 
 		//nullチェック
 		if (item)
