@@ -5,6 +5,7 @@
 #include"StatusWindow.h"
 
 #include"GameObject\Inventory\Inventory.h"
+#include"ItemWindow.h"
 
 /**
 * 初期化.
@@ -17,12 +18,11 @@ void StatusWindow::Start()
 	//座標を中心に設定.
 	transform->SetPosition(Vector3(g_WindowSize.x / 2, g_WindowSize.y / 2, 0.0f));
 
-	//ウィンドウ表示コンポーネントを追加.
-	_WindowSprite = AddComponent<Sprite>();
-	//テクスチャを設定.
-	_WindowSprite->SetTexture(LOADTEXTURE("UI/Panel 5.png"));
-	Vector2 size = _WindowSprite->GetSize();
-	_WindowSprite->SetSize(size * 1.3f);
+	//バックの背景.
+	ImageObject* backWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	backWindow->SetTexture(LOADTEXTURE("UI/Panel 5.png"));
+	backWindow->SetSize(backWindow->GetSize() * 1.3f);
+	backWindow->transform->SetParent(transform);
 
 	int ParamCount = 7;
 	for (int i = 0; i < ParamCount; i++)
@@ -40,6 +40,10 @@ void StatusWindow::Start()
 	_ParameterRenderList[5]->SetParam("DEF", _Player->GetParamPt(CharacterParameter::Param::DEF));
 	_ParameterRenderList[6]->SetParam("MONEY", INSTANCE(Inventory)->GetPlayerMoneyPt());
 
+	ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", 9);
+	iw->transform->SetParent(transform);
+	_ItemWindowList.push_back(iw);
+
 	//始めは非表示.
 	this->SetActive(false, true);
 }
@@ -49,4 +53,5 @@ void StatusWindow::Start()
 */
 void StatusWindow::Update()
 {
+
 }
