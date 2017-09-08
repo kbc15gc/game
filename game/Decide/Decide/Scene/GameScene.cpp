@@ -94,7 +94,7 @@ void GameScene::Start()
 	//歴史で生成されるオブジェクト生成。
 	INSTANCE(HistoryManager)->CreateObject();
 
-	INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
+	//INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
 	INSTANCE(Inventory)->Initalize();
 

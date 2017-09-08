@@ -24,27 +24,8 @@ ShopS_Buy::ShopS_Buy(Shop * shop) :IShopState(shop)
 
 void ShopS_Buy::Update()
 {
-	//項目が変更されたか？
-	bool change = false;
-	if (change = (KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU)))
-	{
-		idx = (idx > 0) ? idx - 1 : _Shop->_ItemList.size() - 1;
-	}
-	else if (change = (KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD)))
-	{
-		idx = (idx + 1) % _Shop->_ItemList.size();
-	}
-	//変更されたか？
-	if (change)
-	{
-		//カーソルをずらす。
-		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
-		float posy = _MenuListHeight * (idx + 1) + _MenuListHeight*0.5f;
-		_Cursor->transform->SetLocalPosition(posx, posy, 0);
-		//アイテムの情報を送る。
-		_Shop->SetDescriptionText(_Shop->_ItemList[idx]->Description);
-	}
-
+	//カーソル移動。
+	MoveMenuCursor();
 
 	//決定(仮)
 	if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
@@ -64,6 +45,7 @@ void ShopS_Buy::EnterState()
 	idx = 0;
 	//メニューを作成。
 	_CreateMenu();
+	UpdateDisplayItem();
 	//ウィンドウをアクティブにする。
 	_BuyWindow->SetActive(true, true);
 }
@@ -85,6 +67,7 @@ void ShopS_Buy::_CreateMenu()
 	{
 		float height = 0.0f;
 		_MenuListHeight = 0.0f;
+		//ショップの品ぞろえと同じ量、テキストを生成。
 		auto items = _Shop->_ItemList;
 		FOR(i, items.size())
 		{
@@ -93,17 +76,16 @@ void ShopS_Buy::_CreateMenu()
 
 			//テキスト設定。
 			char t[256];
-			sprintf(t, "名前:%s,  値段:%d$,  攻撃力:%d", items[i]->Name, items[i]->Value, items[i]->AtkBuff);
+			sprintf(t, "名前:%s,  値段:%d$", items[i]->Name, items[i]->Value);
 			text->SetString(t);
 			text->SetFontSize(50);
 			text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
 
 			//高さ設定。
 			height += text->GetLength().y;
+			//最大の高さを保持。
 			_MenuListHeight = max(_MenuListHeight, text->GetLength().y);
-			//左端+アイコンの横幅。
-			float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x;
-			text->transform->SetLocalPosition(posx, height, 0);
+			//ウィンドウの子に登録。
 			text->transform->SetParent(_BuyWindow->transform);
 
 			//リストに追加。
@@ -121,6 +103,47 @@ void ShopS_Buy::_CloseMenu()
 	_MenuTexts.clear();
 }
 
-void ShopS_Buy::MoveMenuCursor(int idx)
+void ShopS_Buy::MoveMenuCursor()
 {
+	//項目が変更されたか？
+	bool change = false;
+
+	if (change = (KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU)))
+	{
+		idx = (idx > 0) ? idx - 1 : _Shop->_ItemList.size() - 1;
+	}
+	else if (change = (KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD)))
+	{
+		idx = (idx + 1) % _Shop->_ItemList.size();
+	}
+
+	//変更されたか？
+	if (change)
+	{
+		//カーソルをずらす。
+		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
+
+		float posy = _MenuListHeight * (idx + 1) + _MenuListHeight*0.5f;
+		_Cursor->transform->SetLocalPosition(posx, posy, 0);
+
+		//アイテムの情報を送る。
+		_Shop->SetDescriptionText(_Shop->_ItemList[idx]->Description);
+	}
+}
+
+void ShopS_Buy::UpdateDisplayItem()
+{
+	//取り合えず一度全て非表示にする。
+	for each (auto text in _MenuTexts)
+	{
+		text->SetActive(false);
+	}
+
+	//表示の最小添え字からカウント分表示する。
+	for (int i = _MinIdx; i < _MinIdx + (DISPLAY_ITEM_NUM-1) && i < _MenuTexts.size(); i++)
+	{
+		_MenuTexts[i]->SetActive(true);
+		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x;
+		_MenuTexts[i]->transform->SetLocalPosition(posx, _MenuListHeight * i, 0);
+	}
 }
