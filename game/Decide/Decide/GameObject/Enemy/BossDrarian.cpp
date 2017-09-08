@@ -44,7 +44,7 @@ void BossDrarian::_StartSubClass() {
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 3.5f;
+	_AttackRange = 5.0f;
 
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
@@ -61,8 +61,6 @@ void BossDrarian::_StartSubClass() {
 	_singleAttack->Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
 	_tailAttack.reset(new EnemySingleAttack(this));
 	_tailAttack->Init(static_cast<int>(AnimationDrarian::TailAttackRight), 0.2f);
-	_breathAttack.reset(new EnemyBreathAttack(this));
-	_breathAttack->Init(static_cast<int>(AnimationDrarian::Breath), 0.2f);
 
 	// 攻撃処理に使用するパーティクル設定。
 	ParticleParameter param;
@@ -80,11 +78,12 @@ void BossDrarian::_StartSubClass() {
 	param.intervalTime = 0.001f;
 	param.isBillboard = true;
 	param.isFade = true;
-	param.life = 2.0f;
+	param.life = -1.0f;
 	param.size = Vector2(0.5f, 0.5f);
-	//param.mulColor = Color::red;
-	_breathAttack->ConfigParticleParameter(param);
-	_breathAttack->BreathEnd();	// とりあえず最初はパーティクルを生成しないように設定。
+
+	// ブレス攻撃生成。
+	_breathAttack.reset(new EnemyBreathAttack(this, param, Vector3(0.0f, 0.0f, 5.0f)));
+	_breathAttack->Init(static_cast<int>(AnimationDrarian::Breath), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -224,6 +223,7 @@ void BossDrarian::_ConfigCollision() {
 	// ※キャラクターコントローラーで使用するためのもの。
 	_collisionInfo.radius = 1.8f;
 	_collisionInfo.height = 6.0f;
+	_collisionInfo.offset = 0.125f;
 
 	//// 重力設定。
 	//_Gravity = -9.8f;
@@ -329,76 +329,20 @@ void BossDrarian::_BuildSoundTable() {
 
 
 // EnemyBreathAttack。
-
-EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object) : EnemyAttack(object){
+EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object, ParticleParameter& param, const Vector3& emitPos):EnemyAttack(object) {
 	_player = INSTANCE(GameObjectManager)->FindObject("Player");
-	_particleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BreathEmitter", 8);
-	_particleEmitter->transform->SetParent(_enemyObject->transform);
-	_particleEmitter->transform->SetLocalPosition(Vector3(0.0f,0.0f,5.0f));
+	_initParticleParam = param;
+	AddParticleEmitter(param, emitPos,_enemyObject->transform);
 }
 
 bool EnemyBreathAttack::Update() {
-	// 衝突判定コリジョンの更新。
-	UpdateCollision();
+	ParticleParameter param = _particleEmitter[0]->GetParam();
+	param.size.y -= 0.1f * Time::DeltaTime();
+	_particleEmitter[0]->SetParam(param);
 
 	if (!_isPlaying) {
 		// モーション再生終了。
 		return true;
 	}
 	return false;
-}
-
-void EnemyBreathAttack::UpdateCollision() {
-
-	if (_attack) {
-		GostCollision* Gost = _attack->GetGostCollision();
-		if (Gost) {
-			Particle* start = nullptr;
-			start = _particleEmitter->GetParticleBegin();	// 最初に生成されたパーティクルを取得。
-			if (start) {
-				// パーティクルが生成されている。
-
-				Particle* end = _particleEmitter->GetParticleEnd();	// 最後に生成されたパーティクルを取得。
-				if (start != end) {
-					// パーティクルの先頭と終端が同一のパーティクルではない。
-
-					Vector3 breathEndPos = start->transform->GetPosition();	// ブレスの終端位置は最初に生成されたパーティクルの位置。
-					Vector3 breathStartPos = end->transform->GetPosition(); // ブレスの開始位置は最後に生成されたパーティクルの位置。
-
-					// ブレス開始位置から終端位置までの距離をコリジョンの奥行サイズとする。
-					float sizeZ = Vector3(breathEndPos - breathStartPos).Length();
-
-					// 判定コリジョンのサイズを変更。
-					if (start != _start || end != _end) {
-						// ブレスの大きさが変わっている。
-
-						// 直前の値を破棄し、現在の値を新しく保存。
-						_start = start;
-						_end = end;
-
-						static_cast<BoxCollider*>(const_cast<Collider*>(Gost->GetShape()))->Resize(Vector3(1.0f, 1.0f, sizeZ));
-					}
-					//const_cast<Collider*>(Gost->GetShape())->RenderDisable();
-
-					// 位置設定。
-					Gost->transform->SetPosition(breathEndPos);
-					// 位置をサイズの半分だけずらすことでコリジョンの中心を指定する。
-					Vector3 pos = Gost->transform->GetLocalPosition();
-					pos.z -= sizeZ * 0.5f;
-					Gost->transform->SetLocalPosition(pos);
-
-					_isStartCollision = true;	// 衝突判定を開始。
-				}
-				else {
-					// ブレスの開始点と終点が同じ。
-					if (_isStartCollision) {
-						// 衝突判定が開始している。
-
-						INSTANCE(GameObjectManager)->AddRemoveList(_attack);
-						_attack = nullptr;
-					}
-				}
-			}
-		}
-	}
 }

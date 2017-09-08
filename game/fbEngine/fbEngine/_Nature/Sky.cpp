@@ -52,7 +52,7 @@ void Sky::Update()
 		//大気散乱用パラメータを更新.
 		_AtomosphereParam.Update(_Camera->GetPosition(), _SunPosition);
 
-		if (_SceneLight != nullptr)
+		if (_SceneLight != nullptr && _SceneLight->GetLight().size() > 0)
 		{
 			//ライトの方向を計算.
 			Vector3 limLightDir = _SunDir;

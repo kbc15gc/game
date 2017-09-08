@@ -10,6 +10,7 @@
 #include "GameObject\AttackValue2D.h"
 #include "GameObject\Component\AnimationEvent.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
+#include "GameObject\Player\Player.h"
 
 class SkinModel;
 class Animation;
@@ -24,7 +25,7 @@ class EnemyCharacter :
 public:
 	// 自分がどの種類のエネミーか。
 	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
-	enum class EnemyType{Prot = 0,Drarian};
+	enum class EnemyType{Born = 0,Drarian};
 
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
@@ -349,6 +350,12 @@ public:
 		return _AnimationData[static_cast<int>(type)];
 	}
 
+	// 死亡時のドロップ処理。
+	inline void Drop() {
+		_DropSubClass();
+		_Player->TakeDrop(GetDropEXP(), GetDropMoney());
+	}
+
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);
@@ -378,6 +385,9 @@ protected:
 	virtual void _EndNowStateCallback(State EndStateType) {};
 
 private:
+
+	// HPバーの描画状態更新処理。
+	void _BarRenderUpdate();
 
 	// 継承先での更新処理。
 	// ※継承先で上書きして使用。
@@ -433,6 +443,10 @@ private:
 	// ※処理自体は継承先に委譲。
 	virtual void _BuildSoundTable() = 0;
 
+	// 死亡時ドロップ処理。
+	// ※継承先によって異なる処理。
+	virtual inline void _DropSubClass() = 0;
+
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
 
@@ -468,6 +482,8 @@ private:
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
+
+	Player* _Player = nullptr;			//プレイヤー
 };
 
 // エネミーの攻撃処理。

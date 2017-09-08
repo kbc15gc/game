@@ -85,6 +85,14 @@ public:
 		_F = f;
 	}
 
+	/**
+	* 有効フラグを設定.
+	*/
+	void SetEnable(bool value)
+	{
+		_isEnable = value;
+	}
+
 private:
 
 	/** 有効フラグ. */

@@ -4,6 +4,7 @@
 
 class Vertex;
 
+
 //パーティクルクラス
 class Particle :public GameObject
 {
@@ -31,6 +32,16 @@ public:
 	{
 		return _IsDead;
 	}
+	void SetIsDead(bool flg) {
+		_IsDead = flg;
+	}
+
+	void SetParam(const ParticleParameter& param);
+
+	inline const Vector3& GetVelocity() {
+		return _Velocity;
+	}
+
 private:		
 	static Vertex* _Vertex;						//頂点
 
@@ -38,7 +49,7 @@ private:
 	TEXTURE*		_Texture;					//画像
 	Effect*			_Effect;					//シェーダーエフェクト。
 	Camera*			_Camera;					//カメラ。
-	float			_Life;						//ライフ。
+	float			_Life;						//ライフ(0より小さい値で無限)。
 	float			_Timer;						//タイマー。
 	Vector3			_Velocity;					//速度。
 	Vector3			_Gravity;					//重力。

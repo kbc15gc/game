@@ -25,19 +25,25 @@ Collider::~Collider(){
 void Collider::Debug(){
 	if ((KeyBoardInput->isPush(DIK_M))) {
 		if (GetIsRender()) {
-			// 空間分割のコリジョン描画オフ。
+			// コリジョン描画オフ。
 			RenderDisable();
 		}
 		else {
-			// 空間分割のコリジョン描画オン。
+			// コリジョン描画オン。
 			RenderEnable();
 		}
 	}
 }
 #endif
 
-void Collider::CreateViewModel(const btTransform& collisionTr){
 #ifdef _DEBUG
+void Collider::RecreateViewModel() {
+	bool isEnable = _CollisionModel->GetSkinModel()->enable;
+	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+	_CollisionModel->GetSkinModel()->enable = isEnable;	// 直前の描画状態を設定。
+}
+
+void Collider::CreateViewModel(const btTransform& collisionTr){
 
 //前に設定されていたアドレスを削除
 	if (_CollisionModel)
@@ -70,11 +76,10 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 		//コリジョン描画用モデルの中心点とコリジョンの中心点の差分を設定。
 		_CollisionModel->transform->SetLocalPosition(_CollisionModelOffset);
 	}
-#endif //_DEBUG
 }
 
+
 void Collider::UpdateTransform(const btTransform& collisionTr) {
-#ifdef _DEBUG
 
 	if (_CollisionTr.get()) {
 		// 位置情報設定。
@@ -86,10 +91,9 @@ void Collider::UpdateTransform(const btTransform& collisionTr) {
 		// コリジョンのTransform情報を親に設定。
 		_CollisionModel->transform->SetParent(_CollisionTr.get());
 	}
-#endif
 }
 
-#ifdef _DEBUG
+
 bool Collider::GetIsRender() {
 	if (_CollisionModel) {
 		return _CollisionModel->GetSkinModel()->enable;

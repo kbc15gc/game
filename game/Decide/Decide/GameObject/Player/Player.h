@@ -147,6 +147,11 @@ public:
 		_PlayerParam->AddParam(CharacterParameter::ATK, atk);
 		_PlayerParam->AddParam(CharacterParameter::DEF, def);
 	}
+	int* GetParamPt(CharacterParameter::Param param)
+	{
+		return _PlayerParam->GetParamPt(param);
+	}
+
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();

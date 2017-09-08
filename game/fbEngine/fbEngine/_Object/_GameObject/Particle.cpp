@@ -79,7 +79,8 @@ void Particle::Update()
 	_Timer += deltaTime;
 	switch (_State) {
 	case eStateRun:
-		if (_Timer >= _Life) {
+		if (_Life >= 0.0f && _Timer >= _Life) {
+			// Žõ–½‚ª–³ŒÀ‚Å‚È‚¢‚©‚ÂAŽõ–½‚ª‰ß‚¬‚½B
 			if (_IsFade) {
 				_State = eStateFadeOut;
 				_Timer = 0.0f;
@@ -157,6 +158,12 @@ void Particle::Render()
 
 void Particle::Init(const ParticleParameter & param,const Vector3 & emitPosition)
 {
+	transform->SetLocalPosition(emitPosition);
+	SetParam(param);
+	_RotateZ = 3.1415 * 2.0f * (float)Random::RandDouble();
+}
+
+void Particle::SetParam(const ParticleParameter& param) {
 	_Texture = LOADTEXTURE((char*)param.texturePath);
 	_Effect = EffectManager::LoadEffect("Particle.fx");
 	this->_Camera = INSTANCE(GameObjectManager)->mainCamera;
@@ -167,7 +174,7 @@ void Particle::Init(const ParticleParameter & param,const Vector3 & emitPosition
 	_Velocity.x += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initVelocityVelocityRandomMargin.x;
 	_Velocity.y += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initVelocityVelocityRandomMargin.y;
 	_Velocity.z += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initVelocityVelocityRandomMargin.z;
-	Vector3 lpos = emitPosition;
+	Vector3 lpos = transform->GetLocalPosition();
 	lpos.x += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.x;
 	lpos.y += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.y;
 	lpos.z += (((float)Random::RandDouble() - 0.5f) * 2.0f) * param.initPositionRandomMargin.z;
@@ -183,5 +190,4 @@ void Particle::Init(const ParticleParameter & param,const Vector3 & emitPosition
 	_Brightness = param.brightness;
 	_AlphaBlendMode = param.alphaBlendMode;
 	_MulColor = param.mulColor;
-	_RotateZ = 3.1415 * 2.0f * (float)Random::RandDouble();
 }

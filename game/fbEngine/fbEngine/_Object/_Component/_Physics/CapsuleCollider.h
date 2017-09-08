@@ -24,11 +24,12 @@ public:
 	void Resize(float radius, float height);
 
 private:
+#ifdef _DEBUG
 	// 形状に応じたモデルデータをロード。
 	void ColliderModelLoad()override {
 		// カプセルはまだないので生成しない。
 	}
-
+#endif
 
 public:
 	btCollisionShape* GetBody() override

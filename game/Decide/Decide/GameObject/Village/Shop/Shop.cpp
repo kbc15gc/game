@@ -54,10 +54,13 @@ void Shop::Update()
 
 void Shop::OpenShop(const unsigned int & shopID)
 {
-	//店の商品読み込み
-	_LoadShopData(shopID);
-	//セレクトメニューを開く
-	_ChangeState(ShopStateE::Select);
+	if (_State == Shop::ShopStateE::Close)
+	{
+		//店の商品読み込み
+		_LoadShopData(shopID);
+		//セレクトメニューを開く
+		_ChangeState(ShopStateE::Select);
+	}
 }
 
 void Shop::Close()
@@ -85,10 +88,13 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	//品揃えを読み込み
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
+	//
+	_ItemList.clear();
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
 	{
-		Item::ItemInfo* item = INSTANCE(ItemManager)->GetItem((unsigned int&)_ProductList[idx]->ItemID, (unsigned int)_ProductList[idx]->Type);
+		//アイテムの情報を取得。
+		auto item = INSTANCE(ItemManager)->GetItemInfo((unsigned int&)_ProductList[idx]->ItemID, (ItemManager::ItemKodeE)_ProductList[idx]->Type);
 
 		//nullチェック
 		if (item)

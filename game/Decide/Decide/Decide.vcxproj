@@ -172,6 +172,7 @@
     <ClInclude Include="GameObject\Component\OutputData.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
     <ClInclude Include="GameObject\Enemy\BossDrarian.h" />
+    <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
     <ClInclude Include="GameObject\Enemy\EnemyManager.h" />
@@ -186,7 +187,9 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
+    <ClInclude Include="GameObject\Enemy\LaserBreath.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
+    <ClInclude Include="GameObject\GameManager.h" />
     <ClInclude Include="GameObject\Ground\Ground.h" />
     <ClInclude Include="GameObject\History\Chip.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookState.h" />
@@ -217,6 +220,8 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
+    <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h" />
+    <ClInclude Include="GameObject\StatusWindow\StatusWindow.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
     <ClInclude Include="GameObject\Village\EventManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
@@ -271,7 +276,9 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
+    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\Ground\Ground.cpp" />
     <ClCompile Include="GameObject\History\Chip.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
@@ -299,6 +306,8 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\EventManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />

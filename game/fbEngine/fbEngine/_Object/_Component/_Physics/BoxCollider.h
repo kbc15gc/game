@@ -23,8 +23,10 @@ public:
 	void Resize(const Vector3& size);
 
 private:
+#ifdef _DEBUG
 	// 形状に応じたモデルデータをロード。
 	void ColliderModelLoad()override;
+#endif // DEBUG
 
 public:
 	btCollisionShape* GetBody() override
