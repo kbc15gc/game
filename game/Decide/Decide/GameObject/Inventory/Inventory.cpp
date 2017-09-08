@@ -115,12 +115,21 @@ void Inventory::UseItem() {
 	//HoldItemBase* item = (ConsumptionItem*)_InventoryItemList[(int)ItemManager::ItemKodeE::Item][_NowLookItemPos];
 }
 
+//アイテムコードとIDを元に配列から検索。
 HoldItemBase* Inventory::FindItem(ItemManager::ItemKodeE kode, const unsigned int& id) {
+
+	//配列サイズ分検索。
 	for (int i = 0; i < INVENTORYLISTNUM; i++)
 	{
+		//発見。
 		if (_InventoryItemList[(int)kode][i]->_Info->ID == id) {
 			return _InventoryItemList[(int)kode][i];
 		}
 	}
+
+	//見つからなかった。
+	char error[256];
+	sprintf(error, "指定されたアイテムが見つかりませんでした。");
+	MessageBoxA(0, error, "アイテムの検索失敗", MB_ICONWARNING);
 	return nullptr;
 }
