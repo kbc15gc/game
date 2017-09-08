@@ -22,15 +22,15 @@ void ItemManager::LoadAllItemData()
 
 		switch (i)
 		{
-		case (int)ItemKodeE::Item:
+		case (int)ItemCodeE::Item:
 			//ファイルからアイテム情報読み込み。
 			Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemListVec);
 			break;
-		case (int)ItemKodeE::Armor:
+		case (int)ItemCodeE::Armor:
 			//ファイルから防具情報読み込み。
 			Support::LoadCSVData<Item::ArmorInfo>(filepath, Item::Armordata, ARRAY_SIZE(Item::Armordata), _ArmorList);
 			break;
-		case (int)ItemKodeE::Weapon:
+		case (int)ItemCodeE::Weapon:
 			//ファイルから武器情報読み込み。
 			Support::LoadCSVData<Item::WeaponInfo>(filepath, Item::Weapondata, ARRAY_SIZE(Item::Weapondata), _WeaponList);
 			break;

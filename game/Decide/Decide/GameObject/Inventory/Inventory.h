@@ -1,7 +1,6 @@
 #pragma once
-
+#include "GameObject\ItemManager\ItemManager.h"
 class SoundSource;
-class ItemManager;
 class HoldItemBase;
 
 const int INVENTORYLISTNUM = 5;
@@ -49,22 +48,22 @@ public:
 	}
 
 	//アイテムをインベントリに追加。
-	void AddItem(ItemManager::ItemKodeE kode, Item::BaseInfo* item);
+	void AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item);
 
 	//指定されたインベントリのリストの先頭を取得。
-	 inline const vector<HoldItemBase*>& GetInventoryList(ItemManager::ItemKodeE kode) {
-		return _InventoryItemList[(int)kode];
+	 inline const vector<HoldItemBase*>& GetInventoryList(ItemManager::ItemCodeE code) {
+		return _InventoryItemList[(int)code];
 	}
 
 	 //アイテムコードとIDを元に配列から検索。
-	 HoldItemBase* FindItem(ItemManager::ItemKodeE kode, const unsigned int& id);
+	 HoldItemBase* FindItem(ItemManager::ItemCodeE code, const unsigned int& id);
 
 	void UseItem();
 
 private:
 	
 	//インベントリ。
-	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(ItemManager::ItemKodeE::Max), vector<HoldItemBase*>(5, nullptr));
+	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(ItemManager::ItemCodeE::Max), vector<HoldItemBase*>(5, nullptr));
 
 	//今見ているアイテム。
 	int _NowLookItemPos = -1;

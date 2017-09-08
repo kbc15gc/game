@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "GameObject\ItemManager\ItemManager.h"
 #include "Inventory.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "ConsumptionItem.h"
@@ -13,28 +12,23 @@ Inventory::Inventory()
 }
 
 void Inventory::Initialize() {
-	for (int i = 0; i < 2; i++)
-	{
-		AddItem(ItemManager::ItemKodeE::Item, INSTANCE(ItemManager)->GetItemInfo(i, ItemManager::ItemKodeE::Item));
-	}
-	//_NowLookItemPos = 0;
-	//UseItem();
+	
 }
 
 //アイテムをインベントリに追加。
-void Inventory::AddItem(ItemManager::ItemKodeE kode, Item::BaseInfo* item) {
+void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
 	Item::BaseInfo* Item = nullptr;
 	HoldItemBase* Hold = nullptr;
 	char error[256];
 
 	//アイテムコードを見て作るアイテムを決める。
-	switch (kode)
+	switch (code)
 	{
 		//所持アイテム。
-	case ItemManager::ItemKodeE::Item:
+	case ItemManager::ItemCodeE::Item:
 
 		//アイテムマネジャーから追加するアイテムの情報を取得。	
-		Item = (Item::ItemInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, kode);
+		Item = (Item::ItemInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, code);
 		//所持アイテムのインスタンス作成。
 		Hold = (ConsumptionItem*)INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("ConsumptionItem", 5);
 		//所持アイテムに追加するアイテムの情報を格納。
@@ -42,10 +36,10 @@ void Inventory::AddItem(ItemManager::ItemKodeE kode, Item::BaseInfo* item) {
 		break;
 
 		//所持防具。
-	case ItemManager::ItemKodeE::Armor:
+	case ItemManager::ItemCodeE::Armor:
 
 		//アイテムマネジャーから追加する防具の情報を取得。	
-		Item = (Item::ArmorInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, kode);
+		Item = (Item::ArmorInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, code);
 		//所持防具のインスタンス作成。
 		Hold = (HoldArmor*)INSTANCE(GameObjectManager)->AddNew<HoldArmor>("HoldArmor", 5);
 		//所持防具に追加する防具の情報を格納。
@@ -53,17 +47,17 @@ void Inventory::AddItem(ItemManager::ItemKodeE kode, Item::BaseInfo* item) {
 		break;
 
 		//所持武器。
-	case ItemManager::ItemKodeE::Weapon:
+	case ItemManager::ItemCodeE::Weapon:
 
 		//アイテムマネジャーから追加する武器の情報を取得。	
-		Item = (Item::WeaponInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, kode);;
+		Item = (Item::WeaponInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, code);;
 		//所持武器のインスタンス作成。
 		Hold = (HoldWeapon*)INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("HoldWeapon", 5);
 		//所持武器に追加する武器の情報を格納。
 		Hold->_Info = Item;
 		break;
 
-	case ItemManager::ItemKodeE::Max:
+	case ItemManager::ItemCodeE::Max:
 
 		//エラー報告。
 		sprintf(error, "無効なアイテムコードが渡されました。");
@@ -82,20 +76,20 @@ void Inventory::AddItem(ItemManager::ItemKodeE kode, Item::BaseInfo* item) {
 		for (int j = 0; j < INVENTORYLISTNUM; j++)
 		{
 			//インベントリに何も無いなら追加。
-			if (_InventoryItemList[(int)kode][j] == NULL) {
+			if (_InventoryItemList[(int)code][j] == NULL) {
 
 				//追加。
-				_InventoryItemList[(int)kode][j] = Hold;
-				_InventoryItemList[(int)kode][j]->_Info->HoldNum++;
+				_InventoryItemList[(int)code][j] = Hold;
+				_InventoryItemList[(int)code][j]->_Info->HoldNum++;
 				return;
 			}
 			else
 			{
 				//追加する際に同じアイテムかを見て同じなら所持数増加。
-				if (_InventoryItemList[(int)kode][j]->_Info->ID == Hold->_Info->ID)
+				if (_InventoryItemList[(int)code][j]->_Info->ID == Hold->_Info->ID)
 				{
 					//所持数更新。
-					_InventoryItemList[(int)kode][j]->_Info->HoldNum++;
+					_InventoryItemList[(int)code][j]->_Info->HoldNum++;
 					return;
 				}
 			}
@@ -112,11 +106,11 @@ void Inventory::AddItem(ItemManager::ItemKodeE kode, Item::BaseInfo* item) {
 }
 
 void Inventory::UseItem() {
-	//HoldItemBase* item = (ConsumptionItem*)_InventoryItemList[(int)ItemManager::ItemKodeE::Item][_NowLookItemPos];
+	//HoldItemBase* item = (ConsumptionItem*)_InventoryItemList[(int)ItemManager::ItemCodeE::Item][_NowLookItemPos];
 }
 
 //アイテムコードとIDを元に配列から検索。
-HoldItemBase* Inventory::FindItem(ItemManager::ItemKodeE kode, const unsigned int& id) {
+HoldItemBase* Inventory::FindItem(ItemManager::ItemCodeE kode, const unsigned int& id) {
 
 	//配列サイズ分検索。
 	for (int i = 0; i < INVENTORYLISTNUM; i++)

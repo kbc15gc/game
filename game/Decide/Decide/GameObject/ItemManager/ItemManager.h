@@ -74,8 +74,6 @@ namespace Item {
 	};
 }
 
-class Inventory;
-
 //アイテムの情報を管理するクラス。
 class ItemManager
 {
@@ -83,7 +81,7 @@ private:
 	ItemManager();
 public:
 	
-	enum class ItemKodeE
+	enum class ItemCodeE
 	{
 		Item = 0,		//アイテム。
 		Armor = 1,		//防具。
@@ -104,16 +102,16 @@ public:
 	}
 
 	//指定された種類とIDのアイテムを取得。
-	Item::BaseInfo* GetItemInfo(const unsigned int& id, ItemKodeE kode) {
-		switch (kode)
+	Item::BaseInfo* GetItemInfo(const unsigned int& id, ItemCodeE code) {
+		switch (code)
 		{
-		case ItemKodeE::Item:
+		case ItemCodeE::Item:
 			return _ItemListVec.at(id).get();
 			break;
-		case ItemKodeE::Armor:
+		case ItemCodeE::Armor:
 			return _ArmorList.at(id).get();
 			break;
-		case ItemKodeE::Weapon:
+		case ItemCodeE::Weapon:
 			return _WeaponList.at(id).get();
 			break;
 		default:
