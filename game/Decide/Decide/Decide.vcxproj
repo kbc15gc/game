@@ -220,6 +220,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
+    <ClInclude Include="GameObject\StatusWindow\ItemWindow.h" />
     <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h" />
     <ClInclude Include="GameObject\StatusWindow\StatusWindow.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
@@ -306,6 +307,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp" />
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />

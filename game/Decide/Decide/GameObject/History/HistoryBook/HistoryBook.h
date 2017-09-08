@@ -162,7 +162,7 @@ public:
 	*/
 	HistoryPage* PutInChip(ChipID chipID, LocationCodeE code)
 	{
-		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",1);
+		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",2);
 		page->SetHistoryBook(this);
 		page->Start(chipID, code);
 		_HistoryPageList[(int)code].push_back(page);

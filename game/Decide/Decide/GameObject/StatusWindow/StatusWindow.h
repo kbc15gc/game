@@ -5,7 +5,6 @@
 
 #include"GameObject\Player\Player.h"
 #include"Parameter\ParameterRender.h"
-#include"fbEngine\_Object\_Component\_2D\Sprite.h"
 
 /**
 * ステータス画面クラス.
@@ -44,10 +43,10 @@ private:
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;
 
-	/** ウィンドウ表示クラス. */
-	Sprite* _WindowSprite = nullptr;
-
 	/** パラメータリスト. */
 	vector<ParameterRender*> _ParameterRenderList;
+
+	/** アイテム表示画面. */
+	vector<GameObject*> _ItemWindowList;
 
 };
