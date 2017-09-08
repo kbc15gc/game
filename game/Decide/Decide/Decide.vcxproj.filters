@@ -218,6 +218,9 @@
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
+      <Filter>GameObject\StatusWindow\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
   </ItemGroup>
@@ -453,6 +456,9 @@
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h">
+      <Filter>GameObject\StatusWindow\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\ItemWindow.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
   </ItemGroup>
@@ -526,6 +532,9 @@
     </Filter>
     <Filter Include="GameObject\StatusWindow">
       <UniqueIdentifier>{80a2bee9-ac93-4dbf-b2e9-ee7189ce6176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\StatusWindow\Parameter">
+      <UniqueIdentifier>{fef1dbc2-b63a-4c26-8514-3fb1b1589b9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
