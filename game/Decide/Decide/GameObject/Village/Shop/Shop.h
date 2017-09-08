@@ -66,7 +66,7 @@ public:
 	//ショップメニューを開く。
 	void OpenShop(const unsigned int& shopID);
 private:
-	//
+	//ショップを閉じる。
 	void Close();
 
 	//ステートをリストに追加。
@@ -80,20 +80,26 @@ private:
 	//説明テキストに文字を設定する。
 	void SetDescriptionText(string text);
 private:
-	//ふれんず。
+	//ふれんず。ステートを書いておく。
 	friend class ShopS_Close;
 	friend class ShopS_Select;
 	friend class ShopS_Buy;
 	friend class ShopS_Confirmation;
 
-	//ショップの名前
-	vector<unique_ptr<ShopName>> _ShopNameList;
-	//アイテムのリスト。
-	vector<Item::BaseInfo*> _ItemList;
 	//ショップのステート
 	ShopStateE _State;
 	//ショップのステートリスト。
 	vector<ShopSPtr> _StateList;
+
+	//ショップの名前
+	vector<unique_ptr<ShopName>> _ShopNameList;
+	//アイテムのリスト。
+	vector<Item::BaseInfo*> _ItemList;
+
+	//確認後に実行する関数。
+	function<void(Item::BaseInfo*)> _ShopFunc;
+	//選択しているアイテム。
+	Item::BaseInfo* _SelectItem;
 
 	//説明のウィンドウの画像。
 	ImageObject* _DescriptionWindow;

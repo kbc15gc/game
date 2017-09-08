@@ -31,4 +31,7 @@ private:
 	ImageObject* _Cursor;
 	//確認ウィンドウの画像。
 	ImageObject* _ConfirmationWindow;
+
+	//自分の前のステートを保持。
+	Shop::ShopStateE _BeforeState;
 };

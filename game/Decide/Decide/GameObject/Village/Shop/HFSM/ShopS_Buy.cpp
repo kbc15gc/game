@@ -2,6 +2,7 @@
 #include "ShopS_Buy.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\Inventory\Inventory.h"
 
 ShopS_Buy::ShopS_Buy(Shop * shop) :IShopState(shop)
 {
@@ -30,8 +31,7 @@ void ShopS_Buy::Update()
 	//決定(仮)
 	if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
-		//購入確認画面を出す。
-		_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
+		Decision();
 	}
 	//キャンセル。
 	if (KeyBoardInput->isPush(DIK_B) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
@@ -42,9 +42,10 @@ void ShopS_Buy::Update()
 
 void ShopS_Buy::EnterState()
 {
-	idx = 0;
+	_MinIdx = idx = 0;
 	//メニューを作成。
 	_CreateMenu();
+	//
 	UpdateDisplayItem();
 	//ウィンドウをアクティブにする。
 	_BuyWindow->SetActive(true, true);
@@ -52,6 +53,7 @@ void ShopS_Buy::EnterState()
 
 void ShopS_Buy::ExitState()
 {
+	_MinIdx = idx = 0;
 	//メニューを閉じる。
 	_CloseMenu();
 	_BuyWindow->SetActive(false, true);
@@ -128,6 +130,13 @@ void ShopS_Buy::MoveMenuCursor()
 
 		//アイテムの情報を送る。
 		_Shop->SetDescriptionText(_Shop->_ItemList[idx]->Description);
+
+		//リストの表示更新。
+		if(idx > _MinIdx + DISPLAY_ITEM_NUM)
+		{
+			_MinIdx = idx - (DISPLAY_ITEM_NUM - 1);
+			UpdateDisplayItem();
+		}
 	}
 }
 
@@ -140,10 +149,37 @@ void ShopS_Buy::UpdateDisplayItem()
 	}
 
 	//表示の最小添え字からカウント分表示する。
-	for (int i = _MinIdx; i < _MinIdx + (DISPLAY_ITEM_NUM-1) && i < _MenuTexts.size(); i++)
+	for (int i = _MinIdx; i < _MinIdx + DISPLAY_ITEM_NUM && i < _MenuTexts.size(); i++)
 	{
 		_MenuTexts[i]->SetActive(true);
 		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x;
 		_MenuTexts[i]->transform->SetLocalPosition(posx, _MenuListHeight * i, 0);
 	}
+}
+
+void ShopS_Buy::Decision()
+{
+	//お金が足りているか？
+	if (INSTANCE(Inventory)->GetPlayerMoney() >= _Shop->_ItemList[idx]->Value)
+	{
+		//購入関数を設定。
+		_Shop->_ShopFunc = std::bind(&ShopS_Buy::BuyItem, this, std::placeholders::_1);
+		//購入するアイテムを設定。
+		_Shop->_SelectItem = _Shop->_ItemList[idx];
+		//購入確認画面を出す。
+		_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
+	}
+	else
+	{
+		//購入できない旨を表示。
+		_Shop->SetDescriptionText("お金が足りねぇ！");
+	}
+}
+
+void ShopS_Buy::BuyItem(Item::BaseInfo *info)
+{
+	//アイテムの値段分お金を払う。
+	INSTANCE(Inventory)->SubtractPlayerMoney(info->Value);
+	//インベントリへ追加。
+	INSTANCE(Inventory)->AddInventory(info);
 }

@@ -33,6 +33,11 @@ private:
 	void MoveMenuCursor();
 	//アイテムリストの表示更新。
 	void UpdateDisplayItem();
+	//決定処理。
+	void Decision();
+	//アイテムの購入処理。
+	//[in] アイテムの情報。
+	void BuyItem(Item::BaseInfo*);
 private:
 	//現在選択している項目
 	int idx = 0;

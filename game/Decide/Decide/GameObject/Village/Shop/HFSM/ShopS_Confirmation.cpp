@@ -41,21 +41,21 @@ void ShopS_Confirmation::Update()
 	{
 		if(idx == 0)
 		{
-			//アイテムをインベントリに送る。
-
-
-			_Shop->_ChangeState(Shop::ShopStateE::Buy);
+			//設定された関数実行。
+			_Shop->_ShopFunc(_Shop->_SelectItem);
+			//もどる。
+			_Shop->_ChangeState(_BeforeState);
 		}
 		else if(idx == 1)
 		{
-			_Shop->_ChangeState(Shop::ShopStateE::Buy);
+			_Shop->_ChangeState(_BeforeState);
 		}
 	}
 
 	//キャンセル。
 	if (KeyBoardInput->isPush(DIK_B) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
 	{
-		_Shop->_ChangeState(Shop::ShopStateE::Buy);
+		_Shop->_ChangeState(_BeforeState);
 	}
 }
 
@@ -63,12 +63,14 @@ void ShopS_Confirmation::EnterState()
 {
 	//ウィンドウを非アクティブに
 	_ConfirmationWindow->SetActive(true, true);
+	_BeforeState = _Shop->_State;
 }
 
 void ShopS_Confirmation::ExitState()
 {
 	//ウィンドウを非アクティブに
 	_ConfirmationWindow->SetActive(false, true);
+	_BeforeState = Shop::ShopStateE::None;
 }
 
 void ShopS_Confirmation::DiveState()
