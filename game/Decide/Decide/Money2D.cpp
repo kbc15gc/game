@@ -97,8 +97,8 @@ void Money2D::Update()
 
 void Money2D::Initialize(int money)
 {
-	_AddMoenyLog[_UseLogCounter] = to_string(money);
-	_UseLogCounter++;
+	/*_AddMoenyLog[_UseLogCounter] = to_string(money);
+	_UseLogCounter++;*/
 	//_MoneyText->Initialize(L"", 22.0f,Color::white);
 	//	string Money = to_string(money);
 	//_MoneyText->SetString(Money.data());
