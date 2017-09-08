@@ -12,12 +12,14 @@
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
+#include "Money2D.h"
 
 
 class SkinModel;
 class Animation;
 class ParameterBar;
 class HistoryBook;
+class ItemManager;
 
 namespace
 {
@@ -138,6 +140,12 @@ public:
 	{
 		_PlayerParam->AddParam(CharacterParameter::EXP, dropexp);
 		_PlayerParam->AddParam(CharacterParameter::MONEY, money);
+	}
+
+	void SetBuff(int hp = 0, int atk = 0, int def = 0, int speed = 0) {
+		_PlayerParam->AddParam(CharacterParameter::HP,hp );
+		_PlayerParam->AddParam(CharacterParameter::ATK, atk);
+		_PlayerParam->AddParam(CharacterParameter::DEF, def);
 	}
 private:
 	//プレイヤーがダメージを受ける処理
