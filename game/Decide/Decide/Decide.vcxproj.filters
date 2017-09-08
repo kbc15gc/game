@@ -217,6 +217,17 @@
     <ClCompile Include="HoldWeapon.cpp" />
     <ClCompile Include="ConsumptionItem.cpp" />
     <ClCompile Include="HoldArmor.cpp" />
+    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp" />
+    <ClCompile Include="GameObject\GameManager.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -446,6 +457,18 @@
     <ClInclude Include="HoldWeapon.h" />
     <ClInclude Include="ConsumptionItem.h" />
     <ClInclude Include="HoldArmor.h" />
+    <ClInclude Include="GameObject\Enemy\BreathObject.h" />
+    <ClInclude Include="GameObject\Enemy\LaserBreath.h" />
+    <ClInclude Include="GameObject\GameManager.h" />
+    <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\StatusWindow.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\ItemWindow.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -514,6 +537,9 @@
     </Filter>
     <Filter Include="GameObject\Inventory">
       <UniqueIdentifier>{cef64e17-71d3-4bb3-8978-4922156435b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\StatusWindow">
+      <UniqueIdentifier>{4f31e459-f759-4bc0-a9eb-7a601cfde299}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
