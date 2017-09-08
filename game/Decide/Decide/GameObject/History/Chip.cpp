@@ -95,7 +95,7 @@ void Chip::SetChipID(ChipID chipID)
 	transform->SetLocalScale(Vector3::one);
 }
 
-void Chip::SetDropChipID(ChipID chipID, Vector3 pos)
+void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 {
 	//外部からセットしたIDを設定。
 	_ChipID = chipID;

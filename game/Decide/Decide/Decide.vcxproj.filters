@@ -210,16 +210,13 @@
     <ClCompile Include="GameObject\Inventory\Inventory.cpp">
       <Filter>GameObject\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
-      <Filter>GameObject\Enemy</Filter>
+    <ClCompile Include="Money2D.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\GameManager.cpp" />
-    <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClCompile>
+    <ClCompile Include="HoldItemBase.cpp" />
+    <ClCompile Include="HoldWeapon.cpp" />
+    <ClCompile Include="ConsumptionItem.cpp" />
+    <ClCompile Include="HoldArmor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -442,19 +439,13 @@
     <ClInclude Include="GameObject\Inventory\Inventory.h">
       <Filter>GameObject\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BreathObject.h">
-      <Filter>GameObject\Enemy</Filter>
+    <ClInclude Include="Money2D.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\LaserBreath.h">
-      <Filter>GameObject\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\GameManager.h" />
-    <ClInclude Include="GameObject\StatusWindow\StatusWindow.h">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClInclude>
+    <ClInclude Include="HoldItemBase.h" />
+    <ClInclude Include="HoldWeapon.h" />
+    <ClInclude Include="ConsumptionItem.h" />
+    <ClInclude Include="HoldArmor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -523,9 +514,6 @@
     </Filter>
     <Filter Include="GameObject\Inventory">
       <UniqueIdentifier>{cef64e17-71d3-4bb3-8978-4922156435b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\StatusWindow">
-      <UniqueIdentifier>{80a2bee9-ac93-4dbf-b2e9-ee7189ce6176}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

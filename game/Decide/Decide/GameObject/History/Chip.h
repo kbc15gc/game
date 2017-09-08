@@ -56,7 +56,7 @@ public:
 	/**
 	* 敵ドロップのチップIDを設定.
 	*/
-	void SetDropChipID(ChipID chipID, Vector3 pos);
+	void SetDropChipID(ChipID chipID, const Vector3& pos);
 
 private:
 

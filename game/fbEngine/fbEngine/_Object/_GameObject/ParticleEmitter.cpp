@@ -7,8 +7,8 @@
  */
 void ParticleEmitter::Init(const ParticleParameter& _Param )
 {
-		this->_Param = _Param;
-		_Timer = _Param.intervalTime;
+	this->_Param = _Param;
+	_Timer = _Param.intervalTime;
 }
 void ParticleEmitter::Start()
 {

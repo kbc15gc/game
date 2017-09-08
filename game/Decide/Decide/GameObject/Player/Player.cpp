@@ -159,6 +159,11 @@ void Player::Start()
 
 void Player::Update()
 {
+	if (KeyBoardInput->isPush(DIK_A)) {
+		Money2D* money = (Money2D*)INSTANCE(GameObjectManager)->FindObject("Money2D");
+			money->Initialize(100);
+	}
+
 	//–{‚ªŠJ‚¢‚Ä‚¢‚È‚¢‚Æ‚«‚Í“®‚¯‚éB
 	if (_CurrentState != nullptr 
 		&& _HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
