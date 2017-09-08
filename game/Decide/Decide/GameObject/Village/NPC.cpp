@@ -7,7 +7,7 @@
 NPC::NPC(const char * name):
 	ContinentObject(name),
 	_Height(1.5f),
-	_Radius(2.0f)
+	_Radius(4.0f)
 {
 }
 

@@ -17,13 +17,13 @@ namespace
 	//各コインのポジション
 	Vector3 pos[] =
 	{
-		Vector3(344, 69, -1255),
-		Vector3(385, 69, -1275),
-		Vector3(356, 69, -1245),
+		Vector3(75, 69, -1387),
+		Vector3(65, 69, -1387),
+		Vector3(70, 69, -1387),
 	};
 
 	//あたり判定の距離。
-	const float atari = 1.2f;
+	const float atari = 1.5f;
 	//回転のスピード
 	const float rotation_speed = 2.0f;
 
@@ -95,7 +95,7 @@ void Chip::SetChipID(ChipID chipID)
 	transform->SetLocalScale(Vector3::one);
 }
 
-void Chip::SetDropChipID(ChipID chipID, Vector3 pos)
+void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 {
 	//外部からセットしたIDを設定。
 	_ChipID = chipID;

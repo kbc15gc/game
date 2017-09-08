@@ -4,7 +4,7 @@
 
 class ParameterBar;
 
-enum BarColor { Red = 0, Yellow, Green, Blue };
+enum BarColor { None = -1,Red = 0, Yellow, Green, Blue,Max };
 
 // バーの中身。
 class BarElement:public ImageObject{
@@ -131,6 +131,11 @@ public:
 	inline void SetParentComponet(ParameterBar* parent) {
 		_parentComponent = parent;
 	}
+
+	inline void SetIsRender(bool flg) {
+		_isRender = flg;
+	}
+
 private:
 	short _MaxBarNum;	// 何ゲージ分重ねるか。
 	vector<unique_ptr<BarElement>> _BarElement;	// バー。
@@ -148,6 +153,7 @@ private:
 	unique_ptr<ImageObject> _BarFrame;	// バーの枠。
 private:
 	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
+	bool _isRender = false;
 };
 
 // バー。
@@ -206,6 +212,13 @@ public:
 	// HadBarのTransform情報を取得。
 	inline Transform* GetTransform()const {
 		return _Object->transform;
+	}
+
+	inline void RenderEnable() {
+		_Object->SetIsRender(true);
+	}
+	inline void RenderDisable() {
+		_Object->SetIsRender(false);
 	}
 
 private:

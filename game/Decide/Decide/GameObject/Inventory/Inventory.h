@@ -220,6 +220,11 @@ public:
 		return _PlayerMoney;
 	}
 
+	int* GetPlayerMoneyPt()
+	{
+		return &_PlayerMoney;
+	}
+
 	//プレイヤーの所持金に加算。
 	void AddPlayerMoney(int add)
 	{
@@ -245,7 +250,7 @@ private:
 	int _ItemListSelectPos, _ArmorListSelectPos, _WeaponListSelectPos = 0;
 
 	//所持金。
-	int _PlayerMoney = 0;
+	int _PlayerMoney = 100;
 
 	//インベントリに追加or取り出す時の音。
 	SoundSource* _AddOrOutSE = nullptr;

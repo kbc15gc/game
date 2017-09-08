@@ -45,6 +45,14 @@ void OutputData::Start()
 	}
 	_CreateTextObject(OutputInfo::Attach, "ComponentsView", Vector3(0.0f, 15.0f, 0.0f), "", 25.0f, Color::blue);
 	OutputTextAttach();
+
+	// 最初は非アクティブにする。
+	if (this->enable) {
+		this->enable = false;
+		for (auto t : _outputTexts) {
+			t->SetActive(false);
+		}
+	}
 }
 
 void OutputData::Update() {

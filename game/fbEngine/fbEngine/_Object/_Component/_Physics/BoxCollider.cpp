@@ -39,14 +39,16 @@ void BoxCollider::Create( const Vector3& size )
 void BoxCollider::Resize(const Vector3& size) {
 	_Shape->setImplicitShapeDimensions(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
 	_halfSize = size * 0.5f;
-	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+#ifdef _DEBUG
+	RecreateViewModel();
+#endif
 }
 
-void BoxCollider::ColliderModelLoad() {
 #ifdef _DEBUG
+void BoxCollider::ColliderModelLoad() {
 
 	//当たり判定を視覚化したオブジェクト生成
 	_CollisionModel = INSTANCE(GameObjectManager)->AddNew<ModelObject>("ShowCollision", 10);
 	_CollisionModel->LoadModel("BoxCollision.X");
-#endif
 }
+#endif

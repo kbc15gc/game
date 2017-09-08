@@ -176,13 +176,15 @@ void BarAdapter::Update() {
 }
 
 void BarAdapter::ImageRender() {
-	// 背面のものから描画していく。
-	if (_isRenderFrame) {
-		// バーの枠を描画する。
-		_BarFrame->GetComponentManager().ImageRender();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
-	}
-	for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
-		_BarElement[idx]->ImageRender(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+	if (_isRender) {
+		// 背面のものから描画していく。
+		if (_isRenderFrame) {
+			// バーの枠を描画する。
+			_BarFrame->GetComponentManager().ImageRender();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+		}
+		for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
+			_BarElement[idx]->ImageRender(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+		}
 	}
 }
 

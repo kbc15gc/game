@@ -13,6 +13,14 @@ public:
 	void Render();
 	void Release();
 
+	/**
+	* 有効フラグを設定.
+	*/
+	void SetEnable(bool value)
+	{
+		_IsEnable = value;
+	}
+
 private:
 	void _UpdateWeight(const float& dis);
 
@@ -20,7 +28,7 @@ private:
 	//
 	Vertex* _Vertex;
 	//有効フラグ. 
-	bool _IsEnable;
+	bool _IsEnable = true;
 
 	//重みの数
 	static const int NUM_WEIGHTS = 8;

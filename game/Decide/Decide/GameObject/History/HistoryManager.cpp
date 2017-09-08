@@ -32,6 +32,24 @@ void HistoryManager::Start()
 {
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+
+	FOR(i, _LocationHistoryList.size())
+	{
+		for (int j = 0; j < (int)ChipID::ChipNum; j++)
+		{
+			if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
+			{
+				continue;
+			}
+			//読み込んだデータを元に歴史書にページをあらかじめ追加。
+			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
+			page->transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
+			page->ChangeState(HistoryPage::StateCodeE::Close);
+		}
+	}
+
+	//歴史で生成されるオブジェクト生成。
+	CreateObject();
 }
 
 /**

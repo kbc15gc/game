@@ -82,6 +82,11 @@ public:
 		return _Param[idx];
 	}
 
+	int* GetParamPt(Param param)
+	{
+		return &_Param[param];
+	}
+
 	// 全パラメーター取得。
 	inline const vector<int>& GetParams() {
 		return _Param;

@@ -90,8 +90,10 @@ void Collision::_UpdateCollisionTrans()
 		//回転を設定
 		trans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 
+#ifdef _DEBUG
 		// コリジョン描画用モデルのTransform情報更新。
 		_Shape->UpdateTransform(trans);
+#endif
 	}
 }
 

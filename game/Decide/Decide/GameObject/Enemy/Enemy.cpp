@@ -22,7 +22,7 @@ void Enemy::CreateAttackCollision() {
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
 	attack->RemoveParent();
 
 	// 攻撃音再生。
@@ -40,7 +40,7 @@ void Enemy::_AwakeSubClass() {
 void Enemy::_StartSubClass(){
 	// 視野角生成。
 	_ViewAngle = 90.0f;
-	_ViewRange = 5.0f;
+	_ViewRange = 10.0f;
 
 	// 攻撃可能範囲設定。
 	_AttackRange = 1.3f;
@@ -132,13 +132,14 @@ void Enemy::_ConfigCollision() {
 
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
-	_Radius = 0.5f;
-	_Height = 1.5f;
+	_collisionInfo.radius = 0.3f;
+	_collisionInfo.height = 0.3f;
+	_collisionInfo.offset = Vector3(0.0f, 0.45f, 0.0f);
 
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。
-	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_Radius,_Height);
+	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
 }
 
 void Enemy::_ConfigCharacterController() {

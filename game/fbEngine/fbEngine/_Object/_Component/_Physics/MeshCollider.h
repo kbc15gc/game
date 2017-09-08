@@ -20,11 +20,12 @@ public:
 	void Create(SkinModel* model);
 
 private:
+#ifdef _DEBUG
 	// 形状に応じたモデルデータをロード。
 	void ColliderModelLoad()override {
 		// メッシュの形状なので生成しない。
 	}
-
+#endif
 public:
 	btCollisionShape* GetBody() override
 	{

@@ -33,6 +33,9 @@
 
 #include "GameObject\Village\Shop\Shop.h"
 
+#include"GameObject\GameManager.h"
+#include"GameObject\StatusWindow\StatusWindow.h"
+
 ImageObject* g_depth;
 
 void GameScene::Start()
@@ -91,8 +94,6 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(HistoryManager)->Start();
-	//歴史で生成されるオブジェクト生成。
-	INSTANCE(HistoryManager)->CreateObject();
 
 	//INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
@@ -101,6 +102,9 @@ void GameScene::Start()
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
+
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", 9);
+	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	//シャドウマップ有効.
 	_isShadowMap = true;
@@ -121,9 +125,10 @@ void GameScene::Start()
 void GameScene::Update()
 {
 	//スタートボタンの押下確認
-	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
+	bool back = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
+	bool start = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
 	//エンターキー
-	if ((flag || KeyBoardInput->isPush(DIK_DELETE)))
+	if ((back && start) || KeyBoardInput->isPush(DIK_DELETE))
 	{
 		//タイトルシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);

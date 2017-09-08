@@ -63,6 +63,9 @@ void EnemyCharacter::Start() {
 	// 継承先で初期位置が設定された可能性があるため更新。
 	_MyComponent.CharacterController->Execute();
 	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
+	
+	//プレイヤー。
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void EnemyCharacter::Update() {
@@ -74,6 +77,8 @@ void EnemyCharacter::Update() {
 			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
 		}
 	}
+
+	_BarRenderUpdate();
 
 	// 継承先により変わる処理。
 	_UpdateSubClass();
@@ -152,6 +157,17 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 }
 
 
+void EnemyCharacter::_BarRenderUpdate() {
+	if (_MyComponent.HPBar) {
+		float distance = 60.0f;
+		if (Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length() <= distance) {
+			_MyComponent.HPBar->RenderEnable();
+		}
+		else {
+			_MyComponent.HPBar->RenderDisable();
+		}
+	}
+}
 
 void EnemyCharacter::_BuildMyComponents() {
 	// モデル情報を追加。
@@ -176,7 +192,7 @@ void EnemyCharacter::_BuildCollision() {
 	// コリジョンのパラメータを決定。
 	_ConfigCollision();
 
-	if (_Radius <= 0.0f || _Height <= 0.0f) {
+	if (_collisionInfo.radius <= 0.0f || _collisionInfo.height <= 0.0f) {
 		// 継承先でサイズ設定してる？。
 		abort();
 	}
@@ -187,7 +203,7 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(this, transform,Vector3::zero, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
+	_MyComponent.CharacterController->Init(this, transform,_collisionInfo.offset, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
@@ -311,7 +327,7 @@ void EnemyCharacter::GiveDamage(int damage) {
 	}
 
 	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-	attackvalue->Init(Vector3::zero,_damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+	attackvalue->Init(transform->GetPosition(),_damage, 1.5f, Vector3(0.0f, _collisionInfo.height, 0.0f));
 	attackvalue->transform->SetParent(transform);
 }
 
