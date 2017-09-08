@@ -7,12 +7,21 @@ void LaserBreath::Start() {
 }
 
 void LaserBreath::Update() {
+	if (_particleList) {
+		for (auto particle : *_particleList) {
+			Vector3 size = particle->transform->GetLocalScale();
+			size.y -= 0.1f * Time::DeltaTime();
+			particle->transform->SetLocalScale(size);
+		}
+	}
+
 	_UpdateCollision();
 }
 
 void LaserBreath::BreathStart(){
 	//攻撃コリジョン作成。
 	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(0.0f, 0.0f, 0.0f), -1.0f, _enemyObject->transform);
+	attack->RemoveParent();
 	_attack.push_back(attack);
 }
 
@@ -53,7 +62,9 @@ void LaserBreath::_UpdateCollision() {
 					Gost->transform->SetPosition(breathEndPos);
 					// 位置をサイズの半分だけずらすことでコリジョンの中心を指定する。
 					Vector3 pos = Gost->transform->GetLocalPosition();
-					pos.z -= sizeZ * 0.5f;
+					Vector3 dir = start->GetVelocity();
+					dir.Normalize();
+					pos -= dir * sizeZ * 0.5f;
 					Gost->transform->SetLocalPosition(pos);
 				}
 

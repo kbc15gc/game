@@ -40,7 +40,7 @@ void Enemy::_AwakeSubClass() {
 void Enemy::_StartSubClass(){
 	// ‹–ìŠp¶¬B
 	_ViewAngle = 90.0f;
-	_ViewRange = 5.0f;
+	_ViewRange = 10.0f;
 
 	// UŒ‚‰Â”\”ÍˆÍİ’èB
 	_AttackRange = 1.3f;

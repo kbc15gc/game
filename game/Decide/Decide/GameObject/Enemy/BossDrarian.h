@@ -2,6 +2,7 @@
 #include "EnemyCharacter.h"
 #include "fbEngine\_Object\_GameObject\ParticleEmitter.h"
 #include "GameObject\Enemy\LaserBreath.h"
+#include "GameObject\History\Chip.h"
 
 class EnemyBreathAttack;
 
@@ -67,6 +68,12 @@ private:
 
 	// 効果音のテーブル作成関数。
 	void _BuildSoundTable()override;
+
+	inline void _DropSubClass()override {
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
+		chip->SetDropChipID(ChipID::Oil, transform->GetPosition());
+	}
+
 private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
@@ -143,6 +150,7 @@ public:
 		}
 		_particleEmitter.clear();
 	}
+
 private:
 	GameObject* _player = nullptr;
 	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。

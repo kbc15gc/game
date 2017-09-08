@@ -2,6 +2,7 @@
 
 namespace Item {
 
+	//アイテムと武器と防具の共通項目をまとめた構造体。
 	struct BaseInfo :public Noncopyable
 	{
 		int TypeID;				//種類(アイテムは0)。
@@ -9,6 +10,7 @@ namespace Item {
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説名。
 		int Value;				//値段。
+		int HoldNum;			//所持数。
 	};
 	//アイテムの情報をまとめた構造体。
 	struct ItemInfo :public BaseInfo
@@ -72,6 +74,8 @@ namespace Item {
 	};
 }
 
+class Inventory;
+
 //アイテムの情報を管理するクラス。
 class ItemManager
 {
@@ -84,6 +88,7 @@ public:
 		Item = 0,		//アイテム。
 		Armor = 1,		//防具。
 		Weapon = 2,		//武器。
+		Max
 	};
 
 	//アイテム、武器、防具を一括で読み込み。
@@ -129,7 +134,6 @@ public:
 		}
 		return _Instance;
 	}
-
 private:
 	//アイテムのリスト。
 	vector<unique_ptr<Item::ItemInfo>> _ItemList[3];

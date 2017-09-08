@@ -113,16 +113,16 @@ EnemyAttack* BossDrarian::AttackSelect() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
-	//int rnd = rand() % 3;
-	//if (rnd == 0) {
-	//	return _singleAttack.get();
-	//}
-	//else if (rnd == 1) {
+	int rnd = rand() % 3;
+	if (rnd == 0) {
+		return _singleAttack.get();
+	}
+	else if (rnd == 1) {
 		return _breathAttack.get();
-	//}
-	//else {
-	//	return _tailAttack.get();
-	//}
+	}
+	else {
+		return _tailAttack.get();
+	}
 }
 
 void BossDrarian::AnimationEvent_Kamituki() {
@@ -336,10 +336,9 @@ EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object, ParticleParameter& 
 }
 
 bool EnemyBreathAttack::Update() {
-
 	ParticleParameter param = _particleEmitter[0]->GetParam();
 	param.size.y -= 0.1f * Time::DeltaTime();
-	_particleEmitter[0]->ResetParameterAlreadyCreated(param);
+	_particleEmitter[0]->SetParam(param);
 
 	if (!_isPlaying) {
 		// モーション再生終了。

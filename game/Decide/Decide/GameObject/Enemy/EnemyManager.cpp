@@ -4,6 +4,7 @@
 #include "EnemyCharacter.h"
 #include "Enemy.h"
 #include "GameObject\SplitSpace.h"
+#include "GameObject\Enemy\BossDrarian.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -45,11 +46,19 @@ void EnemyManager::CreateEnemy() {
 	for (auto info : _enemys)
 	{
 		EnemyCharacter* enemy = nullptr;
+		vector<BarColor> Color;
 		switch (static_cast<EnemyCharacter::EnemyType>(info->InfoData->type))
 		{
-		case EnemyCharacter::EnemyType::Prot:
-			// プロトエネミー生成。
+		case EnemyCharacter::EnemyType::Born:
+			// 骨エネミー生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
+			Color.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::Drarian:
+			// ドラリアン生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyProt", 1);
+			Color.push_back(BarColor::Yellow);
+			Color.push_back(BarColor::Red);
 			break;
 		}
 
@@ -60,8 +69,6 @@ void EnemyManager::CreateEnemy() {
 			enemy->transform->SetRotation(info->InfoData->rotation);
 			enemy->transform->SetScale(info->InfoData->scale);
 			// パラメーター設定。
-			vector<BarColor> Color;
-			Color.push_back(BarColor::Red);
 			enemy->SetParamAll(Color, info->InfoData->param);
 		}
 		else {
@@ -79,17 +86,22 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			// このクラスで生成したエネミーが死亡している。
 
 			// エネミーをリスポーン。
+			vector<BarColor> Color;
 			ObjectSpawn* Spawner = enemy->Object->GetSpawner();
 			if (Spawner) {
 				switch (static_cast<EnemyCharacter::EnemyType>(enemy->InfoData->type)) {
-				case EnemyCharacter::EnemyType::Prot:
+				case EnemyCharacter::EnemyType::Born:
 					enemy->Object = Spawner->DeathAndRespawnObject<Enemy>(nullptr, 0.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::Drarian:
+					enemy->Object = Spawner->DeathAndRespawnObject<BossDrarian>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Yellow);
+					Color.push_back(BarColor::Red);
 					break;
 				}
 			}
 			// パラメーター設定。
-			vector<BarColor> Color;
-			Color.push_back(BarColor::Red);
 			enemy->Object->SetParamAll(Color,enemy->InfoData->param);
 			return;
 		}

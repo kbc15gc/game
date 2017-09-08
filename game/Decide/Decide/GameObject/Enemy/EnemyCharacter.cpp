@@ -63,6 +63,9 @@ void EnemyCharacter::Start() {
 	// 継承先で初期位置が設定された可能性があるため更新。
 	_MyComponent.CharacterController->Execute();
 	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
+	
+	//プレイヤー。
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void EnemyCharacter::Update() {
@@ -74,6 +77,8 @@ void EnemyCharacter::Update() {
 			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
 		}
 	}
+
+	_BarRenderUpdate();
 
 	// 継承先により変わる処理。
 	_UpdateSubClass();
@@ -152,6 +157,17 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 }
 
 
+void EnemyCharacter::_BarRenderUpdate() {
+	if (_MyComponent.HPBar) {
+		float distance = 60.0f;
+		if (Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length() <= distance) {
+			_MyComponent.HPBar->RenderEnable();
+		}
+		else {
+			_MyComponent.HPBar->RenderDisable();
+		}
+	}
+}
 
 void EnemyCharacter::_BuildMyComponents() {
 	// モデル情報を追加。

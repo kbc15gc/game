@@ -30,11 +30,17 @@ private:
 	void _CreateMenu();
 	void _CloseMenu();
 	//カーソルを移動させる
-	//[in] メニューの何番目に移動するか？
-	void MoveMenuCursor(int idx);
+	void MoveMenuCursor();
+	//アイテムリストの表示更新。
+	void UpdateDisplayItem();
 private:
 	//現在選択している項目
 	int idx = 0;
+	//表示する範囲。
+	int _MinIdx = 0;
+	//ショップに表示する数。
+	const int DISPLAY_ITEM_NUM = 5;
+
 	//カーソルの画像。
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。

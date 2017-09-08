@@ -337,6 +337,12 @@ public:
 		this->z += in.z;
 	}
 
+	void operator -= (Vector3 in) {
+		this->x -= in.x;
+		this->y -= in.y;
+		this->z -= in.z;
+	}
+
 	Vector3 operator + (Vector3 in) const
 	{
 		Vector3 out;
