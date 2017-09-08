@@ -12,7 +12,6 @@
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
-#include "Money2D.h"
 
 
 class SkinModel;
