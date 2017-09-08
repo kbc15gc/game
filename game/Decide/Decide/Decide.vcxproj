@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
+    <ClInclude Include="ConsumptionItem.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\AttackValue2D.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
+    <ClInclude Include="GameObject\StatusWindow\ItemWindow.h" />
     <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h" />
     <ClInclude Include="GameObject\StatusWindow\StatusWindow.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
@@ -234,6 +236,10 @@
     <ClInclude Include="GameObject\Village\Shop\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameSystem.h" />
+    <ClInclude Include="HoldArmor.h" />
+    <ClInclude Include="HoldItemBase.h" />
+    <ClInclude Include="HoldWeapon.h" />
+    <ClInclude Include="Money2D.h" />
     <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
@@ -242,6 +248,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
+    <ClCompile Include="ConsumptionItem.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\AttackValue2D.cpp" />
@@ -300,6 +307,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp" />
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
@@ -313,6 +321,10 @@
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Sell.cpp" />
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
+    <ClCompile Include="HoldArmor.cpp" />
+    <ClCompile Include="HoldItemBase.cpp" />
+    <ClCompile Include="HoldWeapon.cpp" />
+    <ClCompile Include="Money2D.cpp" />
     <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />

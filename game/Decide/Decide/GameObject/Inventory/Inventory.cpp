@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "Inventory.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
+#include "ConsumptionItem.h"
+#include "HoldArmor.h"
+#include "HoldWeapon.h"
 
 Inventory* Inventory::_InventoryInstance = nullptr;
 
@@ -7,274 +11,119 @@ Inventory::Inventory()
 {
 }
 
-//各インベントリの初期化。
-void Inventory::Initalize()
-{
-	//追加or取り出す音の初期化。
-	_AddOrOutSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("_AddOrOutSE", 0);
-	_AddOrOutSE->Init("Asset/Sound/Inventory_AddOrOutSE.wav");
-	_AddOrOutSE->SetVolume(2.0f);
-
-	//ファイルネーム
-	const char* filename[] = { "Item","Armor","Weapon", };
-	FOR(i, ARRAY_SIZE(filename)) {
-		switch (i)
-		{
-			//プレイヤーのアイテムのインベントリ。
-		case (int)ItemManager::ItemKodeE::Item:
-
-			for (int j = 0; j < INVENTORYLISTNUM; j++)
-			{
-				_PlayerItemListInitialize(j);
-			}
-			break;
-			//プレイヤーの防具のインベントリ。
-		case (int)ItemManager::ItemKodeE::Armor:
-
-			for (int j = 0; j < INVENTORYLISTNUM; j++)
-			{
-				_PlayerArmorListInitialize(j);
-			}
-			break;
-			//プレイヤーの武器のインベントリ。
-		case (int)ItemManager::ItemKodeE::Weapon:
-
-			for (int j = 0; j < INVENTORYLISTNUM; j++)
-			{
-				_PlayerWeaponListInitialize(j);
-			}
-			break;
-		}
-	}
-}
-//プレイヤーのアイテムのインベントリを初期化。
-void Inventory::_PlayerItemListInitialize(int i) {
-	_PlayerItemList[i].TypeID = -1;
-	_PlayerItemList[i].ID = -1;
-	strcpy(_PlayerItemList[i].Name, "None");
-	strcpy(_PlayerItemList[i].Description, "None");
-	_PlayerItemList[i].Value = -1;
-	_PlayerItemList[i].Recovery = -1;
-	_PlayerItemList[i].AtkBuff = -1;
-	_PlayerItemList[i].DefBuff = -1;
-	_PlayerItemList[i].SpeedBuff = -1;
-	_PlayerItemList[i].HoldNum = 0;
-}
-
-//プレイヤーの防具のインベントリを初期化。
-void Inventory::_PlayerArmorListInitialize(int i)
-{
-	_PlayerArmorList[i].TypeID = -1;
-	_PlayerArmorList[i].ID = -1;
-	strcpy(_PlayerArmorList[i].Name, "None");
-	strcpy(_PlayerArmorList[i].Description, "None");
-	_PlayerArmorList[i].Value = -1;
-	_PlayerArmorList[i].ATK = -1;
-	_PlayerArmorList[i].DEF = -1;
-	_PlayerArmorList[i].HoldNum = 0;
-}
-
-//プレイヤーの武器のインベントリを初期化。
-void Inventory::_PlayerWeaponListInitialize(int i)
-{
-	_PlayerWeaponList[i].TypeID = -1;
-	_PlayerWeaponList[i].ID = -1;
-	strcpy(_PlayerWeaponList[i].Name, "None");
-	strcpy(_PlayerWeaponList[i].Description, "None");
-	_PlayerWeaponList[i].Value = -1;
-	_PlayerWeaponList[i].ATK = -1;
-	_PlayerWeaponList[i].HoldNum = 0;
-}
-
-//インベントリにアイテムを追加する。
-void Inventory::AddInventory(Item::BaseInfo * item)
-{
-	//NULLチェック。
-	if (NULL != item)
-	{
-		switch (item->TypeID)
-		{
-			//アイテムの追加。
-		case (int)ItemManager::ItemKodeE::Item:
-			//追加するアイテムか所持数を増やすアイテムかチェック。
-			_ItemAddCheckAndPos((Item::ItemInfo*)item);	
-			break;
-
-			//防具の追加。
-		case (int)ItemManager::ItemKodeE::Armor:
-			//追加する防具か所持数を増やすアイテムかチェック。
-			_ArmorAddCheckAndPos((Item::ArmorInfo*)item);
-			break;
-
-			//武器の追加。
-		case (int)ItemManager::ItemKodeE::Weapon:
-			//追加する武器か所持数を増やすアイテムかチェック。
-			_WeaponAddCheckAndPos((Item::WeaponInfo*)item);
-			break;
-
-			//例外処理。
-		default:
-			char error[256];
-			sprintf(error, "指定したアイテムコードコードが無効です。");
-			MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-			break;
-		}
-	}
-	else
-	{
-		char error[256];
-		sprintf(error, "追加するアイテムがNULLでした。");
-		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-	}
-}
-
-//追加するアイテムをアイテムのインベントリから探しあれば所持数だけを増やし、なければ空いている場所に追加し、どちらでもなければエラーを出す。
-void Inventory::_ItemAddCheckAndPos(Item::ItemInfo *item)
-{
-	//アイテムのインベントリの空きを検索。
-	for (int i = 0; i < INVENTORYLISTNUM; i++)
-	{
-		//空きチェック。
-		if (_PlayerItemList[i].TypeID == -1) {
-
-			//追加処理。
-			_AddItem(i, item);
-
-			//音再生。
-			_AddOrOutSE->Play(false);
-			return;
-
-		}
-		//同じアイテムを検索。
-		else if(_PlayerItemList[i].ID == item->ID)
-		{
-			//所持数を増加。
-			_PlayerItemList[i].HoldNum++;
-
-			//音再生。
-			_AddOrOutSE->Play(false);
-			return;
-		}
-	}
-
-	char error[256];
-	sprintf(error, "アイテムのインベントリが一杯で追加できませんでした。");
-	MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-}
-
-void Inventory::_ArmorAddCheckAndPos(Item::ArmorInfo *armor)
-{
-	//アイテムのインベントリの空きを検索。
-	for (int i = 0; i < INVENTORYLISTNUM; i++)
-	{
-		//空きチェック。
-		if (_PlayerArmorList[i].TypeID == -1) {
-
-			//追加処理。
-			_AddArmor(i, armor);
-
-			//音再生。
-			_AddOrOutSE->Play(false);
-			return;
-
-		}
-		//同じアイテムを検索。
-		else if (_PlayerArmorList[i].ID == armor->ID)
-		{
-			//所持数を増加。
-			_PlayerArmorList[i].HoldNum++;
-
-			//音再生。
-			_AddOrOutSE->Play(false);
-			return;
-		}
-	}
-
-	char error[256];
-	sprintf(error, "防具のインベントリが一杯で追加できませんでした。");
-	MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-}
-
-void Inventory::_WeaponAddCheckAndPos(Item::WeaponInfo* weapon)
-{
-	//アイテムのインベントリの空きを検索。
-	for (int i = 0; i < INVENTORYLISTNUM; i++)
-	{
-		//空きチェック。
-		if (_PlayerArmorList[i].TypeID == -1) {
-
-			//追加処理。
-			_AddWeapon(i, weapon);
-
-			//音再生。
-			_AddOrOutSE->Play(false);
-			return;
-
-		}
-		//同じアイテムを検索。
-		else if (_PlayerArmorList[i].ID == weapon->ID)
-		{
-			//所持数を増加。
-			_PlayerArmorList[i].HoldNum++;
-
-			//音再生。
-			_AddOrOutSE->Play(false);
-			return;
-		}
-	}
-	char error[256];
-	sprintf(error, "アイテムのインベントリが一杯で追加できませんでした。");
-	MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+void Inventory::Initialize() {
+	
 }
 
 //アイテムをインベントリに追加。
-void Inventory::_AddItem(int AddPos, Item::ItemInfo *item)
-{
-	_PlayerItemList[AddPos].TypeID = item->TypeID;
-	_PlayerItemList[AddPos].ID = item->ID;
-	strcpy(_PlayerItemList[AddPos].Name, item->Name);
-	strcpy(_PlayerItemList[AddPos].Description, item->Description);
-	_PlayerItemList[AddPos].Value = item->Value;
-	_PlayerItemList[AddPos].Recovery = item->Recovery;
-	_PlayerItemList[AddPos].AtkBuff = item->AtkBuff;
-	_PlayerItemList[AddPos].DefBuff = item->DefBuff;
-	_PlayerItemList[AddPos].SpeedBuff = item->SpeedBuff;
-	_PlayerItemList[AddPos].HoldNum++;
-}
+void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
+	Item::BaseInfo* Item = nullptr;
+	HoldItemBase* Hold = nullptr;
+	char error[256];
 
-//防具をインベントリに追加。
-void Inventory::_AddArmor(int AddPos, Item::ArmorInfo *armor)
-{
-	_PlayerArmorList[AddPos].TypeID = armor->TypeID;
-	_PlayerArmorList[AddPos].ID = armor->ID;
-	strcpy(_PlayerArmorList[AddPos].Name, armor->Name);
-	strcpy(_PlayerArmorList[AddPos].Description, armor->Description);
-	_PlayerArmorList[AddPos].Value = armor->Value;
-	_PlayerArmorList[AddPos].ATK = armor->ATK;
-	_PlayerArmorList[AddPos].DEF = armor->DEF;
-	_PlayerArmorList[AddPos].HoldNum++;
-}
-
-//武器をインベントリに追加。
-void Inventory::_AddWeapon(int AddPos, Item::WeaponInfo *weapon)
-{
-	_PlayerWeaponList[AddPos].TypeID = weapon->TypeID;
-	_PlayerWeaponList[AddPos].ID = weapon->ID;
-	strcpy(_PlayerWeaponList[AddPos].Name, weapon->Name);
-	strcpy(_PlayerArmorList[AddPos].Description, weapon->Description);
-	_PlayerWeaponList[AddPos].Value = weapon->Value;
-	_PlayerWeaponList[AddPos].ATK = weapon->ATK;
-	_PlayerArmorList[AddPos].HoldNum++;
-}
-
-//アイテムを使う。
-tuple<int, int, int, int>Inventory::UseItem(int pos) {
-	if (_PlayerItemList[pos].HoldNum > 0) {
-		_PlayerItemList[pos].HoldNum--;
-		return forward_as_tuple(_PlayerItemList[pos].Recovery, _PlayerItemList[pos].AtkBuff, _PlayerItemList[pos].DefBuff, _PlayerItemList[pos].SpeedBuff);
-	}
-	else
+	//アイテムコードを見て作るアイテムを決める。
+	switch (code)
 	{
-		return forward_as_tuple(0, 0, 0, 0);
+		//所持アイテム。
+	case ItemManager::ItemCodeE::Item:
+
+		//アイテムマネジャーから追加するアイテムの情報を取得。	
+		Item = (Item::ItemInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, code);
+		//所持アイテムのインスタンス作成。
+		Hold = (ConsumptionItem*)INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("ConsumptionItem", 5);
+		//所持アイテムに追加するアイテムの情報を格納。
+		Hold->_Info = Item;
+		break;
+
+		//所持防具。
+	case ItemManager::ItemCodeE::Armor:
+
+		//アイテムマネジャーから追加する防具の情報を取得。	
+		Item = (Item::ArmorInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, code);
+		//所持防具のインスタンス作成。
+		Hold = (HoldArmor*)INSTANCE(GameObjectManager)->AddNew<HoldArmor>("HoldArmor", 5);
+		//所持防具に追加する防具の情報を格納。
+		Hold->_Info = Item;
+		break;
+
+		//所持武器。
+	case ItemManager::ItemCodeE::Weapon:
+
+		//アイテムマネジャーから追加する武器の情報を取得。	
+		Item = (Item::WeaponInfo*)INSTANCE(ItemManager)->GetItemInfo(item->ID, code);;
+		//所持武器のインスタンス作成。
+		Hold = (HoldWeapon*)INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("HoldWeapon", 5);
+		//所持武器に追加する武器の情報を格納。
+		Hold->_Info = Item;
+		break;
+
+	case ItemManager::ItemCodeE::Max:
+
+		//エラー報告。
+		sprintf(error, "無効なアイテムコードが渡されました。");
+		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		break;
+	default:
+		//エラー報告。
+		sprintf(error, "無効なアイテムコードが渡されました。");
+		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		break;
 	}
+
+	//追加するアイテムの情報が作られたかチェック。
+	if (Hold != nullptr) {
+
+		for (int j = 0; j < INVENTORYLISTNUM; j++)
+		{
+			//インベントリに何も無いなら追加。
+			if (_InventoryItemList[(int)code][j] == NULL) {
+
+				//追加。
+				_InventoryItemList[(int)code][j] = Hold;
+				_InventoryItemList[(int)code][j]->_Info->HoldNum++;
+				return;
+			}
+			else
+			{
+				//追加する際に同じアイテムかを見て同じなら所持数増加。
+				if (_InventoryItemList[(int)code][j]->_Info->ID == Hold->_Info->ID)
+				{
+					//所持数更新。
+					_InventoryItemList[(int)code][j]->_Info->HoldNum++;
+					return;
+				}
+			}
+
+			if (j == INVENTORYLISTNUM)
+			{
+				//エラー報告。
+				char error[256];
+				sprintf(error, "インベントリが一杯で追加されませんでした。");
+				MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+			}
+		}
+	}
+}
+
+void Inventory::UseItem() {
+	//HoldItemBase* item = (ConsumptionItem*)_InventoryItemList[(int)ItemManager::ItemCodeE::Item][_NowLookItemPos];
+}
+
+//アイテムコードとIDを元に配列から検索。
+HoldItemBase* Inventory::FindItem(ItemManager::ItemCodeE kode, const unsigned int& id) {
+
+	//配列サイズ分検索。
+	for (int i = 0; i < INVENTORYLISTNUM; i++)
+	{
+		//発見。
+		if (_InventoryItemList[(int)kode][i]->_Info->ID == id) {
+			return _InventoryItemList[(int)kode][i];
+		}
+	}
+
+	//見つからなかった。
+	char error[256];
+	sprintf(error, "指定されたアイテムが見つかりませんでした。");
+	MessageBoxA(0, error, "アイテムの検索失敗", MB_ICONWARNING);
+	return nullptr;
 }

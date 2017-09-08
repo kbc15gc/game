@@ -19,7 +19,7 @@ Player::Player(const char * name) :
 	//キャラクターコントローラーNULL
 	_CharacterController(NULL),
 	//重力設定
-	_Gravity(-50.0f),
+	_Gravity(-55.0f),
 	//現在のステート
 	_CurrentState(NULL),
 	//走るステート
@@ -146,7 +146,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(61, 69, -1387);
+	_StartPos = Vector3(-1056, 69, -1947);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -159,6 +159,11 @@ void Player::Start()
 
 void Player::Update()
 {
+	if (KeyBoardInput->isPush(DIK_A)) {
+		Money2D* money = (Money2D*)INSTANCE(GameObjectManager)->FindObject("Money2D");
+			money->Initialize(100);
+	}
+
 	//本が開いていないときは動ける。
 	if (_CurrentState != nullptr 
 		&& _HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)

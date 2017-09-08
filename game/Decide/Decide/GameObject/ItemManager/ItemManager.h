@@ -2,6 +2,7 @@
 
 namespace Item {
 
+	//アイテムと武器と防具の共通項目をまとめた構造体。
 	struct BaseInfo :public Noncopyable
 	{
 		int TypeID;				//種類(アイテムは0)。
@@ -9,6 +10,7 @@ namespace Item {
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説名。
 		int Value;				//値段。
+		int HoldNum;			//所持数。
 	};
 	//アイテムの情報をまとめた構造体。
 	struct ItemInfo :public BaseInfo
@@ -79,11 +81,12 @@ private:
 	ItemManager();
 public:
 	
-	enum class ItemKodeE
+	enum class ItemCodeE
 	{
 		Item = 0,		//アイテム。
 		Armor = 1,		//防具。
 		Weapon = 2,		//武器。
+		Max
 	};
 
 	//アイテム、武器、防具を一括で読み込み。
@@ -99,16 +102,16 @@ public:
 	}
 
 	//指定された種類とIDのアイテムを取得。
-	Item::BaseInfo* GetItemInfo(const unsigned int& id, ItemKodeE kode) {
-		switch (kode)
+	Item::BaseInfo* GetItemInfo(const unsigned int& id, ItemCodeE code) {
+		switch (code)
 		{
-		case ItemKodeE::Item:
+		case ItemCodeE::Item:
 			return _ItemListVec.at(id).get();
 			break;
-		case ItemKodeE::Armor:
+		case ItemCodeE::Armor:
 			return _ArmorList.at(id).get();
 			break;
-		case ItemKodeE::Weapon:
+		case ItemCodeE::Weapon:
 			return _WeaponList.at(id).get();
 			break;
 		default:
@@ -129,7 +132,6 @@ public:
 		}
 		return _Instance;
 	}
-
 private:
 	//アイテムのリスト。
 	vector<unique_ptr<Item::ItemInfo>> _ItemList[3];
