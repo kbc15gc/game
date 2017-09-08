@@ -56,6 +56,7 @@ public:
 		return _InventoryItemList[(int)kode];
 	}
 
+	 //アイテムコードとIDを元に配列から検索。
 	 HoldItemBase* FindItem(ItemManager::ItemKodeE kode, const unsigned int& id);
 
 	void UseItem();
