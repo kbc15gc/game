@@ -328,7 +328,6 @@ void EnemyCharacter::GiveDamage(int damage) {
 
 	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 	attackvalue->Init(transform->GetPosition(),_damage, 1.5f, Vector3(0.0f, _collisionInfo.height, 0.0f));
-	attackvalue->transform->SetParent(transform);
 }
 
 
