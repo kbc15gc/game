@@ -35,7 +35,7 @@ Money2D::~Money2D()
 
 void Money2D::Awake()
 {
-	_MoneyText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Money2DText", 7);
+	/*_MoneyText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Money2DText", 7);
 	_MoneyText->transform->SetLocalPosition(_TextPos);
 
 	_GetImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("GetImage", 7);
@@ -47,7 +47,7 @@ void Money2D::Awake()
 	_LogBackImage->SetTexture(LOADTEXTURE("window.png"));
 	_LogBackImage->transform->SetLocalPosition(Vector3(_LogBackPos.x, _LogBackPos.y, 0.0f));
 	_LogBackImage->SetSize(Vector2(200.0f, 160.0f));
-	_LogBackImage->SetActive(true);
+	_LogBackImage->SetActive(true);*/
 }
 
 void Money2D::Start()
@@ -78,21 +78,21 @@ void Money2D::Update()
 	//	//削除。
 	//	//INSTANCE(GameObjectManager)->AddRemoveList(this);
 	//}
-	for (int i = 0; i < 5; i++)
-	{
-		//インスタンス化。
-		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("MoneyText", 7);
-		text->Initialize(L"", 22.0f);
-		//テキスト設定。
-		char t[256];
-		string str = "入手しました。";
-		sprintf(t, "%s,%s", _AddMoenyLog[i], str);
-		text->SetString(t);
-		text->SetFontSize(22.0f);
-		text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
-		text->transform->SetLocalPosition(Vector3(_TextPos.x, _TextPos.y - i*4.0f, 0.0f));
-		i++;
-	}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	//インスタンス化。
+	//	TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("MoneyText", 7);
+	//	text->Initialize(L"", 22.0f);
+	//	//テキスト設定。
+	//	char t[256];
+	//	string str = "入手しました。";
+	//	sprintf(t, "%s,%s", _AddMoenyLog[i], str);
+	//	text->SetString(t);
+	//	text->SetFontSize(22.0f);
+	//	text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
+	//	text->transform->SetLocalPosition(Vector3(_TextPos.x, _TextPos.y - i*4.0f, 0.0f));
+	//	i++;
+	//}
 }
 
 void Money2D::Initialize(int money)
