@@ -5,8 +5,7 @@
 
 #include "GameObject\Village\Shop\HFSM\ShopS_Close.h"
 #include "GameObject\Village\Shop\HFSM\ShopS_Select.h"
-#include "GameObject\Village\Shop\HFSM\ShopS_Buy.h"
-#include "GameObject\Village\Shop\HFSM\ShopS_Sell.h"
+#include "GameObject\Village\Shop\HFSM\ShopS_Trade.h"
 #include "GameObject\Village\Shop\HFSM\ShopS_Confirmation.h"
 
 Shop::Shop(const char * name):
@@ -38,7 +37,7 @@ void Shop::Awake()
 	//説明文のテキスト。
 	_DescriptionText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
-	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x/2, 0, 0));
+	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 30, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
 	_DescriptionText->SetFormat((UINT)fbText::TextFormatE::LEFT | (UINT)fbText::TextFormatE::UP);
 	//ステートの初期化。
@@ -58,6 +57,7 @@ void Shop::OpenShop(const unsigned int & shopID)
 	{
 		//店の商品読み込み
 		_LoadShopData(shopID);
+		_DescriptionWindow->SetActive(true, true);
 		//セレクトメニューを開く
 		_ChangeState(ShopStateE::Select);
 	}
@@ -72,8 +72,8 @@ void Shop::SetState()
 {
 	_StateList.push_back(shared_ptr<ShopS_Close>(new ShopS_Close(this)));
 	_StateList.push_back(shared_ptr<ShopS_Select>(new ShopS_Select(this)));
-	_StateList.push_back(shared_ptr<ShopS_Buy>(new ShopS_Buy(this)));
-	_StateList.push_back(shared_ptr<ShopS_Sell>(new ShopS_Sell(this)));
+	_StateList.push_back(shared_ptr<ShopS_Trade>(new ShopS_Trade(this)));
+	_StateList.push_back(shared_ptr<ShopS_Trade>(new ShopS_Trade(this)));
 	_StateList.push_back(shared_ptr<ShopS_Confirmation>(new ShopS_Confirmation(this)));
 }
 
@@ -102,7 +102,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	}
 }
 
-void Shop::_ChangeState(const ShopStateE & state)
+void Shop::_ChangeState(const ShopStateE state)
 {
 	//自己遷移はしない。
 	if (state == _State)
@@ -117,11 +117,12 @@ void Shop::_ChangeState(const ShopStateE & state)
 		//出るときに呼び出される処理。
 		now->Exit(state);
 
-		//入るときに呼び出される処理。
-		next->Enter(_State);
-
+		auto old = _State;
 		//新しいステートを設定。
 		_State = state;
+
+		//入るときに呼び出される処理。
+		next->Enter(old);
 	}
 	catch (const out_of_range& oor)
 	{

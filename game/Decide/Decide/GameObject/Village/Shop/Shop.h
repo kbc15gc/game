@@ -75,7 +75,7 @@ private:
 	void _LoadShopData(const unsigned int& shopID);
 
 	//ステート変更。
-	void _ChangeState(const ShopStateE& state);
+	void _ChangeState(const ShopStateE state);
 
 	//説明テキストに文字を設定する。
 	void SetDescriptionText(string text);
@@ -83,7 +83,7 @@ private:
 	//ふれんず。ステートを書いておく。
 	friend class ShopS_Close;
 	friend class ShopS_Select;
-	friend class ShopS_Buy;
+	friend class ShopS_Trade;
 	friend class ShopS_Confirmation;
 
 	//ショップのステート
