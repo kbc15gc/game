@@ -157,7 +157,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
-    <ClInclude Include="ConsumptionItem.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\AttackValue2D.h" />
@@ -211,7 +210,12 @@
     <ClInclude Include="GameObject\History\HistoryMenu\Chip2D.h" />
     <ClInclude Include="GameObject\History\HistoryMenu\HistoryMenu.h" />
     <ClInclude Include="GameObject\Inventory\Inventory.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemBase.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
+    <ClInclude Include="GameObject\Log\Log.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
@@ -235,10 +239,6 @@
     <ClInclude Include="GameObject\Village\Shop\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameSystem.h" />
-    <ClInclude Include="HoldArmor.h" />
-    <ClInclude Include="HoldItemBase.h" />
-    <ClInclude Include="HoldWeapon.h" />
-    <ClInclude Include="Money2D.h" />
     <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
@@ -247,7 +247,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
-    <ClCompile Include="ConsumptionItem.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\AttackValue2D.cpp" />
@@ -298,7 +297,12 @@
     <ClCompile Include="GameObject\History\HistoryMenu\Chip2D.cpp" />
     <ClCompile Include="GameObject\History\HistoryMenu\HistoryMenu.cpp" />
     <ClCompile Include="GameObject\Inventory\Inventory.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemBase.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
+    <ClCompile Include="GameObject\Log\Log.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
@@ -319,10 +323,6 @@
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp" />
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
-    <ClCompile Include="HoldArmor.cpp" />
-    <ClCompile Include="HoldItemBase.cpp" />
-    <ClCompile Include="HoldWeapon.cpp" />
-    <ClCompile Include="Money2D.cpp" />
     <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />

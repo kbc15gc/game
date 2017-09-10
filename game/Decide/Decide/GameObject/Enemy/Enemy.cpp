@@ -134,7 +134,7 @@ void Enemy::_ConfigCollision() {
 	// ※キャラクターコントローラーで使用するためのもの。
 	_collisionInfo.radius = 0.3f;
 	_collisionInfo.height = 0.3f;
-	_collisionInfo.offset = Vector3(0.0f, 0.45f, 0.0f);
+	_collisionInfo.offset = Vector3(0.0f, 0.46f, 0.0f);
 
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
