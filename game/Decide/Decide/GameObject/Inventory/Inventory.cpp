@@ -133,7 +133,7 @@ void Inventory::DeleteFromList(Item::ItemCodeE code, HoldItemBase* item) {
 	}
 }
 
-void Inventory::SubHoldNum(HoldItemBase* item) {
+void Inventory::SubHoldNum(HoldItemBase* item,int num) {
 	//配列サイズ分検索。
 	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin(); itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
 	{
@@ -142,7 +142,10 @@ void Inventory::SubHoldNum(HoldItemBase* item) {
 		}
 		else
 		{
-			
+			item->AddHoldNum(num);
+			if (item->GetHoldNum() <= 0);
+			INSTANCE(GameObjectManager)->AddRemoveList(item);
+			//itr = _InventoryItemList[(int)code].erase(itr);
 		}
 	}
 }

@@ -27,6 +27,11 @@ public:
 		_HoldNum = add;
 	}
 
+	//所持数を取得。
+	inline int GetHoldNum() {
+		return  _HoldNum;
+	}
+
 private:
 	Item::BaseInfo* _Info = nullptr;	//アイテムの構造体。
 	int _HoldNum;						//所持数。
