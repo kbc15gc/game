@@ -51,7 +51,7 @@ public:
 	void AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item);
 
 	//指定されたインベントリのリストの先頭を取得。
-	 inline const vector<HoldItemBase*>& GetInventoryList(ItemManager::ItemCodeE code) {
+	inline const vector<HoldItemBase*>& GetInventoryList(ItemManager::ItemCodeE code) {
 		return _InventoryItemList[(int)code];
 	}
 

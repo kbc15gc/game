@@ -13,11 +13,11 @@ void ItemWindow::Awake()
 {
 	//ƒoƒbƒN‚Ì”wŒi.
 	ImageObject* backWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
-	backWindow->SetTexture(LOADTEXTURE("UI/Panel4.png"));
-	backWindow->SetSize(backWindow->GetSize() * 1.06f);
+	backWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
+	backWindow->SetSize(backWindow->GetSize() * 0.8f);
 	backWindow->SetPivot(0.0f, 0.5f);
 	backWindow->transform->SetParent(transform);
-	backWindow->transform->SetLocalPosition(Vector3(35.0f, 45.0f, 0.0f));
+	backWindow->transform->SetLocalPosition(Vector3(35.0f, 0.0f, 0.0f));
 }
 
 /**
