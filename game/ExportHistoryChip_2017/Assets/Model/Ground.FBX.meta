@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 7f73739f25bb75a4abc9d9fc6bb9a872
-timeCreated: 1499138414
+guid: 1a7c1aabd2bf47041a5b468b3e6fbc83
+timeCreated: 1504841277
 licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
     100002: Plane001_MeshPart0
@@ -11,6 +11,7 @@ ModelImporter:
     400000: //RootNode
     400002: Plane001_MeshPart0
     400004: Plane001_MeshPart1
+    2100000: 'Material #37'
     2300000: Plane001_MeshPart0
     2300002: Plane001_MeshPart1
     3300000: Plane001_MeshPart0
@@ -18,26 +19,32 @@ ModelImporter:
     4300000: Plane001_MeshPart0
     4300002: Plane001_MeshPart1
     9500000: //RootNode
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -45,7 +52,10 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 1
     importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -61,6 +71,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

@@ -1,5 +1,5 @@
 #pragma once
-#include "HoldItemBase.h"
+#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 
 //Š–h‹ï‚ÌƒNƒ‰ƒXB
 class HoldArmor :public HoldItemBase

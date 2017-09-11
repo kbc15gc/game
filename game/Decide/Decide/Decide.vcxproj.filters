@@ -210,13 +210,6 @@
     <ClCompile Include="GameObject\Inventory\Inventory.cpp">
       <Filter>GameObject\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="Money2D.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="HoldItemBase.cpp" />
-    <ClCompile Include="HoldWeapon.cpp" />
-    <ClCompile Include="ConsumptionItem.cpp" />
-    <ClCompile Include="HoldArmor.cpp" />
     <ClCompile Include="GameObject\Enemy\LaserBreath.cpp" />
     <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
@@ -227,6 +220,21 @@
     </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemBase.cpp">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.cpp">
+      <Filter>GameObject\ItemManager\HoldItem\HoldArmor</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.cpp">
+      <Filter>GameObject\ItemManager\HoldItem\HoldWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.cpp">
+      <Filter>GameObject\ItemManager\HoldItem\ConsumptionItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Log\Log.cpp">
+      <Filter>GameObject\Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -450,13 +458,6 @@
     <ClInclude Include="GameObject\Inventory\Inventory.h">
       <Filter>GameObject\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Money2D.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="HoldItemBase.h" />
-    <ClInclude Include="HoldWeapon.h" />
-    <ClInclude Include="ConsumptionItem.h" />
-    <ClInclude Include="HoldArmor.h" />
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\LaserBreath.h" />
     <ClInclude Include="GameObject\GameManager.h" />
@@ -468,6 +469,21 @@
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\ItemWindow.h">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemBase.h">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h">
+      <Filter>GameObject\ItemManager\HoldItem\HoldArmor</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h">
+      <Filter>GameObject\ItemManager\HoldItem\HoldWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h">
+      <Filter>GameObject\ItemManager\HoldItem\ConsumptionItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Log\Log.h">
+      <Filter>GameObject\Log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -540,6 +556,21 @@
     </Filter>
     <Filter Include="GameObject\StatusWindow">
       <UniqueIdentifier>{4f31e459-f759-4bc0-a9eb-7a601cfde299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager\HoldItem">
+      <UniqueIdentifier>{365ffadd-191f-4aef-8e8c-d1bb26a2f468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager\HoldItem\ConsumptionItem">
+      <UniqueIdentifier>{d19f2b9f-8b03-427a-9e4b-b5f1b5058de2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager\HoldItem\HoldArmor">
+      <UniqueIdentifier>{f23d4ceb-d943-4f89-a382-59e4988e6af1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager\HoldItem\HoldWeapon">
+      <UniqueIdentifier>{ef442b13-309c-469d-9cd8-ccfff0eb4b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Log">
+      <UniqueIdentifier>{f05b0ed3-cc79-4f50-b8d0-d01f8c34c195}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

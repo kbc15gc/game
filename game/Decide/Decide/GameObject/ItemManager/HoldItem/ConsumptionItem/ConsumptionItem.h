@@ -1,5 +1,5 @@
 #pragma once
-#include "HoldItemBase.h"
+#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 class Player;
 
 //消費アイテムのクラス。
