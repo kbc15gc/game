@@ -55,6 +55,9 @@ private:
 	//ショップに表示する数。
 	const int DISPLAY_ITEM_NUM = 7;
 
+	//表示するアイテムの一覧
+	vector<Item::BaseInfo*> _ItemList;
+
 	//カーソルの画像。
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。
