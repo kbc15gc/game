@@ -13,8 +13,8 @@ Inventory::Inventory()
 }
 
 void Inventory::Initialize() {
-	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
-	//DeleteFromList(Item::ItemCodeE::Item, 0);
+	//AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
+	//SubHoldNum(FindItem(Item::ItemCodeE::Item,0), -1);
 }
 
 //アイテムをインベントリに追加。
@@ -117,10 +117,10 @@ HoldItemBase* Inventory::FindItem(Item::ItemCodeE kode, const unsigned int& id) 
 }
 
 //リストから指定されたアイテムを削除。
-void Inventory::DeleteFromList(Item::ItemCodeE code, HoldItemBase* item) {
+void Inventory::DeleteFromList(HoldItemBase* item) {
 
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[(int)code].begin() ; itr != _InventoryItemList[(int)code].end();)
+	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin() ; itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
 	{
 		if (item != *itr) {
 			itr++;
@@ -128,12 +128,14 @@ void Inventory::DeleteFromList(Item::ItemCodeE code, HoldItemBase* item) {
 		else
 		{
 			INSTANCE(GameObjectManager)->AddRemoveList(item);
-			itr = _InventoryItemList[(int)code].erase(itr);
+			*itr = nullptr;
+			//itr = _InventoryItemList[(int)item->GetInfo()->TypeID].erase(itr);
 		}
 	}
 }
 
-void Inventory::SubHoldNum(HoldItemBase* item,int num) {
+//所持数を減らす。
+void Inventory::SubHoldNum(HoldItemBase* item, int num) {
 	//配列サイズ分検索。
 	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin(); itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
 	{
@@ -142,10 +144,13 @@ void Inventory::SubHoldNum(HoldItemBase* item,int num) {
 		}
 		else
 		{
+			//引数分所持品の数を更新。
 			item->AddHoldNum(num);
+
+			//更新した結果所持数が0になれば破棄。
 			if (item->GetHoldNum() <= 0);
-			INSTANCE(GameObjectManager)->AddRemoveList(item);
-			//itr = _InventoryItemList[(int)code].erase(itr);
+			DeleteFromList(item);
+			return;
 		}
 	}
 }

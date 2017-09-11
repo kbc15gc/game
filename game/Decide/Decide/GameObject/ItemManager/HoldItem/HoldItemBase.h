@@ -24,7 +24,7 @@ public:
 
 	//Š”‚ğ‘‚â‚·B
 	inline void AddHoldNum(int add = 1) {
-		_HoldNum = add;
+		_HoldNum += add;
 	}
 
 	//Š”‚ğæ“¾B

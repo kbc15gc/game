@@ -69,7 +69,7 @@ public:
 
 private:
 	//リストから指定されたアイテムを削除。
-	void DeleteFromList( Item::ItemCodeE code, HoldItemBase* item);
+	void DeleteFromList( HoldItemBase* item);
 private:
 	
 	//インベントリ。
