@@ -12,6 +12,7 @@ namespace
 {
 	float NormalAnimationSpeed = 1.0f;
 	float AttackAnimationSpeed = 1.3f;
+	float Oboreru = 1.0f;
 }
 
 Player::Player(const char * name) :
@@ -99,12 +100,14 @@ void Player::Awake()
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
 		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110, 660, 0));
+		_HPBar->RenderEnable();
 	}
 	// MPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
 		_MPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXMP), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+		_MPBar->RenderEnable();
 	}
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
@@ -159,10 +162,10 @@ void Player::Start()
 
 void Player::Update()
 {
-	if (KeyBoardInput->isPush(DIK_A)) {
+	/*if (KeyBoardInput->isPush(DIK_A)) {
 		Money2D* money = (Money2D*)INSTANCE(GameObjectManager)->FindObject("Money2D");
 			money->Initialize(100);
-	}
+	}*/
 
 	//本が開いていないときは動ける。
 	if (_CurrentState != nullptr 
@@ -193,7 +196,6 @@ void Player::Update()
 	if (_EXPTable.size() > 0 &&
 		_PlayerParam->GetParam(CharacterParameter::EXP) >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)])
 	{
-		//レベルアップするか。
 		//何レベルのテーブルか。
 		//レベルアップに必要な経験値。
 		//レベルアップする場合のHP
@@ -363,8 +365,8 @@ void Player::_Damage()
 	if (transform->GetLocalPosition().y < 48.5f 
 		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, 2);
-		_HPBar->SubValue(2);
+		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru);
+		_HPBar->SubValue(Oboreru);
 	}
 }
 
