@@ -32,13 +32,13 @@ void StatusWindow::Start()
 		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
 		_ParameterRenderList.push_back(pr);
 	}
-	_ParameterRenderList[0]->SetParam("LV", _Player->GetParamPt(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", _Player->GetParamPt(CharacterParameter::Param::EXP));
-	_ParameterRenderList[2]->SetParam("HP", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetParamPt(CharacterParameter::Param::MAXHP));
-	_ParameterRenderList[3]->SetParam("MP", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetParamPt(CharacterParameter::Param::MAXMP));
-	_ParameterRenderList[4]->SetParam("ATK", _Player->GetParamPt(CharacterParameter::Param::ATK));
-	_ParameterRenderList[5]->SetParam("DEF", _Player->GetParamPt(CharacterParameter::Param::DEF));
-	_ParameterRenderList[6]->SetParam("MONEY", INSTANCE(Inventory)->GetPlayerMoneyPt());
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetParamPt(CharacterParameter::Param::EXP));
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetParamPt(CharacterParameter::Param::MAXHP));
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetParamPt(CharacterParameter::Param::MAXMP));
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+	_ParameterRenderList[6]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoneyPt());
 
 	ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", 9);
 	iw->transform->SetParent(transform);
