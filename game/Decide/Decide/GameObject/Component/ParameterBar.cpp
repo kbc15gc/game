@@ -109,6 +109,8 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 	_NowBarNum = _NowSettingNum = 0;
 	_NowBar = _NowSettingBar = _BarElement[_NowBarNum].get();
 
+	this->SetIsRender(true);
+
 	// 各値の初期値設定。
 	_MaxValue = max;
 	_Value = max;
