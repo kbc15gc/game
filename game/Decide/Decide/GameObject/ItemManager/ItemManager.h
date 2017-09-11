@@ -2,15 +2,22 @@
 
 namespace Item {
 
+	enum class ItemCodeE
+	{
+		Item = 0,		//アイテム。
+		Armor = 1,		//防具。
+		Weapon = 2,		//武器。
+		Max
+	};
+
 	//アイテムと武器と防具の共通項目をまとめた構造体。
 	struct BaseInfo :public Noncopyable
 	{
-		int TypeID;				//種類(アイテムは0)。
+		ItemCodeE TypeID;				//種類(アイテムは0)。
 		int ID;					//アイテムID。
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説名。
 		int Value;				//値段。
-		int HoldNum;			//所持数。
 	};
 	//アイテムの情報をまとめた構造体。
 	struct ItemInfo :public BaseInfo
@@ -80,14 +87,6 @@ class ItemManager
 private:
 	ItemManager();
 public:
-	
-	enum class ItemCodeE
-	{
-		Item = 0,		//アイテム。
-		Armor = 1,		//防具。
-		Weapon = 2,		//武器。
-		Max
-	};
 
 	//アイテム、武器、防具を一括で読み込み。
 	void LoadAllItemData();
@@ -102,16 +101,16 @@ public:
 	}
 
 	//指定された種類とIDのアイテムを取得。
-	Item::BaseInfo* GetItemInfo(const unsigned int& id, ItemCodeE code) {
+	Item::BaseInfo* GetItemInfo(const unsigned int& id, Item::ItemCodeE code) {
 		switch (code)
 		{
-		case ItemCodeE::Item:
+		case Item::ItemCodeE::Item:
 			return _ItemListVec.at(id).get();
 			break;
-		case ItemCodeE::Armor:
+		case  Item::ItemCodeE::Armor:
 			return _ArmorList.at(id).get();
 			break;
-		case ItemCodeE::Weapon:
+		case  Item::ItemCodeE::Weapon:
 			return _WeaponList.at(id).get();
 			break;
 		default:

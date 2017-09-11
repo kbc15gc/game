@@ -153,7 +153,7 @@ private:
 	unique_ptr<ImageObject> _BarFrame;	// バーの枠。
 private:
 	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
-	bool _isRender = false;
+	bool _isRender = true;
 };
 
 // バー。

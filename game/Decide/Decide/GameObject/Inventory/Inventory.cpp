@@ -13,12 +13,12 @@ Inventory::Inventory()
 }
 
 void Inventory::Initialize() {
-	AddItem(ItemManager::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, ItemManager::ItemCodeE::Item));
-	DeleteFromList(ItemManager::ItemCodeE::Item, 0);
+	//AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
+	//SubHoldNum(FindItem(Item::ItemCodeE::Item,0), -1);
 }
 
 //アイテムをインベントリに追加。
-void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
+void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item) {
 	Item::BaseInfo* Item = nullptr;
 	HoldItemBase* Hold = nullptr;
 	char error[256];
@@ -30,19 +30,19 @@ void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
 		switch (code)
 		{
 			//所持アイテム。
-		case ItemManager::ItemCodeE::Item:
+		case Item::ItemCodeE::Item:
 			//所持アイテムのインスタンス作成。
 			Hold = (ConsumptionItem*)INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("ConsumptionItem", 5);
 			break;
 
 			//所持防具。
-		case ItemManager::ItemCodeE::Armor:
+		case Item::ItemCodeE::Armor:
 			//所持防具のインスタンス作成。
 			Hold = (HoldArmor*)INSTANCE(GameObjectManager)->AddNew<HoldArmor>("HoldArmor", 5);
 			break;
 
 			//所持武器。
-		case ItemManager::ItemCodeE::Weapon:
+		case Item::ItemCodeE::Weapon:
 			//所持武器のインスタンス作成。
 			Hold = (HoldWeapon*)INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("HoldWeapon", 5);
 			break;
@@ -52,8 +52,8 @@ void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
 			MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
 			break;
 		}
-		//所持武器に追加する武器の情報を格納。
-		Hold->_Info = Item;
+		//所持品に追加するアイテムの情報を格納。
+		Hold->SetInfo(Item);
 
 		//追加されたアイテムの情報を格納。
 		_InfoList.push_back(Item);
@@ -69,16 +69,16 @@ void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
 
 				//追加。
 				_InventoryItemList[(int)code][j] = Hold;
-				_InventoryItemList[(int)code][j]->_Info->HoldNum++;
+				_InventoryItemList[(int)code][j]->AddHoldNum();
 				return;
 			}
 			else
 			{
 				//追加する際に同じアイテムかを見て同じなら所持数増加。
-				if (_InventoryItemList[(int)code][j]->_Info->ID == Hold->_Info->ID)
+				if (_InventoryItemList[(int)code][j]->GetInfo()->ID == Hold->GetInfo()->ID)
 				{
 					//所持数更新。
-					_InventoryItemList[(int)code][j]->_Info->HoldNum++;
+					_InventoryItemList[(int)code][j]->AddHoldNum();
 					return;
 				}
 			}
@@ -95,17 +95,17 @@ void Inventory::AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item) {
 }
 
 void Inventory::UseItem() {
-	//HoldItemBase* item = (ConsumptionItem*)_InventoryItemList[(int)ItemManager::ItemCodeE::Item][_NowLookItemPos];
+	//HoldItemBase* item = (ConsumptionItem*)_InventoryItemList[(int)Item::ItemCodeE::Item][_NowLookItemPos];
 }
 
 //アイテムコードとIDを元に配列から検索。
-HoldItemBase* Inventory::FindItem(ItemManager::ItemCodeE kode, const unsigned int& id) {
+HoldItemBase* Inventory::FindItem(Item::ItemCodeE kode, const unsigned int& id) {
 
 	//配列サイズ分検索。
 	for (int i = 0; i < INVENTORYLISTNUM; i++)
 	{
 		//発見。
-		if (_InventoryItemList[(int)kode][i]->_Info->ID == id) {
+		if (_InventoryItemList[(int)kode][i]->GetInfo()->ID == id) {
 			return _InventoryItemList[(int)kode][i];
 		}
 	}
@@ -116,11 +116,41 @@ HoldItemBase* Inventory::FindItem(ItemManager::ItemCodeE kode, const unsigned in
 	MessageBoxA(0, error, "アイテムの検索失敗", MB_ICONWARNING);
 }
 
-void Inventory::DeleteFromList(ItemManager::ItemCodeE code, const unsigned int& id) {
+//リストから指定されたアイテムを削除。
+void Inventory::DeleteFromList(HoldItemBase* item) {
 
 	//配列サイズ分検索。
-	for (int i = 0; i < INVENTORYLISTNUM; i++)
+	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin() ; itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
 	{
-		SAFE_DELETE(_InventoryItemList[(int)code][i]);
+		if (item != *itr) {
+			itr++;
+		}
+		else
+		{
+			INSTANCE(GameObjectManager)->AddRemoveList(item);
+			*itr = nullptr;
+			//itr = _InventoryItemList[(int)item->GetInfo()->TypeID].erase(itr);
+		}
+	}
+}
+
+//所持数を減らす。
+void Inventory::SubHoldNum(HoldItemBase* item, int num) {
+	//配列サイズ分検索。
+	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin(); itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
+	{
+		if (item != *itr) {
+			itr++;
+		}
+		else
+		{
+			//引数分所持品の数を更新。
+			item->AddHoldNum(num);
+
+			//更新した結果所持数が0になれば破棄。
+			if (item->GetHoldNum() <= 0);
+			DeleteFromList(item);
+			return;
+		}
 	}
 }
