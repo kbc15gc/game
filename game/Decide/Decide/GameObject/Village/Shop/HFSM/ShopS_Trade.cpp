@@ -199,13 +199,13 @@ void ShopS_Trade::BuyItem(Item::BaseInfo *info)
 	//アイテムの値段分お金を払う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(info->Value);
 	//インベントリへ追加。
-	INSTANCE(Inventory)->AddItem((ItemManager::ItemCodeE)info->TypeID,info);
+	INSTANCE(Inventory)->AddItem((Item::ItemCodeE)info->TypeID,info);
 }
 
 void ShopS_Trade::SellItem(Item::BaseInfo *info)
 {
 	//インベントリから排除。
-	//INSTANCE(Inventory)->((ItemManager::ItemCodeE)info->TypeID, info.id);
-	//アイテムの値段分お金を払う。
+	INSTANCE(Inventory)->SubHoldNum(info, 1);
+	//アイテムの値段分お金を貰う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(-info->Value);
 }
