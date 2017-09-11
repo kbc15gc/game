@@ -5,7 +5,6 @@
 #include"StatusWindow.h"
 
 #include"GameObject\Inventory\Inventory.h"
-#include"ItemWindow.h"
 
 /**
 * 初期化.
@@ -40,9 +39,24 @@ void StatusWindow::Start()
 	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
 	_ParameterRenderList[6]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoneyPt());
 
-	ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", 9);
-	iw->transform->SetParent(transform);
-	_ItemWindowList.push_back(iw);
+	//アイテム一覧の背景.
+	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
+	itemWindow->SetSize(Vector2(495.0f, 580.0f));
+	itemWindow->SetPivot(0.0f, 0.5f);
+	itemWindow->transform->SetParent(transform);
+	itemWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
+
+	for (int i = 0; i < _WindowCount; i++)
+	{
+		ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", 9);
+		iw->transform->SetParent(itemWindow->transform);
+		iw->SetActive(false, true);
+		_ItemWindowList.push_back(iw);
+	}
+	_ItemWindowList[0]->Init(Item::ItemCodeE::Weapon, "武器一覧");
+	_ItemWindowList[1]->Init(Item::ItemCodeE::Armor, "防具一覧");
+	_ItemWindowList[2]->Init(Item::ItemCodeE::Item, "アイテム一覧");
 
 	//始めは非表示.
 	this->SetActive(false, true);
@@ -53,5 +67,39 @@ void StatusWindow::Start()
 */
 void StatusWindow::Update()
 {
+	float ChangeTime = 0.3f;
+	static float LocalTime = 0.0f;
+	//左スティックの情報.
+	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+	LStick /= 32767.0f;
+	if (LStick.x <= -0.9f)
+	{
+		LocalTime += Time::DeltaTime();
+		if (LocalTime >= ChangeTime)
+		{
+			_NowSelectWindow = max(0, _NowSelectWindow - 1);
+			LocalTime = 0.0f;
+			ChangeTime = 0.1f;
+		}
+	}
+	else if (LStick.x >= 0.9f)
+	{
+		LocalTime += Time::DeltaTime();
+		if (LocalTime >= ChangeTime)
+		{
+			_NowSelectWindow = min(_WindowCount-1, _NowSelectWindow + 1);
+			LocalTime = 0.0f;
+			ChangeTime = 0.1f;
+		}
+	}
+	else
+	{
+		ChangeTime = 0.3f;
+		LocalTime = ChangeTime;
+	}
 
+	for (int i = 0; i < _WindowCount; i++)
+	{
+		_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
+	}
 }
