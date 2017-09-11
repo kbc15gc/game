@@ -58,12 +58,22 @@ public:
 	 //アイテムコードとIDを元に配列から検索。
 	 HoldItemBase* FindItem(ItemManager::ItemCodeE code, const unsigned int& id);
 
-	void UseItem();
+	
+	//リストから指定されたアイテムを削除。
+	void DeleteFromList(ItemManager::ItemCodeE code, const unsigned int& id);
 
+	inline vector<Item::BaseInfo*> GetInfoList() {
+		return _InfoList;
+	}
+	
+	void UseItem();
 private:
 	
 	//インベントリ。
-	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(ItemManager::ItemCodeE::Max), vector<HoldItemBase*>(5, nullptr));
+	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(ItemManager::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+
+	//インベントリのアイテムの情報。
+	vector<Item::BaseInfo*> _InfoList;
 
 	//今見ているアイテム。
 	int _NowLookItemPos = -1;
