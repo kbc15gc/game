@@ -116,11 +116,18 @@ HoldItemBase* Inventory::FindItem(ItemManager::ItemCodeE kode, const unsigned in
 	MessageBoxA(0, error, "アイテムの検索失敗", MB_ICONWARNING);
 }
 
+//リストから指定されたアイテムを削除。
 void Inventory::DeleteFromList(ItemManager::ItemCodeE code, const unsigned int& id) {
 
 	//配列サイズ分検索。
 	for (int i = 0; i < INVENTORYLISTNUM; i++)
 	{
-		SAFE_DELETE(_InventoryItemList[(int)code][i]);
+		if (_InventoryItemList[(int)code][i] == nullptr) {
+			i++;
+			return;
+		}
+		if (_InventoryItemList[(int)code][i]->_Info->ID == id) {
+			INSTANCE(GameObjectManager)->AddRemoveList(_InventoryItemList[(int)code][i]);
+		}
 	}
 }
