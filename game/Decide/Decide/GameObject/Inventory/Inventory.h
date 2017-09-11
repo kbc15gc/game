@@ -59,14 +59,21 @@ public:
 	 HoldItemBase* FindItem(ItemManager::ItemCodeE code, const unsigned int& id);
 
 	
-	//リストから指定されたアイテムを削除。
-	void DeleteFromList(ItemManager::ItemCodeE code, const unsigned int& id);
+	//売る。
+	 void BuyItem() {
+		
+	 }
+
 
 	inline vector<Item::BaseInfo*> GetInfoList() {
 		return _InfoList;
 	}
 	
 	void UseItem();
+
+private:
+	//リストから指定されたアイテムを削除。
+	void DeleteFromList(ItemManager::ItemCodeE code, const unsigned int& id);
 private:
 	
 	//インベントリ。
