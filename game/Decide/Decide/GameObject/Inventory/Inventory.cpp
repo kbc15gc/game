@@ -117,7 +117,7 @@ HoldItemBase* Inventory::FindItem(Item::ItemCodeE kode, const unsigned int& id) 
 	for (int i = 0; i < INVENTORYLISTNUM; i++)
 	{
 		//発見。
-		if (_InventoryItemList[(int)kode][i]->GetInfo()->ID == id) {
+		if (_InventoryItemList[(int)kode][i] != nullptr&&_InventoryItemList[(int)kode][i]->GetInfo()->ID == id) {
 			return _InventoryItemList[(int)kode][i];
 		}
 	}
@@ -134,13 +134,14 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 	//配列サイズ分検索。
 	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin() ; itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
 	{
-		if (item != *itr) {
+		if ((*itr) == nullptr&&item != *itr) {
 			itr++;
 		}
 		else
 		{
 			INSTANCE(GameObjectManager)->AddRemoveList(FindItem(item->GetInfo()->TypeID, item->GetInfo()->ID));
-			*itr = nullptr;
+			*itr = nullptr; 
+			break;
 		}
 	}
 
@@ -153,7 +154,7 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 
 			//削除。
 			itr = _InfoList.erase(itr);
-			return;
+			break;
 		}
 		//不一致。
 		else
@@ -169,7 +170,7 @@ void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 	for (auto itr = _InventoryItemList[(int)item->TypeID].begin(); itr != _InventoryItemList[(int)item->TypeID].end();)
 	{
 		//IDの一致。
-		if (item->ID == (*itr)->GetInfo()->ID) 
+		if ((*itr) != nullptr&&item->ID == (*itr)->GetInfo()->ID)
 		{
 			//引数分所持品の数を更新。
 			(*itr)->AddHoldNum(num);
