@@ -3,7 +3,7 @@
 class SoundSource;
 class HoldItemBase;
 
-const int INVENTORYLISTNUM = 5;
+const int INVENTORYLISTNUM = 20;
 
 //インベントリクラス。
 class Inventory
@@ -58,17 +58,22 @@ public:
 	 //アイテムコードとIDを元に配列から検索。
 	 HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 
+	 //追加されたアイテムの情報だけを取得。
 	inline vector<Item::BaseInfo*> GetInfoList() {
 		return _InfoList;
 	}
 	
 	void UseItem();
 
-	void SubHoldNum(HoldItemBase* item);
+	//所持数を減らす。
+	void SubHoldNum(Item::BaseInfo* item,int num);
 
 private:
 	//リストから指定されたアイテムを削除。
-	void DeleteFromList( Item::ItemCodeE code, HoldItemBase* item);
+	void _DeleteFromList(HoldItemBase* item);
+
+	//アイテムリストのデータを保存。
+	void _ItemListOutData();
 private:
 	
 	//インベントリ。
@@ -82,6 +87,8 @@ private:
 
 	//所持金。
 	int _PlayerMoney = 100;
+
+
 
 	static Inventory* _InventoryInstance;
 };

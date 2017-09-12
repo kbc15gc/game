@@ -212,9 +212,6 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\LaserBreath.cpp" />
     <ClCompile Include="GameObject\GameManager.cpp" />
-    <ClCompile Include="GameObject\StatusWindow\Parameter\ParameterRender.cpp">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
@@ -236,8 +233,11 @@
     <ClCompile Include="GameObject\Log\Log.cpp">
       <Filter>GameObject\Log</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp">
-      <Filter>GameObject\Enemy</Filter>
+    <ClCompile Include="GameObject\StatusWindow\ParameterRender.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\Item2D.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -464,9 +464,6 @@
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\LaserBreath.h" />
     <ClInclude Include="GameObject\GameManager.h" />
-    <ClInclude Include="GameObject\StatusWindow\Parameter\ParameterRender.h">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\StatusWindow.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
@@ -488,8 +485,11 @@
     <ClInclude Include="GameObject\Log\Log.h">
       <Filter>GameObject\Log</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\EnemyDrarian.h">
-      <Filter>GameObject\Enemy</Filter>
+    <ClInclude Include="GameObject\StatusWindow\ParameterRender.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\Item2D.h">
+      <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

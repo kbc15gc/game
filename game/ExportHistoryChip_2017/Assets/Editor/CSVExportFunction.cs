@@ -258,7 +258,7 @@ public class CSVExportFunction : Editor
     static public Transform FindObject(Transform group,string name)
     {
         //オブジェクト検索
-        Transform obj = group.FindChild(name);
+        Transform obj = group.Find(name);
         if (obj == null)
         {
             Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
