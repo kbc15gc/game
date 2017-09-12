@@ -43,4 +43,7 @@ private:
 	/** アイテム名表示. */
 	TextObject* _ItemNameText = nullptr;
 
+	/** アイテム数. */
+	TextObject* _ItemCountText = nullptr;
+
 };

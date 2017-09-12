@@ -29,8 +29,10 @@ public:
 private:
 	//選択している場所。
 	int select = 0;
-	//カーソルの画像。
-	ImageObject* _Cursor;
 	//選択ウィンドウの画像。
 	ImageObject* _SelectWindow;
+	//カーソルの画像。
+	ImageObject* _Cursor;
+	//テキスト。
+	TextObject* _Text;
 };

@@ -3,7 +3,7 @@
 class SoundSource;
 class HoldItemBase;
 
-const static int INVENTORYLISTNUM = 20;
+const int INVENTORYLISTNUM = 20;
 
 //インベントリクラス。
 class Inventory

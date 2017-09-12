@@ -37,6 +37,7 @@
 #include"GameObject\StatusWindow\StatusWindow.h"
 
 ImageObject* g_depth;
+void DebugNPC();
 
 void GameScene::Start()
 {
@@ -120,6 +121,18 @@ void GameScene::Start()
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
 	g_depth->SetActive(false);*/
 
+	
+	DebugNPC();
+}
+
+#include "GameObject\Village\NPC.h"
+void DebugNPC()
+{
+	//ƒfƒoƒbƒO—p‚É‚m‚o‚b’Ç‰ÁB
+	NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+	npc->LoadModel("villager1.X");
+	npc->SetMesseage(12, true);
+	npc->transform->SetLocalPosition(Vector3(-1056, 68, -1947));
 }
 
 void GameScene::Update()

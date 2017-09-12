@@ -27,8 +27,10 @@ public:
 	//子に潜る際に呼び出される処理。
 	void DiveState();
 private:
-	//カーソルの画像。
-	ImageObject* _Cursor;
 	//確認ウィンドウの画像。
 	ImageObject* _ConfirmationWindow;
+	//カーソルの画像。
+	ImageObject* _Cursor;
+	//テキスト。
+	TextObject* _Text;
 };
