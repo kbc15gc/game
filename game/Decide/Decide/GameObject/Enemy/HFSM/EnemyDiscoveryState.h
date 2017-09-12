@@ -22,7 +22,7 @@ private:
 	bool IsPossibleChangeState(EnemyCharacter::State next)override;
 
 private:
-	GameObject* _Player = nullptr;
+	Player* _Player = nullptr;
 	float _Speed = 0.0f;	// ˆÚ“®‘¬“xB
 	bool _isOutside = false;
 };

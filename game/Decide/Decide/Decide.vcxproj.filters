@@ -236,6 +236,9 @@
     <ClCompile Include="GameObject\Log\Log.cpp">
       <Filter>GameObject\Log</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -484,6 +487,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Log\Log.h">
       <Filter>GameObject\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemyDrarian.h">
+      <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

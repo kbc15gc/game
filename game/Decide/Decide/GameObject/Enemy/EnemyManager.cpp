@@ -56,7 +56,7 @@ void EnemyManager::CreateEnemy() {
 			break;
 		case EnemyCharacter::EnemyType::Drarian:
 			// ƒhƒ‰ƒŠƒAƒ“¶¬B
-			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyProt", 1);
+			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
 			Color.push_back(BarColor::Yellow);
 			Color.push_back(BarColor::Red);
 			break;

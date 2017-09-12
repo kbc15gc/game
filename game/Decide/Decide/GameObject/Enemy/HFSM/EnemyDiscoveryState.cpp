@@ -3,6 +3,7 @@
 #include "EnemyDiscoveryState.h"
 #include "EnemyTranslationState.h"
 #include "EnemyWaitState.h"
+#include "GameObject\Player\Player.h"
 
 EnemyDiscoveryState::EnemyDiscoveryState(EnemyCharacter* Object) : EnemyState(Object)
 {
@@ -14,7 +15,7 @@ EnemyDiscoveryState::~EnemyDiscoveryState()
 }
 
 void EnemyDiscoveryState::_EntrySubClass() {
-	_Player = INSTANCE(GameObjectManager)->FindObject("Player");
+	_Player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
 	_Speed = _EnemyObject->GetDashSpeed();	// 移動速度を設定。
 	_isOutside = false;
 }
@@ -28,8 +29,12 @@ void EnemyDiscoveryState::_Start() {
 
 void EnemyDiscoveryState::_UpdateSubClass() {
 	// 暫定処理
-	// ※下記のif文条件式にはエネミーの行動範囲外に行ったかの判定を入れる。
-	if (!_isOutside) {
+	if (_Player->GetState() == Player::State::Death) {
+		// プレイヤーが死んでいる。
+
+		_EnemyObject->ChangeStateRequest(EnemyCharacter::State::Wandering);
+	}
+	else if (!_isOutside) {
 		if (!_EnemyObject->IsOutsideWandering()) {
 			// 行動範囲内。
 
@@ -71,9 +76,9 @@ void EnemyDiscoveryState::_UpdateSubClass() {
 			_EnemyObject->LookAtDirection(NowToInitVec);
 		}
 	}
-	else {
-		// ※暫定処理。
-	}
+	//else {
+	//	// ※暫定処理。
+	//}
 }
 
 void EnemyDiscoveryState::Exit(EnemyCharacter::State next) {
