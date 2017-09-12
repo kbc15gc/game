@@ -7,7 +7,8 @@ public class ExportEnemy : MonoBehaviour {
     //エネミーのタイプ
     public enum EnemyType
     {
-        Bone,   //骨
+        Bone,   	//骨
+        Drarian,	//第１のボスドラリアン
     }
     //エネミーのタイプ指定。
     public EnemyType _EnemyType;

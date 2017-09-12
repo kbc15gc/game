@@ -10,6 +10,7 @@
 
 BossDrarian::BossDrarian(const char* name) : EnemyCharacter(name)
 {
+
 }
 
 
