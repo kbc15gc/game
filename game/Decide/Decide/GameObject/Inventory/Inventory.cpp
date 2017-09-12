@@ -13,7 +13,18 @@ Inventory::Inventory()
 }
 
 void Inventory::Initialize() {
-	//AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(3, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(4, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(5, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(6, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(7, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(8, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(9, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(10, Item::ItemCodeE::Item));
 	//SubHoldNum(FindItem(Item::ItemCodeE::Item,0), -1);
 }
 

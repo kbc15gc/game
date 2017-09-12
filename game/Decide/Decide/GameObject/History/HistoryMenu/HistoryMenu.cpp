@@ -122,37 +122,44 @@ void HistoryMenu::EnableUpdate()
 			break;
 	}
 
-	float ChangeTime = 0.3f;
+	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.y >= 0.9f)
+	if (LStick.y >= 0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+		{
+			_SelectCode = max((int)SelectCodeE::Location, _SelectCode - 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			//上.
 			_SelectCode = max((int)SelectCodeE::Location, _SelectCode - 1);
+
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
-	else if (LStick.y <= -0.9f)
+	else if (LStick.y <= -0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+		{
+			_SelectCode = min((int)SelectCodeE::Chip, _SelectCode + 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			//下.
 			_SelectCode = min((int)SelectCodeE::Chip, _SelectCode + 1);
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
 	else
 	{
-		ChangeTime = 0.3f;
-		LocalTime = ChangeTime;
+		ChangeTime = 0.5f;
+		LocalTime = 0.0f;
 	}
 
 	_CursorSprite->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f));
@@ -227,38 +234,44 @@ void HistoryMenu::SelectPageUpdate()
 	//現状の見ているページ.
 	int beforeLookPage = _NowLookPage;
 
-	//ページを左右選択.
-	float ChangeTime = 0.3f;
+	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
 	if (LStick.x >= 0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+		{
+			_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			//上.
 			_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
 	else if (LStick.x <= -0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+		{
+			_NowLookPage = max(0, _NowLookPage - 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			//下.
 			_NowLookPage = max(0, _NowLookPage - 1);
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
 	else
 	{
-		ChangeTime = 0.3f;
-		LocalTime = ChangeTime;
+		ChangeTime = 0.5f;
+		LocalTime = 0.0f;
 	}
 
 	if (_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() > 0)
@@ -305,39 +318,44 @@ void HistoryMenu::SelectPageUpdate()
 */
 void HistoryMenu::SelectChipUpdate()
 {
-	//チップを左右選択.
-	//ページを左右選択.
-	float ChangeTime = 0.3f;
+	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
 	if (LStick.x >= 0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+		{
+			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			//上.
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
+
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
 	else if (LStick.x <= -0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+		{
+			_NowSelectChip = max(0, _NowSelectChip - 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			//下.
 			_NowSelectChip = max(0, _NowSelectChip - 1);
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
 	else
 	{
-		ChangeTime = 0.3f;
-		LocalTime = ChangeTime;
+		ChangeTime = 0.5f;
+		LocalTime = 0.0f;
 	}
 
 	//Aボタン押.
