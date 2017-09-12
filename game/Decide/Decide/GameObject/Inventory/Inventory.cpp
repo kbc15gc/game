@@ -14,7 +14,7 @@ Inventory::Inventory()
 
 void Inventory::Initialize() {
 	//AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
-	//SubHoldNum(FindItem(Item::ItemCodeE::Item,0), -1);
+	//SubHoldNum(FindItem(Item::ItemCodeE::Item,0)->GetInfo(), -1);
 }
 
 //アイテムをインベントリに追加。
@@ -127,7 +127,7 @@ void Inventory::DeleteFromList(HoldItemBase* item) {
 		}
 		else
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(item);
+			INSTANCE(GameObjectManager)->AddRemoveList(FindItem(item->GetInfo()->TypeID, item->GetInfo()->ID));
 			*itr = nullptr;
 			//itr = _InventoryItemList[(int)item->GetInfo()->TypeID].erase(itr);
 		}
@@ -135,22 +135,25 @@ void Inventory::DeleteFromList(HoldItemBase* item) {
 }
 
 //所持数を減らす。
-void Inventory::SubHoldNum(HoldItemBase* item, int num) {
+void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin(); itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
+	for (auto itr = _InventoryItemList[(int)item->TypeID].begin(); itr != _InventoryItemList[(int)item->TypeID].end();)
 	{
-		if (item != *itr) {
-			itr++;
-		}
-		else
+		//IDの一致。
+		if (item->ID == (*itr)->GetInfo()->ID) 
 		{
 			//引数分所持品の数を更新。
-			item->AddHoldNum(num);
+			(*itr)->AddHoldNum(num);
 
 			//更新した結果所持数が0になれば破棄。
-			if (item->GetHoldNum() <= 0);
-			DeleteFromList(item);
+			if ((*itr)->GetHoldNum() <= 0);
+			DeleteFromList((*itr));
 			return;
+		}
+		//不一致。
+		else
+		{
+			itr++;
 		}
 	}
 }
