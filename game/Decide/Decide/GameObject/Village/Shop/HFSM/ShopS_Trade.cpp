@@ -186,20 +186,22 @@ void ShopS_Trade::Decision()
 	//お金が足りているか？
 	if (INSTANCE(Inventory)->GetPlayerMoney() >= _ItemList[_Select]->Value)
 	{
+		//アイテムを設定。
+		_Shop->_SelectItem = _ItemList[_Select];
 		//関数を設定。
 		if (_Shop->_State == Shop::ShopStateE::Buy)
 		{
 			_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this, std::placeholders::_1);
 			//テキスト設定。
-			_Shop->SetDescriptionText("これを買うのかい？");
+			char t[256];
+			sprintf(t, "全部で %d$ だよ。", _ItemList[_Select]->Value);
+			_Shop->SetDescriptionText(t);
 		}
 		else if (_Shop->_State == Shop::ShopStateE::Sell)
 		{
 			_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this, std::placeholders::_1);//テキスト設定。
 			_Shop->SetDescriptionText("これを売るのかい？");
 		}
-		//アイテムを設定。
-		_Shop->_SelectItem = _ItemList[_Select];
 		//購入確認画面を出す。
 		_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
 	}
@@ -221,7 +223,7 @@ void ShopS_Trade::BuyItem(Item::BaseInfo *info)
 void ShopS_Trade::SellItem(Item::BaseInfo *info)
 {
 	//インベントリから排除。
-	//INSTANCE(Inventory)->SubHoldNum(info, 1);
+	INSTANCE(Inventory)->SubHoldNum(info, 1);
 	//テキストの更新。
 	UpdateText();
 	//アイテムの値段分お金を貰う。
