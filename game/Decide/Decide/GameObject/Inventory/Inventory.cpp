@@ -65,36 +65,38 @@ void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item) {
 		}
 		//所持品に追加するアイテムの情報を格納。
 		Hold->SetInfo(Item);
-
-		//追加されたアイテムの情報を格納。
-		_InfoList.push_back(Item);
 	}
 
 	//追加するアイテムの情報が作られたかチェック。
 	if (Hold != nullptr) {
 
-		for (int j = 0; j < INVENTORYLISTNUM; j++)
+		for (int i = 0; i < INVENTORYLISTNUM; i++)
 		{
 			//インベントリに何も無いなら追加。
-			if (_InventoryItemList[(int)code][j] == NULL) {
+			if (_InventoryItemList[(int)code][i] == NULL) {
 
 				//追加。
-				_InventoryItemList[(int)code][j] = Hold;
-				_InventoryItemList[(int)code][j]->AddHoldNum();
+				_InventoryItemList[(int)code][i] = Hold;
+
+				//所持数更新。
+				_InventoryItemList[(int)code][i]->AddHoldNum();
+
+				//追加されたアイテムの情報を格納。
+				_InfoList.push_back(Item);
 				return;
 			}
 			else
 			{
 				//追加する際に同じアイテムかを見て同じなら所持数増加。
-				if (_InventoryItemList[(int)code][j]->GetInfo()->ID == Hold->GetInfo()->ID)
+				if (_InventoryItemList[(int)code][i]->GetInfo()->ID == Hold->GetInfo()->ID)
 				{
 					//所持数更新。
-					_InventoryItemList[(int)code][j]->AddHoldNum();
+					_InventoryItemList[(int)code][i]->AddHoldNum();
 					return;
 				}
 			}
 
-			if (j == INVENTORYLISTNUM)
+			if (i == INVENTORYLISTNUM)
 			{
 				//エラー報告。
 				char error[256];
@@ -138,30 +140,51 @@ void Inventory::DeleteFromList(HoldItemBase* item) {
 		}
 		else
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(item);
+			INSTANCE(GameObjectManager)->AddRemoveList(FindItem(item->GetInfo()->TypeID, item->GetInfo()->ID));
 			*itr = nullptr;
 			//itr = _InventoryItemList[(int)item->GetInfo()->TypeID].erase(itr);
+		}
+	}
+
+	//情報だけを格納したリストのアイテムを削除。
+	for (auto itr = _InfoList.begin(); itr != _InfoList.end();)
+	{
+		//アイテムコードとIDが一致。
+		if (item->GetInfo()->TypeID == (*itr)->TypeID&&
+			item->GetInfo()->ID == (*itr)->ID) {
+
+			//削除。
+			itr = _InfoList.erase(itr);
+			return;
+		}
+		//不一致。
+		else
+		{
+			itr++;
 		}
 	}
 }
 
 //所持数を減らす。
-void Inventory::SubHoldNum(HoldItemBase* item, int num) {
+void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin(); itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
+	for (auto itr = _InventoryItemList[(int)item->TypeID].begin(); itr != _InventoryItemList[(int)item->TypeID].end();)
 	{
-		if (item != *itr) {
-			itr++;
-		}
-		else
+		//IDの一致。
+		if (item->ID == (*itr)->GetInfo()->ID) 
 		{
 			//引数分所持品の数を更新。
-			item->AddHoldNum(num);
+			(*itr)->AddHoldNum(num);
 
 			//更新した結果所持数が0になれば破棄。
-			if (item->GetHoldNum() <= 0);
-			DeleteFromList(item);
+			if ((*itr)->GetHoldNum() <= 0);
+			DeleteFromList(*itr);
 			return;
+		}
+		//不一致。
+		else
+		{
+			itr++;
 		}
 	}
 }

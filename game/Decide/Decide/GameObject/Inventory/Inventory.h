@@ -58,6 +58,7 @@ public:
 	 //アイテムコードとIDを元に配列から検索。
 	 HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 
+	 //追加されたアイテムの情報だけを取得。
 	inline vector<Item::BaseInfo*> GetInfoList() {
 		return _InfoList;
 	}
@@ -65,11 +66,11 @@ public:
 	void UseItem();
 
 	//所持数を減らす。
-	void SubHoldNum(HoldItemBase* item,int num);
+	void SubHoldNum(Item::BaseInfo* item,int num);
 
 private:
 	//リストから指定されたアイテムを削除。
-	void DeleteFromList( HoldItemBase* item);
+	void DeleteFromList(HoldItemBase* item);
 private:
 	
 	//インベントリ。
