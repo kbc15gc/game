@@ -65,11 +65,11 @@ public:
 	void UseItem();
 
 	//所持数を減らす。
-	void SubHoldNum(HoldItemBase* item,int num);
+	void SubHoldNum(Item::BaseInfo* item,int num);
 
 private:
 	//リストから指定されたアイテムを削除。
-	void DeleteFromList( HoldItemBase* item);
+	void DeleteFromList(HoldItemBase* item);
 private:
 	
 	//インベントリ。
