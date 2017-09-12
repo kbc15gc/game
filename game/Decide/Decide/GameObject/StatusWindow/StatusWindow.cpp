@@ -67,35 +67,44 @@ void StatusWindow::Start()
 */
 void StatusWindow::Update()
 {
-	float ChangeTime = 0.3f;
+
+	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.x <= -0.9f)
+	if (LStick.x <= -0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+		{
+			_NowSelectWindow = max(0, _NowSelectWindow - 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
 			_NowSelectWindow = max(0, _NowSelectWindow - 1);
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
-	else if (LStick.x >= 0.9f)
+	else if (LStick.x >= 0.2f)
 	{
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+		{
+			_NowSelectWindow = min(_WindowCount - 1, _NowSelectWindow + 1);
+		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectWindow = min(_WindowCount-1, _NowSelectWindow + 1);
+			_NowSelectWindow = min(_WindowCount - 1, _NowSelectWindow + 1);
 			LocalTime = 0.0f;
-			ChangeTime = 0.1f;
+			ChangeTime = 0.01f;
 		}
 	}
 	else
 	{
-		ChangeTime = 0.3f;
-		LocalTime = ChangeTime;
+		ChangeTime = 0.5f;
+		LocalTime = 0.0f;
 	}
 
 	for (int i = 0; i < _WindowCount; i++)

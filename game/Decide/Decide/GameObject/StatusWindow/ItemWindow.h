@@ -51,6 +51,16 @@ public:
 
 private:
 
+	/**
+	* 入力.
+	*/
+	void Input();
+
+private:
+
+	/** セルサイズ. */
+	static const int ItemCellSize = 10;
+
 	/** ウィンドウ名表示. */
 	TextObject* _WindowName = nullptr;
 
@@ -59,5 +69,10 @@ private:
 
 	/** アイテムコード. */
 	Item::ItemCodeE _ItemCode;
+
+	/** 現在選択中のアイテム. */
+	int _NowSelectItem = 0;
+	/** セレクトカーソル. */
+	ImageObject* _SelectCursor = nullptr;
 
 };
