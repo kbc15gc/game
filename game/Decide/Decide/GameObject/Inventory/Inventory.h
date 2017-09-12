@@ -3,7 +3,7 @@
 class SoundSource;
 class HoldItemBase;
 
-const int INVENTORYLISTNUM = 5;
+const static int INVENTORYLISTNUM = 20;
 
 //インベントリクラス。
 class Inventory
@@ -70,7 +70,10 @@ public:
 
 private:
 	//リストから指定されたアイテムを削除。
-	void DeleteFromList(HoldItemBase* item);
+	void _DeleteFromList(HoldItemBase* item);
+
+	//アイテムリストのデータを保存。
+	void _ItemListOutData();
 private:
 	
 	//インベントリ。
@@ -84,6 +87,8 @@ private:
 
 	//所持金。
 	int _PlayerMoney = 100;
+
+
 
 	static Inventory* _InventoryInstance;
 };
