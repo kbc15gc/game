@@ -58,6 +58,7 @@ public:
 	 //アイテムコードとIDを元に配列から検索。
 	 HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 
+	 //追加されたアイテムの情報だけを取得。
 	inline vector<Item::BaseInfo*> GetInfoList() {
 		return _InfoList;
 	}
