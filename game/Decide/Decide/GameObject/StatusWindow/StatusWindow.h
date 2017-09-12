@@ -4,7 +4,8 @@
 #pragma once
 
 #include"GameObject\Player\Player.h"
-#include"Parameter\ParameterRender.h"
+#include"ParameterRender.h"
+#include"ItemWindow.h"
 
 /**
 * ステータス画面クラス.
@@ -47,6 +48,9 @@ private:
 	vector<ParameterRender*> _ParameterRenderList;
 
 	/** アイテム表示画面. */
-	vector<GameObject*> _ItemWindowList;
+	vector<ItemWindow*> _ItemWindowList;
+
+	int _WindowCount = 3;
+	int _NowSelectWindow = 0;
 
 };

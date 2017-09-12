@@ -48,22 +48,15 @@ public:
 	}
 
 	//アイテムをインベントリに追加。
-	void AddItem(ItemManager::ItemCodeE code, Item::BaseInfo* item);
+	void AddItem( Item::ItemCodeE code, Item::BaseInfo* item);
 
 	//指定されたインベントリのリストの先頭を取得。
-	 inline const vector<HoldItemBase*>& GetInventoryList(ItemManager::ItemCodeE code) {
+	 inline const vector<HoldItemBase*>& GetInventoryList( Item::ItemCodeE code) {
 		return _InventoryItemList[(int)code];
 	}
 
 	 //アイテムコードとIDを元に配列から検索。
-	 HoldItemBase* FindItem(ItemManager::ItemCodeE code, const unsigned int& id);
-
-	
-	//売る。
-	 void BuyItem() {
-		
-	 }
-
+	 HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 
 	inline vector<Item::BaseInfo*> GetInfoList() {
 		return _InfoList;
@@ -71,13 +64,16 @@ public:
 	
 	void UseItem();
 
+	//所持数を減らす。
+	void SubHoldNum(Item::BaseInfo* item,int num);
+
 private:
 	//リストから指定されたアイテムを削除。
-	void DeleteFromList(ItemManager::ItemCodeE code, const unsigned int& id);
+	void DeleteFromList(HoldItemBase* item);
 private:
 	
 	//インベントリ。
-	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(ItemManager::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>( Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 
 	//インベントリのアイテムの情報。
 	vector<Item::BaseInfo*> _InfoList;

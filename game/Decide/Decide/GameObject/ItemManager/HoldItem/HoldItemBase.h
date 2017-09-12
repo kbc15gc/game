@@ -7,5 +7,32 @@ class HoldItemBase :public GameObject
 public:
 	HoldItemBase(const char* name);
 	~HoldItemBase();
-	Item::BaseInfo* _Info = nullptr;
+	
+
+	//ショップでアイテムを売った数分所持数を減らす。
+	void ItemSub(int sub = 1);
+
+	//構造体に情報を設定。
+	inline void SetInfo(Item::BaseInfo* info) {
+		_Info = info;
+	}
+
+	//構造体の情報を取得。
+	inline Item::BaseInfo* GetInfo() {
+		return _Info;
+	}
+
+	//所持数を増やす。
+	inline void AddHoldNum(int add = 1) {
+		_HoldNum += add;
+	}
+
+	//所持数を取得。
+	inline int GetHoldNum() {
+		return  _HoldNum;
+	}
+
+private:
+	Item::BaseInfo* _Info = nullptr;	//アイテムの構造体。
+	int _HoldNum;						//所持数。
 };
