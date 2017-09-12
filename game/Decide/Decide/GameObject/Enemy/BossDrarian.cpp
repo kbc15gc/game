@@ -27,13 +27,13 @@ void BossDrarian::_AwakeSubClass() {
 }
 
 void BossDrarian::_StartSubClass() {
-	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	SetParamAll(Color, _MyComponent.Parameter->GetParams());
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//SetParamAll(Color, _MyComponent.Parameter->GetParams());
 
 	// 視野角生成。
 	_ViewAngle = 100.0f;
