@@ -24,6 +24,15 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_BuyWindow->SetActive(false, true);
 }
 
+ShopS_Trade::~ShopS_Trade()
+{
+	FOR(i, _MenuTexts.size())
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(_MenuTexts[i]);
+	}
+	_MenuTexts.clear();
+}
+
 void ShopS_Trade::Update()
 {
 	if ((KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU)))
@@ -53,10 +62,12 @@ void ShopS_Trade::EnterState()
 	_BuyWindow->SetActive(true, true);
 	//メニューを作成。
 	_CreateMenu();
+	//テキスト設定。
+	UpdateText();
 	//
 	SetIndex(_Select);
 	//表示更新。
-	UpdateDisplayItem();
+	ScrollDisplayItem();
 }
 
 void ShopS_Trade::ExitState()
@@ -75,50 +86,36 @@ void ShopS_Trade::DiveState()
 
 void ShopS_Trade::_CreateMenu()
 {
-	if (_MenuTexts.size() <= 0)
+	//テキスト生成。
+	while (_MenuTexts.size() <= 50)
 	{
-		float height = 0.0f;
-		_MenuListHeight = 0.0f;
+		//インスタンス化。
+		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _BuyWindow->GetPriorty());
 
-		//ショップの品ぞろえと同じ量、テキストを生成。
-		if (_Shop->_State == Shop::ShopStateE::Buy)
-		{
-			_ItemList = _Shop->_ItemList;
-		}
-		else if (_Shop->_State == Shop::ShopStateE::Sell)
-		{
-			_ItemList = INSTANCE(Inventory)->GetInfoList();
-		}
-		FOR(i, _ItemList.size())
-		{
-			//インスタンス化。
-			TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _BuyWindow->GetPriorty());
+		text->SetFontSize(50);
+		text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
+		text->transform->SetParent(_BuyWindow->transform);
 
-			//テキスト設定。
-			char t[256];
-			sprintf(t, "名前:%s,  値段:%d$", _ItemList[i]->Name, _ItemList[i]->Value);
-			text->SetString(t);
-			text->SetFontSize(50);
-			text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
-			text->transform->SetParent(_BuyWindow->transform);
-			//リストに追加。
-			_MenuTexts.push_back(text);
-
-			//高さ設定。
-			height += text->GetLength().y;
-			//最大の高さを保持。
-			_MenuListHeight = max(_MenuListHeight, text->GetLength().y);
-		}
+		//リストに追加。
+		_MenuTexts.push_back(text);
+	}
+	//ショップの品ぞろえと同じ量、テキストを生成。
+	if (_Shop->_State == Shop::ShopStateE::Buy)
+	{
+		_ItemList = _Shop->_ItemList;
+	}
+	else if (_Shop->_State == Shop::ShopStateE::Sell)
+	{
+		_ItemList = INSTANCE(Inventory)->GetInfoList();
 	}
 }
 
 void ShopS_Trade::_CloseMenu()
 {
-	FOR(i, _MenuTexts.size())
+	for each (auto text in _MenuTexts)
 	{
-		INSTANCE(GameObjectManager)->AddRemoveList(_MenuTexts[i]);
+		text->SetActive(false);
 	}
-	_MenuTexts.clear();
 }
 
 void ShopS_Trade::SetIndex(int idx)
@@ -145,16 +142,13 @@ void ShopS_Trade::SetIndex(int idx)
 void ShopS_Trade::SetMinIndex(int minidx)
 {
 	_MinIdx = max(0, minidx);
-	UpdateDisplayItem();
+	ScrollDisplayItem();
 }
 
-void ShopS_Trade::UpdateDisplayItem()
+void ShopS_Trade::ScrollDisplayItem()
 {
 	//取り合えず一度全て非表示にする。
-	for each (auto text in _MenuTexts)
-	{
-		text->SetActive(false);
-	}
+	_CloseMenu();
 
 	//表示の最小添え字からカウント分表示する。
 	for (int i = _MinIdx,count = 1; i < _MinIdx + DISPLAY_ITEM_NUM && i < _MenuTexts.size(); i++,count++)
@@ -162,6 +156,28 @@ void ShopS_Trade::UpdateDisplayItem()
 		_MenuTexts[i]->SetActive(true);
 		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x;
 		_MenuTexts[i]->transform->SetLocalPosition(posx, _MenuListHeight * count, 0);
+	}
+}
+
+void ShopS_Trade::UpdateText()
+{
+	//一回閉じる。
+	_CloseMenu();
+
+	float height = 0.0f;
+	_MenuListHeight = 0.0f;
+	//テキスト設定。
+	FOR(i, _ItemList.size())
+	{
+		_MenuTexts[i]->SetActive(true);
+		//テキスト設定。
+		char t[256];
+		sprintf(t, "名前:%s,  値段:%d$", _ItemList[i]->Name, _ItemList[i]->Value);
+		_MenuTexts[i]->SetString(t);
+		//高さ設定。
+		height += _MenuTexts[i]->GetLength().y;
+		//最大の高さを保持。
+		_MenuListHeight = max(_MenuListHeight, _MenuTexts[i]->GetLength().y);
 	}
 }
 
@@ -205,7 +221,9 @@ void ShopS_Trade::BuyItem(Item::BaseInfo *info)
 void ShopS_Trade::SellItem(Item::BaseInfo *info)
 {
 	//インベントリから排除。
-	INSTANCE(Inventory)->SubHoldNum(info, 1);
+	//INSTANCE(Inventory)->SubHoldNum(info, 1);
+	//テキストの更新。
+	UpdateText();
 	//アイテムの値段分お金を貰う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(-info->Value);
 }

@@ -13,7 +13,7 @@ public:
 	ShopS_Trade(Shop* shop);
 
 	//デストラクタ。
-	~ShopS_Trade() {}
+	~ShopS_Trade();
 
 	//毎フレーム呼ばれる更新処理。
 	void Update();
@@ -33,8 +33,10 @@ private:
 	void SetIndex(int idx);
 	//
 	void SetMinIndex(int min);
-	//アイテムリストの表示更新。
-	void UpdateDisplayItem();
+	//アイテムリストを移動させる。
+	void ScrollDisplayItem();
+	//テキスト更新。
+	void UpdateText();
 	
 	//売買の関数。
 	function<void()> TradeFunc;
