@@ -91,15 +91,6 @@ public:
 	//アイテム、武器、防具を一括で読み込み。
 	void LoadAllItemData();
 
-	Item::ItemInfo* GetItem(const unsigned int& id,const unsigned int& type)
-	{
-		//範囲チェック
-		if (type < 2)
-			return _ItemList[type].at(id).get();
-		else
-			return nullptr;
-	}
-
 	//指定された種類とIDのアイテムを取得。
 	Item::BaseInfo* GetItemInfo(const unsigned int& id, Item::ItemCodeE code) {
 		switch (code)
@@ -132,8 +123,6 @@ public:
 		return _Instance;
 	}
 private:
-	//アイテムのリスト。
-	vector<unique_ptr<Item::ItemInfo>> _ItemList[3];
 
 	//ゲームで使うアイテムのリスト。
 	vector<unique_ptr<Item::ItemInfo>> _ItemListVec;
