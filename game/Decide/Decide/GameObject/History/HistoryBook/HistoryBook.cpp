@@ -6,7 +6,6 @@
 
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
-#include "GameObject\Player\Player.h"
 
 //ó‘Ô.
 #include"HFSM\HistoryBookStateUnused.h"
@@ -43,6 +42,10 @@ void HistoryBook::Awake()
 */
 void HistoryBook::Start()
 {
+	if (!_PlayerCamera)
+	{
+		_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+	}
 	//ó‘ÔƒŠƒXƒg‚ð‰Šú‰».
 	_InitState();
 
@@ -76,6 +79,8 @@ void HistoryBook::SetActive(const bool & act, const bool & children)
 	{
 		if (act)
 		{
+			_Player->PlayerStopEnable();
+			_PlayerCamera->SetIsMove(false);
 			_IsOpenOrClose = true;
 			ChangeState(StateCodeE::Move);
 			for (auto& locList : _HistoryPageList)
@@ -101,7 +106,6 @@ void HistoryBook::SetActive(const bool & act, const bool & children)
 				{
 					if (it != nullptr)
 					{
-						it->SetActive(act);
 						it->ChangeState(HistoryPage::StateCodeE::Close);
 					}
 				}

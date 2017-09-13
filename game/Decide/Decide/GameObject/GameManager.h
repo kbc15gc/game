@@ -6,6 +6,7 @@
 #include"StatusWindow\StatusWindow.h"
 #include"History\HistoryBook\HistoryBook.h"
 #include"Player\Player.h"
+#include"Camera\PlayerCamera.h"
 
 /**
 * ゲーム管理クラス.
@@ -50,4 +51,5 @@ private:
 	/** ヒストリーブック. */
 	HistoryBook* _HistoryBook = nullptr;
 
+	PlayerCamera* _PlayerCamera = nullptr;
 };

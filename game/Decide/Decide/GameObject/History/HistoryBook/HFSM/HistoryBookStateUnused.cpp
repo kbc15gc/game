@@ -22,7 +22,9 @@ HistoryBookStateUnused::HistoryBookStateUnused(HistoryBook * historybook) :
 */
 void HistoryBookStateUnused::Entry()
 {
+	_HistoryBook->PageInactive();
 	_HistoryBook->SetActiveGameObject(false);
+	_HistoryBook->PlayerStopDisable();
 }
 
 /**

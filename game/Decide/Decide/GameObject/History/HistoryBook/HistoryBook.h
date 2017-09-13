@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "GameObject\Player\Player.h"
+#include"GameObject\Camera\PlayerCamera.h"
 #include"..\HistoryInfo.h"
 
 #include"HFSM\HistoryBookState.h"
@@ -193,9 +195,29 @@ public:
 		}
 	}
 
+	void PageInactive()
+	{
+		for (auto& locList : _HistoryPageList)
+		{
+			for (auto it : locList)
+			{
+				if (it != nullptr)
+				{
+					it->SetActive(false, true);
+				}
+			}
+		}
+	}
+
 	void SetIsOperation(const bool is)
 	{
 		_IsOperation = is;
+	}
+
+	void PlayerStopDisable()
+	{
+		_Player->PlayerStopDisable();
+		_PlayerCamera->SetIsMove(true);
 	}
 
 private:
@@ -237,4 +259,7 @@ private:
 
 	/** ‘€ì‰Â”\ƒtƒ‰ƒO. */
 	bool _IsOperation = true;
+
+	PlayerCamera* _PlayerCamera = nullptr;
+
 };
