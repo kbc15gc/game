@@ -98,7 +98,7 @@ void GameScene::Start()
 
 	//INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
-	INSTANCE(Inventory)->Initialize();
+	//INSTANCE(Inventory)->Initialize();
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");

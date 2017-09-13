@@ -13,11 +13,12 @@ namespace Item {
 	//アイテムと武器と防具の共通項目をまとめた構造体。
 	struct BaseInfo :public Noncopyable
 	{
-		ItemCodeE TypeID;				//種類(アイテムは0)。
+		ItemCodeE TypeID;		//種類(アイテムは0)。
 		int ID;					//アイテムID。
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説名。
 		int Value;				//値段。
+		int MaxNum;				//限界所持数。
 	};
 	//アイテムの情報をまとめた構造体。
 	struct ItemInfo :public BaseInfo

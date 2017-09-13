@@ -106,7 +106,7 @@ void ShopS_Trade::_CreateMenu()
 	}
 	else if (_Shop->_State == Shop::ShopStateE::Sell)
 	{
-		_ItemList = INSTANCE(Inventory)->GetInfoList();
+		//_ItemList = INSTANCE(Inventory)->GetInfoList();
 	}
 }
 
