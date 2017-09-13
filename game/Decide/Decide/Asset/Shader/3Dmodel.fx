@@ -199,7 +199,9 @@ PSOutput PSMain(VS_OUTPUT In)
 	if (g_EffectFlg.x)
 	{
 		//‰e‚É‚È‚Á‚Ä‚¢‚é.
-		light.xyz *= CalcShadow(In._World.xyz, cascadeColor);
+		float shadowPower = CalcShadow(In._World.xyz, cascadeColor);
+		shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
+		light.xyz *= min(1.0f, shadowPower);
 	}
 
 	//ƒ‰ƒCƒg‚ð‚©‚¯‚é
@@ -363,8 +365,9 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	if (g_EffectFlg.x)
 	{
 		//‰e‚É‚È‚Á‚Ä‚¢‚é.
-		light.xyz *= CalcShadow(In._World.xyz, cascadeColor);
-
+		float shadowPower = CalcShadow(In._World.xyz, cascadeColor);
+		shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
+		light.xyz *= min(1.0f, shadowPower);
 	}
 	
 	color *= light;

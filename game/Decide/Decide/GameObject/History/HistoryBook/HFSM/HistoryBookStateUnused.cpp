@@ -22,7 +22,9 @@ HistoryBookStateUnused::HistoryBookStateUnused(HistoryBook * historybook) :
 */
 void HistoryBookStateUnused::Entry()
 {
-	_HistoryBook->SetEnable(false);
+	_HistoryBook->PageInactive();
+	_HistoryBook->SetActiveGameObject(false);
+	_HistoryBook->PlayerStopDisable();
 }
 
 /**
@@ -52,6 +54,4 @@ void HistoryBookStateUnused::Exit()
 	_HistoryBook->SetDestPos(_PlayerCamera->transform->GetPosition() + cameraFoward);
 	
 	_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
-
-	_HistoryBook->SetEnable(true);
 }

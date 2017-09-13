@@ -148,7 +148,6 @@ void BarAdapter::Update() {
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
 		_BarFrame->GetComponentManager().Update();
-
 		// Transform情報は毎フレーム更新されるため、毎フレームスクリーン座標にして上書きする。
 		_ToScreenPos();
 

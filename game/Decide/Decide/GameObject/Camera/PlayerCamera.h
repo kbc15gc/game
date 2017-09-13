@@ -32,7 +32,10 @@ public:
 
 	//移動関数
 	void Move()override;
-
+	void SetIsMove(bool value)
+	{
+		_IsMove = value;
+	}
 private:
 
 	/**
@@ -58,6 +61,8 @@ private:
 		_Player->SetIsStopUpdate(false);
 	}
 
+
+
 private:
 
 	//レイの形状
@@ -71,5 +76,8 @@ private:
 
 	//歴史書オブジェクト。
 	HistoryBook* _HistoryBook = nullptr;
+
+	/** 移動可能フラグ. */
+	bool _IsMove = true;
 
 };

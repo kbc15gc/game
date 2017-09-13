@@ -78,9 +78,6 @@ void GameScene::Start()
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
-
-	// ボス生成。
-	INSTANCE(GameObjectManager)->AddNew<BossDrarian>("Drarian", 1);
 	
 	FOR(i,ChipID::ChipNum)
 	{
