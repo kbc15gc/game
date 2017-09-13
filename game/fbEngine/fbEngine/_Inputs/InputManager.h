@@ -4,6 +4,7 @@
 #include "KeyBoard .h"
 #include "Mouse.h"
 #include "XInput.h"
+#include "VirtualPad.h"
 
 //Xboxコントローラーの数(ここに書かなくてもいいかも。)
 #define XBOX_CONTROLLER_NUM 4
@@ -28,6 +29,8 @@ private:
 	Mouse* _Mouse;
 	//Xboxゲームパッドの入力
 	XInput* _Xinput[XBOX_CONTROLLER_NUM];
+	//
+	VirtualPad* _VirtualPad;
 	static InputManager* _Instance;
 };
 

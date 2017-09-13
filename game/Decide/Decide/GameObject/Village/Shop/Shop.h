@@ -1,6 +1,7 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 #include "GameObject\ItemManager\ItemManager.h"
+#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 
 class ImageObject;
 class TextObject;
@@ -94,7 +95,7 @@ private:
 	//ショップの名前
 	vector<unique_ptr<ShopName>> _ShopNameList;
 	//アイテムのリスト。
-	vector<Item::BaseInfo*> _ItemList;
+	vector<HoldItemBase*> _ItemList;
 
 	//確認後に実行する関数。
 	function<void(Item::BaseInfo*)> _ShopFunc;

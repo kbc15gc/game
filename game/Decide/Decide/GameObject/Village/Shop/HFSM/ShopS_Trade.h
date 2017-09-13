@@ -1,6 +1,6 @@
 #pragma once
 #include "ShopState.h"
-
+#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 class ImageObject;
 class TextObject;
 
@@ -56,16 +56,18 @@ private:
 	int _MinIdx = 0;
 	//ショップに表示する数。
 	const int DISPLAY_ITEM_NUM = 7;
+	//売買する個数。
+	int _SelectNum = 1;
 
 	//表示するアイテムの一覧
-	vector<Item::BaseInfo*> _ItemList;
+	vector<HoldItemBase*> _ItemList;
 
 	//カーソルの画像。
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。
 	ImageObject* _BuyWindow;
 	//アイテム一覧を視覚化したテキストのリスト。
-	vector<TextObject*> _MenuTexts;
+	vector<TextObject*> _MenuTexts,_MoneyTexts;
 	//メニューの一項目の縦幅。
 	float _MenuListHeight;
 };
