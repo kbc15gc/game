@@ -17,9 +17,6 @@ void ItemManager::LoadAllItemData()
 		//ファイルパス
 		char filepath[256] = "";
 		sprintf(filepath, "Asset/Data/ItemData/%s.csv", filename[i]);
-		//ファイルからアイテム情報読み込み
-		Support::LoadCSVData<Item::ItemInfo>(filepath, Item::Itemdata, ARRAY_SIZE(Item::Itemdata), _ItemList[i]);
-
 		switch (i)
 		{
 		case (int)Item::ItemCodeE::Item:

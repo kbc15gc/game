@@ -7,7 +7,8 @@ ShopS_Confirmation::ShopS_Confirmation(Shop * shop) : IShopState(shop)
 {
 	//背景
 	_ConfirmationWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectWindow", 8);
-	_ConfirmationWindow->SetTexture(LOADTEXTURE("ShopSelect.png"));
+	_ConfirmationWindow->SetTexture(LOADTEXTURE("window.png"));
+	_ConfirmationWindow->SetSize(Vector2(256, 128));
 	_ConfirmationWindow->transform->SetPosition(Vector3(1050, 400, 0));
 
 	//カーソル
@@ -15,6 +16,15 @@ ShopS_Confirmation::ShopS_Confirmation(Shop * shop) : IShopState(shop)
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
 	_Cursor->transform->SetParent(_ConfirmationWindow->transform);
 	_Cursor->transform->SetLocalPosition(Vector3(0, 0, 0));
+
+	//テキスト。
+	_Text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
+
+	_Text->SetString("はい\nいいえ");
+	_Text->SetFontSize(50);
+	_Text->transform->SetParent(_ConfirmationWindow->transform);
+	_Text->SetFormat(fbText::TextFormatE::LEFT);
+	_Text->transform->SetLocalPosition(Vector3(-_Text->GetLength().x/2, -40, 0));
 
 	//ウィンドウを非アクティブに
 	_ConfirmationWindow->SetActive(false, true);
@@ -34,28 +44,28 @@ void ShopS_Confirmation::Update()
 		idx = (idx + 1) % max;
 	}
 	//カーソルをずらす。
-	_Cursor->transform->SetLocalPosition(Vector3(-60, 80 * idx - 40, 0));
+	_Cursor->transform->SetLocalPosition(Vector3(-_Text->GetLength().x / 2 - _Cursor->GetSize().x, 60 * idx - 30, 0));
 
 	//決定(仮)
 	if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		if(idx == 0)
 		{
-			//アイテムをインベントリに送る。
-
-
-			_Shop->_ChangeState(Shop::ShopStateE::Buy);
+			//設定された関数実行。
+			_Shop->_ShopFunc(_Shop->_SelectItem);
+			//もどる。
+			_Shop->_ChangeState(_Caller);
 		}
 		else if(idx == 1)
 		{
-			_Shop->_ChangeState(Shop::ShopStateE::Buy);
+			_Shop->_ChangeState(_Caller);
 		}
 	}
 
 	//キャンセル。
 	if (KeyBoardInput->isPush(DIK_B) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
 	{
-		_Shop->_ChangeState(Shop::ShopStateE::Buy);
+		_Shop->_ChangeState(_Caller);
 	}
 }
 

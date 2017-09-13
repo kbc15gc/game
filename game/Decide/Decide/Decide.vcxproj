@@ -233,11 +233,10 @@
     <ClInclude Include="GameObject\Village\MessageManager.h" />
     <ClInclude Include="GameObject\Village\NPC.h" />
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopState.h" />
-    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Buy.h" />
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Trade.h" />
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Close.h" />
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Confirmation.h" />
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Select.h" />
-    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Sell.h" />
     <ClInclude Include="GameObject\Village\Shop\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameSystem.h" />
@@ -320,11 +319,10 @@
     <ClCompile Include="GameObject\Village\EventManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
     <ClCompile Include="GameObject\Village\NPC.cpp" />
-    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Buy.cpp" />
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Trade.cpp" />
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Close.cpp" />
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Confirmation.cpp" />
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp" />
-    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Sell.cpp" />
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="Ocean.cpp" />
