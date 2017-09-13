@@ -4,6 +4,8 @@
 #pragma once
 
 #include"StatusWindow\StatusWindow.h"
+#include"History\HistoryBook\HistoryBook.h"
+#include"Player\Player.h"
 
 /**
 * ゲーム管理クラス.
@@ -40,7 +42,12 @@ public:
 
 private:
 
+	Player* _Player = nullptr;
+
 	/** ステータス画面クラスのポインタ. */
 	StatusWindow* _StatusWindow = nullptr;
+
+	/** ヒストリーブック. */
+	HistoryBook* _HistoryBook = nullptr;
 
 };

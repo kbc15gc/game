@@ -87,24 +87,12 @@ public:
 		return _NowState;
 	}
 
-	/**
-	* 歴史書を表示フラグを設定.
-	*/
-	void SetEnable(bool flag)
-	{
-		_Model->enable = flag;
-		for (auto& locList : _HistoryPageList)
-		{
-			for (auto it : locList)
-			{
-				if (it != nullptr)
-				{
-					it->SetActive(flag);
-				}
-			}
-		}
-	}
+	void SetActive(const bool& act, const bool& children = false)override;
 
+	void SetActiveGameObject(const bool& act, const bool& children = false)
+	{
+		GameObject::SetActive(act, children);
+	}
 	/**
 	* アニメーションの再生判定を取得.
 	*/
