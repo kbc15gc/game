@@ -68,7 +68,7 @@ void ShopS_Trade::EnterState()
 	//メニューを作成。
 	_CreateMenu();
 	//
-	//SetIndex(_Select);
+	SetIndex(_Select);
 	//表示更新。
 	ScrollDisplayItem();
 
@@ -127,23 +127,24 @@ void ShopS_Trade::SetIndex(int idx)
 {
 	if (_DisplayList.size() > 0)
 	{
-		//選択している添え字設定。
-		_Select = idx;
-
 		//リストの表示更新。
-		if (_Select >= _MinIdx + DISPLAY_ITEM_NUM)
-			SetMinIndex(_Select - (DISPLAY_ITEM_NUM - 1));
-		else if (_Select < _MinIdx)
-			SetMinIndex(_Select);
+		if (idx >= _MinIdx + DISPLAY_ITEM_NUM)
+			SetMinIndex(idx - (DISPLAY_ITEM_NUM - 1));
+		else if (idx < _MinIdx)
+			SetMinIndex(idx);
 
 		//カーソルをずらす。
 		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
-		int displayidx = _Select - _MinIdx + 1;
+		int displayidx = idx - _MinIdx + 1;
 		float posy = _MenuListHeight * displayidx + _MenuListHeight*0.5f;
 		_Cursor->transform->SetLocalPosition(posx, posy, 0);
 
 		//アイテムの情報を送る。
-		_Shop->SetDescriptionText(_DisplayList.at(_Select)->GetInfo()->Description);
+		if (_Select != idx)
+			_Shop->SetDescriptionText(_DisplayList.at(idx)->GetInfo()->Description);
+
+		//選択している添え字設定。
+		_Select = idx;
 	}
 }
 
@@ -206,9 +207,15 @@ void ShopS_Trade::UpdateText()
 	{
 		_MenuTexts[i]->SetActive(true);
 		//テキスト設定。
+		char menu[256];
+		sprintf(menu, "%s", _DisplayList[i]->GetInfo()->Name);
+		_MenuTexts[i]->SetString(menu);
+
 		char value[256];
-		sprintf(value, "%d$", _DisplayList[i]->GetInfo()->Value);
-		_MenuTexts[i]->SetString(_DisplayList[i]->GetInfo()->Name);
+		if (_SaveState == Shop::ShopStateE::Sell)
+			sprintf(value, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, _DisplayList[i]->GetHoldNum());
+		else
+			sprintf(value, "%6d$", _DisplayList[i]->GetInfo()->Value);
 		_MoneyTexts[i]->SetString(value);
 		//高さ設定。
 		height += _MenuTexts[i]->GetLength().y;
@@ -268,9 +275,11 @@ void ShopS_Trade::BuyItem()
 void ShopS_Trade::SellItem()
 {
 	//インベントリから排除。
-	INSTANCE(Inventory)->SubHoldNum(_SelectItem,_SelectNum);
-	//削除されていたならリスト更新。
-	UpdateList();
+	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _SelectNum))
+	{
+		//削除されていたならリスト更新。
+		UpdateList();
+	}
 	//アイテムの値段分お金を貰う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(-_SelectItem->Value);
 }
