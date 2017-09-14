@@ -98,9 +98,7 @@ private:
 	vector<HoldItemBase*> _ItemList;
 
 	//確認後に実行する関数。
-	function<void(Item::BaseInfo*)> _ShopFunc;
-	//選択しているアイテム。
-	Item::BaseInfo* _SelectItem;
+	function<void()> _ShopFunc;
 
 	//説明のウィンドウの画像。
 	ImageObject* _DescriptionWindow;

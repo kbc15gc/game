@@ -101,7 +101,8 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		//nullチェック
 		if (item)
 		{
-			HoldItemBase* hitem = new HoldItemBase("");
+			//情報を設定して初期化。
+			HoldItemBase* hitem = new HoldItemBase(item);
 			_ItemList.push_back(hitem);
 		}
 	}
