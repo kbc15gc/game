@@ -47,10 +47,10 @@ namespace Item {
 	//防具の情報をまとめた構造体。
 	struct ArmorInfo :public BaseInfo
 	{
-		int ATK;				//防具を装備した時に上がる攻撃力。
-		int DEF;				//防具を装備した時に上がる防御力。
+		int Def;				//防具を装備した時に上がる防御力。
+		int MagicDef;			//魔法攻撃に対する防御力。
 	};
-
+	
 	//メンバ変数の情報設定。
 	static Support::DATARECORD Armordata[] =
 	{
@@ -59,15 +59,18 @@ namespace Item {
 		{ "Name",Support::DataTypeE::STRING,		offsetof(struct ArmorInfo,Name),			sizeof(char) * 256 },
 		{ "Description",Support::DataTypeE::STRING, offsetof(struct ArmorInfo,Description),	sizeof(char) * 256 },
 		{ "Value",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,Value),		sizeof(int) },
-		{ "ATK",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,ATK),		sizeof(int) },
-		{ "DEF",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,DEF),		sizeof(int) },
+		{ "Def",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,Def),		sizeof(int) },
+		{ "MagicDef",Support::DataTypeE::INT ,		offsetof(struct ArmorInfo,MagicDef),		sizeof(int) },
 	};
 
 
 	//武器の情報をまとめた構造体。
 	struct WeaponInfo :public BaseInfo
 	{
-		int ATK;				//武器を装備した時に上がる攻撃力。
+		int Atk;				//武器を装備した時に上がる攻撃力(*武器種ごとの基準値でランクは考慮していない)。
+		int MagicAtk;			//武器を装備した時に上がる魔法攻撃力(*武器種ごとの基準値でランクは考慮していない)。
+		int Dex;				//武器を装備した時に上がる器用度(クリティカル発生率)。			
+		int CriticalDamage;		//クリティカルが発生した時にダメージ加算率(元のAtkかMagicAtkの値が基準値)。
 	};
 
 	//メンバ変数の情報設定。
@@ -78,7 +81,11 @@ namespace Item {
 		{ "Name",Support::DataTypeE::STRING,		offsetof(struct WeaponInfo,Name),			sizeof(char) * 256 },
 		{ "Description",Support::DataTypeE::STRING, offsetof(struct WeaponInfo,Description),	sizeof(char) * 256 },
 		{ "Value",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,Value),		sizeof(int) },
-		{ "ATK",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,ATK),		sizeof(int) },
+		{ "Atk",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,Atk),		sizeof(int) },
+		{ "MagicAtk",Support::DataTypeE::INT ,		offsetof(struct WeaponInfo,MagicAtk),		sizeof(int) },
+		{ "Dex",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,Dex),		sizeof(int) },
+		{ "CriticalDamage",Support::DataTypeE::INT ,offsetof(struct WeaponInfo,CriticalDamage),		sizeof(int) },
+
 	};
 }
 
