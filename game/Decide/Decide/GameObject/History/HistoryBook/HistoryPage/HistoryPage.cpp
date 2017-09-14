@@ -59,6 +59,8 @@ void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 
 	_ChipID = chipID;
 	_NowLocatuion = code;
+
+
 }
 
 /**

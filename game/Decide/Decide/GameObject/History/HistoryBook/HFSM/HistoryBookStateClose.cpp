@@ -30,8 +30,6 @@ HistoryBookStateClose::HistoryBookStateClose(HistoryBook * historybook) :
 void HistoryBookStateClose::Entry()
 {
 	_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::Close, 0.0f, 1);
-
-	_HistoryBook->SetEnable(true);
 }
 
 /**

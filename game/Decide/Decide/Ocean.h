@@ -46,6 +46,10 @@ public:
 
 private:
 
+	void CreateBuffer();
+
+private:
+
 	/** ’¸“_‚ğˆµ‚¤ƒNƒ‰ƒX. */
 	Vertex* _Vertex = nullptr;
 
