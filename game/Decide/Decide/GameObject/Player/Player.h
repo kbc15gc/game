@@ -57,6 +57,7 @@ public:
 		Run,				//走る
 		Attack,				//攻撃
 		Death,				//死亡
+		Stop,				//移動などしないステートです
 		StateNum,
 	};
 	//アニメーションのナンバー
@@ -150,7 +151,17 @@ public:
 	{
 		return _PlayerParam->GetParamPt(param);
 	}
-
+	//プレイヤーをストップさせるフラグ。
+	void PlayerStopEnable()
+	{
+		ChangeState(State::Stop);
+	}
+	//プレイヤーストップから戻す関数。
+	//ステートアイドルに戻ります。
+	void PlayerStopDisable()
+	{
+		ChangeState(State::Idol);
+	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();

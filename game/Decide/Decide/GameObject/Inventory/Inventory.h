@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include "GameObject\ItemManager\ItemManager.h"
 class SoundSource;
 class HoldItemBase;
 
 const int INVENTORYLISTNUM = 20;
 
-//ƒCƒ“ƒxƒ“ƒgƒŠƒNƒ‰ƒXB
+//ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚¯ãƒ©ã‚¹ã€‚
 class Inventory
 {
 private:
@@ -26,7 +26,7 @@ public:
 	}
 
 
-	//ƒvƒŒƒCƒ„[‚ÌŠ‹à‚ğæ“¾B
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰€æŒé‡‘ã‚’å–å¾—ã€‚
 	int GetPlayerMoney() {
 		return _PlayerMoney;
 	}
@@ -36,59 +36,69 @@ public:
 		return &_PlayerMoney;
 	}
 
-	//ƒvƒŒƒCƒ„[‚ÌŠ‹à‚É‰ÁZB
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰€æŒé‡‘ã«åŠ ç®—ã€‚
 	void AddPlayerMoney(int add)
 	{
 		_PlayerMoney += add;
 	}
 
-	//ƒvƒŒƒCƒ„[‚ÌŠ‹à‚©‚çŒ¸ZB
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰€æŒé‡‘ã‹ã‚‰æ¸›ç®—ã€‚
 	void SubtractPlayerMoney(int sub) {
 		_PlayerMoney -= sub;
 	}
 
-	//ƒAƒCƒeƒ€‚ğƒCƒ“ƒxƒ“ƒgƒŠ‚É’Ç‰ÁB
-	void AddItem( Item::ItemCodeE code, Item::BaseInfo* item);
+	//ã‚¢ã‚¤ãƒ†ãƒ ã‚’ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã«è¿½åŠ (ç¬¬ä¸€å¼•æ•°è¿½åŠ ã™ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã®ç¨®é¡ã€ç¬¬äºŒå¼•æ•°ãŒã‚¢ã‚¤ãƒ†ãƒ ã®æƒ…å ±ã€è¿½åŠ ã™ã‚‹æ•°(æŒ‡å®šã—ãªã„å ´åˆã¯1)ã€‚)ã€‚
+	void AddItem(Item::ItemCodeE code, Item::BaseInfo* item, int num = 1);
 
-	//w’è‚³‚ê‚½ƒCƒ“ƒxƒ“ƒgƒŠ‚ÌƒŠƒXƒg‚Ìæ“ª‚ğæ“¾B
-	 inline const vector<HoldItemBase*>& GetInventoryList( Item::ItemCodeE code) {
+	//æŒ‡å®šã•ã‚ŒãŸã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã®ãƒªã‚¹ãƒˆã®å…ˆé ­ã‚’å–å¾—ã€‚
+	 inline const vector<unique_ptr<HoldItemBase>>& GetInventoryList( Item::ItemCodeE code) {
 		return _InventoryItemList[(int)code];
 	}
 
-	 //ƒAƒCƒeƒ€ƒR[ƒh‚ÆID‚ğŒ³‚É”z—ñ‚©‚çŒŸõB
+
+	 //ã‚¢ã‚¤ãƒ†ãƒ ã‚³ãƒ¼ãƒ‰ã¨IDã‚’å…ƒã«é…åˆ—ã‹ã‚‰æ¤œç´¢ã€‚
 	 HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 
-	 //’Ç‰Á‚³‚ê‚½ƒAƒCƒeƒ€‚Ìî•ñ‚¾‚¯‚ğæ“¾B
-	inline vector<Item::BaseInfo*> GetInfoList() {
-		return _InfoList;
-	}
+
+	 // è¥¿ã«ãƒ—ãƒ¬ã‚¼ãƒ³ãƒˆã€€ã€€by ã®ã¼ã‚ŠãŠã¯ãã¨ã€‚
+
+	// //è¿½åŠ ã•ã‚ŒãŸã‚¢ã‚¤ãƒ†ãƒ ã®æƒ…å ±ã ã‘ã‚’å–å¾—ã€‚
+	//inline unique_ptr<vector<HoldItemBase*>> GetInfoList() {
+
+	//	unique_ptr<vector<HoldItemBase*>> info(new vector<HoldItemBase*>());
+	//	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
+	//		for (int idx2 = 0; idx2 < _InventoryItemList[idx].size();idx2++) {
+	//			if (_InventoryItemList[idx][idx2]) {
+	//				info->push_back(_InventoryItemList[idx][idx2].get());
+	//			}
+	//		}
+	//	}
+	//	
+	//	return move(info);
+	//}
 	
+	//ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ã†ã€‚
 	void UseItem();
 
-	//Š”‚ğŒ¸‚ç‚·B
-	void SubHoldNum(Item::BaseInfo* item,int num);
+	//æ‰€æŒæ•°ã‚’æ¸›ã‚‰ã™ã€‚
+	bool SubHoldNum(Item::BaseInfo* item,int num);
 
 private:
-	//ƒŠƒXƒg‚©‚çw’è‚³‚ê‚½ƒAƒCƒeƒ€‚ğíœB
+	//ãƒªã‚¹ãƒˆã‹ã‚‰æŒ‡å®šã•ã‚ŒãŸã‚¢ã‚¤ãƒ†ãƒ ã‚’å‰Šé™¤ã€‚
 	void _DeleteFromList(HoldItemBase* item);
 
-	//ƒAƒCƒeƒ€ƒŠƒXƒg‚Ìƒf[ƒ^‚ğ•Û‘¶B
+	//ã‚¢ã‚¤ãƒ†ãƒ ãƒªã‚¹ãƒˆã®ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã€‚
 	void _ItemListOutData();
 private:
 	
-	//ƒCƒ“ƒxƒ“ƒgƒŠB
-	vector<vector<HoldItemBase*>> _InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>( Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+	//ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã€‚
+	vector<vector<unique_ptr<HoldItemBase>>> _InventoryItemList;
 
-	//ƒCƒ“ƒxƒ“ƒgƒŠ‚ÌƒAƒCƒeƒ€‚Ìî•ñB
-	vector<Item::BaseInfo*> _InfoList;
-
-	//¡Œ©‚Ä‚¢‚éƒAƒCƒeƒ€B
+	//ä»Šè¦‹ã¦ã„ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã€‚
 	int _NowLookItemPos = -1;
 
-	//Š‹àB
+	//æ‰€æŒé‡‘ã€‚
 	int _PlayerMoney = 100;
-
-
 
 	static Inventory* _InventoryInstance;
 };

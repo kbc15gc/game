@@ -3,9 +3,9 @@
 #include "GameObject\Player\Player.h"
 
 
-ConsumptionItem::ConsumptionItem(const char* name) : HoldItemBase(name)
-{
+ConsumptionItem::ConsumptionItem(Item::BaseInfo* info) :HoldItemBase(info){
 	Target= (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+	
 }
 
 

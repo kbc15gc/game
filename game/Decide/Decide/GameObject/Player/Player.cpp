@@ -165,21 +165,30 @@ void Player::Update()
 			money->Initialize(100);
 	}*/
 
+	if (KeyBoardInput->isPressed(DIK_L))
+	{
+		PlayerStopEnable();
+	}
+	if (KeyBoardInput->isPressed(DIK_K))
+	{
+		PlayerStopDisable();
+	}
+
+
 	//本が開いていないときは動ける。
-	if (_CurrentState != nullptr 
-		&& _HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
+	if (_CurrentState != nullptr && _State != State::Stop)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
 	}
-	//本が開いているときにアイドルステートじゃない場合はアイドルステートに変更。
-	else if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Open)
-	{
-		if (_State != State::Idol)
-		{
-			ChangeState(State::Idol);
-		}
-	}
+	////本が開いているときにアイドルステートじゃない場合はアイドルステートに変更。
+	//if (_State == State::Stop)
+	//{
+	//	if (_State != State::Idol)
+	//	{
+	//		ChangeState(State::Idol);
+	//	}
+	//}
 	if (_HPBar != nullptr)
 	{
 		//HPバーの更新
@@ -252,6 +261,9 @@ void Player::ChangeState(State nextstate)
 	case State::Death:
 		_CurrentState = &_DeathState;
 		//デフォルト
+	case State::Stop:
+		//なにもしない。
+		break;
 	default:
 		break;
 	}
@@ -294,6 +306,11 @@ void Player::AnimationControl()
 		}
 		//アイドルアニメーション
 		else if (_State == State::Idol)
+		{
+			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+		}
+		//プレイヤーストップならアイドルアニメーション
+		else if (_State == State::Stop)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 		}

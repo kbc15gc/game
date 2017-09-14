@@ -22,7 +22,7 @@ void CharacterParameter::Awake() {
 	_Param = vector<int>(Param::MAX,0);
 }
 
-void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def, int mde, int dex, int agi, int lv, int exp, int dropexp,int money)
+void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def, int mde, int dex, int lv, int exp, int dropexp,int money)
 {
 	//パラメーター設定。
 	_Param[Param::HP]		= hp;		//ヒットポイント。
@@ -34,7 +34,6 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::DEF]		= def;		//防御力。
 	_Param[Param::MDE]		= mde;		//魔法防御力。
 	_Param[Param::DEX]		= dex;		//命中力。
-	_Param[Param::AGI]		= agi;		//回避力。
 	_Param[Param::LV]		= lv;		//レベル。
 	_Param[Param::EXP]		= exp;		//現在の経験値。
 	_Param[Param::DROPEXP]	= dropexp;	//落とす経験値。
@@ -77,7 +76,7 @@ int CharacterParameter::ReceiveDamageMass(int defaultDamage, int defidx, int Equ
 	return damage;
 }
 
-void CharacterParameter::LevelUP(int lvupexp,int hp,int mp,int atk,int mat, int def,int mde, int dex, int agi)
+void CharacterParameter::LevelUP(int lvupexp,int hp,int mp,int atk,int mat, int def,int mde, int dex)
 {
 	//レベルアップに必要な経験値を超えるとレベルアップする。
 	
@@ -91,7 +90,5 @@ void CharacterParameter::LevelUP(int lvupexp,int hp,int mp,int atk,int mat, int 
 		_Param[Param::MAT] = mat;
 		_Param[Param::DEF] = def;
 		_Param[Param::MDE] = mde;
-		_Param[Param::DEX] = dex;
-		_Param[Param::AGI] = agi;
-	
+		_Param[Param::DEX] = dex;	
 }

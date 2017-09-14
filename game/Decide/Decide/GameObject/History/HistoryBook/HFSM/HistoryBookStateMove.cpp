@@ -20,7 +20,7 @@ HistoryBookStateMove::HistoryBookStateMove(HistoryBook * historybook) :
 void HistoryBookStateMove::Entry()
 {
 	_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::CloseIdol, 0.0f);
-
+	_HistoryBook->SetIsOperation(false);
 	_LerpRate = 0.0f;
 
 	_Position = _HistoryBook->transform->GetPosition();
@@ -63,4 +63,5 @@ void HistoryBookStateMove::Update()
 */
 void HistoryBookStateMove::Exit()
 {
+	_HistoryBook->SetIsOperation(true);
 }

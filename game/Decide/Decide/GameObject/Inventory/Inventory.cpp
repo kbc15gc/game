@@ -10,10 +10,16 @@ Inventory* Inventory::_InventoryInstance = nullptr;
 
 Inventory::Inventory()
 {
+	for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
+		_InventoryItemList.push_back(vector<unique_ptr<HoldItemBase>>());
+		for (int idx = 0; idx < INVENTORYLISTNUM; idx++) {
+			_InventoryItemList[type].push_back(unique_ptr<HoldItemBase>());
+		}
+	}
+
 }
 
 void Inventory::Initialize() {
-	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Item));
@@ -25,36 +31,50 @@ void Inventory::Initialize() {
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(8, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(9, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(10, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(10, Item::ItemCodeE::Item));
+
+
+	////ファイルパス
+	//char filepath[256] = "";
+	//strcpy(filepath, "Asset/Data/InventoryData/ItemList.csv");
+	////ファイルからアイテム情報読み込み。
+	//vector<unique_ptr<HoldNum>> work;
+	//Support::LoadCSVData<HoldNum>(filepath, HoldItemData, ARRAY_SIZE(HoldItemData), work);
+
+
 }
 
 //アイテムをインベントリに追加。
-void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item) {
-	Item::BaseInfo* Item = nullptr;
+void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item,int num) {
+	Item::BaseInfo* Info = nullptr;
 	HoldItemBase* Hold = nullptr;
 	char error[256];
 
 	//アイテムコードを見て作るアイテムを決める。
 	{
 		//アイテムマネジャーから追加するアイテムの情報を取得。	
-		Item = INSTANCE(ItemManager)->GetItemInfo(item->ID, code);
+		Info = INSTANCE(ItemManager)->GetItemInfo(item->ID, code);
 		switch (code)
 		{
-			//所持アイテム。
 		case Item::ItemCodeE::Item:
+			//所持アイテム。
+
 			//所持アイテムのインスタンス作成。
-			Hold = (ConsumptionItem*)INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("ConsumptionItem", 5);
+			Hold = new ConsumptionItem(Info);
 			break;
 
-			//所持防具。
 		case Item::ItemCodeE::Armor:
+			//所持防具。
+
 			//所持防具のインスタンス作成。
-			Hold = (HoldArmor*)INSTANCE(GameObjectManager)->AddNew<HoldArmor>("HoldArmor", 5);
+			Hold = new HoldArmor(Info);
 			break;
 
-			//所持武器。
 		case Item::ItemCodeE::Weapon:
+			//所持武器。
+
 			//所持武器のインスタンス作成。
-			Hold = (HoldWeapon*)INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("HoldWeapon", 5);
+			Hold = new HoldWeapon(Info);
 			break;
 		default:
 			//エラー報告。
@@ -62,8 +82,11 @@ void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item) {
 			MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
 			break;
 		}
-		//所持品に追加するアイテムの情報を格納。
-		Hold->SetInfo(Item);
+
+		if (Hold) {
+			//所持数更新。
+			Hold->UpdateHoldNum(num);
+		}
 	}
 
 	//追加するアイテムの情報が作られたかチェック。
@@ -71,37 +94,39 @@ void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item) {
 
 		for (int i = 0; i < INVENTORYLISTNUM; i++)
 		{
-			//インベントリに何も無いなら追加。
-			if (_InventoryItemList[(int)code][i] == NULL) {
+			if (_InventoryItemList[(int)code][i] && _InventoryItemList[(int)code][i]->GetInfo()->ID == Hold->GetInfo()->ID)
+			{
+				//同じアイテムが配列にある。
+				_InventoryItemList[(int)code][i]->UpdateHoldNum(num);
 
-				//追加。
-				_InventoryItemList[(int)code][i] = Hold;
-
-				//所持数更新。
-				_InventoryItemList[(int)code][i]->AddHoldNum();
-
-				//追加されたアイテムの情報を格納。
-				_InfoList.push_back(Item);
+				//所持品の所持数書き出し。
+				_ItemListOutData();
 				return;
 			}
-			else
-			{
-				//追加する際に同じアイテムかを見て同じなら所持数増加。
-				if (_InventoryItemList[(int)code][i]->GetInfo()->ID == Hold->GetInfo()->ID)
-				{
-					//所持数更新。
-					_InventoryItemList[(int)code][i]->AddHoldNum();
-					return;
-				}
-			}
+		}
 
-			if (i == INVENTORYLISTNUM)
-			{
-				//エラー報告。
-				char error[256];
-				sprintf(error, "インベントリが一杯で追加されませんでした。");
-				MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		// 追加するアイテムが配列になかった。
+		for (int i = 0; i < INVENTORYLISTNUM; i++)
+		{
+			if (_InventoryItemList[(int)code][i].get() == nullptr) {
+				//インベントリに空きがある。
+
+				// 新しく作成したアイテムを配列に追加。
+				_InventoryItemList[(int)code][i].reset(Hold);
+
+				//所持品配列の所持数をCSVに書き出し。
+				_ItemListOutData();
+
+				return;
 			}
+		}
+
+
+		{
+			//エラー報告。
+			char error[256];
+			sprintf(error, "インベントリが一杯で追加されませんでした。");
+			MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
 		}
 	}
 }
@@ -117,8 +142,8 @@ HoldItemBase* Inventory::FindItem(Item::ItemCodeE kode, const unsigned int& id) 
 	for (int i = 0; i < INVENTORYLISTNUM; i++)
 	{
 		//発見。
-		if (_InventoryItemList[(int)kode][i] != nullptr&&_InventoryItemList[(int)kode][i]->GetInfo()->ID == id) {
-			return _InventoryItemList[(int)kode][i];
+		if (_InventoryItemList[(int)kode][i] && _InventoryItemList[(int)kode][i]->GetInfo()->ID == id) {
+			return _InventoryItemList[(int)kode][i].get();
 		}
 	}
 
@@ -134,38 +159,21 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 	//配列サイズ分検索。
 	for (auto itr = _InventoryItemList[(int)item->GetInfo()->TypeID].begin() ; itr != _InventoryItemList[(int)item->GetInfo()->TypeID].end();)
 	{
-		if ((*itr) == nullptr&&item != *itr) {
+		//中身が無いまたは不一致。
+		if (item != (*itr).get()) {
 			itr++;
 		}
 		else
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(FindItem(item->GetInfo()->TypeID, item->GetInfo()->ID));
-			*itr = nullptr; 
-			break;
-		}
-	}
-
-	//情報だけを格納したリストのアイテムを削除。
-	for (auto itr = _InfoList.begin(); itr != _InfoList.end();)
-	{
-		//アイテムコードとIDが一致。
-		if (item->GetInfo()->TypeID == (*itr)->TypeID&&
-			item->GetInfo()->ID == (*itr)->ID) {
-
-			//削除。
-			itr = _InfoList.erase(itr);
-			break;
-		}
-		//不一致。
-		else
-		{
-			itr++;
+			//一致したので中身を削除。
+			(*itr).reset(nullptr);
+			return;
 		}
 	}
 }
 
 //所持数を減らす。
-void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
+bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 	//配列サイズ分検索。
 	for (auto itr = _InventoryItemList[(int)item->TypeID].begin(); itr != _InventoryItemList[(int)item->TypeID].end();)
 	{
@@ -173,12 +181,16 @@ void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 		if ((*itr) != nullptr&&item->ID == (*itr)->GetInfo()->ID)
 		{
 			//引数分所持品の数を更新。
-			(*itr)->AddHoldNum(num);
+			(*itr)->UpdateHoldNum(num);
 
 			//更新した結果所持数が0になれば破棄。
-			if ((*itr)->GetHoldNum() <= 0);
-			_DeleteFromList(*itr);
-			return;
+			if ((*itr)->GetHoldNum() <= 0) {
+				//リストから削除。
+				_DeleteFromList((*itr).get());
+			}
+			//所持品の所持数書き出し。
+			_ItemListOutData();
+			return true;
 		}
 		//不一致。
 		else
@@ -186,13 +198,40 @@ void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 			itr++;
 		}
 	}
+	return false;
 }
 
 void Inventory::_ItemListOutData() {
-	/*vector<unique_ptr<Item::BaseInfo>> work;
-	for (auto item : _InventoryItemList[(int)Item::ItemCodeE::Item]) {
-		work.push_back(move(unique_ptr<Item::BaseInfo>(item->GetInfo())));
+	vector<unique_ptr<HoldInfo>> work;
+	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Item].size();idx++) {
+		if (_InventoryItemList[(int)Item::ItemCodeE::Item][idx]) {
+			work.push_back(
+				unique_ptr<HoldInfo>(
+				new HoldInfo(
+					static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetInfo()->TypeID),
+					_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetInfo()->ID, 
+					_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetHoldNum()
+				)
+				));
+		}
 	}
 
-	Support::OutputCSV<Item::ItemInfo>("Asset/Data/InventoryData/ItemList.csv", Item::Itemdata, ARRAY_SIZE(Item::Itemdata), work);*/
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
+
+	//vector<unique_ptr<HoldInfo>> work;
+	//for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Armor].size(); idx++) {
+	//	if (_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]) {
+	//		work.push_back(
+	//			unique_ptr<HoldInfo>(
+	//				new HoldArmorInfo(
+	//					static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->TypeID),
+	//					_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID,
+	//					_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetHoldNum(),
+	//					(HoldArmor*)_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get()->,
+	//					_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID
+	//				)));
+	//	}
+	//}
+
+	//Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
 }

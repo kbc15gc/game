@@ -7,6 +7,8 @@
 #include"HistoryMenu\HistoryMenu.h"
 #include"HistoryBook\HistoryBook.h"
 
+#include"Effect\MysteryLight.h"
+
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
 
@@ -135,5 +137,8 @@ private:
 
 	/** 所持しているチップのID. */
 	vector<ChipID> _PossessionChipList;
+
+	MysteryLight* _MysteryLight = nullptr;
+	vector<int> _NowGroupIDList;
 
 };
