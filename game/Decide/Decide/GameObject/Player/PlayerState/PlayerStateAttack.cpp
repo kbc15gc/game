@@ -94,9 +94,9 @@ void PlayerStateAttack::Update()
 	{
 		//コンボ！
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
-		//方向を変える。
-		DirMove();
 	}
+	//方向を変える。
+	DirMove();
 	//あたり判定作成
  	switch (currentanimno)
 	{
