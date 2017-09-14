@@ -81,7 +81,7 @@ public:
 	void UseItem();
 
 	//所持数を減らす。
-	void SubHoldNum(Item::BaseInfo* item,int num);
+	bool SubHoldNum(Item::BaseInfo* item,int num);
 
 private:
 	//リストから指定されたアイテムを削除。
