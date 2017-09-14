@@ -218,20 +218,20 @@ void Inventory::_ItemListOutData() {
 
 	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
 
-	//vector<unique_ptr<HoldInfo>> work;
-	//for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Armor].size(); idx++) {
-	//	if (_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]) {
-	//		work.push_back(
-	//			unique_ptr<HoldInfo>(
-	//				new HoldArmorInfo(
-	//					static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->TypeID),
-	//					_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID,
-	//					_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetHoldNum(),
-	//					(HoldArmor*)_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get()->,
-	//					_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID
-	//				)));
-	//	}
-	//}
+	/*vector<unique_ptr<HoldInfo>> work;
+	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Armor].size(); idx++) {
+		if (_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]) {
+			work.push_back(
+				unique_ptr<HoldInfo>(
+					new HoldArmorInfo(
+						static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->TypeID),
+						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID,
+						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetHoldNum(),
+						(HoldArmor*)_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get(),
+						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID
+					)));
+		}
+	}
 
-	//Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ArmorList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);*/
 }
