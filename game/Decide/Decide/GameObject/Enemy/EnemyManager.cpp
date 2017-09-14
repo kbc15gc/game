@@ -54,10 +54,16 @@ void EnemyManager::CreateEnemy() {
 			enemy = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 			Color.push_back(BarColor::Red);
 			break;
-		case EnemyCharacter::EnemyType::Drarian:
-			// ドラリアン生成。
+		case EnemyCharacter::EnemyType::BossDrarian:
+			// ボスドラリアン生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
 			Color.push_back(BarColor::Yellow);
+			Color.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::Drarian:
+			// ドラリアン生成。
+
+			// ※まだ作成しない。
 			Color.push_back(BarColor::Red);
 			break;
 		}

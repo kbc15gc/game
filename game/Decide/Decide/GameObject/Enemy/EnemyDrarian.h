@@ -22,13 +22,6 @@ public:
 
 	// アニメーションイベント関連。
 	void AnimationEvent_Kamituki();
-	void CreateAttackCollision_TailAttack1();
-	void CreateAttackCollision_TailAttack2();
-	void CreateAttackCollision_TailAttack3();
-	void CreateAttackCollision_TailAttack4();
-	void AnimationEvent_BreathStart();
-	void AnimationEvent_BreathEnd();
-
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
