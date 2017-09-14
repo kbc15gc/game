@@ -32,6 +32,12 @@ void Inventory::Initialize() {
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(9, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(10, Item::ItemCodeE::Item));
 	AddItem(Item::ItemCodeE::Item, INSTANCE(ItemManager)->GetItemInfo(10, Item::ItemCodeE::Item));
+	AddItem(Item::ItemCodeE::Armor, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor));
+	AddItem(Item::ItemCodeE::Armor, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor));
+	AddItem(Item::ItemCodeE::Armor, INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Armor));
+	AddItem(Item::ItemCodeE::Weapon, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Weapon));
+	AddItem(Item::ItemCodeE::Weapon, INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Weapon));
+	AddItem(Item::ItemCodeE::Weapon, INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Weapon));
 
 
 	////ファイルパス
@@ -181,7 +187,7 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 		if ((*itr) != nullptr&&item->ID == (*itr)->GetInfo()->ID)
 		{
 			//引数分所持品の数を更新。
-			(*itr)->UpdateHoldNum(num);
+			(*itr)->UpdateHoldNum(-num);
 
 			//更新した結果所持数が0になれば破棄。
 			if ((*itr)->GetHoldNum() <= 0) {
@@ -202,10 +208,10 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 }
 
 void Inventory::_ItemListOutData() {
-	vector<unique_ptr<HoldInfo>> work;
+	vector<unique_ptr<HoldInfo>> work1;
 	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Item].size();idx++) {
 		if (_InventoryItemList[(int)Item::ItemCodeE::Item][idx]) {
-			work.push_back(
+			work1.push_back(
 				unique_ptr<HoldInfo>(
 				new HoldInfo(
 					static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetInfo()->TypeID),
@@ -215,23 +221,37 @@ void Inventory::_ItemListOutData() {
 				));
 		}
 	}
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work1);
 
-	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
-
-	/*vector<unique_ptr<HoldInfo>> work;
+	vector<unique_ptr<HoldInfo>> work2;
 	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Armor].size(); idx++) {
 		if (_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]) {
-			work.push_back(
+			work2.push_back(
 				unique_ptr<HoldInfo>(
 					new HoldArmorInfo(
 						static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->TypeID),
 						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID,
 						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetHoldNum(),
-						(HoldArmor*)_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get(),
-						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID
+						static_cast<HoldArmor*>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get())->GetDefRnd(),
+						static_cast<HoldArmor*>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get())->GetMDefRnd()
 					)));
 		}
 	}
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ArmorList.csv", HoldArmorData, ARRAY_SIZE(HoldArmorData), work2);
 
-	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ArmorList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);*/
+	vector<unique_ptr<HoldInfo>> work3;
+	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Weapon].size(); idx++) {
+		if (_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx]) {
+			work3.push_back(
+				unique_ptr<HoldInfo>(
+					new HoldWeponInfo(
+						static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx]->GetInfo()->TypeID),
+						_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx]->GetInfo()->ID,
+						_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx]->GetHoldNum(),
+						static_cast<HoldWeapon*>(_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx].get())->GetAtkRnd(),
+						static_cast<HoldWeapon*>(_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx].get())->GetMagicAtk()
+					)));
+		}
+	}
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/WeaponList.csv", HoldWeaponData, ARRAY_SIZE(HoldWeaponData), work3);
 }

@@ -46,7 +46,7 @@ namespace {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldWeponInfo,_ID),			sizeof(int) },
 		{ "HoldNum",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_HoldNum),		sizeof(int) },
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_AtkRnd),		sizeof(int) },
-		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_HoldNum),		sizeof(int) },
+		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_MAtkRnd),		sizeof(int) },
 	};
 
 	struct HoldArmorInfo : public HoldInfo {
@@ -67,8 +67,8 @@ namespace {
 		{ "TypeID",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_TypeID),			sizeof(int) },
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldArmorInfo,_ID),			sizeof(int) },
 		{ "HoldNum",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_HoldNum),		sizeof(int) },
-		{ "Def",Support::DataTypeE::INT ,			offsetof(struct HoldArmorInfo,_DefRnd),		sizeof(int) },
-		{ "MagicDef",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_MDefRnd),		sizeof(int) },
+		{ "DefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_DefRnd),		sizeof(int) },
+		{ "MDefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_MDefRnd),		sizeof(int) },
 	};
 }
 
