@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "fbEngine\fbstdafx.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h"
 
 class CharacterParameter :public Component {
 public:
@@ -104,50 +105,24 @@ public:
 
 	// 被ダメージ処理(パラメーターにダメージを与える)。
 	// 引数:		敵からのダメージ。
+	//				魔法攻撃か。
+	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
-	//				装備品の防御力(デフォルトは0)。
-	int ReciveDamage(int defaultDamage, int defidx = 1, int Equipment = 0);
+	int ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr, int defidx = 1);
 
 	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
 	// 引数:		敵からのダメージ。
+	//				魔法攻撃か。
+	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
-	//				装備品の防御力(デフォルトは0)。
-	int ReceiveDamageMass(int defaultDamage, int defidx = 1,int Equipment = 0);
+	int ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr,int defidx = 1);
 
 	//与ダメージ計算。
 	// 引数：	魔法攻撃か。
 	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
 	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
-	inline int GiveDamageMass(bool isMagic,HoldWeapon* weapon = nullptr,int atk = 1)
-	{
-		int damage = 0;
-		int weaponDamage = 0;
-		int critMax = 100;	// クリティカル率最大。
-		int crit = _Param[Param::DEX];// クリティカル率。
+	int GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
 
-		if (isMagic) {
-			damage = _Param[Param::MAT];
-			if (weapon) {
-				//weaponDamage = weapon->GetInfo();
-				crit += static_cast<Item::WeaponInfo*>(weapon->GetInfo()->Dex);
-			}
-		}
-		else {
-			damage = _Param[Param::ATK];
-			if (weapon) {
-				weaponDamage = weapon->GetAttack();
-			}
-		}
-
-		damage += weaponDamage;
-		if()
-		damage * 
-
-		// クリティカル。
-		damage += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->ATK + (static_cast<Item::WeaponInfo*>(weapon->GetInfo())->ATK * weapon->GetAtkRnd() * 0.1f);
-		
-		return damage * atk;
-	}
 	// レベルアップ。
 	// 引数：		レベルアップに必要な経験値の値。
 	void LevelUP(int lvupexp, int hp, int mp, int atk, int mat,int def,int mde, int dex);

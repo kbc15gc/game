@@ -60,20 +60,75 @@ void CharacterParameter::Update() {
 	}
 }
 
-int CharacterParameter::ReciveDamage(int defaultDamage, int defidx, int Equipment) {
-	int damage = ReceiveDamageMass(defaultDamage, defidx, Equipment);
+int CharacterParameter::ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx) {
+	int damage = ReceiveDamageMass(defaultDamage, isMagic, armor, defidx);
 	//ダメージ分HPを減算。
 	SubParam(Param::HP, damage);
 	return damage;
 }
 
-int CharacterParameter::ReceiveDamageMass(int defaultDamage, int defidx, int Equipment)
+int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx)
 {
 	//こちらの防御力も考慮したダメージ = 相手の与ダメージ-((防御力 + 装備品の防御力) * 属性的なやつ * キャラクターの行動による防御率)。
 	float element = 1.0f;// 属性による補正的なやつ(とりあえず作るだけ作っとく)※暫定処理。
-	int damage = max(0, defaultDamage - ((_Param[Param::DEF] + Equipment) * element * defidx));
+
+	int def;
+
+	if (isMagic) {
+		def = _Param[Param::MDE];
+		if (armor) {
+			def += armor-
+		}
+	}
+	else {
+		def = _Param[Param::DEF];
+		if (armor) {
+			def += armor->
+		}
+	}
+
+	int damage = max(0, defaultDamage - (def * element * defidx));
 
 	return damage;
+}
+
+int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1)
+{
+	int damage = 0;
+	int weaponDamage = 0;
+	int critMax = 100;	// クリティカル率最大。
+	int crit = _Param[Param::DEX];// クリティカル率。
+
+	if (isMagic) {
+		damage = _Param[Param::MAT];
+		if (weapon) {
+			weaponDamage = weapon->GetMagicAtk();
+			crit += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->Dex;
+		}
+	}
+	else {
+		damage = _Param[Param::ATK];
+		if (weapon) {
+			weaponDamage = weapon->GetAtk();
+			crit += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->Dex;
+		}
+	}
+
+	// キャラの攻撃力に武器の攻撃力を加算。
+	damage += weaponDamage;
+
+	if (crit > 0) {
+		int work = critMax / crit;
+		if (work > 100) {
+			work = 100;
+		}
+
+		if (rand() % work == 0) {
+			// クリティカル。
+			damage += damage * static_cast<Item::WeaponInfo*>(weapon->GetInfo())->CriticalDamage;
+		}
+	}
+	return damage * atk;
 }
 
 void CharacterParameter::LevelUP(int lvupexp,int hp,int mp,int atk,int mat, int def,int mde, int dex)
