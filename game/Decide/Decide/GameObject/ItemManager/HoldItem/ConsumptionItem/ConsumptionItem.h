@@ -6,7 +6,7 @@ class Player;
 class ConsumptionItem :public HoldItemBase
 {
 public:
-	ConsumptionItem(const char* name);
+	ConsumptionItem(Item::BaseInfo* info);
 	~ConsumptionItem();
 
 	//アイテムを使う。

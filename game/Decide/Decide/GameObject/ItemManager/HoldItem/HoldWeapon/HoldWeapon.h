@@ -5,6 +5,8 @@
 class HoldWeapon :public HoldItemBase
 {
 public:
-	HoldWeapon(const char* name);
+	HoldWeapon(Item::BaseInfo* info);
 	~HoldWeapon();
+private:
+	int _WeaponRank = 1;	//武器のランク(デフォルトは1)。
 };
