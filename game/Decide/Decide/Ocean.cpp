@@ -7,6 +7,16 @@
 #include"fbEngine\_Effect\EffectManager.h"
 #include"fbEngine\_Object\_Component\_3D\Light.h"
 
+
+namespace
+{
+	float Tmp[6][2] =
+	{
+		{ 0,0 },{ 1,0 },{ 0,1 },
+		{ 0,1 },{ 1,0 },{ 1,1 }
+	};
+}
+
 /**
 * 早めの初期化.
 */
@@ -14,57 +24,7 @@ void Ocean::Awake()
 {
 	if (_Vertex == nullptr)
 	{
-		_Vertex = new Vertex();
-
-		//ポジション定義
-		VERTEX_POSITION position[] =
-		{
-			{ -10000.0f, 0.0f, -10000.0f, 1.0f },//左下
-			{ 10000.0f, 0.0f, -10000.0f, 1.0f },//右下
-			{ -10000.0f, 0.0f, 10000.0f, 1.0f },//左上
-			{ 10000.0f, 0.0f, 10000.0f, 1.0f },//右上
-		};
-		//UV定義
-		VERTEX_TEXCOORD texcoord[] =
-		{
-			{ -80.0f, -80.0f },//左上
-			{ 81.0f, -80.0f },//右上
-			{ -80.0f, 81.0f },//左下
-			{ 81.0f, 81.0f },//右下
-		};
-
-		VERTEX_NORMAL normal[] =
-		{
-			{ 0, 1, 0, 1 },
-			{ 0, 1, 0, 1 },
-			{ 0, 1, 0, 1 },
-			{ 0, 1, 0, 1 },
-		};
-
-		VERTEX_TANGENT tangent[] =
-		{
-			{ 1, 0, 0, 1 },
-			{ 1, 0, 0, 1 },
-			{ 1, 0, 0, 1 },
-			{ 1, 0, 0, 1 },
-		};
-	
-
-		//頂点レイアウト.
-		D3DVERTEXELEMENT9 elements[] = {
-			{ 0, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },	// 頂点座標.
-			{ 1, 0	, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD   , 0 }, // UV座標.
-			{ 2, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },	// 法線ベクトル.
-			{ 2, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },	// 接ベクトル.
-			D3DDECL_END()
-		};
-
-		_Vertex->Initialize(fbEngine::PRIMITIVETYPE::TRIANGLESTRIP, 4);
-		_Vertex->CreateVertexBuffer(position, 4, sizeof(VERTEX_POSITION), elements[0]);
-		_Vertex->CreateVertexBuffer(texcoord, 4, sizeof(VERTEX_TEXCOORD), elements[1]);
-		_Vertex->CreateVertexBuffer(normal, 4, sizeof(VERTEX_NORMAL), elements[2]);
-		_Vertex->CreateVertexBuffer(tangent, 4, sizeof(VERTEX_TANGENT), elements[3]);
-		_Vertex->CreateDeclaration();
+		CreateBuffer();
 	}
 
 	_Effect = EffectManager::LoadEffect("Ocean.fx");
@@ -96,6 +56,52 @@ void Ocean::Update()
 
 	//トランスフォームの更新.
 	transform->UpdateTransform();
+}
+
+void Ocean::CreateBuffer()
+{
+	_Vertex = new Vertex();
+
+	const int SegmentCount = 500;
+
+	vector<VERTEX_POSITION> position;
+	vector<VERTEX_TEXCOORD> texcoord;
+	vector<VERTEX_NORMAL> normal;
+	vector<VERTEX_TANGENT> tangent;
+
+	float polygonSize = 20000.0f / SegmentCount;
+	float uvSize = 81.0f / SegmentCount;
+
+	for (int x = 0; x < SegmentCount; x++)
+	{
+		for (int y = 0; y < SegmentCount; y++)
+		{
+			VERTEX_POSITION pos = VERTEX_POSITION(-10000.0f + (x * polygonSize), 0.0f, -10000.0f + (y * polygonSize), 1.0f);
+			VERTEX_TEXCOORD tex = VERTEX_TEXCOORD(-80.0f + (x * uvSize), -80.0f + (y * uvSize));
+			for (int i = 0; i < 6; i++)
+			{
+				position.push_back(pos + VERTEX_POSITION(polygonSize * Tmp[i][0], 0.0f, polygonSize * Tmp[i][1], 0.0f));
+				texcoord.push_back(tex + VERTEX_TEXCOORD(uvSize * Tmp[i][0], uvSize * Tmp[i][1]));
+				normal.push_back(VERTEX_NORMAL(0.0f, 1.0f, 0.0f, 1.0f));
+				tangent.push_back(VERTEX_TANGENT(1.0f, 0.0f, 0.0f, 1.0f));
+			}
+		}
+	}
+
+	D3DVERTEXELEMENT9 elements[] = {
+		{ 0, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },	// 頂点座標.
+		{ 1, 0	, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD   , 0 }, // UV座標.
+		{ 2, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },	// 法線ベクトル.
+		{ 2, 0	, D3DDECLTYPE_FLOAT4  , D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },	// 接ベクトル.
+		D3DDECL_END()
+	};
+
+	_Vertex->Initialize(fbEngine::PRIMITIVETYPE::TRIANGLELIST, position.size());
+	_Vertex->CreateVertexBuffer(position.data(), position.size(), sizeof(VERTEX_POSITION), elements[0]);
+	_Vertex->CreateVertexBuffer(texcoord.data(), texcoord.size(), sizeof(VERTEX_TEXCOORD), elements[1]);
+	_Vertex->CreateVertexBuffer(normal.data(), normal.size(), sizeof(VERTEX_NORMAL), elements[2]);
+	_Vertex->CreateVertexBuffer(tangent.data(), tangent.size(), sizeof(VERTEX_TANGENT), elements[3]);
+	_Vertex->CreateDeclaration();
 }
 
 /**

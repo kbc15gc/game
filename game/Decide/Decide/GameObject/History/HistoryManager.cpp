@@ -23,6 +23,10 @@ HistoryManager::HistoryManager()
 		_GameObjectList.push_back(list);
 	}
 
+	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
+	{
+		_NowGroupIDList.push_back(0);
+	}
 }
 
 /**
@@ -32,6 +36,8 @@ void HistoryManager::Start()
 {
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+
+	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
 	FOR(i, _LocationHistoryList.size())
 	{
@@ -111,6 +117,12 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
+
+	if (_NowGroupIDList[(int)location] != group)
+	{
+		_MysteryLight->SetActive(true, true);
+		_NowGroupIDList[(int)location] = group;
+	}
 
 	char* type[2] = { "Obj","NPC" };
 	char path[128];

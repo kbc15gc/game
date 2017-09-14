@@ -189,9 +189,6 @@
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp">
       <Filter>GameObject\Village\Shop</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Buy.cpp">
-      <Filter>GameObject\Village\Shop\HFSM</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Close.cpp">
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClCompile>
@@ -199,9 +196,6 @@
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp">
-      <Filter>GameObject\Village\Shop\HFSM</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Sell.cpp">
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp">
@@ -238,6 +232,10 @@
     </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\Item2D.cpp">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Trade.cpp" />
+    <ClCompile Include="GameObject\History\Effect\MysteryLight.cpp">
+      <Filter>GameObject\History\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,9 +435,6 @@
     <ClInclude Include="GameObject\Village\Shop\Shop.h">
       <Filter>GameObject\Village\Shop</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Buy.h">
-      <Filter>GameObject\Village\Shop\HFSM</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Close.h">
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClInclude>
@@ -447,9 +442,6 @@
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Select.h">
-      <Filter>GameObject\Village\Shop\HFSM</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Sell.h">
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopState.h">
@@ -490,6 +482,10 @@
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\Item2D.h">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Trade.h" />
+    <ClInclude Include="GameObject\History\Effect\MysteryLight.h">
+      <Filter>GameObject\History\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -577,6 +573,9 @@
     </Filter>
     <Filter Include="GameObject\Log">
       <UniqueIdentifier>{f05b0ed3-cc79-4f50-b8d0-d01f8c34c195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\History\Effect">
+      <UniqueIdentifier>{594e76b4-ad44-4582-bc81-c2cf8b53d462}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

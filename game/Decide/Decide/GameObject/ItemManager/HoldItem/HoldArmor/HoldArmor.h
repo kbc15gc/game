@@ -5,6 +5,6 @@
 class HoldArmor :public HoldItemBase
 {
 public:
-	HoldArmor(const char* name);
+	HoldArmor(Item::BaseInfo* info);
 	~HoldArmor();
 };

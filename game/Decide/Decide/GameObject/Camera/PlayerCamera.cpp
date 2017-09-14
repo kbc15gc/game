@@ -68,7 +68,7 @@ void PlayerCamera::UpdateSubClass()
 	float Pint = 3.0f;
 
 	//—ðŽj‘‚ðŒ©‚Ä‚¢‚é‚©‚Ç‚¤‚©B
-	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Unused)
+	if (_IsMove)
 	{
 		_StandardBehavior();
 		Pint = 3.0f;

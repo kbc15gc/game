@@ -6,7 +6,6 @@
 
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
-#include "GameObject\Player\Player.h"
 
 //状態.
 #include"HFSM\HistoryBookStateUnused.h"
@@ -43,7 +42,10 @@ void HistoryBook::Awake()
 */
 void HistoryBook::Start()
 {
-
+	if (!_PlayerCamera)
+	{
+		_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+	}
 	//状態リストを初期化.
 	_InitState();
 
@@ -60,10 +62,6 @@ void HistoryBook::Start()
 
 	//アニメーションの初期化。
 	PlayAnimation(AnimationCodeE::OpenIdol, 0.0f);
-
-	//本は見えないように設定。
-	_Model->enable = false;
-
 }
 
 /**
@@ -71,14 +69,49 @@ void HistoryBook::Start()
 */
 void HistoryBook::Update()
 {
-	if (_IsOperation)
-	{
-		//歴史書を見ているフラグを変える操作。
-		_ChangeIsLookAtHistoryFlag();
-	}
-
 	//状態の更新。
 	_StateList[_NowState]->Update();
+}
+
+void HistoryBook::SetActive(const bool & act, const bool & children)
+{
+	if (_IsOperation)
+	{
+		if (act)
+		{
+			_Player->PlayerStopEnable();
+			_PlayerCamera->SetIsMove(false);
+			_IsOpenOrClose = true;
+			ChangeState(StateCodeE::Move);
+			for (auto& locList : _HistoryPageList)
+			{
+				for (auto it : locList)
+				{
+					if (it != nullptr)
+					{
+						it->SetActive(act);
+					}
+				}
+			}
+			SetActiveGameObject(act, children);
+		}
+		else
+		{
+			_IsOpenOrClose = false;
+			ChangeState(StateCodeE::Close);
+
+			for (auto& locList : _HistoryPageList)
+			{
+				for (auto it : locList)
+				{
+					if (it != nullptr)
+					{
+						it->ChangeState(HistoryPage::StateCodeE::Close);
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -116,40 +149,6 @@ void HistoryBook::_InitState()
 	//初期値は閉じている.
 	ChangeState(StateCodeE::Unused);
 
-}
-
-/**
-* 歴史書を開いている判定フラグを変更.
-*/
-void HistoryBook::_ChangeIsLookAtHistoryFlag()
-{
-	//歴史書を見るフラグの切り替え。
-	//スタートボタン又はEキーが押された.
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START) || KeyBoardInput->isPush(DIK_E))
-	{
-		//未使用なら表示。使用状態なら閉じる.
-		if (_NowState == (int)StateCodeE::Unused)
-		{
-			_IsOpenOrClose = true;
-			ChangeState(StateCodeE::Move);
-		}
-		else if (_NowState == (int)StateCodeE::Idol)
-		{
-			_IsOpenOrClose = false;
-			ChangeState(StateCodeE::Close);
-
-			for (auto& locList : _HistoryPageList)
-			{
-				for (auto it : locList)
-				{
-					if (it != nullptr)
-					{
-						it->ChangeState(HistoryPage::StateCodeE::Close);
-					}
-				}
-			}
-		}
-	}
 }
 
 /**
