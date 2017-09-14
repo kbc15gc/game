@@ -100,7 +100,7 @@ void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item,int num) {
 				_InventoryItemList[(int)code][i]->UpdateHoldNum(num);
 
 				//所持品の所持数書き出し。
-				//_ItemListOutData();
+				_ItemListOutData();
 				return;
 			}
 		}
@@ -115,7 +115,7 @@ void Inventory::AddItem(Item::ItemCodeE code, Item::BaseInfo* item,int num) {
 				_InventoryItemList[(int)code][i].reset(Hold);
 
 				//所持品配列の所持数をCSVに書き出し。
-				//_ItemListOutData();
+				_ItemListOutData();
 
 				return;
 			}
@@ -173,7 +173,7 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 }
 
 //所持数を減らす。
-void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
+bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 	//配列サイズ分検索。
 	for (auto itr = _InventoryItemList[(int)item->TypeID].begin(); itr != _InventoryItemList[(int)item->TypeID].end();)
 	{
@@ -184,14 +184,13 @@ void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 			(*itr)->UpdateHoldNum(num);
 
 			//更新した結果所持数が0になれば破棄。
-			if ((*itr)->GetHoldNum() <= 0);
-			
-			//リストから削除。
-			_DeleteFromList((*itr).get());
-
+			if ((*itr)->GetHoldNum() <= 0) {
+				//リストから削除。
+				_DeleteFromList((*itr).get());
+			}
 			//所持品の所持数書き出し。
-			//_ItemListOutData();
-			return;
+			_ItemListOutData();
+			return true;
 		}
 		//不一致。
 		else
@@ -199,15 +198,16 @@ void Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 			itr++;
 		}
 	}
+	return false;
 }
 
 void Inventory::_ItemListOutData() {
-	vector<unique_ptr<HoldNum>> work;
+	vector<unique_ptr<HoldInfo>> work;
 	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Item].size();idx++) {
 		if (_InventoryItemList[(int)Item::ItemCodeE::Item][idx]) {
 			work.push_back(
-				unique_ptr<HoldNum>(
-				new HoldNum(
+				unique_ptr<HoldInfo>(
+				new HoldInfo(
 					static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetInfo()->TypeID),
 					_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetInfo()->ID, 
 					_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetHoldNum()
@@ -216,5 +216,22 @@ void Inventory::_ItemListOutData() {
 		}
 	}
 
-	Support::OutputCSV<HoldNum>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ItemList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);
+
+	/*vector<unique_ptr<HoldInfo>> work;
+	for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Armor].size(); idx++) {
+		if (_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]) {
+			work.push_back(
+				unique_ptr<HoldInfo>(
+					new HoldArmorInfo(
+						static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->TypeID),
+						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID,
+						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetHoldNum(),
+						(HoldArmor*)_InventoryItemList[(int)Item::ItemCodeE::Armor][idx].get(),
+						_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->ID
+					)));
+		}
+	}
+
+	Support::OutputCSV<HoldInfo>("Asset/Data/InventoryData/ArmorList.csv", HoldItemData, ARRAY_SIZE(HoldItemData), work);*/
 }

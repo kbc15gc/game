@@ -36,6 +36,9 @@ HRESULT InputManager::Initialize()
 		_Xinput[idx]->Initialize(idx);
 	}
 
+	_VirtualPad = new VirtualPad();
+	_VirtualPad->Initialize(_KeyBoard, _Xinput[0]);
+
 	return D3D_OK;
 }
 

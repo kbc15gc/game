@@ -31,23 +31,27 @@ ShopS_Trade::~ShopS_Trade()
 		INSTANCE(GameObjectManager)->AddRemoveList(_MenuTexts[i]);
 	}
 	_MenuTexts.clear();
+	_MoneyTexts.clear();
 }
 
 void ShopS_Trade::Update()
 {
-	if ((KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU)))
+	if (_DisplayList.size() > 0)
 	{
-		SetIndex((_Select > 0) ? _Select - 1 : _ItemList.size() - 1);
-	}
-	else if ((KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD)))
-	{
-		SetIndex((_Select + 1) % _ItemList.size());
-	}
+		if ((KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU)))
+		{
+			SetIndex((_Select > 0) ? _Select - 1 : _DisplayList.size() - 1);
+		}
+		else if ((KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD)))
+		{
+			SetIndex((_Select + 1) % _DisplayList.size());
+		}
 
-	//決定(仮)
-	if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-	{
-		Decision();
+		//決定(仮)
+		if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+		{
+			Decision();
+		}
 	}
 	//キャンセル。
 	if (KeyBoardInput->isPush(DIK_B) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
@@ -60,14 +64,15 @@ void ShopS_Trade::EnterState()
 {
 	//ウィンドウをアクティブにする。
 	_BuyWindow->SetActive(true, true);
+	_SaveState = _Shop->_State;
 	//メニューを作成。
 	_CreateMenu();
-	//テキスト設定。
-	UpdateText();
 	//
 	SetIndex(_Select);
 	//表示更新。
 	ScrollDisplayItem();
+
+	_SelectNum = 1;
 }
 
 void ShopS_Trade::ExitState()
@@ -87,7 +92,7 @@ void ShopS_Trade::DiveState()
 void ShopS_Trade::_CreateMenu()
 {
 	//テキスト生成。
-	while (_MenuTexts.size() <= 50)
+	while (_MenuTexts.size() <= 30)
 	{
 		//インスタンス化。
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _BuyWindow->GetPriorty());
@@ -98,45 +103,49 @@ void ShopS_Trade::_CreateMenu()
 
 		//リストに追加。
 		_MenuTexts.push_back(text);
+
+		TextObject* money = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _BuyWindow->GetPriorty());
+
+		money->SetFontSize(50);
+		money->SetFormat((unsigned int)fbText::TextFormatE::RIGHT);
+		money->transform->SetParent(text->transform);
+
+		_MoneyTexts.push_back(money);
 	}
-	//ショップの品ぞろえと同じ量、テキストを生成。
-	if (_Shop->_State == Shop::ShopStateE::Buy)
-	{
-		_ItemList = _Shop->_ItemList;
-	}
-	else if (_Shop->_State == Shop::ShopStateE::Sell)
-	{
-		//_ItemList = INSTANCE(Inventory)->GetInfoList();
-	}
+	UpdateList();
 }
 
 void ShopS_Trade::_CloseMenu()
 {
-	for each (auto text in _MenuTexts)
+	FOR(i,_MenuTexts.size())
 	{
-		text->SetActive(false);
+		_MenuTexts[i]->SetActive(false, true);
 	}
 }
 
 void ShopS_Trade::SetIndex(int idx)
 {
-	//選択している添え字設定。
-	_Select = idx;
+	if (_DisplayList.size() > 0)
+	{
+		//リストの表示更新。
+		if (idx >= _MinIdx + DISPLAY_ITEM_NUM)
+			SetMinIndex(idx - (DISPLAY_ITEM_NUM - 1));
+		else if (idx < _MinIdx)
+			SetMinIndex(idx);
 
-	//リストの表示更新。
-	if (_Select >= _MinIdx + DISPLAY_ITEM_NUM)
-		SetMinIndex(_Select - (DISPLAY_ITEM_NUM - 1));
-	else if (_Select < _MinIdx)
-		SetMinIndex(_Select);
+		//カーソルをずらす。
+		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
+		int displayidx = idx - _MinIdx + 1;
+		float posy = _MenuListHeight * displayidx + _MenuListHeight*0.5f;
+		_Cursor->transform->SetLocalPosition(posx, posy, 0);
 
-	//カーソルをずらす。
-	float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
-	int displayidx = _Select - _MinIdx + 1;
-	float posy = _MenuListHeight * displayidx + _MenuListHeight*0.5f;
-	_Cursor->transform->SetLocalPosition(posx, posy, 0);
+		//アイテムの情報を送る。
+		if (_Select != idx)
+			_Shop->SetDescriptionText(_DisplayList.at(idx)->GetInfo()->Description);
 
-	//アイテムの情報を送る。
-	_Shop->SetDescriptionText(_ItemList[_Select]->Description);
+		//選択している添え字設定。
+		_Select = idx;
+	}
 }
 
 void ShopS_Trade::SetMinIndex(int minidx)
@@ -151,12 +160,39 @@ void ShopS_Trade::ScrollDisplayItem()
 	_CloseMenu();
 
 	//表示の最小添え字からカウント分表示する。
-	for (int i = _MinIdx,count = 1; i < _MinIdx + DISPLAY_ITEM_NUM && i < _MenuTexts.size(); i++,count++)
+	for (int i = _MinIdx,count = 1; i < _MinIdx + DISPLAY_ITEM_NUM && i < _DisplayList.size(); i++,count++)
 	{
-		_MenuTexts[i]->SetActive(true);
+		_MenuTexts[i]->SetActive(true,true);
 		float posx = -(_BuyWindow->GetSize().x / 2) + _Cursor->GetSize().x;
 		_MenuTexts[i]->transform->SetLocalPosition(posx, _MenuListHeight * count, 0);
+		_MoneyTexts[i]->transform->SetLocalPosition(_BuyWindow->GetSize().x - 60, 0, 0);
 	}
+}
+
+void ShopS_Trade::UpdateList()
+{
+	_DisplayList.clear();
+	//表示するリスト取得。
+	if (_SaveState == Shop::ShopStateE::Buy)
+	{
+		_DisplayList = _Shop->_ItemList;
+	}
+	else if (_SaveState == Shop::ShopStateE::Sell)
+	{
+		for (int code = 0; code < static_cast<int>(Item::ItemCodeE::Max); code++)
+		{
+			auto& inventory = INSTANCE(Inventory)->GetInventoryList((Item::ItemCodeE)code);
+			for (auto& item : inventory)
+			{
+				//nullチェック。
+				if (item) {
+					_DisplayList.push_back(item.get());
+				}
+			}
+		}
+	}
+
+	UpdateText();
 }
 
 void ShopS_Trade::UpdateText()
@@ -167,13 +203,20 @@ void ShopS_Trade::UpdateText()
 	float height = 0.0f;
 	_MenuListHeight = 0.0f;
 	//テキスト設定。
-	FOR(i, _ItemList.size())
+	FOR(i, _DisplayList.size())
 	{
 		_MenuTexts[i]->SetActive(true);
 		//テキスト設定。
-		char t[256];
-		sprintf(t, "名前:%s,  値段:%d$", _ItemList[i]->Name, _ItemList[i]->Value);
-		_MenuTexts[i]->SetString(t);
+		char menu[256];
+		sprintf(menu, "%s", _DisplayList[i]->GetInfo()->Name);
+		_MenuTexts[i]->SetString(menu);
+
+		char value[256];
+		if (_SaveState == Shop::ShopStateE::Sell)
+			sprintf(value, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, _DisplayList[i]->GetHoldNum());
+		else
+			sprintf(value, "%6d$", _DisplayList[i]->GetInfo()->Value);
+		_MoneyTexts[i]->SetString(value);
 		//高さ設定。
 		height += _MenuTexts[i]->GetLength().y;
 		//最大の高さを保持。
@@ -183,49 +226,60 @@ void ShopS_Trade::UpdateText()
 
 void ShopS_Trade::Decision()
 {
-	//お金が足りているか？
-	if (INSTANCE(Inventory)->GetPlayerMoney() >= _ItemList[_Select]->Value)
+	if (_DisplayList.size() > 0)
 	{
 		//アイテムを設定。
-		_Shop->_SelectItem = _ItemList[_Select];
+		_SelectItem = _DisplayList[_Select]->GetInfo();
+		//テキスト。
+		char msg[256];
 		//関数を設定。
-		if (_Shop->_State == Shop::ShopStateE::Buy)
+		if (_SaveState == Shop::ShopStateE::Buy)
 		{
-			_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this, std::placeholders::_1);
+			//お金が足りているか？
+			if (INSTANCE(Inventory)->GetPlayerMoney() >= _DisplayList[_Select]->GetInfo()->Value)
+			{
+				sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _SelectNum, _SelectItem->Value);
+
+				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
+				//購入確認画面を出す。
+				_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
+			}
+			else
+			{
+				//購入できない旨を表示。
+				sprintf(msg, "お金がたりませんよ。");
+			}
+		}
+		else if (_SaveState == Shop::ShopStateE::Sell)
+		{
 			//テキスト設定。
-			char t[256];
-			sprintf(t, "全部で %d$ だよ。", _ItemList[_Select]->Value);
-			_Shop->SetDescriptionText(t);
+			sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _SelectNum, _SelectItem->Value);
+
+			_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this);
+			//販売確認画面を出す。
+			_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
 		}
-		else if (_Shop->_State == Shop::ShopStateE::Sell)
-		{
-			_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this, std::placeholders::_1);//テキスト設定。
-			_Shop->SetDescriptionText("これを売るのかい？");
-		}
-		//購入確認画面を出す。
-		_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
-	}
-	else
-	{
-		//購入できない旨を表示。
-		_Shop->SetDescriptionText("お金が足りねぇ！");
+		_Shop->SetDescriptionText(msg);
 	}
 }
 
-void ShopS_Trade::BuyItem(Item::BaseInfo *info)
+void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
-	INSTANCE(Inventory)->SubtractPlayerMoney(info->Value);
+	INSTANCE(Inventory)->SubtractPlayerMoney(_SelectItem->Value);
 	//インベントリへ追加。
-	INSTANCE(Inventory)->AddItem((Item::ItemCodeE)info->TypeID,info);
+	INSTANCE(Inventory)->AddItem((Item::ItemCodeE)_SelectItem->TypeID, _SelectItem);
+	_Shop->SetDescriptionText("まいどあり。");
 }
 
-void ShopS_Trade::SellItem(Item::BaseInfo *info)
+void ShopS_Trade::SellItem()
 {
 	//インベントリから排除。
-	INSTANCE(Inventory)->SubHoldNum(info, 1);
-	//テキストの更新。
-	UpdateText();
+	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _SelectNum))
+	{
+		//削除されていたならリスト更新。
+		UpdateList();
+	}
 	//アイテムの値段分お金を貰う。
-	INSTANCE(Inventory)->SubtractPlayerMoney(-info->Value);
+	INSTANCE(Inventory)->SubtractPlayerMoney(-_SelectItem->Value);
 }

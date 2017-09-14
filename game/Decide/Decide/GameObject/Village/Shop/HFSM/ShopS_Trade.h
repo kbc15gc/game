@@ -1,6 +1,6 @@
 #pragma once
 #include "ShopState.h"
-
+#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 class ImageObject;
 class TextObject;
 
@@ -35,6 +35,8 @@ private:
 	void SetMinIndex(int min);
 	//アイテムリストを移動させる。
 	void ScrollDisplayItem();
+	//
+	void UpdateList();
 	//テキスト更新。
 	void UpdateText();
 	
@@ -44,11 +46,9 @@ private:
 	//決定処理。
 	void Decision();
 	//アイテムの購入処理。
-	//[in] アイテムの情報。
-	void BuyItem(Item::BaseInfo*);
+	void BuyItem();
 	//アイテムの販売処理。
-	//[in] アイテムの情報。
-	void SellItem(Item::BaseInfo*);
+	void SellItem();
 private:
 	//現在選択している項目
 	int _Select = 0;
@@ -56,16 +56,22 @@ private:
 	int _MinIdx = 0;
 	//ショップに表示する数。
 	const int DISPLAY_ITEM_NUM = 7;
+	//売買する個数。
+	int _SelectNum = 1;
+	//ショップのステート保持。
+	Shop::ShopStateE _SaveState;
 
 	//表示するアイテムの一覧
-	vector<Item::BaseInfo*> _ItemList;
+	vector<HoldItemBase*> _DisplayList;
+	//選択しているアイテム。
+	Item::BaseInfo* _SelectItem;
 
 	//カーソルの画像。
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。
 	ImageObject* _BuyWindow;
 	//アイテム一覧を視覚化したテキストのリスト。
-	vector<TextObject*> _MenuTexts;
+	vector<TextObject*> _MenuTexts,_MoneyTexts;
 	//メニューの一項目の縦幅。
 	float _MenuListHeight;
 };

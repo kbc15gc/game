@@ -81,14 +81,16 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 {
 	char path[256];
 	//読み込むCSV決定。
-	sprintf(path, "Asset/Data/ShopData/%s.csv", _ShopNameList.at(shopID));
+	sprintf(path, "Asset/Data/ShopData/%s.csv", _ShopNameList.at(shopID).get()->name);
 	//商品の品ぞろえ。
 	vector<unique_ptr<Product>> _ProductList;
 
 	//品揃えを読み込み
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
-	//
+	//リストの中身削除。
+	for (HoldItemBase* hold : _ItemList)
+		SAFE_DELETE(hold);
 	_ItemList.clear();
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
@@ -98,7 +100,11 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 
 		//nullチェック
 		if (item)
-			_ItemList.push_back(item);
+		{
+			//情報を設定して初期化。
+			HoldItemBase* hitem = new HoldItemBase(item);
+			_ItemList.push_back(hitem);
+		}
 	}
 }
 
