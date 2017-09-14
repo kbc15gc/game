@@ -62,7 +62,7 @@ void Ocean::CreateBuffer()
 {
 	_Vertex = new Vertex();
 
-	const int SegmentCount = 100;
+	const int SegmentCount = 500;
 
 	vector<VERTEX_POSITION> position;
 	vector<VERTEX_TEXCOORD> texcoord;
@@ -77,7 +77,7 @@ void Ocean::CreateBuffer()
 		for (int y = 0; y < SegmentCount; y++)
 		{
 			VERTEX_POSITION pos = VERTEX_POSITION(-10000.0f + (x * polygonSize), 0.0f, -10000.0f + (y * polygonSize), 1.0f);
-			VERTEX_TEXCOORD tex = VERTEX_TEXCOORD(-80.0f + (x * uvSize), -80.0f + (x * uvSize));
+			VERTEX_TEXCOORD tex = VERTEX_TEXCOORD(-80.0f + (x * uvSize), -80.0f + (y * uvSize));
 			for (int i = 0; i < 6; i++)
 			{
 				position.push_back(pos + VERTEX_POSITION(polygonSize * Tmp[i][0], 0.0f, polygonSize * Tmp[i][1], 0.0f));

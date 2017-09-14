@@ -191,6 +191,7 @@
     <ClInclude Include="GameObject\GameManager.h" />
     <ClInclude Include="GameObject\Ground\Ground.h" />
     <ClInclude Include="GameObject\History\Chip.h" />
+    <ClInclude Include="GameObject\History\Effect\MysteryLight.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookState.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateIdol.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\Ground\Ground.cpp" />
     <ClCompile Include="GameObject\History\Chip.cpp" />
+    <ClCompile Include="GameObject\History\Effect\MysteryLight.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateIdol.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateMove.cpp" />
