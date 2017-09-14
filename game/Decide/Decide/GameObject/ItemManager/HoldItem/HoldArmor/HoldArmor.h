@@ -24,6 +24,16 @@ public:
 	inline int GetMDefRnd() {
 		return _MDefRnd;
 	}
+
+	//ランクを考慮した物理防御力を取得。
+	inline int GetDef() {
+		return _Def;
+	}
+
+	//ランクを考慮した魔法防御力を取得。
+	inline int GetMagicDef() {
+		return _MagicDef;
+	}
 private:
 	int _DefRnd;	//防御力の乱数差分(この値でランク付け、単位はパーセント)。
 	int _MDefRnd;	//魔法防御力の乱数差分(この値でランク付け、単位はパーセント)。

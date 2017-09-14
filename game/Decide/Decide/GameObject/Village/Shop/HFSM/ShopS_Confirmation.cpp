@@ -52,7 +52,7 @@ void ShopS_Confirmation::Update()
 		if(idx == 0)
 		{
 			//Ý’è‚³‚ê‚½ŠÖ”ŽÀsB
-			_Shop->_ShopFunc(_Shop->_SelectItem);
+			_Shop->_ShopFunc();
 			//‚à‚Ç‚éB
 			_Shop->_ChangeState(_Caller);
 		}
