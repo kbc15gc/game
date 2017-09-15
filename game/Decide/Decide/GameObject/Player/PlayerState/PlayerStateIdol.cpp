@@ -80,8 +80,9 @@ void PlayerStateIdol::Update()
 		cameraX.z = viewinv.m[0][2];
 		cameraX.Normalize();	//Y軸を打ち消しているので正規化する。
 
-								// 向きベクトルに移動量を積算。
+		// 向きベクトルに移動量を積算。
 		dir = dir * _Speed;
+
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;
 		movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。

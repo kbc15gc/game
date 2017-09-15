@@ -7,6 +7,7 @@
 #include "GameObject\SplitSpace.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\AttackValue2D.h"
+#include "..\History\HistoryManager.h"
 
 namespace
 {
@@ -34,6 +35,7 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false)
 {
+	//経験値テーブルをロード
 	_LoadEXPTable();
 }
 
@@ -99,7 +101,7 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110, 660, 0));
+		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
 	}
 	// MPのバーを表示。
 	{
@@ -147,7 +149,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-1056, 69, -1947);
+	_StartPos = Vector3(-1056.0f, 69.0f, -1947.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -160,35 +162,38 @@ void Player::Start()
 
 void Player::Update()
 {
-	/*if (KeyBoardInput->isPush(DIK_A)) {
-		Money2D* money = (Money2D*)INSTANCE(GameObjectManager)->FindObject("Money2D");
-			money->Initialize(100);
-	}*/
 
-	if (KeyBoardInput->isPressed(DIK_L))
+#ifdef _DEBUG
+	
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+#endif // DEBUG
+
+
+	if (KeyBoardInput->isPush(DIK_L))
 	{
 		PlayerStopEnable();
 	}
-	if (KeyBoardInput->isPressed(DIK_K))
-	{
-		PlayerStopDisable();
-	}
 
-
-	//本が開いていないときは動ける。
+	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
 	}
-	////本が開いているときにアイドルステートじゃない場合はアイドルステートに変更。
-	//if (_State == State::Stop)
-	//{
-	//	if (_State != State::Idol)
-	//	{
-	//		ChangeState(State::Idol);
-	//	}
-	//}
 	if (_HPBar != nullptr)
 	{
 		//HPバーの更新
@@ -211,7 +216,8 @@ void Player::Update()
 		//レベルアップする場合のDEF
 		//レベルアップする場合のDEX
 		//レベルアップする場合のAGI
-		_PlayerParam->LevelUP(_EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
+		_PlayerParam->LevelUP(
+			_EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
 			_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
 			_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
 			_ATKTable[_PlayerParam->GetParam(CharacterParameter::LV)],
@@ -245,25 +251,23 @@ void Player::ChangeState(State nextstate)
 	}
 	switch (nextstate)
 	{
-		//待機状態
+		
 	case State::Idol:
+		//待機状態
 		_CurrentState = &_IdolState;
 		break;
-		//走る状態
 	case State::Run:
+		//走る状態
 		_CurrentState = &_RunState;
 		break;
-		//攻撃状態
 	case State::Attack:
+		//攻撃状態
 		_CurrentState = &_AttackState;
 		break;
+	case State::Death:					
 		//死亡状態
-	case State::Death:
 		_CurrentState = &_DeathState;
 		//デフォルト
-	case State::Stop:
-		//なにもしない。
-		break;
 	default:
 		break;
 	}
@@ -349,7 +353,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(transform->GetPosition(), damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+		attackvalue->Init(damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+		attackvalue->transform->SetParent(transform);
 	}
 }
 
@@ -374,17 +379,16 @@ void Player::_Damage()
 	{
 		ChangeState(State::Death);
 	}
-	/*
-	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
-	*/
+	//海に入るとダメージを食らう。
 	if (transform->GetLocalPosition().y < 48.5f 
 		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru);
-		_HPBar->SubValue(Oboreru);
+		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru * Time::DeltaTime());
+		_HPBar->SubValue(Oboreru * Time::DeltaTime());
 	}
 }
 
+//経験値テーブルをロード。
 void Player::_LoadEXPTable()
 {
 	std::vector<std::unique_ptr<ExperiencePointTableInfo>> exptbaleinfo;
