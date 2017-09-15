@@ -180,6 +180,11 @@ void Player::Update()
 		//所持リストに追加.
 		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
 	}
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(100, 0);
+	}
 #endif // DEBUG
 
 
