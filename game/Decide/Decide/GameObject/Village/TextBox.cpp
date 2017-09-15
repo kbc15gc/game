@@ -5,7 +5,7 @@
 TextBox::TextBox(const char * name):
 	GameObject(name),
 	_CharNum(0),
-	_TextID(-1),
+	_StartTextID(-1),
 	_TextSpeed(1.0f),
 	_State(TextBoxStateE::CLOSE),
 	_AnimeTime(0.0f)
@@ -57,9 +57,9 @@ void TextBox::Update()
 
 void TextBox::SetMessageID(const int & id)
 {
-	_TextID = id;
+	_StartTextID = id;
 	//メッセージ情報取得
-	_Message = INSTANCE(MessageManager)->GetMess(_TextID);
+	_Message = INSTANCE(MessageManager)->GetMess(_StartTextID);
 }
 
 void TextBox::Speak()
@@ -130,7 +130,7 @@ void TextBox::CloseMessage()
 		_State == TextBoxStateE::TITLE)
 	{
 		//最初のメッセージ取得
-		_Message = INSTANCE(MessageManager)->GetMess(_TextID);
+		_Message = INSTANCE(MessageManager)->GetMess(_StartTextID);
 		_State = TextBoxStateE::CLOSING;
 		//テキストを閉じる。
 		_Text->SetString("");
@@ -188,7 +188,7 @@ void TextBox::_SetMessage(const int & id)
 {
 	if (id >= 0)
 	{
-		INSTANCE(EventManager)->Execute(Event::EventID::Shop, 0);
+		INSTANCE(EventManager)->Execute(Event::EventID::ShopF, 0);
 		//メッセージ情報取得
 		_Message = INSTANCE(MessageManager)->GetMess(id);
 		if (_Message)

@@ -65,8 +65,16 @@ public:
 	}
 
 	//オブジェクトのアクティブフラグを設定する　セッター
+	//[in] 設定するアクティブフラグ。
+	//[in] 子供にも反映させるか？
 	virtual void SetActive(const bool& act,const bool& children = false)
 	{
+		//切り替わった時に呼び出す。。
+		if ((_Active != act) && act)
+			OnEnable();
+		else
+			OnDisable();
+
 		_Active = act;
 		if(children)
 		{

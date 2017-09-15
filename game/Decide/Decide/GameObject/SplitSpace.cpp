@@ -78,9 +78,9 @@ void SplitSpace::Debug() {
 			for (auto& x : _SpaceCollisions) {
 				for (auto& y : x) {
 					for (auto z : y) {
-						z->GetCollision()->enable = true;
+						z->GetCollision()->SetEnable(true);
 						//z->GetCollider()->RenderEnable();
-						z->GetCollider()->enable = true;
+						z->GetCollider()->SetEnable(true);
 					}
 				}
 			}
@@ -107,9 +107,9 @@ void SplitSpace::Debug() {
 			for (auto& x : _SpaceCollisions) {
 				for (auto& y : x) {
 					for (auto z : y) {
-						z->GetCollision()->enable = false;
+						z->GetCollision()->SetEnable(false);
 						z->GetCollider()->RenderDisable();
-						z->GetCollider()->enable = false;
+						z->GetCollider()->SetEnable(false);
 					}
 				}
 			}

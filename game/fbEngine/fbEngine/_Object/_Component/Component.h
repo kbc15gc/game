@@ -34,13 +34,31 @@ public:
 	virtual void PreRender() {};
 	virtual void Render() {};*/
 
-	//コンポーネントを有効にする
-	bool enable;
+	//有効フラグの設定。
+	//[in] フラグ。
+	void SetEnable(const bool& flg)
+	{
+		//切り替わった時に呼び出す。。
+		if ((enable != flg) && enable)
+			OnEnable();
+		else
+			OnDisable();
+
+		enable = flg;
+	}
+
+	bool GetEnable()
+	{
+		return enable;
+	}
+
 	//自分がアタッチしているゲームオブジェクトのアドレス
 	GameObject* gameObject;
 	//gameObjectのトランスフォームのアドレス
 	Transform* transform;
 private:
+	//コンポーネントの有効フラグ。
+	bool enable;
 	//実行順番(実行時にしか設定できない)
 	int _ExecutionOrder;
 

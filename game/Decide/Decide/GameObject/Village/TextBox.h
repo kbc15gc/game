@@ -59,8 +59,8 @@ private:
 	ImageObject* _BoxImage[2];
 	//テキスト
 	TextObject* _Text;
-	//最初のテキストID
-	int _TextID;
+	//読み始めるテキストのID
+	int _StartTextID;
 	//テキストの情報
 	MessageInfo* _Message;
 

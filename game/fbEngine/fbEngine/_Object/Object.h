@@ -54,6 +54,12 @@ public:
 	// ※デストラクタよりも前に呼ばれる。
 	virtual void OnDestroy() {};
 
+	//[有効/アクティブ]になった時に呼ばれる関数。
+	virtual void OnEnable() {};
+
+	//[無効/非アクティブ]になった時に呼ばれる関数。
+	virtual void OnDisable() {};
+
 	const char* GetName() const
 	{
 		return _Name;

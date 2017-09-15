@@ -28,7 +28,7 @@ public:
 	{
 		_Text->SetCharNum(num);
 	}
-	const Vector2& GetLength();
+	const Vector2 GetLength();
 	const unsigned int& GetMaxCharNum()
 	{
 		return _Text->GetMaxCharNum();
