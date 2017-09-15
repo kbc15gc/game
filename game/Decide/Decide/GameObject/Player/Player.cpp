@@ -377,15 +377,24 @@ void Player::_LoadEXPTable()
 	{
 		_EXPTable.push_back(exptbaleinfo[i]->ExperiencePoint);
 
-		_ParamTable[i][CharacterParameter::Param::MAXHP] = exptbaleinfo[i]->HP;
-		_ParamTable[i][CharacterParameter::Param::HP] = exptbaleinfo[i]->HP;
-		_ParamTable[i][CharacterParameter::Param::MAXMP] = exptbaleinfo[i]->MP;
-		_ParamTable[i][CharacterParameter::Param::MP] = exptbaleinfo[i]->MP;
-		_ParamTable[i][CharacterParameter::Param::ATK] = exptbaleinfo[i]->ATK;
-		_ParamTable[i][CharacterParameter::Param::MAT] = exptbaleinfo[i]->MAT;
-		_ParamTable[i][CharacterParameter::Param::DEF] = exptbaleinfo[i]->DEF;
-		_ParamTable[i][CharacterParameter::Param::MDE] = exptbaleinfo[i]->MDE;
-		_ParamTable[i][CharacterParameter::Param::LV] = i + 1;
+		// テスト。
+		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++) {
+			_ParamTable[i][idx] = exptbaleinfo[i]->param[idx];
+		}
+
+		//{
+		//	_ParamTable[i][CharacterParameter::Param::MAXHP] = exptbaleinfo[i]->HP;
+		//	_ParamTable[i][CharacterParameter::Param::HP] = exptbaleinfo[i]->HP;
+		//	_ParamTable[i][CharacterParameter::Param::MAXMP] = exptbaleinfo[i]->MP;
+		//	_ParamTable[i][CharacterParameter::Param::MP] = exptbaleinfo[i]->MP;
+		//	_ParamTable[i][CharacterParameter::Param::ATK] = exptbaleinfo[i]->ATK;
+		//	_ParamTable[i][CharacterParameter::Param::MAT] = exptbaleinfo[i]->MAT;
+		//	_ParamTable[i][CharacterParameter::Param::DEF] = exptbaleinfo[i]->DEF;
+		//	_ParamTable[i][CharacterParameter::Param::MDE] = exptbaleinfo[i]->MDE;
+		//	_ParamTable[i][CharacterParameter::Param::DEX] = exptbaleinfo[i]->DEX;
+		//	_ParamTable[i][CharacterParameter::Param::CRT] = exptbaleinfo[i]->CRT;
+		//	_ParamTable[i][CharacterParameter::Param::LV] = i + 1; 
+		//}
 	}
 }
 

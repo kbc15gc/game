@@ -26,7 +26,7 @@ namespace {
 	//			データ型。
 	//			データの先頭から見た各要素の位置(バイト)。
 	//			要素一つ分のサイズ(バイト)。
-	const Support::DATARECORD EnemyInfoDecl[7] =
+	const Support::DATARECORD EnemyInfoDecl[] =
 	{
 		{ "type",Support::DataTypeE::INT, offsetof(struct EnemyInfo,type),	sizeof(EnemyCharacter::EnemyType) },
 		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,param),	sizeof(EnemyInfo::param) },

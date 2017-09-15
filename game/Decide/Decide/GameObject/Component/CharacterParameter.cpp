@@ -8,9 +8,11 @@ const wchar_t* CharacterParameter::ENUM_NAME[] = {
 	L"MP    ",
 	L"MAXMP ",
 	L"ATK   ",
+	L"MAT   ",
 	L"DEF   ",
+	L"MDE   ",
 	L"DEX   ",
-	L"AGI   ",
+	L"CRT   ",
 	L"LV	",
 };
 #endif
@@ -19,20 +21,21 @@ void CharacterParameter::Awake() {
 	_Param = vector<int>(Param::MAX,0);
 }
 
-void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def, int mde, int dex, int lv)
-{
-	//パラメーター設定。
-	_Param[Param::HP]		= hp;		//ヒットポイント。
-	_Param[Param::MAXHP]	= maxhp;	//ヒットポイント。
-	_Param[Param::MP]		= mp;		//マジックポイント。
-	_Param[Param::MAXMP]	= maxmp;	//ヒットポイント。
-	_Param[Param::ATK]		= atk;		//攻撃力。
-	_Param[Param::MAT]		= mat;		//魔法攻撃力。
-	_Param[Param::DEF]		= def;		//防御力。
-	_Param[Param::MDE]		= mde;		//魔法防御力。
-	_Param[Param::DEX]		= dex;		//命中力。
-	_Param[Param::LV]		= lv;		//レベル。
-}
+//void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def, int mde, int dex,int crt, int lv)
+//{
+//	//パラメーター設定。
+//	_Param[Param::HP]		= hp;		//ヒットポイント。
+//	_Param[Param::MAXHP]	= maxhp;	//ヒットポイント。
+//	_Param[Param::MP]		= mp;		//マジックポイント。
+//	_Param[Param::MAXMP]	= maxmp;	//ヒットポイント。
+//	_Param[Param::ATK]		= atk;		//攻撃力。
+//	_Param[Param::MAT]		= mat;		//魔法攻撃力。
+//	_Param[Param::DEF]		= def;		//防御力。
+//	_Param[Param::MDE]		= mde;		//魔法防御力。
+//	_Param[Param::DEX]		= dex;		//器用度。
+//	_Param[Param::CRT]		= crt;		//クリティカル威力。
+//	_Param[Param::LV]		= lv;		//レベル。
+//}
 
 void CharacterParameter::ParamInit(int param[Param::MAX]) {
 	for (int idx = 0; idx < Param::MAX; idx++) {
@@ -119,7 +122,12 @@ int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk
 
 		if (rand() % work == 0) {
 			// クリティカル。
-			damage += damage * static_cast<Item::WeaponInfo*>(weapon->GetInfo())->CriticalDamage;
+			int crt = _Param[Param::CRT];	// キャラのクリティカル。
+			if(weapon) {
+				// 武器のクリティカル威力を加算。
+				crt += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->CriticalDamage;
+			}
+			damage += damage * static_cast<float>(crt) * 0.01f;
 		}
 	}
 	return damage * atk;

@@ -39,20 +39,22 @@ public:
 	//			防御力。
 	//			魔法防御。
 	//			器用度(クリティカル発生率)。
+	//			クリティカル威力。
 	//			レベル。
-	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, MAT, DEF, MDE, DEX, LV, MAX };
-	//初期化。
-	// 引数：	HP。
-	//			HP最大値。
-	//			MP。
-	//			MP最大値。
-	//			攻撃力。
-	//			魔法攻撃力。
-	//			防御力。
-	//			魔法防御。
-	//			器用度(クリティカル発生率)。
-	//			レベル。
-	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int mat, int def, int mde, int dex, int lv);
+	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, MAT, DEF, MDE, DEX, CRT ,LV, MAX };
+	////初期化。
+	//// 引数：	HP。
+	////			HP最大値。
+	////			MP。
+	////			MP最大値。
+	////			攻撃力。
+	////			魔法攻撃力。
+	////			防御力。
+	////			魔法防御。
+	////			器用度(クリティカル発生率)。
+	////			クリティカル威力。
+	////			レベル。
+	//void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int mat, int def, int mde, int dex,int crt, int lv);
 	//初期化。
 	void ParamInit(int param[Param::MAX]);
 	void ParamInit(const vector<int>& param);

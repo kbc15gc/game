@@ -24,29 +24,44 @@ namespace
 {
 	const int MAXLV = 100;
 
+	//struct ExperiencePointTableInfo
+	//{
+	//	int ExperiencePoint;	//レベルアップ毎に必要な経験値
+	//	int HP;					//レベルごとのHP
+	//	int MP;					//レベルごとのMP
+	//	int ATK;				//レベルごとのATK
+	//	int MAT;				//レベルごとのMAT
+	//	int DEF;				//レベルごとのDEF
+	//	int MDE;				//レベルごとのMDE
+	//	int DEX;				//レベルごとのDEX
+	//	int CRT;				//レベルごとのCRT
+	//};
+
 	struct ExperiencePointTableInfo
 	{
 		int ExperiencePoint;	//レベルアップ毎に必要な経験値
-		int HP;					//レベルごとのHP
-		int MP;					//レベルごとのMP
-		int ATK;				//レベルごとのATK
-		int MAT;				//レベルごとのMAT
-		int DEF;				//レベルごとのDEF
-		int MDE;				//レベルごとのMDE
-		int DEX;				//レベルごとのDEX
+		int param[CharacterParameter::Param::MAX];	// 各種パラメータ。
 	};
+
+	//const Support::DATARECORD ExperiencePointTableInfoData[] =
+	//{
+	//	{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
+	//	{ "HP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,HP),sizeof(int)},
+	//	{ "MP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MP),sizeof(int)},
+	//	{ "ATK", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int)},
+	//	{ "MAT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MAT),sizeof(int) },
+	//	{ "DEF", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int)},
+	//	{ "MDE", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MDE),sizeof(int) },
+	//	{ "DEX", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEX),sizeof(int)},
+	//	{ "CRT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,CRT),sizeof(int) },
+	//};
 
 	const Support::DATARECORD ExperiencePointTableInfoData[] =
 	{
 		{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
-		{ "HP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,HP),sizeof(int)},
-		{ "MP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MP),sizeof(int)},
-		{ "ATK", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int)},
-		{ "MAT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int) },
-		{ "DEF", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int)},
-		{ "MDE", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int) },
-		{ "DEX", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEX),sizeof(int)},
+		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct ExperiencePointTableInfo,param),	sizeof(ExperiencePointTableInfo::param) },
 	};
+
 }
 
 class Player : public GameObject
