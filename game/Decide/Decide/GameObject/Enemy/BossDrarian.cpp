@@ -21,9 +21,6 @@ BossDrarian::~BossDrarian()
 void BossDrarian::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("DRARIAN.X");
-
-	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0);
 }
 
 void BossDrarian::_StartSubClass() {

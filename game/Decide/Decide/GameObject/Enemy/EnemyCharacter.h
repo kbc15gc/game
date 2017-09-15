@@ -204,7 +204,8 @@ public:
 
 	// エネミーにダメージを与える処理。
 	// 引数：	ダメージ量。
-	void GiveDamage(int damage);
+	//			魔法か。
+	void GiveDamage(int damage,bool isMagic);
 
 	// 攻撃生成関数。
 	// 引数：	位置(ローカル座標)。
@@ -218,7 +219,7 @@ public:
 		//攻撃コリジョン作成。
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(_MyComponent.Parameter->GiveDamageMass(), localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
+		attack->Create(_MyComponent.Parameter->GiveDamageMass(false), false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
 		return attack;
 	}
 
@@ -230,13 +231,14 @@ public:
 	//			MP。
 	//			MP最大値。
 	//			攻撃力。
+	//			魔法攻撃力。
 	//			防御力。
-	//			命中力。
-	//			敏捷力。
-	inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int def, int dex, int agi,int lv, int exp, int dropexp,int money)const  {
-		_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, def, dex, agi, lv, exp, dropexp,money);
-		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
-	}
+	//			魔法防御力。
+	//			器用度(クリティカル率)。
+	//inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def,int mde, int dex,int lv, int exp, int dropexp,int money)const  {
+	//	_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, mat,def,mde, dex, lv, exp, dropexp,money);
+	//	_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
+	//}
 	// 全パラメーター設定。
 	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
 	//			各種パラメーター。
@@ -328,13 +330,19 @@ public:
 	}
 
 	// ドロップする経験値。
+	inline void SetDropEXP(int exp) {
+		_dropExp = exp;
+	}
 	inline int GetDropEXP() const {
-		return _MyComponent.Parameter->GetParam(CharacterParameter::DROPEXP);
+		return _dropExp;
 	}
 
 	// ドロップする所持金。
+	inline void SetDropMoney(int money) {
+		_dropMoney = money;
+	}
 	inline int GetDropMoney() const {
-		return _MyComponent.Parameter->GetParam(CharacterParameter::MONEY);
+		return _dropMoney;
 	}
 
 	inline float GetWalkSpeed()const {
@@ -477,6 +485,9 @@ protected:
 	unsigned short _damageMotionProbability = 1;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
 
 private:
+	int _dropExp;	// 落とす経験値。
+	int _dropMoney; // 落とす金額。
+
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。

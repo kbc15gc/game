@@ -76,6 +76,9 @@ void EnemyManager::CreateEnemy() {
 			enemy->transform->SetScale(info->InfoData->scale);
 			// パラメーター設定。
 			enemy->SetParamAll(Color, info->InfoData->param);
+			// ドロップ設定。
+			enemy->SetDropEXP(info->InfoData->exp);
+			enemy->SetDropMoney(info->InfoData->money);
 		}
 		else {
 			// 生成失敗。

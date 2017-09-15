@@ -13,6 +13,8 @@ namespace {
 		int type;		// 種別。
 		//char fileName[FILENAME_MAX];	// モデルデータのファイル名。
 		int param[CharacterParameter::Param::MAX];	// 各種パラメータ。
+		int exp;	// 落とす経験値。
+		int money;	// 落とす金額。
 		Vector3 position;	// 位置。
 		Quaternion rotation;	// 回転。
 		Vector3 scale;	// 拡縮。
@@ -24,11 +26,12 @@ namespace {
 	//			データ型。
 	//			データの先頭から見た各要素の位置(バイト)。
 	//			要素一つ分のサイズ(バイト)。
-	const Support::DATARECORD EnemyInfoDecl[5] =
+	const Support::DATARECORD EnemyInfoDecl[7] =
 	{
 		{ "type",Support::DataTypeE::INT, offsetof(struct EnemyInfo,type),	sizeof(EnemyCharacter::EnemyType) },
-		//{ "fileName",Support::DataTypeE::STRING, offsetof(struct EnemyInfo,fileName), sizeof(EnemyInfo::fileName) },
 		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,param),	sizeof(EnemyInfo::param) },
+		{ "exp",	Support::DataTypeE::INT, offsetof(struct EnemyInfo,exp),	sizeof(int) },
+		{ "money",	Support::DataTypeE::INT, offsetof(struct EnemyInfo,money),	sizeof(int) },
 		{ "position",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,position),	sizeof(Vector3) },
 		{ "rotation",	Support::DataTypeE::QUATERNION, offsetof(struct EnemyInfo,rotation),	sizeof(Quaternion) },
 		{ "scale",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,scale),	sizeof(Vector3) },

@@ -12,9 +12,6 @@ const wchar_t* CharacterParameter::ENUM_NAME[] = {
 	L"DEX   ",
 	L"AGI   ",
 	L"LV	",
-	L"EXP	",
-	L"DROPEXP",
-	L"MONEY",
 };
 #endif
 
@@ -22,7 +19,7 @@ void CharacterParameter::Awake() {
 	_Param = vector<int>(Param::MAX,0);
 }
 
-void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def, int mde, int dex, int lv, int exp, int dropexp,int money)
+void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def, int mde, int dex, int lv)
 {
 	//パラメーター設定。
 	_Param[Param::HP]		= hp;		//ヒットポイント。
@@ -35,9 +32,6 @@ void CharacterParameter::ParamInit(int hp, int maxhp, int mp, int maxmp, int atk
 	_Param[Param::MDE]		= mde;		//魔法防御力。
 	_Param[Param::DEX]		= dex;		//命中力。
 	_Param[Param::LV]		= lv;		//レベル。
-	_Param[Param::EXP]		= exp;		//現在の経験値。
-	_Param[Param::DROPEXP]	= dropexp;	//落とす経験値。
-	_Param[Param::MONEY]	= money;	//所持金。
 }
 
 void CharacterParameter::ParamInit(int param[Param::MAX]) {
@@ -77,13 +71,13 @@ int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldA
 	if (isMagic) {
 		def = _Param[Param::MDE];
 		if (armor) {
-			def += armor-
+			def += armor->GetMagicDef();
 		}
 	}
 	else {
 		def = _Param[Param::DEF];
 		if (armor) {
-			def += armor->
+			def += armor->GetDef();
 		}
 	}
 
@@ -92,7 +86,7 @@ int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldA
 	return damage;
 }
 
-int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1)
+int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk)
 {
 	int damage = 0;
 	int weaponDamage = 0;
@@ -131,19 +125,3 @@ int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullpt
 	return damage * atk;
 }
 
-void CharacterParameter::LevelUP(int lvupexp,int hp,int mp,int atk,int mat, int def,int mde, int dex)
-{
-	//レベルアップに必要な経験値を超えるとレベルアップする。
-	
-		_Param[Param::LV] += 1;
-		_Param[Param::EXP] = _Param[Param::EXP] - lvupexp;
-		_Param[Param::HP] = hp;
-		_Param[Param::MAXHP] = hp;
-		_Param[Param::MP] = mp;
-		_Param[Param::MAXMP] = mp;
-		_Param[Param::ATK] = atk;
-		_Param[Param::MAT] = mat;
-		_Param[Param::DEF] = def;
-		_Param[Param::MDE] = mde;
-		_Param[Param::DEX] = dex;	
-}

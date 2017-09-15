@@ -286,19 +286,18 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 	{
 		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) >= 0)
 		{
-			_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(hitCollision->GetDamage()));
-			GiveDamage(hitCollision->GetDamage());
+			GiveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
 		}
 	}
 }
 
-void EnemyCharacter::GiveDamage(int damage) {
+void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	int _damage;
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
 
 		// ダメージ値をもとにパラメーター更新。
-		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage));
+		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage, isMagic));
 		_damage = damage;
 
 		if (_isDamageMotion) {

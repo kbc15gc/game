@@ -40,10 +40,7 @@ public:
 	//			魔法防御。
 	//			器用度(クリティカル発生率)。
 	//			レベル。
-	//			経験値。
-	//			落とす経験値。
-	//			所持金。
-	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, MAT, DEF, MDE, DEX, LV, EXP, DROPEXP, MONEY, MAX };
+	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, MAT, DEF, MDE, DEX, LV, MAX };
 	//初期化。
 	// 引数：	HP。
 	//			HP最大値。
@@ -55,10 +52,7 @@ public:
 	//			魔法防御。
 	//			器用度(クリティカル発生率)。
 	//			レベル。
-	//			経験値。
-	//			落とす経験値。
-	//			所持金。
-	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int mat, int def, int mde, int dex, int lv, int exp, int dropexp,int money);
+	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int mat, int def, int mde, int dex, int lv);
 	//初期化。
 	void ParamInit(int param[Param::MAX]);
 	void ParamInit(const vector<int>& param);
@@ -123,9 +117,6 @@ public:
 	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
 	int GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
 
-	// レベルアップ。
-	// 引数：		レベルアップに必要な経験値の値。
-	void LevelUP(int lvupexp, int hp, int mp, int atk, int mat,int def,int mde, int dex);
 private:
 
 	// 配列外にアクセスしてないかチェック。
