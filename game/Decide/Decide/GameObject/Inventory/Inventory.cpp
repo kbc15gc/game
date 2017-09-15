@@ -236,7 +236,7 @@ void Inventory::_ItemListOutData() {
 
 	//ファイルネーム
 	const char* filename[] = { "ItemList","ArmorList","WeaponList" };
-	vector<unique_ptr<HoldInfo>> list;
+	vector<vector<unique_ptr<HoldInfo>>> list = vector<vector<unique_ptr<HoldInfo>>>(static_cast<int>(Item::ItemCodeE::Max));
 	FOR(i, ARRAY_SIZE(filename))
 	{
 		//ファイルパス
@@ -247,7 +247,7 @@ void Inventory::_ItemListOutData() {
 		case (int)Item::ItemCodeE::Item:
 			for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Item].size(); idx++) {
 				if (_InventoryItemList[(int)Item::ItemCodeE::Item][idx]) {
-					list.push_back(
+					list[(int)Item::ItemCodeE::Item].push_back(
 						unique_ptr<HoldInfo>(
 							new HoldInfo(
 								static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Item][idx]->GetInfo()->TypeID),
@@ -257,13 +257,13 @@ void Inventory::_ItemListOutData() {
 							));
 				}
 			}
-			Support::OutputCSV<HoldInfo>(filepath, HoldItemData, ARRAY_SIZE(HoldItemData), list);
+			Support::OutputCSV<HoldInfo>(filepath, HoldItemData, ARRAY_SIZE(HoldItemData), list[(int)Item::ItemCodeE::Item]);
 			break;
 
 		case (int)Item::ItemCodeE::Armor:
-			for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Item].size(); idx++) {
-				if (_InventoryItemList[(int)Item::ItemCodeE::Item][idx]) {
-					list.push_back(
+			for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Armor].size(); idx++) {
+				if (_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]) {
+					list[(int)Item::ItemCodeE::Armor].push_back(
 						unique_ptr<HoldArmorInfo>(
 							new HoldArmorInfo(
 								static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Armor][idx]->GetInfo()->TypeID),
@@ -275,14 +275,14 @@ void Inventory::_ItemListOutData() {
 							));
 				}
 			}
-			Support::OutputCSV<HoldInfo>(filepath, HoldArmorData, ARRAY_SIZE(HoldArmorData), list);
+			Support::OutputCSV<HoldInfo>(filepath, HoldArmorData, ARRAY_SIZE(HoldArmorData), list[(int)Item::ItemCodeE::Armor]);
 			break;
 
 		case (int)Item::ItemCodeE::Weapon:
 
 			for (int idx = 0; idx < _InventoryItemList[(int)Item::ItemCodeE::Weapon].size(); idx++) {
 				if (_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx]) {
-					list.push_back(
+					list[(int)Item::ItemCodeE::Weapon].push_back(
 						unique_ptr<HoldWeponInfo>(
 							new HoldWeponInfo(
 								static_cast<int>(_InventoryItemList[(int)Item::ItemCodeE::Weapon][idx]->GetInfo()->TypeID),
@@ -295,7 +295,7 @@ void Inventory::_ItemListOutData() {
 							));
 				}
 			}
-			Support::OutputCSV<HoldInfo>(filepath, HoldWeaponData, ARRAY_SIZE(HoldWeaponData), list);
+			Support::OutputCSV<HoldInfo>(filepath, HoldWeaponData, ARRAY_SIZE(HoldWeaponData), list[(int)Item::ItemCodeE::Weapon]);
 			break;
 		}
 	}
