@@ -22,7 +22,7 @@ void Enemy::CreateAttackCollision() {
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false),false, Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
 	attack->RemoveParent();
 
 	// 攻撃音再生。
@@ -32,9 +32,6 @@ void Enemy::CreateAttackCollision() {
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
-
-	//パラメーター初期化。
-	_MyComponent.Parameter->ParamInit(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void Enemy::_StartSubClass(){

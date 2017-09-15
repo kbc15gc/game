@@ -19,6 +19,7 @@ public:
 
 	// 攻撃判定用のコリジョン生成。
 	// 引数：	コリジョン製作者によるダメージ量。
+	//			魔法攻撃か。
 	//			位置(ローカル座標)。
 	//			回転(ローカル座標、クォータニオン)。
 	//			サイズ。
@@ -26,7 +27,7 @@ public:
 	//			コリジョン寿命(0.0fより小さい値で無限)。
 	//			コリジョン生成待ち時間(この関数が呼ばれてから何秒後にコリジョン生成するか)。
 	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
-	void Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f,float waitTime = 0.0f, Transform* Parent = nullptr);
+	void Create(int damage,bool isMagic,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f,float waitTime = 0.0f, Transform* Parent = nullptr);
 
 	inline void SetParent(Transform* Parent) {
 		transform->SetParent(Parent);
@@ -41,9 +42,13 @@ public:
 	}
 
 	//設定されたダメージをゲット。
-	inline int GetDamage()
+	inline int GetDamage() const
 	{
 		return _Damage;
+	}
+
+	inline bool GetIsMagic()const {
+		return _isMagic;
 	}
 
 	inline GostCollision* GetGostCollision()const {
@@ -82,6 +87,7 @@ private:
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
 	int _Damage = 0;
+	bool _isMagic;	// 魔法か。
 	vector<shared_ptr<btCollisionObject>> _HitCollisions;	// 当たっているコリジョン。
 	bool _isCreateCollision = false;	// コリジョンを生成したか。
 };

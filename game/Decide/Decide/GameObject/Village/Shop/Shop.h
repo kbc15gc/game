@@ -3,6 +3,8 @@
 #include "GameObject\ItemManager\ItemManager.h"
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 
+#include "GameObject\Village\EventManager.h"
+
 class ImageObject;
 class TextObject;
 class IShopState;
@@ -66,6 +68,11 @@ public:
 
 	//ショップメニューを開く。
 	void OpenShop(const unsigned int& shopID);
+
+	void OnDisable()override
+	{
+		INSTANCE(EventManager)->NotifyEndEvent();
+	}
 private:
 	//ショップを閉じる。
 	void Close();

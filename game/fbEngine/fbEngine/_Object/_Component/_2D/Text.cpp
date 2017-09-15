@@ -23,7 +23,7 @@ void Text::Awake()
 	_Sprite->SetClipColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 	//Ž©“®•`‰æ‚µ‚È‚¢‚æ‚¤‚É‚·‚é
 	_Sprite->Start();
-	_Sprite->enable = false;
+	_Sprite->SetEnable(false);
 	strcpy_s(_FontStyle, 32, "‚l‚r –¾’©");
 }
 

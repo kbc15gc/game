@@ -38,9 +38,9 @@ void Collider::Debug(){
 
 #ifdef _DEBUG
 void Collider::RecreateViewModel() {
-	bool isEnable = _CollisionModel->GetSkinModel()->enable;
+	bool isEnable = _CollisionModel->GetSkinModel()->GetEnable();
 	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
-	_CollisionModel->GetSkinModel()->enable = isEnable;	// ’¼‘O‚Ì•`‰æó‘Ô‚ğİ’èB
+	_CollisionModel->GetSkinModel()->SetEnable(isEnable);	// ’¼‘O‚Ì•`‰æó‘Ô‚ğİ’èB
 }
 
 void Collider::CreateViewModel(const btTransform& collisionTr){
@@ -96,20 +96,20 @@ void Collider::UpdateTransform(const btTransform& collisionTr) {
 
 bool Collider::GetIsRender() {
 	if (_CollisionModel) {
-		return _CollisionModel->GetSkinModel()->enable;
+		return _CollisionModel->GetSkinModel()->GetEnable();
 	}
 	return false;
 }
 
 void Collider::RenderEnable() {
 	if (_CollisionModel) {
-		_CollisionModel->GetSkinModel()->enable = true;
+		_CollisionModel->GetSkinModel()->SetEnable(true);
 	}
 }
 
 void Collider::RenderDisable() {
 	if (_CollisionModel) {
-		_CollisionModel->GetSkinModel()->enable = false;
+		_CollisionModel->GetSkinModel()->SetEnable(false);
 	}
 }
 #endif

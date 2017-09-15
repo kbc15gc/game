@@ -13,7 +13,7 @@ class BossDrarian :
 {
 private:
 	// ボス(歩行型ドラゴン)のアニメーション番号。
-	enum class AnimationDrarian {
+	enum class AnimationBossDrarian {
 		Wait = 0,
 		Walk,
 		Dash,

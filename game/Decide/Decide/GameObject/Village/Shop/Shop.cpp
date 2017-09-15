@@ -57,6 +57,7 @@ void Shop::OpenShop(const unsigned int & shopID)
 	{
 		//店の商品読み込み
 		_LoadShopData(shopID);
+		SetActive(true);
 		_DescriptionWindow->SetActive(true, true);
 		//セレクトメニューを開く
 		_ChangeState(ShopStateE::Select);
@@ -66,6 +67,7 @@ void Shop::OpenShop(const unsigned int & shopID)
 void Shop::Close()
 {
 	_DescriptionWindow->SetActive(false, true);
+	SetActive(false);
 }
 
 void Shop::SetState()

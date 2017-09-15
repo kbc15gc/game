@@ -24,27 +24,44 @@ namespace
 {
 	const int MAXLV = 100;
 
+	//struct ExperiencePointTableInfo
+	//{
+	//	int ExperiencePoint;	//レベルアップ毎に必要な経験値
+	//	int HP;					//レベルごとのHP
+	//	int MP;					//レベルごとのMP
+	//	int ATK;				//レベルごとのATK
+	//	int MAT;				//レベルごとのMAT
+	//	int DEF;				//レベルごとのDEF
+	//	int MDE;				//レベルごとのMDE
+	//	int DEX;				//レベルごとのDEX
+	//	int CRT;				//レベルごとのCRT
+	//};
+
 	struct ExperiencePointTableInfo
 	{
 		int ExperiencePoint;	//レベルアップ毎に必要な経験値
-		int HP;					//レベルごとのHP
-		int MP;					//レベルごとのMP
-		int ATK;				//レベルごとのATK
-		int DEF;				//レベルごとのDEF
-		int DEX;				//レベルごとのDEX
-		int AGI;				//レベルごとのAGI
+		int param[CharacterParameter::Param::MAX];	// 各種パラメータ。
 	};
+
+	//const Support::DATARECORD ExperiencePointTableInfoData[] =
+	//{
+	//	{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
+	//	{ "HP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,HP),sizeof(int)},
+	//	{ "MP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MP),sizeof(int)},
+	//	{ "ATK", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int)},
+	//	{ "MAT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MAT),sizeof(int) },
+	//	{ "DEF", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int)},
+	//	{ "MDE", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MDE),sizeof(int) },
+	//	{ "DEX", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEX),sizeof(int)},
+	//	{ "CRT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,CRT),sizeof(int) },
+	//};
 
 	const Support::DATARECORD ExperiencePointTableInfoData[] =
 	{
 		{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
-		{ "HP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,HP),sizeof(int)},
-		{ "MP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MP),sizeof(int)},
-		{ "ATK", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int)},
-		{ "DEF", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int)},
-		{ "DEX", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEX),sizeof(int)},
-		{ "AGI", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,AGI),sizeof(int)},
+		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct ExperiencePointTableInfo,param),	sizeof(ExperiencePointTableInfo::param) },
 	};
+
 }
 
 class Player : public GameObject
@@ -78,6 +95,17 @@ public:
 		AnimationDeath,								//死亡
 		AnimationNum,								//アニメーションの数
 	};
+	// プレイヤーのパラメーター
+	enum class Parameter {
+		EXP = 0,
+		HP,
+		MP,
+		ATK,
+		DEF,
+		DEX,
+		AGI
+	};
+
 	Player(const char* name);
 	~Player();
 	void Awake()override;
@@ -131,15 +159,16 @@ public:
 	//モデルを表示するかフラグをセット。
 	void SetEnable(bool is)
 	{
-		_Model->enable = is;
+		_Model->SetEnable(is);
 	}
 	//プレイヤー解放
 	void Releace();
 	//敵が落とした物(経験値、お金)を受け取る。
 	void TakeDrop(int dropexp,int money)
 	{
-		_PlayerParam->AddParam(CharacterParameter::EXP, dropexp);
-		_PlayerParam->AddParam(CharacterParameter::MONEY, money);
+		_nowEXP += dropexp;
+		// お金はインベントリに格納。
+
 	}
 
 	void SetBuff(int hp = 0, int atk = 0, int def = 0, int speed = 0) {
@@ -150,6 +179,9 @@ public:
 	int* GetParamPt(CharacterParameter::Param param)
 	{
 		return _PlayerParam->GetParamPt(param);
+	}
+	int* GetExpPt() {
+		return &_nowEXP;
 	}
 	//プレイヤーをストップさせるフラグ。
 	void PlayerStopEnable()
@@ -167,6 +199,10 @@ private:
 	void _Damage();
 	//経験値テーブルをCSVからロード。
 	void _LoadEXPTable();
+	// レベルアップ。
+	// 引数：		レベルアップに必要な経験値の値。
+	void _LevelUP();
+
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
@@ -213,7 +249,7 @@ private:
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSE = nullptr;
 	//レベルアップ時の音
-	SoundSource* _LevelUP = nullptr;
+	SoundSource* _LevelUP_SE = nullptr;
 	//プレイヤーのパラメーター
 	CharacterParameter* _PlayerParam = nullptr;
 	// 回転。
@@ -231,18 +267,11 @@ private:
 	//デバッグ
 	bool _Debug = false;
 
-	//経験値テーブル
+
+	//レベルアップに必要な経験値のテーブル(LV - 1が添え字)。
 	std::vector<int> _EXPTable;
-	//レベルごとのHP
-	std::vector<int> _HPTable;
-	//レベルごとのMP
-	std::vector<int> _MPTable;
-	//レベルごとのATK
-	std::vector<int> _ATKTable;
-	//レベルごとのDEF
-	std::vector<int> _DEFTable;
-	//レベルごとのDEX
-	std::vector<int> _DEXTable;
-	//レベルごとのAGI
-	std::vector<int> _AGITable;
+	int _nowEXP = 0;	// 現在の経験値。
+
+	// レベルごとのパラメーターテーブル。
+	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
 };

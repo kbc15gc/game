@@ -52,7 +52,7 @@ void HistoryMenu::Update()
 	{
 		//非表示.
 		_LocationNameRender->SetActive(false);
-		_CursorSprite->enable = false;
+		_CursorSprite->SetEnable(false);
 		for (auto& it : _Chip2DList)
 		{
 			it->SetActive(false);
@@ -166,7 +166,7 @@ void HistoryMenu::EnableUpdate()
 
 	//表示.
 	_LocationNameRender->SetActive(true);
-	_CursorSprite->enable = true;
+	_CursorSprite->SetEnable(true);
 
 	//場所名描画.
 	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());

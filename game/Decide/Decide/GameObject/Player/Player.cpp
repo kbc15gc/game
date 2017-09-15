@@ -96,7 +96,8 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(_HPTable[0], _HPTable[0], _MPTable[0], _MPTable[0], _ATKTable[0], _DEFTable[0], _DEXTable[0], _AGITable[0], 1, 0, 0, 0);
+	_PlayerParam->ParamInit(_ParamTable[0]);
+	
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
@@ -113,9 +114,9 @@ void Player::Awake()
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
 	//レベルアップ音初期化
-	_LevelUP = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
-	_LevelUP->Init("Asset/Sound/levelup.wav");
-	_LevelUP->SetVolume(2.0f);
+	_LevelUP_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
+	_LevelUP_SE->Init("Asset/Sound/levelup.wav");
+	_LevelUP_SE->SetVolume(2.0f);
 #ifdef _DEBUG
 
 	_outputData = AddComponent<OutputData>();
@@ -211,31 +212,9 @@ void Player::Update()
 	}
 	//レベルアップするか。
 	if (_EXPTable.size() > 0 &&
-		_PlayerParam->GetParam(CharacterParameter::EXP) >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)])
+		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
 	{
-		//何レベルのテーブルか。
-		//レベルアップに必要な経験値。
-		//レベルアップする場合のHP
-		//レベルアップする場合のMP
-		//レベルアップする場合のATK
-		//レベルアップする場合のDEF
-		//レベルアップする場合のDEX
-		//レベルアップする場合のAGI
-		_PlayerParam->LevelUP(
-			_EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_ATKTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_DEFTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_DEXTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_AGITable[_PlayerParam->GetParam(CharacterParameter::LV)]
-			);
-		//HPが上がったのでHPバーのHP設定しなおす。
-		_HPBar->Reset(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)], _HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
-		//MPが上がったのでMPバーのMP設定しなおす。
-		_MPBar->Reset(_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)], _MPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
-		//レベルアップ時の音再生。
-		_LevelUP->Play(false);
+		_LevelUP();
 	}
 	//ダメージを受ける処理。
 	_Damage();
@@ -354,7 +333,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage());
+		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
@@ -399,14 +378,43 @@ void Player::_LoadEXPTable()
 	std::vector<std::unique_ptr<ExperiencePointTableInfo>> exptbaleinfo;
 	Support::LoadCSVData<ExperiencePointTableInfo>("Asset/Data/PlayerParameter.csv", ExperiencePointTableInfoData, ARRAYSIZE(ExperiencePointTableInfoData), exptbaleinfo);
 	
-	for (int i = 0; i < exptbaleinfo.size(); i++)
+	for (int i = 0; i < MAXLV; i++)
 	{
 		_EXPTable.push_back(exptbaleinfo[i]->ExperiencePoint);
-		_HPTable.push_back(exptbaleinfo[i]->HP);
-		_MPTable.push_back(exptbaleinfo[i]->MP);
-		_ATKTable.push_back(exptbaleinfo[i]->ATK);
-		_DEFTable.push_back(exptbaleinfo[i]->DEF);
-		_DEXTable.push_back(exptbaleinfo[i]->DEX);
-		_AGITable.push_back(exptbaleinfo[i]->AGI);
+
+		// テスト。
+		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++) {
+			_ParamTable[i][idx] = exptbaleinfo[i]->param[idx];
+		}
+
+		//{
+		//	_ParamTable[i][CharacterParameter::Param::MAXHP] = exptbaleinfo[i]->HP;
+		//	_ParamTable[i][CharacterParameter::Param::HP] = exptbaleinfo[i]->HP;
+		//	_ParamTable[i][CharacterParameter::Param::MAXMP] = exptbaleinfo[i]->MP;
+		//	_ParamTable[i][CharacterParameter::Param::MP] = exptbaleinfo[i]->MP;
+		//	_ParamTable[i][CharacterParameter::Param::ATK] = exptbaleinfo[i]->ATK;
+		//	_ParamTable[i][CharacterParameter::Param::MAT] = exptbaleinfo[i]->MAT;
+		//	_ParamTable[i][CharacterParameter::Param::DEF] = exptbaleinfo[i]->DEF;
+		//	_ParamTable[i][CharacterParameter::Param::MDE] = exptbaleinfo[i]->MDE;
+		//	_ParamTable[i][CharacterParameter::Param::DEX] = exptbaleinfo[i]->DEX;
+		//	_ParamTable[i][CharacterParameter::Param::CRT] = exptbaleinfo[i]->CRT;
+		//	_ParamTable[i][CharacterParameter::Param::LV] = i + 1; 
+		//}
 	}
+}
+
+void Player::_LevelUP()
+{
+	// 現在の経験値リセット。
+	_nowEXP = _nowEXP - _EXPTable[_PlayerParam->GetParam(CharacterParameter::Param::LV) - 1];	// レベルアップ時に溢れた分を現在の経験値に設定。
+
+	// 次のレベルのパラメータを設定。
+	_PlayerParam->ParamInit(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
+
+	//HPが上がったのでHPバーのHP設定しなおす。
+	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));
+	//MPが上がったのでMPバーのMP設定しなおす。
+	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP));
+	//レベルアップ時の音再生。
+	_LevelUP_SE->Play(false);
 }

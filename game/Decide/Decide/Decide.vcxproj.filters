@@ -233,9 +233,11 @@
     <ClCompile Include="GameObject\StatusWindow\Item2D.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Trade.cpp" />
     <ClCompile Include="GameObject\History\Effect\MysteryLight.cpp">
       <Filter>GameObject\History\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Trade.cpp">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -483,9 +485,11 @@
     <ClInclude Include="GameObject\StatusWindow\Item2D.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Trade.h" />
     <ClInclude Include="GameObject\History\Effect\MysteryLight.h">
       <Filter>GameObject\History\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Trade.h">
+      <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

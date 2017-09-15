@@ -165,7 +165,7 @@ void AttackCollision::_CallBackExit(btCollisionObject* coll) {
 	}
 }
 
-void AttackCollision::Create(int damage,const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
+void AttackCollision::Create(int damage,bool isMagic, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
 
 
 	_lifeTime = lifeTime;	// 寿命を保存。
@@ -182,6 +182,7 @@ void AttackCollision::Create(int damage,const Vector3& pos, const Quaternion& ro
 	transform->SetLocalRotation(rotation);
 
 	_Damage = damage;	// ダメージ量保存。
+	_isMagic = isMagic;
 
 	// コリジョン生成。
 	CreateCollision();

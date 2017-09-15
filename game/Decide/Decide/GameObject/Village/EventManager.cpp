@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "EventManager.h"
+
+#include "GameObject\Player\Player.h"
+#include "GameObject\Camera\PlayerCamera.h"
+
 #include "GameObject\Village\Shop\Shop.h"
 
 EventManager*  EventManager::_Instance = nullptr;
@@ -8,19 +12,34 @@ EventManager::EventManager()
 {
 }
 
-bool EventManager::Execute(Event::EventID event, int idx)
+bool EventManager::Execute(Event::EventID id, unsigned int idx)
 {
-	EventFunc func;
 	//範囲外アクセスをチェック。
-	try {
-		func = _EventList.at((int)event);
+	try 
+	{
+		//関数かアクションか？
+		if (idx >= 0)
+			_FuncList.at((int)id)(idx);
+		else
+			_ActionList.at((int)id)();
+
+		GetPlayer()->PlayerStopEnable();
+		GetCamera()->SetIsMove(false);
 	}
-	catch (const out_of_range& oor) {
+	catch (const out_of_range& oor) 
+	{
 		oor.what();
 		return false;
 	}
-	func(idx);
-	return true;	
+	_ActiveEvent = id;
+
+	return true;
+}
+
+void EventManager::NotifyEndEvent()
+{
+	GetPlayer()->PlayerStopDisable();
+	GetCamera()->SetIsMove(true);
 }
 
 void EventManager::AddEvent()
@@ -29,5 +48,9 @@ void EventManager::AddEvent()
 	//関数を追加。
 
 	//ショップを開く処理。
-	_EventList.push_back(std::bind(&Shop::OpenShop, shop, std::placeholders::_1));
+	_FuncList.push_back(std::bind(&Shop::OpenShop, shop, std::placeholders::_1));
+}
+
+void EventManager::StartEvent()
+{
 }
