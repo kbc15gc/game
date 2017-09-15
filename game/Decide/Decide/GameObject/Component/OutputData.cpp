@@ -25,7 +25,7 @@ void OutputData::Start()
 	}
 	else {
 		// ゲームオブジェクトがないので無効化。
-		this->enable = false;
+		this->SetEnable(false);
 		return;
 	}
 
@@ -47,8 +47,8 @@ void OutputData::Start()
 	OutputTextAttach();
 
 	// 最初は非アクティブにする。
-	if (this->enable) {
-		this->enable = false;
+	if (this->GetEnable()) {
+		this->SetEnable(false);
 		for (auto t : _outputTexts) {
 			t->SetActive(false);
 		}
@@ -76,14 +76,14 @@ void OutputData::Update() {
 #ifdef _DEBUG
 void OutputData::Debug() {
 	if (KeyBoardInput->isPush(DIK_T)) {
-		if (this->enable) {
-			this->enable = false;
+		if (this->GetEnable()) {
+			this->SetEnable(false);
 			for (auto t : _outputTexts) {
 				t->SetActive(false);
 			}
 		}
 		else {
-			this->enable = true;
+			this->SetEnable(true);
 			for (auto t : _outputTexts) {
 				t->SetActive(true);
 			}

@@ -10,7 +10,7 @@ void ComponentManager::Start() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->Start();
 		}
@@ -21,7 +21,7 @@ void ComponentManager::Update() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->Update();
 		}
@@ -32,7 +32,7 @@ void ComponentManager::LateUpdate() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->LateUpdate();
 		}
@@ -52,7 +52,7 @@ void ComponentManager::PreRender() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->PreRender();
 		}
@@ -63,7 +63,7 @@ void ComponentManager::Render() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->Render();
 		}
@@ -74,7 +74,7 @@ void ComponentManager::PostRender() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->PostRender();
 		}
@@ -85,7 +85,7 @@ void ComponentManager::ImageRender() const
 {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->ImageRender();
 		}
@@ -95,7 +95,7 @@ void ComponentManager::ImageRender() const
 void ComponentManager::OnDestroy()const {
 	for each (Component* c in _Components)
 	{
-		if (c->enable)
+		if (c->GetEnable())
 		{
 			c->OnDestroy();
 		}

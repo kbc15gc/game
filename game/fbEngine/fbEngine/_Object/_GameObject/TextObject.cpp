@@ -61,7 +61,7 @@ void TextObject::SetKerning(const bool & kerning)
 	_Text->SetKerning(kerning);
 }
 
-const Vector2 & TextObject::GetLength()
+const Vector2 TextObject::GetLength()
 {
 	return _Text->GetLength();
 }
