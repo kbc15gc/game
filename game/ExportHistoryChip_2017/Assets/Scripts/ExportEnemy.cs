@@ -23,6 +23,7 @@ public class ExportEnemy : MonoBehaviour {
     public int _DEF;
     public int _MDE;
     public int _DEX;
+    public int _CRT;
     public int _LV;
     public int _DROPEXP;
     public int _MONEY;

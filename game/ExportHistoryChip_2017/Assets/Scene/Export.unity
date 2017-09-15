@@ -1874,11 +1874,12 @@ MonoBehaviour:
   _MP: 100
   _MaxMP: 100
   _ATK: 10
+  _MAT: 0
   _DEF: 5
+  _MDE: 0
   _DEX: 0
-  _AGI: 0
+  _CRT: 0
   _LV: 30
-  _EXP: 0
   _DROPEXP: 100
   _MONEY: 1000
 --- !u!23 &371992813
@@ -5384,11 +5385,12 @@ MonoBehaviour:
   _MP: 100
   _MaxMP: 100
   _ATK: 10
+  _MAT: 8
   _DEF: 5
-  _DEX: 0
-  _AGI: 0
+  _MDE: 4
+  _DEX: 5
+  _CRT: 10
   _LV: 30
-  _EXP: 0
   _DROPEXP: 100
   _MONEY: 1000
 --- !u!23 &928572192
