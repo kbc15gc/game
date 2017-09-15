@@ -20,7 +20,8 @@ public:
 	// ダメージ量。
 	// 表示する時間。
 	// ずらす量。
-	void Init(Vector3 pos,int damagevalue, float lifetime, Vector3 offset = Vector3::zero);
+	//カラー。
+	void Init(int damagevalue, float lifetime = 1.0f, Vector3 offset = Vector3::zero, Color color = Color::red);
 private:
 	//攻撃量のテキスト
 	TextObject* _AttackText;
@@ -32,6 +33,8 @@ private:
 	bool _CreatAttackValue;
 	//ポジション。
 	Vector3 _Pos;
-	//カメラ
-	Camera* camera;
+	//位置を基準点からの距離で表した値。
+	Vector3 _Offset;
+	//上昇値。
+	float _Up;
 };
