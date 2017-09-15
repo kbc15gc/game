@@ -33,12 +33,14 @@ namespace {
 		//			所持数。
 		//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		HoldWeponInfo(int TypeID, int ID, int HoldNum, int AtkRnd, int MAtkRnd) : HoldInfo(TypeID, ID, HoldNum) {
+		HoldWeponInfo(int TypeID, int ID, int HoldNum, int AtkRnd, int MAtkRnd,int CrtRnd) : HoldInfo(TypeID, ID, HoldNum) {
 			_AtkRnd = AtkRnd;
 			_MAtkRnd = MAtkRnd;
+			_CrtRnd = CrtRnd;
 		}
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
+		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
@@ -47,6 +49,7 @@ namespace {
 		{ "HoldNum",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_HoldNum),		sizeof(int) },
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_AtkRnd),		sizeof(int) },
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_MAtkRnd),		sizeof(int) },
+		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_CrtRnd),		sizeof(int) },
 	};
 
 	struct HoldArmorInfo : public HoldInfo {
