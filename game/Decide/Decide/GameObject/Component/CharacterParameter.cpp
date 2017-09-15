@@ -100,14 +100,14 @@ int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk
 		damage = _Param[Param::MAT];
 		if (weapon) {
 			weaponDamage = weapon->GetMagicAtk();
-			crit += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->Dex;
+			crit += weapon->GetCrt();
 		}
 	}
 	else {
 		damage = _Param[Param::ATK];
 		if (weapon) {
 			weaponDamage = weapon->GetAtk();
-			crit += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->Dex;
+			crit += weapon->GetCrt();
 		}
 	}
 
