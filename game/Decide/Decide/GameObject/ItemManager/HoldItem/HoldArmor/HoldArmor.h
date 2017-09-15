@@ -9,7 +9,7 @@ public:
 	~HoldArmor();
 
 	//防具の独自パラメーターを設定。
-	//引数：防御力、魔法防御力。
+	//引数：防御力の乱数差分、魔法防御力の乱数差分。
 	inline void SetParam(float Def, float MDef) {
 		_Def += _Def*Def;
 		_MagicDef += _MagicDef*MDef;
@@ -33,6 +33,14 @@ public:
 	//ランクを考慮した魔法防御力を取得。
 	inline int GetMagicDef() {
 		return _MagicDef;
+	}
+
+	//防具のランクを算出。
+	inline float ParamRaitoMass()override {
+		float offset = _DefRnd + _MDefRnd;
+		float sum = _Def + _MagicDef;
+		float par = offset / sum;
+		return par;
 	}
 private:
 	int _DefRnd;	//防御力の乱数差分(この値でランク付け、単位はパーセント)。
