@@ -21,10 +21,7 @@ void EnemyStartAttackState::_EntrySubClass() {
 void EnemyStartAttackState::_Start() {
 	Vector3 EnemyToPlayer(_Player->transform->GetPosition() - _EnemyObject->transform->GetPosition());
 
-	if (false) {
-		// プレイヤーが死亡した。
-	}
-	else if (EnemyToPlayer.Length() > _EnemyObject->GetAttackRange()) {
+	if (EnemyToPlayer.Length() > _EnemyObject->GetAttackRange()) {
 		// プレイヤーが攻撃範囲外に離脱した。
 
 		// 再び追跡させる。

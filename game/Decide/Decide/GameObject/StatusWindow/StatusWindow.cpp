@@ -32,7 +32,7 @@ void StatusWindow::Start()
 		_ParameterRenderList.push_back(pr);
 	}
 	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetParamPt(CharacterParameter::Param::EXP));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
 	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetParamPt(CharacterParameter::Param::MAXHP));
 	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetParamPt(CharacterParameter::Param::MAXMP));
 	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));

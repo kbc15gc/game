@@ -54,10 +54,16 @@ void EnemyManager::CreateEnemy() {
 			enemy = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 			Color.push_back(BarColor::Red);
 			break;
+		case EnemyCharacter::EnemyType::BossDrarian:
+			// ボスドラリアン生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
+			Color.push_back(BarColor::Yellow);
+			Color.push_back(BarColor::Red);
+			break;
 		case EnemyCharacter::EnemyType::Drarian:
 			// ドラリアン生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyProt", 1);
-			Color.push_back(BarColor::Yellow);
+
+			// ※まだ作成しない。
 			Color.push_back(BarColor::Red);
 			break;
 		}
@@ -70,6 +76,9 @@ void EnemyManager::CreateEnemy() {
 			enemy->transform->SetScale(info->InfoData->scale);
 			// パラメーター設定。
 			enemy->SetParamAll(Color, info->InfoData->param);
+			// ドロップ設定。
+			enemy->SetDropEXP(info->InfoData->exp);
+			enemy->SetDropMoney(info->InfoData->money);
 		}
 		else {
 			// 生成失敗。
