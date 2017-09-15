@@ -7,6 +7,7 @@
 #include "GameObject\SplitSpace.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\AttackValue2D.h"
+#include "..\History\HistoryManager.h"
 
 namespace
 {
@@ -34,6 +35,7 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false)
 {
+	//経験値テーブルをロード
 	_LoadEXPTable();
 }
 
@@ -94,12 +96,13 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(_HPTable[0], _HPTable[0], _MPTable[0], _MPTable[0], _ATKTable[0], _DEFTable[0], _DEXTable[0], _AGITable[0], 1, 0, 0, 0);
+	_PlayerParam->ParamInit(_ParamTable[0]);
+	
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110, 660, 0));
+		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
 	}
 	// MPのバーを表示。
 	{
@@ -111,9 +114,9 @@ void Player::Awake()
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
 	//レベルアップ音初期化
-	_LevelUP = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
-	_LevelUP->Init("Asset/Sound/levelup.wav");
-	_LevelUP->SetVolume(2.0f);
+	_LevelUP_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
+	_LevelUP_SE->Init("Asset/Sound/levelup.wav");
+	_LevelUP_SE->SetVolume(2.0f);
 #ifdef _DEBUG
 
 	_outputData = AddComponent<OutputData>();
@@ -147,7 +150,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-1056, 69, -1947);
+	_StartPos = Vector3(-1056.0f, 69.0f, -1947.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -160,35 +163,38 @@ void Player::Start()
 
 void Player::Update()
 {
-	/*if (KeyBoardInput->isPush(DIK_A)) {
-		Money2D* money = (Money2D*)INSTANCE(GameObjectManager)->FindObject("Money2D");
-			money->Initialize(100);
-	}*/
 
-	if (KeyBoardInput->isPressed(DIK_L))
+#ifdef _DEBUG
+	
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+#endif // DEBUG
+
+
+	if (KeyBoardInput->isPush(DIK_L))
 	{
 		PlayerStopEnable();
 	}
-	if (KeyBoardInput->isPressed(DIK_K))
-	{
-		PlayerStopDisable();
-	}
 
-
-	//本が開いていないときは動ける。
+	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
 	}
-	////本が開いているときにアイドルステートじゃない場合はアイドルステートに変更。
-	//if (_State == State::Stop)
-	//{
-	//	if (_State != State::Idol)
-	//	{
-	//		ChangeState(State::Idol);
-	//	}
-	//}
 	if (_HPBar != nullptr)
 	{
 		//HPバーの更新
@@ -201,30 +207,9 @@ void Player::Update()
 	}
 	//レベルアップするか。
 	if (_EXPTable.size() > 0 &&
-		_PlayerParam->GetParam(CharacterParameter::EXP) >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)])
+		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
 	{
-		//何レベルのテーブルか。
-		//レベルアップに必要な経験値。
-		//レベルアップする場合のHP
-		//レベルアップする場合のMP
-		//レベルアップする場合のATK
-		//レベルアップする場合のDEF
-		//レベルアップする場合のDEX
-		//レベルアップする場合のAGI
-		_PlayerParam->LevelUP(_EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_ATKTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_DEFTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_DEXTable[_PlayerParam->GetParam(CharacterParameter::LV)],
-			_AGITable[_PlayerParam->GetParam(CharacterParameter::LV)]
-			);
-		//HPが上がったのでHPバーのHP設定しなおす。
-		_HPBar->Reset(_HPTable[_PlayerParam->GetParam(CharacterParameter::LV)], _HPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
-		//MPが上がったのでMPバーのMP設定しなおす。
-		_MPBar->Reset(_MPTable[_PlayerParam->GetParam(CharacterParameter::LV)], _MPTable[_PlayerParam->GetParam(CharacterParameter::LV)]);
-		//レベルアップ時の音再生。
-		_LevelUP->Play(false);
+		_LevelUP();
 	}
 	//ダメージを受ける処理。
 	_Damage();
@@ -245,25 +230,23 @@ void Player::ChangeState(State nextstate)
 	}
 	switch (nextstate)
 	{
-		//待機状態
+		
 	case State::Idol:
+		//待機状態
 		_CurrentState = &_IdolState;
 		break;
-		//走る状態
 	case State::Run:
+		//走る状態
 		_CurrentState = &_RunState;
 		break;
-		//攻撃状態
 	case State::Attack:
+		//攻撃状態
 		_CurrentState = &_AttackState;
 		break;
+	case State::Death:					
 		//死亡状態
-	case State::Death:
 		_CurrentState = &_DeathState;
 		//デフォルト
-	case State::Stop:
-		//なにもしない。
-		break;
 	default:
 		break;
 	}
@@ -345,11 +328,12 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage());
+		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(transform->GetPosition(), damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+		attackvalue->Init(damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+		attackvalue->transform->SetParent(transform);
 	}
 }
 
@@ -374,30 +358,58 @@ void Player::_Damage()
 	{
 		ChangeState(State::Death);
 	}
-	/*
-	*テスト用として、海の中に入ると、じわじわとダメージを受ける。
-	*/
+	//海に入るとダメージを食らう。
 	if (transform->GetLocalPosition().y < 48.5f 
 		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru);
-		_HPBar->SubValue(Oboreru);
+		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru * Time::DeltaTime());
+		_HPBar->SubValue(Oboreru * Time::DeltaTime());
 	}
 }
 
+//経験値テーブルをロード。
 void Player::_LoadEXPTable()
 {
 	std::vector<std::unique_ptr<ExperiencePointTableInfo>> exptbaleinfo;
 	Support::LoadCSVData<ExperiencePointTableInfo>("Asset/Data/PlayerParameter.csv", ExperiencePointTableInfoData, ARRAYSIZE(ExperiencePointTableInfoData), exptbaleinfo);
 	
-	for (int i = 0; i < exptbaleinfo.size(); i++)
+	for (int i = 0; i < MAXLV; i++)
 	{
 		_EXPTable.push_back(exptbaleinfo[i]->ExperiencePoint);
-		_HPTable.push_back(exptbaleinfo[i]->HP);
-		_MPTable.push_back(exptbaleinfo[i]->MP);
-		_ATKTable.push_back(exptbaleinfo[i]->ATK);
-		_DEFTable.push_back(exptbaleinfo[i]->DEF);
-		_DEXTable.push_back(exptbaleinfo[i]->DEX);
-		_AGITable.push_back(exptbaleinfo[i]->AGI);
+
+		// テスト。
+		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++) {
+			_ParamTable[i][idx] = exptbaleinfo[i]->param[idx];
+		}
+
+		//{
+		//	_ParamTable[i][CharacterParameter::Param::MAXHP] = exptbaleinfo[i]->HP;
+		//	_ParamTable[i][CharacterParameter::Param::HP] = exptbaleinfo[i]->HP;
+		//	_ParamTable[i][CharacterParameter::Param::MAXMP] = exptbaleinfo[i]->MP;
+		//	_ParamTable[i][CharacterParameter::Param::MP] = exptbaleinfo[i]->MP;
+		//	_ParamTable[i][CharacterParameter::Param::ATK] = exptbaleinfo[i]->ATK;
+		//	_ParamTable[i][CharacterParameter::Param::MAT] = exptbaleinfo[i]->MAT;
+		//	_ParamTable[i][CharacterParameter::Param::DEF] = exptbaleinfo[i]->DEF;
+		//	_ParamTable[i][CharacterParameter::Param::MDE] = exptbaleinfo[i]->MDE;
+		//	_ParamTable[i][CharacterParameter::Param::DEX] = exptbaleinfo[i]->DEX;
+		//	_ParamTable[i][CharacterParameter::Param::CRT] = exptbaleinfo[i]->CRT;
+		//	_ParamTable[i][CharacterParameter::Param::LV] = i + 1; 
+		//}
 	}
+}
+
+void Player::_LevelUP()
+{
+	// 現在の経験値リセット。
+	_nowEXP = _nowEXP - _EXPTable[_PlayerParam->GetParam(CharacterParameter::Param::LV) - 1];	// レベルアップ時に溢れた分を現在の経験値に設定。
+
+	// 次のレベルのパラメータを設定。
+	_PlayerParam->ParamInit(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
+
+	//HPが上がったのでHPバーのHP設定しなおす。
+	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));
+	//MPが上がったのでMPバーのMP設定しなおす。
+	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP));
+	//レベルアップ時の音再生。
+	_LevelUP_SE->Play(false);
 }

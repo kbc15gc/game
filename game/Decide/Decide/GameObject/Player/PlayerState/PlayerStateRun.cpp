@@ -128,9 +128,19 @@ void PlayerStateRun::Move()
 		cameraX.y = 0.0f;		//Y軸はいらない。
 		cameraX.z = viewinv.m[0][2];
 		cameraX.Normalize();	//Y軸を打ち消しているので正規化する。
-
-								// 向きベクトルに移動量を積算。
-		dir = dir * _Speed;
+				
+		// 向きベクトルに移動量を積算。
+		//ダッシュボタンの場合
+		if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_THUMB) || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_Y))
+		{
+			//ダッシュスピードを適用
+			dir = dir * _DashSpeed;
+		}
+		else
+		{
+			//通常のスピード
+			dir = dir * _Speed;
+		}
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;
 		movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。
@@ -214,7 +224,7 @@ void PlayerStateRun::DebugMove()
 		cameraX.z = viewinv.m[0][2];
 		cameraX.Normalize();	//Y軸を打ち消しているので正規化する。
 
-								// 向きベクトルに移動量を積算。
+		// 向きベクトルに移動量を積算。
 		dir = dir * _Speed;
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;

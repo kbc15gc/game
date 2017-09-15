@@ -2,6 +2,8 @@
 #include "fbEngine\_Object\_Component\Component.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "fbEngine\fbstdafx.h"
+#include "GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h"
 
 class CharacterParameter :public Component {
 public:
@@ -33,28 +35,26 @@ public:
 	//			MP。
 	//			MP最大値。
 	//			攻撃力。
+	//			魔法攻撃力。
 	//			防御力。
+	//			魔法防御。
 	//			器用度(クリティカル発生率)。
-	//			敏捷力。
+	//			クリティカル威力。
 	//			レベル。
-	//			経験値。
-	//			落とす経験値。
-	//			所持金。
-	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, DEF, DEX, AGI, LV, EXP, DROPEXP, MONEY, MAX };
-	//初期化。
-	// 引数：	HP。
-	//			HP最大値。
-	//			MP。
-	//			MP最大値。
-	//			攻撃力。
-	//			防御力。
-	//			器用度(クリティカル発生率)。
-	//			敏捷力。
-	//			レベル。
-	//			経験値。
-	//			落とす経験値。
-	//			所持金。
-	void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int def, int dex, int agi, int lv, int exp, int dropexp,int money);
+	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, MAT, DEF, MDE, DEX, CRT ,LV, MAX };
+	////初期化。
+	//// 引数：	HP。
+	////			HP最大値。
+	////			MP。
+	////			MP最大値。
+	////			攻撃力。
+	////			魔法攻撃力。
+	////			防御力。
+	////			魔法防御。
+	////			器用度(クリティカル発生率)。
+	////			クリティカル威力。
+	////			レベル。
+	//void ParamInit(int hp,int maxhp,int mp,int maxmp, int atk, int mat, int def, int mde, int dex,int crt, int lv);
 	//初期化。
 	void ParamInit(int param[Param::MAX]);
 	void ParamInit(const vector<int>& param);
@@ -101,25 +101,24 @@ public:
 
 	// 被ダメージ処理(パラメーターにダメージを与える)。
 	// 引数:		敵からのダメージ。
+	//				魔法攻撃か。
+	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
-	//				装備品の防御力(デフォルトは0)。
-	int ReciveDamage(int defaultDamage, int defidx = 1, int Equipment = 0);
+	int ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr, int defidx = 1);
 
 	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
 	// 引数:		敵からのダメージ。
+	//				魔法攻撃か。
+	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
-	//				装備品の防御力(デフォルトは0)。
-	int ReceiveDamageMass(int defaultDamage, int defidx = 1,int Equipment = 0);
+	int ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr,int defidx = 1);
 
 	//与ダメージ計算。
-	// 引数：		キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
-	inline int GiveDamageMass(float atk = 1)
-	{
-		return _Param[Param::ATK] * atk;
-	}
-	// レベルアップ。
-	// 引数：		レベルアップに必要な経験値の値。
-	void LevelUP(int lvupexp, int hp, int mp, int atk, int def, int dex, int agi);
+	// 引数：	魔法攻撃か。
+	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
+	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
+	int GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
+
 private:
 
 	// 配列外にアクセスしてないかチェック。

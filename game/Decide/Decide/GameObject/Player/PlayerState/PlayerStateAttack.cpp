@@ -94,9 +94,9 @@ void PlayerStateAttack::Update()
 	{
 		//コンボ！
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
-		//方向を変える。
-		DirMove();
 	}
+	//方向を変える。
+	DirMove();
 	//あたり判定作成
  	switch (currentanimno)
 	{
@@ -143,7 +143,7 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 		_SE->Play(false);
 		//攻撃コリジョン作成
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		attack->Create(_Player->_PlayerParam->GiveDamageMass(pram.atk),pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime,0.0f, _Player->transform);
+		attack->Create(_Player->_PlayerParam->GiveDamageMass(false,nullptr,pram.atk),false,pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime,0.0f, _Player->transform);
 	}
 
 }

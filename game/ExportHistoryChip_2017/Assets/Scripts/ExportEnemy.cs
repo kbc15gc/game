@@ -19,11 +19,12 @@ public class ExportEnemy : MonoBehaviour {
     public int _MP;
     public int _MaxMP;
     public int _ATK;
+    public int _MAT;
     public int _DEF;
+    public int _MDE;
     public int _DEX;
-    public int _AGI;
+    public int _CRT;
     public int _LV;
-    public int _EXP;
     public int _DROPEXP;
     public int _MONEY;
     
