@@ -63,132 +63,132 @@ namespace
 {
 	//文字列を受け取って値に変換し、アドレスを返す。
 	//こいつはクビや。
-	void* ConvertValueFromString(char* word, Support::DataTypeE type, const int size)
-	{
-		if (type == Support::DataTypeE::INT)
-		{
-			int val = Support::StringToInt(word);
-			return &val;
-		}
-		else if (type == Support::DataTypeE::INTARRAY) {
-			int offset = 0;
-			char copy[256];
-			strcpy(copy, word);
-			const int max = size / sizeof(int);
-			int Array[999];	// とりあえず多めに取っておく。
-			ZeroMemory(Array, sizeof(Array));
+	//void* ConvertValueFromString(char* word, Support::DataTypeE type, const int size)
+	//{
+	//	if (type == Support::DataTypeE::INT)
+	//	{
+	//		int val = Support::StringToInt(word);
+	//		return &val;
+	//	}
+	//	else if (type == Support::DataTypeE::INTARRAY) {
+	//		int offset = 0;
+	//		char copy[256];
+	//		strcpy(copy, word);
+	//		const int max = size / sizeof(int);
+	//		int Array[999];	// とりあえず多めに取っておく。
+	//		ZeroMemory(Array, sizeof(Array));
 
-			for (int idx = 0; idx < max; idx++) {
-				//数字の部分を取り出す。
-				char* num = strtok(copy + offset, "/");
-				//数字に変換する。
-				Array[idx] = Support::StringToInt(num);
-				//オフセット量を増やす。
-				offset += strlen(num) + 1;
-			}
+	//		for (int idx = 0; idx < max; idx++) {
+	//			//数字の部分を取り出す。
+	//			char* num = strtok(copy + offset, "/");
+	//			//数字に変換する。
+	//			Array[idx] = Support::StringToInt(num);
+	//			//オフセット量を増やす。
+	//			offset += strlen(num) + 1;
+	//		}
 
-			return Array;
-		}
-		else if (type == Support::DataTypeE::FLOAT)
-		{
-			float val = Support::StringToDouble(word);
-			return &val;
-		}
-		else if (type == Support::DataTypeE::VECTOR2)
-		{
-			Vector2 v2 = Vector2(0.0f, 0.0f);
+	//		return Array;
+	//	}
+	//	else if (type == Support::DataTypeE::FLOAT)
+	//	{
+	//		float val = Support::StringToDouble(word);
+	//		return &val;
+	//	}
+	//	else if (type == Support::DataTypeE::VECTOR2)
+	//	{
+	//		Vector2 v2 = Vector2(0.0f, 0.0f);
 
-			Support::ConvertFloatArrayFromString(word, &v2, 2);
+	//		Support::ConvertFloatArrayFromString(word, &v2, 2);
 
-			//int offset = 0;
-			//char copy[256];
-			//strcpy(copy, word);
-			//FOR(i, 3)
-			//{
-			//	//数字の部分を取り出す。
-			//	char* num = strtok(copy + offset, "/");
-			//	//数字に変換する。
-			//	float value = Support::StringToDouble(num);
-			//	//値セット。
-			//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-			//	//オフセット量を増やす。
-			//	offset += strlen(num) + 1;
-			//}
-			return &v2;
-		}
-		else if (type == Support::DataTypeE::VECTOR3)
-		{
-			Vector3 v3 = Vector3::zero;
+	//		//int offset = 0;
+	//		//char copy[256];
+	//		//strcpy(copy, word);
+	//		//FOR(i, 3)
+	//		//{
+	//		//	//数字の部分を取り出す。
+	//		//	char* num = strtok(copy + offset, "/");
+	//		//	//数字に変換する。
+	//		//	float value = Support::StringToDouble(num);
+	//		//	//値セット。
+	//		//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+	//		//	//オフセット量を増やす。
+	//		//	offset += strlen(num) + 1;
+	//		//}
+	//		return &v2;
+	//	}
+	//	else if (type == Support::DataTypeE::VECTOR3)
+	//	{
+	//		Vector3 v3 = Vector3::zero;
 
-			Support::ConvertFloatArrayFromString(word, &v3, 3);
+	//		Support::ConvertFloatArrayFromString(word, &v3, 3);
 
-			//int offset = 0;
-			//char copy[256];
-			//strcpy(copy, word);
-			//FOR(i, 3)
-			//{
-			//	//数字の部分を取り出す。
-			//	char* num = strtok(copy + offset, "/");
-			//	//数字に変換する。
-			//	float value = Support::StringToDouble(num);
-			//	//値セット。
-			//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-			//	//オフセット量を増やす。
-			//	offset += strlen(num) + 1;
-			//}
-			return &v3;
-		}
-		else if (type == Support::DataTypeE::VECTOR4)
-		{
-			Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	//		//int offset = 0;
+	//		//char copy[256];
+	//		//strcpy(copy, word);
+	//		//FOR(i, 3)
+	//		//{
+	//		//	//数字の部分を取り出す。
+	//		//	char* num = strtok(copy + offset, "/");
+	//		//	//数字に変換する。
+	//		//	float value = Support::StringToDouble(num);
+	//		//	//値セット。
+	//		//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+	//		//	//オフセット量を増やす。
+	//		//	offset += strlen(num) + 1;
+	//		//}
+	//		return &v3;
+	//	}
+	//	else if (type == Support::DataTypeE::VECTOR4)
+	//	{
+	//		Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
-			Support::ConvertFloatArrayFromString(word, &v4, 4);
+	//		Support::ConvertFloatArrayFromString(word, &v4, 4);
 
-			//int offset = 0;
-			//char copy[256];
-			//strcpy(copy, word);
-			//FOR(i, 3)
-			//{
-			//	//数字の部分を取り出す。
-			//	char* num = strtok(copy + offset, "/");
-			//	//数字に変換する。
-			//	float value = Support::StringToDouble(num);
-			//	//値セット。
-			//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-			//	//オフセット量を増やす。
-			//	offset += strlen(num) + 1;
-			//}
-			return &v4;
-		}
-		else if (type == Support::DataTypeE::QUATERNION)
-		{
-			Quaternion quat = Quaternion::Identity;
+	//		//int offset = 0;
+	//		//char copy[256];
+	//		//strcpy(copy, word);
+	//		//FOR(i, 3)
+	//		//{
+	//		//	//数字の部分を取り出す。
+	//		//	char* num = strtok(copy + offset, "/");
+	//		//	//数字に変換する。
+	//		//	float value = Support::StringToDouble(num);
+	//		//	//値セット。
+	//		//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
+	//		//	//オフセット量を増やす。
+	//		//	offset += strlen(num) + 1;
+	//		//}
+	//		return &v4;
+	//	}
+	//	else if (type == Support::DataTypeE::QUATERNION)
+	//	{
+	//		Quaternion quat = Quaternion::Identity;
 
-			Support::ConvertFloatArrayFromString(word, &quat, 4);
+	//		Support::ConvertFloatArrayFromString(word, &quat, 4);
 
-			//int offset = 0;
-			//char copy[256];
-			//strcpy(copy, word);
-			//FOR(i, 4)
-			//{
-			//	//数字の部分を取り出す。
-			//	char* num = strtok(copy + offset, "/");
-			//	//数字に変換する。
-			//	float value = Support::StringToDouble(num);
-			//	//値セット。
-			//	memcpy((char*)&quat + (sizeof(float) * i), &value, sizeof(float));
-			//	//オフセット量を増やす。
-			//	offset += strlen(num) + 1;
-			//}
-			return &quat;
-		}
-		else if (type == Support::DataTypeE::STRING)
-		{
-			return word;
-		}
+	//		//int offset = 0;
+	//		//char copy[256];
+	//		//strcpy(copy, word);
+	//		//FOR(i, 4)
+	//		//{
+	//		//	//数字の部分を取り出す。
+	//		//	char* num = strtok(copy + offset, "/");
+	//		//	//数字に変換する。
+	//		//	float value = Support::StringToDouble(num);
+	//		//	//値セット。
+	//		//	memcpy((char*)&quat + (sizeof(float) * i), &value, sizeof(float));
+	//		//	//オフセット量を増やす。
+	//		//	offset += strlen(num) + 1;
+	//		//}
+	//		return &quat;
+	//	}
+	//	else if (type == Support::DataTypeE::STRING)
+	//	{
+	//		return word;
+	//	}
 
-		return nullptr;
-	}
+	//	return nullptr;
+	//}
 
 	//文字列を数字に変換し、受け取ったアドレスに設定。
 	void SetValue(char* addres, char* word, Support::DataTypeE type, const int size)

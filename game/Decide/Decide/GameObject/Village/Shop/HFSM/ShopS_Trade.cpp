@@ -47,6 +47,16 @@ void ShopS_Trade::Update()
 			SetIndex((_Select + 1) % _DisplayList.size());
 		}
 
+		if ((KeyBoardInput->isPush(DIK_RIGHT) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR)))
+		{
+			int maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : _DisplayList.at(_Select)->GetHoldNum();
+				_SelectNum = min(maxNum, _SelectNum + 1);
+		}
+		else if ((KeyBoardInput->isPush(DIK_LEFT) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL)))
+		{
+			_SelectNum = max(1, _SelectNum - 1);
+		}
+
 		//決定(仮)
 		if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 		{
@@ -145,6 +155,9 @@ void ShopS_Trade::SetIndex(int idx)
 
 		//選択している添え字設定。
 		_Select = idx;
+
+		//選択数初期化。
+		_SelectNum = 1;
 	}
 }
 
@@ -211,12 +224,12 @@ void ShopS_Trade::UpdateText()
 		sprintf(menu, "%s", _DisplayList[i]->GetInfo()->Name);
 		_MenuTexts[i]->SetString(menu);
 
-		char value[256];
+		char info[256];
 		if (_SaveState == Shop::ShopStateE::Sell)
-			sprintf(value, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, _DisplayList[i]->GetHoldNum());
+			sprintf(info, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, _DisplayList[i]->GetHoldNum());
 		else
-			sprintf(value, "%6d$", _DisplayList[i]->GetInfo()->Value);
-		_MoneyTexts[i]->SetString(value);
+			sprintf(info, "%6d$", _DisplayList[i]->GetInfo()->Value);
+		_MoneyTexts[i]->SetString(info);
 		//高さ設定。
 		height += _MenuTexts[i]->GetLength().y;
 		//最大の高さを保持。
@@ -232,14 +245,13 @@ void ShopS_Trade::Decision()
 		_SelectItem = _DisplayList[_Select]->GetInfo();
 		//テキスト。
 		char msg[256];
+		sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _SelectNum, _SelectItem->Value*_SelectNum);
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
 			//お金が足りているか？
 			if (INSTANCE(Inventory)->GetPlayerMoney() >= _DisplayList[_Select]->GetInfo()->Value)
 			{
-				sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _SelectNum, _SelectItem->Value);
-
 				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
 				//購入確認画面を出す。
 				_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
@@ -252,9 +264,6 @@ void ShopS_Trade::Decision()
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
 		{
-			//テキスト設定。
-			sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _SelectNum, _SelectItem->Value);
-
 			_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this);
 			//販売確認画面を出す。
 			_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
@@ -266,9 +275,9 @@ void ShopS_Trade::Decision()
 void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
-	INSTANCE(Inventory)->SubtractPlayerMoney(_SelectItem->Value);
+	INSTANCE(Inventory)->SubtractPlayerMoney(_SelectItem->Value * _SelectNum);
 	//インベントリへ追加。
-	INSTANCE(Inventory)->AddItem((Item::ItemCodeE)_SelectItem->TypeID, _SelectItem);
+	INSTANCE(Inventory)->AddItem((Item::ItemCodeE)_SelectItem->TypeID, _SelectItem, _SelectNum);
 	_Shop->SetDescriptionText("まいどあり。");
 }
 
@@ -281,5 +290,5 @@ void ShopS_Trade::SellItem()
 		UpdateList();
 	}
 	//アイテムの値段分お金を貰う。
-	INSTANCE(Inventory)->SubtractPlayerMoney(-_SelectItem->Value);
+	INSTANCE(Inventory)->SubtractPlayerMoney(-_SelectItem->Value * _SelectNum);
 }

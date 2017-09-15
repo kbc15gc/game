@@ -131,7 +131,7 @@ public:
 	//モデルを表示するかフラグをセット。
 	void SetEnable(bool is)
 	{
-		_Model->enable = is;
+		_Model->SetEnable(is);
 	}
 	//プレイヤー解放
 	void Releace();
