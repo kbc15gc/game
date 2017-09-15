@@ -207,7 +207,7 @@ void Player::Update()
 	}
 	//レベルアップするか。
 	if (_EXPTable.size() > 0 &&
-		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV)])
+		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
 	{
 		_LevelUP();
 	}

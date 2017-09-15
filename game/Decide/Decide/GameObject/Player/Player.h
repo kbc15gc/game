@@ -166,7 +166,7 @@ public:
 	//敵が落とした物(経験値、お金)を受け取る。
 	void TakeDrop(int dropexp,int money)
 	{
-		_nowEXP = dropexp;
+		_nowEXP += dropexp;
 		// お金はインベントリに格納。
 
 	}
