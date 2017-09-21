@@ -12,7 +12,6 @@
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
-#include "HoldEquipment.h"
 
 class SkinModel;
 class Animation;
@@ -180,16 +179,16 @@ public:
 	}
 
 	//プレイヤーに装備をセット。
-	void SetEquipment(HoldEquipment* equi) {
+	void SetEquipment(HoldItemBase* equi) {
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 
 			//防具。
-			_Equipment->armor = (HoldArmor*)equi;
+			_Equipment->armor = static_cast<HoldArmor*>(equi);
 		}
 		else
 		{
 			//武器。
-			_Equipment->weapon = (HoldWeapon*)equi;
+			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		}
 	}
 
