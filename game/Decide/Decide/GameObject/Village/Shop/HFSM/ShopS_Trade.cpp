@@ -4,6 +4,9 @@
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Inventory\Inventory.h"
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h"
+#include "GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h"
+#include "GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h"
 
 ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 {
@@ -49,7 +52,7 @@ void ShopS_Trade::Update()
 
 		if ((KeyBoardInput->isPush(DIK_RIGHT) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR)))
 		{
-			int maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : _DisplayList.at(_Select)->GetHoldNum();
+			int maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : static_cast<ConsumptionItem*>(_DisplayList.at(_Select))->GetHoldNum();
 				_SelectNum = min(maxNum, _SelectNum + 1);
 		}
 		else if ((KeyBoardInput->isPush(DIK_LEFT) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL)))
@@ -226,7 +229,13 @@ void ShopS_Trade::UpdateText()
 
 		char info[256];
 		if (_SaveState == Shop::ShopStateE::Sell)
-			sprintf(info, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, _DisplayList[i]->GetHoldNum());
+			if (_DisplayList[i]->GetInfo()->TypeID==Item::ItemCodeE::Item) {
+				sprintf(info, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, static_cast<ConsumptionItem*>(_DisplayList[i])->GetHoldNum());
+			}
+			else
+			{
+				sprintf(info, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, 1);
+			}		
 		else
 			sprintf(info, "%6d$", _DisplayList[i]->GetInfo()->Value);
 		_MoneyTexts[i]->SetString(info);
@@ -276,8 +285,27 @@ void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(_SelectItem->Value * _SelectNum);
-	//インベントリへ追加。
-	INSTANCE(Inventory)->AddItem((Item::ItemCodeE)_SelectItem->TypeID, _SelectItem, _SelectNum);
+	////インベントリへ追加。
+	//INSTANCE(Inventory)->AddItem((Item::ItemCodeE)_SelectItem->TypeID, _SelectItem, _SelectNum);
+	
+	if (_SelectItem->TypeID==Item::ItemCodeE::Item) {
+		//インベントリへ追加。
+		INSTANCE(Inventory)->AddItem(_SelectItem, _SelectNum);
+	}
+	else
+	{
+		if (_SelectItem->TypeID==Item::ItemCodeE::Weapon) {
+			HoldArmor* armor = new HoldArmor(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Armor));
+			//インベントリへ追加。
+			INSTANCE(Inventory)->AddEquipment(armor, _SelectItem->TypeID);
+		}
+		else
+		{
+			HoldWeapon* weapon = new HoldWeapon(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Weapon));
+			//インベントリへ追加。
+			INSTANCE(Inventory)->AddEquipment(weapon, _SelectItem->TypeID);
+		}
+	}
 	_Shop->SetDescriptionText("まいどあり。");
 }
 

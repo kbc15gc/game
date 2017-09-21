@@ -1,8 +1,8 @@
 #pragma once
-#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
+#include "HoldEquipment.h"
 
 //所持している武器のクラス。
-class HoldWeapon :public HoldItemBase
+class HoldWeapon :public HoldEquipment
 {
 public:
 	HoldWeapon(Item::BaseInfo* info);
@@ -10,12 +10,18 @@ public:
 
 	//武器の独自パラメーターを設定。
 	//引数：攻撃力の乱数差分(この値でランク付け、単位はパーセント)、魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-	inline void SetParam(float AtkRnd, float MAtkRnd) {
+	inline void SetParam(float AtkRnd, float MAtkRnd, float CrtRnd) {
 		_AtkRnd = AtkRnd;
 		_MAtkRnd = MAtkRnd;
-		_Atk += _Atk * AtkRnd;
-		_MagicAtk += _MagicAtk*MAtkRnd;
+		_Atk = _Atk + AtkRnd;
+		_MagicAtk = _MagicAtk + MAtkRnd;
+		_Crt = _Crt + CrtRnd;
 	}
+	//武器のパラメーターをランダムで算出。
+	void CreateRandParam()override;
+
+	//武器のパラメーターを基準値で設定。
+	void CreateOriginParam() override;
 
 	//攻撃力の乱数差分を取得。
 	inline int GetAtkRnd() {
@@ -53,6 +59,41 @@ public:
 		float sum = _Atk + _MagicAtk + _Crt;
 		float par = offset / sum;
 		return par;
+	}
+
+	//ランクを考慮したランダム物理攻撃力の計算。
+	inline void RndAtkMass() {
+		//物理攻撃力のランダム差分算出。
+		int baseParam = _Atk;
+		int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
+		float raito = static_cast<float>(rnd) * 0.01f;
+
+		//最終的な物理攻撃力を算出。
+		_AtkRnd = baseParam * raito;
+		_Atk = baseParam + _AtkRnd;
+	}
+
+	//ランクを考慮したランダム魔法攻撃力の計算。
+	inline void RndMAtkMass() {
+		int baseParam = _MagicAtk;
+		int rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
+		float raito = static_cast<float>(rnd) * 0.01f;
+
+		//最終的な魔法攻撃力を算出。
+		_MAtkRnd = baseParam * raito;
+		_MagicAtk = baseParam + _MAtkRnd;
+	}
+
+	//ランクを考慮したランダムクリティカル率の計算。
+	inline void RndCrtMass() {
+		//最終的なクリティカルのランダム差分算出。
+		int baseParam = _Crt;
+		int rnd = GetRand_S50to100();
+		float raito = static_cast<float>(rnd) * 0.01f;
+		_CrtRnd = baseParam * raito;
+
+		//最終的なクリティカル率を算出。
+		_Crt = baseParam + _CrtRnd;
 	}
 private:
 	int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。

@@ -2,6 +2,7 @@
 #include "GameObject\ItemManager\ItemManager.h"
 class SoundSource;
 class HoldItemBase;
+class HoldEquipment;
 
 const int INVENTORYLISTNUM = 20;
 
@@ -48,40 +49,24 @@ public:
 	}
 
 	//アイテムをインベントリに追加(第一引数追加するアイテムの種類、第二引数がアイテムの情報、追加する数(指定しない場合は1)。)。
-	void AddItem(Item::ItemCodeE code, Item::BaseInfo* item, int num = 1);
+	void AddItem(Item::BaseInfo* item, int num = 1);
 
 	//指定されたインベントリのリストの先頭を取得。
 	 inline const vector<unique_ptr<HoldItemBase>>& GetInventoryList( Item::ItemCodeE code) {
-		return _InventoryItemList[(int)code];
+		return _InventoryItemList[static_cast<int>(code)];
 	}
 
+	//アイテムコードとIDを元に配列から検索。
+	HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 
-	 //アイテムコードとIDを元に配列から検索。
-	 HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
-
-
-	 // 西にプレゼント　　by のぼりおはぁと。
-
-	// //追加されたアイテムの情報だけを取得。
-	//inline unique_ptr<vector<HoldItemBase*>> GetInfoList() {
-
-	//	unique_ptr<vector<HoldItemBase*>> info(new vector<HoldItemBase*>());
-	//	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
-	//		for (int idx2 = 0; idx2 < _InventoryItemList[idx].size();idx2++) {
-	//			if (_InventoryItemList[idx][idx2]) {
-	//				info->push_back(_InventoryItemList[idx][idx2].get());
-	//			}
-	//		}
-	//	}
-	//	
-	//	return move(info);
-	//}
-	
 	//アイテムを使う。
 	void UseItem();
 
 	//所持数を減らす。
 	bool SubHoldNum(Item::BaseInfo* item,int num);
+
+	//第一引数：追加したい装備のポインタ、第二引数:武器か防具のアイテムコード(アイテムは無効)。
+	void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
 private:
 	//リストから指定されたアイテムを削除。
