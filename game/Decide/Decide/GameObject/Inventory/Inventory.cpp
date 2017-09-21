@@ -20,6 +20,7 @@ Inventory::Inventory()
 }
 
 void Inventory::Initialize() {
+
 	AddItem(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
 	AddItem(INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Item));
 
@@ -34,7 +35,6 @@ void Inventory::Initialize() {
 	weapon->CreateRandParam();
 	AddEquipment(weapon, Item::ItemCodeE::Weapon);
 
-	
 	//ファイルネーム
 	const char* filename[] = { "ItemList","ArmorList","WeaponList" };
 	vector<vector<unique_ptr<HoldInfo>>> work= vector<vector<unique_ptr<HoldInfo>>>(static_cast<int>(Item::ItemCodeE::Max));

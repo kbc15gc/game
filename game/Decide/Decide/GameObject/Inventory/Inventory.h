@@ -85,5 +85,7 @@ private:
 	//所持金。
 	int _PlayerMoney = 100;
 
+	GameObject* _Player;
+
 	static Inventory* _InventoryInstance;
 };

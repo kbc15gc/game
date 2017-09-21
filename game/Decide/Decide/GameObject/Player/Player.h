@@ -12,7 +12,7 @@
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
-
+#include "HoldEquipment.h"
 
 class SkinModel;
 class Animation;
@@ -24,37 +24,11 @@ namespace
 {
 	const int MAXLV = 100;
 
-	//struct ExperiencePointTableInfo
-	//{
-	//	int ExperiencePoint;	//レベルアップ毎に必要な経験値
-	//	int HP;					//レベルごとのHP
-	//	int MP;					//レベルごとのMP
-	//	int ATK;				//レベルごとのATK
-	//	int MAT;				//レベルごとのMAT
-	//	int DEF;				//レベルごとのDEF
-	//	int MDE;				//レベルごとのMDE
-	//	int DEX;				//レベルごとのDEX
-	//	int CRT;				//レベルごとのCRT
-	//};
-
 	struct ExperiencePointTableInfo
 	{
 		int ExperiencePoint;	//レベルアップ毎に必要な経験値
 		int param[CharacterParameter::Param::MAX];	// 各種パラメータ。
 	};
-
-	//const Support::DATARECORD ExperiencePointTableInfoData[] =
-	//{
-	//	{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
-	//	{ "HP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,HP),sizeof(int)},
-	//	{ "MP", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MP),sizeof(int)},
-	//	{ "ATK", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,ATK),sizeof(int)},
-	//	{ "MAT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MAT),sizeof(int) },
-	//	{ "DEF", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEF),sizeof(int)},
-	//	{ "MDE", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,MDE),sizeof(int) },
-	//	{ "DEX", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,DEX),sizeof(int)},
-	//	{ "CRT", Support::DataTypeE::INT,offsetof(struct ExperiencePointTableInfo,CRT),sizeof(int) },
-	//};
 
 	const Support::DATARECORD ExperiencePointTableInfoData[] =
 	{
@@ -62,6 +36,16 @@ namespace
 		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct ExperiencePointTableInfo,param),	sizeof(ExperiencePointTableInfo::param) },
 	};
 
+}
+
+
+namespace {
+	//プレイヤーの装備構造体(武器と防具)。
+	struct PlayerEquipment
+	{
+		HoldArmor* armor = nullptr;
+		HoldWeapon* weapon = nullptr;
+	};
 }
 
 class Player : public GameObject
@@ -194,6 +178,25 @@ public:
 	{
 		ChangeState(State::Idol);
 	}
+
+	//プレイヤーに装備をセット。
+	void SetEquipment(HoldEquipment* equi) {
+		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
+
+			//防具。
+			_Equipment->armor = (HoldArmor*)equi;
+		}
+		else
+		{
+			//武器。
+			_Equipment->weapon = (HoldWeapon*)equi;
+		}
+	}
+
+	//プレイヤーの装備構造体を取得。
+	inline PlayerEquipment* GetEquipment() {
+		return _Equipment;
+	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
@@ -274,4 +277,6 @@ private:
 
 	// レベルごとのパラメーターテーブル。
 	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
+
+	PlayerEquipment* _Equipment;
 };
