@@ -215,15 +215,6 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemBase.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.cpp">
-      <Filter>GameObject\ItemManager\HoldItem\HoldArmor</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.cpp">
-      <Filter>GameObject\ItemManager\HoldItem\HoldWeapon</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.cpp">
-      <Filter>GameObject\ItemManager\HoldItem\ConsumptionItem</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Log\Log.cpp">
       <Filter>GameObject\Log</Filter>
     </ClCompile>
@@ -241,6 +232,15 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp" />
     <ClCompile Include="HoldEquipment.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\ConsumptionItem.cpp">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldArmor.cpp">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -469,15 +469,6 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemBase.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h">
-      <Filter>GameObject\ItemManager\HoldItem\HoldArmor</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h">
-      <Filter>GameObject\ItemManager\HoldItem\HoldWeapon</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h">
-      <Filter>GameObject\ItemManager\HoldItem\ConsumptionItem</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Log\Log.h">
       <Filter>GameObject\Log</Filter>
     </ClInclude>
@@ -495,6 +486,15 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\EnemyDrarian.h" />
     <ClInclude Include="HoldEquipment.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\ConsumptionItem.h">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldArmor.h">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -569,15 +569,6 @@
     </Filter>
     <Filter Include="GameObject\ItemManager\HoldItem">
       <UniqueIdentifier>{365ffadd-191f-4aef-8e8c-d1bb26a2f468}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\ItemManager\HoldItem\ConsumptionItem">
-      <UniqueIdentifier>{d19f2b9f-8b03-427a-9e4b-b5f1b5058de2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\ItemManager\HoldItem\HoldArmor">
-      <UniqueIdentifier>{f23d4ceb-d943-4f89-a382-59e4988e6af1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\ItemManager\HoldItem\HoldWeapon">
-      <UniqueIdentifier>{ef442b13-309c-469d-9cd8-ccfff0eb4b14}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObject\Log">
       <UniqueIdentifier>{f05b0ed3-cc79-4f50-b8d0-d01f8c34c195}</UniqueIdentifier>

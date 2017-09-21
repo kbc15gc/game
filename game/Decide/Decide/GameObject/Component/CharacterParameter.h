@@ -18,7 +18,7 @@ public:
 
 	void Awake()override;
 public:
-
+	
 #ifdef _DEBUG
 	// デバッグ出力用の配列。
 	// ※パラメーターの種類を追加したら順番通りに追加して。
