@@ -40,7 +40,7 @@ namespace
 
 
 namespace {
-	//プレイヤーの装備構造体(武器と防具)。
+	//プレイヤーが何を装備しているのかをまとめた構造体(防具と武器)。
 	struct PlayerEquipment
 	{
 		HoldArmor* armor = nullptr;
@@ -278,5 +278,6 @@ private:
 	// レベルごとのパラメーターテーブル。
 	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
 
+	//プレイヤーの装備。
 	PlayerEquipment* _Equipment;
 };
