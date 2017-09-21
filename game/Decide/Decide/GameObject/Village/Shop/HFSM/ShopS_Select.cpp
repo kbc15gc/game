@@ -19,9 +19,9 @@ ShopS_Select::ShopS_Select(Shop * shop) :IShopState(shop)
 	//テキスト。
 	_Text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 
-	_Text->SetString("かう\nうる");
+	_Text->SetText("かう\nうる");
 	_Text->SetFontSize(50);
-	_Text->SetFormat(fbText::TextFormatE::LEFT);
+	_Text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
 	_Text->transform->SetParent(_SelectWindow->transform);
 	_Text->transform->SetLocalPosition(Vector3(-_Text->GetLength().x/2, -40, 0));
 

@@ -15,7 +15,6 @@ void ItemWindow::Awake()
 	//ウィンドウ名の初期化.
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
 	_WindowName->Initialize(L"消費アイテム", 30.0f);
-	_WindowName->SetFormat(fbText::TextFormatE::CENTER);
 	_WindowName->transform->SetParent(transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -280.0f, 0.0f));
 

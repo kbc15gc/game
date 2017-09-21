@@ -33,7 +33,7 @@ private:
 	//			テキストのサイズ。
 	//			テキストの色(デフォルト白)。
 	//			書式(デフォルト左揃え)。
-	TextObject* _CreateTextObject(OutputInfo infoIdx, const char* name, const Vector3& localPos = Vector3(0.0f,20.0f,0.0f), const char* initText = "", const float textSize = 40.0f , Color textColor = Color::white, fbText::TextFormatE format = fbText::TextFormatE::LEFT);
+	TextObject* _CreateTextObject(OutputInfo infoIdx, const char* name, const Vector3& localPos = Vector3(0.0f, 20.0f, 0.0f), const char* initText = "", const float textSize = 40.0f, Color textColor = Color::white, fbText::TextAnchorE anchor = fbText::TextAnchorE::MiddleLeft);
 
 	// 指定した文字列を指定した文字列で挟む関数。
 	// 引数：	挟む文字列(左)。

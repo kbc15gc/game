@@ -23,7 +23,7 @@ void HistoryMenu::Start()
 	//座標を設定.
 	_LocationNameRender->transform->SetLocalPosition(Vector3(g_WindowSize.x / 2.0f, 50.0f, 0));
 	//表示名を設定.
-	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
+	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
@@ -169,7 +169,7 @@ void HistoryMenu::EnableUpdate()
 	_CursorSprite->SetEnable(true);
 
 	//場所名描画.
-	_LocationNameRender->SetString(LocationNameList[_NowSelectLocation].c_str());
+	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	for (int i = 0; i < _Chip2DList.size(); i++)
 	{

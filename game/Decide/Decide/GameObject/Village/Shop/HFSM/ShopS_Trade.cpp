@@ -14,6 +14,22 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_BuyWindow->transform->SetPosition(Vector3(450, 50, 0));
 	_BuyWindow->SetPivot(Vector2(0.5f, 0.0f));
 
+	_ParmWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ParmWindow", 8);
+	_ParmWindow->SetTexture(LOADTEXTURE("window.png"));
+	_ParmWindow->SetSize(Vector2(256, 400));
+	_ParmWindow->transform->SetLocalPosition(Vector3(600, 0, 0));
+	_ParmWindow->SetPivot(Vector2(0.5f, 0.0f));
+	_ParmWindow->transform->SetParent(_BuyWindow->transform);
+
+	//インスタンス化。
+	_ParmText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Parmtext", _BuyWindow->GetPriorty());
+
+	_ParmText->SetFontSize(45);
+	_ParmText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_ParmText->transform->SetParent(_ParmWindow->transform);
+	_ParmText->transform->SetLocalPosition(Vector3(-120, 40, 0));
+	_ParmText->SetText("");
+
 	//カーソル
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuyCursor", 8);
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
@@ -22,6 +38,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 
 	//ウィンドウを非アクティブに
 	_BuyWindow->SetActive(false, true);
+	_ParmWindow->SetActive(false, true);
 }
 
 ShopS_Trade::~ShopS_Trade()
@@ -108,7 +125,7 @@ void ShopS_Trade::_CreateMenu()
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _BuyWindow->GetPriorty());
 
 		text->SetFontSize(50);
-		text->SetFormat((unsigned int)fbText::TextFormatE::LEFT);
+		text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
 		text->transform->SetParent(_BuyWindow->transform);
 
 		//リストに追加。
@@ -117,7 +134,7 @@ void ShopS_Trade::_CreateMenu()
 		TextObject* money = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _BuyWindow->GetPriorty());
 
 		money->SetFontSize(50);
-		money->SetFormat((unsigned int)fbText::TextFormatE::RIGHT);
+		money->SetAnchor(fbText::TextAnchorE::MiddleRight);
 		money->transform->SetParent(text->transform);
 
 		_MoneyTexts.push_back(money);
@@ -148,10 +165,9 @@ void ShopS_Trade::SetIndex(int idx)
 		int displayidx = idx - _MinIdx + 1;
 		float posy = _MenuListHeight * displayidx + _MenuListHeight*0.5f;
 		_Cursor->transform->SetLocalPosition(posx, posy, 0);
-
-		//アイテムの情報を送る。
+		
 		if (_Select != idx)
-			_Shop->SetDescriptionText(_DisplayList.at(idx)->GetInfo()->Description);
+			SendItemInfo(_DisplayList.at(idx)->GetInfo());
 
 		//選択している添え字設定。
 		_Select = idx;
@@ -222,18 +238,77 @@ void ShopS_Trade::UpdateText()
 		//テキスト設定。
 		char menu[256];
 		sprintf(menu, "%s", _DisplayList[i]->GetInfo()->Name);
-		_MenuTexts[i]->SetString(menu);
+		_MenuTexts[i]->SetText(menu);
 
 		char info[256];
 		if (_SaveState == Shop::ShopStateE::Sell)
 			sprintf(info, "%6d$%4d個", _DisplayList[i]->GetInfo()->Value, _DisplayList[i]->GetHoldNum());
 		else
 			sprintf(info, "%6d$", _DisplayList[i]->GetInfo()->Value);
-		_MoneyTexts[i]->SetString(info);
+		_MoneyTexts[i]->SetText(info);
 		//高さ設定。
 		height += _MenuTexts[i]->GetLength().y;
 		//最大の高さを保持。
 		_MenuListHeight = max(_MenuListHeight, _MenuTexts[i]->GetLength().y);
+	}
+}
+
+void ShopS_Trade::SendItemInfo(Item::BaseInfo* info)
+{
+	try
+	{
+		//説明文を送信。
+		_Shop->SetDescriptionText(info->Description);
+		//パラメータの文字列を格納。
+		char text[256];
+		ZeroMemory(text, 256);
+
+		if (info->TypeID == Item::ItemCodeE::Weapon)
+		{
+			//武器にキャスト。
+			auto weapon = (Item::WeaponInfo*)info;
+			//現在の装備取得。
+			auto Equip = weapon;
+
+			FOR(i, 4)
+			{
+				int diff = 0;
+				char* colorCode;
+				switch (diff)
+				{
+				case -1:
+					colorCode = "<color=ff0000ff>";
+					break;
+				case 0:
+					colorCode = "<color=ffffffff>";
+					break;
+				case 1:
+					colorCode = "<color=0fffffff>";
+					break;
+				default:
+					break;
+				}
+				char parm[256];
+				//テキスト生成。
+				sprintf(parm, "ATK %d -> %s%d</color>\n", Equip->Atk, colorCode, weapon->Atk);
+				//連結
+				strcat(text, parm);
+			}
+			
+
+			/*sprintf(text, "ATK <color=0fffffff>%d</color> -> %d\nMAG %d -> %d\nDEX %d -> %d\nCRT %d -> %d",
+				0, weapon->Atk,
+				0, weapon->MagicAtk,
+				0, weapon->Dex,
+				0, weapon->CriticalDamage);*/
+		}
+
+		//パラメータ。
+		_ParmText->SetText(text);
+	}
+	catch (const std::exception&)
+	{
+
 	}
 }
 
@@ -291,4 +366,5 @@ void ShopS_Trade::SellItem()
 	}
 	//アイテムの値段分お金を貰う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(-_SelectItem->Value * _SelectNum);
+	_Shop->SetDescriptionText("まいどあり。");
 }

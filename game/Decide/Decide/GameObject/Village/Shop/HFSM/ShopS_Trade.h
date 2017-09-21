@@ -35,14 +35,13 @@ private:
 	void SetMinIndex(int min);
 	//アイテムリストを移動させる。
 	void ScrollDisplayItem();
-	//
+	//表示する項目を更新。
 	void UpdateList();
 	//テキスト更新。
 	void UpdateText();
+	//アイテムの情報をテキストに送信。
+	void SendItemInfo(Item::BaseInfo* info);
 	
-	//売買の関数。
-	function<void()> TradeFunc;
-
 	//決定処理。
 	void Decision();
 	//アイテムの購入処理。
@@ -74,4 +73,8 @@ private:
 	vector<TextObject*> _MenuTexts,_MoneyTexts;
 	//メニューの一項目の縦幅。
 	float _MenuListHeight;
+	//パラメータウィンドウ。
+	ImageObject* _ParmWindow;
+	//パラメータ
+	TextObject* _ParmText;
 };

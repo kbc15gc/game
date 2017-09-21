@@ -41,7 +41,7 @@ public:
 	void Init(Item::ItemCodeE code,char* name)
 	{
 		_ItemCode = code;
-		_WindowName->SetString(name);
+		_WindowName->SetText(name);
 	}
 
 	/**

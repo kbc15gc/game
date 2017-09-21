@@ -18,7 +18,7 @@ void OutputData::Start()
 		strcpy_s(text, gameObject->GetName());
 		strcat_s(text, strlen(text) + strlen(":") + 1, ":");		// 名前に文字列を追加。
 
-		_CreateTextObject(OutputInfo::Name, "ObjectNameView", Vector3::zero, text,40.0f,Color::white,fbText::TextFormatE::RIGHT);
+		_CreateTextObject(OutputInfo::Name, "ObjectNameView", Vector3::zero, text,40.0f,Color::white,fbText::TextAnchorE::MiddleRight);
 		_outputTexts[static_cast<int>(OutputInfo::Name)]->transform->SetPosition(Vector3(700.0f, 20.0f, 0.0f));
 		_root = nullptr;	// 名前は親にふくまない。
 		_lastChildren = nullptr;	// 名前箱に含まない。
@@ -92,7 +92,7 @@ void OutputData::Debug() {
 }
 #endif
 
-TextObject* OutputData::_CreateTextObject(OutputInfo infoIdx, const char* name, const Vector3& localPos, const char* initText, const float textSize ,Color textColor, fbText::TextFormatE format) {
+TextObject* OutputData::_CreateTextObject(OutputInfo infoIdx, const char* name, const Vector3& localPos, const char* initText, const float textSize ,Color textColor, fbText::TextAnchorE anchor) {
 	if (infoIdx <= OutputInfo::None) {
 		// 0より小さい値が設定された。
 		abort();
@@ -108,7 +108,7 @@ TextObject* OutputData::_CreateTextObject(OutputInfo infoIdx, const char* name, 
 		else {
 			_outputTexts[static_cast<int>(infoIdx)]->Initialize(nullptr, textSize, textColor,fbSprite::SpriteEffectE::NONE,"ＭＳ ゴシック");
 		}
-		_outputTexts[static_cast<int>(infoIdx)]->SetFormat(static_cast<int>(format));
+		_outputTexts[static_cast<int>(infoIdx)]->SetAnchor((anchor));
 
 		if (_lastChildren) {
 			_outputTexts[static_cast<int>(infoIdx)]->transform->SetParent(_lastChildren->transform);
@@ -151,7 +151,7 @@ void OutputData::OutputTextParam() {
 			wcscat_s(outPut, wcslen(outPut) + wcslen(_TuckText(L" [ ",strNum,L" ]")) + 1, strNum);
 			wcscat_s(outPut, wcslen(outPut) + wcslen(L"\n") + 1, L"\n");
 		}
-		_outputTexts[static_cast<int>(OutputInfo::Parameter)]->SetString(outPut);
+		_outputTexts[static_cast<int>(OutputInfo::Parameter)]->SetText(outPut);
 	}
 }
 
@@ -171,7 +171,7 @@ void OutputData::OutputTextTrans() {
 		Support::ToString(Vector4(gameObject->transform->GetScale(),0.0f), strNum, 2);
 		wcscat_s(strTrans, wcslen(strTrans) + wcslen(_TuckText(L" [ ", strNum, L" ]\n")) + 1, strNum);
 
-		_outputTexts[static_cast<int>(OutputInfo::Transform)]->SetString(strTrans);
+		_outputTexts[static_cast<int>(OutputInfo::Transform)]->SetText(strTrans);
 	}
 }
 
@@ -245,7 +245,7 @@ void OutputData::OutputTextCollision() {
 		Support::ToString(Vector4(halfSize, 0.0f), num, 2);
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
 
-		_outputTexts[static_cast<int>(OutputInfo::Collision)]->SetString(out);
+		_outputTexts[static_cast<int>(OutputInfo::Collision)]->SetText(out);
 	}
 }
 
@@ -265,7 +265,7 @@ void OutputData::OutputTextAttach() {
 			wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" : [ ", text, L" ]\n")) + 1, text);
 
 		}
-		_outputTexts[static_cast<int>(OutputInfo::Attach)]->SetString(out);
+		_outputTexts[static_cast<int>(OutputInfo::Attach)]->SetText(out);
 	}
 }
 #endif

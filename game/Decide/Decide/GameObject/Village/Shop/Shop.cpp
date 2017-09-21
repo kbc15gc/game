@@ -39,7 +39,7 @@ void Shop::Awake()
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
 	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 40, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
-	_DescriptionText->SetFormat((UINT)fbText::TextFormatE::LEFT | (UINT)fbText::TextFormatE::UP);
+	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	//ステートの初期化。
 	SetState();
 
@@ -140,5 +140,5 @@ void Shop::_ChangeState(const ShopStateE state)
 
 void Shop::SetDescriptionText(string text)
 {
-	_DescriptionText->SetString(text.c_str());
+	_DescriptionText->SetText(text.c_str());
 }
