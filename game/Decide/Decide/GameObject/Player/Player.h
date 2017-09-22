@@ -12,7 +12,6 @@
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
-#include "HoldEquipment.h"
 
 class SkinModel;
 class Animation;
@@ -40,11 +39,11 @@ namespace
 
 
 namespace {
-	//プレイヤーの装備構造体(武器と防具)。
+	//プレイヤーが何を装備しているのかをまとめた構造体(防具と武器)。
 	struct PlayerEquipment
 	{
-		HoldArmor* armor = nullptr;
-		HoldWeapon* weapon = nullptr;
+		HoldArmor* armor = nullptr;		//防具。
+		HoldWeapon* weapon = nullptr;	//武器。
 	};
 }
 
@@ -179,17 +178,17 @@ public:
 		ChangeState(State::Idol);
 	}
 
-	//プレイヤーに装備をセット。
-	void SetEquipment(HoldEquipment* equi) {
+	//プレイヤーに装備をセット(アイテムコードを見て武器か防具をセット)。
+	void SetEquipment(HoldItemBase* equi) {
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 
 			//防具。
-			_Equipment->armor = (HoldArmor*)equi;
+			_Equipment->armor = static_cast<HoldArmor*>(equi);
 		}
 		else
 		{
 			//武器。
-			_Equipment->weapon = (HoldWeapon*)equi;
+			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		}
 	}
 
@@ -278,5 +277,6 @@ private:
 	// レベルごとのパラメーターテーブル。
 	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
 
+	//プレイヤーの装備。
 	PlayerEquipment* _Equipment;
 };

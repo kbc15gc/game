@@ -328,7 +328,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
+		int damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(),hitCollision->GetIsMagic(),_Equipment->armor);
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ƒ_ƒ[ƒW‚ðŽó‚¯‚½‚Æ‚«‚ÌSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
