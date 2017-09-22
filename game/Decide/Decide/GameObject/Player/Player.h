@@ -179,7 +179,8 @@ public:
 	}
 
 	//プレイヤーに装備をセット(アイテムコードを見て武器か防具をセット)。
-	void SetEquipment(HoldItemBase* equi) {
+	void SetEquipment(HoldItemBase* equi)
+	{
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 
 			//防具。
@@ -278,5 +279,5 @@ private:
 	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
 
 	//プレイヤーの装備。
-	PlayerEquipment* _Equipment;
+	PlayerEquipment* _Equipment = nullptr;
 };
