@@ -178,11 +178,14 @@ public:
 		ChangeState(State::Idol);
 	}
 
-	//プレイヤーに装備をセット(アイテムコードを見て武器か防具をセット)。
+	//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
 	void SetEquipment(HoldItemBase* equi)
 	{
-		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
+		//装備フラグをtureにする。
+		static_cast<HoldEquipment*>(equi)->SetIsEquipTrue();
 
+		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
+			
 			//防具。
 			_Equipment->armor = static_cast<HoldArmor*>(equi);
 		}

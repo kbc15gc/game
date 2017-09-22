@@ -5,7 +5,10 @@
 class HoldEquipment :public HoldItemBase
 {
 public:
+	//コンストラクタ。
 	HoldEquipment(Item::BaseInfo* info);
+
+	//デストラクタ。
 	~HoldEquipment();
 
 	// コメントの数字は基準値からの加算率の幅。

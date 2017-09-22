@@ -5,7 +5,10 @@
 class HoldArmor :public HoldEquipment
 {
 public:
+	//コンストラクタ。
 	HoldArmor(Item::BaseInfo* info);
+
+	//デストラクタ。
 	~HoldArmor();
 
 	//防具のパラメーターをランダムで算出。

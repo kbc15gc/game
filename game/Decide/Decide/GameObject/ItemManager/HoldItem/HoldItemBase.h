@@ -83,8 +83,10 @@ namespace {
 class HoldItemBase
 {
 public:
-	// 引数：	アイテムの情報構造体。
+	//コンストラクタ。
 	HoldItemBase(Item::BaseInfo* info);
+	
+	//デストラクタ。
 	virtual ~HoldItemBase();
 
 	//構造体の情報を取得。
