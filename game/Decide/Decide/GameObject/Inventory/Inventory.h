@@ -68,6 +68,9 @@ public:
 	//第一引数：追加したい装備のポインタ、第二引数:武器か防具のアイテムコード(アイテムは無効)。
 	void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
+	//インベントリ内のアイテムをID順でソート。
+	void SortID();
+
 private:
 	//リストから指定されたアイテムを削除。
 	void _DeleteFromList(HoldItemBase* item);
