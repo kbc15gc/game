@@ -39,6 +39,11 @@ void ItemWindow::Awake()
 	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 }
 
+void ItemWindow::Start()
+{
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+}
+
 /**
 * XV.
 */
@@ -107,5 +112,13 @@ void ItemWindow::Input()
 	{
 		ChangeTime = 0.5f;
 		LocalTime = 0.0f;
+	}
+
+	if (_ItemCode != Item::ItemCodeE::Item)
+	{
+		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+		{
+			_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+		}
 	}
 }

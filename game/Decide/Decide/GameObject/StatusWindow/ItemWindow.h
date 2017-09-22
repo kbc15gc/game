@@ -7,6 +7,7 @@
 #include"fbEngine\_Object\_GameObject\TextObject.h"
 #include"GameObject\ItemManager\ItemManager.h"
 #include"Item2D.h"
+#include"GameObject\Player\Player.h"
 
 /**
 * アイテム表示画面クラス.
@@ -35,6 +36,8 @@ public:
 	*/
 	void Awake()override;
 
+	void Start()override;
+
 	/**
 	* 自分で呼ぶ初期化.
 	*/
@@ -57,6 +60,8 @@ private:
 	void Input();
 
 private:
+
+	Player* _Player = nullptr;
 
 	/** セルサイズ. */
 	static const int ItemCellSize = 10;
