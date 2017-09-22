@@ -42,8 +42,8 @@ namespace {
 	//プレイヤーが何を装備しているのかをまとめた構造体(防具と武器)。
 	struct PlayerEquipment
 	{
-		HoldArmor* armor = nullptr;
-		HoldWeapon* weapon = nullptr;
+		HoldArmor* armor = nullptr;		//防具。
+		HoldWeapon* weapon = nullptr;	//武器。
 	};
 }
 
@@ -178,7 +178,7 @@ public:
 		ChangeState(State::Idol);
 	}
 
-	//プレイヤーに装備をセット。
+	//プレイヤーに装備をセット(アイテムコードを見て武器か防具をセット)。
 	void SetEquipment(HoldItemBase* equi) {
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 
