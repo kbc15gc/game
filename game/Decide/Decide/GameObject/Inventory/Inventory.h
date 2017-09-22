@@ -77,6 +77,10 @@ private:
 
 	//アイテムリストのデータを保存。
 	void _ItemListOutData();
+
+	bool operator()(const int &Left, const int&Right)const {
+		return Left < Right;
+	}
 private:
 	
 	//インベントリ。

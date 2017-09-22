@@ -4,7 +4,7 @@
 
 HoldWeapon::HoldWeapon(Item::BaseInfo* info) :HoldEquipment(info)
 {
-	
+	SetIsEquipFalse();
 }
 
 

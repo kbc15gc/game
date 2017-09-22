@@ -3,8 +3,7 @@
 
 HoldArmor::HoldArmor(Item::BaseInfo* info) :HoldEquipment(info)
 {
-	_Def = static_cast<Item::ArmorInfo*>(info)->Def;
-	_MagicDef = static_cast<Item::ArmorInfo*>(info)->MagicDef;
+	SetIsEquipFalse();
 }
 
 HoldArmor::~HoldArmor()
