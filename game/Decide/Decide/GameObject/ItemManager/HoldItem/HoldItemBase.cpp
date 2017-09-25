@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "HoldItemBase.h"
 
-HoldItemBase::HoldItemBase(Item::BaseInfo* info)
+HoldItemBase::HoldItemBase(char* name):ImageObject(name)
 {
-	_Info = info;
 }
 
 HoldItemBase::~HoldItemBase()
 {
 
+}
+
+void HoldItemBase::Start() {
+	LOADTEXTURE(_Info->filePath);
 }

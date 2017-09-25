@@ -104,7 +104,8 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		if (item)
 		{
 			//î•ñ‚ðÝ’è‚µ‚Ä‰Šú‰»B
-			HoldItemBase* hitem = new HoldItemBase(item);
+			HoldItemBase* hitem = INSTANCE(GameObjectManager)->AddNew<HoldItemBase>("Item", 9);
+			hitem->SetInfo(item);
 			_ItemList.push_back(hitem);
 		}
 	}

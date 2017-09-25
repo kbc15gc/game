@@ -137,15 +137,25 @@ wchar_t* OutputData::_TuckText(wchar_t* left, wchar_t* text, wchar_t* right) {
 void OutputData::OutputTextParam() {
 	if (_outputTexts[static_cast<int>(OutputInfo::Parameter)]) {
 		wchar_t outPut[FILENAME_MAX];
+		wchar_t strNum[10];
+
 		wcscpy_s(outPut, wcslen(L"<Parameter>\n") + 1, L"<Parameter>\n");
-		vector<int> Param = gameObject->GetComponent<CharacterParameter>()->GetParams();
+		CharacterParameter* Param = gameObject->GetComponent<CharacterParameter>();
+
+		wcscat_s(outPut, wcslen(outPut) + wcslen(L"MaxHP : ") + 1, L"MaxHP : ");	// char*‚ðwchar_t*‚É•ÏŠ·B
+		Support::ToString(Param->GetMaxHP(), strNum);
+		wcscat_s(outPut, wcslen(outPut) + wcslen(_TuckText(L" [ ", strNum, L" ]")) + 1, strNum);
+		wcscat_s(outPut, wcslen(outPut) + wcslen(L"\n") + 1, L"\n");
+
+		wcscat_s(outPut, wcslen(outPut) + wcslen(L"MaxMP : ") + 1, L"MaxMP : ");	// char*‚ðwchar_t*‚É•ÏŠ·B
+		Support::ToString(Param->GetMaxMP(), strNum);
+		wcscat_s(outPut, wcslen(outPut) + wcslen(_TuckText(L" [ ", strNum, L" ]")) + 1, strNum);
+		wcscat_s(outPut, wcslen(outPut) + wcslen(L"\n") + 1, L"\n");
 
 		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++) {
-			wchar_t strNum[10];
 			wchar_t strType[FILENAME_MAX];
-
 			wcscpy_s(strType, wcslen(CharacterParameter::ENUM_NAME[idx]) + 1, CharacterParameter::ENUM_NAME[idx]);	// char*‚ðwchar_t*‚É•ÏŠ·B
-			Support::ToString(Param[idx], strNum);
+			Support::ToString(Param->GetParam(static_cast<CharacterParameter::Param>(idx)), strNum);
 			wcscat_s(outPut, wcslen(outPut) + wcslen(strType) + 1, strType);
 			wcscat_s(outPut, wcslen(outPut) + wcslen(L": ") + 1, L": ");
 			wcscat_s(outPut, wcslen(outPut) + wcslen(_TuckText(L" [ ",strNum,L" ]")) + 1, strNum);

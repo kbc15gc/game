@@ -5,7 +5,7 @@
 class HoldArmor :public HoldEquipment
 {
 public:
-	HoldArmor(Item::BaseInfo* info);
+	HoldArmor(char* name);
 	~HoldArmor();
 
 	//防具のパラメーターをランダムで算出。

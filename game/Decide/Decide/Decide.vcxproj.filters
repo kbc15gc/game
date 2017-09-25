@@ -231,7 +231,6 @@
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp" />
-    <ClCompile Include="HoldEquipment.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\ConsumptionItem.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
@@ -239,6 +238,9 @@
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldEquipment.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -485,7 +487,6 @@
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\EnemyDrarian.h" />
-    <ClInclude Include="HoldEquipment.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\ConsumptionItem.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
@@ -493,6 +494,9 @@
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldEquipment.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
   </ItemGroup>

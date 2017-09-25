@@ -4,9 +4,9 @@
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Inventory\Inventory.h"
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
-#include "GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h"
-#include "GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h"
-#include "GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor.h"
+#include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
+#include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 
 ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 {
@@ -202,7 +202,7 @@ void ShopS_Trade::UpdateList()
 			{
 				//nullチェック。
 				if (item) {
-					_DisplayList.push_back(item.get());
+					_DisplayList.push_back(item);
 				}
 			}
 		}
@@ -295,13 +295,15 @@ void ShopS_Trade::BuyItem()
 	else
 	{
 		if (_SelectItem->TypeID==Item::ItemCodeE::Weapon) {
-			HoldArmor* armor = new HoldArmor(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Armor));
+			HoldArmor* armor = INSTANCE(GameObjectManager)->AddNew<HoldArmor>("Armor", 9);
+			armor->SetInfo(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Armor));
 			//インベントリへ追加。
 			INSTANCE(Inventory)->AddEquipment(armor, _SelectItem->TypeID);
 		}
 		else
 		{
-			HoldWeapon* weapon = new HoldWeapon(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Weapon));
+			HoldWeapon* weapon = INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("Weapon", 9);
+			weapon->SetInfo(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Weapon));
 			//インベントリへ追加。
 			INSTANCE(Inventory)->AddEquipment(weapon, _SelectItem->TypeID);
 		}

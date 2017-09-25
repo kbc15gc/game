@@ -12,7 +12,7 @@
 #include"GameObject\Component\ObjectRotation.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
-
+#include "GameObject\Inventory\Inventory.h"
 
 class SkinModel;
 class Animation;
@@ -168,17 +168,15 @@ public:
 	{
 		_nowEXP += dropexp;
 		// お金はインベントリに格納。
-
+		INSTANCE(Inventory)->AddPlayerMoney(money);
 	}
 
-	void SetBuff(int hp = 0, int atk = 0, int def = 0, int speed = 0) {
-		_PlayerParam->AddParam(CharacterParameter::HP,hp );
-		_PlayerParam->AddParam(CharacterParameter::ATK, atk);
-		_PlayerParam->AddParam(CharacterParameter::DEF, def);
-	}
 	int* GetParamPt(CharacterParameter::Param param)
 	{
-		return _PlayerParam->GetParamPt(param);
+		return reinterpret_cast<int*>(_PlayerParam->GetParamPt(param));
+	}
+	int* GetMaxHPPt() {
+		return reinterpret_cast<int*>(_PlayerParam->GetMaxHPPt());
 	}
 	int* GetExpPt() {
 		return &_nowEXP;
@@ -266,8 +264,6 @@ private:
 #endif
 	//デバッグ
 	bool _Debug = false;
-	// インベントリ(所持品管理クラス)。
-
 
 
 	//レベルアップに必要な経験値のテーブル(LV - 1が添え字)。

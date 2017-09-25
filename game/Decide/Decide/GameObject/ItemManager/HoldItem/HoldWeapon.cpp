@@ -2,7 +2,7 @@
 #include "HoldWeapon.h"
 
 
-HoldWeapon::HoldWeapon(Item::BaseInfo* info) :HoldEquipment(info)
+HoldWeapon::HoldWeapon(char* name) :HoldEquipment(name)
 {
 	
 }
@@ -15,7 +15,6 @@ HoldWeapon::~HoldWeapon()
 
 void HoldWeapon::CreateRandParam() 
 {
-	
 	RndAtkMass();
 	RndMAtkMass();
 	RndCrtMass();
