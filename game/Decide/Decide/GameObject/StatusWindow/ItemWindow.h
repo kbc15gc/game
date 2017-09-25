@@ -80,4 +80,6 @@ private:
 	/** セレクトカーソル. */
 	ImageObject* _SelectCursor = nullptr;
 
+	/** Eアイコン. */
+	ImageObject* _EIconImage = nullptr;
 };

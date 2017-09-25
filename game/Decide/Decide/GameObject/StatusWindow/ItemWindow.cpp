@@ -37,11 +37,18 @@ void ItemWindow::Awake()
 	_SelectCursor->transform->SetLocalRotation(rot);
 	_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+
+	//EƒAƒCƒRƒ“‚Ì‰Šú‰».
+	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", 9);
+	_EIconImage->SetTexture(LOADTEXTURE("UI/E.png"));
+	_EIconImage->SetSize(Vector2(30, 30));
+	_EIconImage->SetActive(false);
+
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 void ItemWindow::Start()
 {
-	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 /**
@@ -49,8 +56,6 @@ void ItemWindow::Start()
 */
 void ItemWindow::Update()
 {
-	Input();
-
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
 	{
@@ -58,12 +63,22 @@ void ItemWindow::Update()
 		{
 			_Item2DList[i]->SetActive(true, true);
 			_Item2DList[i]->SetItemData(itemList[i].get());
+
+			//
+			if (itemList[i]->GetInfo()->Name == "")
+			{
+				_EIconImage->SetActive(true, false);
+				_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+			}
 		}
 		else
 		{
 			_Item2DList[i]->SetActive(false, true);
 		}
 	}
+
+	Input();
+
 }
 
 /**
