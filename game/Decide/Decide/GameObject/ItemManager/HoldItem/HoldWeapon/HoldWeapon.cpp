@@ -1,35 +1,39 @@
 #include "stdafx.h"
 #include "HoldWeapon.h"
 
-
-HoldWeapon::HoldWeapon(Item::BaseInfo* info):HoldItemBase(info)
+//コンストラクタ。
+HoldWeapon::HoldWeapon(Item::BaseInfo* info) :HoldEquipment(info)
 {
-	// 物理攻撃力のランダム差分算出。
-	int baseParam = static_cast<Item::WeaponInfo*>(info)->Atk;
-	int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
-	float raito = static_cast<float>(rnd) * 0.01f;
-	_AtkRnd = baseParam * raito;
-	_Atk = baseParam + _AtkRnd;
-
-	// 魔法攻撃力のランダム差分算出。
-	baseParam = static_cast<Item::WeaponInfo*>(info)->MagicAtk;
-	rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
-	raito = static_cast<float>(rnd) * 0.01f;
-	_MAtkRnd = baseParam * raito;
-	_MagicAtk = baseParam + _MAtkRnd;
-
-	//クリティカルのランダム差分算出。
-	baseParam = static_cast<Item::WeaponInfo*>(info)->Dex;
-	rnd = GetRand_S50to100();
-	raito = static_cast<float>(rnd) * 0.01f;
-	_CrtRnd = baseParam * raito;
-	_Crt = baseParam + _CrtRnd;
-
-	RankSelect(ParamRaitoMass());
-	
+	//最初は装備していない。
+	SetIsEquipFalse();
 }
 
-
+//デストラクタ。
 HoldWeapon::~HoldWeapon()
 {
+
+}
+
+//武器のパラメーターをランダム差分を使って算出。
+void HoldWeapon::CreateRandParam() 
+{
+	//ランダムパラメーターを算出。
+	RndAtkMass();
+	RndMAtkMass();
+	RndCrtMass();
+
+	//武器のランクを算出。
+	RankSelect(ParamRaitoMass());
+}
+
+//武器のパラメーターを基準値で設定。
+void HoldWeapon::CreateOriginParam() {
+
+	//基準値設定。
+	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk;
+	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk;
+	_Crt = static_cast<Item::WeaponInfo*>(_Info)->Dex;
+
+	//武器のランクを算出。
+	RankSelect(ParamRaitoMass());
 }

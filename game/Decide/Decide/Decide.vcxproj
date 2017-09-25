@@ -242,6 +242,7 @@
     <ClInclude Include="GameObject\Village\Shop\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameSystem.h" />
+    <ClInclude Include="HoldEquipment.h" />
     <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
@@ -329,6 +330,7 @@
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp" />
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
+    <ClCompile Include="HoldEquipment.cpp" />
     <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />

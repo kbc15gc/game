@@ -33,23 +33,25 @@ namespace {
 		//			所持数。
 		//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		HoldWeponInfo(int TypeID, int ID, int HoldNum, int AtkRnd, int MAtkRnd,int CrtRnd) : HoldInfo(TypeID, ID, HoldNum) {
+		HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd,int CrtRnd,bool IsEquip) : HoldInfo(TypeID, ID, 0) {
 			_AtkRnd = AtkRnd;
 			_MAtkRnd = MAtkRnd;
 			_CrtRnd = CrtRnd;
+			_IsEquip = IsEquip;
 		}
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+		int _IsEquip;		//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
 		{ "TypeID",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_TypeID),			sizeof(int) },
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldWeponInfo,_ID),			sizeof(int) },
-		{ "HoldNum",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_HoldNum),		sizeof(int) },
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_AtkRnd),		sizeof(int) },
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_MAtkRnd),		sizeof(int) },
 		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_CrtRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
 	};
 
 	struct HoldArmorInfo : public HoldInfo {
@@ -58,20 +60,22 @@ namespace {
 		//			所持数。
 		//			防御力のランク差分。
 		//			魔法防御力のランク差分。
-		HoldArmorInfo(int TypeID, int ID, int HoldNum, int Def, int MDef) : HoldInfo(TypeID, ID, HoldNum) {
+		HoldArmorInfo(int TypeID, int ID, int Def, int MDef,bool IsEquip) : HoldInfo(TypeID, ID, 0) {
 			_DefRnd = Def;
 			_MDefRnd = MDef;
+			_IsEquip = IsEquip;
 		}
 		int _DefRnd;	//防御力のランク差分。
 		int _MDefRnd;	//魔法防御力のランク差分。
+		int _IsEquip;	//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)
 	};
 
 	static Support::DATARECORD HoldArmorData[] = {
 		{ "TypeID",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_TypeID),			sizeof(int) },
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldArmorInfo,_ID),			sizeof(int) },
-		{ "HoldNum",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_HoldNum),		sizeof(int) },
 		{ "DefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_DefRnd),		sizeof(int) },
 		{ "MDefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_MDefRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
 	};
 }
 
@@ -79,76 +83,21 @@ namespace {
 class HoldItemBase
 {
 public:
-	// 引数：	アイテムの情報構造体。
+	//コンストラクタ。
 	HoldItemBase(Item::BaseInfo* info);
+	
+	//デストラクタ。
 	virtual ~HoldItemBase();
-
-	// コメントの数字は基準値からの加算率の幅。
-	enum Rank
-	{
-		SS = 0, //91 ~ 100	神造級。
-		S, //71 ~ 90		宝物級。
-		A,	// 51 ~ 70		高級。
-		B,	// 31 ~ 50		良。
-		C,	// -20 ~ 30		平均。
-		D,	// -40 ~ -21	粗悪。
-		E,	// -50 ~ -41	超粗悪。
-	};
 
 	//構造体の情報を取得。
 	inline Item::BaseInfo* GetInfo() {
 		return _Info;
 	}
 
-	//所持数を更新(減らす場合は引数にマイナスを設定)。
-	inline void UpdateHoldNum(int add = 1) {
-		_HoldNum += add;
-	}
-
-	//武器もしくは防具のランクを算出。
-	virtual inline float ParamRaitoMass() {
-		return 0.0f;
-	}
-
-	//武器または防具のランクを決定。
-	inline void RankSelect(float raito) {
-		if (raito >= -0.5f && raito <= -0.41f) {
-			_Rank = Rank::E;
-		}
-		else if (raito >= -0.4f && raito <= -0.21f) {
-			_Rank = Rank::D;
-		}
-		else if (raito >= -0.2f && raito <= 0.3f) {
-			_Rank = Rank::C;
-		}
-		else if (raito >= 0.31f && raito <= 0.5f) {
-			_Rank = Rank::B;
-		}
-		else if (raito >= 0.51f && raito <= 0.7f) {
-			_Rank = Rank::A;
-		}
-		else if (raito >= 0.71f && raito <= 0.9f) {
-			_Rank = Rank::S;
-		}
-		else if (raito >= 0.9f && raito <= 1.0f) {
-			_Rank = Rank::SS;
-		}
-		
-	}
-
-	//所持数を取得。
-	inline int GetHoldNum() {
-		return  _HoldNum;
-	}
-
 	//-50から100の値をランダムで取得。
 	inline float GetRand_S50to100() {
 		return (rand() % 151) - 50;
 	}
-
-private:
-	int _HoldNum = 0;
-	Item::BaseInfo* _Info;
 protected:
-	Rank _Rank;
+	Item::BaseInfo* _Info;
 };

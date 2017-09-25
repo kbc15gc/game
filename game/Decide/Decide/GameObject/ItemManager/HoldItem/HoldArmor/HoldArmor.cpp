@@ -1,26 +1,36 @@
 #include "stdafx.h"
 #include "HoldArmor.h"
 
-HoldArmor::HoldArmor(Item::BaseInfo* info):HoldItemBase(info)
+//コンストラクタ。
+HoldArmor::HoldArmor(Item::BaseInfo* info) :HoldEquipment(info)
 {
-	// 物理防御力のランダム差分算出。
-	int baseParam = static_cast<Item::ArmorInfo*>(info)->Def;
-	int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
-	float raito = static_cast<float>(rnd) * 0.01f;
-	_DefRnd = baseParam * raito;
-	_Def = baseParam + _DefRnd;
+	//最初は装備していない。
+	SetIsEquipFalse();
+}
 
-	// 魔法防御力のランダム差分算出。
-	baseParam = static_cast<Item::ArmorInfo*>(info)->MagicDef;
-	rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
-	raito = static_cast<float>(rnd) * 0.01f;
-	_MDefRnd = baseParam * raito;
-	_MagicDef = baseParam + _MDefRnd;
+//デストラクタ。
+HoldArmor::~HoldArmor()
+{
 
+}
+
+//防具のパラメーターをランダムで算出。
+void HoldArmor::CreateRandParam() 
+{
+	//ランダムパラメーターを算出。
+	RndDefMass();
+	RndMDef();
+
+	//防具のランクを算出。
 	RankSelect(ParamRaitoMass());
 }
 
+//防具のパラメーターを基準値で設定。
+void HoldArmor::CreateOriginParam() {
+	//基準値設定。
+	_Def = static_cast<Item::ArmorInfo*>(_Info)->Def;
+	_MagicDef = static_cast<Item::ArmorInfo*>(_Info)->MagicDef;
 
-HoldArmor::~HoldArmor()
-{
+	//防具のランクを算出。
+	RankSelect(ParamRaitoMass());
 }

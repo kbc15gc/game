@@ -120,6 +120,7 @@ void Player::Awake()
 
 	_outputData = AddComponent<OutputData>();
 #endif
+	_Equipment = new PlayerEquipment;
 }
 
 void Player::Start()
@@ -339,7 +340,12 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
+		int damage;
+		if (_Equipment != nullptr&&_Equipment->armor != nullptr)
+		damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(),hitCollision->GetIsMagic(),_Equipment->armor);
+		else
+		damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic());
+
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ƒ_ƒ[ƒW‚ðŽó‚¯‚½‚Æ‚«‚ÌSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);

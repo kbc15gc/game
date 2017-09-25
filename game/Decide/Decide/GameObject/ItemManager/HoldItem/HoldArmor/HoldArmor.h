@@ -1,19 +1,21 @@
 #pragma once
-#include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
+#include "HoldEquipment.h"
 
 //所持防具のクラス。
-class HoldArmor :public HoldItemBase
+class HoldArmor :public HoldEquipment
 {
 public:
+	//コンストラクタ。
 	HoldArmor(Item::BaseInfo* info);
+
+	//デストラクタ。
 	~HoldArmor();
 
-	//防具の独自パラメーターを設定。
-	//引数：防御力の乱数差分、魔法防御力の乱数差分。
-	inline void SetParam(float Def, float MDef) {
-		_Def += _Def*Def;
-		_MagicDef += _MagicDef*MDef;
-	}
+	//防具のパラメーターをランダムで算出。
+	void CreateRandParam()override;
+
+	//防具のパラメーターを基準値で設定。
+	void CreateOriginParam() override;
 
 	//防御力の乱数差分を取得。
 	inline int GetDefRnd() {
@@ -41,6 +43,30 @@ public:
 		float sum = _Def + _MagicDef;
 		float par = offset / sum;
 		return par;
+	}
+
+	//ランクを考慮した物理防御力を計算。
+	inline void RndDefMass() {
+		// 物理防御力のランダム差分算出。
+		int baseParam = static_cast<Item::ArmorInfo*>(_Info)->Def;
+		int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
+		float raito = static_cast<float>(rnd) * 0.01f;
+
+		//最終的な物理防御力を算出。
+		_DefRnd = baseParam * raito;
+		_Def = baseParam + _DefRnd;
+	}
+
+	//ランクを考慮した魔法防御力を計算。
+	inline void RndMDef() {
+		// 魔法防御力のランダム差分算出。
+		int baseParam = static_cast<Item::ArmorInfo*>(_Info)->MagicDef;
+		int rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
+		float raito = static_cast<float>(rnd) * 0.01f;
+
+		//最終的な魔法防御力。
+		_MDefRnd = baseParam * raito;
+		_MagicDef = baseParam + _MDefRnd;
 	}
 private:
 	int _DefRnd;	//防御力の乱数差分(この値でランク付け、単位はパーセント)。

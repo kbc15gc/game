@@ -5,6 +5,7 @@
 #include"Item2D.h"
 
 #include"fbEngine\_Object\_GameObject\ImageObject.h"
+#include "GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h"
 
 /**
 * ‰Šú‰».
@@ -41,7 +42,9 @@ void Item2D::SetItemData(HoldItemBase * item)
 	{
 		_ItemNameText->SetString(item->GetInfo()->Name);
 		char count[100] = { "" };
-		sprintf(count, "x%d", item->GetHoldNum());
-		_ItemCountText->SetString(count);
+		if (Item::ItemCodeE::Item==item->GetInfo()->TypeID) {
+			sprintf(count, "x%d",static_cast<ConsumptionItem*>(item)->GetHoldNum());
+			_ItemCountText->SetString(count);
+		}
 	}
 }
