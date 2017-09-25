@@ -18,8 +18,8 @@ namespace Item {
 		int ID;					//アイテムID。
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説名。
-		char filePath[256];		//アイテムのアイコン(UIなどで使用)。
 		int Value;				//値段。
+		char filePath[256];		//アイテムのアイコン(UIなどで使用)。
 	};
 	//アイテムの情報をまとめた構造体。
 	struct ItemInfo :public BaseInfo
@@ -37,8 +37,8 @@ namespace Item {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct ItemInfo,ID),			sizeof(int) },
 		{ "Name",Support::DataTypeE::STRING,		offsetof(struct ItemInfo,Name),			sizeof(char) * 256 },
 		{ "Description",Support::DataTypeE::STRING, offsetof(struct ItemInfo,Description),	sizeof(char) * 256 },
-		{ "filePath",Support::DataTypeE::STRING, offsetof(struct ItemInfo,filePath),	sizeof(char) * 256 },
 		{ "Value",Support::DataTypeE::INT, offsetof(struct ItemInfo,Value),	sizeof(int)},
+		{ "filePath",Support::DataTypeE::STRING, offsetof(struct ItemInfo,filePath),	sizeof(char) * 256 },
 		{ "type",Support::DataTypeE::INT, offsetof(struct ItemInfo,type),	sizeof(int) },
 		{ "effectValue",Support::DataTypeE::INTARRAY, offsetof(struct ItemInfo,effectValue),	sizeof(ItemInfo::effectValue) },
 		{ "rangeStrength",Support::DataTypeE::INT, offsetof(struct ItemInfo,rangeStrength),	sizeof(int) },

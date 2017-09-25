@@ -28,6 +28,6 @@ public:
 		_Info = info;
 	}
 protected:
-	Item::BaseInfo* _Info;
+	Item::BaseInfo* _Info = nullptr;
 };
 

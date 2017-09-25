@@ -13,6 +13,9 @@
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\OutputData.h"
 #include "GameObject\Inventory\Inventory.h"
+#include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor.h"
+#include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 
 class SkinModel;
 class Animation;

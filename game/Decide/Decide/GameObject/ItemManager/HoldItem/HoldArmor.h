@@ -34,7 +34,7 @@ public:
 		return _MagicDef;
 	}
 
-	//防具のランクを算出。
+	//防具の基準値と差分値の割合を算出。
 	inline float ParamRaitoMass()override {
 		float offset = _DefRnd + _MDefRnd;
 		float sum = _Def + _MagicDef;
@@ -65,9 +65,16 @@ public:
 		_MDefRnd = baseParam * raito;
 		_MagicDef = baseParam + _MDefRnd;
 	}
+
 private:
-	int _DefRnd;	//防御力の乱数差分(この値でランク付け、単位はパーセント)。
-	int _MDefRnd;	//魔法防御力の乱数差分(この値でランク付け、単位はパーセント)。
+	// 外部から読み込んだデータを設定。
+	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
+	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
+	void _ConfigLoadDataSubClass(HoldEquipInfo* info)override;
+
+private:
+	int _DefRnd = 0;	//防御力の乱数差分(この値でランク付け、単位はパーセント)。
+	int _MDefRnd = 0;	//魔法防御力の乱数差分(この値でランク付け、単位はパーセント)。
 	int _Def;		//ランクを考慮した物理防御力。
 	int _MagicDef;	//ランクを考慮した魔法防御力。
 };

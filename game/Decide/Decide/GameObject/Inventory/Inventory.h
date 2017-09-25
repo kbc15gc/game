@@ -12,7 +12,7 @@ const int INVENTORYLISTNUM = 20;
 
 
 namespace {
-	//アイテムごとの所持数(書き出しと読み込みに使用)。
+	//アイテムの所持情報(書き出しと読み込みに使用)。
 	struct HoldInfo
 	{
 		HoldInfo();
@@ -26,6 +26,7 @@ namespace {
 		int _ID;			//アイテムの通し番号(TypeIDの中でユニーク)。
 	};
 
+	// 消費アイテムの所持情報。
 	struct ConsumptionInfo :public HoldInfo
 	{
 		// 引数：	アイテム種別。
@@ -45,19 +46,33 @@ namespace {
 		{ "HoldNum",Support::DataTypeE::INT ,		offsetof(struct ConsumptionInfo,_HoldNum),		sizeof(int) },
 	};
 
-	struct HoldWeponInfo : public HoldInfo {
+	// 装備アイテムの所持情報。
+	struct HoldEquipInfo : public HoldInfo {
+		// 引数：	アイテム種別。
+		//			アイテム通し番号。
+		//			装備されているか。
+		HoldEquipInfo(int TypeID, int ID,bool isEquip);
+
+		// 引数：	コピー元のポインタ。
+		HoldEquipInfo(HoldItemBase* info);
+
+		int _IsEquip;		//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)。
+	};
+
+	// 武器の所持情報。
+	struct HoldWeaponInfo : public HoldEquipInfo {
 		// 引数：	アイテム種別。
 		//			アイテム通し番号。
 		//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip);
+		//			装備されているか。
+		HoldWeaponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip);
 		// 引数：	コピー元のポインタ。
-		HoldWeponInfo(HoldItemBase* info);
+		HoldWeaponInfo(HoldItemBase* info);
 
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
-		int _IsEquip;		//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
@@ -69,14 +84,16 @@ namespace {
 		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
 	};
 
-	struct HoldArmorInfo : public HoldInfo {
+	// 防具の所持情報。
+	struct HoldArmorInfo : public HoldEquipInfo {
 		// 引数：	アイテム種別。
 		//			アイテム通し番号。
 		//			所持数。
 		//			防御力のランク差分。
 		//			魔法防御力のランク差分。
-		HoldArmorInfo(int TypeID, int ID, int Def, int MDef);
-		// 引数：	コピー元のポインタ。
+		//			装備されているか。
+		HoldArmorInfo(int TypeID, int ID, int Def, int MDef, bool IsEquip);
+			// 引数：	コピー元のポインタ。
 		HoldArmorInfo(HoldItemBase* info);
 
 		int _DefRnd;	//防御力のランク差分。
@@ -136,8 +153,8 @@ public:
 		_PlayerMoney -= sub;
 	}
 
-	//アイテムをインベントリに追加(第一引数追加するアイテムの種類、第二引数がアイテムの情報、追加する数(指定しない場合は1)。)。
-	void AddItem(Item::BaseInfo* item, int num = 1);
+	//アイテムをインベントリに追加(第一引数追加するアイテムの情報、追加する数(指定しない場合は1)。)。
+	void AddItem(Item::ItemInfo* item, int num = 1);
 
 	//指定されたインベントリのリストの先頭を取得。
 	 inline const vector<HoldItemBase*>& GetInventoryList( Item::ItemCodeE code) {
@@ -153,8 +170,11 @@ public:
 	//所持数を減らす。
 	bool SubHoldNum(Item::BaseInfo* item,int num);
 
-	//第一引数：追加したい装備のポインタ、第二引数:武器か防具のアイテムコード(アイテムは無効)。
-	void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
+	// 装備品追加関数
+	// 引数：	追加したい装備のポインタ。
+	//			武器か防具のアイテムコード(アイテムは無効)。
+	// 戻り値：	追加した装備品のポインタ。
+	HoldEquipment* AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
 	//インベントリ内のアイテムをID順でソート。
 	void SortID();

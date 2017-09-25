@@ -22,9 +22,7 @@ public:
 
 	// パラメーター列挙。
 	//			HP。
-	//			HP最大値。
 	//			MP。
-	//			MP最大値。
 	//			攻撃力。
 	//			魔法攻撃力。
 	//			防御力。
@@ -33,7 +31,7 @@ public:
 	//			クリティカル威力。
 	//			レベル。
 	enum Param { MIN = -1,HP = 0, MP, ATK, MAT, DEF, MDE, DEX, CRT ,LV, MAX };
-	
+
 private:
 	// 各種パラメータの状態管理用構造体。
 	struct ParamInfo {

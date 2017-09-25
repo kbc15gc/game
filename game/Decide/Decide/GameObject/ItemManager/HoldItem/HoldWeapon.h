@@ -8,15 +8,7 @@ public:
 	HoldWeapon(char* name);
 	~HoldWeapon();
 
-	//武器の独自パラメーターを設定。
-	//引数：攻撃力の乱数差分(この値でランク付け、単位はパーセント)、魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-	inline void SetParam(float AtkRnd, float MAtkRnd, float CrtRnd) {
-		_AtkRnd = AtkRnd;
-		_MAtkRnd = MAtkRnd;
-		_Atk = _Atk + AtkRnd;
-		_MagicAtk = _MagicAtk + MAtkRnd;
-		_Crt = _Crt + CrtRnd;
-	}
+
 	//武器のパラメーターをランダムで算出。
 	void CreateRandParam()override;
 
@@ -53,7 +45,7 @@ public:
 		return _Crt;
 	}
 
-	//武器のランクを算出。
+	//武器の基準値と差分値の割合を算出。
 	inline float ParamRaitoMass()override {
 		float offset = _AtkRnd + _MAtkRnd + _CrtRnd;
 		float sum = _Atk + _MagicAtk + _Crt;
@@ -95,6 +87,16 @@ public:
 		//最終的なクリティカル率を算出。
 		_Crt = baseParam + _CrtRnd;
 	}
+
+
+
+private:
+
+	// 外部から読み込んだデータを設定。
+	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
+	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
+	void _ConfigLoadDataSubClass(HoldEquipInfo* info)override;
+
 private:
 	int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 	int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。

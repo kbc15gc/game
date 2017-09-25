@@ -33,3 +33,12 @@ void HoldArmor::CreateOriginParam() {
 	//防具のランクを算出。
 	RankSelect(ParamRaitoMass());
 }
+
+void HoldArmor::_ConfigLoadDataSubClass(HoldEquipInfo* info) {
+	// ランダム差分設定。
+	_DefRnd = static_cast<HoldArmorInfo*>(info)->_DefRnd;
+	_MDefRnd = static_cast<HoldArmorInfo*>(info)->_MDefRnd;
+	// 合計パラメータ設定。
+	_Def = static_cast<Item::ArmorInfo*>(_Info)->Def + _DefRnd;
+	_MagicDef = static_cast<Item::ArmorInfo*>(_Info)->MagicDef + _MDefRnd;
+}
