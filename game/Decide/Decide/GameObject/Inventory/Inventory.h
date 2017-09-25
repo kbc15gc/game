@@ -176,19 +176,19 @@ public:
 	// 戻り値：	追加した装備品のポインタ。
 	HoldEquipment* AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
-	//インベントリ内のアイテムをID順でソート。
-	void SortID();
+	//インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
+	void AlignmentInventoryList();
 
 private:
 	//リストから指定されたアイテムを削除。
 	void _DeleteFromList(HoldItemBase* item);
 
-	//アイテムリストのデータを保存。
-	void _ItemListOutData();
+	// 所持品のデータを読み込み。
+	void _LoadData();
 
-	bool operator()(const int &Left, const int&Right)const {
-		return Left < Right;
-	}
+	//所持品のデータを書き出し。
+	void _OutData();
+
 private:
 	
 	//インベントリ。
