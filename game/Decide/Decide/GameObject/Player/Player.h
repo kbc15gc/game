@@ -17,7 +17,6 @@
 class SkinModel;
 class Animation;
 class ParameterBar;
-class HistoryBook;
 class ItemManager;
 
 namespace
@@ -258,8 +257,8 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
-	//ヒストリーブック
-	HistoryBook* _HistoryBook = nullptr;
+	//レベルアップスプライト
+	Sprite* _LevelUpSprite;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;
