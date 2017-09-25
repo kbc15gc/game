@@ -68,8 +68,8 @@ public:
 	//第一引数：追加したい装備のポインタ、第二引数:武器か防具のアイテムコード(アイテムは無効)。
 	void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
-	//インベントリ内のアイテムをID順でソート。
-	void SortID();
+	//インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
+	void AlignmentInventoryList();
 
 private:
 	//リストから指定されたアイテムを削除。
@@ -78,9 +78,6 @@ private:
 	//アイテムリストのデータを保存。
 	void _ItemListOutData();
 
-	bool operator()(const int &Left, const int&Right)const {
-		return Left < Right;
-	}
 private:
 	
 	//インベントリ。
