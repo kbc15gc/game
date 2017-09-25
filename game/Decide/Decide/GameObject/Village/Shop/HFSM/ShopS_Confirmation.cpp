@@ -34,11 +34,11 @@ void ShopS_Confirmation::Update()
 {
 	//カーソル移動。
 	const int max = 2;
-	if ((KeyBoardInput->isPush(DIK_UP) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU)))
+	if (VPadInput->IsPush(fbEngine::VPad::ButtonUp))
 	{
 		_Select = (_Select > 0) ? _Select - 1 : max - 1;
 	}
-	else if ((KeyBoardInput->isPush(DIK_DOWN) || XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD)))
+	else if (VPadInput->IsPush(fbEngine::VPad::ButtonDown))
 	{
 		_Select = (_Select + 1) % max;
 	}
@@ -46,7 +46,7 @@ void ShopS_Confirmation::Update()
 	_Cursor->transform->SetLocalPosition(Vector3(-_Text->GetLength().x / 2 - _Cursor->GetSize().x, 60 * _Select - 30, 0));
 
 	//決定(仮)
-	if (KeyBoardInput->isPush(DIK_P) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+	if (VPadInput->IsPush(fbEngine::VPad::ButtonA))
 	{
 		if(_Select == 0)
 		{
@@ -62,7 +62,7 @@ void ShopS_Confirmation::Update()
 	}
 
 	//キャンセル。
-	if (KeyBoardInput->isPush(DIK_B) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
+	if (VPadInput->IsPush(fbEngine::VPad::ButtonB))
 	{
 		_Shop->_ChangeState(_Caller);
 	}

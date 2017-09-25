@@ -1,7 +1,6 @@
 #pragma once
 #include "_Object\_Component\Component.h"
 
-
 class Collision;
 
 class Camera :public Component

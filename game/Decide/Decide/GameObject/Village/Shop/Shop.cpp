@@ -91,8 +91,6 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
 	//リストの中身削除。
-	for (HoldItemBase* hold : _ItemList)
-		SAFE_DELETE(hold);
 	_ItemList.clear();
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
@@ -104,8 +102,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		if (item)
 		{
 			//情報を設定して初期化。
-			HoldItemBase* hitem = new HoldItemBase(item);
-			_ItemList.push_back(hitem);
+			_ItemList.push_back(unique_ptr<HoldItemBase>(new HoldItemBase(item)));
 		}
 	}
 }

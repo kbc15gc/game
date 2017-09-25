@@ -250,23 +250,19 @@ void Text::_RenderText(const Vector3 & base)
 	if (_Text == nullptr)
 		return;
 	//フォントをセットして文字数分描画するっていうのは重い！
-	for (short i = 0,count =0; _Text[i] != '\0'; i++)
+	for (short idx = 0,count = 0; _Text[idx] != '\0';)
 	{
 		//文字数以上になったなら描画止め。
 		if (_DisplayCharNum <= count)
 			break;
 
-		//リッチテキスト処理。
-		if (_Text[i] == '<')
-			i += RichText(&_Text[i]);
-
 		//この文字のスケール
 		float scale = transform->GetScale().x;
 		//改行文字ではない
-		if (_Text[i] != '\n')
+		if (_Text[idx] != '\n')
 		{
 			//文字のデータ取得
-			FontData* data = INSTANCE(FontManager)->Findfont(_Text[i], _FontStyle);
+			FontData* data = INSTANCE(FontManager)->Findfont(_Text[idx], _FontStyle);
 			GLYPHMETRICS gm = data->gm;
 			//画像の左上の座標
 			Vector3 origin(0, -gm.gmptGlyphOrigin.y, 0);
@@ -297,10 +293,14 @@ void Text::_RenderText(const Vector3 & base)
 			//移動量初期化
 			offset.x = 0;
 			//次が改行でないなら初期化
-			if (_Text[i + 1] != '\n')
+			if (_Text[idx + 1] != '\n')
 				maxHeight = 0;
 		}
 		count++;
+		idx++;
+		//リッチテキスト処理。
+		if (_Text[idx] == '<')
+			idx += RichText(&_Text[idx]);
 	}
 }
 

@@ -41,6 +41,8 @@ private:
 	void UpdateText();
 	//アイテムの情報をテキストに送信。
 	void SendItemInfo(Item::BaseInfo* info);
+	//カラーコードを算出。
+	char* _CalcColorCode(int diff);
 	
 	//決定処理。
 	void Decision();
@@ -60,8 +62,12 @@ private:
 	//ショップのステート保持。
 	Shop::ShopStateE _SaveState;
 
-	//表示するアイテムの一覧
-	vector<HoldItemBase*> _DisplayList;
+	//表示するアイテムの種類。
+	int _DisplayType = static_cast<int>(Item::ItemCodeE::Item);
+	//表示するアイテムの一覧の参照を受け取る。
+	const vector<unique_ptr<HoldItemBase>>* _DisplayList;
+	//アイテムの数。
+	int _DisplayItemNum = 0;
 	//選択しているアイテム。
 	Item::BaseInfo* _SelectItem;
 
