@@ -29,6 +29,7 @@ namespace Hold{
 	// 消費アイテムの所持情報。
 	struct ConsumptionInfo :public HoldInfo
 	{
+		ConsumptionInfo() {};
 		// 引数：	アイテム種別。
 		//			アイテム通し番号。
 		//			所持数。
@@ -63,6 +64,8 @@ namespace Hold{
 
 	// 武器の所持情報。
 	struct HoldWeaponInfo : public HoldEquipInfo {
+		HoldWeaponInfo(){};
+
 		// 引数：	アイテム種別。
 		//			アイテム通し番号。
 		//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
@@ -88,6 +91,7 @@ namespace Hold{
 
 	// 防具の所持情報。
 	struct HoldArmorInfo : public HoldEquipInfo {
+		HoldArmorInfo() {};
 		// 引数：	アイテム種別。
 		//			アイテム通し番号。
 		//			所持数。
@@ -118,7 +122,7 @@ class Inventory
 {
 private:
 	Inventory();
-
+	virtual ~Inventory(); 
 public:
 
 	void Initialize();
@@ -189,8 +193,11 @@ private:
 	void _LoadData();
 
 	//所持品のデータを書き出し。
-	void _OutData();
+	// 引数：	アイテムコード。
+	void _OutData(Item::ItemCodeE code);
 
+	// 全所持品書き出し。
+	void _OutData_All();
 private:
 	
 	//インベントリ。

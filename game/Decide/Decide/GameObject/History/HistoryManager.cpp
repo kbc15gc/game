@@ -296,7 +296,7 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 {
 	//CSV‚©‚ç“–‚½‚è”»’è‚Ìî•ñ“Ç‚İ‚İ
 	vector<unique_ptr<CollisionInfo>> colls;
-	Support::LoadCSVData(path, CollisionInfoData, ARRAY_SIZE(CollisionInfoData), colls);
+	Support::LoadCSVData<CollisionInfo>(path, CollisionInfoData, ARRAY_SIZE(CollisionInfoData), colls);
 
 	//î•ñ‚©‚ç“–‚½‚è”»’è¶¬B
 	FOR(i, colls.size())

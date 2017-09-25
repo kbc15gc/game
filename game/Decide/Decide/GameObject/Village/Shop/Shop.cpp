@@ -27,7 +27,7 @@ void Shop::Awake()
 		{
 			"ShopName",Support::DataTypeE::STRING,0,sizeof(char) * 256
 		};
-		Support::LoadCSVData("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
+		Support::LoadCSVData<ShopName>("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
 	}
 	//ウィンドウの画像。
 	_DescriptionWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DescriptionWindow", 8);

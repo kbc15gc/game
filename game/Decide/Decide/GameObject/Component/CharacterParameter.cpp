@@ -211,11 +211,6 @@ void CharacterParameter::DebuffClearAll() {
 }
 
 void CharacterParameter::_UpdateParam(Param idx) {
-	if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
-		// バフとデバフに対応していないものは無視。
-		return;
-	}
-
 	_Info[idx].param = _Info[idx].originParam;	// 基礎パラメータ。
 	
 	_Info[idx].param += _Info[idx].originParam * static_cast<float>(_Info[idx].buffPercentage) * 0.01f;	// バフ値を加算。
