@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include "GameObject\SplitSpace.h"
-#include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 
@@ -159,7 +158,14 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 
-	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+	//レベルアップ時のスプライト初期化
+	{
+		_LevelUpSprite = AddComponent<Sprite>();
+		_LevelUpSprite->SetTexture(LOADTEXTURE("levelup.png"));
+		_LevelUpSprite->SetEnable(true);
+		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
+	}
+
 }
 
 void Player::Update()
@@ -181,6 +187,11 @@ void Player::Update()
 	{
 		//所持リストに追加.
 		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(100, 0);
 	}
 #endif // DEBUG
 

@@ -15,9 +15,7 @@ public class ExportEnemy : MonoBehaviour {
     public EnemyType _EnemyType;
     //各ステータス。
     public int _HP;
-    public int _MaxHP;
     public int _MP;
-    public int _MaxMP;
     public int _ATK;
     public int _MAT;
     public int _DEF;
