@@ -313,34 +313,17 @@ void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
 
 //インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
 void Inventory::AlignmentInventoryList() {
-	////作業用変数。
-	//vector<vector<unique_ptr<HoldItemBase>>> work;
+	//作業用変数。
+	vector<vector<unique_ptr<HoldItemBase>>> work;
 	////作業用変数の初期化。
 	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
 	//	work.push_back(vector<unique_ptr<HoldItemBase>>());
-	//	/*for (int idx = 0; idx < INVENTORYLISTNUM; idx++) {
-	//		work[type].push_back(unique_ptr<HoldItemBase>());
-	//	}*/
 	//}
 
 	////作業用変数にインベントリの中身を全部格納。
 	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
 	//	for (int code = 0; code < INVENTORYLISTNUM; code++) {
-	//					
+	//		work[type].push_back(_InventoryItemList[type][code].get());
 	//	}
 	//}
-
-	//////作業用変数からインベントリに中身を全部格納。
-	////for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
-	////	for (int code = 0; code < INVENTORYLISTNUM; code++) {
-	////		if (work[type][code] != nullptr) {
-
-	////			_InventoryItemList[type][code].reset(work[type][code].get());
-	////		}
-	////		else
-	////		{
-	////			break;
-	////		}
-	////	}
-	////}
 }
