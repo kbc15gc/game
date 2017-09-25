@@ -25,7 +25,7 @@ public:
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
 	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
-	void ConfigLoadData(HoldEquipInfo* info);
+	void ConfigLoadData(Hold::HoldEquipInfo* info);
 
 	//武器または防具のランクを決定。
 	inline void RankSelect(float raito) {
@@ -88,7 +88,7 @@ private:
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
 	// 継承先によって処理を変更。
-	virtual void _ConfigLoadDataSubClass(HoldEquipInfo* info) = 0;
+	virtual void _ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) = 0;
 
 protected:
 	Rank _Rank;	//装備品のランク。

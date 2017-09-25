@@ -95,7 +95,7 @@ private:
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
 	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
-	void _ConfigLoadDataSubClass(HoldEquipInfo* info)override;
+	void _ConfigLoadDataSubClass(Hold::HoldEquipInfo* info)override;
 
 private:
 	int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。

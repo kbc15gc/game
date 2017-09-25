@@ -290,7 +290,7 @@ void ShopS_Trade::BuyItem()
 	
 	if (_SelectItem->TypeID==Item::ItemCodeE::Item) {
 		//インベントリへ追加。
-		INSTANCE(Inventory)->AddItem(_SelectItem, _SelectNum);
+		INSTANCE(Inventory)->AddItem(static_cast<Item::ItemInfo*>(_SelectItem), _SelectNum);
 	}
 	else
 	{

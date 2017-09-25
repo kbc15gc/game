@@ -38,11 +38,11 @@ void HoldWeapon::CreateOriginParam() {
 	RankSelect(ParamRaitoMass());
 }
 
-void HoldWeapon::_ConfigLoadDataSubClass(HoldEquipInfo* info) {
+void HoldWeapon::_ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) {
 	// ランダム差分設定。
-	_AtkRnd = static_cast<HoldWeaponInfo*>(info)->_AtkRnd;
-	_MAtkRnd = static_cast<HoldWeaponInfo*>(info)->_MAtkRnd;
-	_CrtRnd = static_cast<HoldWeaponInfo*>(info)->_CrtRnd;
+	_AtkRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_AtkRnd;
+	_MAtkRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_MAtkRnd;
+	_CrtRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_CrtRnd;
 	// 合計パラメータ設定。
 	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk + _AtkRnd;
 	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk + _MAtkRnd;

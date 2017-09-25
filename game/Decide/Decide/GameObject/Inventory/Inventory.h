@@ -11,7 +11,7 @@ class ConsumptionItem;
 const int INVENTORYLISTNUM = 20;
 
 
-namespace {
+namespace Hold{
 	//アイテムの所持情報(書き出しと読み込みに使用)。
 	struct HoldInfo
 	{
@@ -48,6 +48,8 @@ namespace {
 
 	// 装備アイテムの所持情報。
 	struct HoldEquipInfo : public HoldInfo {
+		HoldEquipInfo();
+
 		// 引数：	アイテム種別。
 		//			アイテム通し番号。
 		//			装備されているか。
@@ -76,12 +78,12 @@ namespace {
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
-		{ "TypeID",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_TypeID),			sizeof(int) },
-		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldWeponInfo,_ID),			sizeof(int) },
-		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_AtkRnd),		sizeof(int) },
-		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_MAtkRnd),		sizeof(int) },
-		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_CrtRnd),		sizeof(int) },
-		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
+		{ "TypeID",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_TypeID),			sizeof(int) },
+		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldWeaponInfo,_ID),			sizeof(int) },
+		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_AtkRnd),		sizeof(int) },
+		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_MAtkRnd),		sizeof(int) },
+		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_CrtRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_IsEquip),		sizeof(int) },
 	};
 
 	// 防具の所持情報。
