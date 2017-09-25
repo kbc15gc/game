@@ -5,7 +5,10 @@
 class HoldWeapon :public HoldEquipment
 {
 public:
+	//コンストラクタ。
 	HoldWeapon(Item::BaseInfo* info);
+
+	//デストラクタ。
 	~HoldWeapon();
 
 	//武器の独自パラメーターを設定。

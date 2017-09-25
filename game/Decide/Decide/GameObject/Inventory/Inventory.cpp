@@ -248,7 +248,9 @@ void Inventory::_ItemListOutData() {
 								static_cast<int>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx]->GetInfo()->TypeID),
 								_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx]->GetInfo()->ID,
 								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetDefRnd(),
-								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetMDefRnd()
+								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetMDefRnd(),
+								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetIsEquip()
+
 							)
 							));
 				}
@@ -272,7 +274,8 @@ void Inventory::_ItemListOutData() {
 								_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx]->GetInfo()->ID,
 								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetAtkRnd(),
 								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetMtkRnd(),
-								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetCrtRnd()
+								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetCrtRnd(),
+								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetIsEquip()
 							)
 							));
 				}
@@ -305,4 +308,8 @@ void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
 			break;
 		}
 	}	
+}
+
+void Inventory::SortID() {
+
 }

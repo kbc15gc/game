@@ -33,14 +33,16 @@ namespace {
 		//			所持数。
 		//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd,int CrtRnd) : HoldInfo(TypeID, ID, 0) {
+		HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd,int CrtRnd,bool IsEquip) : HoldInfo(TypeID, ID, 0) {
 			_AtkRnd = AtkRnd;
 			_MAtkRnd = MAtkRnd;
 			_CrtRnd = CrtRnd;
+			_IsEquip = IsEquip;
 		}
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+		int _IsEquip;		//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
@@ -49,6 +51,7 @@ namespace {
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_AtkRnd),		sizeof(int) },
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_MAtkRnd),		sizeof(int) },
 		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_CrtRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
 	};
 
 	struct HoldArmorInfo : public HoldInfo {
@@ -57,12 +60,14 @@ namespace {
 		//			所持数。
 		//			防御力のランク差分。
 		//			魔法防御力のランク差分。
-		HoldArmorInfo(int TypeID, int ID, int Def, int MDef) : HoldInfo(TypeID, ID, 0) {
+		HoldArmorInfo(int TypeID, int ID, int Def, int MDef,bool IsEquip) : HoldInfo(TypeID, ID, 0) {
 			_DefRnd = Def;
 			_MDefRnd = MDef;
+			_IsEquip = IsEquip;
 		}
 		int _DefRnd;	//防御力のランク差分。
 		int _MDefRnd;	//魔法防御力のランク差分。
+		int _IsEquip;	//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)
 	};
 
 	static Support::DATARECORD HoldArmorData[] = {
@@ -70,6 +75,7 @@ namespace {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldArmorInfo,_ID),			sizeof(int) },
 		{ "DefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_DefRnd),		sizeof(int) },
 		{ "MDefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_MDefRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
 	};
 }
 
@@ -77,8 +83,10 @@ namespace {
 class HoldItemBase
 {
 public:
-	// 引数：	アイテムの情報構造体。
+	//コンストラクタ。
 	HoldItemBase(Item::BaseInfo* info);
+	
+	//デストラクタ。
 	virtual ~HoldItemBase();
 
 	//構造体の情報を取得。

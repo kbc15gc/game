@@ -5,7 +5,10 @@
 class HoldEquipment :public HoldItemBase
 {
 public:
+	//コンストラクタ。
 	HoldEquipment(Item::BaseInfo* info);
+
+	//デストラクタ。
 	~HoldEquipment();
 
 	// コメントの数字は基準値からの加算率の幅。
@@ -61,7 +64,23 @@ public:
 
 	}
 
+	//装備するならこの関数を呼ぶ。
+	inline void SetIsEquipTrue() {
+		_IsEquip = true;
+	}
+
+	//装備しないならこの関数を呼ぶ。
+	inline void SetIsEquipFalse() {
+		_IsEquip = false;
+	}
+
+	//装備フラグをセット(tureなら装備している、falseなら装備していない)。
+	inline bool GetIsEquip() {
+		return _IsEquip;
+	}
+
 protected:
-	Rank _Rank;	//装備品のランク。
+	Rank _Rank;					//装備品のランク。
+	bool _IsEquip = false;		//装備されているかのフラグ(tureなら装備されている)。
 };
 
