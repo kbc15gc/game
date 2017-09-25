@@ -50,13 +50,14 @@ namespace {
 		//			アイテム通し番号。
 		//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd);
+		HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip);
 		// 引数：	コピー元のポインタ。
 		HoldWeponInfo(HoldItemBase* info);
 
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+		int _IsEquip;		//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
@@ -65,6 +66,7 @@ namespace {
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_AtkRnd),		sizeof(int) },
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_MAtkRnd),		sizeof(int) },
 		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_CrtRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeponInfo,_IsEquip),		sizeof(int) },
 	};
 
 	struct HoldArmorInfo : public HoldInfo {
@@ -79,6 +81,7 @@ namespace {
 
 		int _DefRnd;	//防御力のランク差分。
 		int _MDefRnd;	//魔法防御力のランク差分。
+		int _IsEquip;	//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)
 	};
 
 	static Support::DATARECORD HoldArmorData[] = {
@@ -86,6 +89,7 @@ namespace {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldArmorInfo,_ID),			sizeof(int) },
 		{ "DefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_DefRnd),		sizeof(int) },
 		{ "MDefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_MDefRnd),		sizeof(int) },
+		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_IsEquip),		sizeof(int) },
 	};
 };
 
@@ -152,12 +156,19 @@ public:
 	//第一引数：追加したい装備のポインタ、第二引数:武器か防具のアイテムコード(アイテムは無効)。
 	void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
+	//インベントリ内のアイテムをID順でソート。
+	void SortID();
+
 private:
 	//リストから指定されたアイテムを削除。
 	void _DeleteFromList(HoldItemBase* item);
 
 	//アイテムリストのデータを保存。
 	void _ItemListOutData();
+
+	bool operator()(const int &Left, const int&Right)const {
+		return Left < Right;
+	}
 private:
 	
 	//インベントリ。
@@ -168,6 +179,8 @@ private:
 
 	//所持金。
 	int _PlayerMoney = 100;
+
+	GameObject* _Player;
 
 	static Inventory* _InventoryInstance;
 };

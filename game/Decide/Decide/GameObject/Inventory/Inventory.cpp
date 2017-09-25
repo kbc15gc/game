@@ -29,28 +29,36 @@ namespace {
 		_HoldNum = static_cast<ConsumptionItem*>(info)->GetHoldNum();
 	}
 
-
-	HoldWeponInfo::HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd) : HoldInfo(TypeID, ID) {
+	// 引数：	アイテム種別。
+	//			アイテム通し番号。
+	//			所持数。
+	//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
+	//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
+	HoldWeponInfo::HoldWeponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip) : HoldInfo(TypeID, ID) {
 		_AtkRnd = AtkRnd;
 		_MAtkRnd = MAtkRnd;
 		_CrtRnd = CrtRnd;
+		_IsEquip = IsEquip;
 	}
+
 	// 引数：	コピー元のポインタ。
 	HoldWeponInfo::HoldWeponInfo(HoldItemBase* info) : HoldInfo(info) {
 		_AtkRnd = static_cast<HoldWeapon*>(info)->GetAtkRnd();
 		_MAtkRnd = static_cast<HoldWeapon*>(info)->GetMtkRnd();
 		_CrtRnd = static_cast<HoldWeapon*>(info)->GetCrtRnd();
+		_IsEquip = static_cast<HoldWeapon*>(info)->GetIsEquip();
 	}
 
-
-	HoldArmorInfo::HoldArmorInfo(int TypeID, int ID, int Def, int MDef) : HoldInfo(TypeID, ID) {
+	HoldArmorInfo::HoldArmorInfo(int TypeID, int ID, int Def, int MDef, bool IsEquip) : HoldInfo(TypeID, ID) {
 		_DefRnd = Def;
 		_MDefRnd = MDef;
+		_IsEquip = IsEquip;
 	}
 	// 引数：	コピー元のポインタ。
 	HoldArmorInfo::HoldArmorInfo(HoldItemBase* info) : HoldInfo(info) {
 		_DefRnd = static_cast<HoldArmor*>(info)->GetDefRnd();
 		_MDefRnd = static_cast<HoldArmor*>(info)->GetMDefRnd();
+		_IsEquip = static_cast<HoldArmor*>(info)->GetIsEqip();
 	}
 
 }
@@ -63,6 +71,9 @@ Inventory::Inventory()
 
 void Inventory::Initialize() {
 	
+	AddItem(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
+	AddItem(INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Item));
+
 	//ファイルネーム
 	const char* filename[] = { "ItemList","ArmorList","WeaponList" };
 	vector<vector<unique_ptr<HoldInfo>>> work= vector<vector<unique_ptr<HoldInfo>>>(static_cast<int>(Item::ItemCodeE::Max));
@@ -303,4 +314,8 @@ void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
 			break;
 		}
 	}	
+}
+
+void Inventory::SortID() {
+
 }

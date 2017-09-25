@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include "GameObject\SplitSpace.h"
-#include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 
@@ -121,6 +120,7 @@ void Player::Awake()
 
 	_outputData = AddComponent<OutputData>();
 #endif
+	_Equipment = new PlayerEquipment;
 }
 
 void Player::Start()
@@ -158,7 +158,14 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 
-	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+	//レベルアップ時のスプライト初期化
+	{
+		_LevelUpSprite = AddComponent<Sprite>();
+		_LevelUpSprite->SetTexture(LOADTEXTURE("levelup.png"));
+		_LevelUpSprite->SetEnable(true);
+		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
+	}
+
 }
 
 void Player::Update()
@@ -180,6 +187,11 @@ void Player::Update()
 	{
 		//所持リストに追加.
 		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(100, 0);
 	}
 #endif // DEBUG
 
@@ -328,7 +340,12 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
+		int damage;
+		if (_Equipment != nullptr&&_Equipment->armor != nullptr)
+		damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(),hitCollision->GetIsMagic(),_Equipment->armor);
+		else
+		damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic());
+
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);

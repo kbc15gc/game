@@ -5,6 +5,7 @@ HoldItemBase::HoldItemBase(char* name):ImageObject(name)
 {
 }
 
+//デストラクタ。
 HoldItemBase::~HoldItemBase()
 {
 
