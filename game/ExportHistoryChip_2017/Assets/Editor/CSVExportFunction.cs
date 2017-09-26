@@ -189,7 +189,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("type,hp,mhp,mp,mmp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca");
+        sw.WriteLine("type,hp,mp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca");
         foreach (Transform child in Children)
         {
             if (child.name == enemys.name)
