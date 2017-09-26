@@ -52,21 +52,6 @@ void InputManager::Update()
 	}
 }
 
-KeyBoard * InputManager::GetKeyBoard()
-{
-	return _KeyBoard;
-}
-
-Mouse * InputManager::GetMouse()
-{
-	return _Mouse;
-}
-
-XInput * InputManager::GetXInput(int idx)
-{
-	return _Xinput[idx];
-}
-
 bool InputManager::IsPushButtonAll(int in)
 {
 	FOR(idx,XBOX_CONTROLLER_NUM)

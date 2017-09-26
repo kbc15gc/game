@@ -15,7 +15,7 @@ void ItemWindow::Awake()
 {
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
 	_WindowName->Initialize(L"", 30.0f);
-	_WindowName->SetFormat(fbText::TextFormatE::CENTER);
+	_WindowName->SetAnchor(fbText::TextAnchorE::MiddleCenter);
 	_WindowName->transform->SetParent(transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -280.0f, 0.0f));
 

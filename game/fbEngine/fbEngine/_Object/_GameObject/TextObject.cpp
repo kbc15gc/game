@@ -6,19 +6,19 @@ void TextObject::Awake()
 	_Text = AddComponent<Text>();
 }
 
-void TextObject::Initialize(const wchar_t * string, const float& size, const Color& color, const fbSprite::SpriteEffectE& flg , const char * style, const unsigned int& format)
+void TextObject::Initialize(const wchar_t * string, const float& size, const Color& color, const fbSprite::SpriteEffectE& flg , const char * style, fbText::TextAnchorE anchor)
 {
-	_Text->Initialize(string, size, color, flg, style, format);
+	_Text->Initialize(string, size, color, flg, style, anchor);
 }
 
-void TextObject::SetString(const wchar_t* ws)
+void TextObject::SetText(const wchar_t* ws)
 {
-	_Text->SetString(ws);
+	_Text->SetText(ws);
 }
 
-void TextObject::SetString(const char * s)
+void TextObject::SetText(const char * s)
 {
-	_Text->SetString(s);
+	_Text->SetText(s);
 }
 
 void TextObject::SetFontSize(const float& size)
@@ -46,14 +46,9 @@ void TextObject::SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f)
 	_Text->SetEffectFlg(e,f);
 }
 
-void TextObject::SetFormat(const unsigned int& format)
+void TextObject::SetAnchor(fbText::TextAnchorE format)
 {
-	_Text->SetFormat(format);
-}
-
-void TextObject::SetFormat(fbText::TextFormatE format)
-{
-	_Text->SetFormat(format);
+	_Text->SetAnchor(format);
 }
 
 void TextObject::SetKerning(const bool & kerning)

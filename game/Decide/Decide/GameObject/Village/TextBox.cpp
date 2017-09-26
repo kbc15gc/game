@@ -32,7 +32,7 @@ void TextBox::Awake()
 	_BoxImage[1]->SetTexture(LOADTEXTURE("window.png"));
 	
 	_Text->Initialize(L"", 25.0f);
-	_Text->SetFormat((int)fbText::TextFormatE::CENTER | (int)fbText::TextFormatE::UP);
+	_Text->SetAnchor(fbText::TextAnchorE::UpperCenter);
 	
 	//親子関係を付ける。
 	_BoxImage[0]->transform->SetParent(transform);
@@ -133,7 +133,7 @@ void TextBox::CloseMessage()
 		_Message = INSTANCE(MessageManager)->GetMess(_StartTextID);
 		_State = TextBoxStateE::CLOSING;
 		//テキストを閉じる。
-		_Text->SetString("");
+		_Text->SetText("");
 		_Text->SetActive(false);
 
 		_AnimeTime = 0.0f;
@@ -171,7 +171,7 @@ void TextBox::_SetText(const char * text)
 	_Text->SetCharNum((unsigned int)_CharNum);
 
 	//テキスト設定。
-	_Text->SetString(text);
+	_Text->SetText(text);
 	Vector2 space(_Text->GetText()->GetSize() * FontSize);
 	Vector2 len(_Text->GetLength());
 	//テキストのサイズ+余白分。

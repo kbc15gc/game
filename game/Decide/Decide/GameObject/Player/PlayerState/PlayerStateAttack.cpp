@@ -75,6 +75,13 @@ PlayerStateAttack::~PlayerStateAttack()
 
 void PlayerStateAttack::Update()
 {
+	//移動速度設定
+	Vector3 movespeed = _Player->GetCharaCon().GetMoveSpeed();
+	//急に止まらないように
+	movespeed.Scale(0.3f);
+	_Player->GetCharaCon().SetMoveSpeed(movespeed);
+	_Player->GetCharaCon().Execute();
+
 	//現在のアニメーションナンバー
 	int currentanimno = _Player->_Anim->GetPlayAnimNo();
 	//アニメーションの再生が終わる && 次のアニメーションがない場合、待機状態に変更
@@ -82,6 +89,8 @@ void PlayerStateAttack::Update()
 	{
 		_Player->ChangeState(Player::State::Idol);
 	}
+	//攻撃ボタンが押される。
+	//連撃。
 	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X)
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
@@ -92,11 +101,11 @@ void PlayerStateAttack::Update()
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
 		)
 	{
+		//方向を変える。
+		DirMove();
 		//コンボ！
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
 	}
-	//方向を変える。
-	DirMove();
 	//あたり判定作成
  	switch (currentanimno)
 	{
@@ -153,7 +162,7 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 void PlayerStateAttack::DirMove()
 {
 	//移動速度設定
-	Vector3 movespeed = _Player->GetCharaCon().GetMoveSpeed();
+	Vector3 movespeed = Vector3::zero;
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
 	//コントローラー移動
@@ -214,8 +223,5 @@ void PlayerStateAttack::DirMove()
 		//回転
 		_Player->_Rotation->RotationToDirection_XZ(vec);
 	}
-	//急に止まらないように
-	movespeed.Scale(0.3f);
-	_Player->GetCharaCon().SetMoveSpeed(movespeed);
-	_Player->GetCharaCon().Execute();
+	
 }
