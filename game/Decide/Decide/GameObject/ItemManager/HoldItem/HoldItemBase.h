@@ -27,6 +27,12 @@ public:
 	inline void SetInfo(Item::BaseInfo* info) {
 		_Info = info;
 	}
+
+	static bool compareMyDataPredicate(HoldItemBase* left, HoldItemBase* right) 
+	{
+		return (left->GetInfo()->ID > right->GetInfo()->ID);
+	}
+
 protected:
 	Item::BaseInfo* _Info = nullptr;
 };

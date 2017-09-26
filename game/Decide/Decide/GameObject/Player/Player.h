@@ -187,11 +187,15 @@ public:
 
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 			
+			//前に装備していた防具を外す。
+			_Equipment->armor->SetIsEquipFalse();
 			//防具。
 			_Equipment->armor = static_cast<HoldArmor*>(equi);
 		}
 		else
 		{
+			//前に装備していた武器を外す。
+			_Equipment->weapon->SetIsEquipFalse();
 			//武器。
 			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		}
