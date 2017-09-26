@@ -5,6 +5,7 @@
 #include "PlayerState/PlayerStateIdol.h"
 #include "PlayerState/PlayerStateAttack.h"
 #include "PlayerState\/PlayerStateDeath.h"
+#include "PlayerState\PlayerStateStop.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
@@ -253,6 +254,8 @@ private:
 	PlayerStateAttack _AttackState;
 	//プレイヤーステートデス
 	PlayerStateDeath _DeathState;
+	//プレイヤーステートストップ
+	PlayerStateStop _StopState;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSE = nullptr;
 	//レベルアップ時の音

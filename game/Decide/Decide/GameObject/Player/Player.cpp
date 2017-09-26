@@ -31,6 +31,8 @@ Player::Player(const char * name) :
 	_AttackState(this),
 	//死亡ステート
 	_DeathState(this),
+	//ストップステート
+	_StopState(this),
 	//デバッグか
 	_Debug(false)
 {
@@ -258,8 +260,11 @@ void Player::ChangeState(State nextstate)
 	case State::Death:					
 		//死亡状態
 		_CurrentState = &_DeathState;
-		//デフォルト
+	case State::Stop:
+		//ストップ状態
+		_CurrentState = &_StopState;
 	default:
+		//デフォルト
 		break;
 	}
 	//次のステートに変更
@@ -288,7 +293,8 @@ void Player::AnimationControl()
 		return;
 	}
 	//ジャンプアニメーション
-	if (_CharacterController->IsJump())
+	//ストップじゃないならジャンプする。
+	if (_CharacterController->IsJump() && _State != State::Stop)
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
 	}
