@@ -6,8 +6,8 @@ void FPS::Start()
 	_Text = AddComponent<Text>();
 	
 	_Text->SetSize(40.0f);
-	_Text->SetString(L"FPS:0");
-	_Text->SetFormat((int)fbText::TextFormatE::LEFT);
+	_Text->SetText(L"FPS:0");
+	_Text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
 }
 
 void FPS::Update()
@@ -17,5 +17,5 @@ void FPS::Update()
 	Support::ToString(Time::Fps(), dnum,2);
 	wcscpy_s(fps, wcslen(L"FPS:")+1, L"FPS:");
 	wcscat_s(fps, wcslen(fps) + wcslen(dnum)+1, dnum);
-	_Text->SetString(fps);
+	_Text->SetText(fps);
 }

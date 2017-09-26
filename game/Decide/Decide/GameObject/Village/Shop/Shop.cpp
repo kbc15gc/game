@@ -32,14 +32,20 @@ void Shop::Awake()
 	//ウィンドウの画像。
 	_DescriptionWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DescriptionWindow", 8);
 	_DescriptionWindow->SetTexture(LOADTEXTURE("window.png"));
-	_DescriptionWindow->SetSize(Vector2(800, 150));
-	_DescriptionWindow->transform->SetPosition(Vector3(450, 550, 0));
+	_DescriptionWindow->SetSize(Vector2(800, 200));
+	_DescriptionWindow->transform->SetPosition(Vector3(450, 570, 0));
 	//説明文のテキスト。
 	_DescriptionText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
 	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 40, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
-	_DescriptionText->SetFormat((UINT)fbText::TextFormatE::LEFT | (UINT)fbText::TextFormatE::UP);
+	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
+	//
+	_MoneyText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
+	_MoneyText->transform->SetLocalPosition(Vector3(150, 25, 0));
+	_MoneyText->Initialize(L"0$", 40);
+	_MoneyText->SetAnchor(fbText::TextAnchorE::UpperLeft);
+	Pay(0);
 	//ステートの初期化。
 	SetState();
 
@@ -91,14 +97,14 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
 	//リストの中身削除。
-	for (HoldItemBase* hold : _ItemList)
-		SAFE_DELETE(hold);
+	FOR(i, _ItemList.size())
+		INSTANCE(GameObjectManager)->AddRemoveList(_ItemList[i]);
 	_ItemList.clear();
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
 	{
 		//アイテムの情報を取得。
-		auto item = INSTANCE(ItemManager)->GetItemInfo((unsigned int&)_ProductList[idx]->ItemID, (Item::ItemCodeE)_ProductList[idx]->Type);
+		auto item = INSTANCE(ItemManager)->GetItemInfo((unsigned int&)_ProductList[idx]->ItemID,_ProductList[idx]->Code);
 
 		//nullチェック
 		if (item)
@@ -141,5 +147,15 @@ void Shop::_ChangeState(const ShopStateE state)
 
 void Shop::SetDescriptionText(string text)
 {
-	_DescriptionText->SetString(text.c_str());
+	_DescriptionText->SetText(text.c_str());
+}
+
+void Shop::Pay(int money)
+{
+	//お金を加減算。
+	INSTANCE(Inventory)->SubtractPlayerMoney(money);
+	char mo[10];
+	//
+	sprintf(mo,"%6d$", INSTANCE(Inventory)->GetPlayerMoney());
+	_MoneyText->SetText(mo);
 }

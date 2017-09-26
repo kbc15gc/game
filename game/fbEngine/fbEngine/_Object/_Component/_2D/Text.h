@@ -4,15 +4,29 @@
 
 namespace fbText
 {
-	//テキストの書式
-	enum class TextFormatE : unsigned int
+	//テキストのアンカー
+	enum class TextAnchorE : unsigned int
 	{
-		LEFT = BIT(1),		//テキストの左端にポジションが位置する
-		CENTER = BIT(2),	//テキストの真ん中にポジションが位置する
-		RIGHT = BIT(3),		//テキストの右端にポジションが位置する
+		//
+		Left			= 0b1,
+		Center			= 0b10,
+		Right			= 0b100,
+		//
+		Upper			= 0b1000,
+		Middle			= 0b10000,
+		Lower			= 0b100000,
 
-		UP = BIT(4),		//テキストの一番上がポジションになる
-		DOWN = BIT(5)		//テキストの一番下がポジションになる
+		UpperLeft		= Upper | Left,
+		UpperCenter		= Upper | Center,
+		UpperRight		= Upper | Right,
+		//
+		MiddleLeft		= Middle | Left,
+		MiddleCenter	= Middle | Center,
+		MiddleRight		= Middle | Right,
+		//
+		LowerLeft		= Lower | Left,
+		LowerCenter		= Lower | Center,
+		LowerRight		= Lower | Right
 	};
 	//よく使うかもしれないフォントのスタイル
 	enum class TextStyleE
@@ -36,7 +50,7 @@ public:
 		Color Color = Color::white;
 		fbSprite::SpriteEffectE EffectFlg = fbSprite::SpriteEffectE::NONE;
 		char* Style = "ＭＳ 明朝";
-		unsigned int Format = (unsigned int)fbText::TextFormatE::CENTER;
+		fbText::TextAnchorE Anchor = fbText::TextAnchorE::MiddleCenter;
 	};
 public:
 	Text(GameObject* g, Transform* t);
@@ -45,11 +59,11 @@ public:
 	void ImageRender()override;
 	//一括初期化
 	void Initialize(const wchar_t* string, const float& size, const Color& color = Color::white,
-		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "ＭＳ 明朝", const unsigned int& format = (int)fbText::TextFormatE::CENTER);
+		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "ＭＳ 明朝", fbText::TextAnchorE format = fbText::TextAnchorE::MiddleCenter);
 	void Initialize(const TextParameter& param);
 	//文字列セット
-	void SetString(const wchar_t* s);
-	void SetString(const char* s);
+	void SetText(const wchar_t* s);
+	void SetText(const char* s);
 	//フォントのサイズ
 	void SetSize(const float& s);
 	//間隔設定
@@ -62,8 +76,7 @@ public:
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e);
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e,const bool& f);
 	//書式設定
-	void SetFormat(const unsigned int& format);
-	void SetFormat(fbText::TextFormatE format);
+	void SetAnchor(fbText::TextAnchorE anchor);
 	//カーニング設定
 	void SetKerning(const bool& kerning);
 	void SetCharNum(const unsigned int& num)
@@ -87,17 +100,19 @@ public:
 	}
 private:
 	//フォーマットによって移動する量を計算
-	void _CalcFormat(Vector3& pos);
+	void _CalcAnchor(Vector3& pos);
 	//テキストの長さ更新
 	void _UpdateLength();
 	//テキスト描画
 	//基点
 	void _RenderText(const Vector3& base);
+
+	int RichText(const wchar_t* text);
 private:
 	//文字のスタイル名デフォルトは　ＭＳ 明朝.
 	char _FontStyle[32];
 	//制作する文字列
-	wchar_t* _WString;
+	wchar_t* _Text;
 
 	//表示する文字数
 	unsigned int _DisplayCharNum;
@@ -114,7 +129,10 @@ private:
 	//文字を詰めるかどうか？
 	bool _Kerning;
 	//テキストのフォーマット
-	fbText::TextFormatE _TextFormat;
+	fbText::TextAnchorE _TextAnchor;
+
+	//カラーの保持。
+	Color _SaveBlendColor;
 
 	//描画用スプライト
 	Sprite* _Sprite;
