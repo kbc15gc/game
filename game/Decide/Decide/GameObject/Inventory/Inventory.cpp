@@ -100,8 +100,8 @@ void Inventory::Initialize() {
 	
 	_LoadData();
 
-	//// テスト。
-	//AlignmentInventoryList();
+	// テスト。
+	//InvnetorySortID();
 
 }
 
@@ -390,9 +390,9 @@ void Inventory::_OutData_All() {
 }
 
 //インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
-void Inventory::AlignmentInventoryList() {
-	//作業用変数。
-	//vector<vector<unique_ptr<HoldItemBase>>> work;
+void Inventory::InvnetorySortID() {
+	
+	sort(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin(), _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].end(), HoldItemBase::SortID);
 	////作業用変数の初期化。
 	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
 	//	work.push_back(vector<unique_ptr<HoldItemBase>>());

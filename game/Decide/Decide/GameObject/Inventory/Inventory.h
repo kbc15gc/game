@@ -182,9 +182,6 @@ public:
 	//所持数を減らす。
 	bool SubHoldNum(Item::BaseInfo* item,int num);
 
-	//インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
-	void AlignmentInventoryList();
-
 private:
 	//リストから指定されたアイテムを削除。
 	void _DeleteFromList(HoldItemBase* item);
@@ -198,6 +195,10 @@ private:
 
 	// 全所持品書き出し。
 	void _OutData_All();
+
+	//インベントリを整列(ID)。
+	void InvnetorySortID();
+
 private:
 	
 	//インベントリ。
