@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33610861376718028}
   - component: {fileID: 65466912984958960}
   - component: {fileID: 23700218596286992}
-  - component: {fileID: 114543055342274564}
+  - component: {fileID: 114747351923146784}
   m_Layer: 0
   m_Name: enemy_00
   m_TagString: Untagged
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114543055342274564
+--- !u!114 &114747351923146784
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -109,15 +109,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _EnemyType: 0
   _HP: 30
-  _MaxHP: 30
-  _MP: 0
-  _MaxMP: 0
-  _ATK: 3
-  _MAT: 2
-  _DEF: 1
-  _MDE: 1
-  _DEX: 1
+  _MP: 10
+  _ATK: 10
+  _MAT: 10
+  _DEF: 5
+  _MDE: 5
+  _DEX: 5
   _CRT: 5
-  _LV: 1
+  _LV: 5
   _DROPEXP: 10
   _MONEY: 100

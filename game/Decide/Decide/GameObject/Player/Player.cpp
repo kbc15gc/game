@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include "GameObject\SplitSpace.h"
-#include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 
@@ -96,19 +95,19 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(_ParamTable[0]);
+	_PlayerParam->ParamReset(_ParamTable[0]);
 	
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
+		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
 	}
 	// MPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
-		_MPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXMP), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+		_MPBar->Create(Colors, _PlayerParam->GetMaxMP(), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
@@ -159,7 +158,14 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 
-	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+	//レベルアップ時のスプライト初期化
+	{
+		_LevelUpSprite = AddComponent<Sprite>();
+		_LevelUpSprite->SetTexture(LOADTEXTURE("levelup.png"));
+		_LevelUpSprite->SetEnable(true);
+		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
+	}
+
 }
 
 void Player::Update()
@@ -181,6 +187,11 @@ void Player::Update()
 	{
 		//所持リストに追加.
 		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(100, 0);
 	}
 #endif // DEBUG
 
@@ -368,8 +379,7 @@ void Player::_Damage()
 	if (transform->GetLocalPosition().y < 48.5f 
 		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru * Time::DeltaTime());
-		_HPBar->SubValue(Oboreru * Time::DeltaTime());
+		_HPBar->SubValue(_PlayerParam->ReciveDamage(CharacterParameter::HP, Oboreru * Time::DeltaTime()));
 	}
 }
 
@@ -410,7 +420,7 @@ void Player::_LevelUP()
 	_nowEXP = _nowEXP - _EXPTable[_PlayerParam->GetParam(CharacterParameter::Param::LV) - 1];	// レベルアップ時に溢れた分を現在の経験値に設定。
 
 	// 次のレベルのパラメータを設定。
-	_PlayerParam->ParamInit(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
+	_PlayerParam->ParamReset(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
 
 	//HPが上がったのでHPバーのHP設定しなおす。
 	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));

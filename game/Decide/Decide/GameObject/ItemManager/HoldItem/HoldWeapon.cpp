@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "HoldWeapon.h"
 
-//コンストラクタ。
-HoldWeapon::HoldWeapon(Item::BaseInfo* info) :HoldEquipment(info)
+
+HoldWeapon::HoldWeapon(char* name) :HoldEquipment(name)
 {
 	//最初は装備していない。
 	SetIsEquipFalse();
@@ -36,4 +36,15 @@ void HoldWeapon::CreateOriginParam() {
 
 	//武器のランクを算出。
 	RankSelect(ParamRaitoMass());
+}
+
+void HoldWeapon::_ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) {
+	// ランダム差分設定。
+	_AtkRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_AtkRnd;
+	_MAtkRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_MAtkRnd;
+	_CrtRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_CrtRnd;
+	// 合計パラメータ設定。
+	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk + _AtkRnd;
+	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk + _MAtkRnd;
+	_Crt = static_cast<Item::WeaponInfo*>(_Info)->Dex + _CrtRnd;
 }

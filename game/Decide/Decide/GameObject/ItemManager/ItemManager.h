@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObject\Component\CharacterParameter.h"
 
 namespace Item {
 
@@ -18,16 +19,15 @@ namespace Item {
 		char Name[256];			//アイテム名。
 		char Description[256];	//アイテムの説名。
 		int Value;				//値段。
-		int MaxNum;				//限界所持数。
+		char filePath[256];		//アイテムのアイコン(UIなどで使用)。
 	};
 	//アイテムの情報をまとめた構造体。
 	struct ItemInfo :public BaseInfo
 	{
-		
-		int Recovery;			//薬草を使った時の回復量。
-		int AtkBuff;			//薬草を使った時の攻撃力の上昇量。
-		int DefBuff;			//薬草を使った時の防御力の上昇量。
-		int SpeedBuff;			//薬草を使った時の移動速度の上昇量。
+		int type;	// アイテムの種類(回復が0、バフが1、デバフが2)。
+		int effectValue[CharacterParameter::Param::MAX];	// パラメータ加算値(回復アイテムならHPに+の値、デバフなら-の値を書き込む)。
+		int rangeStrength;		// 効果範囲の強度(0で一人、1で三人、2で五人、3で全体)。
+		float time;				// 効果時間(秒)。
 	};
 
 	//メンバ変数の情報設定。
@@ -37,12 +37,17 @@ namespace Item {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct ItemInfo,ID),			sizeof(int) },
 		{ "Name",Support::DataTypeE::STRING,		offsetof(struct ItemInfo,Name),			sizeof(char) * 256 },
 		{ "Description",Support::DataTypeE::STRING, offsetof(struct ItemInfo,Description),	sizeof(char) * 256 },
-		{ "Value",Support::DataTypeE::INT ,			offsetof(struct ItemInfo,Value),		sizeof(int) },
-		{ "Recovery",Support::DataTypeE::INT ,		offsetof(struct ItemInfo,Recovery),		sizeof(int) },
-		{ "AtkBuff",Support::DataTypeE::INT ,		offsetof(struct ItemInfo,AtkBuff),		sizeof(int) },
-		{ "DefBuff",Support::DataTypeE::INT ,		offsetof(struct ItemInfo,DefBuff),		sizeof(int) },
-		{ "SpeedBuff",Support::DataTypeE::INT ,		offsetof(struct ItemInfo,SpeedBuff),		sizeof(int) },
+		{ "Value",Support::DataTypeE::INT, offsetof(struct ItemInfo,Value),	sizeof(int)},
+		{ "filePath",Support::DataTypeE::STRING, offsetof(struct ItemInfo,filePath),	sizeof(char) * 256 },
+		{ "type",Support::DataTypeE::INT, offsetof(struct ItemInfo,type),	sizeof(int) },
+		{ "effectValue",Support::DataTypeE::INTARRAY, offsetof(struct ItemInfo,effectValue),	sizeof(ItemInfo::effectValue) },
+		{ "rangeStrength",Support::DataTypeE::INT, offsetof(struct ItemInfo,rangeStrength),	sizeof(int) },
+		{ "time",Support::DataTypeE::FLOAT ,			offsetof(struct ItemInfo,time),		sizeof(float) },
 	};
+
+	// 消費アイテムの一枠分の所持上限。
+	static int holdMax = 99;
+
 
 	//防具の情報をまとめた構造体。
 	struct ArmorInfo :public BaseInfo
@@ -58,6 +63,7 @@ namespace Item {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,ID),			sizeof(int) },
 		{ "Name",Support::DataTypeE::STRING,		offsetof(struct ArmorInfo,Name),			sizeof(char) * 256 },
 		{ "Description",Support::DataTypeE::STRING, offsetof(struct ArmorInfo,Description),	sizeof(char) * 256 },
+		{ "filePath",Support::DataTypeE::STRING, offsetof(struct ArmorInfo,filePath),	sizeof(char) * 256 },
 		{ "Value",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,Value),		sizeof(int) },
 		{ "Def",Support::DataTypeE::INT ,			offsetof(struct ArmorInfo,Def),		sizeof(int) },
 		{ "MagicDef",Support::DataTypeE::INT ,		offsetof(struct ArmorInfo,MagicDef),		sizeof(int) },
@@ -80,6 +86,7 @@ namespace Item {
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,ID),			sizeof(int) },
 		{ "Name",Support::DataTypeE::STRING,		offsetof(struct WeaponInfo,Name),			sizeof(char) * 256 },
 		{ "Description",Support::DataTypeE::STRING, offsetof(struct WeaponInfo,Description),	sizeof(char) * 256 },
+		{ "filePath",Support::DataTypeE::STRING, offsetof(struct WeaponInfo,filePath),	sizeof(char) * 256 },
 		{ "Value",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,Value),		sizeof(int) },
 		{ "Atk",Support::DataTypeE::INT ,			offsetof(struct WeaponInfo,Atk),		sizeof(int) },
 		{ "MagicAtk",Support::DataTypeE::INT ,		offsetof(struct WeaponInfo,MagicAtk),		sizeof(int) },

@@ -5,7 +5,7 @@
 #include"Item2D.h"
 
 #include"fbEngine\_Object\_GameObject\ImageObject.h"
-#include "GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h"
+#include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 
 /**
 * ‰Šú‰».

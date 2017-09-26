@@ -2,134 +2,173 @@
 #include "Inventory.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
-#include "GameObject\ItemManager\HoldItem\ConsumptionItem\ConsumptionItem.h"
-#include "GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h"
-#include "GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h"
+#include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
+#include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor.h"
+#include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 
 Inventory* Inventory::_InventoryInstance = nullptr;
 
-Inventory::Inventory()
-{
-	for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
-		_InventoryItemList.push_back(vector<unique_ptr<HoldItemBase>>());
-		for (int idx = 0; idx < INVENTORYLISTNUM; idx++) {
-			_InventoryItemList[type].push_back(unique_ptr<HoldItemBase>());
-		}
+namespace Hold {
+	HoldInfo::HoldInfo() {
+
+	}
+	HoldInfo::HoldInfo(int TypeID, int ID) {
+		_TypeID = TypeID;
+		_ID = ID;
+	}
+	HoldInfo::HoldInfo(HoldItemBase* info) {
+		_TypeID = static_cast<int>(info->GetInfo()->TypeID);
+		_ID = info->GetInfo()->ID;
 	}
 
+
+	ConsumptionInfo::ConsumptionInfo(int TypeID, int ID, int num) {
+	}
+
+	ConsumptionInfo::ConsumptionInfo(HoldItemBase* info) :HoldInfo(info) {
+		_HoldNum = static_cast<ConsumptionItem*>(info)->GetHoldNum();
+	}
+
+	HoldEquipInfo::HoldEquipInfo() {
+
+	}
+
+	HoldEquipInfo::HoldEquipInfo(int TypeID, int ID, bool isEquip) :HoldInfo(TypeID,ID){
+		_IsEquip = isEquip;
+	}
+
+	HoldEquipInfo::HoldEquipInfo(HoldItemBase* info) : HoldInfo(info) {
+		_IsEquip = static_cast<HoldEquipment*>(info)->GetIsEquip();
+	}
+
+	// 引数：	アイテム種別。
+	//			アイテム通し番号。
+	//			所持数。
+	//			攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
+	//			魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
+	HoldWeaponInfo::HoldWeaponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip) : HoldEquipInfo(TypeID, ID, IsEquip) {
+		_AtkRnd = AtkRnd;
+		_MAtkRnd = MAtkRnd;
+		_CrtRnd = CrtRnd;
+		_IsEquip = IsEquip;
+	}
+
+	// 引数：	コピー元のポインタ。
+	HoldWeaponInfo::HoldWeaponInfo(HoldItemBase* info) : HoldEquipInfo(info) {
+		_AtkRnd = static_cast<HoldWeapon*>(info)->GetAtkRnd();
+		_MAtkRnd = static_cast<HoldWeapon*>(info)->GetMtkRnd();
+		_CrtRnd = static_cast<HoldWeapon*>(info)->GetCrtRnd();
+	}
+
+	HoldArmorInfo::HoldArmorInfo(int TypeID, int ID, int Def, int MDef, bool IsEquip) : HoldEquipInfo(TypeID, ID, IsEquip) {
+		_DefRnd = Def;
+		_MDefRnd = MDef;
+	}
+	// 引数：	コピー元のポインタ。
+	HoldArmorInfo::HoldArmorInfo(HoldItemBase* info) : HoldEquipInfo(info) {
+		_DefRnd = static_cast<HoldArmor*>(info)->GetDefRnd();
+		_MDefRnd = static_cast<HoldArmor*>(info)->GetMDefRnd();
+	}
+
+};
+
+
+Inventory::Inventory()
+{
+	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+}
+
+Inventory::~Inventory(){
+	for (auto& list : _InventoryItemList) {
+		for (auto p : list) {
+			INSTANCE(GameObjectManager)->AddRemoveList(p);
+		}
+	}
 }
 
 void Inventory::Initialize() {
+	
+	_LoadData();
 
-	AddItem(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item));
-	AddItem(INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Item));
+	//// テスト。
+	//AlignmentInventoryList();
 
-	HoldArmor* armor = new HoldArmor(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor));
-	armor->CreateRandParam();
-
-	AddEquipment(armor, Item::ItemCodeE::Armor);
-
-	AddEquipment(new HoldArmor(INSTANCE(ItemManager)->GetItemInfo(1, Item::ItemCodeE::Armor)), Item::ItemCodeE::Armor);
-
-	HoldWeapon* weapon = new HoldWeapon(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Weapon));
-	weapon->CreateRandParam();
-	AddEquipment(weapon, Item::ItemCodeE::Weapon);
-
-	//ファイルネーム
-	const char* filename[] = { "ItemList","ArmorList","WeaponList" };
-	vector<vector<unique_ptr<HoldInfo>>> work= vector<vector<unique_ptr<HoldInfo>>>(static_cast<int>(Item::ItemCodeE::Max));
-	FOR(i, ARRAY_SIZE(filename)) {
-		//ファイルパス
-		char filepath[256] = "";
-		sprintf(filepath, "Asset/Data/InventoryData/%s.csv", filename[i]);
-		switch (i)
-		{
-		case static_cast<int>((Item::ItemCodeE::Item)):
-			//ファイルからアイテム情報読み込み。
-			//Support::LoadCSVData<HoldInfo>(filepath, HoldItemData, ARRAY_SIZE(HoldItemData), work[static_cast<int>((Item::ItemCodeE::Item))]);
-			/*for (int idx = 0; idx < work[static_cast<int>((Item::ItemCodeE::Item))].size(); idx++)
-			{
-			}*/
-			break;
-		case static_cast<int>((Item::ItemCodeE::Armor)):
-			//ファイルから防具情報読み込み。
-			//Support::LoadCSVData<HoldInfo>(filepath, HoldArmorData, ARRAY_SIZE(HoldArmorData), work[static_cast<int>((Item::ItemCodeE::Armor))]);
-			/*for (int idx = 0; idx < work[static_cast<int>((Item::ItemCodeE::Armor))].size(); idx++)
-			{
-			}*/
-			break;
-		case static_cast<int>((Item::ItemCodeE::Weapon)):
-			//ファイルから武器情報読み込み。
-			//Support::LoadCSVData<HoldInfo>(filepath, HoldWeaponData, ARRAY_SIZE(HoldWeaponData), work[static_cast<int>((Item::ItemCodeE::Weapon))]);
-			/*for (int idx = 0; idx < work[static_cast<int>((Item::ItemCodeE::Weapon))].size(); idx++)
-			{
-			}*/
-			break;
-		default:
-			break;
-		}
-	}
 }
 
 //アイテムをインベントリに追加。
-void Inventory::AddItem(Item::BaseInfo* item, int num) {
-	Item::BaseInfo* Info = nullptr;
-	HoldItemBase* Hold = nullptr;
-	char error[256];
+void Inventory::AddItem(Item::ItemInfo* item, int num) {
+	//Item::BaseInfo* Info = item;
+	//char error[256];
+
+	//for (int i = 0; i < INVENTORYLISTNUM; i++)
+	//{
+	//	if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] && _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i]->GetInfo()->ID == item->ID)
+	//	{
+	//		//同じアイテムが配列にある。
+
+	//		int holdNum = static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->GetHoldNum();
+	//		if (holdNum < Item::holdMax) {
+	//			// このアイテムの所持数に空きがある。
+
+	//			if (holdNum + num > Item::holdMax) {
+	//				// 加算すると所持上限を超える。
+
+	//				int set = Item::holdMax - holdNum;	// 加算する数。
+
+	//				//所持数更新。
+	//				static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->UpdateHoldNum(set);
+
+	//				num -= set;	// 設定した分は減算。
+	//			}
+	//			else {
+	//				// 追加した分の数が一枠に収まる。
+
+	//				// アイテムの所持数を加算。
+	//				static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->UpdateHoldNum(num);
+
+	//				//所持品配列の所持数をCSVに書き出し。
+	//				_OutData(Item::ItemCodeE::Item);
+
+	//				return;
+	//			}
+	//		}
+	//	}
+	//}
+
+	//// 追加するアイテムが配列になかった。
+	//// もしくは既に存在するアイテム枠に追加分の数が収まりきらなかった。
+	//for (int i = 0; i < INVENTORYLISTNUM; i++)
+	//{
+	//	if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] == nullptr) {
+	//		//インベントリに空きがある。
+
+	//		//所持アイテムのインスタンス作成。
+	//		ConsumptionItem* Hold = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Consumption", 9);
+	//		Hold->SetInfo(item);
+	//		//所持数更新。
+	//		static_cast<ConsumptionItem*>(Hold)->UpdateHoldNum(num);
+
+	//		// 新しく作成したアイテムを配列に追加。
+	//		_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] = Hold;
+
+	//		//所持品配列の所持数をCSVに書き出し。
+	//		_OutData(Item::ItemCodeE::Item);
+
+	//		return;
+	//	}
+	//}
 
 
-	//アイテムマネジャーから追加するアイテムの情報を取得。	
-	Info = INSTANCE(ItemManager)->GetItemInfo(item->ID, Item::ItemCodeE::Item);
 
-	//所持アイテムのインスタンス作成。
-	Hold = new ConsumptionItem(Info);
+	//{
+	//	//エラー報告。
+	//	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
+	//	char error[256];
+	//	sprintf(error, "インベントリが一杯で追加されませんでした。");
+	//	MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+	//}
 
-	if (Hold) {
-		//所持数更新。
-		static_cast<ConsumptionItem*>(Hold)->UpdateHoldNum(num);
-	}
-
-
-	//追加するアイテムの情報が作られたかチェック。
-	if (Hold != nullptr) {
-
-		for (int i = 0; i < INVENTORYLISTNUM; i++)
-		{
-			if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] && _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i]->GetInfo()->ID == Hold->GetInfo()->ID)
-			{
-				//同じアイテムが配列にある。
-				static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i].get())->UpdateHoldNum(num);
-
-				//所持品の所持数書き出し。
-				_ItemListOutData();
-				return;
-			}
-		}
-
-		// 追加するアイテムが配列になかった。
-		for (int i = 0; i < INVENTORYLISTNUM; i++)
-		{
-			if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i].get() == nullptr) {
-				//インベントリに空きがある。
-
-				// 新しく作成したアイテムを配列に追加。
-				_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i].reset(Hold);
-
-				//所持品配列の所持数をCSVに書き出し。
-				_ItemListOutData();
-
-				return;
-			}
-		}
-
-
-		{
-			//エラー報告。
-			char error[256];
-			sprintf(error, "インベントリが一杯で追加されませんでした。");
-			MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-		}
-	}
 }
 
 void Inventory::UseItem() {
@@ -144,7 +183,7 @@ HoldItemBase* Inventory::FindItem(Item::ItemCodeE code, const unsigned int& id) 
 	{
 		//発見。
 		if (_InventoryItemList[static_cast<int>(code)][i] && _InventoryItemList[static_cast<int>(code)][i]->GetInfo()->ID == id) {
-			return _InventoryItemList[static_cast<int>(code)][i].get();
+			return _InventoryItemList[static_cast<int>(code)][i];
 		}
 	}
 
@@ -161,13 +200,13 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 	for (auto itr = _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].begin() ; itr != _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].end();)
 	{
 		//中身が無いまたは不一致。
-		if (item != (*itr).get()) {
+		if (item != *itr) {
 			itr++;
 		}
 		else
 		{
 			//一致したので中身を削除。
-			(*itr).reset(nullptr);
+			(*itr) = nullptr;
 			return;
 		}
 	}
@@ -182,15 +221,15 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 		if ((*itr) != nullptr&&item->ID == (*itr)->GetInfo()->ID)
 		{
 			//引数分所持品の数を更新。
-			static_cast<ConsumptionItem*>((*itr).get())->UpdateHoldNum(-num);
+			static_cast<ConsumptionItem*>(*itr)->UpdateHoldNum(-num);
 
 			//更新した結果所持数が0になれば破棄。
-			if (static_cast<ConsumptionItem*>((*itr).get())->GetHoldNum() <= 0) {
+			if (static_cast<ConsumptionItem*>(*itr)->GetHoldNum() <= 0) {
 				//リストから削除。
-				_DeleteFromList((*itr).get());
+				_DeleteFromList(*itr);
 			}
 			//所持品の所持数書き出し。
-			_ItemListOutData();
+			_OutData(item->TypeID);
 			return true;
 		}
 		//不一致。
@@ -202,93 +241,89 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 	return false;
 }
 
-void Inventory::_ItemListOutData() {
-
-	//ファイルネーム。
+void Inventory::_LoadData() {
+	// レコード。
+	Support::DATARECORD* record[] = { Hold::ConsumptionItemData ,Hold::HoldArmorData ,Hold::HoldWeaponData };
+	int recordSize[] = { ARRAY_SIZE(Hold::ConsumptionItemData),ARRAY_SIZE(Hold::HoldArmorData),ARRAY_SIZE(Hold::HoldWeaponData) };
+	//ファイルネーム
 	const char* filename[] = { "ItemList","ArmorList","WeaponList" };
-
-	//CSVに書き出すようのリスト。
-	vector<vector<unique_ptr<HoldInfo>>> OutPutCSVList = vector<vector<unique_ptr<HoldInfo>>>(static_cast<int>(Item::ItemCodeE::Max));
-	FOR(i, ARRAY_SIZE(filename))
-	{
-		//ファイルパス。
+	
+	FOR(i, Item::ItemCodeE::Max) {
+		//ファイルパス
 		char filepath[256] = "";
 		sprintf(filepath, "Asset/Data/InventoryData/%s.csv", filename[i]);
+
+		// データ格納用配列。
+		vector<unique_ptr<Hold::HoldInfo>> work;
+		//ファイルから所持品情報読み込み。
 		switch (i)
 		{
-		//アイテム。
-		case static_cast<int>((Item::ItemCodeE::Item)):
-			for (int idx = 0; idx < _InventoryItemList[static_cast<int>((Item::ItemCodeE::Item))].size(); idx++) {
-				if (_InventoryItemList[static_cast<int>((Item::ItemCodeE::Item))][idx]) {
-				
-					//持っているアイテムの情報を書き出し用のリストに追加。
-					OutPutCSVList[static_cast<int>(Item::ItemCodeE::Item)].push_back(
-						unique_ptr<HoldInfo>(
-							new HoldInfo(
-								static_cast<int>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][idx]->GetInfo()->TypeID),
-								_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][idx]->GetInfo()->ID,
-								static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][idx].get())->GetHoldNum()
-							)
-							));
-				}
+		case static_cast<int>(Item::ItemCodeE::Item) :
+			// 消費アイテム追加。
+			Support::LoadCSVData<Hold::ConsumptionInfo, Hold::HoldInfo>(filepath, record[i], recordSize[i], work);
+			for (int idx = 0; idx < work.size(); idx++) {
+				AddItem(static_cast<Item::ItemInfo*>(INSTANCE(ItemManager)->GetItemInfo(work[idx]->_ID, Item::ItemCodeE::Item)), static_cast<Hold::ConsumptionInfo*>(work[idx].get())->_HoldNum);
 			}
-			//ItemList.CSVに書き出し。
-			Support::OutputCSV<HoldInfo>(filepath, HoldItemData, ARRAY_SIZE(HoldItemData), OutPutCSVList[static_cast<int>(Item::ItemCodeE::Item)]);
 			break;
-
-		//防具。
-		case static_cast<int>(Item::ItemCodeE::Armor):
-			for (int idx = 0; idx < _InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)].size(); idx++) {
-				if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx]) {
-
-					//持っている防具の情報を書き出し用のリストに追加。
-					OutPutCSVList[static_cast<int>(Item::ItemCodeE::Armor)].push_back(
-						unique_ptr<HoldArmorInfo>(
-							new HoldArmorInfo(
-								static_cast<int>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx]->GetInfo()->TypeID),
-								_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx]->GetInfo()->ID,
-								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetDefRnd(),
-								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetMDefRnd(),
-								static_cast<HoldArmor*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Armor)][idx].get())->GetIsEquip()
-
-							)
-							));
-				}
+		case static_cast<int>(Item::ItemCodeE::Armor) :
+			// 防具追加。
+			Support::LoadCSVData<Hold::HoldArmorInfo,Hold::HoldInfo>(filepath, record[i], recordSize[i], work);
+			for (int idx = 0; idx < work.size(); idx++) {
+				AddEquipment(INSTANCE(GameObjectManager)->AddNew<HoldArmor>("Armor", 9), Item::ItemCodeE::Armor)->ConfigLoadData(static_cast<Hold::HoldArmorInfo*>(work[idx].get()));
 			}
-
-			//ArmorList.CSVに書き出し。
-			Support::OutputCSV<HoldInfo>(filepath, HoldArmorData, ARRAY_SIZE(HoldArmorData), OutPutCSVList[static_cast<int>(Item::ItemCodeE::Armor)]);
 			break;
-
-		//武器。
-		case static_cast<int>(Item::ItemCodeE::Weapon):
-
-			for (int idx = 0; idx < _InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)].size(); idx++) {
-				if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx]) {
-
-					//持っている武器の情報を書き出し用のリストに追加。
-					OutPutCSVList[static_cast<int>(Item::ItemCodeE::Weapon)].push_back(
-						unique_ptr<HoldWeponInfo>(
-							new HoldWeponInfo(
-								static_cast<int>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx]->GetInfo()->TypeID),
-								_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx]->GetInfo()->ID,
-								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetAtkRnd(),
-								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetMtkRnd(),
-								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetCrtRnd(),
-								static_cast<HoldWeapon*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Weapon)][idx].get())->GetIsEquip()
-							)
-							));
-				}
+		case static_cast<int>(Item::ItemCodeE::Weapon) :
+			// 武器追加。
+			Support::LoadCSVData<Hold::HoldWeaponInfo, Hold::HoldInfo>(filepath, record[i], recordSize[i], work);
+			for (int idx = 0; idx < work.size(); idx++) {
+				AddEquipment(INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("Weapon", 9), Item::ItemCodeE::Weapon)->ConfigLoadData(static_cast<Hold::HoldWeaponInfo*>(work[idx].get()));
 			}
-			//WeaponList.CSVに書き出し。
-			Support::OutputCSV<HoldInfo>(filepath, HoldWeaponData, ARRAY_SIZE(HoldWeaponData), OutPutCSVList[static_cast<int>(Item::ItemCodeE::Weapon)]);
 			break;
 		}
 	}
 }
 
+void Inventory::_OutData(Item::ItemCodeE code) {
+
+	//ファイルネーム。
+	const char* filename[] = { "ItemList","ArmorList","WeaponList" };
+	Support::DATARECORD* recordArray[] = { Hold::ConsumptionItemData ,Hold::HoldArmorData ,Hold::HoldWeaponData };
+	int recordSize[] = { ARRAY_SIZE(Hold::ConsumptionItemData),ARRAY_SIZE(Hold::HoldArmorData),ARRAY_SIZE(Hold::HoldWeaponData) };
+	//CSVに書き出すようのリスト。
+	vector<unique_ptr<Hold::HoldInfo>> OutPutCSVList;
+
+	//ファイルパス。
+	char filepath[256] = "";
+	sprintf(filepath, "Asset/Data/InventoryData/%s.csv", filename[static_cast<int>(code)]);
+
+	for (int idx = 0; idx < _InventoryItemList[static_cast<int>(code)].size(); idx++) {
+		if (_InventoryItemList[static_cast<int>(code)][idx]) {
+			switch (code) {
+			case Item::ItemCodeE::Item:
+				OutPutCSVList.push_back(unique_ptr<Hold::HoldInfo>(new Hold::ConsumptionInfo(_InventoryItemList[static_cast<int>(code)][idx])));
+				break;
+			case Item::ItemCodeE::Armor:
+				OutPutCSVList.push_back(unique_ptr<Hold::HoldInfo>(new Hold::HoldArmorInfo(_InventoryItemList[static_cast<int>(code)][idx])));
+				break;
+			case Item::ItemCodeE::Weapon:
+				OutPutCSVList.push_back(unique_ptr<Hold::HoldInfo>(new Hold::HoldWeaponInfo(_InventoryItemList[static_cast<int>(code)][idx])));
+				break;
+			}
+		}
+	}
+	//CSVに書き出し。
+	Support::OutputCSV<Hold::HoldInfo>(filepath, recordArray[static_cast<int>(code)], recordSize[static_cast<int>(code)], OutPutCSVList);
+}
+
+void Inventory::_OutData_All() {
+	FOR(i, Item::ItemCodeE::Max)
+	{
+		_OutData(static_cast<Item::ItemCodeE>(i));
+	}
+}
+
 //装備品の追加。
-void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
+HoldEquipment* Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
 	if (code == Item::ItemCodeE::Item) {
 		//アイテムは別の追加関数を使って。
 		char error[256];
@@ -301,15 +336,31 @@ void Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
 		if (_InventoryItemList[static_cast<int>(code)][idx] == nullptr) {
 
 			//装備品を追加。
-			_InventoryItemList[static_cast<int>(code)][idx].reset(equi);
+			_InventoryItemList[static_cast<int>(code)][idx] = equi;
 
 			//所持品の情報を書き出し。
-			_ItemListOutData();
-			break;
+			_OutData(code);
+
+			return equi;
 		}
 	}	
+
+	return nullptr;
 }
 
-void Inventory::SortID() {
+//インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
+void Inventory::AlignmentInventoryList() {
+	//作業用変数。
+	vector<vector<unique_ptr<HoldItemBase>>> work;
+	////作業用変数の初期化。
+	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
+	//	work.push_back(vector<unique_ptr<HoldItemBase>>());
+	//}
 
+	////作業用変数にインベントリの中身を全部格納。
+	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
+	//	for (int code = 0; code < INVENTORYLISTNUM; code++) {
+	//		work[type].push_back(_InventoryItemList[type][code].get());
+	//	}
+	//}
 }

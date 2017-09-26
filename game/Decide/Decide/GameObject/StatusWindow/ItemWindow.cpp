@@ -1,25 +1,24 @@
 /**
-* ƒAƒCƒeƒ€•\¦‰æ–ÊƒNƒ‰ƒX‚ÌÀ‘•.
+* ã‚¢ã‚¤ãƒ†ãƒ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®å®Ÿè£….
 */
 #include"stdafx.h"
 #include"ItemWindow.h"
 
 #include"GameObject\Inventory\Inventory.h"
 #include"GameObject\ItemManager\HoldItem\HoldItemBase.h"
+#include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 
 /**
-* ‰Šú‰».
+* åˆæœŸåŒ–.
 */
 void ItemWindow::Awake()
 {
-	//ƒEƒBƒ“ƒhƒE–¼‚Ì‰Šú‰».
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
-	_WindowName->Initialize(L"Á”ïƒAƒCƒeƒ€", 30.0f);
+	_WindowName->Initialize(L"", 30.0f);
 	_WindowName->SetFormat(fbText::TextFormatE::CENTER);
 	_WindowName->transform->SetParent(transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -280.0f, 0.0f));
 
-	//ƒAƒCƒeƒ€ƒZƒ‹‚Ì‰Šú‰».
 	for (int i = 0; i < ItemCellSize; i++)
 	{
 		Item2D* item = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
@@ -28,7 +27,6 @@ void ItemWindow::Awake()
 		_Item2DList.push_back(item);
 	}
 
-	//ƒZƒŒƒNƒgƒJ[ƒ\ƒ‹. 
 	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 9);
 	_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
 	_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
@@ -38,7 +36,6 @@ void ItemWindow::Awake()
 	_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 
-	//EƒAƒCƒRƒ“‚Ì‰Šú‰».
 	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", 9);
 	_EIconImage->SetTexture(LOADTEXTURE("UI/E.png"));
 	_EIconImage->SetSize(Vector2(30, 30));
@@ -52,7 +49,7 @@ void ItemWindow::Start()
 }
 
 /**
-* XV.
+* æ›´æ–°.
 */
 void ItemWindow::Update()
 {
@@ -62,13 +59,18 @@ void ItemWindow::Update()
 		if (itemList.size() > i && itemList[i] != nullptr)
 		{
 			_Item2DList[i]->SetActive(true, true);
-			_Item2DList[i]->SetItemData(itemList[i].get());
+			_Item2DList[i]->SetItemData(itemList[i]);
 
-			if (itemList[i]->GetInfo()-> == "")
+			if (_ItemCode != Item::ItemCodeE::Item)
 			{
-				_EIconImage->SetActive(true, false);
-				_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+				HoldEquipment* item = (HoldEquipment*)itemList[i];
+				if (item->GetIsEquip())
+				{
+					_EIconImage->SetActive(true, false);
+					_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+				}
 			}
+			
 		}
 		else
 		{
@@ -81,7 +83,7 @@ void ItemWindow::Update()
 }
 
 /**
-* “ü—Í.
+* å…¥åŠ›.
 */
 void ItemWindow::Input()
 {
@@ -105,7 +107,7 @@ void ItemWindow::Input()
 
 		static float ChangeTime = 0.5f;
 		static float LocalTime = 0.0f;
-		//¶ƒXƒeƒBƒbƒN‚Ìî•ñ.
+
 		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 		LStick /= 32767.0f;
 		if (LStick.y >= 0.2f)
@@ -147,11 +149,17 @@ void ItemWindow::Input()
 			LocalTime = 0.0f;
 		}
 
-		if (_ItemCode != Item::ItemCodeE::Item)
+		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 		{
-			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+			if (_ItemCode != Item::ItemCodeE::Item)
 			{
 				_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+			}
+			else if (_ItemCode == Item::ItemCodeE::Item)
+			{
+				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+				item->UseItem();
+				item->UpdateHoldNum(-1);
 			}
 		}
 	}

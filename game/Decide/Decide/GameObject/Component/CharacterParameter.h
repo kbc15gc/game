@@ -2,10 +2,53 @@
 #include "fbEngine\_Object\_Component\Component.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "fbEngine\fbstdafx.h"
-#include "GameObject\ItemManager\HoldItem\HoldWeapon\HoldWeapon.h"
-#include "GameObject\ItemManager\HoldItem\HoldArmor\HoldArmor.h"
+
+class HoldWeapon;
+class HoldArmor;
 
 class CharacterParameter :public Component {
+public:
+	
+#ifdef _DEBUG
+	// デバッグ出力用の配列。
+	// ※パラメーターの種類を追加したら順番通りに追加して。
+	static const wchar_t* ENUM_NAME[];
+#endif
+
+	// 元素属性(火、水など)。
+	enum class Element{None = -1};
+	// 物理属性(斬、打、魔など)。
+	enum class Physical{None = -1};
+
+	// パラメーター列挙。
+	//			HP。
+	//			MP。
+	//			攻撃力。
+	//			魔法攻撃力。
+	//			防御力。
+	//			魔法防御。
+	//			器用度(クリティカル発生率)。
+	//			クリティカル威力。
+	//			レベル。
+	enum Param { MIN = -1,HP = 0, MP, ATK, MAT, DEF, MDE, DEX, CRT ,LV, MAX };
+
+private:
+	// 各種パラメータの状態管理用構造体。
+	struct ParamInfo {
+		// キャラクターの基礎パラメータ(この値をもとにバフ、デバフ、HP計算を行う)。
+		// ※レベルアップなどによって基礎パラメータが更新される際はこちらを変更する。
+		unsigned short originParam = 0;
+		unsigned short param = 0;	// ゲームでの実際のパラメータ(バフ、デバフ後の値や、現在のHPやMPなど)。
+
+		unsigned short buffPercentage = 0;		// パラメータに掛かっているバフの効果値(パーセント)。
+		float buffInterval = 0.0f;		// バフの効果時間。
+		float buffCounter = 0.0f;		// バフの経過時間。
+
+		unsigned short debuffPercentage = 0;	// パラメータに掛かっているバフの効果値(パーセント)。
+		float debuffInterval = 0.0f;	// デバフの効果時間。
+		float debuffCounter = 0.0f;		// デバフの経過時間。
+	};
+
 public:
 	CharacterParameter(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
 #ifdef _DEBUG
@@ -17,67 +60,114 @@ public:
 	};
 
 	void Awake()override;
-public:
-
-#ifdef _DEBUG
-	// デバッグ出力用の配列。
-	// ※パラメーターの種類を追加したら順番通りに追加して。
-	static const wchar_t* ENUM_NAME[];
-#endif
-
-	// 元素属性(火、水など)。
-	enum class Element{None = 0};
-	// 物理属性(斬、打、魔など)。
-	enum class Physical{None = 0};
-	// パラメーター列挙。
-	//			HP。
-	//			HP最大値。
-	//			MP。
-	//			MP最大値。
-	//			攻撃力。
-	//			魔法攻撃力。
-	//			防御力。
-	//			魔法防御。
-	//			器用度(クリティカル発生率)。
-	//			クリティカル威力。
-	//			レベル。
-	enum Param { MIN = -1,HP = 0, MAXHP, MP, MAXMP, ATK, MAT, DEF, MDE, DEX, CRT ,LV, MAX };
-	//初期化。
-	void ParamInit(int param[Param::MAX]);
-	void ParamInit(const vector<int>& param);
 
 	void Update()override;
 
-	// 指定したパラメーターに加算。
-	// 引数：	パラメータータイプ。
-	//			加算量。
-	inline void AddParam(Param idx,const int add) {
-		_OutCheck(idx);
-		_Param[idx] += add;
-	}
-	// 指定したパラメーターから減算。
-	// 引数：	パラメータータイプ。
-	//			減算量。
-	inline void SubParam(Param idx, const int sub) {
-		_OutCheck(idx);
-		_Param[idx] -= sub;
-	}
+
+
+	// パラメータリセット。
+	// 引数：	設定する各種基礎パラメータ。
+	// ※デバフやバフがかかっている場合は新しいパラメータをもとに再計算されて設定される。
+	void ParamReset(int param[Param::MAX]);
+	// パラメータリセット。
+	// 引数：	設定する各種基礎パラメータ。
+	// ※デバフやバフがかかっている場合は新しいパラメータをもとに再計算されて設定される。
+	void ParamReset(const vector<int>& param);
+
+	// 被ダメージ処理(パラメーターにダメージを与える)。
+	// 引数:		敵からのダメージ。
+	//				魔法攻撃か。
+	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
+	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
+	// 戻り値:		受けたダメージ。
+	unsigned short ReciveDamage(unsigned short defaultDamage, bool isMagic, HoldArmor* armor = nullptr, unsigned short defidx = 1);
+
+	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
+	// 引数:		敵からのダメージ。
+	//				魔法攻撃か。
+	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
+	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
+	// 戻り値:		受けるダメージ。
+	unsigned short ReceiveDamageMass(unsigned short defaultDamage, bool isMagic, HoldArmor* armor = nullptr,unsigned short defidx = 1);
+
+	//与ダメージ計算。
+	// 引数：	魔法攻撃か。
+	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
+	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
+	// 戻り値:	与えるダメージ。
+	unsigned short GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, unsigned short atk = 1);
+
+	// HP回復関数。
+	// 引数：	回復量。
+	void HeelHP(unsigned short value);
+	// MP回復関数。
+	// 引数：	回復量。
+	void HeelMP(unsigned short value);
+
+	// バフ関数。
+	// 引数：	バフを掛けたいパラメータ。
+	//			効果値(パーセント)。
+	//			効果時間(秒)。
+	// ※HPとMPとCRTとLVは無効。
+	void Buff(Param idx, unsigned short percentage,float time);
+
+	// バフ解除関数。
+	// 引数：	解除したいパラメータ。
+	// ※HPとMPとCRTとLVは無効。
+	void BuffClear(Param idx);
+
+	// 全バフ解除関数。
+	// ※HPとMPとCRTとLVは無効。
+	void BuffClearAll();
+
+	// デバフ関数。
+	// 引数：	デバフを掛けたいパラメータ。
+	//			効果値(パーセント)。
+	//			効果時間(秒)。
+	// ※HPとMPとCRTとLVは無効。
+	void Debuff(Param idx, unsigned short percentage, float time);
+
+	// デバフ解除関数。
+	// 引数：	解除したいパラメータ。
+	// ※HPとMPとCRTとLVは無効。
+	void DebuffClear(Param idx);
+
+	// 全デバフ解除関数。
+	// ※HPとMPとCRTとLVは無効。
+	void DebuffClearAll();
+
+
 	// 指定したパラメーター取得。
 	// 引数：	パラメータータイプ。
-	inline int GetParam(Param idx)const {
+	inline short GetParam(Param idx)const {
 		_OutCheck(idx);
-		return _Param[idx];
+		return _Info[idx].param;
 	}
-
-	int* GetParamPt(Param param)
+	// 指定したパラメーターのポインタ取得。
+	// 引数：	パラメータータイプ。
+	inline unsigned short* GetParamPt(Param param)
 	{
-		return &_Param[param];
+		return &_Info[param].param;
 	}
 
-	// 全パラメーター取得。
-	inline const vector<int>& GetParams() {
-		return _Param;
+	inline short GetMaxHP()const {
+		return _Info[Param::HP].originParam;
 	}
+	inline unsigned short* GetMaxHPPt() {
+		return &_Info[Param::HP].originParam;
+	}
+
+	inline unsigned short GetMaxMP() const{
+		return _Info[Param::MP].originParam;
+	}
+	inline unsigned short* GetMaxMPPt()  {
+		return &_Info[Param::MP].originParam;
+	}
+
+	//// 全パラメーター取得。
+	//inline const vector<short>& GetParams() {
+	//	return _Info.param;
+	//}
 
 	//死んだかどうかのフラグを取得。
 	//tureなら死んでいる。
@@ -86,35 +176,39 @@ public:
 		return _DeathFlag;
 	}
 
-	// 被ダメージ処理(パラメーターにダメージを与える)。
-	// 引数:		敵からのダメージ。
-	//				魔法攻撃か。
-	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
-	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
-	int ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr, int defidx = 1);
 
-	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
-	// 引数:		敵からのダメージ。
-	//				魔法攻撃か。
-	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
-	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
-	int ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr,int defidx = 1);
-
-	//与ダメージ計算。
-	// 引数：	魔法攻撃か。
-	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
-	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
-	int GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
 
 private:
 
 	// 配列外にアクセスしてないかチェック。
-	inline void _OutCheck(int num)const {
+	inline void _OutCheck(short num)const {
 		if (num <= Param::MIN || num >= Param::MAX) 
 			abort();
 	}
 
+	// 指定したパラメーターに加算。
+	// 引数：	パラメータータイプ。
+	//			加算量。
+	inline void _AddParam(Param idx, const short add) {
+		_OutCheck(idx);
+		_Info[idx].param += add;
+	}
+	// 指定したパラメーターから減算。
+	// 引数：	パラメータータイプ。
+	//			減算量。
+	inline void _SubParam(Param idx, const short sub) {
+		_OutCheck(idx);
+		_Info[idx].param -= sub;
+	}
+
+	// 現在のバフ値、デバフ値でパラメータを更新。
+	void _UpdateParam(Param idx);
+
+
 private:
-	vector<int> _Param;
+	// キャラクターの状態管理用構造体。
+	// ※このクラス内でのみ使用。
+	vector<ParamInfo> _Info;
+
 	bool _DeathFlag = false;//死んだかどうかのフラグ。
 };
