@@ -100,9 +100,6 @@ void Inventory::Initialize() {
 	
 	_LoadData();
 
-	// テスト。
-	InvnetorySortID();
-
 }
 
 //アイテムをインベントリに追加。
@@ -294,6 +291,9 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 			if (static_cast<ConsumptionItem*>(*itr)->GetHoldNum() <= 0) {
 				//リストから削除。
 				_DeleteFromList(*itr);
+
+				//リストから削除されたので他のアイテムを詰める。
+				ArrangementInventory();
 			}
 			//所持品の所持数書き出し。
 			_OutData(item->TypeID);
@@ -389,45 +389,48 @@ void Inventory::_OutData_All() {
 	}
 }
 
-//装備品の追加。
-HoldEquipment* Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code) {
-	if (code == Item::ItemCodeE::Item) {
-		//アイテムは別の追加関数を使って。
-		char error[256];
-		sprintf(error, "装備の追加でcode アイテムが指定されました。");
-		MessageBoxA(0, error, "装備品追加失敗", MB_ICONWARNING);
-		abort();
-	}
-
-	for (int idx = 0; idx < _InventoryItemList[static_cast<int>((code))].size(); idx++) {
-		if (_InventoryItemList[static_cast<int>(code)][idx] == nullptr) {
-
-			//装備品を追加。
-			_InventoryItemList[static_cast<int>(code)][idx] = equi;
-
-			//所持品の情報を書き出し。
-			_OutData(code);
-
-			return equi;
-		}
-	}	
-
-	return nullptr;
-}
+//bool Inventory::IDComp(HoldItemBase* left,HoldItemBase* rigth)
+//{
+//	//return left->GetInfo()->ID > rigth->GetInfo()->ID;
+//}
 
 //インベントリを整列(ID順になる)。
-void Inventory::InvnetorySortID() {
+void Inventory::SortID() {
 	
-	//sort(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin(), _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].end(), HoldItemBase::SortID);
-	////作業用変数の初期化。
-	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
-	//	work.push_back(vector<unique_ptr<HoldItemBase>>());
-	//}
+	//sort(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin(), _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].end(),IDComp);
+	
+}
 
-	////作業用変数にインベントリの中身を全部格納。
-	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
-	//	for (int code = 0; code < INVENTORYLISTNUM; code++) {
-	//		work[type].push_back(_InventoryItemList[type][code].get());
-	//	}
-	//}
+//インベントリ内を整理(途中にnullを挟まない用に中身を詰めるだけ)。
+void Inventory::ArrangementInventory() 
+{
+	//インベントリの中身を一時的に格納する作業用変数。
+	vector<vector<HoldItemBase*>> work= vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max));
+
+	//インベントリ内のアイテム全てをworkに格納。
+	for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++)
+	{
+		for (auto itr = _InventoryItemList[type].begin(); itr < _InventoryItemList[type].end(); itr++)
+		{
+			//中身がある時。
+			if ((*itr) != nullptr) {
+
+				//workに格納。
+				work[type].push_back((*itr));
+
+				//格納し終わったインベントリは初期化。
+				(*itr) = nullptr;
+			}
+		}
+	}
+
+	//workからアイテムを取り出してインベントリに詰める。
+	for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++)
+	{
+		for (int idx = 0; idx < work[type].size(); idx++)
+		{
+			//インベントリにアイテムを追加。
+			_InventoryItemList[type][idx] = work[type][idx];
+		}
+	}
 }

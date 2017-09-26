@@ -182,6 +182,12 @@ public:
 	//所持数を減らす。
 	bool SubHoldNum(Item::BaseInfo* item,int num);
 
+	//インベントリ内を整理(途中にnullを挟まない用に中身を詰めるだけ)。
+	void ArrangementInventory();
+
+	//インベントリを整列(ID順になる)。
+	void SortID();
+
 private:
 	//リストから指定されたアイテムを削除。
 	void _DeleteFromList(HoldItemBase* item);
@@ -196,8 +202,10 @@ private:
 	// 全所持品書き出し。
 	void _OutData_All();
 
-	//インベントリを整列(ID順になる)。
-	void InvnetorySortID();
+
+	//ID比較関数。
+	//bool IDComp(HoldItemBase* left, HoldItemBase* rigth);
+
 
 private:
 	
