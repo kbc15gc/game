@@ -177,10 +177,10 @@ public:
 	bool SubHoldNum(Item::BaseInfo* item,int num);
 
 	// 装備品追加関数
-	// 引数：	追加したい装備のポインタ。
-	//			武器か防具のアイテムコード(アイテムは無効)。
+	// 引数：	追加したい装備品の情報構造体へのポインタ。
+	//			ランダムパラメータにするか。
 	// 戻り値：	追加した装備品のポインタ。
-	HoldEquipment* AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
+	HoldEquipment* AddEquipment(Item::BaseInfo* info, bool isRandParam);
 
 	//インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
 	void AlignmentInventoryList();
