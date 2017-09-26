@@ -27,30 +27,49 @@ public:
 	//子に潜る際に呼び出される処理。
 	void DiveState();
 private:
+	//タブの切り替え。
+	void _SwitchTab();
+	//売買個数変更。
+	void _UpdateTradeNum();
+
+	//メニュー作成。
 	void _CreateMenu();
+	//メニューを閉じる。
 	void _CloseMenu();
-	//選択している添え字を設定。
-	void SetIndex(int idx);
-	//
-	void SetMinIndex(int min);
-	//アイテムリストを移動させる。
-	void ScrollDisplayItem();
+
 	//表示する項目を更新。
-	void UpdateList();
+	void _UpdateList();
 	//テキスト更新。
-	void UpdateText();
+	void _UpdateText();
+	//選択している添え字を設定。
+	void _SetIndex(int idx);
+	//
+	void _SetMinIndex(int min);
+	//アイテムリストを移動させる。
+	void _ScrollDisplayItem();
+
 	//アイテムの情報をテキストに送信。
-	void SendItemInfo(Item::BaseInfo* info);
+	void _SendItemInfo(Item::BaseInfo* info);
 	//カラーコードを算出。
 	char* _CalcColorCode(int diff);
 	
 	//決定処理。
-	void Decision();
+	void _Decision();
 	//アイテムの購入処理。
 	void BuyItem();
 	//アイテムの販売処理。
 	void SellItem();
 private:
+	//ショップのステート保持。
+	Shop::ShopStateE _SaveState;
+
+	//表示するアイテムの種類。
+	int _DisplayType = static_cast<int>(Item::ItemCodeE::Item);
+	//表示するアイテムの一覧。
+	vector<HoldItemBase*> _DisplayList;
+	//アイテムの数。
+	int _DisplayItemNum = 0;
+
 	//現在選択している項目
 	int _Select = 0;
 	//表示する範囲。
@@ -58,16 +77,7 @@ private:
 	//ショップに表示する数。
 	const int DISPLAY_ITEM_NUM = 7;
 	//売買する個数。
-	int _SelectNum = 1;
-	//ショップのステート保持。
-	Shop::ShopStateE _SaveState;
-
-	//表示するアイテムの種類。
-	int _DisplayType = static_cast<int>(Item::ItemCodeE::Item);
-	//表示するアイテムの一覧の参照を受け取る。
-	const vector<unique_ptr<HoldItemBase>>* _DisplayList;
-	//アイテムの数。
-	int _DisplayItemNum = 0;
+	int _TradeNum = 1;
 	//選択しているアイテム。
 	Item::BaseInfo* _SelectItem;
 

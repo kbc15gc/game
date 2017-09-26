@@ -102,7 +102,7 @@ private:
 	//ショップの名前
 	vector<unique_ptr<ShopName>> _ShopNameList;
 	//アイテムのリスト。
-	vector<unique_ptr<HoldItemBase>> _ItemList;
+	vector<HoldItemBase*> _ItemList;
 
 	//確認後に実行する関数。
 	function<void()> _ShopFunc;

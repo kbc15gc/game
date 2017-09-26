@@ -39,7 +39,7 @@ void Shop::Awake()
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
 	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 40, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
-	_DescriptionText->SetFormat((UINT)fbText::TextFormatE::LEFT | (UINT)fbText::TextFormatE::UP);
+	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	//ステートの初期化。
 	SetState();
 
@@ -91,8 +91,8 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
 	//リストの中身削除。
-	for (HoldItemBase* hold : _ItemList)
-		SAFE_DELETE(hold);
+	FOR(i, _ItemList.size())
+		INSTANCE(GameObjectManager)->AddRemoveList(_ItemList[i]);
 	_ItemList.clear();
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
@@ -141,5 +141,5 @@ void Shop::_ChangeState(const ShopStateE state)
 
 void Shop::SetDescriptionText(string text)
 {
-	_DescriptionText->SetString(text.c_str());
+	_DescriptionText->SetText(text.c_str());
 }
