@@ -160,10 +160,13 @@ public:
 
 	int* GetParamPt(CharacterParameter::Param param)
 	{
-		return reinterpret_cast<int*>(_PlayerParam->GetParamPt(param));
+		return _PlayerParam->GetParamPt(param);
 	}
 	int* GetMaxHPPt() {
-		return reinterpret_cast<int*>(_PlayerParam->GetMaxHPPt());
+		return _PlayerParam->GetMaxHPPt();
+	}
+	int* GetMaxMPPt() {
+		return _PlayerParam->GetMaxMPPt();
 	}
 	int* GetExpPt() {
 		return &_nowEXP;

@@ -35,11 +35,21 @@ namespace Hold {
 	}
 
 	HoldEquipInfo::HoldEquipInfo(int TypeID, int ID, bool isEquip) :HoldInfo(TypeID,ID){
-		_IsEquip = isEquip;
+		if (isEquip) {
+			_IsEquip = 1;
+		}
+		else {
+			_IsEquip = 0;
+		}
 	}
 
 	HoldEquipInfo::HoldEquipInfo(HoldItemBase* info) : HoldInfo(info) {
-		_IsEquip = static_cast<HoldEquipment*>(info)->GetIsEquip();
+		if (static_cast<HoldEquipment*>(info)->GetIsEquip()) {
+			_IsEquip = 1;
+		}
+		else {
+			_IsEquip = 0;
+		}
 	}
 
 	// 引数：	アイテム種別。
@@ -51,7 +61,6 @@ namespace Hold {
 		_AtkRnd = AtkRnd;
 		_MAtkRnd = MAtkRnd;
 		_CrtRnd = CrtRnd;
-		_IsEquip = IsEquip;
 	}
 
 	// 引数：	コピー元のポインタ。
@@ -168,6 +177,65 @@ void Inventory::AddItem(Item::ItemInfo* item, int num) {
 		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
 	}
 
+}
+
+//装備品の追加。
+HoldEquipment* Inventory::AddEquipment(Item::BaseInfo* info, bool isRandParam) {
+
+	for (int idx = 0; idx < _InventoryItemList[static_cast<int>((info->TypeID))].size(); idx++) {
+		if (_InventoryItemList[static_cast<int>(info->TypeID)][idx] == nullptr) {
+			// 空き枠がある。
+
+			// 装備品作成。
+			HoldEquipment* equi = nullptr;
+			switch (info->TypeID)
+			{
+			case Item::ItemCodeE::Item:
+				//アイテムは別の追加関数を使って。
+				char error[256];
+				sprintf(error, "装備の追加でcode アイテムが指定されました。");
+				MessageBoxA(0, error, "装備品追加失敗", MB_ICONWARNING);
+				abort();
+				break;
+			case Item::ItemCodeE::Weapon:
+				// 武器生成。
+				equi = INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("HoldWeapon", 9);
+				break;
+			case Item::ItemCodeE::Armor:
+				// 防具生成。
+				equi = INSTANCE(GameObjectManager)->AddNew<HoldArmor>("HoldArmor", 9);
+				break;
+			}
+
+			equi->SetInfo(info);
+			if (isRandParam) {
+				// ランダムパラメータ生成。
+				equi->CreateRandParam();
+			}
+			else {
+				// 基準値でパラメータ生成。
+				equi->CreateOriginParam();
+			}
+
+			//装備品を追加。
+			_InventoryItemList[static_cast<int>(info->TypeID)][idx] = equi;
+
+			//装備品の情報を書き出し。
+			_OutData(info->TypeID);
+
+			return equi;
+		}
+	}
+
+	//エラー報告。
+	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
+	{
+		char error[256];
+		sprintf(error, "インベントリが一杯で追加されませんでした。");
+		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+	}
+
+	return nullptr;
 }
 
 void Inventory::UseItem() {
@@ -319,65 +387,6 @@ void Inventory::_OutData_All() {
 	{
 		_OutData(static_cast<Item::ItemCodeE>(i));
 	}
-}
-
-//装備品の追加。
-HoldEquipment* Inventory::AddEquipment(Item::BaseInfo* info,bool isRandParam) {
-
-	for (int idx = 0; idx < _InventoryItemList[static_cast<int>((info->TypeID))].size(); idx++) {
-		if (_InventoryItemList[static_cast<int>(info->TypeID)][idx] == nullptr) {
-			// 空き枠がある。
-
-			// 装備品作成。
-			HoldEquipment* equi = nullptr;
-			switch (info->TypeID)
-			{
-			case Item::ItemCodeE::Item:
-				//アイテムは別の追加関数を使って。
-				char error[256];
-				sprintf(error, "装備の追加でcode アイテムが指定されました。");
-				MessageBoxA(0, error, "装備品追加失敗", MB_ICONWARNING);
-				abort();
-				break;
-			case Item::ItemCodeE::Weapon:
-				// 武器生成。
-				equi = INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("HoldWeapon", 9);
-				break;
-			case Item::ItemCodeE::Armor:
-				// 防具生成。
-				equi = INSTANCE(GameObjectManager)->AddNew<HoldArmor>("HoldArmor", 9);
-				break;
-			}
-
-			equi->SetInfo(info);
-			if (isRandParam) {
-				// ランダムパラメータ生成。
-				equi->CreateRandParam();
-			}
-			else {
-				// 基準値でパラメータ生成。
-				equi->CreateOriginParam();
-			}
-
-			//装備品を追加。
-			_InventoryItemList[static_cast<int>(info->TypeID)][idx] = equi;
-
-			//装備品の情報を書き出し。
-			_OutData(info->TypeID);
-
-			return equi;
-		}
-	}	
-
-	//エラー報告。
-	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
-	{
-		char error[256];
-		sprintf(error, "インベントリが一杯で追加されませんでした。");
-		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-	}
-
-	return nullptr;
 }
 
 //インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
