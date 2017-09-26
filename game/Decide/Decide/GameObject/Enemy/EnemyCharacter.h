@@ -219,7 +219,7 @@ public:
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(_MyComponent.Parameter->GiveDamageMass(false), false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
+		attack->Create(_MyComponent.Parameter->GiveDamageMass(false)->value, false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
 		return attack;
 	}
 

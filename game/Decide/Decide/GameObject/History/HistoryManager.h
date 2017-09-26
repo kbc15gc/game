@@ -107,8 +107,25 @@ private:
 	*
 	* @param location	場所ID.
 	* @param path		フォルダパス.
+	* @param type		生成するオブジェクトのタイプ.
 	*/
-	void _CreateObject(int location,const char* path);
+	void _CreateObject(int location, const char* path, int type);
+
+	/**
+	* 建物を作成.
+	*
+	* @param location	場所ID.
+	* @param path		フォルダパス.
+	*/
+	void _CreateBuilding(int location, const char* path);
+
+	/**
+	* NPCを作成.
+	*
+	* @param location	場所ID.
+	* @param path		フォルダパス.
+	*/
+	void _CreateNPC(int location, const char* path);
 
 	/**
 	* コリジョンを作成.
