@@ -285,8 +285,6 @@ void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
 	INSTANCE(Inventory)->SubtractPlayerMoney(_SelectItem->Value * _SelectNum);
-	////インベントリへ追加。
-	//INSTANCE(Inventory)->AddItem((Item::ItemCodeE)_SelectItem->TypeID, _SelectItem, _SelectNum);
 	
 	if (_SelectItem->TypeID==Item::ItemCodeE::Item) {
 		//インベントリへ追加。
@@ -294,19 +292,8 @@ void ShopS_Trade::BuyItem()
 	}
 	else
 	{
-		if (_SelectItem->TypeID==Item::ItemCodeE::Weapon) {
-			HoldArmor* armor = INSTANCE(GameObjectManager)->AddNew<HoldArmor>("Armor", 9);
-			armor->SetInfo(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Armor));
-			//インベントリへ追加。
-			INSTANCE(Inventory)->AddEquipment(armor, _SelectItem->TypeID);
-		}
-		else
-		{
-			HoldWeapon* weapon = INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("Weapon", 9);
-			weapon->SetInfo(INSTANCE(ItemManager)->GetItemInfo(_SelectItem->ID, Item::ItemCodeE::Weapon));
-			//インベントリへ追加。
-			INSTANCE(Inventory)->AddEquipment(weapon, _SelectItem->TypeID);
-		}
+		//インベントリへ追加。
+		INSTANCE(Inventory)->AddEquipment(_SelectItem, false);
 	}
 	_Shop->SetDescriptionText("まいどあり。");
 }

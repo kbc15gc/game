@@ -56,7 +56,7 @@ public:
 	//ランクを考慮したランダム物理攻撃力の計算。
 	inline void RndAtkMass() {
 		//物理攻撃力のランダム差分算出。
-		int baseParam = _Atk;
+		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->Atk;
 		int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
 		float raito = static_cast<float>(rnd) * 0.01f;
 
@@ -67,7 +67,7 @@ public:
 
 	//ランクを考慮したランダム魔法攻撃力の計算。
 	inline void RndMAtkMass() {
-		int baseParam = _MagicAtk;
+		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk;
 		int rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
 		float raito = static_cast<float>(rnd) * 0.01f;
 
@@ -79,12 +79,12 @@ public:
 	//ランクを考慮したランダムクリティカル率の計算。
 	inline void RndCrtMass() {
 		//最終的なクリティカルのランダム差分算出。
-		int baseParam = _Crt;
+		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->Dex;
 		int rnd = GetRand_S50to100();
 		float raito = static_cast<float>(rnd) * 0.01f;
-		_CrtRnd = baseParam * raito;
 
 		//最終的なクリティカル率を算出。
+		_CrtRnd = baseParam * raito;
 		_Crt = baseParam + _CrtRnd;
 	}
 

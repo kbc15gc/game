@@ -162,6 +162,12 @@ public:
 	//アイテムをインベントリに追加(第一引数追加するアイテムの情報、追加する数(指定しない場合は1)。)。
 	void AddItem(Item::ItemInfo* item, int num = 1);
 
+	// 装備品追加関数
+	// 引数：	追加したい装備品の情報構造体へのポインタ。
+	//			ランダムパラメータにするか。
+	// 戻り値：	追加した装備品のポインタ。
+	HoldEquipment* AddEquipment(Item::BaseInfo* info, bool isRandParam);
+
 	//指定されたインベントリのリストの先頭を取得。
 	 inline const vector<HoldItemBase*>& GetInventoryList( Item::ItemCodeE code) {
 		return _InventoryItemList[static_cast<int>(code)];
@@ -175,12 +181,6 @@ public:
 
 	//所持数を減らす。
 	bool SubHoldNum(Item::BaseInfo* item,int num);
-
-	// 装備品追加関数
-	// 引数：	追加したい装備のポインタ。
-	//			武器か防具のアイテムコード(アイテムは無効)。
-	// 戻り値：	追加した装備品のポインタ。
-	HoldEquipment* AddEquipment(HoldEquipment* equi, Item::ItemCodeE code);
 
 private:
 	//リストから指定されたアイテムを削除。
