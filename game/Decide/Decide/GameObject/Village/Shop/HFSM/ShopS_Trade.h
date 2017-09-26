@@ -39,12 +39,12 @@ private:
 
 	//表示する項目を更新。
 	void _UpdateList();
-	//テキスト更新。
-	void _UpdateText();
 	//選択している添え字を設定。
 	void _SetIndex(int idx);
 	//
 	void _SetMinIndex(int min);
+	//テキスト更新。
+	void _UpdateText();
 	//アイテムリストを移動させる。
 	void _ScrollDisplayItem();
 
@@ -84,7 +84,7 @@ private:
 	//カーソルの画像。
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。
-	ImageObject* _BuyWindow;
+	ImageObject* _TradeWindow;
 	//アイテム一覧を視覚化したテキストのリスト。
 	vector<TextObject*> _MenuTexts,_MoneyTexts;
 	//メニューの一項目の縦幅。

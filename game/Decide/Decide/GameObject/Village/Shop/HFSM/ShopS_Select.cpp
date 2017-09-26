@@ -9,7 +9,7 @@ ShopS_Select::ShopS_Select(Shop * shop) :IShopState(shop)
 	_SelectWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectWindow", 8);
 	_SelectWindow->SetTexture(LOADTEXTURE("window.png"));
 	_SelectWindow->SetSize(Vector2(256, 128));
-	_SelectWindow->transform->SetPosition(Vector3(1050, 100, 0));
+	_SelectWindow->transform->SetPosition(Vector3(1050, 170, 0));
 
 	//ƒJ[ƒ\ƒ‹
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 8);

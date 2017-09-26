@@ -9,7 +9,7 @@ ShopS_Confirmation::ShopS_Confirmation(Shop * shop) : IShopState(shop)
 	_ConfirmationWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectWindow", 8);
 	_ConfirmationWindow->SetTexture(LOADTEXTURE("window.png"));
 	_ConfirmationWindow->SetSize(Vector2(256, 128));
-	_ConfirmationWindow->transform->SetPosition(Vector3(1050, 550, 0));
+	_ConfirmationWindow->transform->SetPosition(Vector3(1050, 600, 0));
 
 	//ƒJ[ƒ\ƒ‹
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 8);
