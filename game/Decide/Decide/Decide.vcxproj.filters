@@ -243,6 +243,9 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldEquipment.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -498,6 +501,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldEquipment.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
