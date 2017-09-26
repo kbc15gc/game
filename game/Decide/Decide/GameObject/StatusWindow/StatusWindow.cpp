@@ -33,8 +33,8 @@ void StatusWindow::Start()
 	}
 	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
 	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
-	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), reinterpret_cast<int*>(_Player->GetMaxHPPt()));
-	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), reinterpret_cast<int*>(_Player->GetMaxHPPt()));
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
 	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
 	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
 	_ParameterRenderList[6]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoneyPt());
@@ -70,33 +70,58 @@ void StatusWindow::Update()
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
-	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
-	LStick /= 32767.0f;
-	if (LStick.x <= -0.2f)
+	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 		{
-			_NowSelectWindow = max(0, _NowSelectWindow - 1);
+			if (_NowSelectWindow == 0)
+			{
+				_NowSelectWindow = _WindowCount - 1;
+			}
+			else
+			{
+				_NowSelectWindow -= 1;
+			}
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectWindow = max(0, _NowSelectWindow - 1);
+			if (_NowSelectWindow == 0)
+			{
+				_NowSelectWindow = _WindowCount - 1;
+			}
+			else
+			{
+				_NowSelectWindow -= 1;
+			}
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
 	}
-	else if (LStick.x >= 0.2f)
+	else if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 		{
-			_NowSelectWindow = min(_WindowCount - 1, _NowSelectWindow + 1);
+			if (_NowSelectWindow == _WindowCount - 1)
+			{
+				_NowSelectWindow = 0;
+			}
+			else
+			{
+				_NowSelectWindow += 1;
+			}
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectWindow = min(_WindowCount - 1, _NowSelectWindow + 1);
+			if (_NowSelectWindow == _WindowCount - 1)
+			{
+				_NowSelectWindow = 0;
+			}
+			else
+			{
+				_NowSelectWindow += 1;
+			}
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}

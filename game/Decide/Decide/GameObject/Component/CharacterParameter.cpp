@@ -23,14 +23,14 @@ void CharacterParameter::Awake() {
 
 void CharacterParameter::ParamReset(int param[Param::MAX]) {
 	for (short idx = 0; idx < Param::MAX; idx++) {
-		_Info[idx].originParam = static_cast<unsigned short>(param[idx]);
+		_Info[idx].originParam = param[idx];
 		_UpdateParam(static_cast<Param>(idx));
 	}
 }
 
 void CharacterParameter::ParamReset(const vector<int>& param) {
 	for (short idx = 0; idx < Param::MAX; idx++) {
-		_Info[idx].originParam = static_cast<unsigned short>(param[idx]);
+		_Info[idx].originParam = param[idx];
 		_UpdateParam(static_cast<Param>(idx));
 	}
 }
@@ -43,14 +43,14 @@ void CharacterParameter::Update() {
 	}
 }
 
-unsigned short CharacterParameter::ReciveDamage(unsigned short defaultDamage, bool isMagic, HoldArmor* armor, unsigned short defidx) {
+int CharacterParameter::ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx) {
 	int damage = ReceiveDamageMass(defaultDamage, isMagic, armor, defidx);
 	//ダメージ分HPを減算。
 	_SubParam(Param::HP, damage);
 	return damage;
 }
 
-unsigned short CharacterParameter::ReceiveDamageMass(unsigned short defaultDamage, bool isMagic, HoldArmor* armor, unsigned short defidx)
+int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx)
 {
 	//こちらの防御力も考慮したダメージ = 相手の与ダメージ-((防御力 + 装備品の防御力) * 属性的なやつ * キャラクターの行動による防御率)。
 	float element = 1.0f;// 属性による補正的なやつ(とりあえず作るだけ作っとく)※暫定処理。
@@ -75,12 +75,12 @@ unsigned short CharacterParameter::ReceiveDamageMass(unsigned short defaultDamag
 	return damage;
 }
 
-unsigned short CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, unsigned short atk)
+int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk)
 {
-	unsigned short damage = 0;
-	unsigned short weaponDamage = 0;
-	unsigned short critMax = 100;	// クリティカル率最大。
-	unsigned short crit = _Info[Param::DEX].param;// クリティカル率。
+	int damage = 0;
+	int weaponDamage = 0;
+	int critMax = 100;	// クリティカル率最大。
+	int crit = _Info[Param::DEX].param;// クリティカル率。
 
 	if (isMagic) {
 		damage = _Info[Param::MAT].param;
@@ -101,7 +101,7 @@ unsigned short CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weap
 	damage += weaponDamage;
 
 	if (crit > 0) {
-		unsigned short work = critMax / crit;
+		int work = critMax / crit;
 		if (work > 100) {
 			work = 100;
 		}
@@ -119,8 +119,8 @@ unsigned short CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weap
 	return damage * atk;
 }
 
-void CharacterParameter::HeelHP(unsigned short value) {
-	unsigned short hp = _Info[Param::HP].param;
+void CharacterParameter::HeelHP(int value) {
+	int hp = _Info[Param::HP].param;
 	hp += value;
 	if (hp >= _Info[Param::HP].originParam) {
 		// 最大HPを超えた。
@@ -130,8 +130,8 @@ void CharacterParameter::HeelHP(unsigned short value) {
 	_Info[Param::HP].param = hp;
 }
 
-void CharacterParameter::HeelMP(unsigned short value) {
-	unsigned short mp = _Info[Param::MP].param;
+void CharacterParameter::HeelMP(int value) {
+	int mp = _Info[Param::MP].param;
 	mp += value;
 	if (mp >= _Info[Param::MP].originParam) {
 		// 最大HPを超えた。
@@ -141,7 +141,7 @@ void CharacterParameter::HeelMP(unsigned short value) {
 	_Info[Param::MP].param = mp;
 }
 
-void CharacterParameter::Buff(Param idx, unsigned short percentage, float time) {
+void CharacterParameter::Buff(Param idx, int percentage, float time) {
 	if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
 		// バフとデバフに対応していないものは無視。
 		return;
@@ -176,7 +176,7 @@ void CharacterParameter::BuffClearAll() {
 }
 
 
-void CharacterParameter::Debuff(Param idx, unsigned short percentage, float time) {
+void CharacterParameter::Debuff(Param idx, int percentage, float time) {
 	if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
 		// バフとデバフに対応していないものは無視。
 		return;

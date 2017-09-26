@@ -1,24 +1,24 @@
 /**
-* ƒAƒCƒeƒ€•\¦‰æ–ÊƒNƒ‰ƒX‚ÌÀ‘•.
+* ã‚¢ã‚¤ãƒ†ãƒ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®å®Ÿè£….
 */
 #include"stdafx.h"
 #include"ItemWindow.h"
 
 #include"GameObject\Inventory\Inventory.h"
 #include"GameObject\ItemManager\HoldItem\HoldItemBase.h"
+#include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 
 /**
-* ‰Šú‰».
+* åˆæœŸåŒ–.
 */
 void ItemWindow::Awake()
 {
-	//ƒEƒBƒ“ƒhƒE–¼‚Ì‰Šú‰».
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
-	_WindowName->Initialize(L"Á”ïƒAƒCƒeƒ€", 30.0f);
+	_WindowName->Initialize(L"", 30.0f);
+	_WindowName->SetFormat(fbText::TextFormatE::CENTER);
 	_WindowName->transform->SetParent(transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -280.0f, 0.0f));
 
-	//ƒAƒCƒeƒ€ƒZƒ‹‚Ì‰Šú‰».
 	for (int i = 0; i < ItemCellSize; i++)
 	{
 		Item2D* item = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
@@ -27,7 +27,6 @@ void ItemWindow::Awake()
 		_Item2DList.push_back(item);
 	}
 
-	//ƒZƒŒƒNƒgƒJ[ƒ\ƒ‹. 
 	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 9);
 	_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
 	_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
@@ -36,15 +35,24 @@ void ItemWindow::Awake()
 	_SelectCursor->transform->SetLocalRotation(rot);
 	_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+
+	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", 9);
+	_EIconImage->SetTexture(LOADTEXTURE("UI/E.png"));
+	_EIconImage->SetSize(Vector2(30, 30));
+	_EIconImage->SetActive(false);
+
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+}
+
+void ItemWindow::Start()
+{
 }
 
 /**
-* XV.
+* æ›´æ–°.
 */
 void ItemWindow::Update()
 {
-	Input();
-
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
 	{
@@ -52,59 +60,107 @@ void ItemWindow::Update()
 		{
 			_Item2DList[i]->SetActive(true, true);
 			_Item2DList[i]->SetItemData(itemList[i]);
+
+			if (_ItemCode != Item::ItemCodeE::Item)
+			{
+				HoldEquipment* item = (HoldEquipment*)itemList[i];
+				if (item->GetIsEquip())
+				{
+					_EIconImage->SetActive(true, false);
+					_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+				}
+			}
+			
 		}
 		else
 		{
 			_Item2DList[i]->SetActive(false, true);
 		}
 	}
+
+	Input();
+
 }
 
 /**
-* “ü—Í.
+* å…¥åŠ›.
 */
 void ItemWindow::Input()
 {
-	static float ChangeTime = 0.5f;
-	static float LocalTime = 0.0f;
-	//¶ƒXƒeƒBƒbƒN‚Ìî•ñ.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
-	LStick /= 32767.0f;
-	if (LStick.y >= 0.2f)
+	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
+	int itemCount = 0;
+	for (auto& item : itemList)
 	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+		if (item != nullptr)
 		{
-			_NowSelectItem = max(0, _NowSelectItem - 1);
-			_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-		}
-		LocalTime += Time::DeltaTime();
-		if (LocalTime >= ChangeTime)
-		{
-			_NowSelectItem = max(0, _NowSelectItem - 1);
-			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
-			_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			itemCount += 1;
 		}
 	}
-	else if (LStick.y <= -0.2f)
+
+	if (itemCount <= 0)
 	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
-		{
-			_NowSelectItem = min(ItemCellSize - 1, _NowSelectItem + 1);
-			_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-		}
-		LocalTime += Time::DeltaTime();
-		if (LocalTime >= ChangeTime)
-		{
-			_NowSelectItem = min(ItemCellSize - 1, _NowSelectItem + 1);
-			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
-			_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-		}
+		_SelectCursor->SetActive(false, true);
 	}
 	else
 	{
-		ChangeTime = 0.5f;
-		LocalTime = 0.0f;
+		_SelectCursor->SetActive(true, true);
+
+		static float ChangeTime = 0.5f;
+		static float LocalTime = 0.0f;
+
+		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+		LStick /= 32767.0f;
+		if (LStick.y >= 0.2f)
+		{
+			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+			{
+				_NowSelectItem = max(0, _NowSelectItem - 1);
+				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			}
+			LocalTime += Time::DeltaTime();
+			if (LocalTime >= ChangeTime)
+			{
+				_NowSelectItem = max(0, _NowSelectItem - 1);
+				LocalTime = 0.0f;
+				ChangeTime = 0.01f;
+				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			}
+		}
+		else if (LStick.y <= -0.2f)
+		{
+
+			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+			{
+				_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			}
+			LocalTime += Time::DeltaTime();
+			if (LocalTime >= ChangeTime)
+			{
+				_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				LocalTime = 0.0f;
+				ChangeTime = 0.01f;
+				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			}
+		}
+		else
+		{
+			ChangeTime = 0.5f;
+			LocalTime = 0.0f;
+		}
+
+		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+		{
+			if (_ItemCode != Item::ItemCodeE::Item)
+			{
+				_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+			}
+			else if (_ItemCode == Item::ItemCodeE::Item)
+			{
+				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+				item->UseItem();
+				item->UpdateHoldNum(-1);
+			}
+		}
 	}
 }
