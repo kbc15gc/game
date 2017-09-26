@@ -46,7 +46,15 @@ void CharacterParameter::Update() {
 int CharacterParameter::ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx) {
 	int damage = ReceiveDamageMass(defaultDamage, isMagic, armor, defidx);
 	//ダメージ分HPを減算。
-	_SubParam(Param::HP, damage);
+	if (damage > 0) {
+		int hp = GetParam(Param::HP) - damage;
+		if (hp < 0) {
+			_Info[Param::HP].param = 0;
+		}
+		else {
+			_Info[Param::HP].param = hp;
+		}
+	}
 	return damage;
 }
 
@@ -127,7 +135,9 @@ void CharacterParameter::HeelHP(int value) {
 
 		_Info[Param::HP].param = _Info[Param::HP].originParam;
 	}
-	_Info[Param::HP].param = hp;
+	else {
+		_Info[Param::HP].param = hp;
+	}
 }
 
 void CharacterParameter::HeelMP(int value) {
@@ -138,7 +148,9 @@ void CharacterParameter::HeelMP(int value) {
 
 		_Info[Param::MP].param = _Info[Param::MP].originParam;
 	}
-	_Info[Param::MP].param = mp;
+	else {
+		_Info[Param::MP].param = mp;
+	}
 }
 
 void CharacterParameter::Buff(Param idx, int percentage, float time) {

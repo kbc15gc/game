@@ -31,6 +31,8 @@ void ConsumptionItem::Start() {
 
 //アイテムを使う。
 void ConsumptionItem::UseItem() {
+	vector<GameObject*> targets;	// 消費アイテムを使う対象。
+
 	if (static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Heel || static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Buff) {
 		// 回復もしくはバフアイテム。
 
@@ -83,20 +85,20 @@ void ConsumptionItem::UseItem() {
 				hit.erase(hit.begin() + eraseIdx);
 
 				// 対象に取得したオブジェクトを追加。
-				_targets.push_back(minObj);
+				targets.push_back(minObj);
 			}
 		}
 		else {
 			for (auto coll: hit) {
 				// 対象に取得したオブジェクトを追加。
-				_targets.push_back(coll->gameObject);
+				targets.push_back(coll->gameObject);
 			}
 		}
 
 	}
 
 	// 複合アイテムを考慮してとりあえず全部実行する。
-	for (auto target : _targets) {
+	for (auto target : targets) {
 		CharacterParameter* param = target->GetComponent<CharacterParameter>();
 		Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
 		// 暫定処理。
@@ -108,5 +110,14 @@ void ConsumptionItem::UseItem() {
 		}
 	}
 
-	UpdateHoldNum(-1);
+	if (targets.size() <= 0 && static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Debuff) {
+
+		// 暫定処理。
+		// ※ゲーム内で何とか効果がないことをお知らせすべき。
+		char error[256];
+		sprintf(error, "デバフなのに効果範囲内に敵がいないよ");
+		MessageBoxA(0, error, "何の成果も得られませんでしたぁっ！！", MB_ICONWARNING);
+	}
+
+	targets.clear();
 }

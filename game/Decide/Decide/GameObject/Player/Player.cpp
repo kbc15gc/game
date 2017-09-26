@@ -346,16 +346,15 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage;
-		if (_Equipment != nullptr&&_Equipment->armor != nullptr)
+#ifdef _DEBUG
+		if (_Equipment == nullptr)
 		{
-			damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic(), _Equipment->armor);
+			// 装備用の構造体がNull。
+			abort();
 		}
-		else
-		{
-			damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic());
-		}
-
+#endif
+		// ダメージを与える処理
+		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(), hitCollision->GetIsMagic(), _Equipment->armor);
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
@@ -381,7 +380,7 @@ void Player::_Damage()
 {
 	//死亡ステート以外の時。
 	//ライフが0になると死亡する。
-	if (_PlayerParam->GetDeathFalg() == true && _State != State::Death)
+	if (_PlayerParam->GetDeathFlg() == true && _State != State::Death)
 	{
 		ChangeState(State::Death);
 	}
