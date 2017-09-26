@@ -28,7 +28,7 @@ public:
 		_Info = info;
 	}
 
-	static bool compareMyDataPredicate(HoldItemBase* left, HoldItemBase* right) 
+	static bool SortID(HoldItemBase* left, HoldItemBase* right) 
 	{
 		return (left->GetInfo()->ID > right->GetInfo()->ID);
 	}

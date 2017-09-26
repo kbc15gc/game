@@ -92,7 +92,7 @@ void Inventory::Initialize() {
 	_LoadData();
 
 	// テスト。
-	InvnetorySortID();
+	//InvnetorySortID();
 
 }
 
@@ -351,7 +351,7 @@ HoldEquipment* Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code
 //インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
 void Inventory::InvnetorySortID() {
 	
-	//sort(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin(), _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].end(), ID);
+	sort(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin(), _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].end(), HoldItemBase::SortID);
 	////作業用変数の初期化。
 	//for (int type = 0; type < static_cast<int>(Item::ItemCodeE::Max); type++) {
 	//	work.push_back(vector<unique_ptr<HoldItemBase>>());
