@@ -296,9 +296,10 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
 
+		_damage = _MyComponent.Parameter->ReciveDamage(damage, isMagic);
+
 		// ダメージ値をもとにパラメーター更新。
-		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage, isMagic));
-		_damage = damage;
+		_MyComponent.HPBar->SubValue(_damage);
 
 		if (_isDamageMotion) {
 			// のけぞるか。

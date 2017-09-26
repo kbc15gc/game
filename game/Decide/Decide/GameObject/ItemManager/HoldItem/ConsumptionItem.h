@@ -20,11 +20,12 @@ public:
 public:
 	ConsumptionItem(char* name);
 	~ConsumptionItem();
-
+	void Awake()override;
 	void Start()override;
 
 	//アイテムを使う。
-	void UseItem();
+	// 戻り値：	アイテムを使用できたか。
+	bool UseItem();
 
 	//所持数を更新(減らす場合は引数にマイナスを設定)。
 	inline void UpdateHoldNum(int add = 1) {

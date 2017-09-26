@@ -161,7 +161,7 @@ void ItemWindow::Input()
 				// 指定したアイテムを使用。
 				item->UseItem();
 				// 使用したので減らす。
-				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),-1);
+				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
 			}
 		}
 	}

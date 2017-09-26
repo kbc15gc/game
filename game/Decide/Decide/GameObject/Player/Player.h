@@ -158,6 +158,10 @@ public:
 		INSTANCE(Inventory)->AddPlayerMoney(money);
 	}
 
+	inline void HeelHP() {
+		
+	}
+
 	int* GetParamPt(CharacterParameter::Param param)
 	{
 		return _PlayerParam->GetParamPt(param);
