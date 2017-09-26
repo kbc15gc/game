@@ -30,7 +30,7 @@ void ConsumptionItem::Start() {
 
 
 //アイテムを使う。
-void ConsumptionItem::UseItem(Item::ItemInfo* item) {
+void ConsumptionItem::UseItem() {
 	if (static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Heel || static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Buff) {
 		// 回復もしくはバフアイテム。
 

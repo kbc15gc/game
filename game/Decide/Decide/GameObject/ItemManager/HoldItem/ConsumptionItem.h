@@ -24,7 +24,7 @@ public:
 	void Start()override;
 
 	//アイテムを使う。
-	void UseItem(Item::ItemInfo* item);
+	void UseItem();
 
 	//所持数を更新(減らす場合は引数にマイナスを設定)。
 	inline void UpdateHoldNum(int add = 1) {

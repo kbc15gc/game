@@ -1,4 +1,4 @@
-TypeID,ArmorID,Name,Description,Value,Def,MagicDef
-1,0,ぼろぼろの服,ダメージ加工を施しすぎた服。よわい。,3,1,0
-1,1,布の服,普通の服。防御には期待できない。,10,3,1
-1,2,皮の鎧,動物の皮で作られた鎧。すこし臭う。,15,5,5
+TypeID,ArmorID,Name,Description,Value,FilePath,Def,MagicDef
+1,0,ぼろぼろの服,ダメージ加工を施しすぎた服。よわい。,3,Asset\Texture\t1.png,1,0
+1,1,布の服,普通の服。防御には期待できない。,10,Asset\Texture\t1.png,3,1
+1,2,皮の鎧,動物の皮で作られた鎧。すこし臭う。,15,Asset\Texture\t1.png,5,5

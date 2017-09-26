@@ -46,5 +46,7 @@ void Item2D::SetItemData(HoldItemBase * item)
 			sprintf(count, "x%d",static_cast<ConsumptionItem*>(item)->GetHoldNum());
 			_ItemCountText->SetString(count);
 		}
+
+		_ItemData = item;
 	}
 }
