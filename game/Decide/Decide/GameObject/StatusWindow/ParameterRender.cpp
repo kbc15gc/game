@@ -12,7 +12,7 @@ void ParameterRender::Awake()
 	//パラメータ名初期化.
 	_ParamNameText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ParamNameText", 9);
 	_ParamNameText->Initialize(L"", 40.0f);
-	_ParamNameText->SetFormat(fbText::TextFormatE::LEFT);
+	_ParamNameText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
 	_ParamNameText->transform->SetParent(transform);
 	_ParamNameText->transform->SetLocalPosition(Vector3(-170.0f, 0.0f, 0.0f));
 
@@ -24,7 +24,7 @@ void ParameterRender::Awake()
 	//パラメータ初期化.
 	_ParamText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ParamText", 9);
 	_ParamText->Initialize(L"", 40.0f);
-	_ParamText->SetFormat(fbText::TextFormatE::RIGHT);
+	_ParamText->SetAnchor(fbText::TextAnchorE::MiddleRight);
 	_ParamText->transform->SetParent(transform);
 	_ParamText->transform->SetLocalPosition(Vector3(200.0f, 0.0f, 0.0f));
 }
@@ -34,7 +34,7 @@ void ParameterRender::Awake()
 */
 void ParameterRender::Update()
 {
-	_ParamNameText->SetString(_ParamName);
+	_ParamNameText->SetText(_ParamName);
 	char param[100] = { "" };
 	sprintf(param, "%d", (*_Param));
 	if (_MaxParam)
@@ -44,5 +44,5 @@ void ParameterRender::Update()
 		sprintf(maxParam, "%d", (*_MaxParam));
 		strcat(param, maxParam);
 	}
-	_ParamText->SetString(param);
+	_ParamText->SetText(param);
 }

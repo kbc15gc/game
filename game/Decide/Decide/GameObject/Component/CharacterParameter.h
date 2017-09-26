@@ -139,7 +139,7 @@ public:
 
 	// 指定したパラメーター取得。
 	// 引数：	パラメータータイプ。
-	inline short GetParam(Param idx)const {
+	inline int GetParam(Param idx)const {
 		_OutCheck(idx);
 		return _Info[idx].param;
 	}
@@ -150,7 +150,7 @@ public:
 		return &_Info[param].param;
 	}
 
-	inline short GetMaxHP()const {
+	inline int GetMaxHP()const {
 		return _Info[Param::HP].originParam;
 	}
 	inline int* GetMaxHPPt() {
@@ -164,14 +164,9 @@ public:
 		return &_Info[Param::MP].originParam;
 	}
 
-	//// 全パラメーター取得。
-	//inline const vector<short>& GetParams() {
-	//	return _Info.param;
-	//}
-
 	//死んだかどうかのフラグを取得。
 	//tureなら死んでいる。
-	inline bool GetDeathFalg()
+	inline bool GetDeathFlg()
 	{
 		return _DeathFlag;
 	}
@@ -184,21 +179,6 @@ private:
 	inline void _OutCheck(short num)const {
 		if (num <= Param::MIN || num >= Param::MAX) 
 			abort();
-	}
-
-	// 指定したパラメーターに加算。
-	// 引数：	パラメータータイプ。
-	//			加算量。
-	inline void _AddParam(Param idx, const short add) {
-		_OutCheck(idx);
-		_Info[idx].param += add;
-	}
-	// 指定したパラメーターから減算。
-	// 引数：	パラメータータイプ。
-	//			減算量。
-	inline void _SubParam(Param idx, const short sub) {
-		_OutCheck(idx);
-		_Info[idx].param -= sub;
 	}
 
 	// 現在のバフ値、デバフ値でパラメータを更新。

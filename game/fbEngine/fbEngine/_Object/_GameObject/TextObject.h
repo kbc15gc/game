@@ -10,18 +10,17 @@ public:
 	void Awake()override;
 	//àÍäáÇ≈ê›íË
 	void Initialize(const wchar_t* string, const float& size,const Color& color = Color::white,
-		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "ÇlÇr ñæí©", const unsigned int& format = (int)fbText::TextFormatE::CENTER);
+		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "ÇlÇr ñæí©", fbText::TextAnchorE anchor = fbText::TextAnchorE::MiddleCenter);
 
-	void SetString(const wchar_t* ws);
-	void SetString(const char* s);
+	void SetText(const wchar_t* ws);
+	void SetText(const char* s);
 	void SetFontSize(const float& size);
 	void SetFontStyle(const char* style);
 	void SetBlendColor(const Color& c);
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e);
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f);
 	//èëéÆê›íË
-	void SetFormat(const unsigned int& format);
-	void SetFormat(fbText::TextFormatE format);
+	void SetAnchor(fbText::TextAnchorE format);
 	//ÉJÅ[ÉjÉìÉOê›íË
 	void SetKerning(const bool& kerning);
 	void SetCharNum(const unsigned int& num)

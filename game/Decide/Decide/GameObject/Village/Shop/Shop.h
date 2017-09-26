@@ -11,25 +11,18 @@ class IShopState;
 
 namespace
 {
-	enum ItemType :int
-	{
-		ITEM,	//回復アイテムなどの消耗品
-		WEAPON,	//武器
-		ARMOR,	//防具
-	};
-
 	//商品情報
 	struct Product:Noncopyable
 	{
 	public:
-		int ItemID;		//ID
-		ItemType Type;	//なんのアイテムか？
+		int ItemID;		//ID。
+		Item::ItemCodeE Code;	//アイテムを識別するコード。
 	};
 
 	const Support::DATARECORD ProductData[] =
 	{
 		{ "ItemID",Support::DataTypeE::INT , offsetof(struct Product,ItemID),sizeof(int) },
-		{ "Type",Support::DataTypeE::INT, offsetof(struct Product,Type),sizeof(int) },
+		{ "Code",Support::DataTypeE::INT, offsetof(struct Product,Code),sizeof(int) },
 	};
 }
 
@@ -87,6 +80,8 @@ private:
 
 	//説明テキストに文字を設定する。
 	void SetDescriptionText(string text);
+	//支払い
+	void Pay(int money);
 private:
 	//ふれんず。ステートを書いておく。
 	friend class ShopS_Close;
@@ -111,4 +106,7 @@ private:
 	ImageObject* _DescriptionWindow;
 	//説明テキスト。
 	TextObject* _DescriptionText;
+	
+	//お金のテキスト。
+	TextObject* _MoneyText;
 };

@@ -3,14 +3,15 @@
 #include "FontManager.h"
 
 Text::Text(GameObject* g, Transform* t) :
-	Component(g,t,typeid(this).name()),
-	_WString(nullptr),
+	Component(g, t, typeid(this).name()),
+	_Text(nullptr),
 	_Size(1.0f),
 	_Spacing(0),
 	_Kerning(true),
 	_DisplayCharNum(UINT_MAX),
 	_MaxCharNum(0),
-	_TextFormat(fbText::TextFormatE::CENTER)
+	_TextAnchor(fbText::TextAnchorE::MiddleCenter),
+	_SaveBlendColor(Color::white)
 {
 	
 }
@@ -42,7 +43,7 @@ void Text::ImageRender()
 
 	Vector3 baseP = bufP;
 	//フォーマットから基点を計算
-	_CalcFormat(baseP);
+	_CalcAnchor(baseP);
 	
 	//テキスト描画
 	_RenderText(baseP);
@@ -52,12 +53,12 @@ void Text::ImageRender()
 	transform->SetScale(bufS);
 }
 
-void Text::Initialize(const wchar_t * string, const float& size, const Color& color, const fbSprite::SpriteEffectE& flg, const char * style, const unsigned int& format)
+void Text::Initialize(const wchar_t * string, const float& size, const Color& color, const fbSprite::SpriteEffectE& flg, const char * style, fbText::TextAnchorE anchor)
 {
 	SetStyle(style);
 	SetSize(size);
-	SetString(string);
-	SetFormat(format);
+	SetText(string);
+	SetAnchor(anchor);
 	SetBlendColor(color);
 	SetEffectFlg(flg,true);
 }
@@ -66,39 +67,39 @@ void Text::Initialize(const TextParameter & param)
 {
 	SetStyle(param.Style);
 	SetSize(param.FontSize);
-	SetString(param.String);
-	SetFormat(param.Format);
+	SetText(param.String);
+	SetAnchor(param.Anchor);
 	SetBlendColor(param.Color);
 	SetEffectFlg(param.EffectFlg, true);
 }
 
-void Text::SetString(const wchar_t * s)
+void Text::SetText(const wchar_t * s)
 {
 	if (s == nullptr) {
 		return;
 	}
 	//前回の文字列解放
-	if (_WString)
-		SAFE_DELETE(_WString);
+	if (_Text)
+		SAFE_DELETE(_Text);
 	//長さ(+1は終端文字分)
 	size_t len = wcslen(s) + 1;
 	//メモリ確保
-	_WString = new wchar_t[len]();
+	_Text = new wchar_t[len]();
 	//値コピー
-	wcscpy_s(_WString, len, s);
-	INSTANCE(FontManager)->Createfont(_WString, _FontStyle);
+	wcscpy_s(_Text, len, s);
+	INSTANCE(FontManager)->Createfont(_Text, _FontStyle);
 
 	_UpdateLength();
 }
 
-void Text::SetString(const char * s)
+void Text::SetText(const char * s)
 {
 	//wcharに変換
 	wchar_t w[256];
 	setlocale(LC_CTYPE, "jpn");
 
 	mbstowcs(w, s, 256);
-	SetString(w);
+	SetText(w);
 }
 
 void Text::SetStyle(const char* s)
@@ -130,6 +131,7 @@ void Text::SetSpacing(const float& space)
 
 void Text::SetBlendColor(const Color& c)
 {
+	_SaveBlendColor = c;
 	_Sprite->SetBlendColor(c);
 }
 
@@ -143,14 +145,9 @@ void Text::SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f)
 	_Sprite->SetEffectFlg((DWORD)e,f);
 }
 
-void Text::SetFormat(const unsigned int& format)
+void Text::SetAnchor(fbText::TextAnchorE anchor)
 {
-	_TextFormat = (fbText::TextFormatE)format;
-}
-
-void Text::SetFormat(fbText::TextFormatE format)
-{
-	_TextFormat = format;
+	_TextAnchor = anchor;
 }
 
 void Text::SetKerning(const bool & kerning)
@@ -158,30 +155,30 @@ void Text::SetKerning(const bool & kerning)
 	_Kerning = kerning;
 }
 
-void Text::_CalcFormat(Vector3 & pos)
+void Text::_CalcAnchor(Vector3 & pos)
 {
 	//フォーマット
-	const unsigned int& format = (unsigned int)_TextFormat;
+	const unsigned int& format = (unsigned int)_TextAnchor;
 	Vector3 sca = transform->GetScale();
 	//移動量
 	Vector2 offset(_Length.x * sca.x, -_Length.y * sca.y);
 	//半分に
 	offset *= 0.5f;
-	if (format & (unsigned int)fbText::TextFormatE::CENTER)
+	if (format & (unsigned int)fbText::TextAnchorE::Center)
 	{
 		pos.x -= offset.x;
 	}
-	else if (format & (unsigned int)fbText::TextFormatE::RIGHT)
+	else if (format & (unsigned int)fbText::TextAnchorE::Right)
 	{
 		pos.x -= offset.x * 2;
 	}
 
 	//上下の移動
-	if (format & (unsigned int)fbText::TextFormatE::UP)
+	if (format & (unsigned int)fbText::TextAnchorE::Upper)
 	{
 		pos.y += offset.y;
 	}
-	else if (format & (unsigned int)fbText::TextFormatE::DOWN)
+	else if (format & (unsigned int)fbText::TextAnchorE::Lower)
 	{
 		pos.y -= offset.y;
 	}
@@ -190,7 +187,7 @@ void Text::_CalcFormat(Vector3 & pos)
 void Text::_UpdateLength()
 {
 	//nullチェック
-	if (!_WString)
+	if (!_Text)
 		return;
 	//初期化
 	float width = 0;
@@ -200,15 +197,15 @@ void Text::_UpdateLength()
 	_MostHeight = 0.0f;
 	_MaxCharNum = 0;
 	//横の長さ計算
-	for (short i = 0; _WString[i] != '\0'; i++)
+	for (short i = 0; _Text[i] != '\0'; i++)
 	{
 		//文字数カウント
 		_MaxCharNum++;
 		//改行文字ではない。
-		if (_WString[i] != '\n')
+		if (_Text[i] != '\n')
 		{
 			//文字のデータ取得
-			FontData* data = INSTANCE(FontManager)->Findfont(_WString[i], _FontStyle);
+			FontData* data = INSTANCE(FontManager)->Findfont(_Text[i], _FontStyle);
 			GLYPHMETRICS gm = data->gm;
 			//文字の横幅を足していく
 			width += _Kerning ? gm.gmBlackBoxX : (gm.gmCellIncX + _Spacing);
@@ -229,7 +226,7 @@ void Text::_UpdateLength()
 			}
 			_Length.y += MaxLength.y;
 			//次の改行も使いまわすか？
-			if (_WString[i + 1] != '\n') {
+			if (_Text[i + 1] != '\n') {
 				MaxLength.y = 0.0f;
 			}
 			else {
@@ -250,22 +247,22 @@ void Text::_RenderText(const Vector3 & base)
 	Vector3 offset(0, 0, 0);
 	//高さ
 	float maxHeight = 0;
-	if (_WString == nullptr)
+	if (_Text == nullptr)
 		return;
 	//フォントをセットして文字数分描画するっていうのは重い！
-	for (short i = 0; _WString[i] != '\0'; i++)
+	for (short idx = 0,count = 0; _Text[idx] != '\0';)
 	{
 		//文字数以上になったなら描画止め。
-		if (_DisplayCharNum <= i)
+		if (_DisplayCharNum <= count)
 			break;
 
 		//この文字のスケール
 		float scale = transform->GetScale().x;
 		//改行文字ではない
-		if (_WString[i] != '\n')
+		if (_Text[idx] != '\n')
 		{
 			//文字のデータ取得
-			FontData* data = INSTANCE(FontManager)->Findfont(_WString[i], _FontStyle);
+			FontData* data = INSTANCE(FontManager)->Findfont(_Text[idx], _FontStyle);
 			GLYPHMETRICS gm = data->gm;
 			//画像の左上の座標
 			Vector3 origin(0, -gm.gmptGlyphOrigin.y, 0);
@@ -296,8 +293,44 @@ void Text::_RenderText(const Vector3 & base)
 			//移動量初期化
 			offset.x = 0;
 			//次が改行でないなら初期化
-			if (_WString[i + 1] != '\n')
+			if (_Text[idx + 1] != '\n')
 				maxHeight = 0;
 		}
+		count++;
+		idx++;
+		//リッチテキスト処理。
+		if (_Text[idx] == '<')
+			idx += RichText(&_Text[idx]);
 	}
+}
+
+int Text::RichText(const wchar_t* text)
+{
+	wchar_t copy[512], *next;
+	// < を取り除く。
+	wcscpy_s(copy, 512, text + 1);
+	// > までの文字列を取得。
+	wchar_t* addres = wcstok_s(copy, L">", &next);
+	if (addres == nullptr)return 0;
+
+
+	wchar_t* type;
+	//タイプチェック
+	if (type = wcsstr(addres, L"color"))
+	{
+		if (addres[0] == L'/')
+		{
+			_Sprite->SetBlendColor(_SaveBlendColor);
+		}
+		else
+		{
+			//値となりうる文字列を取り出す。
+			wchar_t num[20];
+			wcscpy_s(num, ARRAY_SIZE(num), type + wcslen(L"color="));
+			DWORD color = wcstoul(num, nullptr, 16);
+			_Sprite->SetBlendColor(Color((unsigned int)((color & 0xff000000) / pow(256, 3)), (color & 0x00ff0000) / (DWORD)pow(256, 2), (color & 0x0000ff00) / (DWORD)pow(256, 1), (color & 0x000000ff)));
+		}
+	}
+	//+2は <> の二文字分。
+	return wcslen(addres) + 2;
 }
