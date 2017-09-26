@@ -38,7 +38,6 @@ public:
 
 private:
 	GameObject* _user = nullptr;	// 使用者。
-	vector<GameObject*> _targets;	// 消費アイテムを使う対象。
 
 	float _range = 10.0f;	// 効果を及ぼす範囲(この範囲外のものにはアイテムは影響を及ぼさない)。
 	int _HoldNum = 0;	// 所持数。

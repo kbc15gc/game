@@ -70,7 +70,7 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	if (_MyComponent.Parameter->GetDeathFalg())
+	if (_MyComponent.Parameter->GetDeathFlg())
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);

@@ -273,6 +273,7 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 		else
 		{
 			//ˆê’v‚µ‚½‚Ì‚Å’†g‚ðíœB
+			INSTANCE(GameObjectManager)->AddRemoveList(*itr);
 			(*itr) = nullptr;
 			return;
 		}

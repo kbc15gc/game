@@ -158,8 +158,10 @@ void ItemWindow::Input()
 			else if (_ItemCode == Item::ItemCodeE::Item)
 			{
 				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+				// 指定したアイテムを使用。
 				item->UseItem();
-				item->UpdateHoldNum(-1);
+				// 使用したので減らす。
+				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),-1);
 			}
 		}
 	}
