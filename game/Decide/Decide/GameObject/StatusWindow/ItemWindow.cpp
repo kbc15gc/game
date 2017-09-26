@@ -64,8 +64,7 @@ void ItemWindow::Update()
 			_Item2DList[i]->SetActive(true, true);
 			_Item2DList[i]->SetItemData(itemList[i].get());
 
-			//
-			if (itemList[i]->GetInfo()->Name == "")
+			if (itemList[i]->GetInfo()-> == "")
 			{
 				_EIconImage->SetActive(true, false);
 				_EIconImage->transform->SetParent(_Item2DList[i]->transform);
