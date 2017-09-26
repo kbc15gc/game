@@ -51,7 +51,7 @@ void ItemWindow::Update()
 		if (itemList.size() > i && itemList[i] != nullptr)
 		{
 			_Item2DList[i]->SetActive(true, true);
-			_Item2DList[i]->SetItemData(itemList[i].get());
+			_Item2DList[i]->SetItemData(itemList[i]);
 		}
 		else
 		{

@@ -199,9 +199,7 @@ public class CSVExportFunction : Editor
             string type = Convert.ToString(Convert.ToInt32(e._EnemyType));
 
             string hp = Convert.ToString(e._HP);
-            string mhp = Convert.ToString(e._MaxHP);
             string mp = Convert.ToString(e._MP);
-            string mmp = Convert.ToString(e._MaxMP);
             string atk = Convert.ToString(e._ATK);
             string mat = Convert.ToString(e._MAT);
             string def = Convert.ToString(e._DEF);
@@ -217,7 +215,7 @@ public class CSVExportFunction : Editor
             string sca = Vector3ToString(child.lossyScale);
 
             //
-            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9}/{10}/{11},{12},{13},{14},{15},{16}", type, hp, mhp, mp, mmp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca);
+            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca);
 
 
             //列書き出し

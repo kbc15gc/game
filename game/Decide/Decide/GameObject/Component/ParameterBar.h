@@ -164,7 +164,7 @@ class ParameterBar :
 	static const Vector2 CreateScale_DefaultArg;
 public:
 	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
-		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar",9);
+		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar",8);
 #ifdef _DEBUG
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif

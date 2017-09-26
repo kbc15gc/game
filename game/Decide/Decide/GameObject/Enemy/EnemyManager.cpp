@@ -103,15 +103,20 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					enemy->Object = Spawner->DeathAndRespawnObject<Enemy>(nullptr, 0.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					Color.push_back(BarColor::Red);
 					break;
-				case EnemyCharacter::EnemyType::Drarian:
+				case EnemyCharacter::EnemyType::BossDrarian:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossDrarian>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					Color.push_back(BarColor::Yellow);
 					Color.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::Drarian:
+					// まだ何もしない。
 					break;
 				}
 			}
 			// パラメーター設定。
 			enemy->Object->SetParamAll(Color,enemy->InfoData->param);
+			enemy->Object->SetDropEXP(enemy->InfoData->exp);
+			enemy->Object->SetDropMoney(enemy->InfoData->money);
 			return;
 		}
 	}

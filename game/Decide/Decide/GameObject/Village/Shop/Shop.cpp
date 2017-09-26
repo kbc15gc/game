@@ -27,7 +27,7 @@ void Shop::Awake()
 		{
 			"ShopName",Support::DataTypeE::STRING,0,sizeof(char) * 256
 		};
-		Support::LoadCSVData("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
+		Support::LoadCSVData<ShopName>("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
 	}
 	//ウィンドウの画像。
 	_DescriptionWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DescriptionWindow", 8);
@@ -39,7 +39,7 @@ void Shop::Awake()
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
 	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 40, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
-	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
+	_DescriptionText->SetFormat((UINT)fbText::TextFormatE::LEFT | (UINT)fbText::TextFormatE::UP);
 	//ステートの初期化。
 	SetState();
 
@@ -91,6 +91,8 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
 
 	//リストの中身削除。
+	for (HoldItemBase* hold : _ItemList)
+		SAFE_DELETE(hold);
 	_ItemList.clear();
 	//アイテムの情報を取得
 	for(int idx = 0;idx < _ProductList.size();idx++)
@@ -102,7 +104,9 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		if (item)
 		{
 			//情報を設定して初期化。
-			_ItemList.push_back(unique_ptr<HoldItemBase>(new HoldItemBase(item)));
+			HoldItemBase* hitem = INSTANCE(GameObjectManager)->AddNew<HoldItemBase>("Item", 9);
+			hitem->SetInfo(item);
+			_ItemList.push_back(hitem);
 		}
 	}
 }
@@ -137,5 +141,5 @@ void Shop::_ChangeState(const ShopStateE state)
 
 void Shop::SetDescriptionText(string text)
 {
-	_DescriptionText->SetText(text.c_str());
+	_DescriptionText->SetString(text.c_str());
 }

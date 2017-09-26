@@ -1,3 +1,1 @@
-TypeID,ID,HoldNum,AtkRnd,MagicRnd,CrtRnd
-2,0,2,0,0,0
-2,1,1,0,0,0
+TypeID,ID,AtkRnd,MagicRnd,CrtRnd,IsEquip
