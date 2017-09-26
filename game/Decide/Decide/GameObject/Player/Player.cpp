@@ -159,12 +159,12 @@ void Player::Start()
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 
 	//レベルアップ時のスプライト初期化
-	{
+	/*{
 		_LevelUpSprite = AddComponent<Sprite>();
 		_LevelUpSprite->SetTexture(LOADTEXTURE("levelup.png"));
 		_LevelUpSprite->SetEnable(true);
 		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
-	}
+	}*/
 
 }
 
@@ -342,9 +342,13 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 	{
 		int damage;
 		if (_Equipment != nullptr&&_Equipment->armor != nullptr)
-		damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(),hitCollision->GetIsMagic(),_Equipment->armor);
+		{
+			damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic(), _Equipment->armor);
+		}
 		else
-		damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic());
+		{
+			damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic());
+		}
 
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
