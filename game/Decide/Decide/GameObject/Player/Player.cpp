@@ -260,9 +260,11 @@ void Player::ChangeState(State nextstate)
 	case State::Death:					
 		//死亡状態
 		_CurrentState = &_DeathState;
+		break;
 	case State::Stop:
 		//ストップ状態
 		_CurrentState = &_StopState;
+		break;
 	default:
 		//デフォルト
 		break;
