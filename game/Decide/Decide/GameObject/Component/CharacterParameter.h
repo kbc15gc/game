@@ -16,9 +16,17 @@ public:
 #endif
 
 	// 元素属性(火、水など)。
-	enum class Element{None = -1};
+	enum class Element { None = -1 };
 	// 物理属性(斬、打、魔など)。
-	enum class Physical{None = -1};
+	enum class Physical { None = -1 };
+
+	// 作成した与ダメージ情報。
+	struct GiveDamageInfo {
+		int value = 0;	// ダメージ量。
+		bool isCritical = false;	// クリティカルか。
+		Element element;	// 元素属性(現在未使用)。
+		Physical physical;	// 物理属性(現在未使用)。
+	};
 
 	// パラメーター列挙。
 	//			HP。
@@ -90,19 +98,25 @@ public:
 	// 戻り値:		受けるダメージ。
 	int ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr,int defidx = 1);
 
+	// 防御力無視の被ダメージ処理。
+	// 引数:		敵からのダメージ。
+	int ReciveDamageThrough(int damage);
+
 	//与ダメージ計算。
 	// 引数：	魔法攻撃か。
 	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
 	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
-	// 戻り値:	与えるダメージ。
-	int GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
+	// 戻り値:	与えるダメージの情報。
+	unique_ptr<GiveDamageInfo> GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
 
 	// HP回復関数。
 	// 引数：	回復量。
-	void HeelHP(int value);
+	// 戻り値：	回復できたか。
+	bool HeelHP(int value);
 	// MP回復関数。
 	// 引数：	回復量。
-	void HeelMP(int value);
+	// 戻り値：	回復できたか。
+	bool HeelMP(int value);
 
 	// バフ関数。
 	// 引数：	バフを掛けたいパラメータ。
@@ -184,7 +198,8 @@ private:
 	// 現在のバフ値、デバフ値でパラメータを更新。
 	void _UpdateParam(Param idx);
 
-
+	// 各種パラメータの状態を更新。
+	void _UpdateInfo();
 private:
 	// キャラクターの状態管理用構造体。
 	// ※このクラス内でのみ使用。

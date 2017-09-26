@@ -158,6 +158,10 @@ public:
 		INSTANCE(Inventory)->AddPlayerMoney(money);
 	}
 
+	inline void HeelHP() {
+		
+	}
+
 	int* GetParamPt(CharacterParameter::Param param)
 	{
 		return _PlayerParam->GetParamPt(param);
@@ -189,19 +193,33 @@ public:
 		//装備フラグをtureにする。
 		static_cast<HoldEquipment*>(equi)->SetIsEquipTrue();
 
+		//防具。
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 			
-			//前に装備していた防具を外す。
-			_Equipment->armor->SetIsEquipFalse();
-			//防具。
-			_Equipment->armor = static_cast<HoldArmor*>(equi);
+			if (_Equipment->armor != nullptr) {
+				//前に装備していた防具を外す。
+				_Equipment->armor->SetIsEquipFalse();
+				_Equipment->armor = nullptr;
+			}
+			else
+			{
+				//防具。
+				_Equipment->armor = static_cast<HoldArmor*>(equi);
+			}	
 		}
 		else
+		//武器。
 		{
-			//前に装備していた武器を外す。
-			_Equipment->weapon->SetIsEquipFalse();
-			//武器。
-			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
+			if (_Equipment->weapon != nullptr) {
+				//前に装備していた武器を外す。
+				_Equipment->weapon->SetIsEquipFalse();
+				_Equipment->weapon = nullptr;
+			}
+			else
+			{
+				//武器。
+				_Equipment->weapon = static_cast<HoldWeapon*>(equi);
+			}
 		}
 	}
 
