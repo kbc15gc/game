@@ -37,14 +37,14 @@ private:
 	struct ParamInfo {
 		// キャラクターの基礎パラメータ(この値をもとにバフ、デバフ、HP計算を行う)。
 		// ※レベルアップなどによって基礎パラメータが更新される際はこちらを変更する。
-		unsigned short originParam = 0;
-		unsigned short param = 0;	// ゲームでの実際のパラメータ(バフ、デバフ後の値や、現在のHPやMPなど)。
+		int originParam = 0;
+		int param = 0;	// ゲームでの実際のパラメータ(バフ、デバフ後の値や、現在のHPやMPなど)。
 
-		unsigned short buffPercentage = 0;		// パラメータに掛かっているバフの効果値(パーセント)。
+		int buffPercentage = 0;		// パラメータに掛かっているバフの効果値(パーセント)。
 		float buffInterval = 0.0f;		// バフの効果時間。
 		float buffCounter = 0.0f;		// バフの経過時間。
 
-		unsigned short debuffPercentage = 0;	// パラメータに掛かっているバフの効果値(パーセント)。
+		int debuffPercentage = 0;	// パラメータに掛かっているバフの効果値(パーセント)。
 		float debuffInterval = 0.0f;	// デバフの効果時間。
 		float debuffCounter = 0.0f;		// デバフの経過時間。
 	};
@@ -80,7 +80,7 @@ public:
 	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
 	// 戻り値:		受けたダメージ。
-	unsigned short ReciveDamage(unsigned short defaultDamage, bool isMagic, HoldArmor* armor = nullptr, unsigned short defidx = 1);
+	int ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr, int defidx = 1);
 
 	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
 	// 引数:		敵からのダメージ。
@@ -88,28 +88,28 @@ public:
 	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
 	// 戻り値:		受けるダメージ。
-	unsigned short ReceiveDamageMass(unsigned short defaultDamage, bool isMagic, HoldArmor* armor = nullptr,unsigned short defidx = 1);
+	int ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr,int defidx = 1);
 
 	//与ダメージ計算。
 	// 引数：	魔法攻撃か。
 	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
 	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
 	// 戻り値:	与えるダメージ。
-	unsigned short GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, unsigned short atk = 1);
+	int GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
 
 	// HP回復関数。
 	// 引数：	回復量。
-	void HeelHP(unsigned short value);
+	void HeelHP(int value);
 	// MP回復関数。
 	// 引数：	回復量。
-	void HeelMP(unsigned short value);
+	void HeelMP(int value);
 
 	// バフ関数。
 	// 引数：	バフを掛けたいパラメータ。
 	//			効果値(パーセント)。
 	//			効果時間(秒)。
 	// ※HPとMPとCRTとLVは無効。
-	void Buff(Param idx, unsigned short percentage,float time);
+	void Buff(Param idx, int percentage,float time);
 
 	// バフ解除関数。
 	// 引数：	解除したいパラメータ。
@@ -125,7 +125,7 @@ public:
 	//			効果値(パーセント)。
 	//			効果時間(秒)。
 	// ※HPとMPとCRTとLVは無効。
-	void Debuff(Param idx, unsigned short percentage, float time);
+	void Debuff(Param idx, int percentage, float time);
 
 	// デバフ解除関数。
 	// 引数：	解除したいパラメータ。
@@ -145,7 +145,7 @@ public:
 	}
 	// 指定したパラメーターのポインタ取得。
 	// 引数：	パラメータータイプ。
-	inline unsigned short* GetParamPt(Param param)
+	inline int* GetParamPt(Param param)
 	{
 		return &_Info[param].param;
 	}
@@ -153,14 +153,14 @@ public:
 	inline short GetMaxHP()const {
 		return _Info[Param::HP].originParam;
 	}
-	inline unsigned short* GetMaxHPPt() {
+	inline int* GetMaxHPPt() {
 		return &_Info[Param::HP].originParam;
 	}
 
-	inline unsigned short GetMaxMP() const{
+	inline int GetMaxMP() const{
 		return _Info[Param::MP].originParam;
 	}
-	inline unsigned short* GetMaxMPPt()  {
+	inline int* GetMaxMPPt()  {
 		return &_Info[Param::MP].originParam;
 	}
 

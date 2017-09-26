@@ -5,6 +5,7 @@
 #include "PlayerState/PlayerStateIdol.h"
 #include "PlayerState/PlayerStateAttack.h"
 #include "PlayerState\/PlayerStateDeath.h"
+#include "PlayerState\PlayerStateStop.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
@@ -159,10 +160,13 @@ public:
 
 	int* GetParamPt(CharacterParameter::Param param)
 	{
-		return reinterpret_cast<int*>(_PlayerParam->GetParamPt(param));
+		return _PlayerParam->GetParamPt(param);
 	}
 	int* GetMaxHPPt() {
-		return reinterpret_cast<int*>(_PlayerParam->GetMaxHPPt());
+		return _PlayerParam->GetMaxHPPt();
+	}
+	int* GetMaxMPPt() {
+		return _PlayerParam->GetMaxMPPt();
 	}
 	int* GetExpPt() {
 		return &_nowEXP;
@@ -187,11 +191,15 @@ public:
 
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 			
+			//前に装備していた防具を外す。
+			_Equipment->armor->SetIsEquipFalse();
 			//防具。
 			_Equipment->armor = static_cast<HoldArmor*>(equi);
 		}
 		else
 		{
+			//前に装備していた武器を外す。
+			_Equipment->weapon->SetIsEquipFalse();
 			//武器。
 			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		}
@@ -253,6 +261,8 @@ private:
 	PlayerStateAttack _AttackState;
 	//プレイヤーステートデス
 	PlayerStateDeath _DeathState;
+	//プレイヤーステートストップ
+	PlayerStateStop _StopState;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSE = nullptr;
 	//レベルアップ時の音

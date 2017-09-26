@@ -150,9 +150,6 @@
     <ClCompile Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.cpp">
       <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Player\Player.cpp">
-      <Filter>GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
@@ -242,6 +239,12 @@
     </ClCompile>
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldEquipment.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -498,6 +501,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldEquipment.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
