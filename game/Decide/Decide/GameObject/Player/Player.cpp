@@ -95,19 +95,19 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	_PlayerParam->ParamInit(_ParamTable[0]);
+	_PlayerParam->ParamReset(_ParamTable[0]);
 	
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXHP), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
+		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP), true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
 	}
 	// MPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
-		_MPBar->Create(Colors, _PlayerParam->GetParam(CharacterParameter::MAXMP), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+		_MPBar->Create(Colors, _PlayerParam->GetMaxMP(), _PlayerParam->GetParam(CharacterParameter::MP), true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//ダメージSE初期化
 	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
@@ -383,8 +383,7 @@ void Player::_Damage()
 	if (transform->GetLocalPosition().y < 48.5f 
 		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_PlayerParam->SubParam(CharacterParameter::HP, Oboreru * Time::DeltaTime());
-		_HPBar->SubValue(Oboreru * Time::DeltaTime());
+		_HPBar->SubValue(_PlayerParam->ReciveDamage(CharacterParameter::HP, Oboreru * Time::DeltaTime()));
 	}
 }
 
@@ -425,7 +424,7 @@ void Player::_LevelUP()
 	_nowEXP = _nowEXP - _EXPTable[_PlayerParam->GetParam(CharacterParameter::Param::LV) - 1];	// レベルアップ時に溢れた分を現在の経験値に設定。
 
 	// 次のレベルのパラメータを設定。
-	_PlayerParam->ParamInit(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
+	_PlayerParam->ParamReset(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
 
 	//HPが上がったのでHPバーのHP設定しなおす。
 	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));

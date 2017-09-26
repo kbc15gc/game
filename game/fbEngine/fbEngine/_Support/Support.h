@@ -262,9 +262,15 @@ namespace
 
 namespace Support {
 	//CSVファイルから情報を読み取り、構造体に格納する。
-	//※仮想関数を実装した構造体を使うとメモリを破壊する可能性あり。
-	template<class T>
-	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<unique_ptr<T>>& output)
+	// テンプレート引数：	この関数内で配列に格納する時に、この引数を用いてnewする。
+	//						引数4に渡す配列の中身(ユニークポインタ)のテンプレート引数(デフォルトはテンプレート引数1)。
+	// 引数：				読み込み先のファイル名。
+	//						読み込むデータのレコード(形式)。
+	//						1レコードを構成するデータの数。
+	//						読み込んだデータを格納する配列。
+	// ※テンプレート引数2はポリモーフィズムを活用したクラスや構造体のデータを読み込む際に使用する。
+	template<class T1,class T2 = T1>
+	extern bool LoadCSVData(const char* filepath, const Support::DATARECORD* datas, const int& datanum, vector<unique_ptr<T2>>& output)
 	{
 		//ファイル入力用
 		std::ifstream fin(filepath, std::ios::in);
@@ -301,7 +307,7 @@ namespace Support {
 			int offset = 0;		//先頭からのoffset量
 			memcpy(copy, line, sizeof(char) * 512);
 			//アドレス確保
-			T* tmp = new T();
+			T1* tmp = new T1;
 			
 			while (*(line + offset) != '\0' &&	//1行の終端までループ
 				idx < datanum)					//範囲チェック
@@ -321,7 +327,7 @@ namespace Support {
 				idx++;
 			}
 			//要素追加
-			output.push_back(unique_ptr<T>(tmp));
+			output.push_back(unique_ptr<T1>(tmp));
 		}
 		//読み込み終了
 		return true;
@@ -348,7 +354,7 @@ namespace Support {
 		if (fout.fail())
 		{
 			char error[256];
-			strcat(error, filepath);
+			strcpy(error, filepath);
 			strcat(error, "\nを開けませんでした。");
 			MessageBoxA(0, error, "ファイル読み込みエラー", MB_ICONWARNING);
 			return fout.fail();

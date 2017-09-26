@@ -5,12 +5,6 @@
 class HoldEquipment :public HoldItemBase
 {
 public:
-	//コンストラクタ。
-	HoldEquipment(Item::BaseInfo* info);
-
-	//デストラクタ。
-	~HoldEquipment();
-
 	// コメントの数字は基準値からの加算率の幅。
 	enum Rank
 	{
@@ -22,6 +16,16 @@ public:
 		D,		//-40 ~ -21	粗悪。
 		E,		//-50 ~ -41	超粗悪。
 	};
+
+public:
+	HoldEquipment(char* name);
+	~HoldEquipment();
+
+
+	// 外部から読み込んだデータを設定。
+	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
+	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
+	void ConfigLoadData(Hold::HoldEquipInfo* info);
 
 	//武器または防具のランクを決定。
 	inline void RankSelect(float raito) {
@@ -49,7 +53,7 @@ public:
 
 	}
 
-	//武器もしくは防具のランクを算出。
+	//装備の基準値と差分値の割合を算出。
 	virtual inline float ParamRaitoMass() {
 		return 0.0f;
 	}
@@ -74,13 +78,22 @@ public:
 		_IsEquip = false;
 	}
 
-	//装備フラグをセット(tureなら装備している、falseなら装備していない)。
+	//装備フラグを取得(tureなら装備している、falseなら装備していない)。
 	inline bool GetIsEquip() {
 		return _IsEquip;
 	}
 
+
+private:
+	// 外部から読み込んだデータを設定。
+	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
+	// 継承先によって処理を変更。
+	virtual void _ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) = 0;
+
 protected:
-	Rank _Rank;					//装備品のランク。
+	Rank _Rank;	//装備品のランク。
 	bool _IsEquip = false;		//装備されているかのフラグ(tureなら装備されている)。
+
+	bool _isLoad = false;	// CSVから読み込んだデータか。
 };
 

@@ -27,7 +27,7 @@ void Shop::Awake()
 		{
 			"ShopName",Support::DataTypeE::STRING,0,sizeof(char) * 256
 		};
-		Support::LoadCSVData("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
+		Support::LoadCSVData<ShopName>("Asset/Data/ShopData/ShopName.csv", shopdata, ARRAY_SIZE(shopdata), _ShopNameList);
 	}
 	//ウィンドウの画像。
 	_DescriptionWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DescriptionWindow", 8);
@@ -104,7 +104,8 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		if (item)
 		{
 			//情報を設定して初期化。
-			HoldItemBase* hitem = new HoldItemBase(item);
+			HoldItemBase* hitem = INSTANCE(GameObjectManager)->AddNew<HoldItemBase>("Item", 9);
+			hitem->SetInfo(item);
 			_ItemList.push_back(hitem);
 		}
 	}
