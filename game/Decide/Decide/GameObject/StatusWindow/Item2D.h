@@ -38,7 +38,14 @@ public:
 	*/
 	void SetItemData(HoldItemBase* item);
 
+	HoldItemBase* GetItemData()
+	{
+		return _ItemData;
+	}
+
 private:
+
+	HoldItemBase* _ItemData = nullptr;
 
 	/** アイテム名表示. */
 	TextObject* _ItemNameText = nullptr;
