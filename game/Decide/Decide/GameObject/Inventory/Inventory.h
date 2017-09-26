@@ -196,7 +196,7 @@ private:
 	// 全所持品書き出し。
 	void _OutData_All();
 
-	//インベントリを整列(ID)。
+	//インベントリを整列(ID順になる)。
 	void InvnetorySortID();
 
 private:

@@ -89,10 +89,10 @@ Inventory::~Inventory(){
 
 void Inventory::Initialize() {
 	
-	_LoadData();
+	//_LoadData();
 
 	// テスト。
-	//InvnetorySortID();
+	InvnetorySortID();
 
 }
 
@@ -348,7 +348,7 @@ HoldEquipment* Inventory::AddEquipment(HoldEquipment* equi, Item::ItemCodeE code
 	return nullptr;
 }
 
-//インベントリを整列(リストの途中に空きが無いように中身を詰めるだけ)。
+//インベントリを整列(ID順になる)。
 void Inventory::InvnetorySortID() {
 	
 	sort(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin(), _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].end(), HoldItemBase::SortID);
