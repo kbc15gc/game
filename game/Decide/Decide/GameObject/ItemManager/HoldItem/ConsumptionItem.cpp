@@ -21,11 +21,11 @@ ConsumptionItem::~ConsumptionItem()
 
 void ConsumptionItem::Start() {
 	_user = INSTANCE(GameObjectManager)->FindObject("Player");	// とりあえず使用者は固定でプレイヤー。
-	_gost = INSTANCE(GameObjectManager)->AddNew<CollisionObject>("ItemRange",5);	// アイテムの効果範囲コリジョン。
+	//_gost = INSTANCE(GameObjectManager)->AddNew<CollisionObject>("ItemRange",5);	// アイテムの効果範囲コリジョン。
 
-	_gost->transform->SetParent(_user->transform);
-	_gost->transform->SetLocalPosition(Vector3::zero);
-	_gost->Create(Collision_ID::ITEMRANGE,Vector3(_range,_range,_range),false);
+	//_gost->transform->SetParent(_user->transform);
+	//_gost->transform->SetLocalPosition(Vector3::zero);
+	//_gost->Create(Collision_ID::ITEMRANGE,Vector3(_range,_range,_range),false);
 }
 
 
