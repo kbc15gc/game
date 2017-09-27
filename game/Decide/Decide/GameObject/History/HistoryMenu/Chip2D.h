@@ -58,15 +58,11 @@ public:
 	*/
 	void SetMove(SizeCodeE size, Vector3 pos)
 	{
-		if (!isMove)
-		{
-			_DestSize = SizeData[(int)size];
-			_Size = _ChipSprite->GetSize();
-			_DestPos = pos;
-			_Pos = transform->GetPosition();
-			_LerpRate = 0.0f;
-			isMove = true;
-		}
+		_DestSize = SizeData[(int)size];
+		_Size = _ChipSprite->GetSize();
+		_DestPos = pos;
+		_Pos = transform->GetPosition();
+		_LerpRate = 0.0f;
 	}
 
 	ChipID GetChipID()
@@ -104,7 +100,5 @@ private:
 	Vector2 _DestSize = Vector2(0.0f, 0.0f);
 	/** ï‚ä‘ÉåÅ[Ég. */
 	float _LerpRate = 0.0f;
-
-	bool isMove = true;
 
 };
