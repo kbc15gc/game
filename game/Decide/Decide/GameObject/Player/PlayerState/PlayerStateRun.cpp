@@ -50,7 +50,6 @@ void PlayerStateRun::Update()
 			}
 		}
 	}
-	
 }
 
 void PlayerStateRun::Enter()

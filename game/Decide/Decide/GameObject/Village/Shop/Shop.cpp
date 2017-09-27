@@ -40,11 +40,18 @@ void Shop::Awake()
 	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 40, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
 	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
+	
+	//ウィンドウの画像。
+	_MoneyWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DescriptionWindow", 8);
+	_MoneyWindow->SetTexture(LOADTEXTURE("window.png"));
+	_MoneyWindow->SetSize(Vector2(300, 40));
+	_MoneyWindow->transform->SetPosition(Vector3(700, 25, 0));
 	//
 	_MoneyText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
-	_MoneyText->transform->SetLocalPosition(Vector3(150, 25, 0));
+	_MoneyText->transform->SetParent(_MoneyWindow->transform);
+	_MoneyText->transform->SetLocalPosition(Vector3(150, 0, 0));
 	_MoneyText->Initialize(L"0$", 40);
-	_MoneyText->SetAnchor(fbText::TextAnchorE::UpperLeft);
+	_MoneyText->SetAnchor(fbText::TextAnchorE::UpperRight);
 	Pay(0);
 	//ステートの初期化。
 	SetState();
@@ -65,6 +72,7 @@ void Shop::OpenShop(const unsigned int & shopID)
 		_LoadShopData(shopID);
 		SetActive(true);
 		_DescriptionWindow->SetActive(true, true);
+		_MoneyWindow->SetActive(true, true);
 		//セレクトメニューを開く
 		_ChangeState(ShopStateE::Select);
 	}
@@ -73,6 +81,7 @@ void Shop::OpenShop(const unsigned int & shopID)
 void Shop::Close()
 {
 	_DescriptionWindow->SetActive(false, true);
+	_MoneyWindow->SetActive(false, true);
 	SetActive(false);
 }
 

@@ -193,15 +193,28 @@ void Player::Update()
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
-		TakeDrop(100, 0);
+		TakeDrop(100, 100);
+	}
+	static int level = _PlayerParam->GetParam(CharacterParameter::LV);
+	//レベルを上げる。
+	if (level <= 95)
+	{
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_2))
+		{
+			level += 5;
+			_DebugLevel(level);
+		}
+	}
+	if (level >= 6)
+	{
+		//レベル下げる。
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_3))
+		{
+			level -= 5;
+			_DebugLevel(level);
+		}
 	}
 #endif // DEBUG
-
-
-	if (KeyBoardInput->isPush(DIK_L))
-	{
-		PlayerStopEnable();
-	}
 
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
@@ -425,3 +438,15 @@ void Player::_LevelUP()
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
 }
+#ifdef _DEBUG
+void Player::_DebugLevel(int lv)
+{
+	// 次のレベルのパラメータを設定。
+	_PlayerParam->ParamReset(_ParamTable[lv]);
+	//HPが上がったのでHPバーのHP設定しなおす。
+	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));
+	//MPが上がったのでMPバーのMP設定しなおす。
+	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP));
+}
+#endif // _DEBUG
+
