@@ -13,6 +13,7 @@
 */
 class StatusWindow : public GameObject
 {
+
 public:
 
 	/**

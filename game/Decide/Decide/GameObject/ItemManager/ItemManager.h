@@ -45,10 +45,6 @@ namespace Item {
 		{ "time",Support::DataTypeE::FLOAT ,			offsetof(struct ItemInfo,time),		sizeof(float) },
 	};
 
-	// 消費アイテムの一枠分の所持上限。
-	static int holdMax = 99;
-
-
 	//防具の情報をまとめた構造体。
 	struct ArmorInfo :public BaseInfo
 	{
@@ -108,23 +104,7 @@ public:
 
 	//指定された種類とIDのアイテムを取得。
 	Item::BaseInfo* GetItemInfo(const unsigned int& id, Item::ItemCodeE code) {
-		switch (code)
-		{
-		case Item::ItemCodeE::Item:
-			return _ItemListVec.at(id).get();
-			break;
-		case  Item::ItemCodeE::Armor:
-			return _ArmorList.at(id).get();
-			break;
-		case  Item::ItemCodeE::Weapon:
-			return _WeaponList.at(id).get();
-			break;
-		default:
-			char error[256];
-			sprintf(error, "指定したアイテムコードが無効です。");
-			MessageBoxA(0, error, "アイテム取得失敗", MB_ICONWARNING);
-			break;
-		}
+		return _InfoList[static_cast<int>(code)].at(id).get();
 	}
 	
 	static ItemManager* Instance()
@@ -137,16 +117,18 @@ public:
 		}
 		return _Instance;
 	}
+
+	// 指定したアイテムコードの最大IDを返却。
+	inline int GetMaxID(Item::ItemCodeE code)const {
+		return _maxID[static_cast<int>(code)];
+	}
 private:
 
 	//ゲームで使うアイテムのリスト。
-	vector<unique_ptr<Item::ItemInfo>> _ItemListVec;
+	vector<vector<unique_ptr<Item::BaseInfo>>> _InfoList = vector<vector<unique_ptr<Item::BaseInfo>>>(static_cast<int>(Item::ItemCodeE::Max));
 
-	//ゲームで使う防具のリスト。
-	vector<unique_ptr<Item::ArmorInfo>> _ArmorList;
-
-	//ゲームで使う武器のリスト。
-	vector<unique_ptr<Item::WeaponInfo>> _WeaponList;
+	// 各アイテムタイプごとの最大ID。
+	int _maxID[static_cast<int>(Item::ItemCodeE::Max)];
 
 	static ItemManager* _Instance;
 };

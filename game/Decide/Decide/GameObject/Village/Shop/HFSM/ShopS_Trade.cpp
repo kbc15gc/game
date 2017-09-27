@@ -17,7 +17,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_TradeWindow->transform->SetPosition(Vector3(450, 50, 0));
 	_TradeWindow->SetPivot(Vector2(0.5f, 0.0f));
 
-	_ParmWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ParmWindow", 8);
+	_ParmWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ParmWindow", _TradeWindow->GetPriorty());
 	_ParmWindow->SetTexture(LOADTEXTURE("window.png"));
 	_ParmWindow->SetSize(Vector2(256, 400));
 	_ParmWindow->transform->SetLocalPosition(Vector3(600, 0, 0));
@@ -25,7 +25,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_ParmWindow->transform->SetParent(_TradeWindow->transform);
 
 	//インスタンス化。
-	_ParmText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Parmtext", _TradeWindow->GetPriorty());
+	_ParmText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Parmtext", _ParmWindow->GetPriorty());
 
 	_ParmText->SetFontSize(30);
 	_ParmText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
@@ -35,11 +35,24 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_ParmText->SetText("");
 
 	//カーソル
-	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuyCursor", 8);
+	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuyCursor", _TradeWindow->GetPriorty());
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
 	_Cursor->SetSize(Vector2(32, 32));
 	_Cursor->transform->SetParent(_TradeWindow->transform);
 	_Cursor->transform->SetLocalPosition(Vector3(-10, 10, 0));
+
+	_TopText = INSTANCE(GameObjectManager)->AddNew<TextObject>("TopText", _TradeWindow->GetPriorty());
+	_TopText->transform->SetParent(_TradeWindow->transform);
+	_TopText->transform->SetLocalPosition(Vector3(-370, 25, 0));
+	_TopText->Initialize(L"名称                 所持数 売買個数    値段", 35);
+	_TopText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	
+	_ValueText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ValueText", _TradeWindow->GetPriorty());
+	_ValueText->transform->SetParent(_TradeWindow->transform);
+	_ValueText->transform->SetLocalPosition(Vector3(372, 330, 0));
+	_ValueText->Initialize(L"合計金額      0$", 50);
+	_ValueText->SetAnchor(fbText::TextAnchorE::MiddleRight);
+	_ValueText->SetKerning(false);
 
 	//ウィンドウを非アクティブに
 	_TradeWindow->SetActive(false, true);
@@ -61,11 +74,11 @@ void ShopS_Trade::Update()
 	if (_DisplayItemNum > 0)
 	{
 		//アイテム選択
-		if (VPadInput->IsPush(fbEngine::VPad::ButtonUp))
+		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f))
 		{
 			_SetIndex((_Select > 0) ? _Select - 1 : _DisplayItemNum - 1);
 		}
-		else if (VPadInput->IsPush(fbEngine::VPad::ButtonDown))
+		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.2f))
 		{
 			_SetIndex((_Select + 1) % _DisplayItemNum);
 		}
@@ -131,20 +144,41 @@ void ShopS_Trade::_SwitchTab()
 
 void ShopS_Trade::_UpdateTradeNum()
 {
-	if (_SelectItem->TypeID == Item::ItemCodeE::Item)
+	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,0.1f))
 	{
-		if (VPadInput->IsPush(fbEngine::VPad::ButtonRight))
+		int maxNum = 0;
+		//アイテムか消耗品かどうか？
+		if (_DisplayList[_Select]->GetInfo()->TypeID == Item::ItemCodeE::Item)
+			//買うか売るか？
+			maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList.at(_Select))->GetHoldNum();
+		else
+			maxNum = 1;
+		
+		_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
+		_UpdateText();
+	}
+	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,0.1f))
+	{
+		_TradeNum[_Select] = max(0, _TradeNum[_Select] - 1);
+		_UpdateText();
+	}
+}
+
+void ShopS_Trade::_UpdateSelectItem()
+{
+	_SumValue = 0;
+	_IndexList.clear();
+	FOR(i, _TradeNum.size())
+	{
+		if (_TradeNum[i] > 0)
 		{
-			int maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList.at(_Select))->GetHoldNum();
-			_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
-			_UpdateText();
-		}
-		else if (VPadInput->IsPush(fbEngine::VPad::ButtonLeft))
-		{
-			_TradeNum[_Select] = max(1, _TradeNum[_Select] - 1);
-			_UpdateText();
+			_IndexList.push_back(i);
+			_SumValue += _DisplayList[i]->GetInfo()->Value * _TradeNum[i];
 		}
 	}
+	char sum[256];
+	sprintf(sum, "合計金額      %4d$", _SumValue);
+	_ValueText->SetText(sum);
 }
 
 void ShopS_Trade::_CreateMenu()
@@ -198,7 +232,7 @@ void ShopS_Trade::_UpdateList()
 			_DisplayItemNum++;
 			_TradeNum.push_back(0);
 		}
-	}		
+	}	
 
 	//テキストの文字更新。
 	_UpdateText();
@@ -210,12 +244,10 @@ void ShopS_Trade::_UpdateList()
 
 void ShopS_Trade::_SetIndex(int idx)
 {
+	//選択している添え字設定。
+	_Select = min(idx, max(0, _DisplayItemNum - 1));
 	if (_DisplayItemNum > 0)
 	{
-		//選択している添え字設定。
-		_Select = min(idx, _DisplayItemNum - 1);
-		//アイテムを設定。
-		_SelectItem = _DisplayList.at(_Select)->GetInfo();
 		//アイテムの情報を送る。
 		_SendItemInfo(_DisplayList.at(_Select));
 
@@ -224,13 +256,15 @@ void ShopS_Trade::_SetIndex(int idx)
 			_SetMinIndex(_Select - (DISPLAY_ITEM_NUM - 1));
 		else if (_Select < _MinIdx)
 			_SetMinIndex(_Select);
-
-		//カーソルをずらす。
-		float posx = -(_TradeWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
-		int displayidx = _Select - _MinIdx + 1;
-		float posy = _MenuListHeight * displayidx + _MenuListHeight*0.5f;
-		_Cursor->transform->SetLocalPosition(posx, posy, 0);
+		_Cursor->SetActive(true);
 	}
+	else
+		_Cursor->SetActive(false);
+	//カーソルをずらす。
+	float posx = -(_TradeWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
+	int displayidx = _Select - _MinIdx + 1;
+	float posy = _MenuListHeight * displayidx + _MenuListHeight*0.5f + 20;
+	_Cursor->transform->SetLocalPosition(posx, posy, 0);
 }
 
 void ShopS_Trade::_SetMinIndex(int minidx)
@@ -261,14 +295,16 @@ void ShopS_Trade::_UpdateText()
 		char info[256];
 		if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
-			sprintf(info, "%2d %2d %6d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
+			sprintf(info, "%2d   %2d %4d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
 		}
 		else
 		{
-			sprintf(info, "%2d %6d$", _TradeNum[i], item->GetInfo()->Value);
+			sprintf(info, "%2d %4d$", _TradeNum[i], item->GetInfo()->Value);
 		}
 		_MoneyTexts[i]->SetText(info);
 	}
+
+	_UpdateSelectItem();
 }
 
 void ShopS_Trade::_ScrollDisplayItem()
@@ -281,7 +317,7 @@ void ShopS_Trade::_ScrollDisplayItem()
 	{
 		_MenuTexts[i]->SetActive(true, true);
 		float posx = -(_TradeWindow->GetSize().x / 2) + _Cursor->GetSize().x;
-		_MenuTexts[i]->transform->SetLocalPosition(posx, _MenuListHeight * count, 0);
+		_MenuTexts[i]->transform->SetLocalPosition(posx, _MenuListHeight * count + 20, 0);
 		_MoneyTexts[i]->transform->SetLocalPosition(_TradeWindow->GetSize().x - 60, 0, 0);
 	}
 }
@@ -314,7 +350,8 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetCrt()), weapon->GetMagicAtk(),
 					equip->GetCrt(), _CalcColorCode(weapon->GetCrt()- equip->GetCrt()), weapon->GetCrt());
 			}
-		}else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
+		}
+		else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
 		{
 			//防具にキャスト。
 			auto armor = (HoldArmor*)item;
@@ -356,16 +393,16 @@ char * ShopS_Trade::_CalcColorCode(int diff)
 
 void ShopS_Trade::_Decision()
 {
-	if (_DisplayItemNum > 0)
+	//テキスト。
+	char msg[256];
+	if (_IndexList.size() > 0)
 	{
-		//テキスト。
-		char msg[256];
-		sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _TradeNum[_Select], _SelectItem->Value*_TradeNum[_Select]);
+		sprintf(msg, "全部で %d$ になります。", _SumValue);
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
 			//お金が足りているか？
-			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SelectItem->Value*_TradeNum[_Select])
+			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SumValue)
 			{
 				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
 				//購入確認画面を出す。
@@ -383,37 +420,49 @@ void ShopS_Trade::_Decision()
 			//販売確認画面を出す。
 			_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
 		}
-		_Shop->SetDescriptionText(msg);
 	}
+	else
+		sprintf(msg, "何も選択されていませんよ。");
+	_Shop->SetDescriptionText(msg);
 }
 
 void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
-	_Shop->Pay(_SelectItem->Value * _TradeNum[_Select]);
-	//インベントリへ追加。
-	if (_SelectItem->TypeID == Item::ItemCodeE::Item)
+	_Shop->Pay(_SumValue);
+	for (int idx : _IndexList)
 	{
-		//アイテムを追加。
-		INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_SelectItem, _TradeNum[_Select]);
-	}
-	else
-	{
-		//装備品を追加。
-		INSTANCE(Inventory)->AddEquipment(_SelectItem, false);
+		//インベントリへ追加。
+		if (_DisplayList[idx]->GetInfo()->TypeID == Item::ItemCodeE::Item)
+		{
+			//アイテムを追加。
+			INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_DisplayList[idx]->GetInfo(), _TradeNum[idx]);
+		}
+		else
+		{
+			//装備品を追加。
+			INSTANCE(Inventory)->AddEquipment(_DisplayList[idx]->GetInfo(), false);
+		}
 	}
 	_Shop->SetDescriptionText("まいどあり。");
 }
 
 void ShopS_Trade::SellItem()
 {
-	//インベントリから排除。
-	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _TradeNum[_Select]))
+	//アイテムの値段分お金を貰う。
+	_Shop->Pay(-_SumValue);
+	_Shop->SetDescriptionText("まいどあり。");
+
+	bool erase = false;
+	for (int idx : _IndexList)
 	{
+		//インベントリから排除。
+		if (INSTANCE(Inventory)->SubHoldNum(_DisplayList[idx]->GetInfo(), _TradeNum[idx]))
+		{
+			erase = true;
+		}
+	}
+	if(erase)
 		//削除されていたならリスト更新。
 		_UpdateList();
-	}
-	//アイテムの値段分お金を貰う。
-	_Shop->Pay(-_SelectItem->Value * _TradeNum[_Select]);
-	_Shop->SetDescriptionText("まいどあり。");
 }
