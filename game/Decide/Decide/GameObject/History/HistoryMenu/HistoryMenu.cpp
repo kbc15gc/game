@@ -94,6 +94,8 @@ void HistoryMenu::AddChip(ChipID chipID)
 	{
 		chip2D->SetSize(Chip2D::SizeCodeE::NoSelect);
 	}
+
+	ChipMove();
 }
 
 /**
@@ -170,24 +172,6 @@ void HistoryMenu::EnableUpdate()
 
 	//場所名描画.
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
-
-	for (int i = 0; i < _Chip2DList.size(); i++)
-	{
-		_Chip2DList[i]->SetActive(true);
-
-		int len = i - _NowSelectChip;
-		float offset = -150.0f;
-		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
-
-		if (i == _NowSelectChip)
-		{
-			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::Select, pos);
-		}
-		else
-		{
-			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::NoSelect, pos);
-		}
-	}
 
 	//ページの座標をずらす.
 	vector<HistoryPage*> pageList;
@@ -318,8 +302,10 @@ void HistoryMenu::SelectPageUpdate()
 */
 void HistoryMenu::SelectChipUpdate()
 {
+	bool chipMove = false;
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
+	int bef = _NowSelectChip;
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
@@ -333,7 +319,6 @@ void HistoryMenu::SelectChipUpdate()
 		if (LocalTime >= ChangeTime)
 		{
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
-
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -358,6 +343,11 @@ void HistoryMenu::SelectChipUpdate()
 		LocalTime = 0.0f;
 	}
 
+	if (bef != _NowSelectChip)
+	{
+		chipMove = true;
+	}
+
 	//Aボタン押.
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A) || KeyBoardInput->isPush(DIK_J))
 	{
@@ -367,6 +357,7 @@ void HistoryMenu::SelectChipUpdate()
 			//現在指定している場所にチップを設定.
 			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID());
 
+			chipMove = true;
 
 			//搬入したチップを所持チップから削除.
 			auto it = _Chip2DList.begin();
@@ -379,6 +370,32 @@ void HistoryMenu::SelectChipUpdate()
 
 			_IsOperation = false;
 			_HistoryBook->SetIsOperation(_IsOperation);
+		}
+	}
+
+	if (chipMove)
+	{
+		ChipMove();
+	}
+}
+
+void HistoryMenu::ChipMove()
+{
+	for (int i = 0; i < _Chip2DList.size(); i++)
+	{
+		_Chip2DList[i]->SetActive(true);
+
+		int len = i - _NowSelectChip;
+		float offset = -150.0f;
+		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
+
+		if (i == _NowSelectChip)
+		{
+			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::Select, pos);
+		}
+		else
+		{
+			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::NoSelect, pos);
 		}
 	}
 }
