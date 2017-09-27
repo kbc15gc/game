@@ -18,7 +18,7 @@ namespace
 	Vector3 pos[] =
 	{
 		Vector3(-821, 203, -1356),
-		Vector3(-1058, 69, -1950),
+		Vector3(-1017, 51, -1804),
 		Vector3(-1060, 69, -1950),
 	};
 

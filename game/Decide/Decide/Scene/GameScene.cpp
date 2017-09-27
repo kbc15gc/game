@@ -79,7 +79,7 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 	
-	FOR(i,1)
+	FOR(i,2)
 	{
 		//歴史チップ
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 1);
