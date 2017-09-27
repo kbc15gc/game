@@ -41,15 +41,24 @@ public:
 	/**
 	* パラメータ設定. 
 	*/
-	void SetParam(char* name,char* iconName, int* param, int* maxParam = nullptr)
+	void SetParam(char* name,char* iconName, int param,int buff = 0,int maxParam = INT_MIN)
 	{
 		_IconImage->SetTexture(LOADTEXTURE(iconName));
 		_IconImage->SetSize(Vector2(30.0f, 30.0f));
 		_ParamName = name;
 		_Param = param;
+		_ParamBuff = buff;
 		_MaxParam = maxParam;
 	}
 
+	// パラメータテキストの位置設定(ローカル座標)。
+	inline void SetParamTextPos(const Vector3& localPos) {
+		_ParamText->transform->SetLocalPosition(localPos);
+	}
+	// パラメータテキストの位置取得。
+	inline const Vector3& GetParamTextPos()const {
+		return _ParamText->transform->GetLocalPosition();
+	}
 private:
 
 	/** パラメータ名表示. */
@@ -60,9 +69,14 @@ private:
 	/** パラメータ表示. */
 	TextObject* _ParamText = nullptr;
 	/** パラメータ. */
-	int* _Param = nullptr;
+	int _Param;
 	/** 最大パラメータ. */
-	int* _MaxParam = nullptr;
+	int _MaxParam = INT_MIN;
+
+	TextObject* _BuffText = nullptr;
+
+	/** パラメータバフ値(マイナスならデバフ). */
+	int _ParamBuff;
 
 	/** アイコン画像. */
 	ImageObject* _IconImage = nullptr;

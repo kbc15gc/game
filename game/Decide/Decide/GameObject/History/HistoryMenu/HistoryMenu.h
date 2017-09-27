@@ -84,10 +84,21 @@ private:
 	*/
 	void SelectChipUpdate();
 
+	/**
+	* チップの座標移動.
+	*/
+	void ChipMove();
+
+	/**
+	* ページの座標移動.
+	*/
+	void PageMove();
+
 private:
 
 	/** カーソル表示クラス. */
-	Sprite* _CursorSprite = nullptr;
+	ImageObject* _CursorSpriteL = nullptr;
+	ImageObject* _CursorSpriteR = nullptr;
 
 	/** 選択されているもの. */
 	int _SelectCode = (int)SelectCodeE::Location;

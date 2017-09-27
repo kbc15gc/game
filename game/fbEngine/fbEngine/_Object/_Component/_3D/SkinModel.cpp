@@ -404,13 +404,10 @@ void SkinModel::DrawMeshContainer(
 		_Effect->EndPass();
 		_Effect->End();
 
-		if (_SkyBox)
-		{
-			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
-		}
-
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 	}

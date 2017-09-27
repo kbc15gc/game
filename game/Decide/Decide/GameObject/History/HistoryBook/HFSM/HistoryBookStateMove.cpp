@@ -33,7 +33,7 @@ void HistoryBookStateMove::Entry()
 */
 void HistoryBookStateMove::Update()
 {
-	static float SPEED = 0.5f;
+	static float SPEED = 1.0f;
 	_LerpRate += SPEED * Time::DeltaTime();
 	_LerpRate = min(1.0f, _LerpRate);
 
