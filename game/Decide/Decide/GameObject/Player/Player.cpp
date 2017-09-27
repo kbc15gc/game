@@ -438,6 +438,7 @@ void Player::_LevelUP()
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
 }
+
 #ifdef _DEBUG
 void Player::_DebugLevel(int lv)
 {
