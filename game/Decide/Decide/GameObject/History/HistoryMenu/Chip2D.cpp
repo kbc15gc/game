@@ -32,23 +32,30 @@ void Chip2D::Start(ChipID chipID)
 */
 void Chip2D::Update()
 {
-	static float SPEED = 2.0f;
-	_LerpRate += SPEED * Time::DeltaTime();
-	_LerpRate = min(1.0f, _LerpRate);
+	if (isMove)
+	{
+		static float SPEED = 2.0f;
+		_LerpRate += SPEED * Time::DeltaTime();
+		_LerpRate = min(1.0f, _LerpRate);
+		if (_LerpRate >= 1.0f)
+		{
+			isMove = false;
+		}
 
-	Vector3 dest = _DestPos;
-	dest.Scale(_LerpRate);
-	Vector3 pos = _Pos;
-	pos.Scale(1.0f - _LerpRate);
+		Vector3 dest = _DestPos;
+		dest.Scale(_LerpRate);
+		Vector3 pos = _Pos;
+		pos.Scale(1.0f - _LerpRate);
 
-	//À•W‚ðÝ’è.
-	transform->SetPosition(dest + pos);
+		//À•W‚ðÝ’è.
+		transform->SetPosition(dest + pos);
 
-	Vector2 destSize = _DestSize;
-	destSize *= _LerpRate;
-	Vector2 size = _Size;
-	_Size *= (1.0f - _LerpRate);
+		Vector2 destSize = _DestSize;
+		destSize *= _LerpRate;
+		Vector2 size = _Size;
+		_Size *= (1.0f - _LerpRate);
 
-	_ChipSprite->SetSize(_Size + destSize);
+		_ChipSprite->SetSize(_Size + destSize);
+	}
 }
 
