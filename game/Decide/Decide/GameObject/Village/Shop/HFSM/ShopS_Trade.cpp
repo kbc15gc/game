@@ -2,8 +2,10 @@
 #include "ShopS_Trade.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+
 #include "GameObject\Inventory\Inventory.h"
 #include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
+#include "GameObject\Player\Player.h"
 
 
 ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
@@ -35,6 +37,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	//カーソル
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuyCursor", 8);
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
+	_Cursor->SetSize(Vector2(32, 32));
 	_Cursor->transform->SetParent(_TradeWindow->transform);
 	_Cursor->transform->SetLocalPosition(Vector3(-10, 10, 0));
 
@@ -94,8 +97,6 @@ void ShopS_Trade::EnterState()
 	_CreateMenu();
 	//リスト更新。
 	_UpdateList();
-
-	_TradeNum = 1;
 }
 
 void ShopS_Trade::ExitState()
@@ -135,12 +136,12 @@ void ShopS_Trade::_UpdateTradeNum()
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonRight))
 		{
 			int maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList.at(_Select))->GetHoldNum();
-			_TradeNum = min(maxNum, _TradeNum + 1);
+			_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
 			_UpdateText();
 		}
 		else if (VPadInput->IsPush(fbEngine::VPad::ButtonLeft))
 		{
-			_TradeNum = max(1, _TradeNum - 1);
+			_TradeNum[_Select] = max(1, _TradeNum[_Select] - 1);
 			_UpdateText();
 		}
 	}
@@ -188,11 +189,15 @@ void ShopS_Trade::_UpdateList()
 	else if (_SaveState == Shop::ShopStateE::Sell)
 		_DisplayList = INSTANCE(Inventory)->GetInventoryList(static_cast<Item::ItemCodeE>(_DisplayType));
 	
+	_TradeNum.clear();
 	_DisplayItemNum = 0;
 	for (int i = 0; i < _DisplayList.size(); i++)
 	{
 		if (_DisplayList.at(i) != nullptr)
+		{
 			_DisplayItemNum++;
+			_TradeNum.push_back(0);
+		}
 	}		
 
 	//テキストの文字更新。
@@ -212,7 +217,7 @@ void ShopS_Trade::_SetIndex(int idx)
 		//アイテムを設定。
 		_SelectItem = _DisplayList.at(_Select)->GetInfo();
 		//アイテムの情報を送る。
-		_SendItemInfo(_SelectItem);
+		_SendItemInfo(_DisplayList.at(_Select));
 
 		//リストの表示更新。
 		if (_Select >= _MinIdx + DISPLAY_ITEM_NUM)
@@ -256,11 +261,11 @@ void ShopS_Trade::_UpdateText()
 		char info[256];
 		if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
-			sprintf(info, "%2d %2d %6d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum, item->GetInfo()->Value*_TradeNum);
+			sprintf(info, "%2d %2d %6d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
 		}
 		else
 		{
-			sprintf(info, "%2d %6d$", _TradeNum, item->GetInfo()->Value*_TradeNum);
+			sprintf(info, "%2d %6d$", _TradeNum[i], item->GetInfo()->Value);
 		}
 		_MoneyTexts[i]->SetText(info);
 	}
@@ -281,7 +286,7 @@ void ShopS_Trade::_ScrollDisplayItem()
 	}
 }
 
-void ShopS_Trade::_SendItemInfo(Item::BaseInfo* info)
+void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 {
 	try
 	{
@@ -289,22 +294,48 @@ void ShopS_Trade::_SendItemInfo(Item::BaseInfo* info)
 		char text[256];
 		ZeroMemory(text, 256);
 
-		if (info->TypeID == Item::ItemCodeE::Weapon)
+		if (item->GetInfo()->TypeID == Item::ItemCodeE::Weapon)
 		{
 			//武器にキャスト。
-			auto weapon = (Item::WeaponInfo*)info;
+			auto weapon = (HoldWeapon*)item;
 			//現在の装備取得。
-			auto equip = weapon;
-
-			sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
-				equip->Atk, _CalcColorCode(1), weapon->Atk,
-				equip->MagicAtk, _CalcColorCode(-1), weapon->MagicAtk,
-				equip->Dex, _CalcColorCode(1), weapon->Dex,
-				equip->CriticalDamage, _CalcColorCode(0), weapon->CriticalDamage);
+			auto equip = GetPlayer()->GetEquipment()->weapon;
+			if (equip == nullptr)
+			{
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+					0, _CalcColorCode(weapon->GetAtk()), weapon->GetAtk(),
+					0, _CalcColorCode(weapon->GetMagicAtk()), weapon->GetMagicAtk(),
+					0, _CalcColorCode(weapon->GetCrt()), weapon->GetCrt());
+			}
+			else
+			{
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+					equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , weapon->GetAtk(),
+					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetCrt()), weapon->GetMagicAtk(),
+					equip->GetCrt(), _CalcColorCode(weapon->GetCrt()- equip->GetCrt()), weapon->GetCrt());
+			}
+		}else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
+		{
+			//防具にキャスト。
+			auto armor = (HoldArmor*)item;
+			//現在の装備取得。
+			auto equip = GetPlayer()->GetEquipment()->armor;
+			if (equip == nullptr)
+			{
+				sprintf(text, "DEF %4d -> %s%4d</color>\nRES %4d -> %s%4d</color>",
+					0, _CalcColorCode(armor->GetDef()), armor->GetDef(),
+					0, _CalcColorCode(armor->GetMagicDef()), armor->GetMagicDef());
+			}
+			else
+			{
+				sprintf(text, "DEF %4d -> %s%4d</color>\nRES %4d -> %s%4d</color>",
+					equip->GetDef(), _CalcColorCode(armor->GetDef() - equip->GetDef()) , armor->GetDef(),
+					equip->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equip->GetMagicDef()), armor->GetMagicDef());
+			}
 		}
 
 		//説明文を送信。
-		_Shop->SetDescriptionText(info->Description);
+		_Shop->SetDescriptionText(item->GetInfo()->Description);
 		//パラメータを表示。
 		_ParmText->SetText(text);
 	}
@@ -329,12 +360,12 @@ void ShopS_Trade::_Decision()
 	{
 		//テキスト。
 		char msg[256];
-		sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _TradeNum, _SelectItem->Value*_TradeNum);
+		sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _TradeNum[_Select], _SelectItem->Value*_TradeNum[_Select]);
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
 			//お金が足りているか？
-			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SelectItem->Value*_TradeNum)
+			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SelectItem->Value*_TradeNum[_Select])
 			{
 				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
 				//購入確認画面を出す。
@@ -359,12 +390,12 @@ void ShopS_Trade::_Decision()
 void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
-	_Shop->Pay(_SelectItem->Value * _TradeNum);
+	_Shop->Pay(_SelectItem->Value * _TradeNum[_Select]);
 	//インベントリへ追加。
 	if (_SelectItem->TypeID == Item::ItemCodeE::Item)
 	{
 		//アイテムを追加。
-		INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_SelectItem, _TradeNum);
+		INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_SelectItem, _TradeNum[_Select]);
 	}
 	else
 	{
@@ -377,12 +408,12 @@ void ShopS_Trade::BuyItem()
 void ShopS_Trade::SellItem()
 {
 	//インベントリから排除。
-	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _TradeNum))
+	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _TradeNum[_Select]))
 	{
 		//削除されていたならリスト更新。
 		_UpdateList();
 	}
 	//アイテムの値段分お金を貰う。
-	_Shop->Pay(-_SelectItem->Value * _TradeNum);
+	_Shop->Pay(-_SelectItem->Value * _TradeNum[_Select]);
 	_Shop->SetDescriptionText("まいどあり。");
 }

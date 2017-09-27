@@ -6,6 +6,7 @@
 #include"GameObject\Player\Player.h"
 #include"ParameterRender.h"
 #include"ItemWindow.h"
+#include "GameObject\Village\EventManager.h"
 
 /**
 * ステータス画面クラス.
@@ -39,6 +40,10 @@ public:
 	*/
 	void Update()override;
 
+	void OnDisable()override
+	{
+		INSTANCE(EventManager)->NotifyEndEvent();
+	}
 private:
 
 	/** プレイヤークラスのポインタ. */

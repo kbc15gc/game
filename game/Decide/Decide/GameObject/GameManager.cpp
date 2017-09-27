@@ -3,6 +3,7 @@
 */
 #include"stdafx.h"
 #include"GameManager.h"
+#include "GameObject\Village\EventManager.h"
 
 /**
 * ‰Šú‰».
@@ -36,7 +37,7 @@ void GameManager::Update()
 		KeyBoardInput->isPush(DIK_Q))
 		&& !_HistoryBook->GetActive())
 	{
-		bool active = !_StatusWindow->GetActive();
+		/*bool active = !_StatusWindow->GetActive();
 		if (active)
 		{
 			_Player->PlayerStopEnable();
@@ -48,12 +49,14 @@ void GameManager::Update()
 			_PlayerCamera->SetIsMove(true);
 		}
 
-		_StatusWindow->SetActive(active, true);
+		_StatusWindow->SetActive(active, true);*/
+		INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
 	}
-	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)
+	else if (VPadInput->IsPush(fbEngine::VPad::ButtonStart)
 		&& !_StatusWindow->GetActive())
 	{
-		bool active = !_HistoryBook->GetActive();
-		_HistoryBook->SetActive(active, true);
+		/*bool active = !_HistoryBook->GetActive();
+		_HistoryBook->SetActive(active, true);*/
+		INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
 	}
 }
