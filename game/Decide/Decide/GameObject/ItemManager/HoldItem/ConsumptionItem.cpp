@@ -30,7 +30,9 @@ void ConsumptionItem::Awake() {
 				_gost->transform->SetParent(_user->transform);
 				_gost->transform->SetLocalPosition(Vector3::zero);
 				_gost->Create(Collision_ID::ITEMRANGE, Vector3(_range, _range, _range), false);
+#ifdef _DEBUG
 				_gost->GetAttachCollision()->GetShape()->RenderDisable();
+#endif // _DEBUG
 			}
 		}
 	}
