@@ -1,5 +1,5 @@
 /**
-* ã‚¢ã‚¤ãƒ†ãƒ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®å®Ÿè£….
+* ƒAƒCƒeƒ€ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚ÌÀ‘•.
 */
 #include"stdafx.h"
 #include"ItemWindow.h"
@@ -9,22 +9,28 @@
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 
 /**
-* åˆæœŸåŒ–.
+* ‰Šú‰».
 */
 void ItemWindow::Awake()
 {
+	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
+	itemWindow->SetSize(Vector2(495.0f, 580.0f));
+	itemWindow->SetPivot(0.0f, 0.5f);
+	itemWindow->transform->SetParent(transform);
+	itemWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
+
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
-	_WindowName->Initialize(L"", 30.0f);
-	_WindowName->SetFormat(fbText::TextFormatE::CENTER);
-	_WindowName->transform->SetParent(transform);
+	_WindowName->Initialize(L"ˆê——", 30.0f);
+	_WindowName->transform->SetParent(itemWindow->transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -280.0f, 0.0f));
 
 	for (int i = 0; i < ItemCellSize; i++)
 	{
-		Item2D* item = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
-		item->transform->SetParent(transform);
-		item->transform->SetLocalPosition(Vector3(270.0f, -220.0f + (i * 52.0f), 0.0f));
-		_Item2DList.push_back(item);
+		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
+		item2D->transform->SetParent(itemWindow->transform);
+		item2D->transform->SetLocalPosition(Vector3(270.0f, -220.0f + (i * 52.0f), 0.0f));
+		_Item2DList.push_back(item2D);
 	}
 
 	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 9);
@@ -44,15 +50,35 @@ void ItemWindow::Awake()
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
-void ItemWindow::Start()
+
+/**
+* ‰Šú‰».
+*/
+void ItemWindow::Init(Item::ItemCodeE code)
 {
+	_ItemCode = code;
+
+	switch (_ItemCode)
+	{
+		case Item::ItemCodeE::Item:
+			ItemInit();
+			break;
+		case Item::ItemCodeE::Armor:
+			ArmorInit();
+			break;
+		case Item::ItemCodeE::Weapon:
+			WeaponInit();
+			break;
+	}
 }
 
 /**
-* æ›´æ–°.
+* XV.
 */
 void ItemWindow::Update()
 {
+	_EIconImage->SetActive(false, true);
+
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
 	{
@@ -68,9 +94,9 @@ void ItemWindow::Update()
 				{
 					_EIconImage->SetActive(true, false);
 					_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+					_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
 				}
 			}
-			
 		}
 		else
 		{
@@ -79,11 +105,108 @@ void ItemWindow::Update()
 	}
 
 	Input();
-
 }
 
 /**
-* å…¥åŠ›.
+* ƒAƒCƒeƒ€‚Ì‰Šú‰».
+*/
+void ItemWindow::ItemInit()
+{
+	_WindowName->SetString(L"ƒAƒCƒeƒ€ˆê——");
+
+	int ParamCount = 7;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+	_ParameterRenderList[6]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoneyPt());
+
+	Vector3 pos[4] =
+	{
+		Vector3(-250.0f,190.0f,0.0f),	//ã
+		Vector3(-250.0f,300.0f,0.0f),	//‰º
+		Vector3(-220.0f,245.0f,0.0f),	//‰E
+		Vector3(-280.0f,245.0f,0.0f),	//¶
+	};
+	for (int i = 0; i < 4; i++)
+	{
+		HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+		holdItem->transform->SetParent(transform);
+		holdItem->transform->SetLocalPosition(pos[i]);
+		holdItem->Init((i % 2 == 1));
+		_HoldItem2DList.push_back(holdItem);
+	}
+}
+
+/**
+* •Ší‚Ì‰Šú‰».
+*/
+void ItemWindow::WeaponInit()
+{
+	_WindowName->SetString(L"•Šíˆê——");
+
+	int ParamCount = 6;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+
+	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	holdItem->transform->SetParent(transform);
+	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	holdItem->Init();
+	_HoldItem2DList.push_back(holdItem);
+}
+
+/**
+* –h‹ï‚Ì‰Šú‰».
+*/
+void ItemWindow::ArmorInit()
+{
+	_WindowName->SetString(L"–h‹ïˆê——");
+
+	int ParamCount = 6;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+
+	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	holdItem->transform->SetParent(transform);
+	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	holdItem->Init();
+	_HoldItem2DList.push_back(holdItem);
+}
+
+/**
+* “ü—Í.
 */
 void ItemWindow::Input()
 {

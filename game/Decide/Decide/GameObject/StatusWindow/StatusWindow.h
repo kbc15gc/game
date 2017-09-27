@@ -44,9 +44,6 @@ private:
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;
 
-	/** パラメータリスト. */
-	vector<ParameterRender*> _ParameterRenderList;
-
 	/** アイテム表示画面. */
 	vector<ItemWindow*> _ItemWindowList;
 

@@ -206,9 +206,6 @@
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemBase.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
@@ -245,6 +242,12 @@
     </ClCompile>
     <ClCompile Include="GameObject\Player\Player.cpp">
       <Filter>GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -504,6 +507,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h">
       <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h">
+      <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
