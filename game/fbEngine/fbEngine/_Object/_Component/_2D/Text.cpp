@@ -201,24 +201,9 @@ void Text::_UpdateLength()
 	{
 		//文字数カウント
 		_MaxCharNum++;
-		//改行文字ではない。
-		if (_Text[i] != '\n')
+		//改行文字。
+		if (_Text[i] == '\n')
 		{
-			//文字のデータ取得
-			FontData* data = INSTANCE(FontManager)->Findfont(_Text[i], _FontStyle);
-			GLYPHMETRICS gm = data->gm;
-			//文字の横幅を足していく
-			width += _Kerning ? gm.gmBlackBoxX : (gm.gmCellIncX + _Spacing);
-
-			//横幅更新
-			MaxLength.x = max(MaxLength.x, width);
-			MaxLength.y = max(MaxLength.y, max(gm.gmBlackBoxY, gm.gmptGlyphOrigin.y));
-			//最も大きいものを保持
-			_MostHeight = max(_MostHeight, gm.gmptGlyphOrigin.y);
-		}
-		else
-		{
-			//改行文字だった。
 			width = 0.0f;
 			if (i == 0 && "\n") {
 				// 最初の1文字目が改行文字だった。
@@ -231,8 +216,32 @@ void Text::_UpdateLength()
 			}
 			else {
 				OutputDebugString("あああああ。");
-
 			}
+		}
+		//カラーコード。
+		else if (_Text[i] == '<')
+		{
+			wchar_t copy[512], *next;
+			// < を取り除く。
+			wcscpy_s(copy, 512, _Text + i + 1);
+			// > までの文字列を取得。
+			wchar_t* addres = wcstok_s(copy, L">", &next);
+			i += wcslen(addres) + 1;
+		}
+		//普通の文字。
+		else
+		{
+			//文字のデータ取得
+			FontData* data = INSTANCE(FontManager)->Findfont(_Text[i], _FontStyle);
+			GLYPHMETRICS gm = data->gm;
+			//文字の横幅を足していく
+			width += _Kerning ? gm.gmBlackBoxX : (gm.gmCellIncX + _Spacing);
+
+			//横幅更新
+			MaxLength.x = max(MaxLength.x, width);
+			MaxLength.y = max(MaxLength.y, max(gm.gmBlackBoxY, gm.gmptGlyphOrigin.y));
+			//最も大きいものを保持
+			_MostHeight = max(_MostHeight, gm.gmptGlyphOrigin.y);
 		}
 	}
 	//横幅は最大のものに
