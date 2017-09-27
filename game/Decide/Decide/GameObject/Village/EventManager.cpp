@@ -16,6 +16,11 @@ EventManager::EventManager()
 
 bool EventManager::Execute(Event::EventID id, int idx)
 {
+	//イベントがないよ！
+	if(_ActionList.size() <= 0)
+		//イベント追加。
+		_Instance->AddEvent();
+
 	//他のイベントが実行中ならやめる。
 	if (_ActiveEvent != Event::EventID::None && _ActiveEvent != id)
 		return false;
