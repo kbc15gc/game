@@ -323,7 +323,7 @@ void ItemWindow::Input()
 				else if (_NowSelectItem >= itemCount)
 				{
 					//‘I‘ðˆÊ’u‚ðˆêŒÂ‰º‚°‚é.
-					_NowSelectItem--;
+					_NowSelectItem = max(0, _NowSelectItem - 1);
 				}
 				if (itemCount <= 0)
 				{
@@ -448,16 +448,22 @@ void ItemWindow::_ConfigParamRender()
 			int mdeParam = 0;
 			int mdenewParam = 0;
 
+			HoldEquipment::Rank rank = HoldEquipment::Rank::None;
+			HoldEquipment::Rank newRank = HoldEquipment::Rank::None;
+
 			if (armor)
 			{
 				defParam = armor->GetDef();
 				mdeParam = armor->GetMagicDef();
+				rank = armor->GetRank();
 			}
 			if (newArmor)
 			{
 				defnewParam = newArmor->GetDef();
 				mdenewParam = newArmor->GetMagicDef();
+				newRank = newArmor->GetRank();
 			}
+			_ParameterRenderList[(int)AIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
 			_ParameterRenderList[(int)AIShowStatus::DEF]->SetParamEquip("DEF", "UI/S_Buff02.png", 
 				_Player->GetParam(CharacterParameter::Param::DEF), defParam, defnewParam);
 			_ParameterRenderList[(int)AIShowStatus::MDE]->SetParamEquip("MDE", "UI/S_Buff02.png",
@@ -478,17 +484,22 @@ void ItemWindow::_ConfigParamRender()
 			int matParam = 0;
 			int matnewParam = 0;
 
+			HoldEquipment::Rank rank = HoldEquipment::Rank::None;
+			HoldEquipment::Rank newRank = HoldEquipment::Rank::None;
+
 			if (weapon)
 			{
 				atkParam = weapon->GetAtk();
 				matParam = weapon->GetMagicAtk();
+				rank = weapon->GetRank();
 			}
 			if (newWeapon)
 			{
 				atknewParam = newWeapon->GetAtk();
 				matnewParam = newWeapon->GetMagicAtk();
+				newRank = newWeapon->GetRank();
 			}
-			_ParameterRenderList[(int)WIShowStatus::RANK]->SetParam("RANK", "UI/S_Buff02.png", 0);
+			_ParameterRenderList[(int)WIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
 			_ParameterRenderList[(int)WIShowStatus::ATK]->SetParamEquip("ATK", "UI/S_Buff02.png",
 				_Player->GetParam(CharacterParameter::Param::ATK), atkParam, atknewParam);
 			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", "UI/S_Buff02.png",

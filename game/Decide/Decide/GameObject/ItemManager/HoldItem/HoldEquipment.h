@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 
+
+
 //装備品の基底クラス。
 class HoldEquipment :public HoldItemBase
 {
@@ -15,6 +17,8 @@ public:
 		C,		//-20 ~ 30	平均。
 		D,		//-40 ~ -21	粗悪。
 		E,		//-50 ~ -41	超粗悪。
+		None,	//装備無し.
+		Max,	//数.
 	};
 
 public:
@@ -83,6 +87,10 @@ public:
 		return _IsEquip;
 	}
 
+	Rank GetRank()
+	{
+		return _Rank;
+	}
 
 private:
 	// 外部から読み込んだデータを設定。
@@ -97,3 +105,14 @@ protected:
 	bool _isLoad = false;	// CSVから読み込んだデータか。
 };
 
+static char* RankText[HoldEquipment::Rank::Max] =
+{
+	"SS",
+	"S",
+	"A",
+	"B",
+	"C",
+	"D",
+	"E",
+	"None",
+};

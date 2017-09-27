@@ -9,7 +9,7 @@
 /**
 * 初期化.
 */
-void StatusWindow::Start()
+void StatusWindow::Awake()
 {
 	//プレイヤークラスを取得.
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");

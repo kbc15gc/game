@@ -37,7 +37,7 @@ void GameManager::Update()
 		KeyBoardInput->isPush(DIK_Q))
 		&& !_HistoryBook->GetActive())
 	{
-		/*bool active = !_StatusWindow->GetActive();
+	/*	bool active = !_StatusWindow->GetActive();
 		if (active)
 		{
 			_Player->PlayerStopEnable();
