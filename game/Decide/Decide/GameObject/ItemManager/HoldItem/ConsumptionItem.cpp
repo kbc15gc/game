@@ -25,7 +25,10 @@ void ConsumptionItem::Start() {
 
 	_gost->transform->SetParent(_user->transform);
 	_gost->transform->SetLocalPosition(Vector3::zero);
-	_gost->Create(Collision_ID::ITEMRANGE,Vector3(_range,_range,_range),false);
+	_gost->Create(Collision_ID::ITEMRANGE,Vector3(_range,_range,_range),false);	
+
+	_Effect = AddComponent<ParticleEffect>();
+
 }
 
 
@@ -41,13 +44,17 @@ void ConsumptionItem::UseItem() {
 		Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
 		// 暫定処理。
 		// ※とりあえず演出は考慮していない。
+		_Effect->HeelEffect(_user->transform);
+
 		param->HeelHP(info->effectValue[CharacterParameter::Param::HP]);	// HP回復処理。
 		param->HeelMP(info->effectValue[CharacterParameter::Param::MP]);	// MP回復処理。
+
 		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 			int value = info->effectValue[idx];
 			if (value > 0) {
 				// バフ。
-
+				
+				_Effect->BuffEffect(_user->transform);
 				param->Buff(static_cast<CharacterParameter::Param>(idx),static_cast<unsigned short>(value),info->time);
 			}
 			else if (value < 0) {
@@ -59,7 +66,7 @@ void ConsumptionItem::UseItem() {
 	}
 	else {
 		// デバフアイテム。
-
+		_Effect->DeBuffEffect(_user->transform);
 		// 効果範囲内のエネミーを取得。
 		int attr = Collision_ID::ENEMY | Collision_ID::BOSS;
 		vector<Collision*> hit;

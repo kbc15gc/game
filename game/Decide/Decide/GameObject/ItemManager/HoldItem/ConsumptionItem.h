@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 #include "fbEngine\_Object\_GameObject\CollisionObject.h"
-
+#include "GameObject\Component\ParticleEffect.h"
 class GameObject;
 
 //消費アイテムのクラス。
@@ -37,10 +37,15 @@ public:
 	}
 
 private:
+
+	void SetParticleBuffParam();
+
 	GameObject* _user = nullptr;	// 使用者。
 
 	float _range = 10.0f;	// 効果を及ぼす範囲(この範囲外のものにはアイテムは影響を及ぼさない)。
 	int _HoldNum = 0;	// 所持数。
 
 	CollisionObject* _gost = nullptr;	// 対象の探索に必要。
+
+	ParticleEffect* _Effect = nullptr;
 };
