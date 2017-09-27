@@ -18,7 +18,7 @@ void StatusWindow::Start()
 	transform->SetPosition(Vector3(g_WindowSize.x / 2, g_WindowSize.y / 2, 0.0f));
 
 	//ƒoƒbƒN‚Ì”wŒi.
-	ImageObject* backWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	ImageObject* backWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 7);
 	backWindow->SetTexture(LOADTEXTURE("UI/Panel 5.png"));
 	backWindow->SetSize(backWindow->GetSize() * 1.3f);
 	backWindow->transform->SetParent(transform);

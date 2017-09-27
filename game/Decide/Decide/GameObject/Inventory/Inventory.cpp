@@ -117,12 +117,14 @@ void Inventory::AddItem(Item::ItemInfo* item, int num) {
 
 	for (int i = 0;work > 0 && i < INVENTORYLISTNUM; i++)
 	{
-		if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] && _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i]->GetInfo()->ID == item->ID)
-		{
-			//同じアイテムが配列にある。
+		if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i]) {
+			if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i]->GetInfo()->ID == item->ID)
+			{
+				//同じアイテムが配列にある。
 
-			//所持数更新。
-			work = static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->AddHoldNum(work);
+				//所持数更新。
+				work = static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->AddHoldNum(work);
+			}
 		}
 		else {
 			// 空の領域を保存。
@@ -132,12 +134,15 @@ void Inventory::AddItem(Item::ItemInfo* item, int num) {
 
 	// 追加するアイテムが配列になかった。
 	// もしくは既に存在するアイテム枠に追加分の数が収まりきらなかった。
-	for (int i = 0; work > 0 && i < nullList.size(); i++)
+	for (auto itr = nullList.begin(); work > 0 && itr != nullList.end();)
 	{
-		*nullList[i] = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Consumption", 9);
-		(*nullList[i])->SetInfo(item);
-		work = static_cast<ConsumptionItem*>(*nullList[i])->AddHoldNum(work);
+		**itr = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Consumption", 9);
+		(**itr)->SetInfo(item);
+		work = static_cast<ConsumptionItem*>(**itr)->AddHoldNum(work);
+		itr = nullList.erase(itr);
 	}
+
+	nullList.clear();
 
 	_HoldNumList[static_cast<int>(Item::ItemCodeE::Item)][Info->ID] += (num - work);	// 新しく追加した数だけ所持数合計に加算。
 	//所持品配列の所持数をCSVに書き出し。

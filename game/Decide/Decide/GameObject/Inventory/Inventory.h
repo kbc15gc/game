@@ -104,7 +104,6 @@ namespace Hold{
 
 		int _DefRnd;	//防御力のランク差分。
 		int _MDefRnd;	//魔法防御力のランク差分。
-		int _IsEquip;	//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)
 	};
 
 	static Support::DATARECORD HoldArmorData[] = {

@@ -68,6 +68,8 @@ private:
 
 	/** パラメータ表示. */
 	TextObject* _ParamText = nullptr;
+	// 最大パラメータ表示。
+	TextObject* _MaxParamText = nullptr;
 	/** パラメータ. */
 	int _Param;
 	/** 最大パラメータ. */

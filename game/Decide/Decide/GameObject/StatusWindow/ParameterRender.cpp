@@ -17,7 +17,7 @@ void ParameterRender::Awake()
 	_ParamNameText->transform->SetLocalPosition(Vector3(-170.0f, 0.0f, 0.0f));
 
 	//アイコン画像初期化.
-	_IconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("IconImage", 9);
+	_IconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("IconImage", 8);
 	_IconImage->transform->SetParent(_ParamNameText->transform);
 	_IconImage->transform->SetLocalPosition(Vector3(-20.0f, 12.0f, 0.0f));
 
@@ -28,7 +28,15 @@ void ParameterRender::Awake()
 	_ParamText->transform->SetParent(transform);
 	_ParamText->transform->SetLocalPosition(Vector3(200.0f, 0.0f, 0.0f));
 
-	//パラメータ初期化.
+	//Maxパラメータ初期化.
+	_MaxParamText = INSTANCE(GameObjectManager)->AddNew<TextObject>("BuffText", 9);
+	_MaxParamText->Initialize(L"", 40.0f);
+	_MaxParamText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_MaxParamText->transform->SetParent(_ParamText->transform);
+	_MaxParamText->transform->SetLocalPosition(Vector3(30.0f, 0.0f, 0.0f));
+
+
+	//バフパラメータ初期化.
 	_BuffText = INSTANCE(GameObjectManager)->AddNew<TextObject>("BuffText", 9);
 	_BuffText->Initialize(L"", 25.0f);
 	_BuffText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
@@ -49,7 +57,7 @@ void ParameterRender::Update()
 		strcat(param, " / ");
 		char maxParam[100] = { "" };
 		sprintf(maxParam, "%d", _MaxParam);
-		strcat(param, maxParam);
+		_MaxParamText->SetText(maxParam);
 	}
 	if (_ParamBuff != 0) {
 		char buff[100] = { "" };
