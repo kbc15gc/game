@@ -60,6 +60,7 @@ public:
 
 	inline void SetInfo(Item::BaseInfo* info)override {
 		if (_user) {
+			_Info = info;
 			if (_Info) {
 				if (static_cast<Item::ItemInfo*>(_Info)->type == static_cast<int>(ConsumptionItem::EffectType::Debuff)) {
 					_gost = INSTANCE(GameObjectManager)->AddNew<CollisionObject>("ItemRange", 5);	// アイテムの効果範囲コリジョン。

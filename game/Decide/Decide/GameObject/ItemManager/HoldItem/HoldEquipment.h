@@ -50,7 +50,6 @@ public:
 		else if (raito >= 0.9f && raito <= 1.0f) {
 			_Rank = Rank::SS;
 		}
-
 	}
 
 	//装備の基準値と差分値の割合を算出。
@@ -82,8 +81,6 @@ public:
 	inline bool GetIsEquip() {
 		return _IsEquip;
 	}
-
-
 private:
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
