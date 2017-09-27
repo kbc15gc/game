@@ -12,6 +12,10 @@ public:
 	bool isPush(int key);
 	//継続的
 	bool isPressed(int key);
+	//キーリピート。
+	//[in] キー。
+	//[in] 間隔。
+	bool KeyRepeat(int key, float interval);
 private:
 	// DirectInputデバイス
 	LPDIRECTINPUTDEVICE8 keyDevice;
@@ -19,4 +23,7 @@ private:
 	BYTE now[256];
 	//前のフレームの状態を格納
 	BYTE old[256];
+
+	//キーリピート機能で使うタイマー。
+	float _RepeatTimer = 0.0f;
 };

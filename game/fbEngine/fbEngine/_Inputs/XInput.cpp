@@ -53,6 +53,24 @@ bool XInput::IsPressButton(int gamepad)
 	return ((_State.Gamepad.wButtons & gamepad) > 0);
 }
 
+bool XInput::KeyRepeat(int in, float interval)
+{
+	if (IsPressButton(in))
+	{
+		if (IsPushButton(in))
+			return true;
+		//ŠÔ‰ÁZB
+		_RepeatTimer += Time::DeltaTime();
+		if (_RepeatTimer >= interval)
+		{
+			_RepeatTimer = 0.0f;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool XInput::IsPushAnalog(AnalogE a)
 {
 	//Ú‘±Šm”F
