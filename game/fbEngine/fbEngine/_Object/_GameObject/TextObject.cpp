@@ -46,9 +46,9 @@ void TextObject::SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f)
 	_Text->SetEffectFlg(e,f);
 }
 
-void TextObject::SetAnchor(fbText::TextAnchorE format)
+void TextObject::SetAnchor(fbText::TextAnchorE anchor)
 {
-	_Text->SetAnchor(format);
+	_Text->SetAnchor(anchor);
 }
 
 void TextObject::SetKerning(const bool & kerning)

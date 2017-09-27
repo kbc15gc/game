@@ -49,7 +49,7 @@ private:
 	void _ScrollDisplayItem();
 
 	//アイテムの情報をテキストに送信。
-	void _SendItemInfo(Item::BaseInfo* info);
+	void _SendItemInfo(HoldItemBase* item);
 	//カラーコードを算出。
 	char* _CalcColorCode(int diff);
 	
@@ -59,6 +59,17 @@ private:
 	void BuyItem();
 	//アイテムの販売処理。
 	void SellItem();
+private:
+	//プレイヤーへの参照。
+	Player* player;
+	Player* GetPlayer()
+	{
+		if(player == nullptr)
+		{
+			player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+		}
+		return player;
+	}
 private:
 	//ショップのステート保持。
 	Shop::ShopStateE _SaveState;

@@ -2,8 +2,10 @@
 #include "ShopS_Trade.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+
 #include "GameObject\Inventory\Inventory.h"
 #include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
+#include "GameObject\Player\Player.h"
 
 
 ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
@@ -35,6 +37,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	//カーソル
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuyCursor", 8);
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
+	_Cursor->SetSize(Vector2(32, 32));
 	_Cursor->transform->SetParent(_TradeWindow->transform);
 	_Cursor->transform->SetLocalPosition(Vector3(-10, 10, 0));
 
@@ -212,7 +215,7 @@ void ShopS_Trade::_SetIndex(int idx)
 		//アイテムを設定。
 		_SelectItem = _DisplayList.at(_Select)->GetInfo();
 		//アイテムの情報を送る。
-		_SendItemInfo(_SelectItem);
+		_SendItemInfo(_DisplayList.at(_Select));
 
 		//リストの表示更新。
 		if (_Select >= _MinIdx + DISPLAY_ITEM_NUM)
@@ -281,7 +284,7 @@ void ShopS_Trade::_ScrollDisplayItem()
 	}
 }
 
-void ShopS_Trade::_SendItemInfo(Item::BaseInfo* info)
+void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 {
 	try
 	{
@@ -289,22 +292,48 @@ void ShopS_Trade::_SendItemInfo(Item::BaseInfo* info)
 		char text[256];
 		ZeroMemory(text, 256);
 
-		if (info->TypeID == Item::ItemCodeE::Weapon)
+		if (item->GetInfo()->TypeID == Item::ItemCodeE::Weapon)
 		{
 			//武器にキャスト。
-			auto weapon = (Item::WeaponInfo*)info;
+			auto weapon = (HoldWeapon*)item;
 			//現在の装備取得。
-			auto equip = weapon;
-
-			sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
-				equip->Atk, _CalcColorCode(1), weapon->Atk,
-				equip->MagicAtk, _CalcColorCode(-1), weapon->MagicAtk,
-				equip->Dex, _CalcColorCode(1), weapon->Dex,
-				equip->CriticalDamage, _CalcColorCode(0), weapon->CriticalDamage);
+			auto equip = GetPlayer()->GetEquipment()->weapon;
+			if (equip == nullptr)
+			{
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+					0, _CalcColorCode(weapon->GetAtk()), weapon->GetAtk(),
+					0, _CalcColorCode(weapon->GetMagicAtk()), weapon->GetMagicAtk(),
+					0, _CalcColorCode(weapon->GetCrt()), weapon->GetCrt());
+			}
+			else
+			{
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+					equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , weapon->GetAtk(),
+					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetCrt()), weapon->GetMagicAtk(),
+					equip->GetCrt(), _CalcColorCode(weapon->GetCrt()- equip->GetCrt()), weapon->GetCrt());
+			}
+		}else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
+		{
+			//防具にキャスト。
+			auto armor = (HoldArmor*)item;
+			//現在の装備取得。
+			auto equip = GetPlayer()->GetEquipment()->armor;
+			if (equip == nullptr)
+			{
+				sprintf(text, "DEF %4d -> %s%4d</color>\nRES %4d -> %s%4d</color>",
+					0, _CalcColorCode(armor->GetDef()), armor->GetDef(),
+					0, _CalcColorCode(armor->GetMagicDef()), armor->GetMagicDef());
+			}
+			else
+			{
+				sprintf(text, "DEF %4d -> %s%4d</color>\nRES %4d -> %s%4d</color>",
+					equip->GetDef(), _CalcColorCode(armor->GetDef() - equip->GetDef()) , armor->GetDef(),
+					equip->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equip->GetMagicDef()), armor->GetMagicDef());
+			}
 		}
 
 		//説明文を送信。
-		_Shop->SetDescriptionText(info->Description);
+		_Shop->SetDescriptionText(item->GetInfo()->Description);
 		//パラメータを表示。
 		_ParmText->SetText(text);
 	}
