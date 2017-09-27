@@ -170,6 +170,7 @@
     <ClInclude Include="GameObject\Component\ObjectSpawn.h" />
     <ClInclude Include="GameObject\Component\OutputData.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
+    <ClInclude Include="GameObject\Component\ParticleEffect.h" />
     <ClInclude Include="GameObject\Enemy\BossDrarian.h" />
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp" />
     <ClCompile Include="GameObject\Component\OutputData.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp" />
+    <ClCompile Include="GameObject\Component\ParticleEffect.cpp" />
     <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
