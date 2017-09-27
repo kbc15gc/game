@@ -35,8 +35,6 @@ public:
 		if (_Instance == nullptr)
 		{
 			_Instance = new EventManager();
-			//イベント追加。
-			_Instance->AddEvent();
 		}
 		return _Instance;
 	}
