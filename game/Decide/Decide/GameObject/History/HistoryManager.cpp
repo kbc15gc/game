@@ -59,6 +59,7 @@ void HistoryManager::Start()
 			page->transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
+		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
 	}
 
 	//歴史で生成されるオブジェクト生成。
@@ -259,6 +260,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
 					coll->Create(Rinfo, true);
+
 					//カメラと当たらないコリジョンかどうか？
 					if ((bool)info->hitcamera)
 					{

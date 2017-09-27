@@ -260,6 +260,10 @@ void ItemWindow::Input()
 						_NowSelectItem = 0;
 					}
 				}
+				else if (_NowSelectItem >= itemCount - 1)
+				{
+					_NowSelectItem = 0;
+				}
 				else
 				{
 					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
@@ -280,6 +284,10 @@ void ItemWindow::Input()
 						_StartLoadCount = 0;
 						_NowSelectItem = 0;
 					}
+				}
+				else if (_NowSelectItem >= itemCount - 1)
+				{
+					_NowSelectItem = 0;
 				}
 				else
 				{

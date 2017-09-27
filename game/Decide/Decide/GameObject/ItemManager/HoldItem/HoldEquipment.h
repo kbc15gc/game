@@ -54,7 +54,6 @@ public:
 		else if (raito >= 0.9f && raito <= 1.0f) {
 			_Rank = Rank::SS;
 		}
-
 	}
 
 	//装備の基準値と差分値の割合を算出。
