@@ -79,7 +79,7 @@ private:
 	//表示するアイテムの種類。
 	int _DisplayType = static_cast<int>(Item::ItemCodeE::Item);
 	//表示するアイテムの一覧。
-	vector<HoldItemBase*> _DisplayList;
+	const vector<HoldItemBase*>* _DisplayList;
 	//アイテムの数。
 	int _DisplayItemNum = 0;
 

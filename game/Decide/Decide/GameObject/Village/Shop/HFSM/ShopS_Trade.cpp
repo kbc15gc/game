@@ -148,9 +148,9 @@ void ShopS_Trade::_UpdateTradeNum()
 	{
 		int maxNum = 0;
 		//アイテムか消耗品かどうか？
-		if (_DisplayList[_Select]->GetInfo()->TypeID == Item::ItemCodeE::Item)
+		if ((*_DisplayList)[_Select]->GetInfo()->TypeID == Item::ItemCodeE::Item)
 			//買うか売るか？
-			maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList.at(_Select))->GetHoldNum();
+			maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList->at(_Select))->GetHoldNum();
 		else
 			maxNum = 1;
 		
@@ -173,7 +173,7 @@ void ShopS_Trade::_UpdateSelectItem()
 		if (_TradeNum[i] > 0)
 		{
 			_IndexList.push_back(i);
-			_SumValue += _DisplayList[i]->GetInfo()->Value * _TradeNum[i];
+			_SumValue += (*_DisplayList)[i]->GetInfo()->Value * _TradeNum[i];
 		}
 	}
 	char sum[256];
@@ -219,15 +219,15 @@ void ShopS_Trade::_UpdateList()
 {
 	//表示するリスト取得。
 	if (_SaveState == Shop::ShopStateE::Buy)
-		_DisplayList = _Shop->_ItemList;
+		_DisplayList = &_Shop->_ItemList;
 	else if (_SaveState == Shop::ShopStateE::Sell)
-		_DisplayList = INSTANCE(Inventory)->GetInventoryList(static_cast<Item::ItemCodeE>(_DisplayType));
+		_DisplayList = &INSTANCE(Inventory)->GetInventoryList(static_cast<Item::ItemCodeE>(_DisplayType));
 	
 	_TradeNum.clear();
 	_DisplayItemNum = 0;
-	for (int i = 0; i < _DisplayList.size(); i++)
+	for (int i = 0; i < _DisplayList->size(); i++)
 	{
-		if (_DisplayList.at(i) != nullptr)
+		if (_DisplayList->at(i) != nullptr)
 		{
 			_DisplayItemNum++;
 			_TradeNum.push_back(0);
@@ -249,7 +249,7 @@ void ShopS_Trade::_SetIndex(int idx)
 	if (_DisplayItemNum > 0)
 	{
 		//アイテムの情報を送る。
-		_SendItemInfo(_DisplayList.at(_Select));
+		_SendItemInfo(_DisplayList->at(_Select));
 
 		//リストの表示更新。
 		if (_Select >= _MinIdx + DISPLAY_ITEM_NUM)
@@ -281,10 +281,10 @@ void ShopS_Trade::_UpdateText()
 	//テキスト設定。
 	FOR(i, _DisplayItemNum)
 	{
-		auto &item = _DisplayList[i];
+		auto item = (*_DisplayList)[i];
 		//テキスト設定。
 		char menu[256];
-		sprintf(menu, "%s", item->GetInfo()->Name);
+		sprintf(menu, "%s" ,item->GetInfo()->Name);
 		_MenuTexts[i]->SetText(menu);
 
 		//高さ設定。
@@ -433,15 +433,15 @@ void ShopS_Trade::BuyItem()
 	for (int idx : _IndexList)
 	{
 		//インベントリへ追加。
-		if (_DisplayList[idx]->GetInfo()->TypeID == Item::ItemCodeE::Item)
+		if ((*_DisplayList)[idx]->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
 			//アイテムを追加。
-			INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_DisplayList[idx]->GetInfo(), _TradeNum[idx]);
+			INSTANCE(Inventory)->AddItem((Item::ItemInfo*)(*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]);
 		}
 		else
 		{
 			//装備品を追加。
-			INSTANCE(Inventory)->AddEquipment(_DisplayList[idx]->GetInfo(), false);
+			INSTANCE(Inventory)->AddEquipment((*_DisplayList)[idx]->GetInfo(), false);
 		}
 	}
 	_Shop->SetDescriptionText("まいどあり。");
@@ -457,7 +457,7 @@ void ShopS_Trade::SellItem()
 	for (int idx : _IndexList)
 	{
 		//インベントリから排除。
-		if (INSTANCE(Inventory)->SubHoldNum(_DisplayList[idx]->GetInfo(), _TradeNum[idx]))
+		if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]))
 		{
 			erase = true;
 		}
