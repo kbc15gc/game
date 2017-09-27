@@ -107,20 +107,7 @@ void ItemWindow::WeaponInit()
 {
 	_WindowName->SetText(L"武器一覧");
 
-	int ParamCount = 6;
-	for (int i = 0; i < ParamCount; i++)
-	{
-		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
-		pr->transform->SetParent(transform);
-		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
-		_ParameterRenderList.push_back(pr);
-	}
-	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParam(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExp());
-	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP());
-	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP());
-	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK));
-	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF));
+	this->_CreateShowStatus();
 
 	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
 	holdItem->transform->SetParent(transform);
@@ -136,20 +123,7 @@ void ItemWindow::ArmorInit()
 {
 	_WindowName->SetText(L"防具一覧");
 
-	int ParamCount = 6;
-	for (int i = 0; i < ParamCount; i++)
-	{
-		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
-		pr->transform->SetParent(transform);
-		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
-		_ParameterRenderList.push_back(pr);
-	}
-	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParam(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExp());
-	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP());
-	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP());
-	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK));
-	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF));
+	this->_CreateShowStatus();
 
 	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
 	holdItem->transform->SetParent(transform);
@@ -376,22 +350,22 @@ void ItemWindow::_CreateShowStatus()
 		_ParameterRenderList.push_back(pr);
 	}
 	// レベルのパラメータは真横に表示。
-	_ParameterRenderList[ShowStatus::LV]->SetParamTextPos(_ParameterRenderList[ShowStatus::LV]->GetParamTextPos() + Vector3(-200, 0.0f, 0.0f));
+	_ParameterRenderList[ShowStatus::LV]->SetParamTextPos(_ParameterRenderList[ShowStatus::LV]->GetParamTextPos() + Vector3(-250, 0.0f, 0.0f));
 
 	_ExpBar = AddComponent<ParameterBar>();
 	vector<BarColor> barColor;
 	barColor.push_back(BarColor::Yellow);
-	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[ShowStatus::LV]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[ShowStatus::LV]->transform, Vector3(50.0f, 40.0f, 0.0f), Vector2(1.0f,0.5f), 8);
 
 	_HpBar = AddComponent<ParameterBar>();
 	barColor.clear();
 	barColor.push_back(BarColor::Green);
-	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[ShowStatus::HP]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[ShowStatus::HP]->transform, Vector3(50.0f,20.0f, 0.0f), Vector2(1.0f,0.7f), 8);
 
 	_MpBar = AddComponent<ParameterBar>();
 	barColor.clear();
 	barColor.push_back(BarColor::Blue);
-	_MpBar->Create(barColor, static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::MP)), false, false, _ParameterRenderList[ShowStatus::MP]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+	_MpBar->Create(barColor, static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::MP)), false, false, _ParameterRenderList[ShowStatus::MP]->transform, Vector3(50.0f, 20.0f, 0.0f), Vector2(1.0f,0.7f), 8);
 
 	_ConfigParamRender();
 }
