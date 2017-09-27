@@ -5,6 +5,13 @@
 #include "GameObject\Village\NPC.h"
 #include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
 
+namespace
+{
+	//オブジェクトを識別するタイプ。
+	const char* ObjectType[2] = { "Obj","NPC" };
+}
+
+
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
 
@@ -63,19 +70,19 @@ void HistoryManager::Start()
 */
 void HistoryManager::CreateObject()
 {
-	FOR(i, _LocationHistoryList.size())
-	{
-		//歴史のオブジェクト切り替え・生成
-		_ChangeLocation((LocationCodeE)i);
-	}
+	//FOR(i, _LocationHistoryList.size())
+	//{
+	//	//歴史のオブジェクト切り替え・生成
+	//	_ChangeLocation((LocationCodeE)i);
+	//}
 
 	//共通オブジェクト生成
-	char* type[2] = { "Obj","NPC" };
 	char path[128];
+	FOR(type, 2)
 	{		
 		//パス生成
-		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", type[0]);
-		_CreateObject(-1, path);
+		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
+		_CreateObject(-1, path, type);
 	}
 }
 
@@ -109,7 +116,7 @@ bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip)
 void HistoryManager::_ChangeLocation(LocationCodeE location)
 {
 	//前のオブジェクトを削除
-	for(auto& it : _GameObjectList[(int)location])
+	for (auto& it : _GameObjectList[(int)location])
 	{
 		INSTANCE(GameObjectManager)->AddRemoveList(it);
 	}
@@ -117,49 +124,25 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
-
-	if (_NowGroupIDList[(int)location] != group)
+	//どれかのグループに該当するのなら。
+	if (group >= 0)
 	{
-		_MysteryLight->SetActive(true, true);
-		_NowGroupIDList[(int)location] = group;
-	}
 
-	char* type[2] = { "Obj","NPC" };
-	char path[128];
-	
-	//OBJ
-	{
-		//パス生成
-		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[0]);
-		_CreateObject((int)location, path);
-		
-	}
-	ZeroMemory(path, 128);
-	//NPC
-	{
-		//パス生成
-		sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, type[1]);
-		
-		
-		//CSVからオブジェクトの情報読み込み
-		vector<unique_ptr<NPCInfo>> npcInfo;
-		Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
-
-		//情報からオブジェクト生成。
-		FOR(i, npcInfo.size())
+		if (_NowGroupIDList[(int)location] != group)
 		{
-			//生成
-			NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
-			npc->LoadModel(npcInfo[i]->filename);
-			npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-			npc->transform->SetLocalPosition(npcInfo[i]->pos);
-			npc->transform->SetRotation(npcInfo[i]->ang);
-			npc->transform->SetLocalScale(npcInfo[i]->sca);
-			//管理用の配列に追加。
-			_GameObjectList[(int)location].push_back(npc);
+			_MysteryLight->SetActive(true, true);
+			_NowGroupIDList[(int)location] = group;
 		}
 
-		npcInfo.clear();
+		char path[128];
+
+		FOR(type,2)		
+		{
+			//パス生成
+			sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, ObjectType[type]);
+			_CreateObject((int)location, path, type);
+			ZeroMemory(path, 128);
+		}
 	}
 }
 
@@ -170,12 +153,11 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 {
 	//大陸に合ったグループシート読み込み
 	char path[256];
-	sprintf(path, "Asset/Data/Village%dGroup.csv", 0/*+ info->ContinentID*/);
+	sprintf(path, "Asset/Data/Village%dGroup.csv", info->_LocationID);
 	//CSVからグループ情報読み込み
 	vector<unique_ptr<VillageGroup>> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
 	
-	int pattern = 0;
 	//一致するものがあるか調べる。
 	for(auto& group : groupList)
 	{
@@ -196,11 +178,10 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 		}
 
 		//パターン一致したのでID設定。
-		pattern = group->GroupID;
-		break;
+		return group->GroupID;
 	}
 
-	return pattern;
+	return -1;
 }
 
 /**
@@ -208,15 +189,24 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 *
 * @param location	場所ID.
 * @param path		フォルダパス.
+* @param type		生成するオブジェクトのタイプ.
 */
-void HistoryManager::_CreateObject(int location,const char * path)
+void HistoryManager::_CreateObject(int location, const char * path, int type)
+{
+	if (type == 0)
+		_CreateBuilding(location, path);
+	else if (type == 1)
+		_CreateNPC(location, path);
+}
+
+void HistoryManager::_CreateBuilding(int location, const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
 	vector<unique_ptr<ObjectInfo>> objInfo;
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
-	for(short i = 0;i < objInfo.size();)
+	for (short i = 0; i < objInfo.size();)
 	{
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
@@ -263,19 +253,20 @@ void HistoryManager::_CreateObject(int location,const char * path)
 					Rinfo.offset = info->pos;
 					/*Quaternion q; /*q.SetEuler(info->ang);*/
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
-					/*q.SetEuler(Vector3(0.0f, -90.0f, 0.0f));*/
-					//q.SetEuler(Vector3(0.0f, 180.0f, 0.0f));
+								  /*q.SetEuler(Vector3(0.0f, -90.0f, 0.0f));*/
+								  //q.SetEuler(Vector3(0.0f, 180.0f, 0.0f));
 					q.SetRotation(Vector3::up, PI);
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
-					coll->Create(Rinfo,false);
+					coll->Create(Rinfo, false);
 					//カメラと当たらないコリジョンかどうか？
-					if((bool)info->hitcamera)
+					if ((bool)info->hitcamera)
 					{
 						//コリジョンの属性に「カメラと当たらない」を追加する
 						//未実装。
 					}
-				}else
+				}
+				else
 				{
 					break;
 				}
@@ -284,6 +275,33 @@ void HistoryManager::_CreateObject(int location,const char * path)
 	}
 
 	objInfo.clear();
+}
+
+void HistoryManager::_CreateNPC(int location, const char * path)
+{
+	//CSVからオブジェクトの情報読み込み
+	vector<unique_ptr<NPCInfo>> npcInfo;
+	Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
+
+	//情報からオブジェクト生成。
+	FOR(i, npcInfo.size())
+	{
+		//生成
+		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+		npc->LoadModel(npcInfo[i]->filename);
+		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
+		npc->transform->SetLocalPosition(npcInfo[i]->pos);
+		npc->transform->SetRotation(npcInfo[i]->ang);
+		npc->transform->SetLocalScale(npcInfo[i]->sca);
+
+		//管理用の配列に追加。
+		if (location >= 0)
+		{
+			_GameObjectList[location].push_back(npc);
+		}
+	}
+	//いらんので破棄。
+	npcInfo.clear();
 }
 
 /**
@@ -326,5 +344,4 @@ void HistoryManager::PutOutPage(LocationCodeE location,vector<HistoryPage*>& lis
 
 	//データを保存.
 	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
-
 }

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CharacterParameter.h"
+#include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 
@@ -41,13 +41,14 @@ void CharacterParameter::Update() {
 	{
 		_DeathFlag = true;
 	}
+
+	// バフやデバフの状況を更新。
+	_UpdateInfo();
 }
 
 int CharacterParameter::ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx) {
-	int damage = ReceiveDamageMass(defaultDamage, isMagic, armor, defidx);
 	//ダメージ分HPを減算。
-	_SubParam(Param::HP, damage);
-	return damage;
+	return ReciveDamageThrough(ReceiveDamageMass(defaultDamage, isMagic, armor, defidx));
 }
 
 int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx)
@@ -75,7 +76,20 @@ int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldA
 	return damage;
 }
 
-int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk)
+int CharacterParameter::ReciveDamageThrough(int damage) {
+	if (damage > 0) {
+		int hp = GetParam(Param::HP) - damage;
+		if (hp < 0) {
+			_Info[Param::HP].param = 0;
+		}
+		else {
+			_Info[Param::HP].param = hp;
+		}
+	}
+	return damage;
+}
+
+unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk)
 {
 	int damage = 0;
 	int weaponDamage = 0;
@@ -100,6 +114,8 @@ int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk
 	// キャラの攻撃力に武器の攻撃力を加算。
 	damage += weaponDamage;
 
+	unique_ptr<GiveDamageInfo> info(new GiveDamageInfo);
+
 	if (crit > 0) {
 		int work = critMax / crit;
 		if (work > 100) {
@@ -108,6 +124,8 @@ int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk
 
 		if (rand() % work == 0) {
 			// クリティカル。
+
+			info->isCritical = true;
 			short crt = _Info[Param::CRT].param;	// キャラのクリティカル。
 			if(weapon) {
 				// 武器のクリティカル威力を加算。
@@ -116,29 +134,49 @@ int CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk
 			damage += damage * static_cast<float>(crt) * 0.01f;
 		}
 	}
-	return damage * atk;
+
+	info->value = damage * atk;
+	return move(info);
 }
 
-void CharacterParameter::HeelHP(int value) {
+bool CharacterParameter::HeelHP(int value) {
 	int hp = _Info[Param::HP].param;
+	if (hp >= _Info[Param::HP].originParam) {
+		// 回復不可。
+
+		return false;
+	}
+
 	hp += value;
 	if (hp >= _Info[Param::HP].originParam) {
 		// 最大HPを超えた。
 
 		_Info[Param::HP].param = _Info[Param::HP].originParam;
 	}
-	_Info[Param::HP].param = hp;
+	else {
+		_Info[Param::HP].param = hp;
+	}
+	return true;
 }
 
-void CharacterParameter::HeelMP(int value) {
+bool CharacterParameter::HeelMP(int value) {
 	int mp = _Info[Param::MP].param;
+	if (mp >= _Info[Param::MP].originParam) {
+		// 回復不可。
+
+		return false;
+	}
+
 	mp += value;
 	if (mp >= _Info[Param::MP].originParam) {
 		// 最大HPを超えた。
 
 		_Info[Param::MP].param = _Info[Param::MP].originParam;
 	}
-	_Info[Param::MP].param = mp;
+	else {
+		_Info[Param::MP].param = mp;
+	}
+	return true;
 }
 
 void CharacterParameter::Buff(Param idx, int percentage, float time) {
@@ -215,4 +253,26 @@ void CharacterParameter::_UpdateParam(Param idx) {
 	
 	_Info[idx].param += _Info[idx].originParam * static_cast<float>(_Info[idx].buffPercentage) * 0.01f;	// バフ値を加算。
 	_Info[idx].param -= _Info[idx].originParam * static_cast<float>(_Info[idx].debuffPercentage) * 0.01f;	// デバフ値を減算。
+}
+
+void CharacterParameter::_UpdateInfo() {
+	for (int idx = 0; idx < Param::MAX;idx++) {
+		if (_Info[idx].buffCounter >= _Info[idx].buffInterval) {
+			// バフの効果時間が過ぎた。
+
+			BuffClear(static_cast<Param>(idx));
+		}
+		else {
+			_Info[idx].buffCounter += Time::DeltaTime();
+		}
+
+		if (_Info[idx].debuffCounter >= _Info[idx].debuffInterval) {
+			// デバフの効果時間が過ぎた。
+
+			DebuffClear(static_cast<Param>(idx));
+		}
+		else {
+			_Info[idx].debuffCounter += Time::DeltaTime();
+		}
+	}
 }

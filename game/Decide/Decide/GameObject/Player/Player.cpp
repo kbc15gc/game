@@ -193,15 +193,28 @@ void Player::Update()
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
-		TakeDrop(100, 0);
+		TakeDrop(100, 100);
+	}
+	static int level = _PlayerParam->GetParam(CharacterParameter::LV);
+	//レベルを上げる。
+	if (level <= 95)
+	{
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_2))
+		{
+			level += 5;
+			_DebugLevel(level);
+		}
+	}
+	if (level >= 6)
+	{
+		//レベル下げる。
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_3))
+		{
+			level -= 5;
+			_DebugLevel(level);
+		}
 	}
 #endif // DEBUG
-
-
-	if (KeyBoardInput->isPush(DIK_L))
-	{
-		PlayerStopEnable();
-	}
 
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
@@ -260,9 +273,11 @@ void Player::ChangeState(State nextstate)
 	case State::Death:					
 		//死亡状態
 		_CurrentState = &_DeathState;
+		break;
 	case State::Stop:
 		//ストップ状態
 		_CurrentState = &_StopState;
+		break;
 	default:
 		//デフォルト
 		break;
@@ -346,16 +361,15 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
-		int damage;
-		if (_Equipment != nullptr&&_Equipment->armor != nullptr)
+#ifdef _DEBUG
+		if (_Equipment == nullptr)
 		{
-			damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic(), _Equipment->armor);
+			// 装備用の構造体がNull。
+			abort();
 		}
-		else
-		{
-			damage = _PlayerParam->ReceiveDamageMass(hitCollision->GetDamage(), hitCollision->GetIsMagic());
-		}
-
+#endif
+		// ダメージを与える処理
+		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(), hitCollision->GetIsMagic(), _Equipment->armor);
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
@@ -381,7 +395,7 @@ void Player::_Damage()
 {
 	//死亡ステート以外の時。
 	//ライフが0になると死亡する。
-	if (_PlayerParam->GetDeathFalg() == true && _State != State::Death)
+	if (_PlayerParam->GetDeathFlg() == true && _State != State::Death)
 	{
 		ChangeState(State::Death);
 	}
@@ -424,3 +438,15 @@ void Player::_LevelUP()
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
 }
+#ifdef _DEBUG
+void Player::_DebugLevel(int lv)
+{
+	// 次のレベルのパラメータを設定。
+	_PlayerParam->ParamReset(_ParamTable[lv]);
+	//HPが上がったのでHPバーのHP設定しなおす。
+	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));
+	//MPが上がったのでMPバーのMP設定しなおす。
+	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP));
+}
+#endif // _DEBUG
+

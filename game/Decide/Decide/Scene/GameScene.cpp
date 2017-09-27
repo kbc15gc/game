@@ -149,4 +149,9 @@ void GameScene::Update()
 	{
 		int a = 0;
 	}
+
+	// テスト。
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)) {
+		INSTANCE(Inventory)->ArrangementInventory();
+	}
 }

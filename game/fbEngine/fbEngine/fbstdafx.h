@@ -58,7 +58,7 @@ using namespace std;
 #include <functional>	//ŠÖ”ƒ|ƒCƒ“ƒ^
 #include <string>
 
-static const float FontSize = 300.0f;
+static const float FontSize = 512.0f;
 
 //Include
 #include "_Include\Definition.h"

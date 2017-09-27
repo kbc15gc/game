@@ -20,11 +20,12 @@ public:
 public:
 	ConsumptionItem(char* name);
 	~ConsumptionItem();
-
+	void Awake()override;
 	void Start()override;
 
 	//アイテムを使う。
-	void UseItem();
+	// 戻り値：	アイテムを使用できたか。
+	bool UseItem();
 
 	//所持数を更新(減らす場合は引数にマイナスを設定)。
 	inline void UpdateHoldNum(int add = 1) {
@@ -38,7 +39,6 @@ public:
 
 private:
 	GameObject* _user = nullptr;	// 使用者。
-	vector<GameObject*> _targets;	// 消費アイテムを使う対象。
 
 	float _range = 10.0f;	// 効果を及ぼす範囲(この範囲外のものにはアイテムは影響を及ぼさない)。
 	int _HoldNum = 0;	// 所持数。

@@ -27,6 +27,8 @@ public:
 	//子に潜る際に呼び出される処理。
 	void DiveState();
 private:
+	int _Select = 0;
+
 	//確認ウィンドウの画像。
 	ImageObject* _ConfirmationWindow;
 	//カーソルの画像。

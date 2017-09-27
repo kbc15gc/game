@@ -70,7 +70,7 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	if (_MyComponent.Parameter->GetDeathFalg())
+	if (_MyComponent.Parameter->GetDeathFlg())
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);
@@ -284,7 +284,7 @@ void EnemyCharacter::_ChangeState(State next) {
 void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Player)
 	{
-		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) >= 0)
+		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) > 0)
 		{
 			GiveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
 		}
@@ -296,9 +296,15 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
 
+		_damage = _MyComponent.Parameter->ReciveDamage(damage, isMagic);
+
 		// ダメージ値をもとにパラメーター更新。
-		_MyComponent.HPBar->SubValue(_MyComponent.Parameter->ReciveDamage(damage, isMagic));
-		_damage = damage;
+		_MyComponent.HPBar->SubValue(_damage);
+
+		//受けたダメージ量を表示。
+		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
+		attackvalue->transform->SetParent(transform);
 
 		if (_isDamageMotion) {
 			// のけぞるか。
@@ -324,10 +330,6 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	else {
 		_damage = 0;
 	}
-
-	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-	attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
-	attackvalue->transform->SetParent(transform);
 }
 
 

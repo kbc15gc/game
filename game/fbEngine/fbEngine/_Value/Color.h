@@ -47,7 +47,7 @@ public:
 		Set(r, g, b, 1.0f);
 	}
 	//int型コンストラクタ 0~255で指定。
-	Color(const int& r, const int& g, const int& b, const int& a)
+	Color(const unsigned int& r, const unsigned int& g, const unsigned int& b, const unsigned int& a)
 	{
 		Set(r, g, b, a);
 	}
@@ -67,7 +67,7 @@ public:
 		this->a = a;
 	}
 
-	void Set(const int& r, const int& g, const int& b, const int& a)
+	void Set(const unsigned int& r, const unsigned int& g, const unsigned int& b, const unsigned int& a)
 	{
 		this->r = (float)r / 255.0f;
 		this->g = (float)g / 255.0f;
