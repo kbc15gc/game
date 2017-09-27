@@ -32,6 +32,7 @@ void Chip2D::Start(ChipID chipID)
 */
 void Chip2D::Update()
 {
+
 	static float SPEED = 2.0f;
 	_LerpRate += SPEED * Time::DeltaTime();
 	_LerpRate = min(1.0f, _LerpRate);
@@ -47,8 +48,8 @@ void Chip2D::Update()
 	Vector2 destSize = _DestSize;
 	destSize *= _LerpRate;
 	Vector2 size = _Size;
-	_Size *= (1.0f - _LerpRate);
+	size *= (1.0f - _LerpRate);
 
-	_ChipSprite->SetSize(_Size + destSize);
+	_ChipSprite->SetSize(size + destSize);
 }
 

@@ -78,7 +78,7 @@ void Player::Awake()
 	//モデル設定
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
-	_Model->SetAllBlend(Color::white * 13);
+	//_Model->SetAllBlend(Color::white * 13);
 	
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(this, transform, Vector3(0.0f,_Height * 0.5f + _Radius,0.0f), Collision_ID::PLAYER, coll, _Gravity);

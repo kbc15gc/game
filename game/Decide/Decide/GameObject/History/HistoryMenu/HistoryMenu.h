@@ -84,6 +84,8 @@ private:
 	*/
 	void SelectChipUpdate();
 
+	void ChipMove();
+
 private:
 
 	/** カーソル表示クラス. */

@@ -106,6 +106,10 @@ public:
 	Particle* GetParticleEnd()const;
 
 	void ReleaseParticleAll();
+
+	//void SetParent(Transform* parent) {
+	//	transform->SetParent(parent);
+	//}
 private:
 	//パーティクル生成
 	void Emit();
@@ -115,4 +119,5 @@ private:
 	ParticleParameter		_Param;			//!<パラメータ。
 	std::list<Particle*>	_ParticleList;	//!<パーティクルのリスト。
 	vector<Particle*>* _achievedArray = nullptr;
+	//Transform*				_Parent;		//!<エミッタの親。
 };
