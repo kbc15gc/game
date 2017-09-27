@@ -80,21 +80,8 @@ void ItemWindow::ItemInit()
 {
 	_WindowName->SetText(L"アイテム一覧");
 
-	int ParamCount = 7;
-	for (int i = 0; i < ParamCount; i++)
-	{
-		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
-		pr->transform->SetParent(transform);
-		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
-		_ParameterRenderList.push_back(pr);
-	}
-	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
-	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
-	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
-	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
-	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
-	_ParameterRenderList[6]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoneyPt());
+	// ステータス表示作成。
+	_CreateShowStatus();
 
 	Vector3 pos[4] =
 	{
@@ -128,12 +115,12 @@ void ItemWindow::WeaponInit()
 		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
 		_ParameterRenderList.push_back(pr);
 	}
-	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
-	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
-	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
-	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
-	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParam(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExp());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF));
 
 	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
 	holdItem->transform->SetParent(transform);
@@ -157,12 +144,12 @@ void ItemWindow::ArmorInit()
 		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
 		_ParameterRenderList.push_back(pr);
 	}
-	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
-	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
-	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
-	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
-	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
-	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParam(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExp());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF));
 
 	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
 	holdItem->transform->SetParent(transform);
@@ -176,6 +163,8 @@ void ItemWindow::ArmorInit()
 */
 void ItemWindow::Update()
 {
+	_ConfigParamRender();
+
 	_EIconImage->SetActive(false, true);
 
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
@@ -373,5 +362,62 @@ void ItemWindow::Input()
 				}
 			}
 		}
+	}
+}
+
+void ItemWindow::_CreateShowStatus()
+{
+	ShowStatus ParamCount = ShowStatus::MAX;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	// レベルのパラメータは真横に表示。
+	_ParameterRenderList[ShowStatus::LV]->SetParamTextPos(_ParameterRenderList[ShowStatus::LV]->GetParamTextPos() + Vector3(-200, 0.0f, 0.0f));
+
+	_ExpBar = AddComponent<ParameterBar>();
+	vector<BarColor> barColor;
+	barColor.push_back(BarColor::Yellow);
+	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[ShowStatus::LV]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+
+	_HpBar = AddComponent<ParameterBar>();
+	barColor.clear();
+	barColor.push_back(BarColor::Green);
+	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[ShowStatus::HP]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+
+	_MpBar = AddComponent<ParameterBar>();
+	barColor.clear();
+	barColor.push_back(BarColor::Blue);
+	_MpBar->Create(barColor, static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::MP)), false, false, _ParameterRenderList[ShowStatus::MP]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+
+	_ConfigParamRender();
+}
+
+void ItemWindow::_ConfigParamRender() {
+	int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
+	_ParameterRenderList[ShowStatus::LV]->SetParam("LV", "UI/gem.png", playerLevel);
+	_ParameterRenderList[ShowStatus::HP]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), 0, _Player->GetMaxHP());
+	_ParameterRenderList[ShowStatus::MP]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), 0, _Player->GetMaxMP());
+	_ParameterRenderList[ShowStatus::ATK]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
+	_ParameterRenderList[ShowStatus::MAT]->SetParam("MAT", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
+	_ParameterRenderList[ShowStatus::DEF]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
+	_ParameterRenderList[ShowStatus::MDE]->SetParam("MDE", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
+	_ParameterRenderList[ShowStatus::DEX]->SetParam("DEX", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
+	_ParameterRenderList[ShowStatus::MONEY]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney());
+
+	if (playerLevel != _playerLevel) {
+		// レベル変動。
+		_playerLevel = playerLevel;
+		_ExpBar->Reset(static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false);
+		_HpBar->Reset(static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::HP)), false);
+		_MpBar->Reset(static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::MP)), false);
+	}
+	else {
+		_ExpBar->SetValue(static_cast<float>(_Player->GetExp()));
+		_HpBar->SetValue(static_cast<float>(_Player->GetParam(CharacterParameter::HP)));
+		_MpBar->SetValue(static_cast<float>(_Player->GetParam(CharacterParameter::MP)));
 	}
 }

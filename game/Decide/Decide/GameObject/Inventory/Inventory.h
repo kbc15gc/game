@@ -188,7 +188,13 @@ public:
 	//インベントリを整列(ID順になる)。
 	void SortID();
 
+	// 指定したアイテムの合計所持数を返却。
+	inline int GetHoldNum(Item::ItemCodeE code,int id) {
+		return _HoldNumList[static_cast<int>(code)][id];
+	}
+
 private:
+
 	//リストから指定されたアイテムを削除。
 	void _DeleteFromList(HoldItemBase* item);
 
@@ -219,6 +225,11 @@ private:
 	int _PlayerMoney = 100;
 
 	GameObject* _Player;
+
+	// アイテムの種類ごとに所持数をまとめた配列。
+	// 添え字：	Item::ItemCodeE。
+	//			ID。
+	vector<vector<int>> _HoldNumList;
 
 	static Inventory* _InventoryInstance;
 };
