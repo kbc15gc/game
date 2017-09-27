@@ -250,8 +250,9 @@ private:
 	// レベルアップ。
 	// 引数：		レベルアップに必要な経験値の値。
 	void _LevelUP();
-
 #ifdef _DEBUG
+	//デバッグ機能
+	void _DebugPlayer();
 	//デバッグレベル
 	void _DebugLevel(int lv);
 #endif // _DEBUG
@@ -321,7 +322,6 @@ private:
 #endif
 	//デバッグ
 	bool _Debug = false;
-
 
 	//レベルアップに必要な経験値のテーブル(LV - 1が添え字)。
 	std::vector<int> _EXPTable;

@@ -119,7 +119,6 @@ void Player::Awake()
 	_LevelUP_SE->Init("Asset/Sound/levelup.wav");
 	_LevelUP_SE->SetVolume(2.0f);
 #ifdef _DEBUG
-
 	_outputData = AddComponent<OutputData>();
 #endif
 	_Equipment = new PlayerEquipment;
@@ -172,50 +171,6 @@ void Player::Start()
 
 void Player::Update()
 {
-
-#ifdef _DEBUG
-	
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
-	}
-	//経験値を増やす。
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
-	{
-		TakeDrop(100, 100);
-	}
-	static int level = _PlayerParam->GetParam(CharacterParameter::LV);
-	//レベルを上げる。
-	if (level <= 95)
-	{
-		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_2))
-		{
-			level += 5;
-			_DebugLevel(level);
-		}
-	}
-	if (level >= 6)
-	{
-		//レベル下げる。
-		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_3))
-		{
-			level -= 5;
-			_DebugLevel(level);
-		}
-	}
-#endif // DEBUG
-
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
@@ -440,6 +395,49 @@ void Player::_LevelUP()
 }
 
 #ifdef _DEBUG
+void Player::_DebugPlayer()
+{
+
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(100, 100);
+	}
+	static int level = _PlayerParam->GetParam(CharacterParameter::LV);
+	//レベルを上げる。
+	if (level <= 95)
+	{
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_2))
+		{
+			level += 5;
+			_DebugLevel(level);
+		}
+	}
+	if (level >= 6)
+	{
+		//レベル下げる。
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_3))
+		{
+			level -= 5;
+			_DebugLevel(level);
+		}
+	}
+}
 void Player::_DebugLevel(int lv)
 {
 	// 次のレベルのパラメータを設定。
