@@ -22,6 +22,7 @@ class SkinModel;
 class Animation;
 class ParameterBar;
 class ItemManager;
+class ParticleEffect;
 
 namespace
 {
@@ -205,9 +206,6 @@ public:
 	//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
 	void SetEquipment(HoldItemBase* equi)
 	{
-		//装備フラグをtureにする。
-		static_cast<HoldEquipment*>(equi)->SetIsEquipTrue();
-
 		//防具。
 		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
 			
@@ -216,11 +214,10 @@ public:
 				_Equipment->armor->SetIsEquipFalse();
 				_Equipment->armor = nullptr;
 			}
-			else
-			{
-				//防具。
-				_Equipment->armor = static_cast<HoldArmor*>(equi);
-			}	
+			//防具。
+			_Equipment->armor = static_cast<HoldArmor*>(equi);
+			//装備フラグをtrueにする。
+			_Equipment->armor->SetIsEquipTrue();
 		}
 		else
 		//武器。
@@ -229,12 +226,13 @@ public:
 				//前に装備していた武器を外す。
 				_Equipment->weapon->SetIsEquipFalse();
 				_Equipment->weapon = nullptr;
+
+				
 			}
-			else
-			{
-				//武器。
-				_Equipment->weapon = static_cast<HoldWeapon*>(equi);
-			}
+			//武器。
+			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
+			//装備フラグをtrueにする。
+			_Equipment->weapon->SetIsEquipTrue();
 		}
 	}
 
@@ -332,4 +330,7 @@ private:
 
 	//プレイヤーの装備。
 	PlayerEquipment* _Equipment = nullptr;
+	
+	//パーティクルエフェクト。
+	ParticleEffect*	_ParticleEffect = nullptr;
 };

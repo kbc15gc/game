@@ -7,6 +7,7 @@
 #include "GameObject\SplitSpace.h"
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
+#include "GameObject\Component\ParticleEffect.h"
 
 namespace
 {
@@ -122,6 +123,9 @@ void Player::Awake()
 	_outputData = AddComponent<OutputData>();
 #endif
 	_Equipment = new PlayerEquipment;
+
+	//パーティクルエフェクト。
+	_ParticleEffect = AddComponent<ParticleEffect>();
 }
 
 void Player::Start()
