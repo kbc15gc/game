@@ -123,7 +123,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		if (item)
 		{
 			//î•ñ‚ðÝ’è‚µ‚Ä‰Šú‰»B
-			HoldItemBase* hitem;
+			HoldItemBase* hitem = nullptr;
 			switch (item->TypeID)
 			{
 			case Item::ItemCodeE::Item:

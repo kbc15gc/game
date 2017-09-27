@@ -12,6 +12,7 @@
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
 
+
 /**
 * 歴史を管理するクラス.
 */

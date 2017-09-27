@@ -17,7 +17,49 @@
 class ItemWindow : public GameObject
 {
 public:
-	enum ShowStatus { LV = 0, HP, MP, ATK, MAT, DEF, MDE, DEX, MONEY, MAX };
+
+	/**
+	* 消費アイテム表示ステータス.
+	*/
+	enum class CIShowStatus
+	{ 
+		LV = 0,		//!< レベル.
+		HP,			//!< 体力.
+		MP,			//!< 魔力.
+		ATK,		//!< 物理攻撃.
+		MAT,		//!< 魔法攻撃.
+		DEF,		//!< 物理防御.
+		MDE,		//!< 魔法防御.
+		DEX,		//!< 器用度.
+		MONEY,		//!< 金.
+		MAX			//!< 数.
+	};
+
+	/**
+	* 武器アイテム表示ステータス.
+	*/
+	enum class WIShowStatus
+	{
+		RANK,		//!< ランク.
+		ATK,		//!< 物理攻撃.
+		MAT,		//!< 魔法攻撃.
+		CRT,		//!< クリティカル率.
+		DEX,		//!< 器用度.
+		MAX			//!< 数.
+	};
+
+	/**
+	* 防具アイテム表示ステータス.
+	*/
+	enum class AIShowStatus
+	{
+		RANK,		//!< ランク.
+		DEF,		//!< 物理防御.
+		MDE,		//!< 魔法防御.
+		CRT,		//!< クリティカル率.
+		DEX,		//!< 器用度.
+		MAX			//!< 数.
+	};
 
 public:
 
@@ -73,10 +115,26 @@ private:
 	*/
 	void Input();
 
-	// ステータス表示作成。
-	void _CreateShowStatus();
+private:
 
-	// パラメータ表示クラスのインスタンスに値を設定。
+	/**
+	* 消費アイテムの表示ステータスの作成.
+	*/
+	void _CreateCIShowStatus();
+
+	/**
+	* 武器アイテムの表示ステータスの作成.
+	*/
+	void _CreateWIShowStatus();
+
+	/**
+	* 防具アイテムの表示ステータスの作成.
+	*/
+	void _CreateAIShowStatus();
+
+	/**
+	* パラメータ表示クラスのインスタンスに値を設定.
+	*/
 	void _ConfigParamRender();
 
 private:

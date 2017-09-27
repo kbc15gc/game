@@ -50,32 +50,68 @@ void ParameterRender::Awake()
 void ParameterRender::Update()
 {
 	_ParamNameText->SetText(_ParamName);
+
 	char param[100] = { "" };
-	sprintf(param, "%d", _Param);
-	if (_MaxParam != INT_MIN)
+
+	switch (_ShowType)
 	{
-		strcat(param, " / ");
-		char maxParam[100] = { "" };
-		sprintf(maxParam, "%d", _MaxParam);
-		_MaxParamText->SetText(maxParam);
-	}
-	if (_ParamBuff != 0) {
-		char buff[100] = { "" };
-		if (_ParamBuff > 0) {
-			sprintf(buff, " ª%d", abs(_ParamBuff));
-			_BuffText->SetBlendColor(Color::blue);
-			_ParamText->SetBlendColor(Color::yellow);
+		case ParameterRender::Normal:
+		{
+			sprintf(param, "%d", _Param);
+			_BuffText->SetText("");
+			_ParamText->SetBlendColor(Color::white);
+			break;
 		}
-		else {
-			sprintf(buff, " «%d", abs(_ParamBuff));
-			_BuffText->SetBlendColor(Color::red);
-			_ParamText->SetBlendColor(Color::black * 0.5f);
+		case ParameterRender::Max:
+		{
+			sprintf(param, "%d", _Param);
+			strcat(param, " / ");
+			char maxParam[100] = { "" };
+			sprintf(maxParam, "%d", _MaxParam);
+			_MaxParamText->SetText(maxParam);
+			break;
 		}
-		_BuffText->SetText(buff);
+		case ParameterRender::Buff:
+		{
+			if (_ParamBuff != 0)
+			{
+				sprintf(param, "%d", _Param);
+				char buff[100] = { "" };
+				if (_ParamBuff > 0) {
+					sprintf(buff, " ª%d", abs(_ParamBuff));
+					_BuffText->SetBlendColor(Color::blue);
+					_ParamText->SetBlendColor(Color::yellow);
+				}
+				else {
+					sprintf(buff, " «%d", abs(_ParamBuff));
+					_BuffText->SetBlendColor(Color::red);
+					_ParamText->SetBlendColor(Color::black * 0.5f);
+				}
+				_BuffText->SetText(buff);
+			}
+			break;
+		}
+		case ParameterRender::Equip:
+		{
+			sprintf(param, "+ %d ( %d ", _ParamNewEquip, _ParamEquip + _Param);
+			char p[100] = { "" };
+			if (_ParamEquip + _Param > _ParamNewEquip + _Param)
+			{
+				sprintf(p, "<color=ff0000ff>« %d</color>", _ParamNewEquip + _Param);
+			}
+			else if (_ParamEquip + _Param < _ParamNewEquip + _Param)
+			{
+				sprintf(p, "<color=0000ffff>ª %d</color>", _ParamNewEquip + _Param);
+			}
+			else
+			{
+				sprintf(p, "¨ %d", _ParamNewEquip + _Param);
+			}
+			strcat(param, p);
+			strcat(param, " )");
+			break;
+		}
 	}
-	else {
-		_BuffText->SetText("");
-		_ParamText->SetBlendColor(Color::white);
-	}
+
 	_ParamText->SetText(param);
 }

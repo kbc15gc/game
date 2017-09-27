@@ -14,6 +14,19 @@ class ParameterRender : public GameObject
 public:
 
 	/**
+	* 表示タイプ.
+	*/
+	enum ShowType
+	{
+		Normal,		//!< 通常.
+		Max,		//!< 最大値使用.
+		Buff,		//!< バフ使用.
+		Equip,		//!< 装備使用.
+	};
+
+public:
+
+	/**
 	* コンストラクタ.
 	*/
 	ParameterRender(const char* name) :
@@ -39,17 +52,59 @@ public:
 	void Update()override;
 
 	/**
+	* パラメータ設定.
+	*/
+	void SetParam(char* name, char* iconName, int param)
+	{
+		_IconImage->SetTexture(LOADTEXTURE(iconName));
+		_IconImage->SetSize(Vector2(30.0f, 30.0f));
+		_ParamName = name;
+		_Param = param;
+
+		_ShowType = ShowType::Normal;
+	}
+	/**
 	* パラメータ設定. 
 	*/
-	void SetParam(char* name,char* iconName, int param,int buff = 0,int maxParam = INT_MIN)
+	void SetParamMax(char* name,char* iconName, int param,int maxParam)
+	{
+		_IconImage->SetTexture(LOADTEXTURE(iconName));
+		_IconImage->SetSize(Vector2(30.0f, 30.0f));
+		_ParamName = name;
+		_Param = param;
+		_MaxParam = maxParam;
+
+		_ShowType = ShowType::Max;
+	}
+	/**
+	* パラメータ設定.
+	*/
+	void SetParamBuff(char* name, char* iconName, int param, int buff)
 	{
 		_IconImage->SetTexture(LOADTEXTURE(iconName));
 		_IconImage->SetSize(Vector2(30.0f, 30.0f));
 		_ParamName = name;
 		_Param = param;
 		_ParamBuff = buff;
-		_MaxParam = maxParam;
+
+		_ShowType = ShowType::Buff;
 	}
+	/**
+	* パラメータ設定.
+	*/
+	void SetParamEquip(char* name, char* iconName, int param, int equip, int newEquip)
+	{
+		_IconImage->SetTexture(LOADTEXTURE(iconName));
+		_IconImage->SetSize(Vector2(30.0f, 30.0f));
+		_ParamName = name;
+		_Param = param;
+
+		_ParamEquip = equip;
+		_ParamNewEquip = newEquip;
+
+		_ShowType = ShowType::Equip;
+	}
+
 
 	// パラメータテキストの位置設定(ローカル座標)。
 	inline void SetParamTextPos(const Vector3& localPos) {
@@ -80,7 +135,14 @@ private:
 	/** パラメータバフ値(マイナスならデバフ). */
 	int _ParamBuff;
 
+	/** 現在装備. */
+	int _ParamEquip;
+	/** 候補装備. */
+	int _ParamNewEquip;
+
 	/** アイコン画像. */
 	ImageObject* _IconImage = nullptr;
+
+	ShowType _ShowType = ShowType::Normal;
 
 };
