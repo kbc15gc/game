@@ -2,6 +2,7 @@
 #include "ConsumptionItem.h"
 #include "fbEngine\_Object\_Component\_Physics\GostCollision.h"
 #include "fbEngine\_Object\_Component\_Physics\SphereCollider.h"
+#include "GameObject\Component\ParticleEffect.h"
 
 namespace {
 	// 効果を及ぼす人数のテーブル。
@@ -48,6 +49,7 @@ void ConsumptionItem::Start() {
 bool ConsumptionItem::UseItem() {
 	vector<GameObject*> targets;	// 消費アイテムを使う対象。
 
+	ParticleEffect* effect = _user->GetComponent<ParticleEffect>();
 	if (static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Heel || static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Buff) {
 		// 回復もしくはバフアイテム。
 
@@ -57,6 +59,9 @@ bool ConsumptionItem::UseItem() {
 
 		// 暫定処理。
 		// ※とりあえず演出は考慮していない。
+
+		//回復のエフェクト。
+		effect->HeelEffect(_user->transform);
 
 		param->HeelHP(info->effectValue[CharacterParameter::Param::HP]);	// HP回復処理。
 		param->HeelMP(info->effectValue[CharacterParameter::Param::MP]);	// MP回復処理。
@@ -70,7 +75,6 @@ bool ConsumptionItem::UseItem() {
 				sprintf(error, "何の成果も得られませんでしたぁっ！！");
 				MessageBoxA(0, error, "回復できないよ！", MB_ICONWARNING);
 				targets.clear();
-
 				return false;
 			}
 		}
@@ -84,7 +88,6 @@ bool ConsumptionItem::UseItem() {
 				sprintf(error, "何の成果も得られませんでしたぁっ！！");
 				MessageBoxA(0, error, "回復できないよ！", MB_ICONWARNING);
 				targets.clear();
-
 				return false;
 			}
 		}
@@ -93,7 +96,6 @@ bool ConsumptionItem::UseItem() {
 			int value = info->effectValue[idx];
 			if (value > 0) {
 				// バフ。
-				
 				param->Buff(static_cast<CharacterParameter::Param>(idx),static_cast<unsigned short>(value),info->time);
 			}
 			else if (value < 0) {
@@ -102,7 +104,7 @@ bool ConsumptionItem::UseItem() {
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
 			}
 		}
-
+		
 		return true;
 	}
 	else {
@@ -166,6 +168,8 @@ bool ConsumptionItem::UseItem() {
 		// ※とりあえず演出は考慮していない。
 		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 			if (param) {
+				effect = target->GetComponent<ParticleEffect>();
+				effect->DeBuffEffect(target->transform);
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
 			}
 		}

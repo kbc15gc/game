@@ -16,6 +16,7 @@ class SkinModel;
 class Animation;
 class EnemyState;
 class EnemyAttack;
+class ParticleEffect;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -68,6 +69,7 @@ private:
 		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
 		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる関数。
+		ParticleEffect* ParticleEffect = nullptr;	// パーティクルエフェクト。
 	};
 
 	struct CollisionInfo {
