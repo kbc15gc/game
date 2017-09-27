@@ -75,7 +75,7 @@ private:
 	Player* _Player = nullptr;
 
 	/** セルサイズ. */
-	static const int ItemCellSize = 10;
+	static const int ItemCellSize = 5;
 
 	/** ウィンドウ名表示. */
 	TextObject* _WindowName = nullptr;
@@ -88,6 +88,8 @@ private:
 
 	/** 現在選択中のアイテム. */
 	int _NowSelectItem = 0;
+	/** リストの初めの添え字. */
+	int _StartLoadCount = 0;
 	/** セレクトカーソル. */
 	ImageObject* _SelectCursor = nullptr;
 
