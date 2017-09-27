@@ -236,6 +236,11 @@ private:
 	// 引数：		レベルアップに必要な経験値の値。
 	void _LevelUP();
 
+#ifdef _DEBUG
+	//デバッグレベル
+	void _DebugLevel(int lv);
+#endif // _DEBUG
+
 private:
 	friend class PlayerStateAttack;
 	friend class PlayerStateDeath;
