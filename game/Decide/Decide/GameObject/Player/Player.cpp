@@ -12,7 +12,7 @@ namespace
 {
 	float NormalAnimationSpeed = 1.0f;
 	float AttackAnimationSpeed = 1.3f;
-	float Oboreru = 1.0f;
+	float Oboreru = 3.0f;
 }
 
 Player::Player(const char * name) :
@@ -403,7 +403,7 @@ void Player::_Damage()
 	if (transform->GetLocalPosition().y < 48.5f 
 		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_HPBar->SubValue(_PlayerParam->ReciveDamage(CharacterParameter::HP, Oboreru * Time::DeltaTime()));
+		_HPBar->SubValue(_PlayerParam->ReciveDamage(Oboreru,false,nullptr,0));
 	}
 }
 

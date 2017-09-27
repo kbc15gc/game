@@ -12,7 +12,6 @@
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
 
-class SplitSpace;
 
 /**
 * 歴史を管理するクラス.
@@ -159,8 +158,5 @@ private:
 
 	MysteryLight* _MysteryLight = nullptr;
 	vector<int> _NowGroupIDList;
-
-	//空間分割
-	SplitSpace* _SplitSpace = nullptr;
 
 };
