@@ -444,9 +444,9 @@ void Player::_DebugLevel(int lv)
 	// 次のレベルのパラメータを設定。
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP));
+	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP));
+	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
 }
 #endif // _DEBUG
 

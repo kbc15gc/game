@@ -97,80 +97,58 @@ Inventory::~Inventory(){
 }
 
 void Inventory::Initialize() {
-	
-	_LoadData();
 
+	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
+		// コードごとの最大ID数分配列確保。
+		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx))));
+	}
+
+	// CSV読み込み。
+	_LoadData();
 }
 
 //アイテムをインベントリに追加。
 void Inventory::AddItem(Item::ItemInfo* item, int num) {
 	Item::BaseInfo* Info = item;
 	char error[256];
+	int work = num;
 
-	for (int i = 0; i < INVENTORYLISTNUM; i++)
+	vector<vector<HoldItemBase*>::iterator> nullList;	// インベントリの空き。
+
+	for (int i = 0;work > 0 && i < INVENTORYLISTNUM; i++)
 	{
 		if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] && _InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i]->GetInfo()->ID == item->ID)
 		{
 			//同じアイテムが配列にある。
 
-			int holdNum = static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->GetHoldNum();
-			if (holdNum < Item::holdMax) {
-				// このアイテムの所持数に空きがある。
-
-				if (holdNum + num > Item::holdMax) {
-					// 加算すると所持上限を超える。
-
-					int set = Item::holdMax - holdNum;	// 加算する数。
-
-					//所持数更新。
-					static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->UpdateHoldNum(set);
-
-					num -= set;	// 設定した分は減算。
-				}
-				else {
-					// 追加した分の数が一枠に収まる。
-
-					// アイテムの所持数を加算。
-					static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->UpdateHoldNum(num);
-
-					//所持品配列の所持数をCSVに書き出し。
-					_OutData(Item::ItemCodeE::Item);
-
-					return;
-				}
-			}
+			//所持数更新。
+			work = static_cast<ConsumptionItem*>(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i])->AddHoldNum(work);
+		}
+		else {
+			// 空の領域を保存。
+			nullList.push_back(_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)].begin() + i);
 		}
 	}
 
 	// 追加するアイテムが配列になかった。
 	// もしくは既に存在するアイテム枠に追加分の数が収まりきらなかった。
-	for (int i = 0; i < INVENTORYLISTNUM; i++)
+	for (int i = 0; work > 0 && i < nullList.size(); i++)
 	{
-		if (_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] == nullptr) {
-			//インベントリに空きがある。
-
-			//所持アイテムのインスタンス作成。
-			ConsumptionItem* Hold = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Consumption", 9);
-			Hold->SetInfo(item);
-			//所持数更新。
-			static_cast<ConsumptionItem*>(Hold)->UpdateHoldNum(num);
-
-			// 新しく作成したアイテムを配列に追加。
-			_InventoryItemList[static_cast<int>(Item::ItemCodeE::Item)][i] = Hold;
-
-			//所持品配列の所持数をCSVに書き出し。
-			_OutData(Item::ItemCodeE::Item);
-
-			return;
-		}
+		*nullList[i] = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Consumption", 9);
+		(*nullList[i])->SetInfo(item);
+		work = static_cast<ConsumptionItem*>(*nullList[i])->AddHoldNum(work);
 	}
+
+	_HoldNumList[static_cast<int>(Item::ItemCodeE::Item)][Info->ID] += (num - work);	// 新しく追加した数だけ所持数合計に加算。
+	//所持品配列の所持数をCSVに書き出し。
+	_OutData(Item::ItemCodeE::Item);
 
 
 	//エラー報告。
 	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
-	{
+	if(work > 0){
 		char error[256];
-		sprintf(error, "インベントリが一杯で追加されませんでした。");
+		sprintf(error, "インベントリが一杯で%sが%dこ追加されませんでした。",Info->Name,work);
 		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
 	}
 
@@ -279,26 +257,37 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 
 //所持数を減らす。
 bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
+	int work = num;
+	bool isDeleteList = false;
+
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[static_cast<int>(item->TypeID)].begin(); itr != _InventoryItemList[static_cast<int>(item->TypeID)].end();)
+	for (auto itr = _InventoryItemList[static_cast<int>(item->TypeID)].begin(); work > 0 && itr != _InventoryItemList[static_cast<int>(item->TypeID)].end();)
 	{
 		//IDの一致。
 		if ((*itr) != nullptr&&item->ID == (*itr)->GetInfo()->ID)
 		{
-			//引数分所持品の数を更新。
-			static_cast<ConsumptionItem*>(*itr)->UpdateHoldNum(-num);
-
-			//更新した結果所持数が0になれば破棄。
-			if (static_cast<ConsumptionItem*>(*itr)->GetHoldNum() <= 0) {
-				//リストから削除。
+			switch (item->TypeID) {
+			case Item::ItemCodeE::Item:
+				//引数分所持品の数を更新。
+				work = static_cast<ConsumptionItem*>(*itr)->SubHoldNum(work);
+				//更新した結果所持数が0になれば破棄。
+				if (static_cast<ConsumptionItem*>(*itr)->GetHoldNum() <= 0) {
+					//リストから削除。
+					_DeleteFromList(*itr);
+					isDeleteList = true;
+				}
+				break;
+			case Item::ItemCodeE::Armor:
+			case Item::ItemCodeE::Weapon:
 				_DeleteFromList(*itr);
-
+				work--;
+				isDeleteList = true;
+				break;
+			}
+			if (isDeleteList) {
 				//リストから削除されたので他のアイテムを詰める。
 				ArrangementInventory();
 			}
-			//所持品の所持数書き出し。
-			_OutData(item->TypeID);
-			return true;
 		}
 		//不一致。
 		else
@@ -306,7 +295,13 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 			itr++;
 		}
 	}
-	return false;
+
+	_HoldNumList[static_cast<int>(Item::ItemCodeE::Item)][item->ID] -= (num - work);	// 新しく追加した数だけ所持数合計に加算。
+
+	//所持品の所持数書き出し。
+	_OutData(item->TypeID);
+
+	return isDeleteList;
 }
 
 void Inventory::_LoadData() {

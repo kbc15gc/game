@@ -307,7 +307,7 @@ namespace Support {
 			int offset = 0;		//先頭からのoffset量
 			memcpy(copy, line, sizeof(char) * 512);
 			//アドレス確保
-			T1* tmp = new T1;
+			T2* tmp = new T1();
 			
 			while (*(line + offset) != '\0' &&	//1行の終端までループ
 				idx < datanum)					//範囲チェック
@@ -327,7 +327,7 @@ namespace Support {
 				idx++;
 			}
 			//要素追加
-			output.push_back(unique_ptr<T1>(tmp));
+			output.push_back(unique_ptr<T2>(tmp));
 		}
 		//読み込み終了
 		return true;
