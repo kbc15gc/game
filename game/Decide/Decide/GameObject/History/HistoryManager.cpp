@@ -4,6 +4,7 @@
 #include "GameObject\Village\ContinentObject.h"
 #include "GameObject\Village\NPC.h"
 #include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
+#include "..\SplitSpace.h"
 
 namespace
 {
@@ -58,6 +59,8 @@ void HistoryManager::Start()
 			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
 			page->transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
 			page->ChangeState(HistoryPage::StateCodeE::Close);
+
+			_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
 		}
 	}
 
@@ -259,6 +262,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
 					coll->Create(Rinfo, true);
+
 					//カメラと当たらないコリジョンかどうか？
 					if ((bool)info->hitcamera)
 					{
@@ -271,6 +275,12 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					break;
 				}
 			}
+			if (!_SplitSpace)
+			{
+				//空間分割検索。
+				_SplitSpace = static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace"));
+			}
+			_SplitSpace->AddObjectHitSpace(*obj);
 		}
 	}
 
