@@ -158,27 +158,27 @@ void Text::SetKerning(const bool & kerning)
 void Text::_CalcAnchor(Vector3 & pos)
 {
 	//フォーマット
-	const unsigned int& format = (unsigned int)_TextAnchor;
+	const unsigned int& anchor = (unsigned int)_TextAnchor;
 	Vector3 sca = transform->GetScale();
 	//移動量
 	Vector2 offset(_Length.x * sca.x, -_Length.y * sca.y);
 	//半分に
 	offset *= 0.5f;
-	if (format & (unsigned int)fbText::TextAnchorE::Center)
+	if (anchor & (unsigned int)fbText::TextAnchorE::Center)
 	{
 		pos.x -= offset.x;
 	}
-	else if (format & (unsigned int)fbText::TextAnchorE::Right)
+	else if (anchor & (unsigned int)fbText::TextAnchorE::Right)
 	{
 		pos.x -= offset.x * 2;
 	}
 
 	//上下の移動
-	if (format & (unsigned int)fbText::TextAnchorE::Upper)
+	if (anchor & (unsigned int)fbText::TextAnchorE::Upper)
 	{
 		pos.y += offset.y;
 	}
-	else if (format & (unsigned int)fbText::TextAnchorE::Lower)
+	else if (anchor & (unsigned int)fbText::TextAnchorE::Lower)
 	{
 		pos.y -= offset.y;
 	}

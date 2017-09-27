@@ -107,6 +107,8 @@ private:
 	//説明テキスト。
 	TextObject* _DescriptionText;
 	
+	//お金のウィンドウ。
+	ImageObject* _MoneyWindow;
 	//お金のテキスト。
 	TextObject* _MoneyText;
 };
