@@ -13,7 +13,7 @@ void HistoryPageStatePutOut::Entry()
 {
 	_BefAngle = _HistoryPage->GetAngle();
 
-	_MoveSpeed = 1.2f;
+	_MoveSpeed = 2.0f;
 	_Angle = 0.0f;
 
 	_LerpRate = 0.0f;

@@ -13,6 +13,8 @@
 void HistoryPageStateTakeOff::Entry()
 {
 	_LerpRate = 0.0f;
+
+	_MoveSpeed = 2.0f;
 }
 
 /**

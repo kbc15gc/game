@@ -31,6 +31,8 @@ private:
 	void _SwitchTab();
 	//売買個数変更。
 	void _UpdateTradeNum();
+	//
+	void _UpdateSelectItem();
 
 	//メニュー作成。
 	void _CreateMenu();
@@ -86,16 +88,22 @@ private:
 	//表示する範囲。
 	int _MinIdx = 0;
 	//ショップに表示する数。
-	const int DISPLAY_ITEM_NUM = 7;
+	const int DISPLAY_ITEM_NUM = 5;
 	//売買する個数。
 	vector<int> _TradeNum;
 	//選択しているアイテム。
-	Item::BaseInfo* _SelectItem;
+	vector<int> _IndexList;
+	//合計金額
+	int _SumValue = 0;
 
 	//カーソルの画像。
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。
 	ImageObject* _TradeWindow;
+	//合計金額。
+	TextObject* _ValueText;
+	//各項目の名称説明。
+	TextObject* _TopText;
 	//アイテム一覧を視覚化したテキストのリスト。
 	vector<TextObject*> _MenuTexts,_MoneyTexts;
 	//メニューの一項目の縦幅。

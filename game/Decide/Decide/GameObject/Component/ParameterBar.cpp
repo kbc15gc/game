@@ -12,6 +12,7 @@ void BarElement::Create(BarColor color, float max,Transform* parent) {
 	_MaxValue = max;
 	_TargetValue = max;
 	_Value = max;
+	_isInterpolation = false;
 
 	// Transform設定。
 	transform->SetParent(parent);
@@ -48,16 +49,21 @@ void BarElement::ImageRender() {
 }
 
 void BarElement::_BarValueUpdate() {
-	if (_Value >= _TargetValue && _Dir > 0) {
-		// 更新方向が+、かつ目標値に到達した。
-		_Value = _TargetValue;
-	}
-	else if (_Value <= _TargetValue && _Dir < 0) {
-		// 更新方向が-、かつ目標値に到達した。
-		_Value = _TargetValue;
+	if (_isInterpolation) {
+		if (_Value >= _TargetValue && _Dir > 0) {
+			// 更新方向が+、かつ目標値に到達した。
+			_Value = _TargetValue;
+		}
+		else if (_Value <= _TargetValue && _Dir < 0) {
+			// 更新方向が-、かつ目標値に到達した。
+			_Value = _TargetValue;
+		}
+		else {
+			_Value += _WorkValue;
+		}
 	}
 	else {
-		_Value += _WorkValue;
+		_Value = _TargetValue;
 	}
 }
 
@@ -85,7 +91,7 @@ BarAdapter::~BarAdapter() {
 	}
 };
 
-void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float value, bool isRenderFrame, Transform* parent, const Vector3& pos, const Vector2& scale, bool isHud) {
+void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float value,  bool isInterpolation, bool isRenderFrame, Transform* parent, const Vector3& pos, const Vector2& scale, bool isHud) {
 	// 作業用Transform情報を保存。
 	// 親子関係を組んだ場合は親が移動したりすると自動更新される。
 	if (parent) {
@@ -103,11 +109,7 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 
 
 	// 指定された色の順と数に従ってバーを生成。
-	_ActiveBarColor(BarColorArray, max, value, _BarFrame->transform);
-
-	// 最初のバーを決定。
-	_NowBarNum = _NowSettingNum = 0;
-	_NowBar = _NowSettingBar = _BarElement[_NowBarNum].get();
+	_ActiveBarColor(BarColorArray, max, _BarFrame->transform);
 
 	this->SetIsRender(true);
 
@@ -115,10 +117,20 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 	_MaxValue = max;
 	_Value = max;
 
+	// 最初のバーを決定。
+	_NowBarNum = _NowSettingNum = 0;
+	_NowBar = _NowSettingBar = _BarElement[_NowBarNum].get();
+
 	_UpdateValue(value);	// 初期値を各バーに分配して設定。
+	
+	// 設定した値ですべてのバーを更新。
+	for (int idx = 0; idx < _BarElement.size(); idx++) {
+		_BarElement[idx]->Update();	
+		_BarElement[idx]->SetIsInterpolation(isInterpolation);	// 補間フラグをオンにする。
+	}
 }
 
-void BarAdapter::Reset(float max, float value) {
+void BarAdapter::Reset(float max, float value,bool isInterpolation) {
 	for (auto& element : _BarElement) {
 		// 全てのバーを新しい最大値で初期化。
 		element->Reset(max / _MaxBarNum);
@@ -133,6 +145,12 @@ void BarAdapter::Reset(float max, float value) {
 	_Value = max;
 
 	_UpdateValue(value);	// 初期値を各バーに分配して設定。
+
+	// 設定した値ですべてのバーを更新。
+	for (int idx = 0; idx < _BarElement.size(); idx++) {
+		_BarElement[idx]->Update();
+		_BarElement[idx]->SetIsInterpolation(isInterpolation);	// 補間フラグをオンにする。
+	}
 }
 
 void BarAdapter::Update() {
@@ -153,25 +171,37 @@ void BarAdapter::Update() {
 
 		_NowBar->Update();
 	}
-
-	if (_NowBar->GetValue() <= 0.0f) {
-		_NowBarNum++;
-		if (_NowBarNum < _MaxBarNum) {
-			// 更新中のバーを変更。
-			_NowBar = _BarElement[_NowBarNum].get();
-		}
-		else {
-			_NowBarNum--;
-		}
-	}
-	else if (_NowBar->GetValue() >= _NowBar->GetMaxValue()) {
-		_NowBarNum--;
-		if (_NowBarNum >= 0) {
-			// 更新中のバーを変更。
-			_NowBar = _BarElement[_NowBarNum].get();
-		}
-		else {
+	while (true) {
+		if (_NowBar->GetValue() <= 0.0f) {
 			_NowBarNum++;
+			if (_NowBarNum < _MaxBarNum) {
+				// 更新中のバーを変更。
+				_NowBar = _BarElement[_NowBarNum].get();
+			}
+			else {
+				// これ以上バーが無いので処理を終了。
+
+				_NowBarNum--;
+				break;
+			}
+		}
+		else if (_NowBar->GetValue() >= _NowBar->GetMaxValue()) {
+			_NowBarNum--;
+			if (_NowBarNum >= 0) {
+				// 更新中のバーを変更。
+				_NowBar = _BarElement[_NowBarNum].get();
+			}
+			else {
+				// これ以上バーが無いので処理を終了。
+
+				_NowBarNum++;
+				break;
+			}
+		}
+		else {
+			// 現在のバーを更新中。
+
+			break;
 		}
 	}
 }
@@ -317,14 +347,14 @@ void BarAdapter::_CreateBarFrame(const Vector3& pos, const Vector3& scale, bool 
 	_BarFrame->SetTexture(LOADTEXTURE("hpsp_bar.png"));
 }
 
-void BarAdapter::_ActiveBarColor(const vector<BarColor>& BarColorArray, float max, float value, Transform* tr) {
+void BarAdapter::_ActiveBarColor(const vector<BarColor>& BarColorArray, float max, Transform* tr) {
 	_MaxBarNum = BarColorArray.size();
 	for (auto BarColor : BarColorArray) {
 		BarElement* bar = new BarElement("BarElement")/*INSTANCE(GameObjectManager)->AddNew<CBarElement>("BarElement", idx)*/;
 		bar->Awake(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 
 		// バーを重ねる場合は値を重ねるバーの数分だけ分割する。
-		bar->Create(BarColor, max / _MaxBarNum, tr);
+		bar->Create(BarColor, max / _MaxBarNum,tr);
 		_BarElement.push_back(unique_ptr<BarElement>(bar));
 	}
 }

@@ -10,7 +10,6 @@
 
 #include "GameObject\History\HistoryManager.h"
 
-
 /**
 * 初期化.
 */
@@ -31,8 +30,13 @@ void HistoryMenu::Start()
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 
 	//スプライトクラスを追加.
-	_CursorSprite = AddComponent<Sprite>();
-	_CursorSprite->SetTexture(LOADTEXTURE("cursor.png"));
+	_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	_CursorSpriteL->SetTexture(LOADTEXTURE("UI/brackets.png"));
+	_CursorSpriteL->SetSize(_CursorSpriteL->GetSize() * 0.1f);
+	_CursorSpriteR = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
+	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
+	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
 }
 
 /**
@@ -52,7 +56,8 @@ void HistoryMenu::Update()
 	{
 		//非表示.
 		_LocationNameRender->SetActive(false);
-		_CursorSprite->SetEnable(false);
+		_CursorSpriteL->SetActive(false);
+		_CursorSpriteR->SetActive(false);
 		for (auto& it : _Chip2DList)
 		{
 			it->SetActive(false);
@@ -109,17 +114,17 @@ void HistoryMenu::EnableUpdate()
 		case SelectCodeE::Location:
 			//場所選択中の更新.
 			SelectLocationUpdate();
-			cursorPos.y = 20.0f;
+			cursorPos.y = 90.0f;
 			break;
 		case SelectCodeE::Page:
 			//ページ選択中の更新.
 			SelectPageUpdate();
-			cursorPos.y = 150.0f;
+			cursorPos.y = g_WindowSize.y / 2.0f;
 			break;
 		case SelectCodeE::Chip:
 			//チップ選択中の更新.
 			SelectChipUpdate();
-			cursorPos.y = g_WindowSize.y - 250.0f;
+			cursorPos.y = g_WindowSize.y - 100.0f;
 			break;
 	}
 
@@ -128,7 +133,7 @@ void HistoryMenu::EnableUpdate()
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.y >= 0.2f)
+	if (LStick.y >= 0.2f && fabsf(LStick.x) <= 0.1f)
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 		{
@@ -143,7 +148,7 @@ void HistoryMenu::EnableUpdate()
 			ChangeTime = 0.01f;
 		}
 	}
-	else if (LStick.y <= -0.2f)
+	else if (LStick.y <= -0.2f && fabsf(LStick.x) <= 0.1f)
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 		{
@@ -163,35 +168,20 @@ void HistoryMenu::EnableUpdate()
 		LocalTime = 0.0f;
 	}
 
-	_CursorSprite->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f));
+	_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
+	_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
 
 	//表示.
 	_LocationNameRender->SetActive(true);
-	_CursorSprite->SetEnable(true);
+	_CursorSpriteL->SetActive(true);
+	_CursorSpriteR->SetActive(true);
 
 	//場所名描画.
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	ChipMove();
 
-	//ページの座標をずらす.
-	vector<HistoryPage*> pageList;
-	for (auto& loc : _HistoryBook->GetPageList())
-	{
-		for (auto& page : loc)
-		{
-			pageList.push_back(page);
-		}
-	}
-	int size = pageList.size();
-	for (int i = 0; i < size; i++)
-	{
-		//位置.
-		int pos = i - size / 2;
-		Vector3 posVec = Vector3(-0.01f * pos, 0.0f, 0.2f - 0.005f * i);
-		pageList[i]->transform->SetPosition(posVec);
-	}
-
+	PageMove();
 }
 
 /**
@@ -385,5 +375,29 @@ void HistoryMenu::ChipMove()
 		{
 			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::NoSelect, pos);
 		}
+	}
+}
+
+/**
+* ページの座標移動.
+*/
+void HistoryMenu::PageMove()
+{
+	//ページの座標をずらす.
+	vector<HistoryPage*> pageList;
+	for (auto& loc : _HistoryBook->GetPageList())
+	{
+		for (auto& page : loc)
+		{
+			pageList.push_back(page);
+		}
+	}
+	int size = pageList.size();
+	for (int i = 0; i < size; i++)
+	{
+		//位置.
+		int pos = i - size / 2;
+		Vector3 posVec = Vector3(-0.01f * pos, 0.0f, 0.2f - 0.01f * i);
+		pageList[i]->transform->SetLocalPosition(posVec);
 	}
 }

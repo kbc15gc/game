@@ -151,31 +151,48 @@ public:
 	void DebuffClearAll();
 
 
-	// 指定したパラメーター取得。
+	// 指定したパラメーター(バフ値を含む)取得。
 	// 引数：	パラメータータイプ。
 	inline int GetParam(Param idx)const {
 		_OutCheck(idx);
 		return _Info[idx].param;
 	}
-	// 指定したパラメーターのポインタ取得。
+	// 指定したパラメーター(バフ値を除く)取得。
 	// 引数：	パラメータータイプ。
-	inline int* GetParamPt(Param param)
-	{
-		return &_Info[param].param;
+	inline int GetPigmentParam(Param idx)const {
+		if (idx == Param::HP || idx == Param::MP) {
+			// HPとMPは非対応。
+			abort();
+		}
+		_OutCheck(idx);
+		return _Info[idx].originParam;
+	}
+
+	// 指定したパラメーターの現在のバフ値取得。
+	// 引数：	パラメータータイプ。
+	inline int GetBuffParam(Param idx)const {
+		if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
+			// バフとデバフに対応していないものは非対応。
+			abort();
+		}
+		return static_cast<float>(_Info[idx].buffPercentage) * 0.01f * _Info[idx].originParam;
+	}
+	// 指定したパラメーターの現在のデバフ値取得。
+	// 引数：	パラメータータイプ。
+	inline int GetDebuffParam(Param idx)const {
+		if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
+			// バフとデバフに対応していないものは非対応。
+			abort();
+		}
+		return static_cast<float>(_Info[idx].debuffPercentage) * 0.01f * _Info[idx].originParam;
 	}
 
 	inline int GetMaxHP()const {
 		return _Info[Param::HP].originParam;
 	}
-	inline int* GetMaxHPPt() {
-		return &_Info[Param::HP].originParam;
-	}
 
 	inline int GetMaxMP() const{
 		return _Info[Param::MP].originParam;
-	}
-	inline int* GetMaxMPPt()  {
-		return &_Info[Param::MP].originParam;
 	}
 
 	//死んだかどうかのフラグを取得。

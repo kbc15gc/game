@@ -11,6 +11,9 @@ namespace {
 	};
 }
 
+// ˆê˜g‚ÌÅ‘åŠ”B
+const int ConsumptionItem::holdMax = 99;
+
 ConsumptionItem::ConsumptionItem(char* name) :HoldItemBase(name)
 {
 }

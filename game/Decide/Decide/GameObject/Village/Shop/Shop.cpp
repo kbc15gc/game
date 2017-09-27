@@ -8,6 +8,10 @@
 #include "GameObject\Village\Shop\HFSM\ShopS_Trade.h"
 #include "GameObject\Village\Shop\HFSM\ShopS_Confirmation.h"
 
+#include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
+#include "GameObject\ItemManager\HoldItem\HoldArmor.h"
+#include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
+
 Shop::Shop(const char * name):
 	GameObject(name),
 	_State(ShopStateE::Select)
@@ -49,7 +53,7 @@ void Shop::Awake()
 	//
 	_MoneyText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 	_MoneyText->transform->SetParent(_MoneyWindow->transform);
-	_MoneyText->transform->SetLocalPosition(Vector3(150, 0, 0));
+	_MoneyText->transform->SetLocalPosition(Vector3(130, 0, 0));
 	_MoneyText->Initialize(L"0$", 40);
 	_MoneyText->SetAnchor(fbText::TextAnchorE::UpperRight);
 	Pay(0);
@@ -119,7 +123,21 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		if (item)
 		{
 			//î•ñ‚ðÝ’è‚µ‚Ä‰Šú‰»B
-			HoldItemBase* hitem = INSTANCE(GameObjectManager)->AddNew<HoldItemBase>("Item", 9);
+			HoldItemBase* hitem;
+			switch (item->TypeID)
+			{
+			case Item::ItemCodeE::Item:
+				hitem = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Item", 9);
+				break;
+			case Item::ItemCodeE::Armor:
+				hitem = INSTANCE(GameObjectManager)->AddNew<HoldArmor>("Item", 9);
+				break;
+			case Item::ItemCodeE::Weapon:
+				hitem = INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("Item", 9);
+				break;
+			default:
+				break;
+			}
 			hitem->SetInfo(item);
 			_ItemList.push_back(hitem);
 		}

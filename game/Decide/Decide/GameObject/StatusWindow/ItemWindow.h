@@ -17,6 +17,9 @@
 class ItemWindow : public GameObject
 {
 public:
+	enum ShowStatus { LV = 0, HP, MP, ATK, MAT, DEF, MDE, DEX, MONEY, MAX };
+
+public:
 
 	/**
 	* コンストラクタ.
@@ -70,9 +73,17 @@ private:
 	*/
 	void Input();
 
+	// ステータス表示作成。
+	void _CreateShowStatus();
+
+	// パラメータ表示クラスのインスタンスに値を設定。
+	void _ConfigParamRender();
+
 private:
 
 	Player* _Player = nullptr;
+	// プレイヤーのレベル。
+	int _playerLevel = 0;
 
 	/** セルサイズ. */
 	static const int ItemCellSize = 5;
@@ -95,6 +106,11 @@ private:
 
 	/** Eアイコン. */
 	ImageObject* _EIconImage = nullptr;
+
+	// ゲージ。
+	ParameterBar* _ExpBar = nullptr;
+	ParameterBar* _HpBar = nullptr;
+	ParameterBar* _MpBar = nullptr;
 
 	/** パラメーターリスト. */
 	vector<ParameterRender*> _ParameterRenderList;

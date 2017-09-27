@@ -163,18 +163,33 @@ public:
 		
 	}
 
-	int* GetParamPt(CharacterParameter::Param param)
+	int GetParam(CharacterParameter::Param param)
 	{
-		return _PlayerParam->GetParamPt(param);
+		return _PlayerParam->GetParam(param);
 	}
-	int* GetMaxHPPt() {
-		return _PlayerParam->GetMaxHPPt();
+	int GetPigmentParam(CharacterParameter::Param param){
+		return _PlayerParam->GetPigmentParam(param);
 	}
-	int* GetMaxMPPt() {
-		return _PlayerParam->GetMaxMPPt();
+	int GetBuffParam(CharacterParameter::Param param) {
+		return _PlayerParam->GetBuffParam(param);
 	}
-	int* GetExpPt() {
-		return &_nowEXP;
+	int GetDebuffParam(CharacterParameter::Param param) {
+		return _PlayerParam->GetDebuffParam(param);
+	}
+
+	int GetMaxHP() {
+		return _PlayerParam->GetMaxHP();
+	}
+	int GetMaxMP() {
+		return _PlayerParam->GetMaxMP();
+	}
+	// 現在の経験値量を取得。
+	int GetExp() const{
+		return _nowEXP;
+	}
+	// レベルアップに必要な経験値を取得。
+	int GetNextLevelExp()const {
+		return _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1];
 	}
 	//プレイヤーをストップさせるフラグ。
 	void PlayerStopEnable()
