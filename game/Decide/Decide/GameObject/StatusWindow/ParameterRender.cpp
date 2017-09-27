@@ -27,6 +27,13 @@ void ParameterRender::Awake()
 	_ParamText->SetAnchor(fbText::TextAnchorE::MiddleRight);
 	_ParamText->transform->SetParent(transform);
 	_ParamText->transform->SetLocalPosition(Vector3(200.0f, 0.0f, 0.0f));
+
+	//ƒpƒ‰ƒ[ƒ^‰Šú‰».
+	_BuffText = INSTANCE(GameObjectManager)->AddNew<TextObject>("BuffText", 9);
+	_BuffText->Initialize(L"", 25.0f);
+	_BuffText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_BuffText->transform->SetParent(transform);
+	_BuffText->transform->SetLocalPosition(Vector3(200.0f, 10.0f, 0.0f));
 }
 
 /**
@@ -36,13 +43,31 @@ void ParameterRender::Update()
 {
 	_ParamNameText->SetText(_ParamName);
 	char param[100] = { "" };
-	sprintf(param, "%d", (*_Param));
-	if (_MaxParam)
+	sprintf(param, "%d", _Param);
+	if (_MaxParam != INT_MIN)
 	{
 		strcat(param, " / ");
 		char maxParam[100] = { "" };
-		sprintf(maxParam, "%d", (*_MaxParam));
+		sprintf(maxParam, "%d", _MaxParam);
 		strcat(param, maxParam);
+	}
+	if (_ParamBuff != 0) {
+		char buff[100] = { "" };
+		if (_ParamBuff > 0) {
+			sprintf(buff, " ª%d", abs(_ParamBuff));
+			_BuffText->SetBlendColor(Color::blue);
+			_ParamText->SetBlendColor(Color::yellow);
+		}
+		else {
+			sprintf(buff, " «%d", abs(_ParamBuff));
+			_BuffText->SetBlendColor(Color::red);
+			_ParamText->SetBlendColor(Color::black * 0.5f);
+		}
+		_BuffText->SetText(buff);
+	}
+	else {
+		_BuffText->SetText("");
+		_ParamText->SetBlendColor(Color::white);
 	}
 	_ParamText->SetText(param);
 }

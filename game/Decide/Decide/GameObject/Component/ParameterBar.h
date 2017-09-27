@@ -30,6 +30,10 @@ public:
 
 
 	void SetValue(float value) {
+		if (fabsf(_TargetValue - value) <= 0.0001f) {
+			// 同じ値が再設定されたと判断。
+			return;
+		}
 		_TargetValue = value;
 		_WorkValue = (_TargetValue - _Value) / (60.0f * _Time);
 		_Dir = _WorkValue / fabsf(_WorkValue);
@@ -43,6 +47,10 @@ public:
 	inline float GetMaxValue()const {
 		return _MaxValue;
 	}
+
+	inline void SetIsInterpolation(bool flg) {
+		_isInterpolation = flg;
+	}
 private:
 	void _BarValueUpdate();
 	void _BarScaling();
@@ -55,6 +63,7 @@ private:
 	float _WorkValue; // m_Valueをm_TargetValueに向けて徐々に進めていくときの値。
 	float _Dir = 1.0f;	// 更新方向(+1か-1)。
 	static float _Time;	// m_Valueがm_TargetValueに到達するまでの時間(秒)。
+	bool _isInterpolation = false;	// バーのスケーリングを補間するか。
 };
 
 namespace {
@@ -76,19 +85,20 @@ public:
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
 	//			バーに設定する最大値(HP最大量など)。
 	//			バーに設定する初期値(HP量など)。
+	//			バーのスケーリングの際に補間処理を使用するか。
 	//			バーの枠を描画するか。
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
-	//			HUDとして使用するか(デフォルトはtrue)。
-	void Create(const vector<BarColor>& colors, float max, float value, bool isRenderFrame, Transform* tr, const Vector3& pos, const Vector2& scale, bool isHud);
+	//			HUDとして使用するか。
+	void Create(const vector<BarColor>& colors, float max, float value, bool isInterpolation, bool isRenderFrame, Transform* tr, const Vector3& pos, const Vector2& scale, bool isHud);
 	void Update();
 	void ImageRender()override;
 
 	// 作成済みのバーに値を設定しなおす関数。
 	// 引数：	最大値。
 	//			現在値。
-	void Reset(float max, float value);
+	void Reset(float max, float value, bool isInterpolation);
 
 private:
 	// バーの枠を生成する関数。
@@ -98,7 +108,7 @@ private:
 	void _CreateBarFrame(const Vector3& pos, const Vector3& scale, bool isHud);
 	// どの順番でどの色を表示するかを決めた配列を渡し、CBarElementのインスタンスを生成する関数。
 	// ※先に追加した色のゲージから減っていく。
-	void _ActiveBarColor(const vector<BarColor>& BarColorArray, float max, float value, Transform* tr);
+	void _ActiveBarColor(const vector<BarColor>& BarColorArray, float max, Transform* tr);
 	// ワンゲージ削った際のイベント。
 	void _BreakEvent();
 	// 引数の値で各バーに設定する値を更新。
@@ -116,8 +126,11 @@ public:
 	inline void SubValue(float value) {
 		_UpdateValue(_Value - value);
 	}
-	void AddValue(float value) {
+	inline void AddValue(float value) {
 		_UpdateValue(_Value + value);
+	}
+	inline void SetValue(float value) {
+		_UpdateValue(value);
 	}
 	// 何ゲージ重ねるかを返却。
 	inline short GetMaxBarNum()const {
@@ -164,7 +177,6 @@ class ParameterBar :
 	static const Vector2 CreateScale_DefaultArg;
 public:
 	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
-		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar",8);
 #ifdef _DEBUG
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
@@ -178,28 +190,38 @@ public:
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
 	//			バーに設定する最大値(HP最大量など)。
 	//			バーに設定する初期値(HP量など)。
-	//			バーの枠を描画するか。
+	//			バーのスケーリングの際に補間処理を使用するか(デフォルトはtrue)。
+	//			バーの枠を描画するか(デフォルトはtrue)。
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
+	//			更新優先度(デフォルトは8)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	inline void Create(const vector<BarColor>& colors, float max, float value, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, bool isHud = true) {
-		_Object->Create(colors,max, value, isRenderFrame, tr, pos, scale, isHud);
+	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 8,bool isHud = true) {
+		if (_Object) {
+			INSTANCE(GameObjectManager)->AddRemoveList(_Object);
+		}
+		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar", priorty);
+		_Object->Create(colors,max, value, isInterpolation,isRenderFrame, tr, pos, scale, isHud);
 		_Object->SetParentComponet(this);	// 更新管理を行うためにこのクラスのポインタを渡す。
 	}
 
 	// 作成済みのバーに値を設定しなおす関数。
 	// 引数：	最大値。
 	//			現在値。
-	inline void Reset(float max, float value) {
-		_Object->Reset(max,value);
+	//			バーのスケーリングに補間処理を使用するか。
+	inline void Reset(float max, float value,bool isInterpolaation) {
+		_Object->Reset(max,value, isInterpolaation);
 	}
 public:
 	inline void SubValue(float value) {
 		_Object->SubValue(value);
 	}
-	void AddValue(float value) {
+	inline void AddValue(float value) {
 		_Object->AddValue(value);
+	}
+	inline void SetValue(float value) {
+		_Object->SetValue(value);
 	}
 	// 何ゲージ重ねるかを返却。
 	inline short GetMaxBarNum()const {

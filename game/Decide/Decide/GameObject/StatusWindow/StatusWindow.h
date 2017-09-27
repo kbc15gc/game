@@ -13,6 +13,9 @@
 class StatusWindow : public GameObject
 {
 public:
+	enum ShowStatus { LV = 0, HP, MP, ATK, MAT, DEF, MDE, DEX, MONEY, MAX };
+
+public:
 
 	/**
 	* コンストラクタ.
@@ -40,9 +43,20 @@ public:
 	void Update()override;
 
 private:
+	// ステータス表示作成。
+	void _CreateShowStatus();
+	// パラメータ表示クラスのインスタンスに値を設定。
+	void _ConfigParamRender();
+private:
 
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;
+	// プレイヤーのレベル。
+	int _playerLevel = 0;
+	// ゲージ。
+	ParameterBar* _ExpBar = nullptr;
+	ParameterBar* _HpBar = nullptr;
+	ParameterBar* _MpBar = nullptr;
 
 	/** パラメータリスト. */
 	vector<ParameterRender*> _ParameterRenderList;
