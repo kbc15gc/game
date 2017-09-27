@@ -69,7 +69,8 @@ void ShadowMap::Render()
 
 		//”w–Ê‚ÌƒJƒŠƒ“ƒO‚Í‚µ‚È‚¢.
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE,TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE,TRUE);
 		for (auto& it : _CasterModelList)
 		{
 			//ƒ‚ƒfƒ‹•`‰æ.

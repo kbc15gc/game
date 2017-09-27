@@ -2,10 +2,15 @@
 
 namespace Event
 {
-	enum class EventID:int
+	enum class EventID :int
 	{
 		None = -1,
-		ShopF,
+		ShopF = 0,
+		FunctionNum,
+
+		StatusWindowA = FunctionNum,
+		HistoryBookA,
+		ActionNum
 	};
 }
 
@@ -20,7 +25,7 @@ public:
 	//添え字に対応したイベントを実行。
 	//[in] 実行するイベントのID
 	//[in] 渡す引数。
-	bool Execute(Event::EventID id,unsigned int idx = -1);
+	bool Execute(Event::EventID id,int idx = -1);
 
 	//イベントの終了通知を送る。
 	void NotifyEndEvent();

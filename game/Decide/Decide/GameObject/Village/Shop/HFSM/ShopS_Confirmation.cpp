@@ -15,6 +15,7 @@ ShopS_Confirmation::ShopS_Confirmation(Shop * shop) : IShopState(shop)
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 8);
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
 	_Cursor->transform->SetParent(_ConfirmationWindow->transform);
+	_Cursor->SetSize(Vector2(32, 32));
 	_Cursor->transform->SetLocalPosition(Vector3(0, 0, 0));
 
 	//テキスト。

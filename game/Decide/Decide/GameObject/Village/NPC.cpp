@@ -20,7 +20,7 @@ void NPC::Awake()
 {
 	ContinentObject::Awake();
 	//テキストボックスを出す。
-	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox", 8);
+	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox", 6);
 	_TextBox->SetTextSpeed(12.0f);
 }
 

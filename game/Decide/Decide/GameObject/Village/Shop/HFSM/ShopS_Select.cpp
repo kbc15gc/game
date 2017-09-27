@@ -14,6 +14,7 @@ ShopS_Select::ShopS_Select(Shop * shop) :IShopState(shop)
 	//カーソル
 	_Cursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 8);
 	_Cursor->SetTexture(LOADTEXTURE("ShopCursor.png"));
+	_Cursor->SetSize(Vector2(32, 32));
 	_Cursor->transform->SetParent(_SelectWindow->transform);
 
 	//テキスト。
@@ -79,6 +80,7 @@ void ShopS_Select::EnterState()
 
 void ShopS_Select::ExitState()
 {
+	select = 0;
 	_SelectWindow->SetActive(false, true);
 }
 

@@ -6,6 +6,7 @@
 #include"GameObject\Player\Player.h"
 #include"ParameterRender.h"
 #include"ItemWindow.h"
+#include "GameObject\Village\EventManager.h"
 
 /**
 * ステータス画面クラス.
@@ -39,13 +40,14 @@ public:
 	*/
 	void Update()override;
 
+	void OnDisable()override
+	{
+		INSTANCE(EventManager)->NotifyEndEvent();
+	}
 private:
 
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;
-
-	/** パラメータリスト. */
-	vector<ParameterRender*> _ParameterRenderList;
 
 	/** アイテム表示画面. */
 	vector<ItemWindow*> _ItemWindowList;

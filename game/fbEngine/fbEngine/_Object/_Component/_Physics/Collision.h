@@ -148,7 +148,7 @@ public:
 		return _Offset;
 	}
 
-	inline const Collider* GetShape()const {
+	inline Collider* GetShape()const {
 		return _Shape;
 	}
 

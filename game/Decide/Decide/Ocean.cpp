@@ -174,6 +174,6 @@ void Ocean::Render()
 	//変更したステートを元に戻す
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
+	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 
 }

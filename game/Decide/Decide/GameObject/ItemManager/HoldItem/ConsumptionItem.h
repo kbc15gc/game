@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 #include "fbEngine\_Object\_GameObject\CollisionObject.h"
-#include "GameObject\Component\ParticleEffect.h"
+
 class GameObject;
 
 //消費アイテムのクラス。
@@ -20,11 +20,12 @@ public:
 public:
 	ConsumptionItem(char* name);
 	~ConsumptionItem();
-
+	void Awake()override;
 	void Start()override;
 
 	//アイテムを使う。
-	void UseItem();
+	// 戻り値：	アイテムを使用できたか。
+	bool UseItem();
 
 	//所持数を更新(減らす場合は引数にマイナスを設定)。
 	inline void UpdateHoldNum(int add = 1) {
@@ -46,6 +47,4 @@ private:
 	int _HoldNum = 0;	// 所持数。
 
 	CollisionObject* _gost = nullptr;	// 対象の探索に必要。
-
-	ParticleEffect* _Effect = nullptr;
 };
