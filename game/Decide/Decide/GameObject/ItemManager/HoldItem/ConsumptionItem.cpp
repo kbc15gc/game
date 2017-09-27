@@ -23,10 +23,6 @@ void ConsumptionItem::Awake() {
 	// ショップで購入したアイテムで枠が追加された場合、Startが呼ばれないのでこちらでも呼ぶ。
 
 	_user = INSTANCE(GameObjectManager)->FindObject("Player");	// とりあえず使用者は固定でプレイヤー。
-
-	_gost->transform->SetParent(_user->transform);
-	_gost->transform->SetLocalPosition(Vector3::zero);
-	_gost->Create(Collision_ID::ITEMRANGE,Vector3(_range,_range,_range),false);	
 	if (_user) {
 		if (_Info) {
 			if (static_cast<Item::ItemInfo*>(_Info)->type == static_cast<int>(ConsumptionItem::EffectType::Debuff)) {
