@@ -97,8 +97,6 @@ void ShopS_Trade::EnterState()
 	_CreateMenu();
 	//リスト更新。
 	_UpdateList();
-
-	_TradeNum = 1;
 }
 
 void ShopS_Trade::ExitState()
@@ -138,12 +136,12 @@ void ShopS_Trade::_UpdateTradeNum()
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonRight))
 		{
 			int maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList.at(_Select))->GetHoldNum();
-			_TradeNum = min(maxNum, _TradeNum + 1);
+			_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
 			_UpdateText();
 		}
 		else if (VPadInput->IsPush(fbEngine::VPad::ButtonLeft))
 		{
-			_TradeNum = max(1, _TradeNum - 1);
+			_TradeNum[_Select] = max(1, _TradeNum[_Select] - 1);
 			_UpdateText();
 		}
 	}
@@ -191,11 +189,15 @@ void ShopS_Trade::_UpdateList()
 	else if (_SaveState == Shop::ShopStateE::Sell)
 		_DisplayList = INSTANCE(Inventory)->GetInventoryList(static_cast<Item::ItemCodeE>(_DisplayType));
 	
+	_TradeNum.clear();
 	_DisplayItemNum = 0;
 	for (int i = 0; i < _DisplayList.size(); i++)
 	{
 		if (_DisplayList.at(i) != nullptr)
+		{
 			_DisplayItemNum++;
+			_TradeNum.push_back(0);
+		}
 	}		
 
 	//テキストの文字更新。
@@ -259,11 +261,11 @@ void ShopS_Trade::_UpdateText()
 		char info[256];
 		if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
-			sprintf(info, "%2d %2d %6d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum, item->GetInfo()->Value*_TradeNum);
+			sprintf(info, "%2d %2d %6d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
 		}
 		else
 		{
-			sprintf(info, "%2d %6d$", _TradeNum, item->GetInfo()->Value*_TradeNum);
+			sprintf(info, "%2d %6d$", _TradeNum[i], item->GetInfo()->Value);
 		}
 		_MoneyTexts[i]->SetText(info);
 	}
@@ -358,12 +360,12 @@ void ShopS_Trade::_Decision()
 	{
 		//テキスト。
 		char msg[256];
-		sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _TradeNum, _SelectItem->Value*_TradeNum);
+		sprintf(msg, "%s を %d 個ですね。\n全部で %d$ になります。", _SelectItem->Name, _TradeNum[_Select], _SelectItem->Value*_TradeNum[_Select]);
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
 			//お金が足りているか？
-			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SelectItem->Value*_TradeNum)
+			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SelectItem->Value*_TradeNum[_Select])
 			{
 				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
 				//購入確認画面を出す。
@@ -388,12 +390,12 @@ void ShopS_Trade::_Decision()
 void ShopS_Trade::BuyItem()
 {
 	//アイテムの値段分お金を払う。
-	_Shop->Pay(_SelectItem->Value * _TradeNum);
+	_Shop->Pay(_SelectItem->Value * _TradeNum[_Select]);
 	//インベントリへ追加。
 	if (_SelectItem->TypeID == Item::ItemCodeE::Item)
 	{
 		//アイテムを追加。
-		INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_SelectItem, _TradeNum);
+		INSTANCE(Inventory)->AddItem((Item::ItemInfo*)_SelectItem, _TradeNum[_Select]);
 	}
 	else
 	{
@@ -406,12 +408,12 @@ void ShopS_Trade::BuyItem()
 void ShopS_Trade::SellItem()
 {
 	//インベントリから排除。
-	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _TradeNum))
+	if (INSTANCE(Inventory)->SubHoldNum(_SelectItem, _TradeNum[_Select]))
 	{
 		//削除されていたならリスト更新。
 		_UpdateList();
 	}
 	//アイテムの値段分お金を貰う。
-	_Shop->Pay(-_SelectItem->Value * _TradeNum);
+	_Shop->Pay(-_SelectItem->Value * _TradeNum[_Select]);
 	_Shop->SetDescriptionText("まいどあり。");
 }

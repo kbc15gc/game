@@ -88,7 +88,7 @@ private:
 	//ショップに表示する数。
 	const int DISPLAY_ITEM_NUM = 7;
 	//売買する個数。
-	int _TradeNum = 1;
+	vector<int> _TradeNum;
 	//選択しているアイテム。
 	Item::BaseInfo* _SelectItem;
 

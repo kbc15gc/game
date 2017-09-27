@@ -10,6 +10,7 @@
 #include"HFSM\HistoryBookState.h"
 
 #include"HistoryPage\HistoryPage.h"
+#include "GameObject\Village\EventManager.h"
 
 /** プレイヤークラス. */
 class Player;
@@ -216,8 +217,7 @@ public:
 
 	void PlayerStopDisable()
 	{
-		_Player->PlayerStopDisable();
-		_PlayerCamera->SetIsMove(true);
+		INSTANCE(EventManager)->NotifyEndEvent();
 	}
 
 private:

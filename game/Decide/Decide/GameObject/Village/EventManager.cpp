@@ -67,20 +67,15 @@ void EventManager::AddEvent()
 
 	//
 
-	//ステータスウィンドウを開く処理。
+	//ステータスウィンドウの開閉処理。
 	_ActionList.push_back([status]
 	{
 		status->SetActive(!status->GetActive(), true);
 	});
-	//歴史書を開く処理。
-	_ActionList.push_back([book, this]
+	//歴史書の開閉処理。
+	_ActionList.push_back([book]
 	{
-		bool active = !book->GetActive();
-		if (active == false)
-		{
-			NotifyEndEvent();
-		}
-		book->SetActive(active, true);
+		book->SetActive(!book->GetActive(), true);
 	});
 }
 
