@@ -8,12 +8,17 @@
 #include"GameObject\ItemManager\ItemManager.h"
 #include"Item2D.h"
 #include"GameObject\Player\Player.h"
+#include"ParameterRender.h"
+#include"HoldItem2D.h"
 
 /**
 * アイテム表示画面クラス.
 */
 class ItemWindow : public GameObject
 {
+public:
+	enum ShowStatus { LV = 0, HP, MP, ATK, MAT, DEF, MDE, DEX, MONEY, MAX };
+
 public:
 
 	/**
@@ -36,16 +41,10 @@ public:
 	*/
 	void Awake()override;
 
-	void Start()override;
-
 	/**
 	* 自分で呼ぶ初期化.
 	*/
-	void Init(Item::ItemCodeE code,char* name)
-	{
-		_ItemCode = code;
-		_WindowName->SetText(name);
-	}
+	void Init(Item::ItemCodeE code);
 
 	/**
 	* 更新.
@@ -55,16 +54,39 @@ public:
 private:
 
 	/**
+	* 消費アイテムの初期化.
+	*/
+	void ItemInit();
+
+	/**
+	* 武器の初期化.
+	*/
+	void WeaponInit();
+	
+	/**
+	* 防具の初期化.
+	*/
+	void ArmorInit();
+
+	/**
 	* 入力.
 	*/
 	void Input();
 
+	// ステータス表示作成。
+	void _CreateShowStatus();
+
+	// パラメータ表示クラスのインスタンスに値を設定。
+	void _ConfigParamRender();
+
 private:
 
 	Player* _Player = nullptr;
+	// プレイヤーのレベル。
+	int _playerLevel = 0;
 
 	/** セルサイズ. */
-	static const int ItemCellSize = 10;
+	static const int ItemCellSize = 5;
 
 	/** ウィンドウ名表示. */
 	TextObject* _WindowName = nullptr;
@@ -77,9 +99,23 @@ private:
 
 	/** 現在選択中のアイテム. */
 	int _NowSelectItem = 0;
+	/** リストの初めの添え字. */
+	int _StartLoadCount = 0;
 	/** セレクトカーソル. */
 	ImageObject* _SelectCursor = nullptr;
 
 	/** Eアイコン. */
 	ImageObject* _EIconImage = nullptr;
+
+	// ゲージ。
+	ParameterBar* _ExpBar = nullptr;
+	ParameterBar* _HpBar = nullptr;
+	ParameterBar* _MpBar = nullptr;
+
+	/** パラメーターリスト. */
+	vector<ParameterRender*> _ParameterRenderList;
+
+	/** 装備アイテムリスト. */
+	vector<HoldItem2D*> _HoldItem2DList;
+
 };

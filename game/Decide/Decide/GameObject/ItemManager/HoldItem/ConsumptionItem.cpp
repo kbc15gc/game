@@ -60,6 +60,9 @@ bool ConsumptionItem::UseItem() {
 
 		// 暫定処理。
 		// ※とりあえず演出は考慮していない。
+
+		param->HeelHP(info->effectValue[CharacterParameter::Param::HP]);	// HP回復処理。
+		param->HeelMP(info->effectValue[CharacterParameter::Param::MP]);	// MP回復処理。
 		if (!param->HeelHP(info->effectValue[CharacterParameter::Param::HP]) && info->effectValue[CharacterParameter::Param::HP] > 0){	// HP回復処理。
 			// 回復できなかった。
 
@@ -93,7 +96,7 @@ bool ConsumptionItem::UseItem() {
 			int value = info->effectValue[idx];
 			if (value > 0) {
 				// バフ。
-
+				
 				param->Buff(static_cast<CharacterParameter::Param>(idx),static_cast<unsigned short>(value),info->time);
 			}
 			else if (value < 0) {
@@ -107,7 +110,6 @@ bool ConsumptionItem::UseItem() {
 	}
 	else {
 		// デバフアイテム。
-
 		// 効果範囲内のエネミーを取得。
 		int attr = Collision_ID::ENEMY | Collision_ID::BOSS;
 		vector<Collision*> hit;

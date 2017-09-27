@@ -1,5 +1,5 @@
 /**
-* ã‚¢ã‚¤ãƒ†ãƒ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®å®Ÿè£….
+* ƒAƒCƒeƒ€ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚ÌÀ‘•.
 */
 #include"stdafx.h"
 #include"ItemWindow.h"
@@ -9,22 +9,29 @@
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 
 /**
-* åˆæœŸåŒ–.
+* ‰Šú‰».
 */
 void ItemWindow::Awake()
 {
+	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
+	itemWindow->SetSize(Vector2(495.0f, 580.0f));
+	itemWindow->SetPivot(0.0f, 0.5f);
+	itemWindow->transform->SetParent(transform);
+	itemWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
+
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
 	_WindowName->Initialize(L"", 30.0f);
 	_WindowName->SetAnchor(fbText::TextAnchorE::MiddleCenter);
 	_WindowName->transform->SetParent(transform);
-	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -280.0f, 0.0f));
+	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -235.0f, 0.0f));
 
 	for (int i = 0; i < ItemCellSize; i++)
 	{
-		Item2D* item = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
-		item->transform->SetParent(transform);
-		item->transform->SetLocalPosition(Vector3(270.0f, -220.0f + (i * 52.0f), 0.0f));
-		_Item2DList.push_back(item);
+		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
+		item2D->transform->SetParent(itemWindow->transform);
+		item2D->transform->SetLocalPosition(Vector3(270.0f, -220.0f + (i * 52.0f), 0.0f));
+		_Item2DList.push_back(item2D);
 	}
 
 	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 9);
@@ -44,33 +51,140 @@ void ItemWindow::Awake()
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
-void ItemWindow::Start()
+
+/**
+* ‰Šú‰».
+*/
+void ItemWindow::Init(Item::ItemCodeE code)
 {
+	_ItemCode = code;
+
+	switch (_ItemCode)
+	{
+		case Item::ItemCodeE::Item:
+			ItemInit();
+			break;
+		case Item::ItemCodeE::Armor:
+			ArmorInit();
+			break;
+		case Item::ItemCodeE::Weapon:
+			WeaponInit();
+			break;
+	}
 }
 
 /**
-* æ›´æ–°.
+* ƒAƒCƒeƒ€‚Ì‰Šú‰».
+*/
+void ItemWindow::ItemInit()
+{
+	_WindowName->SetText(L"ƒAƒCƒeƒ€ˆê——");
+
+	// ƒXƒe[ƒ^ƒX•\¦ì¬B
+	_CreateShowStatus();
+
+	Vector3 pos[4] =
+	{
+		Vector3(-250.0f,190.0f,0.0f),	//ã
+		Vector3(-250.0f,300.0f,0.0f),	//‰º
+		Vector3(-220.0f,245.0f,0.0f),	//‰E
+		Vector3(-280.0f,245.0f,0.0f),	//¶
+	};
+	for (int i = 0; i < 4; i++)
+	{
+		HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+		holdItem->transform->SetParent(transform);
+		holdItem->transform->SetLocalPosition(pos[i]);
+		holdItem->Init((i % 2 == 1));
+		_HoldItem2DList.push_back(holdItem);
+	}
+}
+
+/**
+* •Ší‚Ì‰Šú‰».
+*/
+void ItemWindow::WeaponInit()
+{
+	_WindowName->SetText(L"•Šíˆê——");
+
+	int ParamCount = 6;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+
+	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	holdItem->transform->SetParent(transform);
+	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	holdItem->Init();
+	_HoldItem2DList.push_back(holdItem);
+}
+
+/**
+* –h‹ï‚Ì‰Šú‰».
+*/
+void ItemWindow::ArmorInit()
+{
+	_WindowName->SetText(L"–h‹ïˆê——");
+
+	int ParamCount = 6;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	_ParameterRenderList[0]->SetParam("LV", "UI/gem.png", _Player->GetParamPt(CharacterParameter::Param::LV));
+	_ParameterRenderList[1]->SetParam("EXP", "UI/S_Light01.png", _Player->GetExpPt());
+	_ParameterRenderList[2]->SetParam("HP", "UI/hp.png", _Player->GetParamPt(CharacterParameter::Param::HP), _Player->GetMaxHPPt());
+	_ParameterRenderList[3]->SetParam("MP", "UI/mp.png", _Player->GetParamPt(CharacterParameter::Param::MP), _Player->GetMaxMPPt());
+	_ParameterRenderList[4]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParamPt(CharacterParameter::Param::ATK));
+	_ParameterRenderList[5]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParamPt(CharacterParameter::Param::DEF));
+
+	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	holdItem->transform->SetParent(transform);
+	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	holdItem->Init();
+	_HoldItem2DList.push_back(holdItem);
+}
+
+/**
+* XV.
 */
 void ItemWindow::Update()
 {
+	_ConfigParamRender();
+
+	_EIconImage->SetActive(false, true);
+
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
 	{
-		if (itemList.size() > i && itemList[i] != nullptr)
+		if (itemList.size() > i + _StartLoadCount && itemList[i + _StartLoadCount] != nullptr)
 		{
 			_Item2DList[i]->SetActive(true, true);
-			_Item2DList[i]->SetItemData(itemList[i]);
+			_Item2DList[i]->SetItemData(itemList[i + _StartLoadCount]);
 
 			if (_ItemCode != Item::ItemCodeE::Item)
 			{
-				HoldEquipment* item = (HoldEquipment*)itemList[i];
+				HoldEquipment* item = (HoldEquipment*)itemList[i + _StartLoadCount];
 				if (item->GetIsEquip())
 				{
 					_EIconImage->SetActive(true, false);
 					_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+					_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
 				}
 			}
-			
 		}
 		else
 		{
@@ -79,11 +193,10 @@ void ItemWindow::Update()
 	}
 
 	Input();
-
 }
 
 /**
-* å…¥åŠ›.
+* “ü—Í.
 */
 void ItemWindow::Input()
 {
@@ -114,13 +227,43 @@ void ItemWindow::Input()
 		{
 			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 			{
-				_NowSelectItem = max(0, _NowSelectItem - 1);
+				if (_NowSelectItem <= 0)
+				{
+					if (_StartLoadCount > 0)
+					{
+						_StartLoadCount--;
+					}
+					else
+					{
+						_StartLoadCount = max(0, itemCount - ItemCellSize);
+						_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+					}
+				}
+				else
+				{
+					_NowSelectItem = max(0, _NowSelectItem - 1);
+				}
 				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 			LocalTime += Time::DeltaTime();
 			if (LocalTime >= ChangeTime)
 			{
-				_NowSelectItem = max(0, _NowSelectItem - 1);
+				if (_NowSelectItem <= 0)
+				{
+					if (_StartLoadCount > 0)
+					{
+						_StartLoadCount--;
+					}
+					else
+					{
+						_StartLoadCount = max(0, itemCount - ItemCellSize);
+						_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+					}
+				}
+				else
+				{
+					_NowSelectItem = max(0, _NowSelectItem - 1);
+				}
 				LocalTime = 0.0f;
 				ChangeTime = 0.01f;
 				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
@@ -131,13 +274,43 @@ void ItemWindow::Input()
 
 			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 			{
-				_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				if (_NowSelectItem >= ItemCellSize - 1)
+				{
+					if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+					{
+						_StartLoadCount++;
+					}
+					else
+					{
+						_StartLoadCount = 0;
+						_NowSelectItem = 0;
+					}
+				}
+				else
+				{
+					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				}
 				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 			LocalTime += Time::DeltaTime();
 			if (LocalTime >= ChangeTime)
 			{
-				_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				if (_NowSelectItem >= ItemCellSize - 1)
+				{
+					if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+					{
+						_StartLoadCount++;
+					}
+					else
+					{
+						_StartLoadCount = 0;
+						_NowSelectItem = 0;
+					}
+				}
+				else
+				{
+					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				}
 				LocalTime = 0.0f;
 				ChangeTime = 0.01f;
 				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
@@ -158,11 +331,93 @@ void ItemWindow::Input()
 			else if (_ItemCode == Item::ItemCodeE::Item)
 			{
 				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-				// æŒ‡å®šã—ãŸã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã€‚
 				item->UseItem();
-				// ä½¿ç”¨ã—ãŸã®ã§æ¸›ã‚‰ã™ã€‚
 				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
+				itemCount = 0;
+				for (auto& item : itemList)
+				{
+					if (item != nullptr)
+					{
+						itemCount += 1;
+					}
+				}
+				if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
+				{
+					//•\¦ˆÊ’u‚ğˆêŒÂ‚³‚°‚é.
+					_StartLoadCount--;
+				}
+				else if (_NowSelectItem >= itemCount)
+				{
+					//‘I‘ğˆÊ’u‚ğˆêŒÂ‰º‚°‚é.
+					_NowSelectItem--;
+				}
+				if (itemCount <= 0)
+				{
+					_SelectCursor->transform->SetParent(nullptr);
+					_SelectCursor->SetActive(false, true);
+				}
+				else
+				{
+					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
 			}
 		}
+	}
+}
+
+void ItemWindow::_CreateShowStatus()
+{
+	ShowStatus ParamCount = ShowStatus::MAX;
+	for (int i = 0; i < ParamCount; i++)
+	{
+		ParameterRender* pr = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("ParamParameterRender", 9);
+		pr->transform->SetParent(transform);
+		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
+		_ParameterRenderList.push_back(pr);
+	}
+	// ƒŒƒxƒ‹‚Ìƒpƒ‰ƒ[ƒ^‚Í^‰¡‚É•\¦B
+	_ParameterRenderList[ShowStatus::LV]->SetParamTextPos(_ParameterRenderList[ShowStatus::LV]->GetParamTextPos() + Vector3(-200, 0.0f, 0.0f));
+
+	_ExpBar = AddComponent<ParameterBar>();
+	vector<BarColor> barColor;
+	barColor.push_back(BarColor::Yellow);
+	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[ShowStatus::LV]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+
+	_HpBar = AddComponent<ParameterBar>();
+	barColor.clear();
+	barColor.push_back(BarColor::Green);
+	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[ShowStatus::HP]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+
+	_MpBar = AddComponent<ParameterBar>();
+	barColor.clear();
+	barColor.push_back(BarColor::Blue);
+	_MpBar->Create(barColor, static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::MP)), false, false, _ParameterRenderList[ShowStatus::MP]->transform, Vector3(50.0f, 0.0f, 0.0f), Vector2::one, 9);
+
+	_ConfigParamRender();
+}
+
+void ItemWindow::_ConfigParamRender() {
+	int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
+	_ParameterRenderList[ShowStatus::LV]->SetParam("LV", "UI/gem.png", playerLevel);
+	_ParameterRenderList[ShowStatus::HP]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), 0, _Player->GetMaxHP());
+	_ParameterRenderList[ShowStatus::MP]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), 0, _Player->GetMaxMP());
+	_ParameterRenderList[ShowStatus::ATK]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
+	_ParameterRenderList[ShowStatus::MAT]->SetParam("MAT", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
+	_ParameterRenderList[ShowStatus::DEF]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
+	_ParameterRenderList[ShowStatus::MDE]->SetParam("MDE", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
+	_ParameterRenderList[ShowStatus::DEX]->SetParam("DEX", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
+	_ParameterRenderList[ShowStatus::MONEY]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney());
+
+	if (playerLevel != _playerLevel) {
+		// ƒŒƒxƒ‹•Ï“®B
+		_playerLevel = playerLevel;
+		_ExpBar->Reset(static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false);
+		_HpBar->Reset(static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::HP)), false);
+		_MpBar->Reset(static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::MP)), false);
+	}
+	else {
+		_ExpBar->SetValue(static_cast<float>(_Player->GetExp()));
+		_HpBar->SetValue(static_cast<float>(_Player->GetParam(CharacterParameter::HP)));
+		_MpBar->SetValue(static_cast<float>(_Player->GetParam(CharacterParameter::MP)));
 	}
 }

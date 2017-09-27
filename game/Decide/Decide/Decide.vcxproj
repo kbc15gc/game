@@ -170,6 +170,7 @@
     <ClInclude Include="GameObject\Component\ObjectSpawn.h" />
     <ClInclude Include="GameObject\Component\OutputData.h" />
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
+    <ClInclude Include="GameObject\Component\ParticleEffect.h" />
     <ClInclude Include="GameObject\Enemy\BossDrarian.h" />
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
+    <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
     <ClInclude Include="GameObject\StatusWindow\Item2D.h" />
     <ClInclude Include="GameObject\StatusWindow\ItemWindow.h" />
     <ClInclude Include="GameObject\StatusWindow\ParameterRender.h" />
@@ -265,6 +267,7 @@
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp" />
     <ClCompile Include="GameObject\Component\OutputData.cpp" />
     <ClCompile Include="GameObject\Component\ParameterBar.cpp" />
+    <ClCompile Include="GameObject\Component\ParticleEffect.cpp" />
     <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
@@ -319,6 +322,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Item2D.cpp" />
     <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp" />
     <ClCompile Include="GameObject\StatusWindow\ParameterRender.cpp" />

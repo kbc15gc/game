@@ -79,7 +79,7 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 	
-	FOR(i,ChipID::ChipNum)
+	FOR(i,2)
 	{
 		//歴史チップ
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 1);
@@ -113,11 +113,10 @@ void GameScene::Start()
 
 
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthofField().GetDepthRenderTarget()->texture);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(0));
 	g_depth->SetPivot(Vector2(0, 0));
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	g_depth->SetActive(false);*/
-
+	g_depth->SetActive(true);*/
 	
 	DebugNPC();
 }

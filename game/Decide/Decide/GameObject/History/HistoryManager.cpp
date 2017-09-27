@@ -249,7 +249,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					Rinfo.physicsType = Collision::PhysicsType::Static;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
-					Rinfo.id = (const int)fbCollisionAttributeE::ALL;
+					Rinfo.id = Collision_ID::BUILDING;
 					Rinfo.offset = info->pos;
 					/*Quaternion q; /*q.SetEuler(info->ang);*/
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
@@ -258,7 +258,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					q.SetRotation(Vector3::up, PI);
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
-					coll->Create(Rinfo, false);
+					coll->Create(Rinfo, true);
 					//カメラと当たらないコリジョンかどうか？
 					if ((bool)info->hitcamera)
 					{
