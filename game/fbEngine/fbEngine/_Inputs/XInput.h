@@ -35,6 +35,10 @@ public:
 	bool IsPushButton(int in);
 	//ボタンの継続的な押下
 	bool IsPressButton(int in);
+	//キーリピート。
+	//[in] ボタン。
+	//[in] 間隔。
+	bool KeyRepeat(int in,float interval);
 	//アナログスティック、トリガーが瞬間的に入力されているか
 	bool IsPushAnalog(AnalogE a);
 	//トリガーやスティックの値が欲しいときにどうぞ。
@@ -53,4 +57,7 @@ private:
 	bool _IsConnect;			//接続されているかどうか
 	XINPUT_STATE _State;		//現在の入力情報
 	XINPUT_STATE _BeforeState;	//1フレーム前のステート
+	
+	//キーリピート機能で使うタイマー。
+	float _RepeatTimer = 0.0f;
 };
