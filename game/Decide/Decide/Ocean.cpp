@@ -62,7 +62,7 @@ void Ocean::CreateBuffer()
 {
 	_Vertex = new Vertex();
 
-	const int SegmentCount = 500;
+	const int SegmentCount = 100;
 
 	vector<VERTEX_POSITION> position;
 	vector<VERTEX_TEXCOORD> texcoord;
@@ -109,7 +109,6 @@ void Ocean::CreateBuffer()
 */
 void Ocean::Render()
 {
-	
 	//—¼–Ê•`‰æ.
 	(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	

@@ -106,7 +106,7 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
+		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL, Vector3(170, 660.0f, 0.0f));
 	}
 	// MPのバーを表示。
 	{
@@ -157,7 +157,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-1056.0f, 69.0f, -1947.0f);
+	_StartPos = Vector3(-148.0f, 68.5f, -34.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -447,7 +447,7 @@ void Player::_DebugPlayer()
 	{
 		TakeDrop(100, 100);
 	}
-	static int level = _PlayerParam->GetParam(CharacterParameter::LV);
+	int level = _PlayerParam->GetParam(CharacterParameter::LV);
 	//レベルを上げる。
 	if (level <= 95)
 	{
