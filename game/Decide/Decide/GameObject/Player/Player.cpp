@@ -13,7 +13,7 @@ namespace
 {
 	float NormalAnimationSpeed = 1.0f;
 	float AttackAnimationSpeed = 1.3f;
-	float Oboreru = 3.0f;
+	float Oboreru = 1.0f;
 }
 
 Player::Player(const char * name) :
@@ -34,6 +34,8 @@ Player::Player(const char * name) :
 	_DeathState(this),
 	//ストップステート
 	_StopState(this),
+	//スピークステート
+	_SpeakState(this),
 	//デバッグか
 	_Debug(false)
 {
@@ -237,6 +239,9 @@ void Player::ChangeState(State nextstate)
 		//ストップ状態
 		_CurrentState = &_StopState;
 		break;
+	case State::Speak:
+		_CurrentState = &_SpeakState;
+		break;
 	default:
 		//デフォルト
 		break;
@@ -288,6 +293,11 @@ void Player::AnimationControl()
 		else if (_State == State::Stop)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+		}
+		//話せるか。
+		else if (_State == State::Speak)
+		{
+			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
@@ -359,10 +369,20 @@ void Player::_Damage()
 		ChangeState(State::Death);
 	}
 	//海に入るとダメージを食らう。
-	if (transform->GetLocalPosition().y < 48.5f 
-		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
+
+	static float time = 0.0f;
+	time += Time::DeltaTime();
+	//海の中の場合。
+	//HPが0以上なら。
+	//デバッグ時でない。
+	//2秒間隔で。
+	if (transform->GetLocalPosition().y < 48.5f && _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_HPBar->SubValue(_PlayerParam->ReciveDamage(Oboreru,false,nullptr,0));
+		if (fmod(time, 2.0f) >= 1.0f)
+		{
+			_HPBar->SubValue(_PlayerParam->ReciveDamageThrough(Oboreru));
+			time = 0.0f;
+		}
 	}
 }
 
