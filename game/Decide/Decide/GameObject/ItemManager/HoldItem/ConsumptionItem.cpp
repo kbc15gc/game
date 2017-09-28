@@ -68,7 +68,7 @@ bool ConsumptionItem::UseItem() {
 		else
 		{
 			//Hp回復のエフェクト。
-			effect->HeelHpEffect(_user->transform);
+			effect->HeelHpEffect();
 		}
 
 		if (!param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。
@@ -87,7 +87,7 @@ bool ConsumptionItem::UseItem() {
 		else
 		{
 			//Mp回復のエフェクト。
-			effect->HeelMpEffect(_user->transform);
+			effect->HeelMpEffect();
 		}
 
 		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
@@ -167,7 +167,7 @@ bool ConsumptionItem::UseItem() {
 		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 			if (param) {
 				effect = target->GetComponent<ParticleEffect>();
-				effect->DeBuffEffect(target->transform);
+				effect->DeBuffEffect();
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
 			}
 		}

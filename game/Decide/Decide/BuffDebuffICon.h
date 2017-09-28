@@ -13,7 +13,8 @@ public:
 		MAtk,		//魔法攻撃力。
 		Def,		//物理防御力。
 		MDef,		//魔法防御力。
-		Dex			//クリティカル率。
+		Dex,		//クリティカル率。
+		Max
 	};
 
 	//コンストラクタ。
@@ -30,12 +31,24 @@ public:
 	//初期化。
 	void Awake()override;
 
-	//バフデバフかを見てアイコンを生成。
-	void Buff(Param );
+	//バフアイコンを生成。
+	//引数:バフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
+	void BuffIconCreate(Param param);
 
-	//どのバフデバフかを見てアイコンを生成。
-	void Debuff(Param);
+	//デバフかを見てアイコンを生成。
+	//引数:デバフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
+	void DebuffIconCreate(Param param);
 private:
 	ImageObject* _ArrowIconImage = nullptr;				//BuffDebuffTypeIconに添える矢印アイコン。
 	ImageObject* _BuffDebuffTypeIconImage = nullptr;	//何のステータスが上がっているかを表すアイコン。
+};
+
+//ステータスアイコン。
+static const char* TypeIconText[static_cast<int>(BuffDebuffICon::Param::Max)] =
+{
+	"sword.png",
+	"magic.png",
+	"armor.png",
+	"cloaks.png",
+	"UI/S_Light01.png"
 };

@@ -10,3 +10,7 @@ void BuffDebuffICon::Awake() {
 	//武器か防具のアイコン。
 	_BuffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 9);
 }
+
+void BuffDebuffICon::BuffIconCreate(Param param) {
+	
+}
