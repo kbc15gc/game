@@ -4,6 +4,9 @@
 #include"stdafx.h"
 #include"ParameterRender.h"
 
+const float ParameterRender::defaultNameTextSize = 40.0f;
+const Vector2 ParameterRender::defaultIconSize = Vector2(30.0f,30.0f);
+
 /**
 * 初期化.
 */
@@ -11,7 +14,7 @@ void ParameterRender::Awake()
 {
 	//パラメータ名初期化.
 	_ParamNameText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ParamNameText", 9);
-	_ParamNameText->Initialize(L"", 40.0f);
+	_ParamNameText->Initialize(L"", defaultNameTextSize);
 	_ParamNameText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
 	_ParamNameText->transform->SetParent(transform);
 	_ParamNameText->transform->SetLocalPosition(Vector3(-170.0f, 0.0f, 0.0f));
@@ -23,7 +26,7 @@ void ParameterRender::Awake()
 
 	//パラメータ初期化.
 	_ParamText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ParamText", 9);
-	_ParamText->Initialize(L"", 40.0f);
+	_ParamText->Initialize(L"", defaultNameTextSize);
 	_ParamText->SetAnchor(fbText::TextAnchorE::MiddleRight);
 	_ParamText->transform->SetParent(_ParamNameText->transform);
 	_ParamText->transform->SetLocalPosition(Vector3(370.0f, 0.0f, 0.0f));
@@ -50,32 +53,97 @@ void ParameterRender::Awake()
 void ParameterRender::Update()
 {
 	_ParamNameText->SetText(_ParamName);
+
 	char param[100] = { "" };
-	sprintf(param, "%d", _Param);
-	if (_MaxParam != INT_MIN)
+
+	switch (_ShowType)
 	{
-		strcat(param, " / ");
-		char maxParam[100] = { "" };
-		sprintf(maxParam, "%d", _MaxParam);
-		strcat(param, maxParam);
-	}
-	if (_ParamBuff != 0) {
-		char buff[100] = { "" };
-		if (_ParamBuff > 0) {
-			sprintf(buff, " ↑%d", abs(_ParamBuff));
-			_BuffText->SetBlendColor(Color::blue);
-			_ParamText->SetBlendColor(Color::yellow);
+		case ParameterRender::Normal:
+		{
+			sprintf(param, "%d", _Param);
+			_BuffText->SetText("");
+			_ParamText->SetBlendColor(Color::white);
+			break;
 		}
-		else {
-			sprintf(buff, " ↓%d", abs(_ParamBuff));
-			_BuffText->SetBlendColor(Color::red);
-			_ParamText->SetBlendColor(Color::black * 0.5f);
+		case ParameterRender::Max:
+		{
+			sprintf(param, "%d", _Param);
+			strcat(param, " / ");
+			char maxParam[100] = { "" };
+			sprintf(maxParam, "%d", _MaxParam);
+			strcat(param, maxParam);
+			break;
 		}
-		_BuffText->SetText(buff);
+		case ParameterRender::Buff:
+		{
+			if (_ParamBuff != 0)
+			{
+				sprintf(param, "%d", _Param);
+				char buff[100] = { "" };
+				if (_ParamBuff > 0) {
+					sprintf(buff, " ↑%d", abs(_ParamBuff));
+					_BuffText->SetBlendColor(Color::blue);
+					_ParamText->SetBlendColor(Color::yellow);
+				}
+				else {
+					sprintf(buff, " ↓%d", abs(_ParamBuff));
+					_BuffText->SetBlendColor(Color::red);
+					_ParamText->SetBlendColor(Color::black * 0.3f);
+				}
+				_BuffText->SetText(buff);
+			}
+			break;
+		}
+		case ParameterRender::Equip:
+		{
+			sprintf(param, "+ %d ( %d ", _ParamNewEquip, _ParamEquip + _Param);
+			char p[100] = { "" };
+			if (_ParamEquip + _Param > _ParamNewEquip + _Param)
+			{
+				sprintf(p, "<color=ff0000ff>↓ %d</color>", _ParamNewEquip + _Param);
+			}
+			else if (_ParamEquip + _Param < _ParamNewEquip + _Param)
+			{
+				sprintf(p, "<color=0000ffff>↑ %d</color>", _ParamNewEquip + _Param);
+			}
+			else
+			{
+				sprintf(p, "→ %d", _ParamNewEquip + _Param);
+			}
+			strcat(param, p);
+			strcat(param, " )");
+			break;
+		}
+		case ParameterRender::Rank:
+		{
+			if (_ParamRank == HoldEquipment::Rank::None)
+			{
+				sprintf(param, "%s ", "-");
+			}
+			else
+			{
+				sprintf(param, "%s ", RankText[_ParamRank]);
+			}
+
+			char p[100] = { "" };
+			if (_ParamRank < _ParamNewRank)
+			{
+				sprintf(p, "<color=ff0000ff>↓ %s</color>", RankText[_ParamNewRank]);
+			}
+			else if (_ParamRank > _ParamNewRank)
+			{
+				sprintf(p, "<color=0000ffff>↑ %s</color>", RankText[_ParamNewRank]);
+			}
+			else
+			{
+				sprintf(p, "→ %s", RankText[_ParamNewRank]);
+			}
+
+			strcat(param, p);
+
+			break;
+		}
 	}
-	else {
-		_BuffText->SetText("");
-		_ParamText->SetBlendColor(Color::white);
-	}
+
 	_ParamText->SetText(param);
 }

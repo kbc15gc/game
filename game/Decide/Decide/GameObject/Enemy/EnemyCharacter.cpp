@@ -13,6 +13,7 @@
 #include "HFSM\EnemyDamageReactionState.h"
 #include "HFSM\EnemyThreatState.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
+#include "GameObject\Component\ParticleEffect.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -186,6 +187,9 @@ void EnemyCharacter::_BuildMyComponents() {
 	_MyComponent.Spawner = AddComponent<ObjectSpawn>();
 	// アニメーションイベントコンポーネント追加。
 	_MyComponent.AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
+
+	// パーティクルエフェクトコンポーネント追加。
+	_MyComponent.ParticleEffect = AddComponent<ParticleEffect>();
 }
 
 void EnemyCharacter::_BuildCollision() {

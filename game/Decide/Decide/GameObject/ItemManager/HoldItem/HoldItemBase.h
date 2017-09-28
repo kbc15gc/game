@@ -24,7 +24,7 @@ public:
 	}
 
 
-	inline void SetInfo(Item::BaseInfo* info) {
+	virtual inline void SetInfo(Item::BaseInfo* info) {
 		_Info = info;
 	}
 

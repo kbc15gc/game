@@ -39,7 +39,7 @@ void PlayerCamera::Awake()
 	_Sphere = AddComponent<SphereCollider>();
 	_Sphere->Create(_Radius);
 	//距離の下限と上限
-	_Dist = 7.0f;
+	_Dist = 5.0f;
 
 }
 
@@ -47,8 +47,9 @@ void PlayerCamera::Start()
 {
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
-	//正規化した方向を入れる
-	D3DXVec3Normalize(&_ToPlayerDir, &D3DXVECTOR3(0.0f, 3.0f, -4.0f));
+	//正規化した方向を
+	static D3DXVECTOR3 baseDir(0.0f, 1.5f, -1.5f);
+	D3DXVec3Normalize(&_ToPlayerDir, &baseDir);
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{

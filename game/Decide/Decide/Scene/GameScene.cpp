@@ -101,7 +101,7 @@ void GameScene::Start()
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
-	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", 9);
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", 7);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	//シャドウマップ有効.

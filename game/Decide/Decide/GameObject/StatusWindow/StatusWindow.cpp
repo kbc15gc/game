@@ -9,7 +9,7 @@
 /**
 * 初期化.
 */
-void StatusWindow::Start()
+void StatusWindow::Awake()
 {
 	//プレイヤークラスを取得.
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
@@ -38,9 +38,9 @@ void StatusWindow::Start()
 		iw->SetActive(false, true);
 		_ItemWindowList.push_back(iw);
 	}
-	_ItemWindowList[0]->Init(Item::ItemCodeE::Weapon);
-	_ItemWindowList[1]->Init(Item::ItemCodeE::Armor);
-	_ItemWindowList[2]->Init(Item::ItemCodeE::Item);
+	_ItemWindowList[0]->Init(Item::ItemCodeE::Item);
+	_ItemWindowList[1]->Init(Item::ItemCodeE::Weapon);
+	_ItemWindowList[2]->Init(Item::ItemCodeE::Armor);
 
 	//始めは非表示.
 	this->SetActive(false, true);
