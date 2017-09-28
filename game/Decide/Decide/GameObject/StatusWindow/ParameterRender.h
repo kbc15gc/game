@@ -5,6 +5,7 @@
 
 #include"fbEngine\_Object\_GameObject\TextObject.h"
 #include"fbEngine\_Object\_GameObject\ImageObject.h"
+#include"GameObject\ItemManager\HoldItem\HoldEquipment.h"
 
 /**
 * パラメータ表示クラス.
@@ -22,6 +23,7 @@ public:
 		Max,		//!< 最大値使用.
 		Buff,		//!< バフ使用.
 		Equip,		//!< 装備使用.
+		Rank,		//!< ランク使用.
 	};
 
 public:
@@ -104,6 +106,20 @@ public:
 
 		_ShowType = ShowType::Equip;
 	}
+	/**
+	* パラメータ設定.
+	*/
+	void SetParamRank(char* name, char* iconName, HoldEquipment::Rank rank, HoldEquipment::Rank newRank)
+	{
+		_IconImage->SetTexture(LOADTEXTURE(iconName));
+		_IconImage->SetSize(Vector2(30.0f, 30.0f));
+		_ParamName = name;
+
+		_ParamRank = rank;
+		_ParamNewRank = newRank;
+
+		_ShowType = ShowType::Rank;
+	}
 
 
 	// パラメータテキストの位置設定(ローカル座標)。
@@ -139,6 +155,9 @@ private:
 	int _ParamEquip;
 	/** 候補装備. */
 	int _ParamNewEquip;
+
+	HoldEquipment::Rank _ParamRank;
+	HoldEquipment::Rank _ParamNewRank;
 
 	/** アイコン画像. */
 	ImageObject* _IconImage = nullptr;

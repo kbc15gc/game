@@ -111,6 +111,35 @@ void ParameterRender::Update()
 			strcat(param, " )");
 			break;
 		}
+		case ParameterRender::Rank:
+		{
+			if (_ParamRank == HoldEquipment::Rank::None)
+			{
+				sprintf(param, "%s ", "-");
+			}
+			else
+			{
+				sprintf(param, "%s ", RankText[_ParamRank]);
+			}
+
+			char p[100] = { "" };
+			if (_ParamRank < _ParamNewRank)
+			{
+				sprintf(p, "<color=ff0000ff>« %s</color>", RankText[_ParamNewRank]);
+			}
+			else if (_ParamRank > _ParamNewRank)
+			{
+				sprintf(p, "<color=0000ffff>ª %s</color>", RankText[_ParamNewRank]);
+			}
+			else
+			{
+				sprintf(p, "¨ %s", RankText[_ParamNewRank]);
+			}
+
+			strcat(param, p);
+
+			break;
+		}
 	}
 
 	_ParamText->SetText(param);

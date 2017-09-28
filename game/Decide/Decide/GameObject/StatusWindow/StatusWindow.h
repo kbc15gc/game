@@ -34,7 +34,7 @@ public:
 	/**
 	* ‰Šú‰».
 	*/
-	void Start()override;
+	void Awake()override;
 
 	/**
 	* XV.
