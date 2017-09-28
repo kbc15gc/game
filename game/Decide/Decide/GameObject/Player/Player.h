@@ -6,6 +6,7 @@
 #include "PlayerState/PlayerStateAttack.h"
 #include "PlayerState\/PlayerStateDeath.h"
 #include "PlayerState\PlayerStateStop.h"
+#include "PlayerState\PlayerStateSpeak.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
@@ -63,6 +64,7 @@ public:
 		Attack,				//攻撃
 		Death,				//死亡
 		Stop,				//移動などしないステートです
+		Speak,				//会話
 		StateNum,
 	};
 	//アニメーションのナンバー
@@ -260,6 +262,7 @@ private:
 	friend class PlayerStateDeath;
 	friend class PlayerStateIdol;
 	friend class PlayerStateRun;
+	friend class PlayerStateSpeak;
 
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
@@ -300,6 +303,8 @@ private:
 	PlayerStateDeath _DeathState;
 	//プレイヤーステートストップ
 	PlayerStateStop _StopState;
+	//プレイヤーステートスピーク
+	PlayerStateSpeak _SpeakState;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSE = nullptr;
 	//レベルアップ時の音

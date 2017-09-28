@@ -1,6 +1,23 @@
 #include"fbstdafx.h"
 #include "XInput.h"
 
+namespace
+{
+	const AnalogInputE AnalogConvert[] =
+	{
+		TRIGGER,
+		TRIGGER,
+		L_STICK,
+		L_STICK,
+		L_STICK,
+		L_STICK,
+		R_STICK,
+		R_STICK,
+		R_STICK,
+		R_STICK,
+	};
+}
+
 XInput::XInput()
 {
 
@@ -105,7 +122,7 @@ bool XInput::IsPushAnalog(AnalogE a)
 		if (_BeforeState.Gamepad.sThumbLY == 0 &&		//‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢
 			_State.Gamepad.sThumbLY > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
 			return true;
-		break;
+		break; 
 	case L_STICKD:
 		if (_BeforeState.Gamepad.sThumbLY == 0 &&		//‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢
 			_State.Gamepad.sThumbLY < 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
@@ -132,9 +149,64 @@ bool XInput::IsPushAnalog(AnalogE a)
 			return true;
 		break;
 	default:
-		break;
+		return false;
+	}
+	return false;
+}
+
+bool XInput::IsPressAnalog(AnalogE a)
+{
+	//Ú‘±Šm”F
+	if (!IsConnected())
+	{
+		return false;
 	}
 
+	switch (a)
+	{
+	case L_TRIGGER:
+		if (_State.Gamepad.bLeftTrigger > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case R_TRIGGER:
+		if (_State.Gamepad.bRightTrigger > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case L_STICKR:
+		if (_State.Gamepad.sThumbLX > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case L_STICKL:
+		if (_State.Gamepad.sThumbLX < 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case L_STICKU:
+		if (_State.Gamepad.sThumbLY > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case L_STICKD:
+		if (_State.Gamepad.sThumbLY < 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case R_STICKR:
+		if (_State.Gamepad.sThumbRX > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case R_STICKL:
+		if (_State.Gamepad.sThumbRX < 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case R_STICKU:
+		if (_State.Gamepad.sThumbRY > 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	case R_STICKD:
+		if (_State.Gamepad.sThumbRY < 0)				//¡‰Ÿ‚³‚ê‚Ä‚¢‚é
+			return true;
+		break;
+	default:
+		return false;
+	}
 	return false;
 }
 
@@ -159,6 +231,23 @@ Vector2 XInput::GetAnalog(AnalogInputE in)
 		break;
 	}
 	return value;
+}
+bool XInput::AnalogRepeat(AnalogE analog, float interval)
+{
+	if (IsPressAnalog(analog))
+	{
+		if (IsPushAnalog(analog))
+			return true;
+		//ŠÔ‰ÁZB
+		_RepeatTimer += Time::DeltaTime();
+		if (_RepeatTimer >= interval)
+		{
+			_RepeatTimer = 0.0f;
+			return true;
+		}
+	}
+
+	return false;
 }
 ;
 

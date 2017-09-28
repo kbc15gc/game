@@ -59,8 +59,6 @@ private:
 
 	//最初にイベントを追加する処理。
 	void AddEvent();
-	//イベント開始。
-	void StartEvent();
 private:
 	static EventManager* _Instance;
 
