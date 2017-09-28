@@ -118,6 +118,7 @@ private:
 		}
 		_IconImage->SetSize(iconSize);
 		_ParamName = nameText;
+		_ParamNameText->SetFontSize(nameTextSize);
 		_Param = param;
 		_ParamText->SetAnchor(paramAnchor);
 	}

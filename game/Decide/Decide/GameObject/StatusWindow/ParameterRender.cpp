@@ -76,9 +76,9 @@ void ParameterRender::Update()
 		}
 		case ParameterRender::Buff:
 		{
+			sprintf(param, "%d", _Param);
 			if (_ParamBuff != 0)
 			{
-				sprintf(param, "%d", _Param);
 				char buff[100] = { "" };
 				if (_ParamBuff > 0) {
 					sprintf(buff, " ª%d", abs(_ParamBuff));

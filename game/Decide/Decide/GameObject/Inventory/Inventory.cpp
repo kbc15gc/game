@@ -108,7 +108,7 @@ void Inventory::Initialize() {
 }
 
 //アイテムをインベントリに追加。
-void Inventory::AddItem(Item::ItemInfo* item, int num) {
+bool Inventory::AddItem(Item::ItemInfo* item, int num) {
 	Item::BaseInfo* Info = item;
 	char error[256];
 	int work = num;
@@ -155,8 +155,10 @@ void Inventory::AddItem(Item::ItemInfo* item, int num) {
 		char error[256];
 		sprintf(error, "インベントリが一杯で%sが%dこ追加されませんでした。",Info->Name,work);
 		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		return false;
 	}
 
+	return true;
 }
 
 //装備品の追加。

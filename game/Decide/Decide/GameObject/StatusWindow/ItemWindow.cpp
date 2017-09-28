@@ -362,7 +362,7 @@ void ItemWindow::_CreateCIShowStatus()
 		pos = Vector3::zero;
 	}
 	// レベルのパラメータは真横に表示。
-	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetParamTextPos() + Vector3(-270, 0.0f, 0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetParamTextPos() + Vector3(-300, 0.0f, 0.0f));
 	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetIconObject()->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetIconObject()->transform->GetLocalPosition() + Vector3(0.0f, 5.0f, 0.0f));
 	_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform->GetLocalPosition() + Vector3(0.0f,10.0f,0.0f));
 	_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->GetParamTextPos() + Vector3(-270, 0.0f, 0.0f));
@@ -428,14 +428,14 @@ void ItemWindow::_ConfigParamRender()
 		case Item::ItemCodeE::Item:
 		{
 			int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", "UI/gem.png", playerLevel, fbText::TextAnchorE::MiddleLeft, 0, INT_MIN, 50.0f, Vector2(40.0f, 40.0f));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParam("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), fbText::TextAnchorE::MiddleLeft, 0, _Player->GetMaxHP());
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParam("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), fbText::TextAnchorE::MiddleLeft, 0, _Player->GetMaxMP());
-			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParam("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK), fbText::TextAnchorE::MiddleRight, _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParam("MAT", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::MAT), fbText::TextAnchorE::MiddleRight, _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParam("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF), fbText::TextAnchorE::MiddleRight, _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MDE)]->SetParam("MDE", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::MDE), fbText::TextAnchorE::MiddleRight, _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::DEX)]->SetParam("DEX", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::DEX), fbText::TextAnchorE::MiddleRight, _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", "UI/gem.png", playerLevel, fbText::TextAnchorE::MiddleLeft, 50.0f, Vector2(40.0f, 40.0f));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MDE)]->SetParamBuff("MDE", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::DEX)]->SetParamBuff("DEX", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
 			_ParameterRenderList[static_cast<int>(CIShowStatus::MONEY)]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney());
 
 			if (playerLevel != _playerLevel) {
