@@ -35,11 +35,11 @@ void ShopS_Select::Update()
 {
 	//Œ»Ý‘I‘ð‚µ‚Ä‚¢‚é€–Ú
 	const int MAX_SELECT = 2;
-	if (VPadInput->IsPush(fbEngine::VPad::ButtonUp))
+	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
 	{
 		select = select > 0 ? select - 1 : MAX_SELECT - 1;
 	}
-	else if (VPadInput->IsPush(fbEngine::VPad::ButtonDown))
+	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.2f))
 	{
 		select = (select + 1) % MAX_SELECT;
 	}

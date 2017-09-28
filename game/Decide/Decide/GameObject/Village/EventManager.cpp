@@ -83,7 +83,3 @@ void EventManager::AddEvent()
 		book->SetActive(!book->GetActive(), true);
 	});
 }
-
-void EventManager::StartEvent()
-{
-}

@@ -74,11 +74,11 @@ void ShopS_Trade::Update()
 	if (_DisplayItemNum > 0)
 	{
 		//アイテム選択
-		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f))
+		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
 		{
 			_SetIndex((_Select > 0) ? _Select - 1 : _DisplayItemNum - 1);
 		}
-		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.2f))
+		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.2f))
 		{
 			_SetIndex((_Select + 1) % _DisplayItemNum);
 		}
@@ -144,7 +144,7 @@ void ShopS_Trade::_SwitchTab()
 
 void ShopS_Trade::_UpdateTradeNum()
 {
-	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,0.1f))
+	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,0.1f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKR, 0.1f))
 	{
 		int maxNum = 0;
 		//アイテムか消耗品かどうか？
@@ -157,7 +157,7 @@ void ShopS_Trade::_UpdateTradeNum()
 		_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
 		_UpdateText();
 	}
-	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,0.1f))
+	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,0.1f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKL, 0.1f))
 	{
 		_TradeNum[_Select] = max(0, _TradeNum[_Select] - 1);
 		_UpdateText();
@@ -338,14 +338,14 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto equip = GetPlayer()->GetEquipment()->weapon;
 			if (equip == nullptr)
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
 					0, _CalcColorCode(weapon->GetAtk()), weapon->GetAtk(),
 					0, _CalcColorCode(weapon->GetMagicAtk()), weapon->GetMagicAtk(),
 					0, _CalcColorCode(weapon->GetCrt()), weapon->GetCrt());
 			}
 			else
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
 					equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , weapon->GetAtk(),
 					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetCrt()), weapon->GetMagicAtk(),
 					equip->GetCrt(), _CalcColorCode(weapon->GetCrt()- equip->GetCrt()), weapon->GetCrt());
@@ -428,10 +428,9 @@ void ShopS_Trade::_Decision()
 
 void ShopS_Trade::BuyItem()
 {
-	//アイテムの値段分お金を払う。
-	_Shop->Pay(_SumValue);
 	for (int idx : _IndexList)
 	{
+		bool add = true;
 		//インベントリへ追加。
 		if ((*_DisplayList)[idx]->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
@@ -441,9 +440,16 @@ void ShopS_Trade::BuyItem()
 		else
 		{
 			//装備品を追加。
-			INSTANCE(Inventory)->AddEquipment((*_DisplayList)[idx]->GetInfo(), false);
+			add = (INSTANCE(Inventory)->AddEquipment((*_DisplayList)[idx]->GetInfo(), false) != nullptr);
+		}
+
+		if (add)
+		{
+			//アイテムの値段分お金を払う。
+			_Shop->Pay((*_DisplayList)[idx]->GetInfo()->Value * _TradeNum[idx]);
 		}
 	}
+
 	_Shop->SetDescriptionText("まいどあり。");
 }
 

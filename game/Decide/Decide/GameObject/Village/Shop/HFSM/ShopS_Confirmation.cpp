@@ -35,11 +35,11 @@ void ShopS_Confirmation::Update()
 {
 	//カーソル移動。
 	const int max = 2;
-	if (VPadInput->IsPush(fbEngine::VPad::ButtonUp))
+	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
 	{
 		_Select = (_Select > 0) ? _Select - 1 : max - 1;
 	}
-	else if (VPadInput->IsPush(fbEngine::VPad::ButtonDown))
+	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown , 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.2f))
 	{
 		_Select = (_Select + 1) % max;
 	}
