@@ -77,7 +77,7 @@ namespace Hold{
 
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+		int _DexRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
@@ -85,7 +85,7 @@ namespace Hold{
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldWeaponInfo,_ID),			sizeof(int) },
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_AtkRnd),		sizeof(int) },
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_MAtkRnd),		sizeof(int) },
-		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_CrtRnd),		sizeof(int) },
+		{ "DexRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_DexRnd),		sizeof(int) },
 		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_IsEquip),		sizeof(int) },
 	};
 
@@ -158,13 +158,16 @@ public:
 		_PlayerMoney -= sub;
 	}
 
-	//アイテムをインベントリに追加(第一引数追加するアイテムの情報、追加する数(指定しない場合は1)。)。
-	void AddItem(Item::ItemInfo* item, int num = 1);
+	//アイテムをインベントリに追加。
+	// 引数：	アイテムの情報のポインタ。
+	//			追加する数(指定しない場合は1)。
+	// 戻り値：	追加成功か。
+	bool AddItem(Item::ItemInfo* item, int num = 1);
 
 	// 装備品追加関数
 	// 引数：	追加したい装備品の情報構造体へのポインタ。
 	//			ランダムパラメータにするか。
-	// 戻り値：	追加した装備品のポインタ。
+	// 戻り値：	追加した装備品のポインタ(追加失敗ならnull)。
 	HoldEquipment* AddEquipment(Item::BaseInfo* info, bool isRandParam);
 
 	//指定されたインベントリのリストの先頭を取得。

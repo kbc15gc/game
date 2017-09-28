@@ -60,14 +60,14 @@ namespace Hold {
 	HoldWeaponInfo::HoldWeaponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip) : HoldEquipInfo(TypeID, ID, IsEquip) {
 		_AtkRnd = AtkRnd;
 		_MAtkRnd = MAtkRnd;
-		_CrtRnd = CrtRnd;
+		_DexRnd = CrtRnd;
 	}
 
 	// 引数：	コピー元のポインタ。
 	HoldWeaponInfo::HoldWeaponInfo(HoldItemBase* info) : HoldEquipInfo(info) {
 		_AtkRnd = static_cast<HoldWeapon*>(info)->GetAtkRnd();
 		_MAtkRnd = static_cast<HoldWeapon*>(info)->GetMtkRnd();
-		_CrtRnd = static_cast<HoldWeapon*>(info)->GetCrtRnd();
+		_DexRnd = static_cast<HoldWeapon*>(info)->GetDexRnd();
 	}
 
 	HoldArmorInfo::HoldArmorInfo(int TypeID, int ID, int Def, int MDef, bool IsEquip) : HoldEquipInfo(TypeID, ID, IsEquip) {
@@ -108,7 +108,7 @@ void Inventory::Initialize() {
 }
 
 //アイテムをインベントリに追加。
-void Inventory::AddItem(Item::ItemInfo* item, int num) {
+bool Inventory::AddItem(Item::ItemInfo* item, int num) {
 	Item::BaseInfo* Info = item;
 	char error[256];
 	int work = num;
@@ -155,8 +155,10 @@ void Inventory::AddItem(Item::ItemInfo* item, int num) {
 		char error[256];
 		sprintf(error, "インベントリが一杯で%sが%dこ追加されませんでした。",Info->Name,work);
 		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		return false;
 	}
 
+	return true;
 }
 
 //装備品の追加。

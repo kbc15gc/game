@@ -36,6 +36,7 @@
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
 
+#include "BuffDebuffICon.h"
 ImageObject* g_depth;
 void DebugNPC();
 
@@ -96,6 +97,9 @@ void GameScene::Start()
 	//INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
 	//INSTANCE(Inventory)->Initialize();
+
+	//バフデバフアイコンを表示するクラス。
+	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");

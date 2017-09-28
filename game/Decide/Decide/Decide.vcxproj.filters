@@ -250,9 +250,7 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
-    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateSpeak.cpp">
-      <Filter>GameObject\Player\PlayerState</Filter>
-    </ClCompile>
+    <ClCompile Include="BuffDebuffICon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -516,9 +514,7 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateSpeak.h">
-      <Filter>GameObject\Player\PlayerState</Filter>
-    </ClInclude>
+    <ClInclude Include="BuffDebuffICon.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

@@ -31,6 +31,7 @@ struct ParticleParameter {
 	float		brightness;							//!<輝度。ブルームが有効になっているとこれを強くすると光が溢れます。
 	int			alphaBlendMode;						//!<0半透明合成、1加算合成。
 	Color		mulColor;							//!<乗算カラー。
+	bool		isParent = false;					//!<エミッターと親子関係を組むか。
 };
 
 
@@ -106,11 +107,6 @@ public:
 	Particle* GetParticleEnd()const;
 
 	void ReleaseParticleAll();
-
-	//void SetParent(Transform* parent) {
-	//	transform->SetParent(parent);
-	//}
-private:
 	//パーティクル生成
 	void Emit();
 private:
@@ -119,5 +115,4 @@ private:
 	ParticleParameter		_Param;			//!<パラメータ。
 	std::list<Particle*>	_ParticleList;	//!<パーティクルのリスト。
 	vector<Particle*>* _achievedArray = nullptr;
-	//Transform*				_Parent;		//!<エミッタの親。
 };
