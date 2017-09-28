@@ -13,7 +13,7 @@ void Camera::Awake()
 	D3DXMatrixIdentity(&_Projection);
 
 	_ViewPoint = nullptr;
-	_ViewAngle = 60;
+	_ViewAngle = 45.0f;
 	_Aspect = (16.0f / 9.0f);
 	_near = 1.0f;
 	_far = 1000.0f;

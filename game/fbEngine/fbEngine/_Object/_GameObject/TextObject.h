@@ -9,26 +9,26 @@ public:
 	TextObject(char* name) :GameObject(name) {}
 	void Awake()override;
 	//ˆêŠ‡‚ÅÝ’è
-	void Initialize(const wchar_t* string, const float& size,const Color& color = Color::white,
-		const fbSprite::SpriteEffectE& flg = fbSprite::SpriteEffectE::NONE, const char* style = "‚l‚r –¾’©", fbText::TextAnchorE anchor = fbText::TextAnchorE::MiddleCenter);
+	void Initialize(const wchar_t* string, float size,const Color& color = Color::white,
+		fbSprite::SpriteEffectE flg = fbSprite::SpriteEffectE::NONE, const char* style = "‚l‚r –¾’©", fbText::TextAnchorE anchor = fbText::TextAnchorE::MiddleCenter);
 
 	void SetText(const wchar_t* ws);
 	void SetText(const char* s);
-	void SetFontSize(const float& size);
+	void SetFontSize(float size);
 	void SetFontStyle(const char* style);
 	void SetBlendColor(const Color& c);
-	void SetEffectFlg(const fbSprite::SpriteEffectE& e);
-	void SetEffectFlg(const fbSprite::SpriteEffectE& e, const bool& f);
+	void SetEffectFlg(fbSprite::SpriteEffectE e);
+	void SetEffectFlg(fbSprite::SpriteEffectE e, bool f);
 	//‘Ž®Ý’è
 	void SetAnchor(fbText::TextAnchorE format);
 	//ƒJ[ƒjƒ“ƒOÝ’è
-	void SetKerning(const bool& kerning);
-	void SetCharNum(const unsigned int& num)
+	void SetKerning(bool kerning);
+	void SetCharNum(unsigned int num)
 	{
 		_Text->SetCharNum(num);
 	}
 	const Vector2 GetLength();
-	const unsigned int& GetMaxCharNum()
+	unsigned int GetMaxCharNum()
 	{
 		return _Text->GetMaxCharNum();
 	}

@@ -65,6 +65,10 @@ void NPC::_Speak()
 		//会話可能な距離か？
 		if (len <= _Radius)
 		{
+			if (_Player->GetState() != Player::State::Speak && _Player->GetState() != Player::State::Stop)
+			{
+				_Player->ChangeState(Player::State::Speak);
+			}
 			//タイトル表示
 			if (_ShowTitle)
 			{
@@ -79,6 +83,11 @@ void NPC::_Speak()
 		}
 		else
 		{
+			if (_Player->GetState() == Player::State::Speak)
+			{
+				_Player->ChangeState(Player::State::Run);
+			}
+			
 			//離れたなら閉じる
 			_TextBox->CloseMessage();
 		}
