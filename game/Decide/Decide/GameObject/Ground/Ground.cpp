@@ -30,7 +30,7 @@ void Ground::Awake()
 
 	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 
-	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
