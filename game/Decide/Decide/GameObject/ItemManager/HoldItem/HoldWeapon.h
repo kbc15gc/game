@@ -27,7 +27,7 @@ public:
 
 	//クリティカル率の乱数差分を取得。
 	inline int GetCrtRnd() {
-		return _CrtRnd;
+		return _DexRnd;
 	}
 
 	//ランクを考慮した物理攻撃力(クリティカル率は除く)を取得。
@@ -41,14 +41,14 @@ public:
 	}
 
 	//ランクを考慮したクリティカル率を取得。
-	inline int GetCrt() {
-		return _Crt;
+	inline int GetDex() {
+		return _Dex;
 	}
 
 	//武器の基準値と差分値の割合を算出。
 	inline float ParamRaitoMass()override {
-		float offset = _AtkRnd + _MAtkRnd + _CrtRnd;
-		float sum = _Atk + _MagicAtk + _Crt;
+		float offset = _AtkRnd + _MAtkRnd + _DexRnd;
+		float sum = _Atk + _MagicAtk + _Dex;
 		float par = offset / sum;
 		return par;
 	}
@@ -84,8 +84,8 @@ public:
 		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的なクリティカル率を算出。
-		_CrtRnd = baseParam * raito;
-		_Crt = baseParam + _CrtRnd;
+		_DexRnd = baseParam * raito;
+		_Dex = baseParam + _DexRnd;
 	}
 
 
@@ -100,8 +100,8 @@ private:
 private:
 	int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 	int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-	int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+	int _DexRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
 	int	_Atk;			//ランクを考慮した物理攻撃力。
 	int	_MagicAtk;		//ランクを考慮した魔法攻撃力。
-	int _Crt;			//ランクを考慮したクリティカル率。
+	int _Dex;			//ランクを考慮したクリティカル率。
 };

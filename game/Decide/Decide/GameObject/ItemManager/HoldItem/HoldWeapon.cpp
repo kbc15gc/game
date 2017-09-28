@@ -32,7 +32,7 @@ void HoldWeapon::CreateOriginParam() {
 	//基準値設定。
 	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk;
 	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk;
-	_Crt = static_cast<Item::WeaponInfo*>(_Info)->Dex;
+	_Dex = static_cast<Item::WeaponInfo*>(_Info)->Dex;
 
 	//武器のランクを算出。
 	RankSelect(ParamRaitoMass());
@@ -42,9 +42,9 @@ void HoldWeapon::_ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) {
 	// ランダム差分設定。
 	_AtkRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_AtkRnd;
 	_MAtkRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_MAtkRnd;
-	_CrtRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_CrtRnd;
+	_DexRnd = static_cast<Hold::HoldWeaponInfo*>(info)->_DexRnd;
 	// 合計パラメータ設定。
 	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk + _AtkRnd;
 	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk + _MAtkRnd;
-	_Crt = static_cast<Item::WeaponInfo*>(_Info)->Dex + _CrtRnd;
+	_Dex = static_cast<Item::WeaponInfo*>(_Info)->Dex + _DexRnd;
 }
