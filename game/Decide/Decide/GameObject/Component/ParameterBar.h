@@ -90,8 +90,9 @@ public:
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
+	//			バーの背景を描画するか。
 	//			HUDとして使用するか。
-	void Create(const vector<BarColor>& colors, float max, float value, bool isInterpolation, bool isRenderFrame, Transform* tr, const Vector3& pos, const Vector2& scale, bool isHud);
+	void Create(const vector<BarColor>& colors, float max, float value, bool isInterpolation, bool isRenderFrame, Transform* tr, const Vector3& pos, const Vector2& scale,bool isBackColor, bool isHud);
 	void Update();
 	void ImageRender()override;
 
@@ -164,9 +165,11 @@ private:
 	bool _isHud;		// HUDとして使用するか。
 	bool _isRenderFrame;	// バーの枠を描画するか。
 	unique_ptr<ImageObject> _BarFrame;	// バーの枠。
+	unique_ptr<ImageObject> _BarBack;	// バーの背景。
 private:
 	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
 	bool _isRender = true;
+	bool _isBackColor = true;	// バーの背景を描画するか。
 };
 
 // バー。
@@ -196,13 +199,14 @@ public:
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
 	//			更新優先度(デフォルトは8)。
+	//			バーの背景を使用するか(デフォルトはfalse)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 8,bool isHud = true) {
+	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 8, bool isBackColor = false,bool isHud = true) {
 		if (_Object) {
 			INSTANCE(GameObjectManager)->AddRemoveList(_Object);
 		}
 		_Object = INSTANCE(GameObjectManager)->AddNew<BarAdapter>("ParamterBar", priorty);
-		_Object->Create(colors,max, value, isInterpolation,isRenderFrame, tr, pos, scale, isHud);
+		_Object->Create(colors,max, value, isInterpolation,isRenderFrame, tr, pos, scale, isBackColor,isHud);
 		_Object->SetParentComponet(this);	// 更新管理を行うためにこのクラスのポインタを渡す。
 	}
 

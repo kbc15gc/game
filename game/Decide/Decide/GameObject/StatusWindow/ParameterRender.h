@@ -41,12 +41,16 @@ public:
 	/**
 	* パラメータ設定. 
 	*/
-	void SetParam(char* name,char* iconName, int param,int buff = 0,int maxParam = INT_MIN)
+	void SetParam(char* name,  char* iconName , int param,fbText::TextAnchorE anchor = fbText::TextAnchorE::MiddleRight, int buff = 0, int maxParam = INT_MIN, float nameTextSize = 40.0f, const Vector2& iconSize = Vector2(30.0f, 30.0f))
 	{
-		_IconImage->SetTexture(LOADTEXTURE(iconName));
-		_IconImage->SetSize(Vector2(30.0f, 30.0f));
+		if (_IconImage->GetTexture() == nullptr) {
+			_IconImage->SetTexture(LOADTEXTURE(iconName));
+		}
+		_IconImage->SetSize(iconSize);
+		_ParamNameText->SetFontSize(nameTextSize);
 		_ParamName = name;
 		_Param = param;
+		_ParamText->SetAnchor(anchor);
 		_ParamBuff = buff;
 		_MaxParam = maxParam;
 	}
@@ -58,6 +62,10 @@ public:
 	// パラメータテキストの位置取得。
 	inline const Vector3& GetParamTextPos()const {
 		return _ParamText->transform->GetLocalPosition();
+	}
+
+	inline ImageObject* GetIconObject()const {
+		return _IconImage;
 	}
 private:
 

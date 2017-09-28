@@ -25,23 +25,23 @@ void ParameterRender::Awake()
 	_ParamText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ParamText", 9);
 	_ParamText->Initialize(L"", 40.0f);
 	_ParamText->SetAnchor(fbText::TextAnchorE::MiddleRight);
-	_ParamText->transform->SetParent(transform);
-	_ParamText->transform->SetLocalPosition(Vector3(200.0f, 0.0f, 0.0f));
+	_ParamText->transform->SetParent(_ParamNameText->transform);
+	_ParamText->transform->SetLocalPosition(Vector3(370.0f, 0.0f, 0.0f));
 
-	//Maxパラメータ初期化.
-	_MaxParamText = INSTANCE(GameObjectManager)->AddNew<TextObject>("BuffText", 9);
-	_MaxParamText->Initialize(L"", 40.0f);
-	_MaxParamText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
-	_MaxParamText->transform->SetParent(_ParamText->transform);
-	_MaxParamText->transform->SetLocalPosition(Vector3(30.0f, 0.0f, 0.0f));
+	////Maxパラメータ初期化.
+	//_MaxParamText = INSTANCE(GameObjectManager)->AddNew<TextObject>("BuffText", 9);
+	//_MaxParamText->Initialize(L"", 40.0f);
+	//_MaxParamText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	//_MaxParamText->transform->SetParent(_ParamText->transform);
+	//_MaxParamText->transform->SetLocalPosition(Vector3(0.0f, 3.5f, 0.0f));
 
 
 	//バフパラメータ初期化.
 	_BuffText = INSTANCE(GameObjectManager)->AddNew<TextObject>("BuffText", 9);
 	_BuffText->Initialize(L"", 25.0f);
 	_BuffText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
-	_BuffText->transform->SetParent(transform);
-	_BuffText->transform->SetLocalPosition(Vector3(200.0f, 10.0f, 0.0f));
+	_BuffText->transform->SetParent(_ParamText->transform);
+	_BuffText->transform->SetLocalPosition(Vector3(0.0f, 10.0f, 0.0f));
 }
 
 /**
@@ -57,7 +57,7 @@ void ParameterRender::Update()
 		strcat(param, " / ");
 		char maxParam[100] = { "" };
 		sprintf(maxParam, "%d", _MaxParam);
-		_MaxParamText->SetText(maxParam);
+		strcat(param, maxParam);
 	}
 	if (_ParamBuff != 0) {
 		char buff[100] = { "" };

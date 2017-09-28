@@ -4,7 +4,7 @@
 #include "GameObject\Inventory\Inventory.h"
 
 //所持アイテムの基底クラス。
-class HoldItemBase :public ImageObject
+class HoldItemBase :public GameObject
 {
 public:
 	// 引数：	アイテムの情報構造体。
