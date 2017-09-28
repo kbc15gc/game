@@ -69,7 +69,7 @@ private:
 namespace {
 	static const char* BarFileNameArray[] = {
 		"hp.png",	// 赤ゲージ。
-		"hp_back.png",	// 黄色ゲージ。
+		"hp_Yellow.png",	// 黄色ゲージ。
 		"hp_Green.png",	// 緑ゲージ。
 		"hp_Blue.png",	// 青ゲージ。
 	};
@@ -169,7 +169,7 @@ private:
 private:
 	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
 	bool _isRender = true;
-	bool _isBackColor = true;	// バーの背景を描画するか。
+	bool _isBackColor = false;	// バーの背景を描画するか。
 };
 
 // バー。
