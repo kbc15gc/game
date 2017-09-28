@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_Component\_Physics\GostCollision.h"
 #include "fbEngine\_Object\_Component\_Physics\SphereCollider.h"
 #include "GameObject\Component\ParticleEffect.h"
+#include "BuffDebuffICon.h"
 
 namespace {
 	// 効果を及ぼす人数のテーブル。
@@ -53,7 +54,7 @@ bool ConsumptionItem::UseItem() {
 		if (param->HeelHP(info->effectValue[CharacterParameter::Param::HP])) {	// HP回復処理。
 
 			//Hp回復のエフェクト。
-			effect->HeelHpEffect(_user->transform);
+			effect->HeelHpEffect();
 			ret = true;
 		}
 
@@ -68,13 +69,15 @@ bool ConsumptionItem::UseItem() {
 			int value = info->effectValue[idx];
 			if (value > 0) {
 				// バフ。
-
+				effect->BuffEffect();
 				param->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+				BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
+				icon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 				ret = true;
 			}
 			else if (value < 0) {
 				// デバフ(デメリット)。
-
+				effect->DeBuffEffect();
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
 				ret = true;
 			}

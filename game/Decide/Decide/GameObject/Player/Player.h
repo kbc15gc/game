@@ -242,6 +242,11 @@ public:
 	inline PlayerEquipment* GetEquipment() {
 		return _Equipment;
 	}
+
+	//プレイヤーのHpBarを取得。
+	inline ParameterBar* GetPlayerHpBar() {
+		return _HPBar;
+	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();

@@ -2,7 +2,8 @@
 #include "ParticleEffect.h"
 
 void ParticleEffect::Awake() {
-	_ParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("ParticleEffect", 8);
+	_BuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BuffParticleEffect", 8);
+	_DebuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("DebuffParticleEffect", 8);
 	_HeelHpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelHPParticleEffect", 8);
 	_HeelMpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelMpParticleEffect", 8);
 	_HeelParticleAssistEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelParticleEffectAssist", 8);
@@ -25,9 +26,11 @@ void ParticleEffect::Awake() {
 	_HeelParticleAssistParam.life = 0.001f;
 	_HeelParticleAssistParam.size = Vector2(0.03f, 0.03f);
 	_HeelParticleAssistParam.mulColor = Color::yellow;
+	_HeelParticleAssistParam.isParent = true;
 }
 
 void ParticleEffect::HeelHpEffect() {
+
 	//Hp回復に使用するパーティクルパラメーターを設定。
 	_HeelHpParticleParam.Init();
 	_HeelHpParticleParam.texturePath = "ItemEfectBase.png";
@@ -46,16 +49,20 @@ void ParticleEffect::HeelHpEffect() {
 	_HeelHpParticleParam.life = 0.001f;
 	_HeelHpParticleParam.size = Vector2(0.05f, 0.05f);
 	_HeelHpParticleParam.mulColor = Color::green;
+	_HeelHpParticleParam.isParent = true;
 
-
+	//Hp回復に使用するエミッターを設定。
 	_HeelHpParticleEmitter->transform->SetParent(transform);
 	_HeelHpParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
 	_HeelHpParticleEmitter->Init(_HeelHpParticleParam);
 
 
+	//回復エフェクトのアシストエミッター設定。
 	_HeelParticleAssistEmitter->transform->SetParent(transform);
 	_HeelParticleAssistEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.3f, 0.0f));
 	_HeelParticleAssistEmitter->Init(_HeelParticleAssistParam);
+
+	//Hp回復エフェクトのエミット開始。
 	SetHeelHpEffectFlag(true);
 }
 
@@ -79,98 +86,104 @@ void ParticleEffect::HeelMpEffect() {
 	_HeelMpParticleParam.size = Vector2(0.05f, 0.05f);
 	_HeelMpParticleParam.mulColor = Color::blue * 0.7f;
 
-
+	//Mp回復に使用するエミッターを設定。
 	_HeelMpParticleEmitter->transform->SetParent(transform);
 	_HeelMpParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
 	_HeelMpParticleEmitter->Init(_HeelMpParticleParam);
 
-
+	//回復エフェクトのアシストエミッター設定。
 	_HeelParticleAssistEmitter->transform->SetParent(transform);
 	_HeelParticleAssistEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.3f, 0.0f));
 	_HeelParticleAssistEmitter->Init(_HeelParticleAssistParam);
+
+	//Mp回復エフェクトのエミット開始。
 	SetHeelMpEffectFlag(true);
 }
 
 void ParticleEffect::BuffEffect() {
 	//バフに使用するパーティクルパラメーターを設定。
-	_ParticleParam.Init();
-	_ParticleParam.texturePath = "ItemEfectBase.png";
-	_ParticleParam.alphaBlendMode = 3;
-	_ParticleParam.addVelocityRandomMargih = Vector3::zero;
-	_ParticleParam.brightness = 1.0f;
-	_ParticleParam.fadeTime = 0.5f;
-	_ParticleParam.gravity = 0.0f;
-	_ParticleParam.initAlpha = 1.0f;
-	_ParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
-	_ParticleParam.initVelocity = Vector3::up * 5.0f;
-	_ParticleParam.initVelocityVelocityRandomMargin = Vector3::up;
-	_ParticleParam.intervalTime = 0.01f;
-	_ParticleParam.isBillboard = true;
-	_ParticleParam.isFade = true;
-	_ParticleParam.life = 0.01f;
-	_ParticleParam.size = Vector2(0.01f, 0.3f);
-	_ParticleParam.mulColor = Color::red;
+	_BuffParticleParam.Init();
+	_BuffParticleParam.texturePath = "ItemEfectBase.png";
+	_BuffParticleParam.alphaBlendMode = 3;
+	_BuffParticleParam.addVelocityRandomMargih = Vector3::zero;
+	_BuffParticleParam.brightness = 1.0f;
+	_BuffParticleParam.fadeTime = 0.5f;
+	_BuffParticleParam.gravity = 0.0f;
+	_BuffParticleParam.initAlpha = 1.0f;
+	_BuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
+	_BuffParticleParam.initVelocity = Vector3::up * 5.0f;
+	_BuffParticleParam.initVelocityVelocityRandomMargin = Vector3::up;
+	_BuffParticleParam.intervalTime = 0.01f;
+	_BuffParticleParam.isBillboard = true;
+	_BuffParticleParam.isFade = true;
+	_BuffParticleParam.life = 0.01f;
+	_BuffParticleParam.size = Vector2(0.01f, 0.3f);
+	_BuffParticleParam.mulColor = Color::red;
+	_BuffParticleParam.isParent = true;
 
-	_ParticleEmitter->transform->SetParent(transform);
-	_ParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
-	_ParticleEmitter->Init(_ParticleParam);
-	SetEffectFlag(true);
+	_BuffParticleEmitter->transform->SetParent(transform);
+	_BuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
+	_BuffParticleEmitter->Init(_BuffParticleParam);
+	SetBuffEffectFlag(true);
 }
 
 void ParticleEffect::DeBuffEffect() {
 	//デバフに使用するパーティクルパラメーターを設定。
-	_ParticleParam.Init();
-	_ParticleParam.texturePath = "ItemEfectBase.png";
-	_ParticleParam.alphaBlendMode = 3;
-	_ParticleParam.addVelocityRandomMargih = Vector3::zero;
-	_ParticleParam.brightness = 1.0f;
-	_ParticleParam.fadeTime = 0.5f;
-	_ParticleParam.gravity = 0.0f;
-	_ParticleParam.initAlpha = 1.0f;
-	_ParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
-	_ParticleParam.initVelocity = Vector3::down * 5.0f;
-	_ParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
-	_ParticleParam.intervalTime = 0.01f;
-	_ParticleParam.isBillboard = true;
-	_ParticleParam.isFade = true;
-	_ParticleParam.life = 0.01f;
-	_ParticleParam.size = Vector2(0.01f, 0.3f);
-	_ParticleParam.mulColor = Color::blue;
+	_DebuffParticleParam.Init();
+	_DebuffParticleParam.texturePath = "ItemEfectBase.png";
+	_DebuffParticleParam.alphaBlendMode = 3;
+	_DebuffParticleParam.addVelocityRandomMargih = Vector3::zero;
+	_DebuffParticleParam.brightness = 1.0f;
+	_DebuffParticleParam.fadeTime = 0.5f;
+	_DebuffParticleParam.gravity = 0.0f;
+	_DebuffParticleParam.initAlpha = 1.0f;
+	_DebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
+	_DebuffParticleParam.initVelocity = Vector3::down * 5.0f;
+	_DebuffParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
+	_DebuffParticleParam.intervalTime = 0.01f;
+	_DebuffParticleParam.isBillboard = true;
+	_DebuffParticleParam.isFade = true;
+	_DebuffParticleParam.life = 0.01f;
+	_DebuffParticleParam.size = Vector2(0.01f, 0.3f);
+	_DebuffParticleParam.mulColor = Color::blue;
+	_DebuffParticleParam.isParent = true;
 
-	_ParticleEmitter->transform->SetParent(transform);
-	_ParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.6f, 0.0f));
-	_ParticleEmitter->Init(_ParticleParam);
-	SetEffectFlag(true);
+	_DebuffParticleEmitter->transform->SetParent(transform);
+	_DebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 2.4f, 0.0f));
+	_DebuffParticleEmitter->Init(_DebuffParticleParam);
+	SetDebuffEffectFlag(true);
 }
 
 void ParticleEffect::FireFly()
 {	
 	//水辺の蛍にどうぞ。
-	_ParticleParam.Init();
-	_ParticleParam.texturePath = "ItemEfectBase.png";
-	_ParticleParam.alphaBlendMode = 1;
-	_ParticleParam.addVelocityRandomMargih = Vector3::up;
-	_ParticleParam.brightness = 5.0f;
-	_ParticleParam.fadeTime = 0.5f;
-	_ParticleParam.gravity = 0.0f;
-	_ParticleParam.initAlpha = 1.0f;
-	_ParticleParam.initPositionRandomMargin = Vector3(10.0f, 10.0f, 10.0f);
-	_ParticleParam.initVelocity = Vector3::up * 2.0f;
-	_ParticleParam.initVelocityVelocityRandomMargin = Vector3(-10.0f, -10.0f,-10.0f);
-	_ParticleParam.intervalTime = 0.01f;
-	_ParticleParam.isBillboard = true;
-	_ParticleParam.isFade = true;
-	_ParticleParam.life = 0.01f;
-	_ParticleParam.size = Vector2(0.1f, 0.1f);
-	_ParticleParam.mulColor = Color::green;
+	_FireFlyParticleParam.Init();
+	_FireFlyParticleParam.texturePath = "ItemEfectBase.png";
+	_FireFlyParticleParam.alphaBlendMode = 1;
+	_FireFlyParticleParam.addVelocityRandomMargih = Vector3::up;
+	_FireFlyParticleParam.brightness = 5.0f;
+	_FireFlyParticleParam.fadeTime = 0.5f;
+	_FireFlyParticleParam.gravity = 0.0f;
+	_FireFlyParticleParam.initAlpha = 1.0f;
+	_FireFlyParticleParam.initPositionRandomMargin = Vector3(10.0f, 10.0f, 10.0f);
+	_FireFlyParticleParam.initVelocity = Vector3::up * 2.0f;
+	_FireFlyParticleParam.initVelocityVelocityRandomMargin = Vector3(-10.0f, -10.0f,-10.0f);
+	_FireFlyParticleParam.intervalTime = 0.01f;
+	_FireFlyParticleParam.isBillboard = true;
+	_FireFlyParticleParam.isFade = true;
+	_FireFlyParticleParam.life = 0.01f;
+	_FireFlyParticleParam.size = Vector2(0.1f, 0.1f);
+	_FireFlyParticleParam.mulColor = Color::green;
 
-	_ParticleEmitter->transform->SetParent(transform);
-	_ParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
-	_ParticleEmitter->Init(_ParticleParam);
-	SetEffectFlag(true);
+	_FireFlyParticleEmitter->transform->SetParent(transform);
+	_FireFlyParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
+	_FireFlyParticleEmitter->Init(_FireFlyParticleParam);
+	SetFireFlyEffectFlag(true);
 }
 
 void ParticleEffect::Update() {
+
+	//Hp回復エフェクトを消す処理。
 	if (_IsHeelHpFlag) {
 		_TotalHeelHpEffectTime += Time::DeltaTime();
 		if (_TotalHeelHpEffectTime > 1.0f) {
@@ -179,6 +192,7 @@ void ParticleEffect::Update() {
 		}
 	}
 
+	//Mp回復エフェクトを消す処理。
 	if (_IsHeelMpFlag) {
 		_TotalHeelMpEffectTime += Time::DeltaTime();
 		if (_TotalHeelMpEffectTime > 1.0f) {

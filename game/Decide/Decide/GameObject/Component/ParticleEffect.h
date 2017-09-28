@@ -55,15 +55,28 @@ public:
 		_IsHeelMpFlag = flag;
 	}
 
-	//バフデバフを発生させるかどうかのフラグ。
+	//バフを発生させるかどうかのフラグ。
 	//tureで発生。falseで発生させない。
-	void SetEffectFlag(bool flag) {
-		_ParticleEmitter->SetEmitFlg(flag);
+	void SetBuffEffectFlag(bool flag) {
+		_BuffParticleEmitter->SetEmitFlg(flag);
 	}
 
+	//デバフを発生させるかどうかのフラグ。
+	//tureで発生。falseで発生させない。
+	void SetDebuffEffectFlag(bool flag) {
+		_DebuffParticleEmitter->SetEmitFlg(flag);
+	}
+
+	//蛍を発生させるかどうかのフラグ。
+	//tureで発生。falseで発生させない。
+	void SetFireFlyEffectFlag(bool flag) {
+		_FireFlyParticleEmitter->SetEmitFlg(flag);
+	}
 private:
-	ParticleEmitter*	_ParticleEmitter = nullptr;				//パーティクル発生元。
-	ParticleParameter	_ParticleParam;							//パーティクルパラメーター。
+	ParticleEmitter*	_BuffParticleEmitter = nullptr;			//バフパーティクル発生元。
+	ParticleParameter	_BuffParticleParam;						//バフパーティクルパラメーター。
+	ParticleEmitter*	_DebuffParticleEmitter = nullptr;		//デバフパーティクル発生元。
+	ParticleParameter	_DebuffParticleParam;					//デバフパーティクルパラメーター。
 	ParticleParameter	_HeelHpParticleParam;					//Hp回復パーティクルパラメーター。
 	ParticleEmitter*	_HeelHpParticleEmitter = nullptr;		//Hp回復エフェクトパーティクルの発生元。
 	ParticleEmitter*	_HeelParticleAssistEmitter = nullptr;	//回復エフェクトを補助するパーティクルの発生元。	
@@ -74,5 +87,7 @@ private:
 	float				_TotalHeelHpEffectTime = 0.0f;			//Hp回復エフェクトが始まって何秒経ったかの合計。
 	bool				_IsHeelMpFlag;							//Mp回復エフェクトが始まった。
 	float				_TotalHeelMpEffectTime = 0.0f;			//Mp回復エフェクトが始まって何秒経ったかの合計。
+	ParticleEmitter*	_FireFlyParticleEmitter = nullptr;		//蛍みたいなパーティクル発生元。
+	ParticleParameter	_FireFlyParticleParam;					//蛍みたいなバフパーティクルパラメーター。
 };
 
