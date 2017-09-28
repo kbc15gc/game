@@ -54,14 +54,32 @@ bool ConsumptionItem::UseItem() {
 		if (param->HeelHP(info->effectValue[CharacterParameter::Param::HP])) {	// HP回復処理。
 
 			//Hp回復のエフェクト。
-			effect->HeelHpEffect();
+			if (effect) {
+				effect->HeelHpEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+
 			ret = true;
 		}
 
 		if (param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。	
 			//Mp回復のエフェクト。
 
-			effect->HeelMpEffect();
+			if (effect) {
+				effect->HeelMpEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+
 			ret = true;
 		}
 
@@ -69,7 +87,15 @@ bool ConsumptionItem::UseItem() {
 			int value = info->effectValue[idx];
 			if (value > 0) {
 				// バフ。
-				effect->BuffEffect();
+				if (effect) {
+					effect->BuffEffect();
+				}
+#ifdef  _DEBUG
+				else {
+					// エフェクトコンポーネントないよ。
+					abort();
+				}
+#endif //  _DEBUG
 				param->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
 				BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
 				icon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
@@ -77,7 +103,15 @@ bool ConsumptionItem::UseItem() {
 			}
 			else if (value < 0) {
 				// デバフ(デメリット)。
-				effect->DeBuffEffect();
+				if (effect) {
+					effect->DeBuffEffect();
+				}
+#ifdef  _DEBUG
+				else {
+					// エフェクトコンポーネントないよ。
+					abort();
+				}
+#endif //  _DEBUG
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
 				ret = true;
 			}
@@ -89,7 +123,6 @@ bool ConsumptionItem::UseItem() {
 			char error[256];
 			sprintf(error, "何の成果も得られませんでしたぁっ！！");
 			MessageBoxA(0, error, "バフも回復もできないよ！", MB_ICONWARNING);
-			targets.clear();
 			return false;
 		}
 
@@ -132,31 +165,37 @@ bool ConsumptionItem::UseItem() {
 			}
 		}
 
-		if (targets.size() <= 0 && static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Debuff) {
+		if (targets.size() <= 0) {
 
 			// 暫定処理。
 			// ※ゲーム内で何とか効果がないことをお知らせすべき。
-			{
-				char error[256];
-				sprintf(error, "何の成果も得られませんでしたぁっ！！");
-				MessageBoxA(0, error, "デバフなのに効果範囲内に敵がいないよ", MB_ICONWARNING);
-				targets.clear();
+			char error[256];
+			sprintf(error, "何の成果も得られませんでしたぁっ！！");
+			MessageBoxA(0, error, "デバフなのに効果範囲内に敵がいないよ", MB_ICONWARNING);
 
-				return false;
-			}
+			return false;
 		}
-
-		// 複合アイテムを考慮してとりあえず全部実行する。
-		for (auto target : targets) {
-			CharacterParameter* param = target->GetComponent<CharacterParameter>();
-			Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
-			// 暫定処理。
-			// ※とりあえず演出は考慮していない。
-			for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
-				if (param) {
-					effect = target->GetComponent<ParticleEffect>();
-					effect->DeBuffEffect();
-					param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
+		else {
+			// 複合アイテムを考慮してとりあえず全部実行する。
+			for (auto target : targets) {
+				CharacterParameter* param = target->GetComponent<CharacterParameter>();
+				Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
+				// 暫定処理。
+				// ※とりあえず演出は考慮していない。
+				for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+					if (param) {
+						effect = target->GetComponent<ParticleEffect>();
+						if (effect) {
+							effect->DeBuffEffect();
+						}
+#ifdef  _DEBUG
+						else {
+							// エフェクトコンポーネントないよ。
+							abort();
+						}
+#endif //  _DEBUG
+						param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
+					}
 				}
 			}
 			targets.clear();

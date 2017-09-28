@@ -4,8 +4,10 @@
 //Š‚µ‚Ä‚¢‚é•Ší‚ÌƒNƒ‰ƒXB
 class HoldWeapon :public HoldEquipment
 {
-public:
+private:
+	friend class HoldItemFactory;
 	HoldWeapon(char* name);
+public:
 	~HoldWeapon();
 
 
