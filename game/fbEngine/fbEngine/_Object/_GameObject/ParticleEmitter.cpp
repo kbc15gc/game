@@ -114,7 +114,14 @@ void ParticleEmitter::Emit()
 		if (_Timer >= _Param.intervalTime) {
 			//パーティクルを生成。
 			Particle* p = INSTANCE(GameObjectManager)->AddNew<Particle>("particle",8);
-			p->Init(_Param, transform->GetPosition());
+			if (_Param.isParent) {
+				// エミッターを親として設定。
+				p->transform->SetParent(transform);
+				p->Init(_Param, Vector3::zero);
+			}
+			else {
+				p->Init(_Param, transform->GetPosition());
+			}
 			_Timer = 0.0f;
 			_ParticleList.push_back(p);
 			if (_achievedArray) {
