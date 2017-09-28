@@ -77,7 +77,7 @@ namespace Hold{
 
 		int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
 		int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-		int _CrtRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+		int _DexRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
 	};
 
 	static Support::DATARECORD HoldWeaponData[] = {
@@ -85,7 +85,7 @@ namespace Hold{
 		{ "ID",Support::DataTypeE::INT ,			offsetof(struct HoldWeaponInfo,_ID),			sizeof(int) },
 		{ "AtkRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_AtkRnd),		sizeof(int) },
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_MAtkRnd),		sizeof(int) },
-		{ "CrtRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_CrtRnd),		sizeof(int) },
+		{ "DexRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_DexRnd),		sizeof(int) },
 		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_IsEquip),		sizeof(int) },
 	};
 

@@ -43,66 +43,52 @@ bool ConsumptionItem::UseItem() {
 	if (static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Heel || static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Buff) {
 		// 回復もしくはバフアイテム。
 
-		// 使用者自身をHP回復処理。
+		// 使用者自身をターゲットにする。
 		CharacterParameter* param = _user->GetComponent<CharacterParameter>();
 		Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
 
+		bool ret = false;
 		// 暫定処理。
 		// ※とりあえず演出は考慮していない。
+		if (param->HeelHP(info->effectValue[CharacterParameter::Param::HP])) {	// HP回復処理。
 
-		param->HeelHP(info->effectValue[CharacterParameter::Param::HP]);	// HP回復処理。
-		param->HeelMP(info->effectValue[CharacterParameter::Param::MP]);	// MP回復処理。
-		if (!param->HeelHP(info->effectValue[CharacterParameter::Param::HP])){	// HP回復処理。
-			// 回復できなかった。
-
-			// 暫定処理。
-			// ※ゲーム内で何とか効果がないことをお知らせすべき。
-			{
-				char error[256];
-				sprintf(error, "何の成果も得られませんでしたぁっ！！");
-				MessageBoxA(0, error, "回復できないよ！", MB_ICONWARNING);
-				targets.clear();
-				return false;
-			}
-		}
-		else
-		{
 			//Hp回復のエフェクト。
-			effect->HeelHpEffect();
+			effect->HeelHpEffect(_user->transform);
+			ret = true;
 		}
 
-		if (!param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。
-			// 回復できなかった。
-
-			// 暫定処理。
-			// ※ゲーム内で何とか効果がないことをお知らせすべき。
-			{
-				char error[256];
-				sprintf(error, "何の成果も得られませんでしたぁっ！！");
-				MessageBoxA(0, error, "回復できないよ！", MB_ICONWARNING);
-				targets.clear();
-				return false;
-			}
-		}
-		else
-		{
+		if (param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。			//Mp回復のエフェクト。
 			//Mp回復のエフェクト。
+
 			effect->HeelMpEffect();
+			ret = true;
 		}
 
 		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 			int value = info->effectValue[idx];
 			if (value > 0) {
 				// バフ。
-				param->Buff(static_cast<CharacterParameter::Param>(idx),static_cast<unsigned short>(value),info->time);
+
+				param->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+				ret = true;
 			}
 			else if (value < 0) {
 				// デバフ(デメリット)。
 
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+				ret = true;
 			}
 		}
-		
+
+		// 暫定処理。
+		// ※ゲーム内で何とか効果がないことをお知らせすべき。
+		if (!ret) {
+			char error[256];
+			sprintf(error, "何の成果も得られませんでしたぁっ！！");
+			MessageBoxA(0, error, "バフも回復もできないよ！", MB_ICONWARNING);
+			targets.clear();
+			return false;
+		}
 		return true;
 	}
 	else {
@@ -136,7 +122,7 @@ bool ConsumptionItem::UseItem() {
 			}
 		}
 		else {
-			for (auto coll: hit) {
+			for (auto coll : hit) {
 				// 対象に取得したオブジェクトを追加。
 				targets.push_back(coll->gameObject);
 			}
@@ -171,9 +157,9 @@ bool ConsumptionItem::UseItem() {
 				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
 			}
 		}
+
+
+		targets.clear();
+		return true;
 	}
-
-
-	targets.clear();
-	return true;
 }
