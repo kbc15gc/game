@@ -226,6 +226,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateSpeak.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
@@ -319,6 +320,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateSpeak.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
