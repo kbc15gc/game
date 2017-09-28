@@ -244,12 +244,14 @@ void ShopS_Trade::_UpdateList()
 
 void ShopS_Trade::_SetIndex(int idx)
 {
+	int old = _Select;
 	//選択している添え字設定。
 	_Select = min(idx, max(0, _DisplayItemNum - 1));
 	if (_DisplayItemNum > 0)
 	{
-		//アイテムの情報を送る。
-		_SendItemInfo(_DisplayList->at(_Select));
+		if (old != _Select)
+			//アイテムの情報を送る。
+			_SendItemInfo(_DisplayList->at(_Select));
 
 		//リストの表示更新。
 		if (_Select >= _MinIdx + DISPLAY_ITEM_NUM)
@@ -435,7 +437,7 @@ void ShopS_Trade::BuyItem()
 		if ((*_DisplayList)[idx]->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
 			//アイテムを追加。
-			INSTANCE(Inventory)->AddItem((Item::ItemInfo*)(*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]);
+			add = INSTANCE(Inventory)->AddItem((Item::ItemInfo*)(*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]);
 		}
 		else
 		{
@@ -447,10 +449,15 @@ void ShopS_Trade::BuyItem()
 		{
 			//アイテムの値段分お金を払う。
 			_Shop->Pay((*_DisplayList)[idx]->GetInfo()->Value * _TradeNum[idx]);
+			_Shop->SetDescriptionText("まいどあり。");
+		}
+		else
+		{
+			_Shop->SetDescriptionText("インベントリが一杯ですね。");
 		}
 	}
 
-	_Shop->SetDescriptionText("まいどあり。");
+	
 }
 
 void ShopS_Trade::SellItem()
