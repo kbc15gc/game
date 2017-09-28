@@ -177,6 +177,11 @@ void Player::Start()
 
 void Player::Update()
 {
+
+#ifdef _DEBUG
+	_DebugPlayer();
+#endif // _DEBUG
+
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
