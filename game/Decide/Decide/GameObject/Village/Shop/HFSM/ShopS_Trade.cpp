@@ -340,17 +340,17 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto equip = GetPlayer()->GetEquipment()->weapon;
 			if (equip == nullptr)
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDex %4d -> %s%4d</color>",
 					0, _CalcColorCode(weapon->GetAtk()), weapon->GetAtk(),
 					0, _CalcColorCode(weapon->GetMagicAtk()), weapon->GetMagicAtk(),
-					0, _CalcColorCode(weapon->GetCrt()), weapon->GetCrt());
+					0, _CalcColorCode(weapon->GetDex()), weapon->GetDex());
 			}
 			else
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAG %4d -> %s%4d</color>\nDex %4d -> %s%4d</color>",
 					equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , weapon->GetAtk(),
-					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetCrt()), weapon->GetMagicAtk(),
-					equip->GetCrt(), _CalcColorCode(weapon->GetCrt()- equip->GetCrt()), weapon->GetCrt());
+					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetMagicAtk()), weapon->GetMagicAtk(),
+					equip->GetDex(), _CalcColorCode(weapon->GetDex()- equip->GetDex()), weapon->GetDex());
 			}
 		}
 		else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
