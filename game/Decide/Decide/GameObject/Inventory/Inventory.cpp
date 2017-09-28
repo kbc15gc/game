@@ -60,14 +60,14 @@ namespace Hold {
 	HoldWeaponInfo::HoldWeaponInfo(int TypeID, int ID, int AtkRnd, int MAtkRnd, int CrtRnd, bool IsEquip) : HoldEquipInfo(TypeID, ID, IsEquip) {
 		_AtkRnd = AtkRnd;
 		_MAtkRnd = MAtkRnd;
-		_CrtRnd = CrtRnd;
+		_DexRnd = CrtRnd;
 	}
 
 	// 引数：	コピー元のポインタ。
 	HoldWeaponInfo::HoldWeaponInfo(HoldItemBase* info) : HoldEquipInfo(info) {
 		_AtkRnd = static_cast<HoldWeapon*>(info)->GetAtkRnd();
 		_MAtkRnd = static_cast<HoldWeapon*>(info)->GetMtkRnd();
-		_CrtRnd = static_cast<HoldWeapon*>(info)->GetCrtRnd();
+		_DexRnd = static_cast<HoldWeapon*>(info)->GetDexRnd();
 	}
 
 	HoldArmorInfo::HoldArmorInfo(int TypeID, int ID, int Def, int MDef, bool IsEquip) : HoldEquipInfo(TypeID, ID, IsEquip) {

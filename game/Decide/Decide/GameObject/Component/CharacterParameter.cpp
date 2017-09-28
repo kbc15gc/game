@@ -100,14 +100,14 @@ unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMas
 		damage = _Info[Param::MAT].param;
 		if (weapon) {
 			weaponDamage = weapon->GetMagicAtk();
-			crit += weapon->GetCrt();
+			crit += weapon->GetDex();
 		}
 	}
 	else {
 		damage = _Info[Param::ATK].param;
 		if (weapon) {
 			weaponDamage = weapon->GetAtk();
-			crit += weapon->GetCrt();
+			crit += weapon->GetDex();
 		}
 	}
 
@@ -129,7 +129,7 @@ unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMas
 			short crt = _Info[Param::CRT].param;	// キャラのクリティカル。
 			if(weapon) {
 				// 武器のクリティカル威力を加算。
-				crt += static_cast<Item::WeaponInfo*>(weapon->GetInfo())->CriticalDamage;
+				crt += weapon->GetCrt();
 			}
 			damage += damage * static_cast<float>(crt) * 0.01f;
 		}

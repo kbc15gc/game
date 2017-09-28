@@ -20,7 +20,9 @@ void HoldWeapon::CreateRandParam()
 	//ランダムパラメーターを算出。
 	RndAtkMass();
 	RndMAtkMass();
-	RndCrtMass();
+	RndDexMass();
+
+	_Crt = static_cast<Item::WeaponInfo*>(_Info)->CriticalDamage;	// クリティカル威力は固定。
 
 	//武器のランクを算出。
 	RankSelect(ParamRaitoMass());
@@ -33,7 +35,7 @@ void HoldWeapon::CreateOriginParam() {
 	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk;
 	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk;
 	_Dex = static_cast<Item::WeaponInfo*>(_Info)->Dex;
-
+	_Crt = static_cast<Item::WeaponInfo*>(_Info)->CriticalDamage;
 	//武器のランクを算出。
 	RankSelect(ParamRaitoMass());
 }
@@ -47,4 +49,5 @@ void HoldWeapon::_ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) {
 	_Atk = static_cast<Item::WeaponInfo*>(_Info)->Atk + _AtkRnd;
 	_MagicAtk = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk + _MAtkRnd;
 	_Dex = static_cast<Item::WeaponInfo*>(_Info)->Dex + _DexRnd;
+	_Crt = static_cast<Item::WeaponInfo*>(_Info)->CriticalDamage;
 }

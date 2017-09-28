@@ -16,33 +16,38 @@ public:
 	void CreateOriginParam() override;
 
 	//攻撃力の乱数差分を取得。
-	inline int GetAtkRnd() {
+	inline int GetAtkRnd() const {
 		return _AtkRnd;
 	}
 
 	//魔法攻撃力の乱数差分を取得。
-	inline int GetMtkRnd() {
+	inline int GetMtkRnd() const{
 		return _MAtkRnd;
 	}
 
 	//クリティカル率の乱数差分を取得。
-	inline int GetCrtRnd() {
+	inline int GetDexRnd() const{
 		return _DexRnd;
 	}
 
 	//ランクを考慮した物理攻撃力(クリティカル率は除く)を取得。
-	inline int GetAtk() {
+	inline int GetAtk() const{
 		return _Atk;
 	}
 
 	//ランクを考慮した魔法攻撃力クリティカル率は除く)を取得。
-	inline int GetMagicAtk() {
+	inline int GetMagicAtk()const {
 		return _MagicAtk;
 	}
 
 	//ランクを考慮したクリティカル率を取得。
-	inline int GetDex() {
+	inline int GetDex()const {
 		return _Dex;
+	}
+
+	// クリティカル威力取得。
+	inline int GetCrt()const {
+		return _Crt;
 	}
 
 	//武器の基準値と差分値の割合を算出。
@@ -77,7 +82,7 @@ public:
 	}
 
 	//ランクを考慮したランダムクリティカル率の計算。
-	inline void RndCrtMass() {
+	inline void RndDexMass() {
 		//最終的なクリティカルのランダム差分算出。
 		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->Dex;
 		int rnd = GetRand_S50to100();
@@ -104,4 +109,5 @@ private:
 	int	_Atk;			//ランクを考慮した物理攻撃力。
 	int	_MagicAtk;		//ランクを考慮した魔法攻撃力。
 	int _Dex;			//ランクを考慮したクリティカル率。
+	int _Crt;			//クリティカル威力。
 };

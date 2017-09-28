@@ -43,137 +43,124 @@ bool ConsumptionItem::UseItem() {
 	if (static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Heel || static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Buff) {
 		// 回復もしくはバフアイテム。
 
-		// 使用者自身をHP回復処理。
+		// 使用者自身をターゲットにする。
 		CharacterParameter* param = _user->GetComponent<CharacterParameter>();
 		Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
 
+		bool ret = false;
 		// 暫定処理。
 		// ※とりあえず演出は考慮していない。
+		if (param->HeelHP(info->effectValue[CharacterParameter::Param::HP])) {	// HP回復処理。
 
-		param->HeelHP(info->effectValue[CharacterParameter::Param::HP]);	// HP回復処理。
-		param->HeelMP(info->effectValue[CharacterParameter::Param::MP]);	// MP回復処理。
-		if (!param->HeelHP(info->effectValue[CharacterParameter::Param::HP])){	// HP回復処理。
-			// 回復できなかった。
-
-			// 暫定処理。
-			// ※ゲーム内で何とか効果がないことをお知らせすべき。
-			{
-				char error[256];
-				sprintf(error, "何の成果も得られませんでしたぁっ！！");
-				MessageBoxA(0, error, "回復できないよ！", MB_ICONWARNING);
-				targets.clear();
-				return false;
-			}
-		}
-		else
-		{
 			//Hp回復のエフェクト。
 			effect->HeelHpEffect(_user->transform);
+			ret = true;
+
+			if (param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。
+
+				//Hp回復のエフェクト。
+				effect->HeelMpEffect(_user->transform);
+				ret = true;
+			}
+
+			for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+				int value = info->effectValue[idx];
+				if (value > 0) {
+					// バフ。
+
+					param->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+					ret = true;
+				}
+				else if (value < 0) {
+					// デバフ(デメリット)。
+
+					param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+					ret = true;
+				}
+			}
+
+			// 暫定処理。
+			// ※ゲーム内で何とか効果がないことをお知らせすべき。
+			if (!ret) {
+				char error[256];
+				sprintf(error, "何の成果も得られませんでしたぁっ！！");
+				MessageBoxA(0, error, "バフも回復もできないよ！", MB_ICONWARNING);
+				targets.clear();
+				return false;
+			}
+
+			return true;
+		}
+		else {
+			// デバフアイテム。
+			// 効果範囲内のエネミーを取得。
+			int attr = Collision_ID::ENEMY | Collision_ID::BOSS;
+			vector<Collision*> hit;
+			INSTANCE(PhysicsWorld)->AllHitsContactTest(_gost->GetAttachCollision(), hit, attr);
+
+			if (hit.size() > effectNumTable[static_cast<int>(static_cast<Item::ItemInfo*>(_Info)->rangeStrength)]) {
+				// 衝突した対象がアイテムの効果範囲より多い。
+
+				for (int idx = 0; idx < effectNumTable[static_cast<int>(static_cast<Item::ItemInfo*>(_Info)->rangeStrength)]; idx++) {
+
+					// 衝突した対象の中の近いものから取得していく。
+					float min = FLT_MAX;
+					GameObject* minObj = nullptr;
+					int eraseIdx = 0;	// 先頭から何番目の要素か。
+					for (int idx = 0; idx < hit.size(); idx++) {
+						if (Vector3(_user->transform->GetPosition() - hit[idx]->transform->GetPosition()).Length() < min) {
+							minObj = hit[idx]->gameObject;
+							eraseIdx = idx;
+						}
+					}
+
+					// 取得したコリジョンは配列から省く。
+					hit.erase(hit.begin() + eraseIdx);
+
+					// 対象に取得したオブジェクトを追加。
+					targets.push_back(minObj);
+				}
+			}
+			else {
+				for (auto coll : hit) {
+					// 対象に取得したオブジェクトを追加。
+					targets.push_back(coll->gameObject);
+				}
+			}
+
 		}
 
-		if (!param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。
-			// 回復できなかった。
+		if (targets.size() <= 0 && static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Debuff) {
 
 			// 暫定処理。
 			// ※ゲーム内で何とか効果がないことをお知らせすべき。
 			{
 				char error[256];
 				sprintf(error, "何の成果も得られませんでしたぁっ！！");
-				MessageBoxA(0, error, "回復できないよ！", MB_ICONWARNING);
+				MessageBoxA(0, error, "デバフなのに効果範囲内に敵がいないよ", MB_ICONWARNING);
 				targets.clear();
+
 				return false;
 			}
 		}
-		else
-		{
-			//Mp回復のエフェクト。
-			effect->HeelMpEffect(_user->transform);
-		}
 
-		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
-			int value = info->effectValue[idx];
-			if (value > 0) {
-				// バフ。
-				param->Buff(static_cast<CharacterParameter::Param>(idx),static_cast<unsigned short>(value),info->time);
-			}
-			else if (value < 0) {
-				// デバフ(デメリット)。
-
-				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+		// 複合アイテムを考慮してとりあえず全部実行する。
+		for (auto target : targets) {
+			CharacterParameter* param = target->GetComponent<CharacterParameter>();
+			Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
+			// 暫定処理。
+			// ※とりあえず演出は考慮していない。
+			for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+				if (param) {
+					effect = target->GetComponent<ParticleEffect>();
+					effect->DeBuffEffect(target->transform);
+					param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
+				}
 			}
 		}
-		
+
+
+		targets.clear();
 		return true;
 	}
-	else {
-		// デバフアイテム。
-		// 効果範囲内のエネミーを取得。
-		int attr = Collision_ID::ENEMY | Collision_ID::BOSS;
-		vector<Collision*> hit;
-		INSTANCE(PhysicsWorld)->AllHitsContactTest(_gost->GetAttachCollision(), hit, attr);
-
-		if (hit.size() > effectNumTable[static_cast<int>(static_cast<Item::ItemInfo*>(_Info)->rangeStrength)]) {
-			// 衝突した対象がアイテムの効果範囲より多い。
-
-			for (int idx = 0; idx < effectNumTable[static_cast<int>(static_cast<Item::ItemInfo*>(_Info)->rangeStrength)]; idx++) {
-
-				// 衝突した対象の中の近いものから取得していく。
-				float min = FLT_MAX;
-				GameObject* minObj = nullptr;
-				int eraseIdx = 0;	// 先頭から何番目の要素か。
-				for (int idx = 0; idx < hit.size(); idx++) {
-					if (Vector3(_user->transform->GetPosition() - hit[idx]->transform->GetPosition()).Length() < min) {
-						minObj = hit[idx]->gameObject;
-						eraseIdx = idx;
-					}
-				}
-
-				// 取得したコリジョンは配列から省く。
-				hit.erase(hit.begin() + eraseIdx);
-
-				// 対象に取得したオブジェクトを追加。
-				targets.push_back(minObj);
-			}
-		}
-		else {
-			for (auto coll: hit) {
-				// 対象に取得したオブジェクトを追加。
-				targets.push_back(coll->gameObject);
-			}
-		}
-
-	}
-
-	if (targets.size() <= 0 && static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type) == EffectType::Debuff) {
-
-		// 暫定処理。
-		// ※ゲーム内で何とか効果がないことをお知らせすべき。
-		{
-			char error[256];
-			sprintf(error, "何の成果も得られませんでしたぁっ！！");
-			MessageBoxA(0, error, "デバフなのに効果範囲内に敵がいないよ", MB_ICONWARNING);
-			targets.clear();
-
-			return false;
-		}
-	}
-
-	// 複合アイテムを考慮してとりあえず全部実行する。
-	for (auto target : targets) {
-		CharacterParameter* param = target->GetComponent<CharacterParameter>();
-		Item::ItemInfo* info = static_cast<Item::ItemInfo*>(_Info);
-		// 暫定処理。
-		// ※とりあえず演出は考慮していない。
-		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
-			if (param) {
-				effect = target->GetComponent<ParticleEffect>();
-				effect->DeBuffEffect(target->transform);
-				param->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
-			}
-		}
-	}
-
-
-	targets.clear();
-	return true;
 }
