@@ -141,7 +141,7 @@ unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMas
 
 bool CharacterParameter::HeelHP(int value) {
 	int hp = _Info[Param::HP].param;
-	if (hp >= _Info[Param::HP].originParam) {
+	if (value == 0 || hp >= _Info[Param::HP].originParam) {
 		// 回復不可。
 
 		return false;
@@ -161,7 +161,7 @@ bool CharacterParameter::HeelHP(int value) {
 
 bool CharacterParameter::HeelMP(int value) {
 	int mp = _Info[Param::MP].param;
-	if (mp >= _Info[Param::MP].originParam) {
+	if (value == 0 || mp >= _Info[Param::MP].originParam) {
 		// 回復不可。
 
 		return false;

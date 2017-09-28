@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
+    <ClInclude Include="BuffDebuffICon.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\AttackValue2D.h" />
@@ -254,6 +255,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
+    <ClCompile Include="BuffDebuffICon.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\AttackValue2D.cpp" />

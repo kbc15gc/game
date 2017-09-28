@@ -50,12 +50,9 @@ bool ConsumptionItem::UseItem() {
 		// 暫定処理。
 		// ※とりあえず演出は考慮していない。
 
-		//回復のエフェクト。
-		effect->HeelEffect(_user->transform);
-
 		param->HeelHP(info->effectValue[CharacterParameter::Param::HP]);	// HP回復処理。
 		param->HeelMP(info->effectValue[CharacterParameter::Param::MP]);	// MP回復処理。
-		if (!param->HeelHP(info->effectValue[CharacterParameter::Param::HP]) && info->effectValue[CharacterParameter::Param::HP] > 0){	// HP回復処理。
+		if (!param->HeelHP(info->effectValue[CharacterParameter::Param::HP])){	// HP回復処理。
 			// 回復できなかった。
 
 			// 暫定処理。
@@ -68,7 +65,13 @@ bool ConsumptionItem::UseItem() {
 				return false;
 			}
 		}
-		else if (!param->HeelMP(info->effectValue[CharacterParameter::Param::MP]) && info->effectValue[CharacterParameter::Param::MP] > 0) {	// MP回復処理。
+		else
+		{
+			//Hp回復のエフェクト。
+			effect->HeelHpEffect(_user->transform);
+		}
+
+		if (!param->HeelMP(info->effectValue[CharacterParameter::Param::MP])) {	// MP回復処理。
 			// 回復できなかった。
 
 			// 暫定処理。
@@ -80,6 +83,11 @@ bool ConsumptionItem::UseItem() {
 				targets.clear();
 				return false;
 			}
+		}
+		else
+		{
+			//Mp回復のエフェクト。
+			effect->HeelMpEffect(_user->transform);
 		}
 
 		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
