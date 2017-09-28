@@ -56,25 +56,25 @@ public:
 	/**
 	* パラメータ設定.
 	*/
-	void SetParam(char* name, char* iconName, int param, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize)
+	void SetParam(char* name, char* iconName, int param, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize, float paramTextSize = defaultNameTextSize)
 	{
-		_SetRenderStyle(ShowType::Normal,iconName, iconSize, name,nameTextSize,param,paramAnchor);
+		_SetRenderStyle(ShowType::Normal,iconName, iconSize, name,nameTextSize,param, paramTextSize,paramAnchor);
 	}
 	/**
 	* パラメータ設定. 
 	*/
-	void SetParamMax(char* name,char* iconName, int param,int maxParam, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize)
+	void SetParamMax(char* name,char* iconName, int param,int maxParam, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize, float paramTextSize = defaultNameTextSize)
 	{
-		_SetRenderStyle(ShowType::Max, iconName, iconSize, name, nameTextSize, param, paramAnchor);
+		_SetRenderStyle(ShowType::Max, iconName, iconSize, name, nameTextSize, param, paramTextSize,paramAnchor);
 		_MaxParam = maxParam;
 	}
 
 	/**
 	* パラメータ設定.
 	*/
-	void SetParamBuff(char* name, char* iconName, int param, int buff, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize)
+	void SetParamBuff(char* name, char* iconName, int param, int buff, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize,float paramTextSize = defaultNameTextSize)
 	{
-		_SetRenderStyle(ShowType::Buff, iconName, iconSize, name, nameTextSize, param, paramAnchor);
+		_SetRenderStyle(ShowType::Buff, iconName, iconSize, name, nameTextSize, param, paramTextSize, paramAnchor);
 		_ParamBuff = buff;
 	}
 	/**
@@ -82,7 +82,7 @@ public:
 	*/
 	void SetParamEquip(char* name, char* iconName, int param, int equip, int newEquip)
 	{
-		_SetRenderStyle(ShowType::Equip, iconName, defaultIconSize, name, defaultNameTextSize, param, fbText::TextAnchorE::MiddleRight);
+		_SetRenderStyle(ShowType::Equip, iconName, defaultIconSize, name, defaultNameTextSize, defaultNameTextSize,param, fbText::TextAnchorE::MiddleRight);
 		_ParamEquip = equip;
 		_ParamNewEquip = newEquip;
 	}
@@ -91,7 +91,7 @@ public:
 	*/
 	void SetParamRank(char* name, char* iconName, HoldEquipment::Rank rank, HoldEquipment::Rank newRank)
 	{
-		_SetRenderStyle(ShowType::Rank, iconName, defaultIconSize, name, defaultNameTextSize, 0, fbText::TextAnchorE::MiddleRight);
+		_SetRenderStyle(ShowType::Rank, iconName, defaultIconSize, name, defaultNameTextSize, 0, defaultNameTextSize, fbText::TextAnchorE::MiddleRight);
 		_ParamRank = rank;
 		_ParamNewRank = newRank;
 	}
@@ -106,12 +106,21 @@ public:
 		return _ParamText->transform->GetLocalPosition();
 	}
 
+	// 名前テキストの位置設定(ローカル座標)。
+	inline void SetNameTextPos(const Vector3& localPos) {
+		_ParamNameText->transform->SetLocalPosition(localPos);
+	}
+	// 名前テキストの位置取得。
+	inline const Vector3& GetNameTextPos()const {
+		return _ParamNameText->transform->GetLocalPosition();
+	}
+
 	inline ImageObject* GetIconObject()const {
 		return _IconImage;
 	}
 
 private:
-	inline void _SetRenderStyle(ShowType type,char* iconName,  const Vector2& iconSize,char* nameText, float nameTextSize, int param, fbText::TextAnchorE paramAnchor) {
+	inline void _SetRenderStyle(ShowType type,char* iconName,  const Vector2& iconSize,char* nameText, float nameTextSize, int param,float paramTextSize, fbText::TextAnchorE paramAnchor) {
 		_ShowType = type;
 		if (_IconImage->GetTexture() == nullptr) {
 			_IconImage->SetTexture(LOADTEXTURE(iconName));
@@ -120,6 +129,7 @@ private:
 		_ParamName = nameText;
 		_ParamNameText->SetFontSize(nameTextSize);
 		_Param = param;
+		_ParamText->SetFontSize(paramTextSize);
 		_ParamText->SetAnchor(paramAnchor);
 	}
 

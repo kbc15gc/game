@@ -100,7 +100,7 @@ void Inventory::Initialize() {
 
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
 		// コードごとの最大ID数分配列確保。
-		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx))));
+		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx)) + 1,0));
 	}
 
 	// CSV読み込み。
@@ -189,33 +189,39 @@ HoldEquipment* Inventory::AddEquipment(Item::BaseInfo* info, bool isRandParam) {
 				break;
 			}
 
-			equi->SetInfo(info);
-			if (isRandParam) {
-				// ランダムパラメータ生成。
-				equi->CreateRandParam();
+			if (equi) {
+
+				equi->SetInfo(info);
+				if (isRandParam) {
+					// ランダムパラメータ生成。
+					equi->CreateRandParam();
+				}
+				else {
+					// 基準値でパラメータ生成。
+					equi->CreateOriginParam();
+				}
+
+				//装備品を追加。
+				_InventoryItemList[static_cast<int>(info->TypeID)][idx] = equi;
+
+				_HoldNumList[static_cast<int>(info->TypeID)][info->ID] += 1;	// 新しく追加した数だけ所持数合計に加算。
+																				//装備品の情報を書き出し。
+				_OutData(info->TypeID);
 			}
 			else {
-				// 基準値でパラメータ生成。
-				equi->CreateOriginParam();
+				//エラー報告。
+				// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
+				{
+					char error[256];
+					sprintf(error, "インベントリが一杯で追加されませんでした。");
+					MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+				}
 			}
-
-			//装備品を追加。
-			_InventoryItemList[static_cast<int>(info->TypeID)][idx] = equi;
-
-			//装備品の情報を書き出し。
-			_OutData(info->TypeID);
 
 			return equi;
 		}
 	}
 
-	//エラー報告。
-	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
-	{
-		char error[256];
-		sprintf(error, "インベントリが一杯で追加されませんでした。");
-		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
-	}
 
 	return nullptr;
 }
@@ -303,7 +309,7 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 		}
 	}
 
-	_HoldNumList[static_cast<int>(Item::ItemCodeE::Item)][item->ID] -= (num - work);	// 新しく追加した数だけ所持数合計に加算。
+	_HoldNumList[static_cast<int>(item->TypeID)][item->ID] -= (num - work);	// 新しく追加した数だけ所持数合計に加算。
 
 	//所持品の所持数書き出し。
 	_OutData(item->TypeID);
