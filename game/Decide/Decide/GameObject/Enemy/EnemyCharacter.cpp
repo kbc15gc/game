@@ -96,6 +96,8 @@ void EnemyCharacter::Update() {
 		_EndNowStateCallback(_NowStateIdx);
 	}
 
+	EffectUpdate();
+
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
 	_MyComponent.CharacterController->Execute();
@@ -246,6 +248,54 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
+}
+
+/**
+* アイテム効果.
+*/
+bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
+{
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+		if (_MyComponent.Parameter)
+		{
+			if (_MyComponent.ParticleEffect) {
+				_MyComponent.ParticleEffect->DeBuffEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
+
+		}
+	}
+
+	return true;
+}
+
+/**
+* エフェクト用更新.
+*/
+void EnemyCharacter::EffectUpdate()
+{
+	bool isBuffEffect = false;
+	bool isDeBuffEffect = false;
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+
+		if (_MyComponent.Parameter->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isBuffEffect = true;
+		}
+		if (_MyComponent.Parameter->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isDeBuffEffect = true;
+		}
+	}
+
+	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
 }
 
 void EnemyCharacter::_ChangeState(State next) {

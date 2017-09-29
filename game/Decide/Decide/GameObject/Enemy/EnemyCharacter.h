@@ -366,6 +366,17 @@ public:
 		_Player->TakeDrop(GetDropEXP(), GetDropMoney());
 	}
 
+	/**
+	* アイテム効果.
+	*/
+	bool ItemEffect(Item::ItemInfo* info);
+
+	/**
+	* エフェクト用更新.
+	*/
+	void EffectUpdate();
+
+
 protected:
 	// ステート切り替え関数。
 	void _ChangeState(State next);

@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\CollisionObject.h"
 
 class GameObject;
+#include"GameObject\Player\Player.h"
 
 //消費アイテムのクラス。
 class ConsumptionItem :public HoldItemBase
@@ -104,6 +105,11 @@ private:
 	void SetParticleBuffParam();
 
 	GameObject* _user = nullptr;	// 使用者。
+
+	/**
+	* プレイヤー.
+	*/
+	Player* _Player = nullptr;
 
 	EffectType _type;
 
