@@ -106,7 +106,7 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL, Vector3(170, 660.0f, 0.0f));
+		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL);
 	}
 	// MPのバーを表示。
 	{
@@ -177,7 +177,7 @@ void Player::Start()
 
 void Player::Update()
 {
-
+	//@todo for debug
 #ifdef _DEBUG
 	_DebugPlayer();
 #endif // _DEBUG
@@ -426,7 +426,13 @@ void Player::_LevelUP()
 #ifdef _DEBUG
 void Player::_DebugPlayer()
 {
-
+	//お金増える
+	if (KeyBoardInput->isPush(DIK_O))
+	{
+		INSTANCE(Inventory)->AddPlayerMoney(10000);
+	}
+	//経験値増える
+	
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
 	{
 		//所持リストに追加.
