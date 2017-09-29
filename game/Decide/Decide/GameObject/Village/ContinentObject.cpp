@@ -13,6 +13,8 @@ void ContinentObject::Awake()
 
 	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,false);
 
+	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+
 }
 
 void ContinentObject::Start() {

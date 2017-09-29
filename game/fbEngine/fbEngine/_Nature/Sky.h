@@ -3,7 +3,9 @@
 */
 #pragma once
 
-static const double PI = 3.14159265358979323846f;
+#include"_Object\_GameObject\Plate.h"
+
+static const float PI = 3.14159265358979323846f;
 
 /**
 * 大気散乱用パラメータ.
@@ -17,11 +19,11 @@ struct AtmosphericScatteringParamS
 	AtmosphericScatteringParamS()
 	{
 		fScaleDepth = 0.25;
-		//const float fInvScaleDepth = 4;
+		const float fInvScaleDepth = 4;
 
-		//const int nSamples = 2;
-		//const float fSamples = 2.0f;
-		const float km = 0.001f;
+		const int nSamples = 2;
+		const float fSamples = 2.0f;
+		const float km = 0.0010f;
 		const float ESun = 30.0f;
 		const float kr = 0.0025f;
 		//大気錯乱パラメータの更新。
@@ -126,11 +128,10 @@ public:
 	/**
 	* 空のシミュレーションを有効にする.
 	*/
-	void SetEnable(const Camera* camera, Light* light)
+	void SetEnable()
 	{
-		_Camera = camera;
-		_SceneLight = light;
 		SetActive(true);
+		_SunPlate->SetActive(true);
 	}
 
 	/**
@@ -170,6 +171,8 @@ private:
 	/** 空モデル. */
 	SkinModel* _SkyModel = nullptr;
 
+	Plate* _SunPlate = nullptr;
+
 	/** 大気散乱用パラメータ. */
 	AtmosphericScatteringParamS _AtomosphereParam;
 
@@ -179,11 +182,6 @@ private:
 	float _SunAngle = 0.0f;
 	/** 太陽の方向. */
 	Vector3 _SunDir = Vector3::zero;
-
-	/** カメラのポインタ. */
-	const Camera* _Camera = nullptr;
-	/** ライトのポインタ. */
-	Light* _SceneLight = nullptr;
 
 	/** 日中の環境光. */
 	Vector3 _DayAmbientLight = Vector3(0.3f, 0.3f, 0.3f);

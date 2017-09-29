@@ -133,6 +133,11 @@ void Ocean::Render()
 
 	_Effect->SetFloat("g_Wave", _Wave);
 
+	AtmosphericScatteringParamS atmos = INSTANCE(SceneManager)->GetSky()->GetAtmosphericScatteringParam();
+	_Effect->SetValue("g_atmosParam", &atmos, sizeof(atmos));
+	_Effect->SetInt("g_atmosFlag", AtmosphereFunc::enAtomosphereFuncNone);
+
+
 	//ƒ‰ƒCƒg.
 	{
 		const int num = INSTANCE(GameObjectManager)->mainLight->GetNum();

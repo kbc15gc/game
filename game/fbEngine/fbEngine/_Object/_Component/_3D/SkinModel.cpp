@@ -31,7 +31,6 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_SkyBox(false),
 	_CullMode(D3DCULL_CCW)
 {
-	
 }
 
 SkinModel::~SkinModel()
@@ -247,7 +246,7 @@ void SkinModel::DrawMeshContainer(
 			_Effect->SetTexture("g_ShadowMap_1", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(1));
 			_Effect->SetTexture("g_ShadowMap_2", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(2));
 			//影を映すかどうかのフラグセット
-			_Effect->SetBool("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
+			_Effect->SetInt("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
 		}
 
 		Vector2 size = 20;
@@ -261,12 +260,12 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetValue("g_EffectFlg", &flg, sizeof(Vector4));
 
 		//スペキュラフラグセット
-		_Effect->SetBool("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
+		_Effect->SetInt("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
 
 		_Effect->SetVector("g_blendcolor", (D3DXVECTOR4*)&_AllBlend);
 
 		AtmosphericScatteringParamS atmos = INSTANCE(SceneManager)->GetSky()->GetAtmosphericScatteringParam();
-		_Effect->SetValue("g_atmosParam", &atmos, sizeof(atmos));
+		_Effect->SetValue("g_atmosParam", &atmos, sizeof(AtmosphericScatteringParamS));
 		_Effect->SetInt("g_atmosFlag", _AtomosphereFunc);
 
 	
@@ -323,13 +322,13 @@ void SkinModel::DrawMeshContainer(
 					// ディフューズテクスチャ。
 					_Effect->SetTexture("g_diffuseTexture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
-					_Effect->SetBool("Texflg", true);
+					_Effect->SetInt("Texflg", true);
 				}
 				//テクスチャがないならカラーセット
 				else if (Diffuse != NULL)
 				{
 					_Effect->SetVector("g_diffuseMaterial", Diffuse);
-					_Effect->SetBool("Texflg", false);
+					_Effect->SetInt("Texflg", false);
 				}
 
 				//この関数を呼び出すことで、データの転送が確定する。
@@ -353,7 +352,8 @@ void SkinModel::DrawMeshContainer(
 			//モデル描画
 			for (DWORD i = 0; i < MaterialNum; i++)
 			{
-				_Effect->SetBool("SkyBox", _SkyBox);
+				_Effect->SetInt("SkyBox", _SkyBox);
+
 				//ディフューズカラー
 				D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
 				//マテリアル
@@ -364,7 +364,7 @@ void SkinModel::DrawMeshContainer(
 				{
 					_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
-					_Effect->SetBool("Texflg", true);
+					_Effect->SetInt("Texflg", true);
 
 					//スプラットマップ
 					IDirect3DBaseTexture9* splat = material->GetTexture(Material::TextureHandleE::SplatMap);
@@ -391,7 +391,7 @@ void SkinModel::DrawMeshContainer(
 				{
 					//テクスチャがないならカラーセット
 					_Effect->SetVector("g_diffuseMaterial", Diffuse);
-					_Effect->SetBool("Texflg", false);
+					_Effect->SetInt("Texflg", false);
 				}
 
 				//この関数を呼び出すことで、データの転送が確定する。
