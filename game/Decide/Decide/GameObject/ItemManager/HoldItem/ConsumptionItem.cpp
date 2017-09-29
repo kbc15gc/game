@@ -104,6 +104,8 @@ bool ConsumptionItem::UseItem() {
 			else if (value < 0) {
 				// デバフ(デメリット)。
 				if (effect) {
+					BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
+					icon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 					effect->DeBuffEffect();
 				}
 #ifdef  _DEBUG
