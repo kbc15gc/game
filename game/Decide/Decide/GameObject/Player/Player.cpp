@@ -21,7 +21,7 @@ Player::Player(const char * name) :
 	//キャラクターコントローラーNULL
 	_CharacterController(NULL),
 	//重力設定
-	_Gravity(-55.0f),
+	_Gravity(-0.98f),
 	//現在のステート
 	_CurrentState(NULL),
 	//走るステート
@@ -71,7 +71,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.1f;
+	_Radius = 0.2f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 	//スキンモデル作成

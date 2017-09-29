@@ -77,9 +77,9 @@ void ParameterRender::Update()
 		case ParameterRender::Buff:
 		{
 			sprintf(param, "%d", _Param);
+			char buff[100] = { "" };
 			if (_ParamBuff != 0)
 			{
-				char buff[100] = { "" };
 				if (_ParamBuff > 0) {
 					sprintf(buff, " ª%d", abs(_ParamBuff));
 					_BuffText->SetBlendColor(Color::blue);
@@ -88,10 +88,14 @@ void ParameterRender::Update()
 				else {
 					sprintf(buff, " «%d", abs(_ParamBuff));
 					_BuffText->SetBlendColor(Color::red);
-					_ParamText->SetBlendColor(Color::black * 0.3f);
+					_ParamText->SetBlendColor(Color::white * 0.3f);
 				}
-				_BuffText->SetText(buff);
+			} else
+			{
+				_ParamText->SetBlendColor(Color::white);
 			}
+			_BuffText->SetText(buff);
+
 			break;
 		}
 		case ParameterRender::Equip:
