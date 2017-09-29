@@ -105,7 +105,7 @@ void GameScene::Start()
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
-	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", 7);
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	//シャドウマップ有効.
@@ -132,7 +132,7 @@ void DebugNPC()
 	NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
 	npc->LoadModel("villager1.X");
 	npc->SetMesseage(12, true);
-	npc->transform->SetLocalPosition(Vector3(-1056, 68, -1947));
+	npc->transform->SetLocalPosition(-148.0f, 68.5f, -34.0f);
 }
 
 void GameScene::Update()

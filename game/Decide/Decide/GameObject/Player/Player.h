@@ -75,7 +75,7 @@ public:
 		AnimationWalk,								//歩き
 		AnimationRun,								//走る
 		AnimationJump,								//ジャンプ
-		AnimationAttackStart,			
+		AnimationAttackStart,
 		AnimationAttack01 = AnimationAttackStart,	//攻撃01
 		AnimationAttack02,							//攻撃02
 		AnimationAttack03,							//攻撃３
@@ -108,7 +108,7 @@ public:
 	// animno アニメーションのナンバー
 	// interpolatetime 補間時間
 	// loopnum ループ回数 (デフォルトは-1)
-	void PlayAnimation(AnimationNo animno, float interpolatetime , int loopnum = -1);
+	void PlayAnimation(AnimationNo animno, float interpolatetime, int loopnum = -1);
 	//アニメーションコントロール
 	void AnimationControl();
 
@@ -154,7 +154,7 @@ public:
 	//プレイヤー解放
 	void Releace();
 	//敵が落とした物(経験値、お金)を受け取る。
-	void TakeDrop(int dropexp,int money)
+	void TakeDrop(int dropexp, int money)
 	{
 		_nowEXP += dropexp;
 		// お金はインベントリに格納。
@@ -162,14 +162,14 @@ public:
 	}
 
 	inline void HeelHP() {
-		
+
 	}
 
 	int GetParam(CharacterParameter::Param param)
 	{
 		return _PlayerParam->GetParam(param);
 	}
-	int GetPigmentParam(CharacterParameter::Param param){
+	int GetPigmentParam(CharacterParameter::Param param) {
 		return _PlayerParam->GetPigmentParam(param);
 	}
 	int GetBuffParam(CharacterParameter::Param param) {
@@ -186,7 +186,7 @@ public:
 		return _PlayerParam->GetMaxMP();
 	}
 	// 現在の経験値量を取得。
-	int GetExp() const{
+	int GetExp() const {
 		return _nowEXP;
 	}
 	// レベルアップに必要な経験値を取得。
@@ -209,8 +209,8 @@ public:
 	void SetEquipment(HoldItemBase* equi)
 	{
 		//防具。
-		if (equi->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
-			
+		if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
+
 			if (_Equipment->armor != nullptr) {
 				//前に装備していた防具を外す。
 				_Equipment->armor->SetIsEquipFalse();
@@ -222,14 +222,14 @@ public:
 			_Equipment->armor->SetIsEquipTrue();
 		}
 		else
-		//武器。
+			//武器。
 		{
 			if (_Equipment->weapon != nullptr) {
 				//前に装備していた武器を外す。
 				_Equipment->weapon->SetIsEquipFalse();
 				_Equipment->weapon = nullptr;
 
-				
+
 			}
 			//武器。
 			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
@@ -258,6 +258,9 @@ public:
 	*/
 	void EffectUpdate();
 
+	inline ParameterBar* GetPlayerMpBar() {
+		return _MPBar;
+	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
