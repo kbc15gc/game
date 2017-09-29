@@ -1,9 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <FxCompile Include="Asset\Shader\Ocean.fx" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
+    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Scene\GameScene.cpp">
       <Filter>Scene</Filter>
@@ -246,8 +250,10 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
-    <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp">
-      <Filter>GameObject\Nature\Ocean</Filter>
+    <ClCompile Include="BuffDebuffICon.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateSpeak.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +261,7 @@
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameSystem.h" />
+    <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Scene\GameScene.h">
@@ -511,8 +518,10 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
-    <ClInclude Include="GameObject\Nature\Ocean\Ocean.h">
-      <Filter>GameObject\Nature\Ocean</Filter>
+    <ClInclude Include="BuffDebuffICon.h" />
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateSpeak.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h">
+      <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -595,16 +604,5 @@
     <Filter Include="GameObject\History\Effect">
       <UniqueIdentifier>{594e76b4-ad44-4582-bc81-c2cf8b53d462}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\Nature">
-      <UniqueIdentifier>{eeaed660-a034-4ff8-ba98-befbf4be6f6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Nature\Ocean">
-      <UniqueIdentifier>{a1e103a6-04b8-4c1b-bf29-70b05cb9fc75}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Asset\Shader\Ocean.fx">
-      <Filter>GameObject\Nature\Ocean</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

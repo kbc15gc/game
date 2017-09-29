@@ -13,7 +13,7 @@ namespace
 {
 	float NormalAnimationSpeed = 1.0f;
 	float AttackAnimationSpeed = 1.3f;
-	float Oboreru = 3.0f;
+	float Oboreru = 1.0f;
 }
 
 Player::Player(const char * name) :
@@ -21,7 +21,7 @@ Player::Player(const char * name) :
 	//キャラクターコントローラーNULL
 	_CharacterController(NULL),
 	//重力設定
-	_Gravity(-55.0f),
+	_Gravity(-0.98f),
 	//現在のステート
 	_CurrentState(NULL),
 	//走るステート
@@ -34,6 +34,8 @@ Player::Player(const char * name) :
 	_DeathState(this),
 	//ストップステート
 	_StopState(this),
+	//スピークステート
+	_SpeakState(this),
 	//デバッグか
 	_Debug(false)
 {
@@ -69,7 +71,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.1f;
+	_Radius = 0.2f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 	//スキンモデル作成
@@ -104,7 +106,7 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL, Vector3(1110.0f, 660.0f, 0.0f));
+		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL, Vector3(170, 660.0f, 0.0f));
 	}
 	// MPのバーを表示。
 	{
@@ -155,7 +157,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-1056.0f, 69.0f, -1947.0f);
+	_StartPos = Vector3(-148.0f, 68.5f, -34.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -175,6 +177,11 @@ void Player::Start()
 
 void Player::Update()
 {
+
+#ifdef _DEBUG
+	_DebugPlayer();
+#endif // _DEBUG
+
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
@@ -237,6 +244,9 @@ void Player::ChangeState(State nextstate)
 		//ストップ状態
 		_CurrentState = &_StopState;
 		break;
+	case State::Speak:
+		_CurrentState = &_SpeakState;
+		break;
 	default:
 		//デフォルト
 		break;
@@ -288,6 +298,11 @@ void Player::AnimationControl()
 		else if (_State == State::Stop)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+		}
+		//話せるか。
+		else if (_State == State::Speak)
+		{
+			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
@@ -359,10 +374,20 @@ void Player::_Damage()
 		ChangeState(State::Death);
 	}
 	//海に入るとダメージを食らう。
-	if (transform->GetLocalPosition().y < 48.5f 
-		&& _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
+
+	static float time = 0.0f;
+	time += Time::DeltaTime();
+	//海の中の場合。
+	//HPが0以上なら。
+	//デバッグ時でない。
+	//2秒間隔で。
+	if (transform->GetLocalPosition().y < 48.5f && _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		_HPBar->SubValue(_PlayerParam->ReciveDamage(Oboreru,false,nullptr,0));
+		if (fmod(time, 2.0f) >= 1.0f)
+		{
+			_HPBar->SubValue(_PlayerParam->ReciveDamageThrough(Oboreru));
+			time = 0.0f;
+		}
 	}
 }
 
@@ -422,7 +447,7 @@ void Player::_DebugPlayer()
 	{
 		TakeDrop(100, 100);
 	}
-	static int level = _PlayerParam->GetParam(CharacterParameter::LV);
+	int level = _PlayerParam->GetParam(CharacterParameter::LV);
 	//レベルを上げる。
 	if (level <= 95)
 	{

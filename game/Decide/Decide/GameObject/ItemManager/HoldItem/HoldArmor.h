@@ -4,8 +4,10 @@
 //所持防具のクラス。
 class HoldArmor :public HoldEquipment
 {
-public:
+private:
+	friend class HoldItemFactory;
 	HoldArmor(char* name);
+public:
 	~HoldArmor();
 
 	//防具のパラメーターをランダムで算出。

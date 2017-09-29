@@ -53,9 +53,12 @@ bool EventManager::Execute(Event::EventID id, int idx)
 
 void EventManager::NotifyEndEvent()
 {
-	GetPlayer()->PlayerStopDisable();
-	GetCamera()->SetIsMove(true);
-	_ActiveEvent = Event::EventID::None;
+	if (_ActiveEvent != Event::EventID::None)
+	{
+		GetPlayer()->PlayerStopDisable();
+		GetCamera()->SetIsMove(true);
+		_ActiveEvent = Event::EventID::None;
+	}
 }
 
 void EventManager::AddEvent()
@@ -82,8 +85,4 @@ void EventManager::AddEvent()
 	{
 		book->SetActive(!book->GetActive(), true);
 	});
-}
-
-void EventManager::StartEvent()
-{
 }

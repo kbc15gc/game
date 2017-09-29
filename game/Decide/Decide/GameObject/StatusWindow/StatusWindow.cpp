@@ -42,6 +42,11 @@ void StatusWindow::Awake()
 	_ItemWindowList[1]->Init(Item::ItemCodeE::Weapon);
 	_ItemWindowList[2]->Init(Item::ItemCodeE::Armor);
 
+	// お金の表示作成。
+	_MoneyRender = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("MoneyRender", 9);
+	_MoneyRender->transform->SetParent(transform);
+	_MoneyRender->transform->SetLocalPosition(Vector3(0.0f,0.0f,0.0f));
+
 	//始めは非表示.
 	this->SetActive(false, true);
 }
@@ -51,6 +56,7 @@ void StatusWindow::Awake()
 */
 void StatusWindow::Update()
 {
+	_MoneyRender->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney());
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;

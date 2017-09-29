@@ -12,9 +12,9 @@ HoldEquipment::~HoldEquipment()
 
 }
 
-void HoldEquipment::ConfigLoadData(Hold::HoldEquipInfo* info) {
-	_ConfigLoadDataSubClass(info);
-	_IsEquip = info->_IsEquip;
+void HoldEquipment::ConfigLoadData(Hold::HoldInfo* info) {
+	_ConfigLoadDataSubClass(static_cast<Hold::HoldEquipInfo*>(info));
+	_IsEquip = static_cast<Hold::HoldEquipInfo*>(info)->_IsEquip;
 	RankSelect(ParamRaitoMass());
 	_isLoad = true;
 }

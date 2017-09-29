@@ -2,16 +2,23 @@
 #include "GameObject\ItemManager\ItemManager.h"
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "GameObject\Inventory\Inventory.h"
+#include "GameObject\ItemManager\HoldItem\HoldItemFactory.h"
 
 //所持アイテムの基底クラス。
-class HoldItemBase :public ImageObject
+class HoldItemBase :public GameObject
 {
-public:
-	// 引数：	アイテムの情報構造体。
+protected:
+	friend class HoldItemFactory;
 	HoldItemBase(char* name);
+public:
 	~HoldItemBase();
 
 	void Start()override;
+
+	// 外部から読み込んだデータを設定。
+	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
+	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
+	virtual void ConfigLoadData(Hold::HoldInfo* info) = 0;
 
 	//構造体の情報を取得。
 	inline Item::BaseInfo* GetInfo() {

@@ -1,5 +1,6 @@
 #pragma once
 
+
 enum AnalogE {
 	L_TRIGGER,	//左ﾄﾘｶﾞｰ
 	R_TRIGGER,	//右ﾄﾘｶﾞｰ
@@ -41,10 +42,14 @@ public:
 	bool KeyRepeat(int in,float interval);
 	//アナログスティック、トリガーが瞬間的に入力されているか
 	bool IsPushAnalog(AnalogE a);
+	//アナログスティック、トリガーの継続的な押下
+	bool IsPressAnalog(AnalogE a);
 	//トリガーやスティックの値が欲しいときにどうぞ。
 	//スティックは-32768 ～ 32767(65536)
 	//トリガーは0 ～ 255
 	Vector2 GetAnalog(AnalogInputE in);
+	//
+	bool AnalogRepeat(AnalogE analog,float interval);
 	//モーターを振動させる
 	//第一引数：int 右モーターの振動数
 	//第二引数：int 左モーターの振動数

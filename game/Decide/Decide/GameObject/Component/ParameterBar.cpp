@@ -86,12 +86,13 @@ void BarElement::_BarScaling() {
 // BarAdapter。
 BarAdapter::~BarAdapter() {
 	_BarFrame->GetComponentManager().OnDestroy();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+	_BarBack->GetComponentManager().OnDestroy();
 	for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
 		_BarElement[idx]->OnDestroy(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	}
 };
 
-void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float value,  bool isInterpolation, bool isRenderFrame, Transform* parent, const Vector3& pos, const Vector2& scale, bool isHud) {
+void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float value,  bool isInterpolation, bool isRenderFrame, Transform* parent, const Vector3& pos, const Vector2& scale, bool isBackColor, bool isHud) {
 	// 作業用Transform情報を保存。
 	// 親子関係を組んだ場合は親が移動したりすると自動更新される。
 	if (parent) {
@@ -106,6 +107,20 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 	// バーのフレームを生成。
 	// ※親子関係を作成すると勝手に更新されるため、ここでは親子関係のない絶対座標を渡す。
 	_CreateBarFrame(transform->GetPosition(), transform->GetScale(), isHud);
+
+	_isBackColor = isBackColor;
+
+	// バーの背景生成。
+	_BarBack.reset(new ImageObject("BarBack"));
+	_BarBack->Awake();
+	_BarBack->Start();
+	// Transform設定。
+	_BarBack->transform->SetParent(_BarFrame->transform);
+	_BarBack->transform->SetLocalPosition(Vector3(-0.9f, 0.0f, 0.0f));
+	_BarBack->transform->SetLocalScale(Vector3(2.54f, 1.0f, 1.0f));
+
+	_BarBack->GetComponentManager().Update();
+	_BarBack->SetTexture(LOADTEXTURE("hp_back.png"));
 
 
 	// 指定された色の順と数に従ってバーを生成。
@@ -166,6 +181,7 @@ void BarAdapter::Update() {
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
 		_BarFrame->GetComponentManager().Update();
+		_BarBack->GetComponentManager().Update();
 		// Transform情報は毎フレーム更新されるため、毎フレームスクリーン座標にして上書きする。
 		_ToScreenPos();
 
@@ -212,6 +228,9 @@ void BarAdapter::ImageRender() {
 		if (_isRenderFrame) {
 			// バーの枠を描画する。
 			_BarFrame->GetComponentManager().ImageRender();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
+		}
+		if (_isBackColor) {
+			_BarBack->GetComponentManager().ImageRender();
 		}
 		for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
 			_BarElement[idx]->ImageRender(); // オブジェクトマネージャーに登録していないため、自前で呼ぶ。
