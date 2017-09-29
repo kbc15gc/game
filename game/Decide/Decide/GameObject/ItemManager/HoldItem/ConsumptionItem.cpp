@@ -89,6 +89,8 @@ bool ConsumptionItem::UseItem() {
 				// ƒoƒtB
 				if (effect) {
 					effect->BuffEffect();
+					BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
+					icon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 				}
 #ifdef  _DEBUG
 				else {
@@ -97,8 +99,6 @@ bool ConsumptionItem::UseItem() {
 				}
 #endif //  _DEBUG
 				param->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
-				BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
-				icon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 				ret = true;
 			}
 			else if (value < 0) {

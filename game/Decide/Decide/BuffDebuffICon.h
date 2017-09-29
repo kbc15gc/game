@@ -52,11 +52,9 @@ public:
 	//引数:デバフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DebuffIconCreate(Param param);
 private:
-	ImageObject*		_ArrowIconImage = nullptr;				//BuffDebuffTypeIconに添える矢印アイコン。
-	ImageObject*		_BuffDebuffTypeIconImage = nullptr;		//何のステータスが上がっているかを表すアイコン。
-	BuffDebuff*			_Buffdebuff = nullptr;					//表示するアイコンの情報をまとめる用。
 	vector<BuffDebuff*>	_PlayerBuffDebuffList;					//プレイヤーに掛かっているバフデバフのリスト。
 	Transform*			_PlayerHpBarTransform = nullptr;		//プレイヤーのHpBarのTransform参照用。
+
 };
 
 //表示するステータスアイコン。
