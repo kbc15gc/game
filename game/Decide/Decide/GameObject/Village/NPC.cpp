@@ -86,13 +86,12 @@ void NPC::_Speak()
 		}
 		else
 		{
-			if (_Player->GetState() == Player::State::Speak)
-			{
-				_Player->ChangeState(Player::State::Run);
-			}
-			
 			//—£‚ê‚½‚È‚ç•Â‚¶‚é
 			_TextBox->CloseMessage();
 		}
+	}
+	if (_Player->GetState() == Player::State::Speak)
+	{
+		_Player->ChangeState(Player::State::Run);
 	}
 }

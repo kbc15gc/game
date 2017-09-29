@@ -17,8 +17,8 @@ public:
 	//バフデバフがどのステータスに影響しているかを判断するのに使う。
 	enum class Param
 	{
-		HP,			//HP。
-		MP,			//MP。
+		HP,			//HP(キャラクターパラメーターとの項目合わせ用。今の所使わない)。
+		MP,			//MP(キャラクターパラメーターとの項目合わせ用。今の所使わない)。
 		Atk,		//物理攻撃力。
 		MAtk,		//魔法攻撃力。
 		Def,		//物理防御力。
@@ -52,18 +52,16 @@ public:
 	//引数:デバフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DebuffIconCreate(Param param);
 private:
-	ImageObject*		_ArrowIconImage = nullptr;				//BuffDebuffTypeIconに添える矢印アイコン。
-	ImageObject*		_BuffDebuffTypeIconImage = nullptr;		//何のステータスが上がっているかを表すアイコン。
-	BuffDebuff*			_Buffdebuff = nullptr;					//表示するアイコンの情報をまとめる用。
 	vector<BuffDebuff*>	_PlayerBuffDebuffList;					//プレイヤーに掛かっているバフデバフのリスト。
 	Transform*			_PlayerHpBarTransform = nullptr;		//プレイヤーのHpBarのTransform参照用。
+
 };
 
 //表示するステータスアイコン。
 static char* TypeIconText[static_cast<int>(BuffDebuffICon::Param::Max)] =
 {	
-	"Hp.pmg",
-	"Mp.pmg",
+	"Hp.pmg",			//Hp(パラメーターとの項目合わせ用。今の所使わない)
+	"Mp.pmg",			//Mp(パラメーターとの項目合わせ用。今の所使わない)
 	"sword.png",		//剣。
 	"magic.png",		//杖。
 	"armor.png",		//鎧。

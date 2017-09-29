@@ -92609,7 +92609,7 @@ Frame GeoSphere001 {
     0.000000;0.000000;0.000000;;
 
     TextureFilename Diffuse {
-     "sky.png";
+     "skyCubeMap.dds";
     }
    }
   }

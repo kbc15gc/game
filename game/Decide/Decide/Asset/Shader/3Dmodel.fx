@@ -6,11 +6,11 @@
 #define MAX_LIGHTNUM 4
 #include "LightingFunction.h"
 
-bool Texflg;							//テクスチャ
-bool Spec;								//スペキュラ
-bool ReceiveShadow;						//影を写す
+int Texflg;							//テクスチャ
+int Spec; //スペキュラ
+int ReceiveShadow; //影を写す
 
-bool SkyBox;
+int SkyBox;
 
 /** 環境マップフラグ. */
 int g_isEnvironmentMap;
@@ -96,7 +96,7 @@ VS_OUTPUT VSMain(VS_INPUT In)
 
 	Out._Color = In._Color;
 	Out._UV = In._UV;
-	Out._Normal = mul(In._Normal, g_rotationMatrix);	//法線を回す。
+    Out._Normal = mul(In._Normal, (float3x4)g_rotationMatrix); //法線を回す。
 	
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
@@ -127,27 +127,28 @@ PSOutput PSMain(VS_OUTPUT In)
 			//反転しているので-1をかけて法線をもどす
 			diff = texCUBE(g_cubeSampler, normal * -1.0f);
 
-			//float3 mono = float3(0.29900f, 0.58700f, 0.11400f);
+			float3 mono = float3(0.29900f, 0.58700f, 0.11400f);
 
-			//float Y = dot(mono, diff.xyz);
+            //白黒にする.
+			float Y = dot(mono, diff.xyz);
 
 			//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
-			//float cloudRate = pow(Y, 3.0f);
+			float cloudRate = pow(Y, 3.0f);
+
+            cloudRate *= 0.2f;
 
 			color = In._RayColor + 0.25f * In._MieColor;
 
 			//大気の色もモノクロ化
-			//float colorY = max(0.0f, dot(mono, color.xyz));
+			float colorY = max(0.0f, dot(mono, color.xyz));
 
-			//float nightRate = max(0.0f,dot(float3(0.0f,1.0f,0.0f), g_atmosParam.v3LightDirection));
+			float nightRate = max(0.0f,dot(float3(0.0f,1.0f,0.0f), g_atmosParam.v3LightDirection));
 
 			//雲の色.
-			//float cloudColor = lerp(3.0f, 0.1f, pow(1.0f - nightRate, 3.0f));
+			float cloudColor = lerp(3.0f, 0.1f, pow(1.0f - nightRate, 3.0f));
 
 			//空の色.
-			//color.xyz = lerp(color.xyz, cloudColor, cloudRate);
-
-			//color.xyz *= 1.1f;
+			color.xyz = lerp(color.xyz, cloudColor, cloudRate);
 
 			color.w = 1.0f;
 
@@ -210,8 +211,7 @@ PSOutput PSMain(VS_OUTPUT In)
 	//大気散乱.
 	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
 	{
-		color = In._RayColor + color * In._MieColor;
-		color.w = diff.w;
+		color.xyz = In._RayColor + color * In._MieColor;
 	}
 
 	//アンビエントライトを加算。
@@ -350,10 +350,12 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	float4 weights = float4(splatMap.r / t, splatMap.g / t, splatMap.b / t, splatMap.w / t);
 
 	//各テクスチャから色を取得
-	float4 diffuseColor = tex2D(g_terrainTexSampler[0], In._UV) * weights.x;
-	diffuseColor += tex2D(g_terrainTexSampler[1], In._UV) * weights.y;
-	diffuseColor += tex2D(g_terrainTexSampler[2], In._UV) * weights.z;
-	//diffuseColor += tex2D(g_terrainTexSampler[3], In._UV) * weights.w;
+	float2 uv = In._UV;
+	
+	float4 diffuseColor = tex2D(g_terrainTexSampler[0], uv * 300.0f) * weights.x;
+	diffuseColor += tex2D(g_terrainTexSampler[1], uv * 50.0f) * weights.y;
+	diffuseColor += tex2D(g_terrainTexSampler[2], uv * 150.0f) * weights.z;
+	//diffuseColor += tex2D(g_terrainTexSampler[3], uv) * weights.w;
 	float4 color = diffuseColor;
 
 	float3 normal = normalize(In._Normal);
@@ -369,22 +371,21 @@ PSOutput PSTerrain(VS_OUTPUT In)
 		shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
 		light.xyz *= min(1.0f, shadowPower);
 	}
-	
+
 	color *= light;
 
 	//大気散乱.
 	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
 	{
-		color = In._RayColor + color * In._MieColor;
-		color.w = diffuseColor.w;
-	}
+		color.xyz = In._RayColor + color * In._MieColor;
+    }
 
 	//アンビエントライトを加算。
 	color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
 
 	PSOutput Out = (PSOutput)0;
 
-	Out.Color = color;
+    Out.Color = color;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
 
