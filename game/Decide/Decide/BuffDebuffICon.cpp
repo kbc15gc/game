@@ -48,9 +48,6 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 
 	//表示アイコン追加。
 	_PlayerBuffDebuffList.push_back(_Buffdebuff);
-
-	_Buffdebuff->_ArrowIconImage = nullptr;
-	_Buffdebuff->_BuffDebuffTypeIconImage = nullptr;
 }
 
 //デバフアイコンの生成。
@@ -79,10 +76,12 @@ void BuffDebuffICon::DebuffIconCreate(Param param) {
 	//表示アイコン追加。
 	_PlayerBuffDebuffList.push_back(_Buffdebuff);
 
-	_Buffdebuff->_ArrowIconImage = nullptr;
-	_Buffdebuff->_BuffDebuffTypeIconImage = nullptr;
 }
 
 void BuffDebuffICon::Update() {
-	
+
+	for (int i = 0; i < _PlayerBuffDebuffList.size(); i++) {
+		_PlayerBuffDebuffList[i]->_ArrowIconImage->transform->SetLocalPosition(Vector3(-30.0f + i*20.0f, -30.0f, 0.0f));
+		_PlayerBuffDebuffList[i]->_BuffDebuffTypeIconImage->transform->SetLocalPosition(Vector3(0.0f + i*30.0f, 0.0f, 0.0f));
+	}
 }
