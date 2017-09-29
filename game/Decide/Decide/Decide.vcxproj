@@ -218,6 +218,7 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldArmor.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldEquipment.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemBase.h" />
+    <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
@@ -314,6 +315,7 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldArmor.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldEquipment.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemBase.cpp" />
+    <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
     <ClCompile Include="GameObject\Log\Log.cpp" />

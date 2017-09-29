@@ -468,7 +468,7 @@ protected:
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
 
-	float _Gravity = -50.0f;	// 重力。
+	float _Gravity = -0.98f;	// 重力。
 
 	Vector3 _InitPos;	// 初期位置。
 

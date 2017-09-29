@@ -56,4 +56,5 @@ private:
 	int _WindowCount = 3;
 	int _NowSelectWindow = 0;
 
+	ParameterRender* _MoneyRender = nullptr;
 };

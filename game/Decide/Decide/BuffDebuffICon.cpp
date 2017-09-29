@@ -30,7 +30,7 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 	}
 
 	//バフ矢印のテクスチャを読み込み。
-	_ArrowIconImage->SetTexture(LOADTEXTURE("Up2.png"));
+	_ArrowIconImage->SetTexture(LOADTEXTURE("BuffIArrow.png"));
 	_ArrowIconImage->SetSize(Vector2(20.0f, 30.0f));
 	
 	//パラメーターを見てパラメーターに合った画像を読み込み。
@@ -61,7 +61,7 @@ void BuffDebuffICon::DebuffIconCreate(Param param) {
 	}
 
 	//デバフ矢印のテクスチャを読み込み。
-	_ArrowIconImage->SetTexture(LOADTEXTURE("Down2.png"));
+	_ArrowIconImage->SetTexture(LOADTEXTURE("DebuffArrow.png"));
 	_ArrowIconImage->SetSize(Vector2(20.0f, 30.0f));
 	//パラメーターを見てパラメーターに合った画像を読み込み。
 	_BuffDebuffTypeIconImage->SetTexture(LOADTEXTURE(TypeIconText[static_cast<int>(param)]));

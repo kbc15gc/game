@@ -21,15 +21,17 @@ public:
 		Max,	//数.
 	};
 
-public:
+protected:
+	friend class HoldItemFactory;
 	HoldEquipment(char* name);
+public:
 	~HoldEquipment();
 
 
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
 	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
-	void ConfigLoadData(Hold::HoldEquipInfo* info);
+	virtual void ConfigLoadData(Hold::HoldInfo* info);
 
 	//武器または防具のランクを決定。
 	inline void RankSelect(float raito) {
