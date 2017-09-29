@@ -65,10 +65,6 @@ void NPC::_Speak()
 		//会話可能な距離か？
 		if (len <= _Radius)
 		{
-			if (_Player->GetState() != Player::State::Speak && _Player->GetState() != Player::State::Stop)
-			{
-				_Player->ChangeState(Player::State::Speak);
-			}
 			//タイトル表示
 			if (_ShowTitle)
 			{
@@ -77,6 +73,10 @@ void NPC::_Speak()
 			//本来は外部から呼び出す。
 			if (KeyBoardInput->isPush(DIK_SPACE) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 			{
+				if (_Player->GetState() != Player::State::Speak && _Player->GetState() != Player::State::Stop)
+				{
+					_Player->ChangeState(Player::State::Speak);
+				}
 				//会話する。
 				_TextBox->Speak();
 			}
@@ -85,10 +85,11 @@ void NPC::_Speak()
 		{
 			//離れたなら閉じる
 			_TextBox->CloseMessage();
+			if (_Player->GetState() == Player::State::Speak)
+			{
+				_Player->ChangeState(Player::State::Run);
+			}
 		}
 	}
-	if (_Player->GetState() == Player::State::Speak)
-	{
-		_Player->ChangeState(Player::State::Run);
-	}
+	
 }

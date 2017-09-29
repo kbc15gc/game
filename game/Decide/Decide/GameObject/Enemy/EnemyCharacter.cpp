@@ -307,7 +307,7 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 
 		//受けたダメージ量を表示。
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
+		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::yellow);
 		attackvalue->transform->SetParent(transform);
 
 		if (_isDamageMotion) {

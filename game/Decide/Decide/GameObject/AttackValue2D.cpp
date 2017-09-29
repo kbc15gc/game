@@ -51,8 +51,9 @@ void AttackValue2D::Init(int damagevalue, float lifetime, Vector3 offset, Color 
 	Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(_Pos);
 	_Pos = Vector3(_ScreenPos.x, _ScreenPos.y, 0.0f);
 	_AttackText->transform->SetLocalPosition(_Pos);
-	string attackvalue = to_string(damagevalue);
-	_AttackText->SetText(attackvalue.data());
+	char attack[4];
+	sprintf(attack, "%d", damagevalue);
+	_AttackText->SetText(attack);
 
 	_LifeTime = lifetime;
 	_CreatAttackValue = true;
