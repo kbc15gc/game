@@ -354,7 +354,7 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	
 	float4 diffuseColor = tex2D(g_terrainTexSampler[0], uv * 300.0f) * weights.x;
 	diffuseColor += tex2D(g_terrainTexSampler[1], uv * 50.0f) * weights.y;
-	diffuseColor += tex2D(g_terrainTexSampler[2], uv) * weights.z;
+	diffuseColor += tex2D(g_terrainTexSampler[2], uv * 150.0f) * weights.z;
 	//diffuseColor += tex2D(g_terrainTexSampler[3], uv) * weights.w;
 	float4 color = diffuseColor;
 
