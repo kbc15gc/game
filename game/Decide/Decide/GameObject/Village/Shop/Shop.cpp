@@ -72,6 +72,9 @@ void Shop::OpenShop(const unsigned int & shopID)
 {
 	if (_State == Shop::ShopStateE::Close)
 	{
+		//プレイヤーのお金の読み込み
+		Pay(0);
+
 		//店の商品読み込み
 		_LoadShopData(shopID);
 		SetActive(true);
