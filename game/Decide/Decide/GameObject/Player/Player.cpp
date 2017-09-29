@@ -8,6 +8,7 @@
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
+#include "BuffDebuffICon.h"
 
 namespace
 {
@@ -213,6 +214,8 @@ void Player::Update()
 	// ※都合が悪いのでとりあえずコメントアウト。
 		////トランスフォーム更新
 		//transform->UpdateTransform();
+
+	EffectUpdate();
 }
 
 void Player::ChangeState(State nextstate)
@@ -362,6 +365,94 @@ void Player::Releace()
 	_CurrentState = nullptr;
 	_HPBar = nullptr;
 	_MPBar = nullptr;
+}
+
+/**
+* アイテムが使用された.
+*/
+bool Player::ItemEffect(Item::ItemInfo* info)
+{
+	//戻り値.
+	bool returnValue = false;
+
+	//HP回復処理.
+	if (_PlayerParam->HeelHP(info->effectValue[CharacterParameter::Param::HP]))
+	{
+		if (_ParticleEffect)
+		{
+			_ParticleEffect->HeelHpEffect();
+		}
+
+		returnValue = true;
+	}
+	if (_PlayerParam->HeelMP(info->effectValue[CharacterParameter::Param::MP]))
+	{
+		if (_ParticleEffect)
+		{
+			_ParticleEffect->HeelMpEffect();
+		}
+
+		returnValue = true;
+	}
+
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+		int value = info->effectValue[idx];
+		if (value > 0) {
+			// バフ。
+			if (_ParticleEffect) {
+				_ParticleEffect->BuffEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+
+			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+			BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
+			icon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+			returnValue = true;
+		}
+		else if (value < 0) {
+			// デバフ(デメリット)。
+			if (_ParticleEffect) {
+				_ParticleEffect->DeBuffEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+			returnValue = true;
+		}
+	}
+	return returnValue;
+}
+
+/**
+* エフェクト用更新.
+*/
+void Player::EffectUpdate()
+{
+	bool isBuffEffect = false;
+	bool isDeBuffEffect = false;
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+
+		if (_PlayerParam->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isBuffEffect = true;
+		}
+		if (_PlayerParam->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isDeBuffEffect = true;
+		}
+	}
+
+	_ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+	_ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
 }
 
 //攻撃を受けたとき

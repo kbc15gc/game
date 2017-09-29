@@ -247,6 +247,17 @@ public:
 	inline ParameterBar* GetPlayerHpBar() {
 		return _HPBar;
 	}
+
+	/**
+	* アイテムが使用された.
+	*/
+	bool ItemEffect(Item::ItemInfo* info);
+	
+	/**
+	* エフェクト用更新.
+	*/
+	void EffectUpdate();
+
 	inline ParameterBar* GetPlayerMpBar() {
 		return _MPBar;
 	}
