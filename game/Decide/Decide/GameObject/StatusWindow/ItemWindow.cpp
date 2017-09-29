@@ -7,20 +7,35 @@
 #include"GameObject\Inventory\Inventory.h"
 #include"GameObject\ItemManager\HoldItem\HoldItemBase.h"
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
+#include "GameObject\StatusWindow\StatusWindow.h"
+
+const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = {
+	"UI/gem.png",
+	"UI/hp.png",
+	"UI/mp.png",
+	"sword.png",
+	"magic.png",
+	"armor.png",
+	"cloaks.PNG",
+	"UI/S_Light01.png",
+	"UI/S_Light01.png",	// 暫定。
+	"UI/gem.png",	// 暫定。
+};
+
 
 /**
 * 初期化.
 */
 void ItemWindow::Awake()
 {
-	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", StatusWindow::WindowBackPriorty + 1);
 	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
 	itemWindow->SetSize(Vector2(495.0f, 580.0f));
 	itemWindow->SetPivot(0.0f, 0.5f);
 	itemWindow->transform->SetParent(transform);
 	itemWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
 
-	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
+	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", StatusWindow::WindowBackPriorty + 2);
 	_WindowName->Initialize(L"", 30.0f);
 	_WindowName->SetAnchor(fbText::TextAnchorE::MiddleCenter);
 	_WindowName->transform->SetParent(transform);
@@ -28,13 +43,13 @@ void ItemWindow::Awake()
 
 	for (int i = 0; i < ItemCellSize; i++)
 	{
-		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
+		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", StatusWindow::WindowBackPriorty + 3);
 		item2D->transform->SetParent(itemWindow->transform);
-		item2D->transform->SetLocalPosition(Vector3(270.0f, -220.0f + (i * 52.0f), 0.0f));
+		item2D->transform->SetLocalPosition(Vector3(270.0f, -195.0f + (i * 52.0f), 0.0f));
 		_Item2DList.push_back(item2D);
 	}
 
-	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 9);
+	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", StatusWindow::WindowBackPriorty + 3);
 	_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
 	_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
 	Quaternion rot = Quaternion::Identity;
@@ -43,7 +58,24 @@ void ItemWindow::Awake()
 	_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 
-	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", 9);
+	_UpArrow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("UpArrow", StatusWindow::WindowBackPriorty + 3);
+	_UpArrow->SetTexture(LOADTEXTURE("cursor.png"));
+	_UpArrow->SetSize(Vector2(50.0f, 50.0f));
+	rot = Quaternion::Identity;
+	rot.SetEuler(Vector3(0.0f, 0.0f, -180.0f));
+	_UpArrow->transform->SetLocalRotation(rot);
+	_UpArrow->transform->SetParent(_Item2DList[0]->transform);
+	_UpArrow->transform->SetLocalPosition(Vector3(0.0f, -40.0f, 0.0f));
+	_UpArrow->SetActive(false,false);
+
+	_DownArrow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DownArrow", StatusWindow::WindowBackPriorty + 3);
+	_DownArrow->SetTexture(LOADTEXTURE("cursor.png"));
+	_DownArrow->SetSize(Vector2(50.0f, 50.0f));
+	_DownArrow->transform->SetParent(_Item2DList[ItemCellSize - 1]->transform);
+	_DownArrow->transform->SetLocalPosition(Vector3(0.0f, 40.0f, 0.0f));
+	_DownArrow->SetActive(false, false);
+
+	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", StatusWindow::WindowBackPriorty + 3);
 	_EIconImage->SetTexture(LOADTEXTURE("UI/E.png"));
 	_EIconImage->SetSize(Vector2(30, 30));
 	_EIconImage->SetActive(false);
@@ -344,6 +376,34 @@ void ItemWindow::Input()
 				}
 			}
 		}
+
+		if (itemCount > ItemCellSize) {
+			// 所持枠を埋めているアイテムが表示限界枠より多い。
+
+			if (_StartLoadCount > 0) {
+				// 一番上に表示されているアイテムがアイテムリストの先頭ではない。
+
+				_UpArrow->SetActive(true,true);
+			}
+			else {
+				_UpArrow->SetActive(false, false);
+			}
+
+			if (_StartLoadCount + ItemCellSize < itemCount) {
+				// 一番下に表示されているアイテムがアイテムリストの終端ではない。
+
+				_DownArrow->SetActive(true, true);
+			}
+			else {
+				_DownArrow->SetActive(false, false);
+			}
+		}
+		else {
+			// 所持枠を埋めているアイテムが表示限界枠におさまっている。
+
+			_UpArrow->SetActive(false, false);
+			_DownArrow->SetActive(false, false);
+		}
 	}
 }
 
@@ -431,14 +491,14 @@ void ItemWindow::_ConfigParamRender()
 		case Item::ItemCodeE::Item:
 		{
 			int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", "UI/gem.png", playerLevel, fbText::TextAnchorE::MiddleLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MDE)]->SetParamBuff("MDE", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::DEX)]->SetParamBuff("DEX", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::LV)]), playerLevel, fbText::TextAnchorE::MiddleLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::HP)]), _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MP)]), _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::ATK)]), _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]), _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEF)]), _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MDE)]->SetParamBuff("MDE", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MDE)]), _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::DEX)]->SetParamBuff("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]), _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
 
 			if (playerLevel != _playerLevel) {
 				// レベル変動。
@@ -482,13 +542,13 @@ void ItemWindow::_ConfigParamRender()
 				newRank = newArmor->GetRank();
 			}
 			_ParameterRenderList[(int)AIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
-			_ParameterRenderList[(int)AIShowStatus::DEF]->SetParamEquip("DEF", "UI/S_Buff02.png", 
+			_ParameterRenderList[(int)AIShowStatus::DEF]->SetParamEquip("DEF", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEF)]),
 				_Player->GetParam(CharacterParameter::Param::DEF), defParam, defnewParam);
-			_ParameterRenderList[(int)AIShowStatus::MDE]->SetParamEquip("MDE", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)AIShowStatus::MDE]->SetParamEquip("MDE", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MDE)]),
 				_Player->GetParam(CharacterParameter::Param::MDE), mdeParam, mdenewParam);
-			_ParameterRenderList[(int)AIShowStatus::CRT]->SetParamEquip("CRT", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)AIShowStatus::CRT]->SetParamEquip("CRT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::CRT)]),
 				_Player->GetParam(CharacterParameter::Param::CRT), 0, 0);
-			_ParameterRenderList[(int)AIShowStatus::DEX]->SetParamEquip("DEX", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)AIShowStatus::DEX]->SetParamEquip("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]),
 				_Player->GetParam(CharacterParameter::Param::DEX), 0, 0);
 			break;
 		}
@@ -518,13 +578,13 @@ void ItemWindow::_ConfigParamRender()
 				newRank = newWeapon->GetRank();
 			}
 			_ParameterRenderList[(int)WIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
-			_ParameterRenderList[(int)WIShowStatus::ATK]->SetParamEquip("ATK", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)WIShowStatus::ATK]->SetParamEquip("ATK", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::ATK)]),
 				_Player->GetParam(CharacterParameter::Param::ATK), atkParam, atknewParam);
-			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]),
 				_Player->GetParam(CharacterParameter::Param::MAT), matParam, matnewParam);
-			_ParameterRenderList[(int)WIShowStatus::CRT]->SetParamEquip("CRT", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)WIShowStatus::CRT]->SetParamEquip("CRT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::CRT)]),
 				_Player->GetParam(CharacterParameter::Param::CRT), 0, 0);
-			_ParameterRenderList[(int)WIShowStatus::DEX]->SetParamEquip("DEX", "UI/S_Buff02.png", 
+			_ParameterRenderList[(int)WIShowStatus::DEX]->SetParamEquip("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]),
 				_Player->GetParam(CharacterParameter::Param::DEX), 0, 0);
 			break;
 		}

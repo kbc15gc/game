@@ -18,6 +18,20 @@ class ItemWindow : public GameObject
 {
 public:
 
+	enum class IconIndex {
+		LV = 0,		//!< レベル.
+		HP,			//!< 体力.
+		MP,			//!< 魔力.
+		ATK,		//!< 物理攻撃.
+		MAT,		//!< 魔法攻撃.
+		DEF,		//!< 物理防御.
+		MDE,		//!< 魔法防御.
+		DEX,		//!< 器用度.
+		CRT,		// クリティカル威力。
+		RANK,		// ランク。
+		MAX			//!< 数.
+	};
+
 	/**
 	* 消費アイテム表示ステータス.
 	*/
@@ -143,7 +157,7 @@ private:
 	int _playerLevel = 0;
 
 	/** セルサイズ. */
-	static const int ItemCellSize = 5;
+	static const int ItemCellSize = 8;
 
 	/** ウィンドウ名表示. */
 	TextObject* _WindowName = nullptr;
@@ -161,6 +175,10 @@ private:
 	/** セレクトカーソル. */
 	ImageObject* _SelectCursor = nullptr;
 
+	// 見えているアイテム枠を超えてアイテムがまだ存在するかを示すアイコン。
+	ImageObject* _UpArrow = nullptr;
+	ImageObject* _DownArrow = nullptr;
+
 	/** Eアイコン. */
 	ImageObject* _EIconImage = nullptr;
 
@@ -175,4 +193,6 @@ private:
 	/** 装備アイテムリスト. */
 	vector<HoldItem2D*> _HoldItem2DList;
 
+
+	static const char* IconTextureNameList[static_cast<int>(IconIndex::MAX)];
 };
