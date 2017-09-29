@@ -96,6 +96,8 @@ void EnemyCharacter::Update() {
 		_EndNowStateCallback(_NowStateIdx);
 	}
 
+	EffectUpdate();
+
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
 	_MyComponent.CharacterController->Execute();
@@ -248,6 +250,54 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
 }
 
+/**
+* アイテム効果.
+*/
+bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
+{
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+		if (_MyComponent.Parameter)
+		{
+			if (_MyComponent.ParticleEffect) {
+				_MyComponent.ParticleEffect->DeBuffEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
+
+		}
+	}
+
+	return true;
+}
+
+/**
+* エフェクト用更新.
+*/
+void EnemyCharacter::EffectUpdate()
+{
+	bool isBuffEffect = false;
+	bool isDeBuffEffect = false;
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+
+		if (_MyComponent.Parameter->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isBuffEffect = true;
+		}
+		if (_MyComponent.Parameter->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isDeBuffEffect = true;
+		}
+	}
+
+	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+}
+
 void EnemyCharacter::_ChangeState(State next) {
 	if (static_cast<int>(next) >= _MyState.size() || static_cast<int>(next) < 0) {
 		// 渡された数字が配列の容量を超えている。
@@ -307,7 +357,7 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 
 		//受けたダメージ量を表示。
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
+		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::yellow);
 		attackvalue->transform->SetParent(transform);
 
 		if (_isDamageMotion) {

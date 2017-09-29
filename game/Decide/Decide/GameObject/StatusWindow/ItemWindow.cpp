@@ -494,7 +494,7 @@ void ItemWindow::_CreateWIShowStatus()
 		_ParameterRenderList.push_back(pr);
 	}
 
-	_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->GetParamTextPos() + Vector3(-50, -7.0f, 0.0f));
+	_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->GetParamTextPos() + Vector3(-40, -7.0f, 0.0f));
 
 
 	_ConfigParamRender();
@@ -514,7 +514,7 @@ void ItemWindow::_CreateAIShowStatus()
 		_ParameterRenderList.push_back(pr);
 	}
 
-	_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->GetParamTextPos() + Vector3(-50, -7.0f, 0.0f));
+	_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->GetParamTextPos() + Vector3(-40, -7.0f, 0.0f));
 
 	_ConfigParamRender();
 }

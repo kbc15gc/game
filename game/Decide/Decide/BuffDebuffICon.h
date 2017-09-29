@@ -7,13 +7,6 @@ class ImageObject;
 class BuffDebuffICon :public GameObject
 {
 public:
-	//表示するアイコンの情報をまとめる用。
-	struct BuffDebuff
-	{
-		ImageObject* _ArrowIconImage;			//BuffDebuffTypeIconに添える矢印アイコン。
-		ImageObject* _BuffDebuffTypeIconImage;	//何のステータスが上がっているかを表すアイコン。
-	};
-
 	//バフデバフがどのステータスに影響しているかを判断するのに使う。
 	enum class Param
 	{
@@ -25,6 +18,14 @@ public:
 		MDef,		//魔法防御力。
 		Dex,		//クリティカル率。
 		Max
+	};
+
+	//表示するアイコンの情報をまとめる用。
+	struct BuffDebuff
+	{
+		ImageObject* _ArrowIconImage;			//BuffDebuffTypeIconに添える矢印アイコン。
+		ImageObject* _BuffDebuffTypeIconImage;	//何のステータスが上がっているかを表すアイコン。
+		Param        _Param;					//どのパラメーターかを保持する用。
 	};
 
 	//コンストラクタ。
@@ -48,23 +49,34 @@ public:
 	//引数:バフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void BuffIconCreate(Param param);
 
-	//デバフかを見てアイコンを生成。
+	//デバフアイコンを生成。
 	//引数:デバフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DebuffIconCreate(Param param);
+
+	//アイコンを描画しない。
+	void RenderDisable();
+
+	//アイコンを描画する。
+	void RenderEnable();
+private:
+	//追加するパラメーターを追加していいのかをチェック、追加が可能ならtrue、追加出来ないならfalse。
+	//引数:パラメーター(Atk,Matk,Def,MDef,Dex)。
+	bool _AddCheck(Param param);
 private:
 	vector<BuffDebuff*>	_PlayerBuffDebuffList;					//プレイヤーに掛かっているバフデバフのリスト。
 	Transform*			_PlayerHpBarTransform = nullptr;		//プレイヤーのHpBarのTransform参照用。
-
 };
 
-//表示するステータスアイコン。
-static char* TypeIconText[static_cast<int>(BuffDebuffICon::Param::Max)] =
-{	
-	"Hp.pmg",			//Hp(パラメーターとの項目合わせ用。今の所使わない)
-	"Mp.pmg",			//Mp(パラメーターとの項目合わせ用。今の所使わない)
-	"sword.png",		//剣。
-	"magic.png",		//杖。
-	"armor.png",		//鎧。
-	"cloaks.png",		//服。
-	"UI/S_Light01.png"	//クリティカル率。
-};
+namespace {
+	//表示するステータスアイコン。
+	static char* TypeIconText[static_cast<int>(BuffDebuffICon::Param::Max)] =
+	{
+		"Hp.pmg",			//Hp(パラメーターとの項目合わせ用。今の所使わない)
+		"Mp.pmg",			//Mp(パラメーターとの項目合わせ用。今の所使わない)
+		"sword.png",		//剣。
+		"magic.png",		//杖。
+		"armor.png",		//鎧。
+		"cloaks.png",		//服。
+		"UI/S_Light01.png"	//クリティカル率。
+	};
+}

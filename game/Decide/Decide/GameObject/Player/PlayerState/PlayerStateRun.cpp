@@ -130,7 +130,7 @@ void PlayerStateRun::Move()
 				
 		// 向きベクトルに移動量を積算。
 		//ダッシュボタンの場合
-		if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_THUMB) || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_Y))
+		if (VPadInput->IsPush(fbEngine::VPad::ButtonRB1))
 		{
 			//ダッシュスピードを適用
 			dir = dir * _DashSpeed;
