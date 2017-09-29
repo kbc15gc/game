@@ -32,9 +32,9 @@ sampler g_diffuseTextureSampler =
 sampler_state
 {
 	Texture = <g_diffuseTexture>;
-    MipFilter = NONE;
-    MinFilter = NONE;
-    MagFilter = NONE;
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
     AddressU = Wrap;
 	AddressV = Wrap;
 };
@@ -196,8 +196,7 @@ PSOutput PSMain( VS_OUTPUT In )
 	//大気散乱.
 	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
 	{
-		color = In._RayColor + color * In._MieColor;
-		color.w = diff.w;
+        color.xyz = In._RayColor + color * In._MieColor;
 	}
 
 	//アンビエントライトを加算。

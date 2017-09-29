@@ -4,6 +4,9 @@
 #include "GameObject\Player\Player.h"
 #include "GameObject\Village\TextBox.h"
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
+#include "GameObject\StatusWindow\StatusWindow.h"
+
+
 NPC::NPC(const char * name):
 	ContinentObject(name),
 	_Height(1.5f),
@@ -20,7 +23,7 @@ void NPC::Awake()
 {
 	ContinentObject::Awake();
 	//テキストボックスを出す。
-	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox", 6);
+	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox",StatusWindow::WindowBackPriorty - 1);
 	_TextBox->SetTextSpeed(12.0f);
 }
 

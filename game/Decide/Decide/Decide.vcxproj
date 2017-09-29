@@ -222,6 +222,7 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
+    <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
@@ -249,7 +250,6 @@
     <ClInclude Include="GameObject\Village\Shop\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
     <ClInclude Include="GameSystem.h" />
-    <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
@@ -319,6 +319,7 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
     <ClCompile Include="GameObject\Log\Log.cpp" />
+    <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
@@ -343,7 +344,6 @@
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp" />
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
-    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">

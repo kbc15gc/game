@@ -82,7 +82,7 @@ public:
 	*/
 	void SetParamEquip(char* name, char* iconName, int param, int equip, int newEquip)
 	{
-		_SetRenderStyle(ShowType::Equip, iconName, defaultIconSize, name, defaultNameTextSize, defaultNameTextSize,param, fbText::TextAnchorE::MiddleRight);
+		_SetRenderStyle(ShowType::Equip, iconName, defaultIconSize, name, defaultNameTextSize, param, defaultNameTextSize, fbText::TextAnchorE::MiddleRight);
 		_ParamEquip = equip;
 		_ParamNewEquip = newEquip;
 	}
@@ -95,7 +95,6 @@ public:
 		_ParamRank = rank;
 		_ParamNewRank = newRank;
 	}
-
 
 	// パラメータテキストの位置設定(ローカル座標)。
 	inline void SetParamTextPos(const Vector3& localPos) {

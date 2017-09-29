@@ -187,7 +187,7 @@ void BarAdapter::Update() {
 
 		_NowBar->Update();
 	}
-	while (true) {
+	//while (true) {
 		if (_NowBar->GetValue() <= 0.0f) {
 			_NowBarNum++;
 			if (_NowBarNum < _MaxBarNum) {
@@ -198,7 +198,8 @@ void BarAdapter::Update() {
 				// これ以上バーが無いので処理を終了。
 
 				_NowBarNum--;
-				break;
+				return;
+				//break;
 			}
 		}
 		else if (_NowBar->GetValue() >= _NowBar->GetMaxValue()) {
@@ -211,15 +212,16 @@ void BarAdapter::Update() {
 				// これ以上バーが無いので処理を終了。
 
 				_NowBarNum++;
-				break;
+				return;
+				//break;
 			}
 		}
 		else {
 			// 現在のバーを更新中。
 
-			break;
+			//break;
 		}
-	}
+	//}
 }
 
 void BarAdapter::ImageRender() {

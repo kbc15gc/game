@@ -29,7 +29,10 @@ bool EventManager::Execute(Event::EventID id, int idx)
 	try 
 	{
 		//止める。
+		GetPlayer()->GetPlayerHpBar()->RenderDisable();
+		GetPlayer()->GetPlayerMpBar()->RenderDisable();
 		GetPlayer()->PlayerStopEnable();
+
 		GetCamera()->SetIsMove(false);
 		//実行中のイベントの添え字保持。
 		_ActiveEvent = id;
@@ -55,6 +58,8 @@ void EventManager::NotifyEndEvent()
 {
 	if (_ActiveEvent != Event::EventID::None)
 	{
+		GetPlayer()->GetPlayerHpBar()->RenderEnable();
+		GetPlayer()->GetPlayerMpBar()->RenderEnable();
 		GetPlayer()->PlayerStopDisable();
 		GetCamera()->SetIsMove(true);
 		_ActiveEvent = Event::EventID::None;

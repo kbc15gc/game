@@ -9,7 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
-#include "Ocean.h"
+#include"GameObject\Nature\Ocean\Ocean.h"
 
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
@@ -105,7 +105,7 @@ void GameScene::Start()
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
-	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", 7);
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	//シャドウマップ有効.
@@ -113,7 +113,7 @@ void GameScene::Start()
 	//環境マップ有効.
 	_isEnvironmentMap = true;
 
-	INSTANCE(SceneManager)->GetSky()->SetEnable(playerCamera->GetComponent<Camera>(), light->GetComponent<Light>());
+	INSTANCE(SceneManager)->GetSky()->SetEnable();
 
 
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
