@@ -9,7 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
-#include "Ocean.h"
+#include"GameObject\Nature\Ocean\Ocean.h"
 
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
@@ -109,7 +109,7 @@ void GameScene::Start()
 	//環境マップ有効.
 	_isEnvironmentMap = true;
 
-	INSTANCE(SceneManager)->GetSky()->SetEnable(playerCamera->GetComponent<Camera>(), light->GetComponent<Light>());
+	INSTANCE(SceneManager)->GetSky()->SetEnable();
 
 
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);

@@ -64,9 +64,12 @@ struct VS_OUTPUT
 {
 	float4 Pos		: POSITION;		//!< 頂点座標.
 	float2 Tex		: TEXCOORD0;	//!< UV座標.
-	float4 Normal	: TEXCOORD1;	//!< 法線ベクトル.
-	float4 Tangent	: TEXCOORD2;	//!< 接ベクトル.
-	float4 WorldPos	: TEXCOORD3;	//!< ワールド座標.
+    float4 Normal   : NORMAL; //!< 法線ベクトル.
+	float4 Tangent	: TEXCOORD1;	//!< 接ベクトル.
+	float4 WorldPos	: TEXCOORD2;	//!< ワールド座標.
+    float4 _MieColor : TEXCOORD3; //ミー錯乱色。
+    float4 _RayColor : TEXCOORD4; //レイリー錯乱色。
+    float3 _PosToCameraDir : TEXCOORD5;
 };
 
 /**
@@ -91,10 +94,13 @@ VS_OUTPUT VSMain(VS_INPUT In)
 
 	Out.Tex = In.Tex;
 
-	float3 nor = mul(In.Normal.xyz, (float4x3)g_WorldMatrix);
+	float3 nor = mul(In.Normal.xyz, (float3x3)g_WorldMatrix);
 	Out.Normal.xyz = normalize(nor);
-	float3 tan = mul(In.Tangent.xyz, (float4x3)g_WorldMatrix);
+	float3 tan = mul(In.Tangent.xyz, (float3x3)g_WorldMatrix);
 	Out.Tangent.xyz = normalize(tan);
+
+    //大気錯乱.
+    CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out.WorldPos.xyz);
 
 	return Out;
 }
@@ -171,6 +177,11 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 	LightColor.xyz += SpecCalc(normal, In.WorldPos.xyz);
 
 	OutColor *= LightColor;
+
+    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+    {
+        OutColor.xyz = In._RayColor + OutColor * In._MieColor;
+    }
 
 	//環境光.
 	OutColor.xyz += g_ambientLight.xyz * defColor.xyz;
