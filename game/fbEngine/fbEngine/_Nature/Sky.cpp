@@ -27,7 +27,8 @@ void Sky::Awake()
 
 	_SunPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
 	_SunPlate->SetTexture(LOADTEXTURE("UI/circle128.png"));
-	_SunPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 1.5f);
+	_SunPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 10.0f);
+	_SunPlate->SetSize(Vector2(50.0f, 50.0f));
 	_SunPlate->SetBillboard(true);
 	_SunPlate->SetActive(false);
 }
@@ -40,7 +41,7 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 5.0f;
+		const float TMP = 1.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 		_SunAngle += 0.02f * Time::DeltaTime() * TMP;
 

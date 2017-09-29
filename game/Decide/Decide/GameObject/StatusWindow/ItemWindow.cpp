@@ -403,6 +403,9 @@ void ItemWindow::_CreateWIShowStatus()
 		_ParameterRenderList.push_back(pr);
 	}
 
+	_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->GetParamTextPos() + Vector3(-50, -7.0f, 0.0f));
+
+
 	_ConfigParamRender();
 }
 
@@ -419,6 +422,8 @@ void ItemWindow::_CreateAIShowStatus()
 		pr->transform->SetLocalPosition(Vector3(-280.0f, -230.0f + (i * 40.0f), 0.0f));
 		_ParameterRenderList.push_back(pr);
 	}
+
+	_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->GetParamTextPos() + Vector3(-50, -7.0f, 0.0f));
 
 	_ConfigParamRender();
 }
@@ -459,7 +464,7 @@ void ItemWindow::_ConfigParamRender()
 			HoldArmor* armor = _Player->GetEquipment()->armor;
 			HoldArmor* newArmor = (HoldArmor*)_Item2DList[_NowSelectItem]->GetItemData();
 
-			_ParameterRenderList[(int)AIShowStatus::RANK]->SetParam("RANK", "UI/S_Buff02.png", 0);
+			//_ParameterRenderList[(int)AIShowStatus::RANK]->SetParam("RANK", "UI/S_Buff02.png", 0);
 
 			int defParam = 0;
 			int defnewParam = 0;

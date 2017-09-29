@@ -90,7 +90,8 @@ void ParameterRender::Update()
 					_BuffText->SetBlendColor(Color::red);
 					_ParamText->SetBlendColor(Color::white * 0.3f);
 				}
-			} else
+			}
+			else
 			{
 				_ParamText->SetBlendColor(Color::white);
 			}
@@ -132,15 +133,15 @@ void ParameterRender::Update()
 			char p[100] = { "" };
 			if (_ParamRank < _ParamNewRank)
 			{
-				sprintf(p, "<color=ff0000ff>« %s</color>", RankText[_ParamNewRank]);
+				sprintf(p, "<color=ff0000ff>« %s</color>", (_ParamNewRank == HoldEquipment::Rank::None) ? "-" : RankText[_ParamNewRank]);
 			}
 			else if (_ParamRank > _ParamNewRank)
 			{
-				sprintf(p, "<color=0000ffff>ª %s</color>", RankText[_ParamNewRank]);
+				sprintf(p, "<color=0000ffff>ª %s</color>", (_ParamNewRank == HoldEquipment::Rank::None) ? "-" : RankText[_ParamNewRank]);
 			}
 			else
 			{
-				sprintf(p, "¨ %s", RankText[_ParamNewRank]);
+				sprintf(p, "¨ %s", (_ParamNewRank == HoldEquipment::Rank::None) ? "-" : RankText[_ParamNewRank]);
 			}
 
 			strcat(param, p);

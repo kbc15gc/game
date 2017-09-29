@@ -36,11 +36,11 @@ SceneManager::SceneManager():
 	_AntiAliasing.Create();
 
 	//被写界深度の作成
-	_DepthofField.SetEnable(false);
+	_DepthofField.SetEnable(true);
 	_DepthofField.Create();
 
 	//ブルームの準備
-	_Bloom.SetEnable(false);
+	_Bloom.SetEnable(true);
 	_Bloom.Create();
 
 	//シャドウマップの初期化.

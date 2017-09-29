@@ -135,6 +135,8 @@ PSOutput PSMain(VS_OUTPUT In)
 			//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
 			float cloudRate = pow(Y, 3.0f);
 
+            cloudRate *= 0.2f;
+
 			color = In._RayColor + 0.25f * In._MieColor;
 
 			//大気の色もモノクロ化
