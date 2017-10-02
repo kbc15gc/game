@@ -22,6 +22,8 @@ class EventManager
 {
 public:
 	EventManager();
+	//初期化
+	void ReSet();
 	//添え字に対応したイベントを実行。
 	//[in] 実行するイベントのID
 	//[in] 渡す引数。

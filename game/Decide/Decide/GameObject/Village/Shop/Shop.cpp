@@ -96,8 +96,9 @@ void Shop::SetState()
 {
 	_StateList.push_back(shared_ptr<ShopS_Close>(new ShopS_Close(this)));
 	_StateList.push_back(shared_ptr<ShopS_Select>(new ShopS_Select(this)));
-	_StateList.push_back(shared_ptr<ShopS_Trade>(new ShopS_Trade(this)));
-	_StateList.push_back(shared_ptr<ShopS_Trade>(new ShopS_Trade(this)));
+	auto trade = shared_ptr<ShopS_Trade>(new ShopS_Trade(this));
+	_StateList.push_back(trade);
+	_StateList.push_back(trade);
 	_StateList.push_back(shared_ptr<ShopS_Confirmation>(new ShopS_Confirmation(this)));
 }
 
