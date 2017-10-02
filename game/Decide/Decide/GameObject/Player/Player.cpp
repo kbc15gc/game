@@ -145,8 +145,8 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack01] = -1.0f;		//UŒ‚1
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack02] = -1.0f;		//UŒ‚2
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0f;		//UŒ‚3
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack04] = -1.0f;		//UŒ‚3
-	_AnimationEndTime[(int)AnimationNo::AnimationAttack05] = -1.0f;		//UŒ‚3
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack04] = -1.0f;		//UŒ‚4
+	_AnimationEndTime[(int)AnimationNo::AnimationAttack05] = -1.0f;		//UŒ‚5
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0f;		//€–S
 	//ŠeƒGƒ“ƒhƒ^ƒCƒ€‚ğİ’è
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -173,7 +173,6 @@ void Player::Start()
 		_LevelUpSprite->SetEnable(true);
 		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
 	}*/
-
 }
 
 void Player::Update()
