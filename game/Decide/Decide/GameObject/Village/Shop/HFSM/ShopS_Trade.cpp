@@ -73,6 +73,8 @@ void ShopS_Trade::Update()
 {
 	if (_DisplayItemNum > 0)
 	{
+		//数量決定
+		_UpdateTradeNum();
 		//アイテム選択
 		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
 		{
@@ -82,8 +84,6 @@ void ShopS_Trade::Update()
 		{
 			_SetIndex((_Select + 1) % _DisplayItemNum);
 		}
-		//数量決定
-		_UpdateTradeNum();
 		//決定(仮)
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonA))
 		{
