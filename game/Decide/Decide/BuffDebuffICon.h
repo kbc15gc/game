@@ -26,6 +26,7 @@ public:
 		ImageObject* _ArrowIconImage;			//BuffDebuffTypeIconに添える矢印アイコン。
 		ImageObject* _BuffDebuffTypeIconImage;	//何のステータスが上がっているかを表すアイコン。
 		Param        _Param;					//どのパラメーターかを保持する用。
+		bool		 _isBuff;					//バフかデバフかどうかのフラグ。
 	};
 
 	//コンストラクタ。
@@ -52,6 +53,15 @@ public:
 	//デバフアイコンを生成。
 	//引数:デバフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DebuffIconCreate(Param param);
+
+
+	//バフアイコンの削除。
+	//引数:効果時間が切れたパラメーター(Atk,Matk,Def,MDef,Dex)。
+	void DeleteBuffIcon(Param param);
+
+	//デバフアイコンの削除。
+	//引数:効果時間が切れたパラメーター(Atk,Matk,Def,MDef,Dex)。
+	void DeleteDebuffIcon(Param param);
 
 	//アイコンを描画しない。
 	void RenderDisable();

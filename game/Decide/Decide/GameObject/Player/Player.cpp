@@ -129,6 +129,12 @@ void Player::Awake()
 
 	//パーティクルエフェクト。
 	_ParticleEffect = AddComponent<ParticleEffect>();
+
+	//バフデバフアイコン。
+	_BuffDebuffICon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
+
+	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
+	Re_SetEquipment();
 }
 
 void Player::Start()
@@ -409,8 +415,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 #endif //  _DEBUG
 
 			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
-			BuffDebuffICon* icon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
-			icon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+			_BuffDebuffICon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			returnValue = true;
 		}
 		else if (value < 0) {
@@ -425,6 +430,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			}
 #endif //  _DEBUG
 			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+			_BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			returnValue = true;
 		}
 	}
@@ -444,9 +450,18 @@ void Player::EffectUpdate()
 		{
 			isBuffEffect = true;
 		}
+		else
+		{
+			_BuffDebuffICon->DeleteBuffIcon(static_cast<BuffDebuffICon::Param>(idx));
+		}
+
 		if (_PlayerParam->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
 		{
 			isDeBuffEffect = true;
+		}
+		else
+		{
+			_BuffDebuffICon->DeleteDebuffIcon(static_cast<BuffDebuffICon::Param>(idx));
 		}
 	}
 
@@ -574,3 +589,75 @@ void Player::_DebugLevel(int lv)
 }
 #endif // _DEBUG
 
+//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
+void Player::SetEquipment(HoldItemBase* equi) {
+	if (equi == nullptr) {
+		return;
+	}
+
+	//防具。
+	if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
+
+		//装備している防具と装備しようとしている防具が同じなら外す。
+		if (static_cast<HoldArmor*>(equi) == _Equipment->armor) {
+			_Equipment->armor->SetIsEquipFalse();
+			_Equipment->armor = nullptr;
+			return;
+		}
+		//前に装備していた防具を外す。
+		else if (_Equipment->armor != nullptr) {
+
+			_Equipment->armor->SetIsEquipFalse();
+			_Equipment->armor = nullptr;
+		}
+
+
+		//防具。
+		_Equipment->armor = static_cast<HoldArmor*>(equi);
+		//装備フラグをtrueにする。
+		_Equipment->armor->SetIsEquipTrue();
+	}
+	else
+		//武器。
+	{
+		//装備している防具と装備しようとしている防具が同じなら外す。
+		if (static_cast<HoldWeapon*>(equi) == _Equipment->weapon) {
+			_Equipment->weapon->SetIsEquipFalse();
+			_Equipment->weapon = nullptr;
+			return;
+		}
+		else if (_Equipment->weapon != nullptr) {
+			//前に装備していた武器を外す。
+			_Equipment->weapon->SetIsEquipFalse();
+			_Equipment->weapon = nullptr;
+		}
+		//武器。
+		_Equipment->weapon = static_cast<HoldWeapon*>(equi);
+		//装備フラグをtrueにする。
+		_Equipment->weapon->SetIsEquipTrue();
+	}
+}
+
+//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
+void Player::Re_SetEquipment() {
+
+	//武具分装備フラグを探す。
+	for (int type = static_cast<int>(Item::ItemCodeE::Armor); type <= static_cast<int>(Item::ItemCodeE::Weapon); type++)
+	{
+		//武具のインベントリリストを取得。
+		vector<HoldItemBase*> vector = INSTANCE(Inventory)->GetInventoryList(static_cast<Item::ItemCodeE>(type));
+		for (auto itr = vector.begin(); itr != vector.end();)
+		{
+			//装備されている。
+			if ((*itr) != nullptr&& static_cast<HoldEquipment*>((*itr))->GetIsEquip() == true) {
+				//プレイヤーに装備。
+				SetEquipment((*itr));
+				break;
+			}
+			else
+			{
+				itr++;
+			}
+		}
+	}
+}

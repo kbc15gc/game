@@ -58,7 +58,6 @@ private:
 		}
 		return _Camera;
 	}
-
 	//最初にイベントを追加する処理。
 	void AddEvent();
 private:

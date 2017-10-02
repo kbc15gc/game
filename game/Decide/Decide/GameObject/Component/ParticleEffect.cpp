@@ -107,7 +107,7 @@ void ParticleEffect::BuffEffect() {
 	_BuffParticleParam.alphaBlendMode = 3;
 	_BuffParticleParam.addVelocityRandomMargih = Vector3::zero;
 	_BuffParticleParam.brightness = 1.0f;
-	_BuffParticleParam.fadeTime = 0.5f;
+	_BuffParticleParam.fadeTime = 0.1f;
 	_BuffParticleParam.gravity = 0.0f;
 	_BuffParticleParam.initAlpha = 1.0f;
 	_BuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
@@ -116,7 +116,7 @@ void ParticleEffect::BuffEffect() {
 	_BuffParticleParam.intervalTime = 0.01f;
 	_BuffParticleParam.isBillboard = true;
 	_BuffParticleParam.isFade = true;
-	_BuffParticleParam.life = 0.01f;
+	_BuffParticleParam.life = 0.001f;
 	_BuffParticleParam.size = Vector2(0.01f, 0.3f);
 	_BuffParticleParam.mulColor = Color::red;
 	_BuffParticleParam.isParent = true;
@@ -134,7 +134,7 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.alphaBlendMode = 3;
 	_DebuffParticleParam.addVelocityRandomMargih = Vector3::zero;
 	_DebuffParticleParam.brightness = 1.0f;
-	_DebuffParticleParam.fadeTime = 0.5f;
+	_DebuffParticleParam.fadeTime = 0.1f;
 	_DebuffParticleParam.gravity = 0.0f;
 	_DebuffParticleParam.initAlpha = 1.0f;
 	_DebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
@@ -143,7 +143,7 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.intervalTime = 0.01f;
 	_DebuffParticleParam.isBillboard = true;
 	_DebuffParticleParam.isFade = true;
-	_DebuffParticleParam.life = 0.01f;
+	_DebuffParticleParam.life = 0.001f;
 	_DebuffParticleParam.size = Vector2(0.01f, 0.3f);
 	_DebuffParticleParam.mulColor = Color::blue;
 	_DebuffParticleParam.isParent = true;

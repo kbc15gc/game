@@ -47,6 +47,9 @@ void GameScene::Start()
 	//ゲームライト生成
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
+	//バフデバフアイコンを表示するクラス。
+	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
+
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 
@@ -99,9 +102,8 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->Start();
 
 	INSTANCE(ItemManager)->LoadAllItemData();
+	INSTANCE(Inventory)->Initialize();
 
-	//バフデバフアイコンを表示するクラス。
-	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
