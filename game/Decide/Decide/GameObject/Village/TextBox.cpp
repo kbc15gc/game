@@ -188,7 +188,6 @@ void TextBox::_SetMessage(const int & id)
 {
 	if (id >= 0)
 	{
-		INSTANCE(EventManager)->Execute(Event::EventID::ShopF, 0);
 		//メッセージ情報取得
 		_Message = INSTANCE(MessageManager)->GetMess(id);
 		if (_Message)

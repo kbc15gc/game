@@ -12,7 +12,7 @@ struct D3DXFRAME_DERIVED : public D3DXFRAME {
 struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER {
 	//マテリアル
 	Material** material;
-	//
+	//オリジナルのメッシュ。
 	LPD3DXMESH pOrigMesh;
 	//
 	LPD3DXATTRIBUTERANGE pAttributeTable;
@@ -32,6 +32,10 @@ struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER {
 	bool UseSoftwareVP;
 	//
 	DWORD iAttributeSW;
+	//頂点定義の作成。
+	IDirect3DVertexDeclaration9* vertexDecl = NULL;
+	//ワールド行列用のバッファの作成。
+	IDirect3DVertexBuffer9* worldMatrixBuffer = NULL;			//ワールド行列のバッファ。
 };
 
 //モデルのデータを扱うクラス
@@ -52,7 +56,7 @@ public:
 	//[out] ロードが成功したかどうか？ 
 	bool LoadModelData(const char* filePath);
 	//モデルデータのクローン作製
-	void CloneModelData(const SkinModelData* modelData, Animation* anim = nullptr);
+	void CloneModelData(const SkinModelData* original, Animation* anim = nullptr);
 	
 
 	/*!
@@ -106,6 +110,41 @@ public:
 	{
 		return _Instancing;
 	}
+
+	//オリジナルモデル取得。
+	SkinModelData* GetOriginal()
+	{
+		return _Original;
+	}
+
+
+	//インスタンシング処理。
+public:
+	//インスタンシング様にワールド行列を積む。
+	void StackWorldMatrix(const D3DXMATRIX &world)
+	{
+		_Original->_WorldMatrixStack.push_back(world);
+	}
+	vector<D3DXMATRIX> GetMatrixStack()
+	{
+		return _Original->_WorldMatrixStack;
+	}
+	//描画済みフラグ取得。
+	bool GetAlreadyDrawn()
+	{
+		return _Original->_AlreadyDrawn;
+	}
+	//インスタンシング開始。
+	void StartInstancing()
+	{
+		_Original->_AlreadyDrawn = false;
+	}
+	//インスタンシング終了。
+	void EndInstancing()
+	{
+		_Original->_WorldMatrixStack.clear();
+		_Original->_AlreadyDrawn = true;
+	}
 private:
 	//最初のメッシュを返す？
 	LPD3DXMESH GetOrgMesh(LPD3DXFRAME frame) const;
@@ -127,6 +166,13 @@ private:
 	ID3DXAnimationController* m_pAnimationController;
 	//とりあえずほじさせたかった。いつか消す。
 	Vector4 _TerrainSize;
+private:
+	//オリジナルモデルへのポインタ。
+	SkinModelData* _Original;
 	//インスタンシング描画フラグ。デフォルトはfalse。
 	bool _Instancing;
+	//描画済みフラグ。インスタンシングで使う。
+	bool _AlreadyDrawn;
+	//インスタンシングで使う、ワールド行列を積むベクター。
+	vector<D3DXMATRIX> _WorldMatrixStack;
 };

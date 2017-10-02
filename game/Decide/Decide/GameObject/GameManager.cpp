@@ -33,9 +33,8 @@ void GameManager::Start()
 */
 void GameManager::Update()
 {
-	if ((XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_BACK) ||
-		KeyBoardInput->isPush(DIK_Q))
-		&& !_HistoryBook->GetActive())
+	if (VPadInput->IsPush(fbEngine::VPad::ButtonSelect)	&&
+		!_HistoryBook->GetActive())
 	{
 	/*	bool active = !_StatusWindow->GetActive();
 		if (active)

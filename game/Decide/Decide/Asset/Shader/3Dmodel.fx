@@ -53,10 +53,18 @@ sampler_state
 
 struct VS_INPUT
 {
-	float4	_Pos		: POSITION;
+	float4	_Pos	: POSITION;
 	float4	_Color	: COLOR0;
 	float3	_Normal	: NORMAL;
 	float2	_UV		: TEXCOORD0;
+};
+
+struct VS_INPUT_INSTANCING {
+	VS_INPUT base;
+	float4 _World1	: TEXCOORD1;		//ワールド行列の1行目
+	float4 _World2	: TEXCOORD2;		//ワールド行列の2行目
+	float4 _World3	: TEXCOORD3;		//ワールド行列の3行目
+	float4 _World4	: TEXCOORD4;		//ワールド行列の4行目
 };
 
 struct VS_OUTPUT
@@ -98,6 +106,45 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	Out._UV = In._UV;
     Out._Normal = mul(In._Normal, (float3x4)g_rotationMatrix); //法線を回す。
 	
+	//大気散乱.
+	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
+
+	return Out;
+}
+
+VS_OUTPUT VSMainInstancing(VS_INPUT_INSTANCING In)
+{
+	VS_OUTPUT Out;
+
+	float4x4 worldMat;
+	worldMat[0] = In._World1;
+	worldMat[1] = In._World2;
+	worldMat[2] = In._World3;
+	worldMat[3] = In._World4;
+
+	float4 pos;
+	pos = mul(float4(In.base._Pos.xyz, 1.0f), worldMat);		//モデルのローカル空間からワールド空間に変換。
+
+	Out._World.xyz = pos.xyz;						//ワールド行列を保持
+
+	//スカイボックスはビュー行列をかけない。
+	//if (!SkyBox || g_isEnvironmentMap > 0.0f)
+	{
+		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
+	}
+	pos = mul(pos, g_projectionMatrix);	//ビュー空間から射影空間に変換。
+
+	Out._Pos = Out._WVP = pos;
+	Out._World.w = pos.w;
+
+	Out._Color = In.base._Color;
+	Out._UV = In.base._UV;
+	float4x4 rotM;
+	rotM[0] = In._World1;
+	rotM[1] = In._World2;
+	rotM[2] = In._World3;
+	Out._Normal = mul(In.base._Normal, rotM);	//法線を回す。
+
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
 
@@ -233,6 +280,15 @@ technique NormalRender
 	pass p0
 	{
 		VertexShader = compile vs_3_0 VSMain();
+		PixelShader = compile ps_3_0 PSMain();
+	}
+}
+//インスタンシング描画用。
+technique InstancingRender
+{
+	pass p0
+	{
+		VertexShader = compile vs_3_0 VSMainInstancing();
 		PixelShader = compile ps_3_0 PSMain();
 	}
 }
