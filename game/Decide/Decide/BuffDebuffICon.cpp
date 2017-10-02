@@ -41,13 +41,13 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 	BuffDebuff* buffdebuff = new BuffDebuff;
 
 	//矢印アイコン。
-	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", 10);
+	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", 7);
 
 	//パラメーターのアイコン。
-	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 10);
+	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 7);
 
 	//バフ矢印のテクスチャを読み込み。
-	arrowIconImage->SetTexture(LOADTEXTURE("BuffIArrow.png"));
+	arrowIconImage->SetTexture(LOADTEXTURE(ArrowIconText[static_cast<int>(Arrow::Up)]));
 	arrowIconImage->SetSize(ARROW_ICON_SIZE);
 
 	//パラメーターを見てパラメーターに合った画像を読み込み。
@@ -87,10 +87,10 @@ void BuffDebuffICon::DebuffIconCreate(Param param) {
 	BuffDebuff* buffdebuff = new(BuffDebuff);
 
 	//矢印アイコン。
-	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", 10);
+	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", 7);
 
 	//パラメーターのアイコン。
-	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 10);
+	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 7);
 
 	//アイコンに出すパラメーター以外が来たら何もしない。
 	if (param<Param::Atk || param>Param::Max) {
@@ -98,7 +98,7 @@ void BuffDebuffICon::DebuffIconCreate(Param param) {
 	}
 
 	//デバフ矢印のテクスチャを読み込み。
-	arrowIconImage->SetTexture(LOADTEXTURE("DebuffArrow.png"));
+	arrowIconImage->SetTexture(LOADTEXTURE(ArrowIconText[static_cast<int>(Arrow::Down)]));
 	arrowIconImage->SetSize(ARROW_ICON_SIZE);
 	//パラメーターを見てパラメーターに合った画像を読み込み。
 	buffDebuffTypeIconImage->SetTexture(LOADTEXTURE(TypeIconText[static_cast<int>(param)]));
@@ -181,20 +181,26 @@ void BuffDebuffICon::DeleteBuffIcon(Param param) {
 		return;
 	}
 
+	//バフアイコンを削除する処理。
 	for (auto itr = _PlayerBuffDebuffList.begin(); itr != _PlayerBuffDebuffList.end();) {
+
+		//バフアイコン。
 		if ((*itr)->_Param == param && (*itr)->_isBuff == true) {
+
+			//削除。
 			INSTANCE(GameObjectManager)->AddRemoveList((*itr)->_ArrowIconImage);
 			INSTANCE(GameObjectManager)->AddRemoveList((*itr)->_BuffDebuffTypeIconImage);
 			itr = _PlayerBuffDebuffList.erase(itr);
 		}
 		else
 		{
+			//バフアイコン以外。
 			itr++;
 		}
 	}
 }
 
-//バフアイコンの削除。
+//デバフアイコンの削除。
 void BuffDebuffICon::DeleteDebuffIcon(Param param) {
 
 	//アイコンに出すパラメーター以外が来たら何もしない。
@@ -202,14 +208,21 @@ void BuffDebuffICon::DeleteDebuffIcon(Param param) {
 		return;
 	}
 
+	//デバフアイコンを削除する処理。
 	for (auto itr = _PlayerBuffDebuffList.begin(); itr != _PlayerBuffDebuffList.end();) {
+
+		//デバフアイコン。
 		if ((*itr)->_Param == param && (*itr)->_isBuff == false) {
+
+			//削除。
 			INSTANCE(GameObjectManager)->AddRemoveList((*itr)->_ArrowIconImage);
 			INSTANCE(GameObjectManager)->AddRemoveList((*itr)->_BuffDebuffTypeIconImage);
 			itr = _PlayerBuffDebuffList.erase(itr);
 		}
 		else
 		{
+
+			//デバフアイコン以外。
 			itr++;
 		}
 	}

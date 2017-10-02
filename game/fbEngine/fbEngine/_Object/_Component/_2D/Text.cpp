@@ -214,9 +214,6 @@ void Text::_UpdateLength()
 			if (_Text[i + 1] != '\n') {
 				MaxLength.y = 0.0f;
 			}
-			else {
-				OutputDebugString("あああああ。");
-			}
 		}
 		//カラーコード。
 		else if (_Text[i] == '<')

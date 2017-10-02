@@ -156,5 +156,4 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 			attack->Create(_Player->_PlayerParam->GiveDamageMass(false, _Player->GetEquipment()->weapon, pram.atk)->value, false, pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, 0.0f, _Player->transform);
 		}
 	}
-
 }

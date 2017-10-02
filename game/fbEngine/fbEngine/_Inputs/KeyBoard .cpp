@@ -56,12 +56,15 @@ bool KeyBoard::KeyRepeat(int key, float interval)
 	if (isPressed(key))
 	{
 		if (isPush(key))
-			return true;
-		//ŠÔ‰ÁZB
-		_RepeatTimer += Time::DeltaTime();
-		if (_RepeatTimer >= interval)
 		{
-			_RepeatTimer = 0.0f;
+			_RepeatTimer[key] = 0.0f;
+			return true;
+		}
+		//ŠÔ‰ÁZB
+		_RepeatTimer[key] += Time::DeltaTime();
+		if (_RepeatTimer[key] >= interval)
+		{
+			_RepeatTimer[key] = 0.0f;
 			return true;
 		}
 	}

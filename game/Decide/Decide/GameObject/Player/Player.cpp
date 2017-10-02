@@ -397,8 +397,8 @@ void Player::Run()
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
 	//コントローラー移動
-	dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f);
-	dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f);
+	dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
+	dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
 #ifdef _DEBUG
 	//キーボード(デバッグ用)
 	if (KeyBoardInput->isPressed(DIK_W))

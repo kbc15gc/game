@@ -136,13 +136,13 @@ void SceneManager::DrawScene()
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
 	//ブルームの描画.
-	_Bloom.Render();
+	//_Bloom.Render();
 
 	//被写界深度の描画.
-	_DepthofField.Render();
+	//_DepthofField.Render();
 	
 	//アンチエイリアスの描画.
-	_AntiAliasing.Render();
+	//_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
 	INSTANCE(RenderTargetManager)->BeforeRT();
