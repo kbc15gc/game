@@ -191,7 +191,9 @@ void CCharacterController::Execute()
 				//ínñ Ç…ê⁄êGÇµÇƒÇ¢ÇÈÅB
 
 				if (gameObject == INSTANCE(GameObjectManager)->FindObject("Player")) {
-					OutputDebugString("aa");
+					char debug[256];
+					sprintf(debug, "%s, %dçsñ⁄\n", __FILE__, __LINE__);
+					//OutputDebugString(debug);
 				}
 
 				m_moveSpeed.y = 0.0f;
