@@ -70,7 +70,7 @@ private:
 
 	//現在実行中のイベントの添え字。
 	Event::EventID _ActiveEvent = Event::EventID::None;
-
+private:
 	Player* _Player;
 	PlayerCamera* _Camera;
 };

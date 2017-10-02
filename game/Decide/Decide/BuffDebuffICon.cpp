@@ -31,6 +31,11 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 		return;
 	}
 
+	//すでに追加されているパラメーターかをチェック。
+	if (false == _AddCheck(param)) {
+		return;
+	}
+
 	//構造体の確保。
 	BuffDebuff* buffdebuff = new BuffDebuff;
 
@@ -56,6 +61,7 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 	//設定したアイコンの情報をまとめる。
 	buffdebuff->_ArrowIconImage = arrowIconImage;
 	buffdebuff->_BuffDebuffTypeIconImage = buffDebuffTypeIconImage;
+	buffdebuff->_Param = param;
 
 	//表示アイコン追加。
 	_PlayerBuffDebuffList.push_back(buffdebuff);
@@ -64,6 +70,17 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 
 //デバフアイコンの生成。
 void BuffDebuffICon::DebuffIconCreate(Param param) {
+
+	//アイコンに出すパラメーター以外が来たら何もしない。
+	if (param<Param::Atk || param>Param::Max) {
+		return;
+	}
+
+	//すでに追加されているパラメーターかをチェック。
+	if (false == _AddCheck(param)) {
+		return;
+	}
+
 	//構造体の初期化。
 	BuffDebuff* buffdebuff = new(BuffDebuff);
 
@@ -93,17 +110,62 @@ void BuffDebuffICon::DebuffIconCreate(Param param) {
 	//設定したアイコンの情報をまとめる。
 	buffdebuff->_ArrowIconImage = arrowIconImage;
 	buffdebuff->_BuffDebuffTypeIconImage = buffDebuffTypeIconImage;
+	buffdebuff->_Param = param;
 
 	//表示アイコン追加。
 	_PlayerBuffDebuffList.push_back(buffdebuff);
 
 }
 
+//更新。
 void BuffDebuffICon::Update() {
 	//バフデバフリストにつまれている数分。
 	for (int i = 0; i < _PlayerBuffDebuffList.size(); i++) {
 		//バフを重ね掛けするさい、横にずらす。
 		//OFFSETの値で、どれだけ横にずらすか。
 		_PlayerBuffDebuffList[i]->_BuffDebuffTypeIconImage->transform->SetLocalPosition(Vector3(BUFF_POS.x + i*OFFSET, BUFF_POS.y, BUFF_POS.z));
+	}
+
+	//デバッグ用アイコンの描画切り替え。
+#ifdef _DEBUG
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_N))
+	{
+		RenderDisable();
+	}
+
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M))
+	{
+		RenderEnable();
+	}
+#endif // _DEBUG
+}
+
+//追加するパラメーターを追加していいのかをチェック。
+bool BuffDebuffICon::_AddCheck(Param param) {
+	for (int i = 0; i < _PlayerBuffDebuffList.size(); i++) {
+		//同じパラメーターがある。
+		if (_PlayerBuffDebuffList[i]->_Param == param) {
+			return false;
+		}
+	}
+
+	//同じパラメーターが無かった
+	return true;
+}
+
+//アイコンを描画しない。
+void BuffDebuffICon::RenderDisable() {
+
+	for (int i = 0; i < _PlayerBuffDebuffList.size(); i++) {
+		_PlayerBuffDebuffList[i]->_ArrowIconImage->SetActive(false);
+		_PlayerBuffDebuffList[i]->_BuffDebuffTypeIconImage->SetActive(false);
+	}
+}
+
+//アイコンを描画する。
+void BuffDebuffICon::RenderEnable() {
+	for (int i = 0; i < _PlayerBuffDebuffList.size(); i++) {
+		_PlayerBuffDebuffList[i]->_ArrowIconImage->SetActive(true);
+		_PlayerBuffDebuffList[i]->_BuffDebuffTypeIconImage->SetActive(true);
 	}
 }

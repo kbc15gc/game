@@ -7,7 +7,6 @@
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Scene\GameScene.cpp">
       <Filter>Scene</Filter>
@@ -257,13 +256,16 @@
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\Cursor.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameSystem.h" />
-    <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Scene\GameScene.h">
@@ -525,6 +527,10 @@
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
+    <ClInclude Include="GameObject\StatusWindow\Cursor.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,8 @@
 
 //UINT                        g_NumBoneMatricesMax = 0;
 //D3DXMATRIXA16*              g_pBoneMatrices = NULL;
+//インスタンシングで描画可能な最大数。
+const int MAX_INSTANCING_NUM = 1000;
 
 //モデルのFrame更新
 void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix)
@@ -406,6 +408,39 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		pMesh->AddRef();
 	}
 
+	//頂点定義とか作成。
+	{
+		//インスタンシング描画用の初期化。
+		D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
+		//デコレーション取得。
+		pMeshContainer->MeshData.pMesh->GetDeclaration(declElement);
+		int elementIndex = 0;
+		while (true) {
+			//未設定の場所を探す。
+			if (declElement[elementIndex].Type == D3DDECLTYPE_UNUSED) {
+				//終端を発見。
+				//ここからインスタンシング用の頂点レイアウトを埋め込む。
+				declElement[elementIndex] = { 1,  0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 };  // WORLD 1行目
+				declElement[elementIndex + 1] = { 1, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 };  // WORLD 2行目
+				declElement[elementIndex + 2] = { 1, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 3 };  // WORLD 3行目
+				declElement[elementIndex + 3] = { 1, 48, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 4 };  // WORLD 4行目
+				declElement[elementIndex + 4] = D3DDECL_END();
+				break;
+			}
+			elementIndex++;
+		}
+		//頂点宣言作成。
+		(*graphicsDevice()).CreateVertexDeclaration(declElement, &pMeshContainer->vertexDecl);
+		//頂点バッファ作成。
+		(*graphicsDevice()).CreateVertexBuffer(
+			sizeof(D3DXMATRIX) *MAX_INSTANCING_NUM,
+			0,
+			0,
+			D3DPOOL_MANAGED,
+			&pMeshContainer->worldMatrixBuffer,
+			0);
+	}
+
 	// allocate memory to contain the material information.  This sample uses
 	//   the D3D9 materials and texture names instead of the EffectInstance style materials
 	//マテリアルの数設定
@@ -660,6 +695,8 @@ bool SkinModelData::LoadModelData(const char* filePath)
 
 		//メッシュリストを作成。
 		_CreateMeshList();
+		//オリジナル。
+		_Original = this;
 		return true;
 	}
 	return false;
@@ -667,7 +704,7 @@ bool SkinModelData::LoadModelData(const char* filePath)
 
 //モデルデータのクローンを作成
 //すべてクローンで作成する。
-void SkinModelData::CloneModelData(const SkinModelData* modelData, Animation* anim)
+void SkinModelData::CloneModelData(const SkinModelData* original, Animation* anim)
 {
 	//フレームを新しく作成
 	_FrameRoot = new D3DXFRAME_DERIVED;
@@ -675,14 +712,14 @@ void SkinModelData::CloneModelData(const SkinModelData* modelData, Animation* an
 	_FrameRoot->pFrameSibling = nullptr;
 	_FrameRoot->pMeshContainer = nullptr;
 	//骨のクローン作製
-	CloneSkeleton(_FrameRoot, modelData->_FrameRoot);
+	CloneSkeleton(_FrameRoot, original->_FrameRoot);
 	//アニメーションコントローラを作成して、スケルトンと関連付けを行う。
-	if (modelData->m_pAnimationController) {
-		modelData->m_pAnimationController->CloneAnimationController(
-			modelData->m_pAnimationController->GetMaxNumAnimationOutputs(),
-			modelData->m_pAnimationController->GetMaxNumAnimationSets(),
-			modelData->m_pAnimationController->GetMaxNumTracks(),
-			modelData->m_pAnimationController->GetMaxNumEvents(),
+	if (original->m_pAnimationController) {
+		original->m_pAnimationController->CloneAnimationController(
+			original->m_pAnimationController->GetMaxNumAnimationOutputs(),
+			original->m_pAnimationController->GetMaxNumAnimationSets(),
+			original->m_pAnimationController->GetMaxNumTracks(),
+			original->m_pAnimationController->GetMaxNumEvents(),
 			&m_pAnimationController
 		);
 		//ウェイト設定？
@@ -694,13 +731,20 @@ void SkinModelData::CloneModelData(const SkinModelData* modelData, Animation* an
 		}
 	}
 	//マテリアルコピー
-	this->_Materials = modelData->_Materials;
+	this->_Materials = original->_Materials;
 	//メッシュリストコピー
-	this->_MeshList = modelData->_MeshList;
+	this->_MeshList = original->_MeshList;
 	//
-	this->_TerrainSize = modelData->_TerrainSize;
+	this->_TerrainSize = original->_TerrainSize;
 	
 	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
+
+
+	//オリジナル設定。。
+	_Original = const_cast<SkinModelData*>(original);
+	//とりあえず、アニメーションがあるならインスタンシングしない。
+	if (m_pAnimationController)
+		_Instancing = false;
 }
 
 //骨をコピー

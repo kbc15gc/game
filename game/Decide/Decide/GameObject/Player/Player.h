@@ -210,12 +210,21 @@ public:
 	{
 		//防具。
 		if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
-
-			if (_Equipment->armor != nullptr) {
-				//前に装備していた防具を外す。
+			
+			//装備している防具と装備しようとしている防具が同じなら外す。
+			if (equi == _Equipment->armor) {
+				_Equipment->armor->SetIsEquipFalse();
+				_Equipment->armor = nullptr;
+				return;
+			}
+			//前に装備していた防具を外す。
+			else if (_Equipment->armor != nullptr) {
+				
 				_Equipment->armor->SetIsEquipFalse();
 				_Equipment->armor = nullptr;
 			}
+			
+
 			//防具。
 			_Equipment->armor = static_cast<HoldArmor*>(equi);
 			//装備フラグをtrueにする。
@@ -224,12 +233,16 @@ public:
 		else
 			//武器。
 		{
-			if (_Equipment->weapon != nullptr) {
+			//装備している防具と装備しようとしている防具が同じなら外す。
+			if (equi == _Equipment->weapon) {
+				_Equipment->weapon->SetIsEquipFalse();
+				_Equipment->weapon = nullptr;
+				return;
+			}
+			else if (_Equipment->weapon != nullptr) {
 				//前に装備していた武器を外す。
 				_Equipment->weapon->SetIsEquipFalse();
 				_Equipment->weapon = nullptr;
-
-
 			}
 			//武器。
 			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
@@ -248,6 +261,7 @@ public:
 		return _HPBar;
 	}
 
+
 	/**
 	* アイテムが使用された.
 	*/
@@ -258,6 +272,7 @@ public:
 	*/
 	void EffectUpdate();
 
+	//プレイヤーのMpBarを取得。
 	inline ParameterBar* GetPlayerMpBar() {
 		return _MPBar;
 	}

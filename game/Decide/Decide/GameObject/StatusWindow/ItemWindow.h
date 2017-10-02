@@ -10,6 +10,7 @@
 #include"GameObject\Player\Player.h"
 #include"ParameterRender.h"
 #include"HoldItem2D.h"
+#include "GameObject\StatusWindow\Cursor.h"
 
 /**
 * アイテム表示画面クラス.
@@ -173,7 +174,9 @@ private:
 	/** リストの初めの添え字. */
 	int _StartLoadCount = 0;
 	/** セレクトカーソル. */
-	ImageObject* _SelectCursor = nullptr;
+	//ImageObject* _SelectCursor = nullptr;
+	/** セレクトカーソル. */
+	Cursor* _Cursor = nullptr;
 
 	// 見えているアイテム枠を超えてアイテムがまだ存在するかを示すアイコン。
 	ImageObject* _UpArrow = nullptr;

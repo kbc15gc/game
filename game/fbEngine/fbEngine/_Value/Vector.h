@@ -178,7 +178,7 @@ public:
 	{
 		Set(x, y, z);
 	}
-	Vector3(Vector2& v2,float z)
+	Vector3(const Vector2& v2,float z)
 	{
 		this->x = v2.x;
 		this->y = v2.y;

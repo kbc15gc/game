@@ -48,7 +48,7 @@ void StatusWindow::Awake()
 	// ‚¨‹à‚Ì•\Ž¦ì¬B
 	_MoneyFrame = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MoneyFrame", WindowBackPriorty + 2);
 	_MoneyFrame->transform->SetParent(transform);
-	_MoneyFrame->transform->SetLocalPosition(Vector3(330.0f, 310.0f, 0.0f));
+	_MoneyFrame->transform->SetLocalPosition(Vector3(-330.0f, 310.0f, 0.0f));
 	_MoneyFrame->SetTexture(LOADTEXTURE("UI/Hotbar.png"));
 	_MoneyFrame->SetSize(Vector2(310.0f,52.0f));
 	_MoneyRender = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("MoneyRender", WindowBackPriorty+ 3);
