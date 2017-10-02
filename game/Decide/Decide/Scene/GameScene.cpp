@@ -121,11 +121,14 @@ void GameScene::Start()
 	g_depth->SetPivot(Vector2(0, 0));
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
 	g_depth->SetActive(true);*/
-	
+#ifdef _DEBUG
 	DebugNPC();
-}
+#endif // _DEBUG
 
+}
+#ifdef _DEBUG
 #include "GameObject\Village\NPC.h"
+
 void DebugNPC()
 {
 	//デバッグ用にＮＰＣ追加。
@@ -134,7 +137,7 @@ void DebugNPC()
 	npc->SetMesseage(12, true);
 	npc->transform->SetLocalPosition(Vector3(-148.0f, 68.5f, -34.0f));
 }
-
+#endif // _DEBUG
 void GameScene::Update()
 {
 	//スタートボタンの押下確認
