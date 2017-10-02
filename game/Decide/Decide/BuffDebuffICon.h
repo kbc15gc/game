@@ -44,9 +44,7 @@ public:
 	}
 
 	//デストラクタ。
-	~BuffDebuffICon()
-	{
-	}
+	~BuffDebuffICon();
 
 	//初期化。
 	void Awake()override;

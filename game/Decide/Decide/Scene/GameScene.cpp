@@ -102,7 +102,7 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->Start();
 
 	INSTANCE(ItemManager)->LoadAllItemData();
-	INSTANCE(Inventory)->Initialize();
+	//INSTANCE(Inventory)->Initialize();
 
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

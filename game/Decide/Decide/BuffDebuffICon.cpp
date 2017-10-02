@@ -17,6 +17,14 @@ namespace
 	Vector2 ARROW_ICON_SIZE = { 13,19 };
 }
 
+//デストラクタ。
+BuffDebuffICon::~BuffDebuffICon() {
+	for (auto BuffDebuff : _PlayerBuffDebuffList)
+	{
+		delete BuffDebuff;
+	}
+}
+
 //初期化。
 void BuffDebuffICon::Awake() {
 
