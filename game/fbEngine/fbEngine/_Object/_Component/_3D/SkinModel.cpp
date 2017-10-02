@@ -118,10 +118,9 @@ void SkinModel::PreRender()
 	//インスタンシングフラグをチェック。
 	if(_ModelDate->GetInstancing())
 	{
-		//オリジナルモデル。
-		auto original = _ModelDate->GetOriginal();
 		//ワールド行列を積む。
-		original->StackWorldMatrix(transform->GetWorldMatrix());
+		//積むワールド行列が違う。
+		_ModelDate->StackWorldMatrix(transform->GetWorldMatrix());
 		//インスタンシング開始の合図。
 		_ModelDate->StartInstancing();
 	}
@@ -192,27 +191,26 @@ void SkinModel::DrawMeshContainer(
 	//モデル描画
 	else
 	{
-		if (_ModelDate->GetInstancing())
+
+		//エフェクト読み込み
+		if (pMeshContainer->pSkinInfo != NULL)
+			_Effect = EffectManager::LoadEffect("AnimationModel.fx");
+		else
+			_Effect = EffectManager::LoadEffect("3Dmodel.fx");
+
+		//テクニックをセット
+		if (terain)
 		{
-			_Effect;// = EffectManager::LoadEffect("AnimationModel.fx");
+			_Effect->SetTechnique("TerrainRender");
 		}
 		else
 		{
-			//エフェクト読み込み
-			if (pMeshContainer->pSkinInfo != NULL)
-				_Effect = EffectManager::LoadEffect("AnimationModel.fx");
-			else
-				_Effect = EffectManager::LoadEffect("3Dmodel.fx");
-
-			//テクニックをセット
-			if (terain)
+			if (_ModelDate->GetInstancing())
 			{
-				_Effect->SetTechnique("TerrainRender");
+				_Effect->SetTechnique("InstancingRender");
 			}
 			else
-			{
 				_Effect->SetTechnique("NormalRender");
-			}
 		}
 		//開始（必ず終了すること）
 		_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
@@ -366,8 +364,28 @@ void SkinModel::DrawMeshContainer(
 
 				//マテリアルの数
 				auto MaterialNum = pMeshContainer->NumMaterials;
+				//マテリアル
+				D3DXMATERIAL *mtrl = (D3DXMATERIAL*)(pMeshContainer->pMaterials);
 				for (auto i = 0; i < MaterialNum; i++)
 				{
+					//ディフューズカラー
+					D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
+					//マテリアル
+					Material* material = pMeshContainer->material[i];
+
+					//テクスチャが格納されていればセット
+					if (material != nullptr)
+					{
+						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
+						_Effect->SetBool("Texflg", true);
+					}
+					else
+					{
+						//テクスチャがないならカラーセット
+						_Effect->SetVector("g_diffuseMaterial", Diffuse);
+						_Effect->SetBool("Texflg", false);
+					}
 
 					//メッシュ。
 					auto Mesh = pMeshContainer->MeshData.pMesh;
@@ -383,7 +401,7 @@ void SkinModel::DrawMeshContainer(
 
 					DWORD fvf = Mesh->GetFVF();
 					DWORD stride = D3DXGetFVFVertexSize(fvf);
-
+					//周波数パラメータなるものを設定。
 					(*graphicsDevice()).SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | Stack.size());
 					(*graphicsDevice()).SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
 					//デコレーション設定。
@@ -395,6 +413,7 @@ void SkinModel::DrawMeshContainer(
 					//ワールド行列を頂点バッファにコピー。
 					CopyWorldMatrixToVertexBuffer(matrixBuffer, Stack);
 					
+
 					//インデックスバッファ設定。
 					(*graphicsDevice()).SetIndices(ib);
 					//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
@@ -407,6 +426,10 @@ void SkinModel::DrawMeshContainer(
 						Mesh->GetNumVertices(),
 						0,
 						Mesh->GetNumFaces());
+
+					// 後始末
+					(*graphicsDevice()).SetStreamSourceFreq(0, 1);
+					(*graphicsDevice()).SetStreamSourceFreq(1, 1);
 
 					vb->Release();
 					ib->Release();

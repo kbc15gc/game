@@ -7,7 +7,7 @@
 //UINT                        g_NumBoneMatricesMax = 0;
 //D3DXMATRIXA16*              g_pBoneMatrices = NULL;
 //インスタンシングで描画可能な最大数。
-const int MAX_INSTANCING_NUM = 5000;
+const int MAX_INSTANCING_NUM = 1000;
 
 //モデルのFrame更新
 void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix)
@@ -429,7 +429,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 			}
 			elementIndex++;
 		}
-		//デコレーション作成。
+		//頂点宣言作成。
 		(*graphicsDevice()).CreateVertexDeclaration(declElement, &pMeshContainer->vertexDecl);
 		//頂点バッファ作成。
 		(*graphicsDevice()).CreateVertexBuffer(
@@ -645,7 +645,7 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
 SkinModelData::SkinModelData():
 _FrameRoot(nullptr),
 m_pAnimationController(nullptr),
-_Instancing(true)
+_Instancing(false)
 {
 	
 }

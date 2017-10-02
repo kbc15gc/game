@@ -12,7 +12,6 @@ void ContinentObject::Awake()
 	_Anim = AddComponent<Animation>();
 
 	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,false);
-
 }
 
 void ContinentObject::Start() {
@@ -28,14 +27,20 @@ void ContinentObject::LoadModel(const char * filename)
 {
 	SkinModelData* data= new SkinModelData();
 	data->CloneModelData(SkinModelManager::LoadModel(filename), _Anim);
+	//data->SetInstancing(true);
 	_Model->SetModelData(data);
 	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
 
-	//当たり判定追加。
+	////当たり判定追加。
 	//RigidBody* rigid = AddComponent<RigidBody>();
 	//MeshCollider* mesh = AddComponent<MeshCollider>();
 
-	//メッシュコライダー生成。
+	////メッシュコライダー生成。
 	//mesh->Create(_Model);
-	//rigid->Create(0, mesh, Collision_ID::BUILDING,Vector3::zero,Vector3::zero,false);
+	//RigidBodyInfo info;
+	//info.mass = 0.0f;
+	//info.coll = mesh;
+	//info.id = Collision_ID::BUILDING;
+	//info.rotation = transform->GetRotation();
+	//rigid->Create(info,false);
 }

@@ -206,7 +206,7 @@ void Draw()
 	//シーン開始
 	if (SUCCEEDED((*graphicsDevice()).BeginScene()))
 	{
-		INSTANCE(SceneManager)->DrawScene();
+		//INSTANCE(SceneManager)->DrawScene();
 		//シーン終了
 		(*graphicsDevice()).EndScene();
 	}
