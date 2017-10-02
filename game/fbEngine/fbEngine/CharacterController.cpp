@@ -190,12 +190,6 @@ void CCharacterController::Execute()
 			if (callback.isHit) {
 				//ínñ Ç…ê⁄êGÇµÇƒÇ¢ÇÈÅB
 
-				if (gameObject == INSTANCE(GameObjectManager)->FindObject("Player")) {
-					char debug[256];
-					sprintf(debug, "%s, %dçsñ⁄\n", __FILE__, __LINE__);
-					//OutputDebugString(debug);
-				}
-
 				m_moveSpeed.y = 0.0f;
 				m_isJump = false;
 				m_isOnGround = true;

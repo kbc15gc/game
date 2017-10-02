@@ -47,6 +47,9 @@ void GameScene::Start()
 	//ゲームライト生成
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
+	//バフデバフアイコンを表示するクラス。
+	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
+
 	//プレイヤー生成
 	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 
@@ -99,9 +102,8 @@ void GameScene::Start()
 	INSTANCE(HistoryManager)->Start();
 
 	INSTANCE(ItemManager)->LoadAllItemData();
+	INSTANCE(Inventory)->Initialize();
 
-	//バフデバフアイコンを表示するクラス。
-	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
@@ -125,7 +127,9 @@ void GameScene::Start()
 #endif // _DEBUG
 }
 
+#ifdef _DEBUG
 #include "GameObject\Village\NPC.h"
+
 void DebugNPC()
 {
 	//デバッグ用にＮＰＣ追加。
@@ -134,7 +138,7 @@ void DebugNPC()
 	npc->SetMesseage(12, true);
 	npc->transform->SetLocalPosition(Vector3(-148.0f, 68.5f, -34.0f));
 }
-
+#endif // _DEBUG
 void GameScene::Update()
 {
 	//スタートボタンの押下確認
