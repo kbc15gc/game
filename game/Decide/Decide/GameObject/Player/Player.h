@@ -24,6 +24,7 @@ class Animation;
 class ParameterBar;
 class ItemManager;
 class ParticleEffect;
+class BuffDebuffICon;
 
 namespace
 {
@@ -206,50 +207,10 @@ public:
 	}
 
 	//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
-	void SetEquipment(HoldItemBase* equi)
-	{
-		//防具。
-		if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
-			
-			//装備している防具と装備しようとしている防具が同じなら外す。
-			if (equi == _Equipment->armor) {
-				_Equipment->armor->SetIsEquipFalse();
-				_Equipment->armor = nullptr;
-				return;
-			}
-			//前に装備していた防具を外す。
-			else if (_Equipment->armor != nullptr) {
-				
-				_Equipment->armor->SetIsEquipFalse();
-				_Equipment->armor = nullptr;
-			}
-			
+	void SetEquipment(HoldItemBase* equi);
 
-			//防具。
-			_Equipment->armor = static_cast<HoldArmor*>(equi);
-			//装備フラグをtrueにする。
-			_Equipment->armor->SetIsEquipTrue();
-		}
-		else
-			//武器。
-		{
-			//装備している防具と装備しようとしている防具が同じなら外す。
-			if (equi == _Equipment->weapon) {
-				_Equipment->weapon->SetIsEquipFalse();
-				_Equipment->weapon = nullptr;
-				return;
-			}
-			else if (_Equipment->weapon != nullptr) {
-				//前に装備していた武器を外す。
-				_Equipment->weapon->SetIsEquipFalse();
-				_Equipment->weapon = nullptr;
-			}
-			//武器。
-			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
-			//装備フラグをtrueにする。
-			_Equipment->weapon->SetIsEquipTrue();
-		}
-	}
+	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
+	void Re_SetEquipment();
 
 	//プレイヤーの装備構造体を取得。
 	inline PlayerEquipment* GetEquipment() {
@@ -259,6 +220,16 @@ public:
 	//プレイヤーのHpBarを取得。
 	inline ParameterBar* GetPlayerHpBar() {
 		return _HPBar;
+	}
+
+	//プレイヤーのMpBarを取得。
+	inline ParameterBar* GetPlayerMpBar() {
+		return _MPBar;
+	}
+
+	//バフデバフアイコンを取得。
+	inline BuffDebuffICon* GetBuffDebuffICon() {
+		return _BuffDebuffICon;
 	}
 
 
@@ -271,11 +242,6 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
-
-	//プレイヤーのMpBarを取得。
-	inline ParameterBar* GetPlayerMpBar() {
-		return _MPBar;
-	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
@@ -372,4 +338,7 @@ private:
 	
 	//パーティクルエフェクト。
 	ParticleEffect*	_ParticleEffect = nullptr;
+
+	//バフデバフアイコン。
+	BuffDebuffICon* _BuffDebuffICon = nullptr;
 };
