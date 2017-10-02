@@ -19,8 +19,6 @@ namespace
 	bool g_EnvironmentRender = false;
 }
 
-void CopyWorldMatrixToVertexBuffer(IDirect3DVertexBuffer9* buffer, vector<D3DXMATRIX> stack);
-
 SkinModel::SkinModel(GameObject * g, Transform * t) :
 	Component(g, t, typeid(this).name(),100),
 	_Effect(nullptr),
@@ -33,7 +31,6 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_SkyBox(false),
 	_CullMode(D3DCULL_CCW)
 {
-	
 }
 
 SkinModel::~SkinModel()
@@ -44,11 +41,6 @@ SkinModel::~SkinModel()
 //再帰関数
 void SkinModel::DrawFrame(LPD3DXFRAME pFrame)
 {
-	//インスタンシングで、描画済みなら抜ける。
-	if (_ModelDate->GetInstancing() == true && _ModelDate->GetAlreadyDrawn() == true)
-		return;
-
-
 	D3DXMESHCONTAINER_DERIVED* pMeshContainer;
 
 	pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pFrame->pMeshContainer;
@@ -119,10 +111,8 @@ void SkinModel::PreRender()
 	if(_ModelDate->GetInstancing())
 	{
 		//ワールド行列を積む。
-		//積むワールド行列が違う。
-		_ModelDate->StackWorldMatrix(transform->GetWorldMatrix());
-		//インスタンシング開始の合図。
-		_ModelDate->StartInstancing();
+		//どこに積もうか・・・？
+		
 	}
 }
 
@@ -135,8 +125,6 @@ void SkinModel::Render()
 	{
 		//再帰関数呼び出し
 		DrawFrame(_ModelDate->GetFrameRoot());
-		//インスタンシング終了。
-		_ModelDate->EndInstancing();
 	}
 }
 
@@ -191,7 +179,6 @@ void SkinModel::DrawMeshContainer(
 	//モデル描画
 	else
 	{
-
 		//エフェクト読み込み
 		if (pMeshContainer->pSkinInfo != NULL)
 			_Effect = EffectManager::LoadEffect("AnimationModel.fx");
@@ -199,18 +186,13 @@ void SkinModel::DrawMeshContainer(
 			_Effect = EffectManager::LoadEffect("3Dmodel.fx");
 
 		//テクニックをセット
-		if (terain)
+		if(terain)
 		{
 			_Effect->SetTechnique("TerrainRender");
 		}
 		else
 		{
-			if (_ModelDate->GetInstancing())
-			{
-				_Effect->SetTechnique("InstancingRender");
-			}
-			else
-				_Effect->SetTechnique("NormalRender");
+			_Effect->SetTechnique("NormalRender");
 		}
 		//開始（必ず終了すること）
 		_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
@@ -264,7 +246,7 @@ void SkinModel::DrawMeshContainer(
 			_Effect->SetTexture("g_ShadowMap_1", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(1));
 			_Effect->SetTexture("g_ShadowMap_2", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(2));
 			//影を映すかどうかのフラグセット
-			_Effect->SetBool("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
+			_Effect->SetInt("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
 		}
 
 		Vector2 size = 20;
@@ -278,12 +260,12 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetValue("g_EffectFlg", &flg, sizeof(Vector4));
 
 		//スペキュラフラグセット
-		_Effect->SetBool("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
+		_Effect->SetInt("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
 
 		_Effect->SetVector("g_blendcolor", (D3DXVECTOR4*)&_AllBlend);
 
 		AtmosphericScatteringParamS atmos = INSTANCE(SceneManager)->GetSky()->GetAtmosphericScatteringParam();
-		_Effect->SetValue("g_atmosParam", &atmos, sizeof(atmos));
+		_Effect->SetValue("g_atmosParam", &atmos, sizeof(AtmosphericScatteringParamS));
 		_Effect->SetInt("g_atmosFlag", _AtomosphereFunc);
 
 	
@@ -340,13 +322,13 @@ void SkinModel::DrawMeshContainer(
 					// ディフューズテクスチャ。
 					_Effect->SetTexture("g_diffuseTexture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
-					_Effect->SetBool("Texflg", true);
+					_Effect->SetInt("Texflg", true);
 				}
 				//テクスチャがないならカラーセット
 				else if (Diffuse != NULL)
 				{
 					_Effect->SetVector("g_diffuseMaterial", Diffuse);
-					_Effect->SetBool("Texflg", false);
+					_Effect->SetInt("Texflg", false);
 				}
 
 				//この関数を呼び出すことで、データの転送が確定する。
@@ -358,144 +340,64 @@ void SkinModel::DrawMeshContainer(
 		//アニメーションしない方
 		else
 		{
-			if (_ModelDate->GetInstancing())
+			_Effect->SetMatrix("g_worldMatrix", &pFrame->CombinedTransformationMatrix);
+
+			_Effect->SetInt("g_isEnvironmentMap", g_EnvironmentRender ? 1 : 0);
+
+			//マテリアルの数
+			DWORD MaterialNum = pMeshContainer->NumMaterials;
+			//マテリアル
+			D3DXMATERIAL *mtrl = (D3DXMATERIAL*)(pMeshContainer->pMaterials);
+
+			//モデル描画
+			for (DWORD i = 0; i < MaterialNum; i++)
 			{
-				//いろいろ設定。
+				_Effect->SetInt("SkyBox", _SkyBox);
 
-				//マテリアルの数
-				auto MaterialNum = pMeshContainer->NumMaterials;
+				//ディフューズカラー
+				D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
 				//マテリアル
-				D3DXMATERIAL *mtrl = (D3DXMATERIAL*)(pMeshContainer->pMaterials);
-				for (auto i = 0; i < MaterialNum; i++)
+				Material* material = pMeshContainer->material[i];
+				
+				//テクスチャが格納されていればセット
+				if (material != nullptr)
 				{
-					//ディフューズカラー
-					D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
-					//マテリアル
-					Material* material = pMeshContainer->material[i];
+					_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
+					_Effect->SetInt("Texflg", true);
 
-					//テクスチャが格納されていればセット
-					if (material != nullptr)
+					//スプラットマップ
+					IDirect3DBaseTexture9* splat = material->GetTexture(Material::TextureHandleE::SplatMap);
+					if (splat)
 					{
-						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
-						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
-						_Effect->SetBool("Texflg", true);
-					}
-					else
-					{
-						//テクスチャがないならカラーセット
-						_Effect->SetVector("g_diffuseMaterial", Diffuse);
-						_Effect->SetBool("Texflg", false);
-					}
+						_Effect->SetValue("g_terrainRect", &_ModelDate->GetTerrainSize(), sizeof(Vector4));
 
-					//メッシュ。
-					auto Mesh = pMeshContainer->MeshData.pMesh;
-					//ワールド行列のスタック。
-					auto Stack = _ModelDate->GetMatrixStack();
-					
-					//DrawSubsetを使用するとインスタンシング描画が行えないので
-					//g_pMeshから頂点バッファ、インデックスバッファを引っ張ってきて、直接描画する。
-					LPDIRECT3DVERTEXBUFFER9 vb;
-					LPDIRECT3DINDEXBUFFER9 ib;
-					Mesh->GetVertexBuffer(&vb);
-					Mesh->GetIndexBuffer(&ib);
-
-					DWORD fvf = Mesh->GetFVF();
-					DWORD stride = D3DXGetFVFVertexSize(fvf);
-					//周波数パラメータなるものを設定。
-					(*graphicsDevice()).SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | Stack.size());
-					(*graphicsDevice()).SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
-					//デコレーション設定。
-					(*graphicsDevice()).SetVertexDeclaration(pMeshContainer->vertexDecl);
-
-					auto matrixBuffer = pMeshContainer->worldMatrixBuffer;
-					(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);							//頂点バッファをストリーム0番目に設定
-					(*graphicsDevice()).SetStreamSource(1, matrixBuffer, 0, sizeof(D3DXMATRIX));	//ワールド行列用のバッファをストリーム1番目に設定。
-					//ワールド行列を頂点バッファにコピー。
-					CopyWorldMatrixToVertexBuffer(matrixBuffer, Stack);
-					
-
-					//インデックスバッファ設定。
-					(*graphicsDevice()).SetIndices(ib);
-					//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
-					_Effect->CommitChanges();
-					//描画
-					(*graphicsDevice()).DrawIndexedPrimitive(
-						D3DPT_TRIANGLELIST,
-						0,
-						0,
-						Mesh->GetNumVertices(),
-						0,
-						Mesh->GetNumFaces());
-
-					// 後始末
-					(*graphicsDevice()).SetStreamSourceFreq(0, 1);
-					(*graphicsDevice()).SetStreamSourceFreq(1, 1);
-
-					vb->Release();
-					ib->Release();
-				}
-			}
-			else
-			{
-
-				_Effect->SetMatrix("g_worldMatrix", &pFrame->CombinedTransformationMatrix);
-
-				_Effect->SetInt("g_isEnvironmentMap", g_EnvironmentRender ? 1 : 0);
-
-				//マテリアルの数
-				DWORD MaterialNum = pMeshContainer->NumMaterials;
-				//マテリアル
-				D3DXMATERIAL *mtrl = (D3DXMATERIAL*)(pMeshContainer->pMaterials);
-
-				//モデル描画
-				for (DWORD i = 0; i < MaterialNum; i++)
-				{
-					_Effect->SetBool("SkyBox", _SkyBox);
-					//ディフューズカラー
-					D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
-					//マテリアル
-					Material* material = pMeshContainer->material[i];
-
-					//テクスチャが格納されていればセット
-					if (material != nullptr)
-					{
-						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
-						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
-						_Effect->SetBool("Texflg", true);
-
-						//スプラットマップ
-						IDirect3DBaseTexture9* splat = material->GetTexture(Material::TextureHandleE::SplatMap);
-						if (splat)
+						_Effect->SetTexture("g_splatMap", splat);
+						FOR(i, 4)
 						{
-							_Effect->SetValue("g_terrainRect", &_ModelDate->GetTerrainSize(), sizeof(Vector4));
-
-							_Effect->SetTexture("g_splatMap", splat);
-							FOR(i, 4)
+							IDirect3DBaseTexture9* tex = material->GetTexture(Material::TextureHandleE::TerrainTex0 + i);
+							if (tex)
 							{
-								IDirect3DBaseTexture9* tex = material->GetTexture(Material::TextureHandleE::TerrainTex0 + i);
-								if (tex)
-								{
-									char param[20] = "g_terrainTex";
-									char idx[2] = { i + 48, 0 };
-									strcat(param, idx);
-									_Effect->SetTexture(param, tex);
-								}
+								char param[20] = "g_terrainTex";
+								char idx[2] = { i + 48, 0 };
+								strcat(param, idx);
+								_Effect->SetTexture(param, tex);
 							}
 						}
-
-					}
-					else
-					{
-						//テクスチャがないならカラーセット
-						_Effect->SetVector("g_diffuseMaterial", Diffuse);
-						_Effect->SetBool("Texflg", false);
 					}
 
-					//この関数を呼び出すことで、データの転送が確定する。
-					_Effect->CommitChanges();
-					//メッシュ描画
-					pMeshContainer->MeshData.pMesh->DrawSubset(i);
 				}
+				else
+				{
+					//テクスチャがないならカラーセット
+					_Effect->SetVector("g_diffuseMaterial", Diffuse);
+					_Effect->SetInt("Texflg", false);
+				}
+
+				//この関数を呼び出すことで、データの転送が確定する。
+				_Effect->CommitChanges();
+				//メッシュ描画
+				pMeshContainer->MeshData.pMesh->DrawSubset(i);
 			}
 		}
 
@@ -584,20 +486,4 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	//終了
 	_Effect->EndPass();
 	_Effect->End();
-}
-
-void CopyWorldMatrixToVertexBuffer(IDirect3DVertexBuffer9* buffer,vector<D3DXMATRIX> stack)
-//ワールド行列を頂点バッファにコピー。
-{
-	D3DVERTEXBUFFER_DESC desc;
-	buffer->GetDesc(&desc);
-	D3DXMATRIX* pData;
-	buffer->Lock(0, desc.Size, (void**)&pData, D3DLOCK_DISCARD);
-
-	for (int i = 0; i < stack.size(); i++) {
-
-		*pData = stack[i];
-		pData++;
-	}
-	buffer->Unlock();
 }

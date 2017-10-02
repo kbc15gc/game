@@ -56,4 +56,9 @@ private:
 	int _WindowCount = 3;
 	int _NowSelectWindow = 0;
 
+	ParameterRender* _MoneyRender = nullptr;	// お金の表示。
+	ImageObject* _MoneyFrame = nullptr;			// お金の枠表示。
+
+public:
+	static const int WindowBackPriorty;
 };

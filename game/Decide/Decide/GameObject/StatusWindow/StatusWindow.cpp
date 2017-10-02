@@ -6,6 +6,9 @@
 
 #include"GameObject\Inventory\Inventory.h"
 
+
+const int StatusWindow::WindowBackPriorty = 6;
+
 /**
 * 初期化.
 */
@@ -18,13 +21,13 @@ void StatusWindow::Awake()
 	transform->SetPosition(Vector3(g_WindowSize.x / 2, g_WindowSize.y / 2, 0.0f));
 
 	//バックの背景.
-	ImageObject* backWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 7);
+	ImageObject* backWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", WindowBackPriorty);
 	backWindow->SetTexture(LOADTEXTURE("UI/Panel 5.png"));
 	backWindow->SetSize(backWindow->GetSize() * 1.3f);
 	backWindow->transform->SetParent(transform);
 
 	//アイテム一覧の背景.
-	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", WindowBackPriorty + 1);
 	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
 	itemWindow->SetSize(Vector2(495.0f, 580.0f));
 	itemWindow->SetPivot(0.0f, 0.5f);
@@ -33,7 +36,7 @@ void StatusWindow::Awake()
 
 	for (int i = 0; i < _WindowCount; i++)
 	{
-		ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", 9);
+		ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", WindowBackPriorty + 3);
 		iw->transform->SetParent(transform);
 		iw->SetActive(false, true);
 		_ItemWindowList.push_back(iw);
@@ -41,6 +44,18 @@ void StatusWindow::Awake()
 	_ItemWindowList[0]->Init(Item::ItemCodeE::Item);
 	_ItemWindowList[1]->Init(Item::ItemCodeE::Weapon);
 	_ItemWindowList[2]->Init(Item::ItemCodeE::Armor);
+
+	// お金の表示作成。
+	_MoneyFrame = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MoneyFrame", WindowBackPriorty + 2);
+	_MoneyFrame->transform->SetParent(transform);
+	_MoneyFrame->transform->SetLocalPosition(Vector3(-330.0f, 310.0f, 0.0f));
+	_MoneyFrame->SetTexture(LOADTEXTURE("UI/Hotbar.png"));
+	_MoneyFrame->SetSize(Vector2(310.0f,52.0f));
+	_MoneyRender = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("MoneyRender", WindowBackPriorty+ 3);
+	_MoneyRender->transform->SetParent(_MoneyFrame->transform);
+	_MoneyRender->transform->SetLocalPosition(Vector3(60.0f,-13.0f,0.0f));
+	_MoneyRender->SetParamTextPos(_MoneyRender->GetParamTextPos() + Vector3(-380.0f,0.0f,0.0f));
+
 
 	//始めは非表示.
 	this->SetActive(false, true);
@@ -51,6 +66,7 @@ void StatusWindow::Awake()
 */
 void StatusWindow::Update()
 {
+	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::MiddleLeft);
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;

@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\CollisionObject.h"
 
 class GameObject;
+#include"GameObject\Player\Player.h"
 
 //消費アイテムのクラス。
 class ConsumptionItem :public HoldItemBase
@@ -17,8 +18,11 @@ public:
 		All,	// 範囲内すべて。
 		Max
 	};
-public:
+
+private:
+	friend class HoldItemFactory;
 	ConsumptionItem(char* name);
+public:
 	~ConsumptionItem();
 	void Awake()override;
 	void Start()override;
@@ -26,6 +30,14 @@ public:
 	//アイテムを使う。
 	// 戻り値：	アイテムを使用できたか。
 	bool UseItem();
+
+
+	// 外部から読み込んだデータを設定。
+	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
+	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
+	inline void ConfigLoadData(Hold::HoldInfo* info)override {
+		SetHoldNum(static_cast<Hold::ConsumptionInfo*>(info)->_HoldNum);
+	}
 
 	//所持数を加算。
 	// 引数：	増やす量。
@@ -53,15 +65,29 @@ public:
 		return 0;
 	}
 
+	//所持数を設定。
+	// 引数：	設定する量。
+	// 戻り値：	入りきらなかった値。
+	inline int SetHoldNum(int num) {
+		if (num > holdMax) {
+			int ret = num - holdMax;
+			_HoldNum = holdMax;
+			return ret;
+		}
+		_HoldNum = num;
+		return 0;
+	}
+
 	//所持数を取得。
 	inline int GetHoldNum() {
 		return  _HoldNum;
 	}
 
 	inline void SetInfo(Item::BaseInfo* info)override {
-		if (_user) {
-			_Info = info;
-			if (_Info) {
+		_Info = info;
+		if (_Info) {
+			_type = static_cast<EffectType>(static_cast<Item::ItemInfo*>(_Info)->type);
+			if (_user) {
 				if (static_cast<Item::ItemInfo*>(_Info)->type == static_cast<int>(ConsumptionItem::EffectType::Debuff)) {
 					_gost = INSTANCE(GameObjectManager)->AddNew<CollisionObject>("ItemRange", 5);	// アイテムの効果範囲コリジョン。
 					_gost->transform->SetParent(_user->transform);
@@ -79,6 +105,13 @@ private:
 	void SetParticleBuffParam();
 
 	GameObject* _user = nullptr;	// 使用者。
+
+	/**
+	* プレイヤー.
+	*/
+	Player* _Player = nullptr;
+
+	EffectType _type;
 
 	float _range = 10.0f;	// 効果を及ぼす範囲(この範囲外のものにはアイテムは影響を及ぼさない)。
 	int _HoldNum = 0;	// 所持数。

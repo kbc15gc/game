@@ -10,6 +10,7 @@
 #include"GameObject\Player\Player.h"
 #include"ParameterRender.h"
 #include"HoldItem2D.h"
+#include "GameObject\StatusWindow\Cursor.h"
 
 /**
 * アイテム表示画面クラス.
@@ -17,6 +18,20 @@
 class ItemWindow : public GameObject
 {
 public:
+
+	enum class IconIndex {
+		LV = 0,		//!< レベル.
+		HP,			//!< 体力.
+		MP,			//!< 魔力.
+		ATK,		//!< 物理攻撃.
+		MAT,		//!< 魔法攻撃.
+		DEF,		//!< 物理防御.
+		MDE,		//!< 魔法防御.
+		DEX,		//!< 器用度.
+		CRT,		// クリティカル威力。
+		RANK,		// ランク。
+		MAX			//!< 数.
+	};
 
 	/**
 	* 消費アイテム表示ステータス.
@@ -31,7 +46,6 @@ public:
 		DEF,		//!< 物理防御.
 		MDE,		//!< 魔法防御.
 		DEX,		//!< 器用度.
-		MONEY,		//!< 金.
 		MAX			//!< 数.
 	};
 
@@ -144,7 +158,7 @@ private:
 	int _playerLevel = 0;
 
 	/** セルサイズ. */
-	static const int ItemCellSize = 5;
+	static const int ItemCellSize = 8;
 
 	/** ウィンドウ名表示. */
 	TextObject* _WindowName = nullptr;
@@ -160,7 +174,13 @@ private:
 	/** リストの初めの添え字. */
 	int _StartLoadCount = 0;
 	/** セレクトカーソル. */
-	ImageObject* _SelectCursor = nullptr;
+	//ImageObject* _SelectCursor = nullptr;
+	/** セレクトカーソル. */
+	Cursor* _Cursor = nullptr;
+
+	// 見えているアイテム枠を超えてアイテムがまだ存在するかを示すアイコン。
+	ImageObject* _UpArrow = nullptr;
+	ImageObject* _DownArrow = nullptr;
 
 	/** Eアイコン. */
 	ImageObject* _EIconImage = nullptr;
@@ -176,4 +196,6 @@ private:
 	/** 装備アイテムリスト. */
 	vector<HoldItem2D*> _HoldItem2DList;
 
+
+	static const char* IconTextureNameList[static_cast<int>(IconIndex::MAX)];
 };

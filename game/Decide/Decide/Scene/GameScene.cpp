@@ -9,7 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
-#include "Ocean.h"
+#include"GameObject\Nature\Ocean\Ocean.h"
 
 #include "GameObject/Player/Player.h"
 #include "GameObject\Enemy\Enemy.h"
@@ -36,6 +36,7 @@
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
 
+#include "BuffDebuffICon.h"
 ImageObject* g_depth;
 void DebugNPC();
 
@@ -97,11 +98,14 @@ void GameScene::Start()
 	INSTANCE(ItemManager)->LoadAllItemData();
 	//INSTANCE(Inventory)->Initialize();
 
+	//バフデバフアイコンを表示するクラス。
+	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
+
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
 
-	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", 7);
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	//シャドウマップ有効.
@@ -109,7 +113,7 @@ void GameScene::Start()
 	//環境マップ有効.
 	_isEnvironmentMap = true;
 
-	INSTANCE(SceneManager)->GetSky()->SetEnable(playerCamera->GetComponent<Camera>(), light->GetComponent<Light>());
+	INSTANCE(SceneManager)->GetSky()->SetEnable();
 
 
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
@@ -128,7 +132,7 @@ void DebugNPC()
 	NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
 	npc->LoadModel("villager1.X");
 	npc->SetMesseage(12, true);
-	npc->transform->SetLocalPosition(Vector3(-1056, 68, -1947));
+	npc->transform->SetLocalPosition(Vector3(-148.0f, 68.5f, -34.0f));
 }
 
 void GameScene::Update()

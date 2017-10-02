@@ -146,32 +146,31 @@ float CalcLuminance( float3 color )
 	return luminance;
 }
 
-
 // The scale equation calculated by Vernier's Graphical Analysis
 float scale(float fCos)
 {
 	float x = 1.0 - fCos;
-	return fScaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
+	return fScaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
 }
 // Returns the near intersection point of a line and a sphere
 float getNearIntersection(float3 v3Pos, float3 v3Ray, float fDistance2, float fRadius2)
 {
 	float B = 2.0 * dot(v3Pos, v3Ray);
 	float C = fDistance2 - fRadius2;
-	float fDet = max(0.0, B * B - 4.0 * C);
+	float fDet = max(0.0, B*B - 4.0 * C);
 	return 0.5 * (-B - sqrt(fDet));
 }
 // Calculates the Mie phase function
 float getMiePhase(float fCos, float fCos2, float g, float g2)
 {
-	return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos2) / pow(1.0 + g2 - 2.0 * g * fCos, 1.5);
+	return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos2) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
 }
 
 // Calculates the Rayleigh phase function
 float getRayleighPhase(float fCos2)
 {
 	//return 1.0;
-	return 0.75 + 0.75 * fCos2;
+	return 0.75 + 0.75*fCos2;
 }
 
 /*!
@@ -179,15 +178,12 @@ float getRayleighPhase(float fCos2)
 */
 void CalcMieAndRayleighColorsSkyFromAtomosphere(out float4 mieColor, out float4 rayColor, out float3 posToCameraDir, float3 worldPos)
 {
-
-	mieColor = 0.0f;
-	rayColor = 0.0f;
-
 	//	worldPos.y += g_atmosParam.fInnerRadius;
 	float3 cameraPos = g_cameraPos.xyz;
 	cameraPos *= 0.001f;
 	cameraPos.y += g_atmosParam.fInnerRadius;
-	
+	mieColor = 0.0f;
+	rayColor = 0.0f;
 	worldPos *= 0.001f;
 	worldPos.y += g_atmosParam.fInnerRadius;
 	// Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
@@ -235,15 +231,12 @@ void CalcMieAndRayleighColorsSkyFromAtomosphere(out float4 mieColor, out float4 
 */
 void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out float4 rayColor, out float3 posToCameraDir, float3 worldPos)
 {
-
-	mieColor = 0.0f;
-	rayColor = 0.0f;
-
 	//	worldPos.y += g_atmosParam.fInnerRadius;
 	float3 cameraPos = g_cameraPos.xyz;
 	cameraPos *= 0.001f; //単位をmからkmに変更。
 	cameraPos.y += g_atmosParam.fInnerRadius;
-	
+	mieColor = 0.0f;
+	rayColor = 0.0f;
 	worldPos *= 0.001f; //単位をmからkmに変更。
 	worldPos.y += g_atmosParam.fInnerRadius;
 	worldPos.y = min(worldPos.y, cameraPos.y);
@@ -291,24 +284,23 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 }
 /*!
 *@brief	大気錯乱シミュレーション。
+*@param[in]	In		入力頂点。
+*@param[out]	Pos		ワールド座標の格納先。
+*@param[out]	Normal	ワールド法線の格納先。
+*@param[out]	Tangent	ワールド接ベクトルの格納先。
 */
 
 void CalcMieAndRayleighColors(out float4 mieColor, out float4 rayColor, out float3 posToCameraDir, float3 worldPos)
 {
-	
-	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere) 
-	{
+	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere) {
 		CalcMieAndRayleighColorsObjectFromAtomosphere(mieColor, rayColor, posToCameraDir, worldPos);
 	}
-	else if (g_atmosFlag == AtomosphereFuncSkyFromAtomosphere) 
-	{
+	else if (g_atmosFlag == AtomosphereFuncSkyFromAtomosphere) {
 		CalcMieAndRayleighColorsSkyFromAtomosphere(mieColor, rayColor, posToCameraDir, worldPos);
 	}
-	else
-	{
+	else {
 		mieColor = 0.0f;
 		rayColor = 0.0f;
 	}
-	//mieColor = min(mieColor, float4(0.8f, 0.8f, 0.8f, 1));
-	//rayColor = min(rayColor, float4(0.8f, 0.8f, 0.8f, 1));
+
 }

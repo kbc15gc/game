@@ -72,6 +72,9 @@ void Shop::OpenShop(const unsigned int & shopID)
 {
 	if (_State == Shop::ShopStateE::Close)
 	{
+		//プレイヤーのお金の読み込み
+		Pay(0);
+
 		//店の商品読み込み
 		_LoadShopData(shopID);
 		SetActive(true);
@@ -113,34 +116,12 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	FOR(i, _ItemList.size())
 		INSTANCE(GameObjectManager)->AddRemoveList(_ItemList[i]);
 	_ItemList.clear();
-	//アイテムの情報を取得
+
+	//ショップに並べるアイテム作成。
 	for(int idx = 0;idx < _ProductList.size();idx++)
 	{
-		//アイテムの情報を取得。
-		auto item = INSTANCE(ItemManager)->GetItemInfo((unsigned int&)_ProductList[idx]->ItemID,_ProductList[idx]->Code);
-
-		//nullチェック
-		if (item)
-		{
-			//情報を設定して初期化。
-			HoldItemBase* hitem = nullptr;
-			switch (item->TypeID)
-			{
-			case Item::ItemCodeE::Item:
-				hitem = INSTANCE(GameObjectManager)->AddNew<ConsumptionItem>("Item", 9);
-				break;
-			case Item::ItemCodeE::Armor:
-				hitem = INSTANCE(GameObjectManager)->AddNew<HoldArmor>("Item", 9);
-				break;
-			case Item::ItemCodeE::Weapon:
-				hitem = INSTANCE(GameObjectManager)->AddNew<HoldWeapon>("Item", 9);
-				break;
-			default:
-				break;
-			}
-			hitem->SetInfo(item);
-			_ItemList.push_back(hitem);
-		}
+		HoldItemBase* hitem = HoldItemFactory::CreateItem(_ProductList[idx]->Code,_ProductList[idx]->ItemID, false);
+		_ItemList.push_back(hitem);
 	}
 }
 

@@ -20,11 +20,17 @@ void Sky::Awake()
 	_SkyModel->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 	_SkyModel->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT, true);
 	_SkyModel->SetSky(true);
-
 	transform->SetLocalAngle(Vector3(15, 0, 0));
 
 	//‘¾—z‚ÌˆÊ’u.
 	_SunPosition.Set(0.0f, 1000000.0f, 0.0f);
+
+	_SunPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
+	_SunPlate->SetTexture(LOADTEXTURE("UI/circle128.png"));
+	_SunPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 10.0f);
+	_SunPlate->SetSize(Vector2(50.0f, 50.0f));
+	_SunPlate->SetBillboard(true);
+	_SunPlate->SetActive(false);
 }
 
 /**
@@ -32,16 +38,18 @@ void Sky::Awake()
 */
 void Sky::Update()
 {
-	if (_Camera != nullptr)
+	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
+	if (camera != nullptr)
 	{
+		const float TMP = 1.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
-		_SunAngle += 0.02f * Time::DeltaTime();
+		_SunAngle += 0.02f * Time::DeltaTime() * TMP;
 
 		//XŽ²‰ñ“].
 		_SunPosition.Set(0.0f, sinf(_SunAngle), cosf(_SunAngle));
 
 		//ZŽ²‰ñ“].
-		float angleZ = PI * -0.15f;
+		const float angleZ = PI * -0.15f;
 		_SunPosition.x = _SunPosition.y * sinf(angleZ);
 		_SunPosition.y *= cosf(angleZ);
 
@@ -50,16 +58,19 @@ void Sky::Update()
 		_SunPosition.Scale(1000000.0f);
 
 		//‘å‹CŽU——pƒpƒ‰ƒ[ƒ^‚ðXV.
-		_AtomosphereParam.Update(_Camera->GetPosition(), _SunPosition);
+		_AtomosphereParam.Update(camera->GetPosition(), _SunPosition);
 
-		if (_SceneLight != nullptr && _SceneLight->GetLight().size() > 0)
+
+		Light* light = INSTANCE(GameObjectManager)->mainLight;
+		if (light != nullptr && light->GetLight().size() > 0)
 		{
 			//ƒ‰ƒCƒg‚Ì•ûŒü‚ðŒvŽZ.
 			Vector3 limLightDir = _SunDir;
 			limLightDir.Scale(-1.0f);
+			limLightDir.Normalize();
 
 			//•½sŒõŒ¹‚Ì0”Ô–Ú‚ðXV.
-			_SceneLight->GetLight()[0]->SetDirection(limLightDir);
+			light->GetLight()[0]->SetDirection(limLightDir);
 	
 			//‘¾—z‚ÌˆÊ’u‚©‚çŠÂ‹«Œõ‚ðŒvŽZ.
 			float t = max(0.0f, _SunDir.Dot(Vector3::up));
@@ -67,12 +78,16 @@ void Sky::Update()
 			ambientLight = Vector3::Lerp(_NightAmbientLight, _DayAmbientLight, t);
 
 			//ŠÂ‹«Œõ‚ðÝ’è.
-			_SceneLight->SetAmbientLight(ambientLight);
+			light->SetAmbientLight(ambientLight);
 		}
 
 	}
 
-	transform->SetLocalPosition(_Camera->GetTarget());
+	transform->SetLocalPosition(camera->GetTarget());
+	Vector3 sunModelPos = _SunDir;
+	sunModelPos.Scale(2000.0f);
+	sunModelPos.Add(camera->GetTarget());
+	_SunPlate->transform->SetLocalPosition(sunModelPos);
 
 	transform->UpdateTransform();
 }

@@ -12,6 +12,8 @@ void ContinentObject::Awake()
 	_Anim = AddComponent<Animation>();
 
 	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,false);
+	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+
 }
 
 void ContinentObject::Start() {

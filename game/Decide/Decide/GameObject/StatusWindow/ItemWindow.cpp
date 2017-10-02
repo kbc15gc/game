@@ -7,20 +7,35 @@
 #include"GameObject\Inventory\Inventory.h"
 #include"GameObject\ItemManager\HoldItem\HoldItemBase.h"
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
+#include "GameObject\StatusWindow\StatusWindow.h"
+
+const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = {
+	"UI/gem.png",
+	"UI/hp.png",
+	"UI/mp.png",
+	"sword.png",
+	"magic.png",
+	"armor.png",
+	"cloaks.PNG",
+	"UI/S_Light01.png",
+	"UI/S_Light01.png",	// 暫定。
+	"UI/gem.png",	// 暫定。
+};
+
 
 /**
 * 初期化.
 */
 void ItemWindow::Awake()
 {
-	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", 9);
+	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", StatusWindow::WindowBackPriorty + 1);
 	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
 	itemWindow->SetSize(Vector2(495.0f, 580.0f));
 	itemWindow->SetPivot(0.0f, 0.5f);
 	itemWindow->transform->SetParent(transform);
 	itemWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
 
-	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", 9);
+	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", StatusWindow::WindowBackPriorty + 2);
 	_WindowName->Initialize(L"", 30.0f);
 	_WindowName->SetAnchor(fbText::TextAnchorE::MiddleCenter);
 	_WindowName->transform->SetParent(transform);
@@ -28,22 +43,42 @@ void ItemWindow::Awake()
 
 	for (int i = 0; i < ItemCellSize; i++)
 	{
-		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", 9);
+		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", StatusWindow::WindowBackPriorty + 3);
 		item2D->transform->SetParent(itemWindow->transform);
-		item2D->transform->SetLocalPosition(Vector3(270.0f, -220.0f + (i * 52.0f), 0.0f));
+		item2D->transform->SetLocalPosition(Vector3(270.0f, -190.0f + (i * 52.0f), 0.0f));
 		_Item2DList.push_back(item2D);
 	}
 
-	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", 9);
-	_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
-	_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
+	//_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", StatusWindow::WindowBackPriorty + 3);
+	//_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
+	//_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
 	Quaternion rot = Quaternion::Identity;
-	rot.SetEuler(Vector3(0.0f, 0.0f, -90.0f));
-	_SelectCursor->transform->SetLocalRotation(rot);
-	_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+	//rot.SetEuler(Vector3(0.0f, 0.0f, -90.0f));
+	//_SelectCursor->transform->SetLocalRotation(rot);
+	//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+	//_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 
-	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", 9);
+	_Cursor = INSTANCE(GameObjectManager)->AddNew<Cursor>("SelectCursor", StatusWindow::WindowBackPriorty + 3);
+	_Cursor->CreateCursor("cursor.png", _Item2DList[_NowSelectItem]->transform, Vector2(-230.0f, 0.0f), Vector2(50.0f, 50.0f),0.0f , ItemCellSize, ItemCellSize, true, -90.0f);
+
+	_UpArrow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("UpArrow", StatusWindow::WindowBackPriorty + 3);
+	_UpArrow->SetTexture(LOADTEXTURE("cursor.png"));
+	_UpArrow->SetSize(Vector2(40.0f, 40.0f));
+	rot = Quaternion::Identity;
+	rot.SetEuler(Vector3(0.0f, 0.0f, -180.0f));
+	_UpArrow->transform->SetLocalRotation(rot);
+	_UpArrow->transform->SetParent(_Item2DList[0]->transform);
+	_UpArrow->transform->SetLocalPosition(Vector3(0.0f, -40.0f, 0.0f));
+	_UpArrow->SetActive(false,false);
+
+	_DownArrow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DownArrow", StatusWindow::WindowBackPriorty + 3);
+	_DownArrow->SetTexture(LOADTEXTURE("cursor.png"));
+	_DownArrow->SetSize(Vector2(40.0f, 40.0f));
+	_DownArrow->transform->SetParent(_Item2DList[ItemCellSize - 1]->transform);
+	_DownArrow->transform->SetLocalPosition(Vector3(0.0f, 40.0f, 0.0f));
+	_DownArrow->SetActive(false, false);
+
+	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", StatusWindow::WindowBackPriorty + 3);
 	_EIconImage->SetTexture(LOADTEXTURE("UI/E.png"));
 	_EIconImage->SetSize(Vector2(30, 30));
 	_EIconImage->SetActive(false);
@@ -184,13 +219,16 @@ void ItemWindow::Input()
 		}
 	}
 
+	_Cursor->SetMax(itemCount);
 	if (itemCount <= 0)
 	{
-		_SelectCursor->SetActive(false, true);
+		//_SelectCursor->SetActive(false, true);
+		_Cursor->SetActive(false, false);
 	}
 	else
 	{
-		_SelectCursor->SetActive(true, true);
+		//_SelectCursor->SetActive(true, true);
+		_Cursor->SetActive(true, true);
 
 		static float ChangeTime = 0.5f;
 		static float LocalTime = 0.0f;
@@ -201,46 +239,56 @@ void ItemWindow::Input()
 		{
 			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 			{
-				if (_NowSelectItem <= 0)
-				{
-					if (_StartLoadCount > 0)
-					{
-						_StartLoadCount--;
-					}
-					else
-					{
-						_StartLoadCount = max(0, itemCount - ItemCellSize);
-						_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
-					}
-				}
-				else
-				{
-					_NowSelectItem = max(0, _NowSelectItem - 1);
-				}
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//if (_NowSelectItem <= 0)
+				//{
+				//	if (_StartLoadCount > 0)
+				//	{
+				//		_StartLoadCount--;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = max(0, itemCount - ItemCellSize);
+				//		_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+				//	}
+				//}
+				//else
+				//{
+				//	_NowSelectItem = max(0, _NowSelectItem - 1);
+				//}
+
+				Cursor::CursorIndex index = _Cursor->PrevMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 			LocalTime += Time::DeltaTime();
 			if (LocalTime >= ChangeTime)
 			{
-				if (_NowSelectItem <= 0)
-				{
-					if (_StartLoadCount > 0)
-					{
-						_StartLoadCount--;
-					}
-					else
-					{
-						_StartLoadCount = max(0, itemCount - ItemCellSize);
-						_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
-					}
-				}
-				else
-				{
-					_NowSelectItem = max(0, _NowSelectItem - 1);
-				}
+				//if (_NowSelectItem <= 0)
+				//{
+				//	if (_StartLoadCount > 0)
+				//	{
+				//		_StartLoadCount--;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = max(0, itemCount - ItemCellSize);
+				//		_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+				//	}
+				//}
+				//else
+				//{
+				//	_NowSelectItem = max(0, _NowSelectItem - 1);
+				//}
+
 				LocalTime = 0.0f;
 				ChangeTime = 0.01f;
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				Cursor::CursorIndex index = _Cursor->PrevMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 		}
 		else if (LStick.y <= -0.2f)
@@ -248,54 +296,63 @@ void ItemWindow::Input()
 
 			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 			{
-				if (_NowSelectItem >= ItemCellSize - 1)
-				{
-					if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-					{
-						_StartLoadCount++;
-					}
-					else
-					{
-						_StartLoadCount = 0;
-						_NowSelectItem = 0;
-					}
-				}
-				else if (_NowSelectItem >= itemCount - 1)
-				{
-					_NowSelectItem = 0;
-				}
-				else
-				{
-					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-				}
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//if (_NowSelectItem >= ItemCellSize - 1)
+				//{
+				//	if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+				//	{
+				//		_StartLoadCount++;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = 0;
+				//		_NowSelectItem = 0;
+				//	}
+				//}
+				//else if (_NowSelectItem >= itemCount - 1)
+				//{
+				//	_NowSelectItem = 0;
+				//}
+				//else
+				//{
+				//	_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				//}
+
+				Cursor::CursorIndex index = _Cursor->NextMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 			LocalTime += Time::DeltaTime();
 			if (LocalTime >= ChangeTime)
 			{
-				if (_NowSelectItem >= ItemCellSize - 1)
-				{
-					if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-					{
-						_StartLoadCount++;
-					}
-					else
-					{
-						_StartLoadCount = 0;
-						_NowSelectItem = 0;
-					}
-				}
-				else if (_NowSelectItem >= itemCount - 1)
-				{
-					_NowSelectItem = 0;
-				}
-				else
-				{
-					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-				}
+				//if (_NowSelectItem >= ItemCellSize - 1)
+				//{
+				//	if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+				//	{
+				//		_StartLoadCount++;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = 0;
+				//		_NowSelectItem = 0;
+				//	}
+				//}
+				//else if (_NowSelectItem >= itemCount - 1)
+				//{
+				//	_NowSelectItem = 0;
+				//}
+				//else
+				//{
+				//	_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				//}
 				LocalTime = 0.0f;
 				ChangeTime = 0.01f;
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				Cursor::CursorIndex index = _Cursor->NextMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 		}
 		else
@@ -323,26 +380,60 @@ void ItemWindow::Input()
 						itemCount += 1;
 					}
 				}
+				_Cursor->SetMax(itemCount);	// 要素数を更新。
 				if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
 				{
 					//表示位置を一個さげる.
 					_StartLoadCount--;
+					//_Cursor->SetNowCursorIndex(_StartLoadCount);
 				}
 				else if (_NowSelectItem >= itemCount)
 				{
 					//選択位置を一個下げる.
-					_NowSelectItem = max(0, _NowSelectItem - 1);
+					//_NowSelectItem = max(0, _NowSelectItem - 1);
+					_NowSelectItem = _Cursor->NextMove(1).rangeIndex;
 				}
 				if (itemCount <= 0)
 				{
-					_SelectCursor->transform->SetParent(nullptr);
-					_SelectCursor->SetActive(false, true);
+					//_SelectCursor->transform->SetParent(nullptr);
+					//_SelectCursor->SetActive(false, true);
+					_Cursor->transform->SetParent(nullptr);
+					_Cursor->SetActive(false, false);
 				}
 				else
 				{
-					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 				}
 			}
+		}
+
+		if (itemCount > ItemCellSize) {
+			// 所持枠を埋めているアイテムが表示限界枠より多い。
+
+			if (_StartLoadCount > 0) {
+				// 一番上に表示されているアイテムがアイテムリストの先頭ではない。
+
+				_UpArrow->SetActive(true,true);
+			}
+			else {
+				_UpArrow->SetActive(false, false);
+			}
+
+			if (_StartLoadCount + ItemCellSize < itemCount) {
+				// 一番下に表示されているアイテムがアイテムリストの終端ではない。
+
+				_DownArrow->SetActive(true, true);
+			}
+			else {
+				_DownArrow->SetActive(false, false);
+			}
+		}
+		else {
+			// 所持枠を埋めているアイテムが表示限界枠におさまっている。
+
+			_UpArrow->SetActive(false, false);
+			_DownArrow->SetActive(false, false);
 		}
 	}
 }
@@ -362,26 +453,29 @@ void ItemWindow::_CreateCIShowStatus()
 		pos = Vector3::zero;
 	}
 	// レベルのパラメータは真横に表示。
-	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetParamTextPos() + Vector3(-300, 0.0f, 0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetNameTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetNameTextPos() + Vector3(0.0f,10.0f,0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetParamTextPos() + Vector3(-320, -7.0f, 0.0f));
 	_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetIconObject()->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->GetIconObject()->transform->GetLocalPosition() + Vector3(0.0f, 5.0f, 0.0f));
-	_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform->GetLocalPosition() + Vector3(0.0f,10.0f,0.0f));
-	_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->GetParamTextPos() + Vector3(-270, 0.0f, 0.0f));
-	_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->GetParamTextPos() + Vector3(-270, 0.0f, 0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform->GetLocalPosition() + Vector3(15.0f,25.0f,0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->transform->GetLocalPosition() + Vector3(0.0f, -5.0f, 0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->GetParamTextPos() + Vector3(-290, -4.5f, 0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->GetParamTextPos() + Vector3(-290, -4.5f, 0.0f));
+	_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->transform->SetLocalPosition(_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->transform->GetLocalPosition() + Vector3(0.0f, 15.0f, 0.0f));
 
 	_ExpBar = AddComponent<ParameterBar>();
 	vector<BarColor> barColor;
 	barColor.push_back(BarColor::Yellow);
-	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->transform, Vector3(50.0f, 40.0f, 0.0f), Vector2(1.0f,0.5f), 8,true);
+	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->transform, Vector3(25.0f, 46.0f, 0.0f), Vector2(1.16f,0.35f), 8,true);
 
 	_HpBar = AddComponent<ParameterBar>();
 	barColor.clear();
 	barColor.push_back(BarColor::Green);
-	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform, Vector3(50.0f,20.0f, 0.0f), Vector2(1.0f,0.7f), 8, true);
+	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform, Vector3(50.0f,18.0f, 0.0f), Vector2(1.0f,0.7f), 8, false);
 
 	_MpBar = AddComponent<ParameterBar>();
 	barColor.clear();
 	barColor.push_back(BarColor::Blue);
-	_MpBar->Create(barColor, static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::MP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->transform, Vector3(50.0f, 20.0f, 0.0f), Vector2(1.0f,0.7f), 8, true);
+	_MpBar->Create(barColor, static_cast<float>(_Player->GetMaxMP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::MP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->transform, Vector3(50.0f, 18.0f, 0.0f), Vector2(1.0f,0.7f), 8, false);
 
 	_ConfigParamRender();
 }
@@ -400,6 +494,9 @@ void ItemWindow::_CreateWIShowStatus()
 		_ParameterRenderList.push_back(pr);
 	}
 
+	_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(WIShowStatus::RANK)]->GetParamTextPos() + Vector3(-40, -7.0f, 0.0f));
+
+
 	_ConfigParamRender();
 }
 
@@ -417,6 +514,8 @@ void ItemWindow::_CreateAIShowStatus()
 		_ParameterRenderList.push_back(pr);
 	}
 
+	_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->SetParamTextPos(_ParameterRenderList[static_cast<int>(AIShowStatus::RANK)]->GetParamTextPos() + Vector3(-40, -7.0f, 0.0f));
+
 	_ConfigParamRender();
 }
 
@@ -428,15 +527,14 @@ void ItemWindow::_ConfigParamRender()
 		case Item::ItemCodeE::Item:
 		{
 			int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", "UI/gem.png", playerLevel, fbText::TextAnchorE::MiddleLeft, 50.0f, Vector2(40.0f, 40.0f));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", "UI/hp.png", _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", "UI/mp.png", _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MDE)]->SetParamBuff("MDE", "UI/S_Buff03.png", _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::DEX)]->SetParamBuff("DEX", "UI/S_Buff02.png", _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MONEY)]->SetParam("MONEY", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney());
+			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::LV)]), playerLevel, fbText::TextAnchorE::MiddleLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::HP)]), _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MP)]), _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::ATK)]), _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]), _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEF)]), _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MDE)]->SetParamBuff("MDE", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MDE)]), _Player->GetParam(CharacterParameter::Param::MDE), _Player->GetBuffParam(CharacterParameter::Param::MDE) - _Player->GetDebuffParam(CharacterParameter::Param::MDE));
+			_ParameterRenderList[static_cast<int>(CIShowStatus::DEX)]->SetParamBuff("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]), _Player->GetParam(CharacterParameter::Param::DEX), _Player->GetBuffParam(CharacterParameter::Param::DEX) - _Player->GetDebuffParam(CharacterParameter::Param::DEX));
 
 			if (playerLevel != _playerLevel) {
 				// レベル変動。
@@ -457,7 +555,7 @@ void ItemWindow::_ConfigParamRender()
 			HoldArmor* armor = _Player->GetEquipment()->armor;
 			HoldArmor* newArmor = (HoldArmor*)_Item2DList[_NowSelectItem]->GetItemData();
 
-			_ParameterRenderList[(int)AIShowStatus::RANK]->SetParam("RANK", "UI/S_Buff02.png", 0);
+			//_ParameterRenderList[(int)AIShowStatus::RANK]->SetParam("RANK", "UI/S_Buff02.png", 0);
 
 			int defParam = 0;
 			int defnewParam = 0;
@@ -480,13 +578,13 @@ void ItemWindow::_ConfigParamRender()
 				newRank = newArmor->GetRank();
 			}
 			_ParameterRenderList[(int)AIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
-			_ParameterRenderList[(int)AIShowStatus::DEF]->SetParamEquip("DEF", "UI/S_Buff02.png", 
+			_ParameterRenderList[(int)AIShowStatus::DEF]->SetParamEquip("DEF", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEF)]),
 				_Player->GetParam(CharacterParameter::Param::DEF), defParam, defnewParam);
-			_ParameterRenderList[(int)AIShowStatus::MDE]->SetParamEquip("MDE", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)AIShowStatus::MDE]->SetParamEquip("MDE", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MDE)]),
 				_Player->GetParam(CharacterParameter::Param::MDE), mdeParam, mdenewParam);
-			_ParameterRenderList[(int)AIShowStatus::CRT]->SetParamEquip("CRT", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)AIShowStatus::CRT]->SetParamEquip("CRT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::CRT)]),
 				_Player->GetParam(CharacterParameter::Param::CRT), 0, 0);
-			_ParameterRenderList[(int)AIShowStatus::DEX]->SetParamEquip("DEX", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)AIShowStatus::DEX]->SetParamEquip("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]),
 				_Player->GetParam(CharacterParameter::Param::DEX), 0, 0);
 			break;
 		}
@@ -516,13 +614,13 @@ void ItemWindow::_ConfigParamRender()
 				newRank = newWeapon->GetRank();
 			}
 			_ParameterRenderList[(int)WIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
-			_ParameterRenderList[(int)WIShowStatus::ATK]->SetParamEquip("ATK", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)WIShowStatus::ATK]->SetParamEquip("ATK", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::ATK)]),
 				_Player->GetParam(CharacterParameter::Param::ATK), atkParam, atknewParam);
-			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]),
 				_Player->GetParam(CharacterParameter::Param::MAT), matParam, matnewParam);
-			_ParameterRenderList[(int)WIShowStatus::CRT]->SetParamEquip("CRT", "UI/S_Buff02.png",
+			_ParameterRenderList[(int)WIShowStatus::CRT]->SetParamEquip("CRT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::CRT)]),
 				_Player->GetParam(CharacterParameter::Param::CRT), 0, 0);
-			_ParameterRenderList[(int)WIShowStatus::DEX]->SetParamEquip("DEX", "UI/S_Buff02.png", 
+			_ParameterRenderList[(int)WIShowStatus::DEX]->SetParamEquip("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]),
 				_Player->GetParam(CharacterParameter::Param::DEX), 0, 0);
 			break;
 		}

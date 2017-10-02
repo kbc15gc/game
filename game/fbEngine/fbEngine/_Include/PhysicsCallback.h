@@ -271,40 +271,33 @@ public:
 		Vector3 hitNormal = Vector3::zero;				//衝突点の法線。
 		btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 		float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
-		Vector3 vDist = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
-		vector<unsigned int> Through_ID;		// 無視するコリジョン属性。
 		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
-		bool isSlip = false;	// 滑るか。
-		float SlipAngle = 90.0f;			// 上方向との角度がこの角度以上なら滑る(度)。
+		//bool isSlip = false;	// 滑るか。
+		//float SlipAngle = 90.0f;			// 上方向との角度がこの角度以上なら滑る(度)。
 
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			if (convexResult.m_hitCollisionObject == me) {
-				//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
-				return 0.0f;
-			}
-
-			if ((_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0) {
-				// 衝突を取りたいコリジョンではなかった。
+				//自分に衝突した。
 				return 0.0f;
 			}
 
 			//衝突点の法線を引っ張ってくる。
 			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
 			//// ワールド行列取得。
-			D3DXMATRIX worldMat;
-			worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
+			//D3DXMATRIX worldMat;
+			//worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
 			//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitNormalTmp), &hitNormalTmp, &worldMat);	// ワールド座標に変換。
-			//D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
+			D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
 
 			//上方向と衝突点の法線のなす角度を求める。
 			float angle = fabsf(acosf(D3DXVec3Dot(&hitNormalTmp, &D3DXVECTOR3(0.0f, 1.0f, 0.0f))));
 
 			if (((angle < D3DXToRadian(54.0f))		//地面の傾斜が54度より小さいので地面とみなす。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND) //もしくはコリジョン属性が地面と指定されている。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
-				) {
+				&& (_attribute & convexResult.m_hitCollisionObject->getUserIndex()))
+				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND
+				){
 
 				//衝突している。
 				isHit = true;
@@ -321,12 +314,11 @@ public:
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
 					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
 					dist = distTmp;
-					vDist = vDistTmp;
 					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
-					if (angle >= D3DXToRadian(SlipAngle)) {
-						// 指定角度以上なので滑らせる。
-						isSlip = true;
-					}
+					//if (angle >= D3DXToRadian(SlipAngle)) {
+					//	// 指定角度以上なので滑らせる。
+					//	isSlip = true;
+					//}
 				}
 			}
 
@@ -340,7 +332,6 @@ public:
 		Vector3 hitPos = Vector3::zero;		//衝突点。
 		Vector3 startPos = Vector3::zero;		//レイの始点。
 		float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
-		Vector3 vDist = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
 		Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
 		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
@@ -353,25 +344,17 @@ public:
 				return 0.0f;
 			}
 
-			if ((_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0) {
-				// 衝突を取りたいコリジョンではなかった。
-				return 0.0f;
-			}
-
 			//衝突点の法線を引っ張ってくる。
 			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());		
 			//// ワールド行列取得。
-			D3DXMATRIX worldMat;
-			worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
+			//D3DXMATRIX worldMat;
+			//worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
 			//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitNormalTmp), &hitNormalTmp, &worldMat);	// ワールド座標に変換。
 			//D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
 			//上方向と衝突点の法線のなす角度を求める。
 			float angle = fabsf(acosf(D3DXVec3Dot(&hitNormalTmp,&D3DXVECTOR3(0.0f,1.0f,0.0f))));
-			if (((angle >= D3DXToRadian(54.0f))		//地面の傾斜が54度以上なので壁とみなす。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND)
-					|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::CHARACTER
-					|| convexResult.m_hitCollisionObject->getUserIndex() == BIT(7)
-				) {
+			if ((angle >= D3DXToRadian(54.0f))		//地面の傾斜が54度以上なので壁とみなす。
+				|| (_attribute & convexResult.m_hitCollisionObject->getUserIndex())) {
 				isHit = true;
 
 				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
@@ -385,7 +368,6 @@ public:
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
 					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z) ;
 					dist = distTmp;
-					vDist = vDistTmp;
 					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
 				}
 			}
