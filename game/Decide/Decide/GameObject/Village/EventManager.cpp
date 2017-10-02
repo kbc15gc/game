@@ -14,6 +14,16 @@ EventManager::EventManager()
 {
 }
 
+void EventManager::ReSet()
+{
+	_FuncList.clear();
+	_ActionList.clear();
+	_ActiveEvent = Event::EventID::None;
+
+	_Player = nullptr;
+	_Camera = nullptr;
+}
+
 bool EventManager::Execute(Event::EventID id, int idx)
 {
 	//イベントがないよ！

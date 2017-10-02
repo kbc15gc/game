@@ -42,6 +42,8 @@ void DebugNPC();
 
 void GameScene::Start()
 {
+	INSTANCE(EventManager)->ReSet();
+
 	//ゲームライト生成
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
@@ -91,12 +93,12 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
+	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	INSTANCE(HistoryManager)->Start();
 
-	//INSTANCE(GameObjectManager)->AddNew<Shop>("", 0);
 	INSTANCE(ItemManager)->LoadAllItemData();
-	//INSTANCE(Inventory)->Initialize();
 
 	//バフデバフアイコンを表示するクラス。
 	INSTANCE(GameObjectManager)->AddNew<BuffDebuffICon>("BuffDebuffICon", 9);
@@ -104,9 +106,6 @@ void GameScene::Start()
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
 	_WorldSE->Play(true);
-
-	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
-	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	//シャドウマップ有効.
 	_isShadowMap = true;
@@ -121,8 +120,9 @@ void GameScene::Start()
 	g_depth->SetPivot(Vector2(0, 0));
 	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
 	g_depth->SetActive(true);*/
-	
+#ifdef _DEBUG
 	DebugNPC();
+#endif // _DEBUG
 }
 
 #include "GameObject\Village\NPC.h"
