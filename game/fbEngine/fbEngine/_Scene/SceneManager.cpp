@@ -72,7 +72,6 @@ void SceneManager::StartScene()
 	_Sky->SetActive(false);
 
 	_Scenes[_NowScene]->Start();
-	INSTANCE(GameObjectManager)->StartObject();
 }
 
 void SceneManager::UpdateScene()

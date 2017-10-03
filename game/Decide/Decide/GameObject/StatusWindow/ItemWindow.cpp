@@ -37,7 +37,7 @@ void ItemWindow::Awake()
 
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", StatusWindow::WindowBackPriorty + 2);
 	_WindowName->Initialize(L"", 30.0f);
-	_WindowName->SetAnchor(fbText::TextAnchorE::MiddleCenter);
+	_WindowName->SetAnchor(fbText::TextAnchorE::UpperCenter);
 	_WindowName->transform->SetParent(transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -235.0f, 0.0f));
 
@@ -527,9 +527,9 @@ void ItemWindow::_ConfigParamRender()
 		case Item::ItemCodeE::Item:
 		{
 			int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::LV)]), playerLevel, fbText::TextAnchorE::MiddleLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::HP)]), _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MP)]), _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::LV)]), playerLevel, fbText::TextAnchorE::UpperLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::HP)]), _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::UpperLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MP)]), _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::UpperLeft);
 			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::ATK)]), _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
 			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]), _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
 			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEF)]), _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));

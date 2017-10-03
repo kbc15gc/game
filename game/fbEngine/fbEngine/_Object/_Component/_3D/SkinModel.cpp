@@ -72,14 +72,14 @@ void SkinModel::DrawFrame(LPD3DXFRAME pFrame)
 
 void SkinModel::Awake()
 {
-	
+	//mainのものが設定されているならセットされる。
+	_Camera = INSTANCE(GameObjectManager)->mainCamera;
+	_Light = INSTANCE(GameObjectManager)->mainLight;
 }
 
 void SkinModel::Start()
 {
-	//mainのものが設定されているならセットされる。
-	_Camera = INSTANCE(GameObjectManager)->mainCamera;
-	_Light = INSTANCE(GameObjectManager)->mainLight;
+	
 }
 
 //モデルデータの行列更新
@@ -199,11 +199,11 @@ void SkinModel::DrawMeshContainer(
 		_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 		_Effect->BeginPass(0);
 
-		const int num = _Light->GetNum();
+		const int num = INSTANCE(GameObjectManager)->mainLight->GetNum();
 		Vector4 dir[System::MAX_LIGHTNUM];
 		Color color[System::MAX_LIGHTNUM];
 		ZeroMemory(dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
-		const vector<DirectionalLight*>& vec = _Light->GetLight();
+		const vector<DirectionalLight*>& vec = INSTANCE(GameObjectManager)->mainLight->GetLight();
 		FOR(i, num)
 		{
 			dir[i] = vec[i]->Direction();
@@ -217,11 +217,11 @@ void SkinModel::DrawMeshContainer(
 		//ライト数セット
 		_Effect->SetInt("g_LightNum", num);
 		//環境光
-		Vector3 ambient = _Light->GetAmbientLight();
+		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
 		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 
 		//カメラのポジションセット(スペキュラライト用)
-		Vector3 campos = _Camera->transform->GetPosition();
+		Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
 		_Effect->SetValue("g_cameraPos", &D3DXVECTOR4(campos.x, campos.y, campos.z, 1.0f), sizeof(D3DXVECTOR4));
 		
 		//各行列を送信
@@ -234,8 +234,8 @@ void SkinModel::DrawMeshContainer(
 		}
 		else
 		{
-			_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)_Camera->GetViewMat());
-			_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)_Camera->GetProjectionMat());
+			_Effect->SetMatrix("g_viewMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetViewMat());
+			_Effect->SetMatrix("g_projectionMatrix", &(D3DXMATRIX)INSTANCE(GameObjectManager)->mainCamera->GetProjectionMat());
 		}
 
 		{

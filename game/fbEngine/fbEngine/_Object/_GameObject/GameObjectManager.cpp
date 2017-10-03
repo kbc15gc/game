@@ -11,21 +11,6 @@ GameObject* GameObjectManager::Add(GameObject* pAdd, int priority)
 	return pAdd;
 }
 
-void GameObjectManager::StartObject()
-{
-	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
-	{
-		for each (GameObject* obj in _GameObjects[priority])
-		{
-			if (obj->GetActive())
-			{
-				obj->Start();
-				obj->GetComponentManager().Start();
-			}
-		}
-	}
-}
-
 void GameObjectManager::UpdateObject()
 {
 	//削除リストを削除
@@ -40,8 +25,8 @@ void GameObjectManager::UpdateObject()
 			{
 				if (!(obj->GetIsStopUpdate())) {
 					// 更新ストップフラグがオフ。
-					obj->Update();
-					obj->GetComponentManager().Update();
+					obj->ConnoteUpdate();
+					obj->GetComponentManager().ConnoteUpdate();
 				}
 			}
 		}

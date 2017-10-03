@@ -253,6 +253,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					Rinfo.coll = box;
 					//カメラと当たらないコリジョンかどうか？
 					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+					Rinfo.id = Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA;
 					Rinfo.offset = info->pos;
 					/*Quaternion q; /*q.SetEuler(info->ang);*/
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/

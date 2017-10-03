@@ -56,14 +56,14 @@ public:
 	/**
 	* パラメータ設定.
 	*/
-	void SetParam(char* name, char* iconName, int param, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize, float paramTextSize = defaultNameTextSize)
+	void SetParam(char* name, char* iconName, int param, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::UpperRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize, float paramTextSize = defaultNameTextSize)
 	{
 		_SetRenderStyle(ShowType::Normal,iconName, iconSize, name,nameTextSize,param, paramTextSize,paramAnchor);
 	}
 	/**
 	* パラメータ設定. 
 	*/
-	void SetParamMax(char* name,char* iconName, int param,int maxParam, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize, float paramTextSize = defaultNameTextSize)
+	void SetParamMax(char* name,char* iconName, int param,int maxParam, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::UpperRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize, float paramTextSize = defaultNameTextSize)
 	{
 		_SetRenderStyle(ShowType::Max, iconName, iconSize, name, nameTextSize, param, paramTextSize,paramAnchor);
 		_MaxParam = maxParam;
@@ -72,7 +72,7 @@ public:
 	/**
 	* パラメータ設定.
 	*/
-	void SetParamBuff(char* name, char* iconName, int param, int buff, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::MiddleRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize,float paramTextSize = defaultNameTextSize)
+	void SetParamBuff(char* name, char* iconName, int param, int buff, fbText::TextAnchorE paramAnchor = fbText::TextAnchorE::UpperRight, float nameTextSize = 40.0f, const Vector2& iconSize = defaultIconSize,float paramTextSize = defaultNameTextSize)
 	{
 		_SetRenderStyle(ShowType::Buff, iconName, iconSize, name, nameTextSize, param, paramTextSize, paramAnchor);
 		_ParamBuff = buff;
@@ -82,7 +82,7 @@ public:
 	*/
 	void SetParamEquip(char* name, char* iconName, int param, int equip, int newEquip)
 	{
-		_SetRenderStyle(ShowType::Equip, iconName, defaultIconSize, name, defaultNameTextSize, param, defaultNameTextSize, fbText::TextAnchorE::MiddleRight);
+		_SetRenderStyle(ShowType::Equip, iconName, defaultIconSize, name, defaultNameTextSize, param, defaultNameTextSize, fbText::TextAnchorE::UpperRight);
 		_ParamEquip = equip;
 		_ParamNewEquip = newEquip;
 	}
@@ -91,7 +91,7 @@ public:
 	*/
 	void SetParamRank(char* name, char* iconName, HoldEquipment::Rank rank, HoldEquipment::Rank newRank)
 	{
-		_SetRenderStyle(ShowType::Rank, iconName, defaultIconSize, name, defaultNameTextSize, 0, defaultNameTextSize, fbText::TextAnchorE::MiddleRight);
+		_SetRenderStyle(ShowType::Rank, iconName, defaultIconSize, name, defaultNameTextSize, 0, defaultNameTextSize, fbText::TextAnchorE::UpperRight);
 		_ParamRank = rank;
 		_ParamNewRank = newRank;
 	}

@@ -22,7 +22,7 @@ ShopS_Select::ShopS_Select(Shop * shop) :IShopState(shop)
 
 	_Text->SetText("‚©‚¤\n‚¤‚é");
 	_Text->SetFontSize(50);
-	_Text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_Text->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	_Text->transform->SetParent(_SelectWindow->transform);
 	_Text->transform->SetLocalPosition(Vector3(-_Text->GetLength().x/2, -40, 0));
 

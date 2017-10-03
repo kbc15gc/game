@@ -21,13 +21,13 @@ void Item2D::Awake()
 	//アイテム名表示の初期化.
 	_ItemNameText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ItemName", 9);
 	_ItemNameText->Initialize(L"", 30.0f);
-	_ItemNameText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_ItemNameText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	_ItemNameText->transform->SetParent(backWindow->transform);
 	_ItemNameText->transform->SetLocalPosition(Vector3(-180.0f, -15.0f, 0.0f));
 
 	_ItemCountText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ItemCount", 9);
 	_ItemCountText->Initialize(L"", 30.0f);
-	_ItemCountText->SetAnchor(fbText::TextAnchorE::MiddleRight);
+	_ItemCountText->SetAnchor(fbText::TextAnchorE::UpperRight);
 	_ItemCountText->transform->SetParent(backWindow->transform);
 	_ItemCountText->transform->SetLocalPosition(Vector3(180.0f, -15.0f, 0.0f));
 
