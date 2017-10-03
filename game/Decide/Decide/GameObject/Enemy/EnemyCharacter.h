@@ -18,6 +18,7 @@ class Animation;
 class EnemyState;
 class EnemyAttack;
 class ParticleEffect;
+class BuffDebuffICon;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -71,6 +72,7 @@ private:
 		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
 		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる。
 		ParticleEffect* ParticleEffect = nullptr;	// パーティクルエフェクト。
+		BuffDebuffICon*	BuffDebuffICon = nullptr;	// バフデバフアイコン。
 		CharacterExtrude* CharacterExtrude = nullptr;	// このエネミーが他のオブジェクトを押し出す。
 	};
 
@@ -249,6 +251,7 @@ public:
 	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
 		_MyComponent.Parameter->ParamReset(param);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6,false, false);
+		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 	}
 	// 全パラメーター設定。
 	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
@@ -256,8 +259,8 @@ public:
 	inline void SetParamAll(const vector<BarColor>& color, const vector<int>& param) const {
 		_MyComponent.Parameter->ParamReset(param);
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6 ,false,false);
+		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 	}
-
 
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
@@ -377,7 +380,6 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
-
 
 protected:
 	// ステート切り替え関数。

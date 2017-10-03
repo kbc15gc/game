@@ -18,6 +18,7 @@
 #include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
+#include "GameObject\Component\BuffDebuffICon.h"
 
 class SkinModel;
 class Animation;
