@@ -22,8 +22,6 @@ public:
 	void Leave()override;
 	//攻撃コリジョンパラメータを渡す。
 	void Attack(AttackCollisionParameter pram);
-	//方向を変える関数。
-	void DirMove();
 private:
 	//攻撃時のSE
 	SoundSource* _SE = nullptr;

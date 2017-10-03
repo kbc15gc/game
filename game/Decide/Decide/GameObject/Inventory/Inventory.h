@@ -95,7 +95,6 @@ public:
 	inline int GetHoldNum(Item::ItemCodeE code,int id) {
 		return _HoldNumList[static_cast<int>(code)][id];
 	}
-
 private:
 
 	//リストから指定されたアイテムを削除。

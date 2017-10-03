@@ -44,7 +44,7 @@ void Enemy::_StartSubClass(){
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
-	_WanderingRange = 30.0f;
+	_WanderingRange = 10.0f;
 
 	// 歩行速度設定。
 	_walkSpeed = 1.0f;

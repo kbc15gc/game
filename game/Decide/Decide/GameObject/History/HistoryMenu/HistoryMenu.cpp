@@ -131,7 +131,7 @@ void HistoryMenu::EnableUpdate()
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 	LStick /= 32767.0f;
 	if (LStick.y >= 0.2f && fabsf(LStick.x) <= 0.1f)
 	{
@@ -212,7 +212,7 @@ void HistoryMenu::SelectPageUpdate()
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 	LStick /= 32767.0f;
 	if (LStick.x >= 0.2f)
 	{
@@ -296,7 +296,7 @@ void HistoryMenu::SelectChipUpdate()
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 	LStick /= 32767.0f;
 	if (LStick.x >= 0.2f)
 	{

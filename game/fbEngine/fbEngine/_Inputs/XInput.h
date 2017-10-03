@@ -1,24 +1,26 @@
 #pragma once
 
 
-enum AnalogE {
-	L_TRIGGER,	//左ﾄﾘｶﾞｰ
-	R_TRIGGER,	//右ﾄﾘｶﾞｰ
-	L_STICKR,	//左スティック右
-	L_STICKL,	//左スティック左
-	L_STICKU,	//左スティック上
-	L_STICKD,	//左スティック下
-	R_STICKR,	//右スティック右
-	R_STICKL,	//右スティック左
-	R_STICKU,	//右スティック上
-	R_STICKD,	//右スティック下
-};
+enum class AnalogE {
+	TRIGGER = 0b100000,	//トリガー
+	L_STICK = 0b10000,	//左スティック
+	R_STICK = 0b1000,	//右スティック
+	X = 0b100,			//横
+	Y = 0b10,			//縦
+	INVERT = 0b1,		//反転
+	ANALOG = 0b111110,
 
-enum AnalogInputE
-{
-	TRIGGER,	//トリガー
-	L_STICK,	//左スティック
-	R_STICK,	//右スティック
+
+	R_TRIGGER = TRIGGER | X,		//右ﾄﾘｶﾞｰ
+	L_TRIGGER = TRIGGER | Y,		//左ﾄﾘｶﾞｰ
+	L_STICKR = L_STICK | X,			//左スティック右
+	L_STICKL = L_STICK | X | INVERT,//左スティック左
+	L_STICKU = L_STICK | Y,			//左スティック上
+	L_STICKD = L_STICK | Y | INVERT,//左スティック下
+	R_STICKR = R_STICK | X,			//右スティック右
+	R_STICKL = R_STICK | X | INVERT,//右スティック左
+	R_STICKU = R_STICK | Y,			//右スティック上
+	R_STICKD = R_STICK | Y | INVERT,//右スティック下
 };
 
 //Xbox360のコントローラー
@@ -43,13 +45,15 @@ public:
 	//アナログスティック、トリガーが瞬間的に入力されているか
 	bool IsPushAnalog(AnalogE a);
 	//アナログスティック、トリガーの継続的な押下
-	bool IsPressAnalog(AnalogE a);
+	//[in] 判定したいアナログボタン。
+	//[in] 最も大きい値以外を無視するか？
+	bool IsPressAnalog(AnalogE a, bool exclusive = false);
 	//トリガーやスティックの値が欲しいときにどうぞ。
 	//スティックは-32768 ～ 32767(65536)
 	//トリガーは0 ～ 255
-	Vector2 GetAnalog(AnalogInputE in);
+	Vector2 GetAnalog(AnalogE in);
 	//
-	bool AnalogRepeat(AnalogE analog,float interval);
+	bool AnalogRepeat(AnalogE analog, float interval, bool exclusive = false);
 	//モーターを振動させる
 	//第一引数：int 右モーターの振動数
 	//第二引数：int 左モーターの振動数
@@ -63,6 +67,10 @@ private:
 	XINPUT_STATE _State;		//現在の入力情報
 	XINPUT_STATE _BeforeState;	//1フレーム前のステート
 	
+	//
+	map<AnalogE,int> _AnalogValue;
+	//最も値が大きいもの。
+	AnalogE _Most;
 	//キーリピート機能で使うタイマー。
-	float _RepeatTimer = 0.0f;
+	map<int,float> _RepeatTimer[2];
 };

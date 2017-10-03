@@ -25,5 +25,5 @@ private:
 	BYTE old[256];
 
 	//キーリピート機能で使うタイマー。
-	float _RepeatTimer = 0.0f;
+	map<int, float> _RepeatTimer;
 };

@@ -233,7 +233,7 @@ void ItemWindow::Input()
 		static float ChangeTime = 0.5f;
 		static float LocalTime = 0.0f;
 
-		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 		LStick /= 32767.0f;
 		if (LStick.y >= 0.2f)
 		{

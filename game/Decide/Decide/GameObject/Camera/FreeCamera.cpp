@@ -85,8 +85,8 @@ void FreeCamera::Move()
 	//ゲームパッドから取得した方向。
 	Vector3 dir = Vector3::zero;
 	//コントローラー移動。
-	dir.x += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).x / 32767.0f);
-	dir.z += (XboxInput(0)->GetAnalog(AnalogInputE::L_STICK).y / 32767.0f);
+	dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
+	dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
 
 	//キーボード(デバッグ用)。
 	if (KeyBoardInput->isPressed(DIK_W))
@@ -148,8 +148,8 @@ void FreeCamera::Move()
 void FreeCamera::FreeCameraRotation()
 {
 	//ゲームパッドから入力された値に_CameraRotationSpeedを掛けて回転速度を調整。
-	_R_STICK_Y += (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).y / 32767.0f)*_CameraRotationSpeed;
-	_R_STICK_X += (XboxInput(0)->GetAnalog(AnalogInputE::R_STICK).x / 32767.0f)*_CameraRotationSpeed;
+	_R_STICK_Y += (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f)*_CameraRotationSpeed;
+	_R_STICK_X += (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f)*_CameraRotationSpeed;
 
 	//縦と横に一回転しきったら初期化。
 	if (fabs(_R_STICK_X) >= 360)
@@ -170,9 +170,9 @@ void FreeCamera::FreeCameraMoveUpDown()
 {
 	Vector3 pos = transform->GetPosition();
 	//右トリガー押し込みで上昇。
-	pos.y -= XboxInput(0)->GetAnalog(AnalogInputE::TRIGGER).x / 255.0f*_MoveSpeed;
+	pos.y -= XboxInput(0)->GetAnalog(AnalogE::TRIGGER).x / 255.0f*_MoveSpeed;
 	//左トリガー押し込みで下降。
-	pos.y += XboxInput(0)->GetAnalog(AnalogInputE::TRIGGER).y / 255.0f*_MoveSpeed;
+	pos.y += XboxInput(0)->GetAnalog(AnalogE::TRIGGER).y / 255.0f*_MoveSpeed;
 	transform->SetPosition(pos);
 }
 

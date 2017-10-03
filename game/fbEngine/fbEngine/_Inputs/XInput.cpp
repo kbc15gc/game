@@ -3,19 +3,8 @@
 
 namespace
 {
-	const AnalogInputE AnalogConvert[] =
-	{
-		TRIGGER,
-		TRIGGER,
-		L_STICK,
-		L_STICK,
-		L_STICK,
-		L_STICK,
-		R_STICK,
-		R_STICK,
-		R_STICK,
-		R_STICK,
-	};
+	const int BUTTON = 0;
+	const int ANALOG = 1;
 }
 
 XInput::XInput()
@@ -46,6 +35,24 @@ void XInput::Update()
 	else if (er == ERROR_SUCCESS)
 	{
 		_IsConnect = true;
+
+		_AnalogValue[AnalogE::R_TRIGGER] = _State.Gamepad.bRightTrigger;
+		_AnalogValue[AnalogE::L_TRIGGER] = _State.Gamepad.bLeftTrigger;
+		_AnalogValue[AnalogE::L_STICKR] = _State.Gamepad.sThumbLX;
+		_AnalogValue[AnalogE::L_STICKU] = _State.Gamepad.sThumbLY;
+		_AnalogValue[AnalogE::R_STICKR] = _State.Gamepad.sThumbRX;
+		_AnalogValue[AnalogE::R_STICKU] = _State.Gamepad.sThumbRY;
+
+		int max = 0;
+		for (auto analog : _AnalogValue)
+		{
+			int val = fabs(analog.second);
+			if (max < val)
+			{
+				max = val;
+				_Most = analog.first;
+			}
+		}
 	}
 }
 
@@ -75,12 +82,15 @@ bool XInput::KeyRepeat(int in, float interval)
 	if (IsPressButton(in))
 	{
 		if (IsPushButton(in))
-			return true;
-		//時間加算。
-		_RepeatTimer += Time::DeltaTime();
-		if (_RepeatTimer >= interval)
 		{
-			_RepeatTimer = 0.0f;
+			_RepeatTimer[BUTTON][in] = 0.0f;
+			return true;
+		}
+		//時間加算。
+		_RepeatTimer[BUTTON][in] += Time::DeltaTime();
+		if (_RepeatTimer[BUTTON][in] >= interval)
+		{
+			_RepeatTimer[BUTTON][in] = 0.0f;
 			return true;
 		}
 	}
@@ -98,52 +108,52 @@ bool XInput::IsPushAnalog(AnalogE a)
 
 	switch (a)
 	{
-	case L_TRIGGER:
+	case AnalogE::L_TRIGGER:
 		if (_BeforeState.Gamepad.bLeftTrigger == 0 &&		//押されていない
 			_State.Gamepad.bLeftTrigger > 0)				//今押されている
 			return true;
 		break;
-	case R_TRIGGER:
+	case AnalogE::R_TRIGGER:
 		if (_BeforeState.Gamepad.bRightTrigger == 0 &&		//押されていない
 			_State.Gamepad.bRightTrigger > 0)				//今押されている
 			return true;
 		break;
-	case L_STICKR:
+	case AnalogE::L_STICKR:
 		if (_BeforeState.Gamepad.sThumbLX == 0 &&		//押されていない
 			_State.Gamepad.sThumbLX > 0)				//今押されている
 			return true;
 		break;
-	case L_STICKL:
+	case AnalogE::L_STICKL:
 		if (_BeforeState.Gamepad.sThumbLX == 0 &&		//押されていない
 			_State.Gamepad.sThumbLX < 0)				//今押されている
 			return true;
 		break;
-	case L_STICKU:
+	case AnalogE::L_STICKU:
 		if (_BeforeState.Gamepad.sThumbLY == 0 &&		//押されていない
 			_State.Gamepad.sThumbLY > 0)				//今押されている
 			return true;
 		break; 
-	case L_STICKD:
+	case AnalogE::L_STICKD:
 		if (_BeforeState.Gamepad.sThumbLY == 0 &&		//押されていない
 			_State.Gamepad.sThumbLY < 0)				//今押されている
 			return true;
 		break;
-	case R_STICKR:
+	case AnalogE::R_STICKR:
 		if (_BeforeState.Gamepad.sThumbRX == 0 &&		//押されていない
 			_State.Gamepad.sThumbRX > 0)				//今押されている
 			return true;
 		break;
-	case R_STICKL:
+	case AnalogE::R_STICKL:
 		if (_BeforeState.Gamepad.sThumbRX == 0 &&		//押されていない
 			_State.Gamepad.sThumbRX < 0)				//今押されている
 			return true;
 		break;
-	case R_STICKU:
+	case AnalogE::R_STICKU:
 		if (_BeforeState.Gamepad.sThumbRY == 0 &&		//押されていない
 			_State.Gamepad.sThumbRY > 0)				//今押されている
 			return true;
 		break;
-	case R_STICKD:
+	case AnalogE::R_STICKD:
 		if (_BeforeState.Gamepad.sThumbRY == 0 &&		//押されていない
 			_State.Gamepad.sThumbRY < 0)				//今押されている
 			return true;
@@ -154,95 +164,61 @@ bool XInput::IsPushAnalog(AnalogE a)
 	return false;
 }
 
-bool XInput::IsPressAnalog(AnalogE a)
+bool XInput::IsPressAnalog(AnalogE a, bool exclusive)
 {
+	//反転以外の情報を取得。
+	AnalogE analog = (AnalogE)((int)a & (int)AnalogE::ANALOG);
 	//接続確認
-	if (!IsConnected())
+	if (!IsConnected() || analog != _Most)
 	{
 		return false;
 	}
 
-	switch (a)
+	//反転。
+	if ((int)a & (int)AnalogE::INVERT)
 	{
-	case L_TRIGGER:
-		if (_State.Gamepad.bLeftTrigger > 0)				//今押されている
-			return true;
-		break;
-	case R_TRIGGER:
-		if (_State.Gamepad.bRightTrigger > 0)				//今押されている
-			return true;
-		break;
-	case L_STICKR:
-		if (_State.Gamepad.sThumbLX > 0)				//今押されている
-			return true;
-		break;
-	case L_STICKL:
-		if (_State.Gamepad.sThumbLX < 0)				//今押されている
-			return true;
-		break;
-	case L_STICKU:
-		if (_State.Gamepad.sThumbLY > 0)				//今押されている
-			return true;
-		break;
-	case L_STICKD:
-		if (_State.Gamepad.sThumbLY < 0)				//今押されている
-			return true;
-		break;
-	case R_STICKR:
-		if (_State.Gamepad.sThumbRX > 0)				//今押されている
-			return true;
-		break;
-	case R_STICKL:
-		if (_State.Gamepad.sThumbRX < 0)				//今押されている
-			return true;
-		break;
-	case R_STICKU:
-		if (_State.Gamepad.sThumbRY > 0)				//今押されている
-			return true;
-		break;
-	case R_STICKD:
-		if (_State.Gamepad.sThumbRY < 0)				//今押されている
-			return true;
-		break;
-	default:
-		return false;
+		return (_AnalogValue[analog] < 0);
+	}
+	else
+	{
+		return (_AnalogValue[analog] > 0);
 	}
 	return false;
 }
 
-Vector2 XInput::GetAnalog(AnalogInputE in)
+Vector2 XInput::GetAnalog(AnalogE in)
 {
+	int analog = (int)in;
 	Vector2 value;
-	switch (in)
+	if (analog & (int)AnalogE::TRIGGER)
 	{
-	case TRIGGER:
-		value.x = _State.Gamepad.bRightTrigger;
-		value.y = _State.Gamepad.bLeftTrigger;
-		break;
-	case L_STICK:
-		value.x = _State.Gamepad.sThumbLX;
-		value.y = _State.Gamepad.sThumbLY;
-		break;
-	case R_STICK:
-		value.x = _State.Gamepad.sThumbRX;
-		value.y = _State.Gamepad.sThumbRY;
-		break;
-	default:
-		break;
+		return Vector2(_State.Gamepad.bRightTrigger, _State.Gamepad.bLeftTrigger);
 	}
-	return value;
+	else if (analog & (int)AnalogE::R_STICK)
+	{
+		return Vector2(_State.Gamepad.sThumbRX, _State.Gamepad.sThumbRY);
+	}
+	else if (analog & (int)AnalogE::L_STICK)
+	{
+		return Vector2(_State.Gamepad.sThumbLX, _State.Gamepad.sThumbLY);
+	}
 }
-bool XInput::AnalogRepeat(AnalogE analog, float interval)
+
+bool XInput::AnalogRepeat(AnalogE analog, float interval, bool exclusive)
 {
-	if (IsPressAnalog(analog))
+	int in = (int)analog;
+	if (IsPressAnalog(analog, exclusive))
 	{
 		if (IsPushAnalog(analog))
-			return true;
-		//時間加算。
-		_RepeatTimer += Time::DeltaTime();
-		if (_RepeatTimer >= interval)
 		{
-			_RepeatTimer = 0.0f;
+			_RepeatTimer[ANALOG][in] = 0.0f;
+			return true;
+		}
+		//時間加算。
+		_RepeatTimer[ANALOG][in] += Time::DeltaTime();
+		if (_RepeatTimer[ANALOG][in] >= interval)
+		{
+			_RepeatTimer[ANALOG][in] = 0.0f;
 			return true;
 		}
 	}
