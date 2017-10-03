@@ -91,6 +91,9 @@ void ItemWindow::Init(Item::ItemCodeE code)
 {
 	_ItemCode = code;
 
+	_Dialog = INSTANCE(GameObjectManager)->AddNew<Dialog>("", 9);
+	_Dialog->Init(code);
+
 	switch (_ItemCode)
 	{
 		case Item::ItemCodeE::Item:
@@ -216,165 +219,174 @@ void ItemWindow::Input()
 		}
 	}
 
-	if (itemCount <= 0)
+	_SelectCursor->SetActive(false, true);
+
+	if(itemCount > 0)
 	{
-		_SelectCursor->SetActive(false, true);
-	}
-	else
-	{
-		_SelectCursor->SetActive(true, true);
-
-		static float ChangeTime = 0.5f;
-		static float LocalTime = 0.0f;
-
-		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
-		LStick /= 32767.0f;
-		if (LStick.y >= 0.2f)
+		if (!_Dialog->GetActive())
 		{
-			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+			_SelectCursor->SetActive(true, true);
+
+			static float ChangeTime = 0.5f;
+			static float LocalTime = 0.0f;
+
+			Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
+			LStick /= 32767.0f;
+			if (LStick.y >= 0.2f)
 			{
-				if (_NowSelectItem <= 0)
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 				{
-					if (_StartLoadCount > 0)
+					if (_NowSelectItem <= 0)
 					{
-						_StartLoadCount--;
+						if (_StartLoadCount > 0)
+						{
+							_StartLoadCount--;
+						}
+						else
+						{
+							_StartLoadCount = max(0, itemCount - ItemCellSize);
+							_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+						}
 					}
 					else
 					{
-						_StartLoadCount = max(0, itemCount - ItemCellSize);
-						_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+						_NowSelectItem = max(0, _NowSelectItem - 1);
 					}
+					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 				}
-				else
+				LocalTime += Time::DeltaTime();
+				if (LocalTime >= ChangeTime)
 				{
-					_NowSelectItem = max(0, _NowSelectItem - 1);
-				}
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			}
-			LocalTime += Time::DeltaTime();
-			if (LocalTime >= ChangeTime)
-			{
-				if (_NowSelectItem <= 0)
-				{
-					if (_StartLoadCount > 0)
+					if (_NowSelectItem <= 0)
 					{
-						_StartLoadCount--;
+						if (_StartLoadCount > 0)
+						{
+							_StartLoadCount--;
+						}
+						else
+						{
+							_StartLoadCount = max(0, itemCount - ItemCellSize);
+							_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+						}
 					}
 					else
 					{
-						_StartLoadCount = max(0, itemCount - ItemCellSize);
-						_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+						_NowSelectItem = max(0, _NowSelectItem - 1);
 					}
-				}
-				else
-				{
-					_NowSelectItem = max(0, _NowSelectItem - 1);
-				}
-				LocalTime = 0.0f;
-				ChangeTime = 0.01f;
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			}
-		}
-		else if (LStick.y <= -0.2f)
-		{
-
-			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
-			{
-				if (_NowSelectItem >= ItemCellSize - 1)
-				{
-					if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-					{
-						_StartLoadCount++;
-					}
-					else
-					{
-						_StartLoadCount = 0;
-						_NowSelectItem = 0;
-					}
-				}
-				else if (_NowSelectItem >= itemCount - 1)
-				{
-					_NowSelectItem = 0;
-				}
-				else
-				{
-					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-				}
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			}
-			LocalTime += Time::DeltaTime();
-			if (LocalTime >= ChangeTime)
-			{
-				if (_NowSelectItem >= ItemCellSize - 1)
-				{
-					if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-					{
-						_StartLoadCount++;
-					}
-					else
-					{
-						_StartLoadCount = 0;
-						_NowSelectItem = 0;
-					}
-				}
-				else if (_NowSelectItem >= itemCount - 1)
-				{
-					_NowSelectItem = 0;
-				}
-				else
-				{
-					_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-				}
-				LocalTime = 0.0f;
-				ChangeTime = 0.01f;
-				_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			}
-		}
-		else
-		{
-			ChangeTime = 0.5f;
-			LocalTime = 0.0f;
-		}
-
-		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-		{
-			if (_ItemCode != Item::ItemCodeE::Item)
-			{
-				_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
-			}
-			else if (_ItemCode == Item::ItemCodeE::Item)
-			{
-				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-				item->UseItem();
-				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
-				itemCount = 0;
-				for (auto& item : itemList)
-				{
-					if (item != nullptr)
-					{
-						itemCount += 1;
-					}
-				}
-				if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
-				{
-					//表示位置を一個さげる.
-					_StartLoadCount--;
-				}
-				else if (_NowSelectItem >= itemCount)
-				{
-					//選択位置を一個下げる.
-					_NowSelectItem = max(0, _NowSelectItem - 1);
-				}
-				if (itemCount <= 0)
-				{
-					_SelectCursor->transform->SetParent(nullptr);
-					_SelectCursor->SetActive(false, true);
-				}
-				else
-				{
+					LocalTime = 0.0f;
+					ChangeTime = 0.01f;
 					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 				}
 			}
+			else if (LStick.y <= -0.2f)
+			{
+
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+				{
+					if (_NowSelectItem >= ItemCellSize - 1)
+					{
+						if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+						{
+							_StartLoadCount++;
+						}
+						else
+						{
+							_StartLoadCount = 0;
+							_NowSelectItem = 0;
+						}
+					}
+					else if (_NowSelectItem >= itemCount - 1)
+					{
+						_NowSelectItem = 0;
+					}
+					else
+					{
+						_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+					}
+					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
+				LocalTime += Time::DeltaTime();
+				if (LocalTime >= ChangeTime)
+				{
+					if (_NowSelectItem >= ItemCellSize - 1)
+					{
+						if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+						{
+							_StartLoadCount++;
+						}
+						else
+						{
+							_StartLoadCount = 0;
+							_NowSelectItem = 0;
+						}
+					}
+					else if (_NowSelectItem >= itemCount - 1)
+					{
+						_NowSelectItem = 0;
+					}
+					else
+					{
+						_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+					}
+					LocalTime = 0.0f;
+					ChangeTime = 0.01f;
+					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
+			}
+			else
+			{
+				ChangeTime = 0.5f;
+				LocalTime = 0.0f;
+			}
+
+
+			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+			{
+				_Dialog->Enable(_Item2DList[_NowSelectItem]);
+			}
+
+		}
+		else
+		{
+			Dialog::DialogCommand commang = _Dialog->InputUpdate();
+
+			//if (_ItemCode != Item::ItemCodeE::Item)
+			//{
+			//	_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+			//}
+			//else if (_ItemCode == Item::ItemCodeE::Item)
+			//{
+			//	ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+			//	item->UseItem();
+			//	INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
+			//	itemCount = 0;
+			//	for (auto& item : itemList)
+			//	{
+			//		if (item != nullptr)
+			//		{
+			//			itemCount += 1;
+			//		}
+			//	}
+			//	if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
+			//	{
+			//		//表示位置を一個さげる.
+			//		_StartLoadCount--;
+			//	}
+			//	else if (_NowSelectItem >= itemCount)
+			//	{
+			//		//選択位置を一個下げる.
+			//		_NowSelectItem = max(0, _NowSelectItem - 1);
+			//	}
+			//	if (itemCount <= 0)
+			//	{
+			//		_SelectCursor->transform->SetParent(nullptr);
+			//		_SelectCursor->SetActive(false, true);
+			//	}
+			//	else
+			//	{
+			//		_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			//	}
+			//}
 		}
 
 		if (itemCount > ItemCellSize) {

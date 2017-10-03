@@ -7,7 +7,6 @@
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Scene\GameScene.cpp">
       <Filter>Scene</Filter>
@@ -249,12 +248,14 @@
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
     <ClCompile Include="BuffDebuffICon.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateSpeak.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp">
+    <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\Dialog.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
   </ItemGroup>
@@ -263,7 +264,6 @@
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameSystem.h" />
-    <ClInclude Include="Ocean.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Scene\GameScene.h">
@@ -519,12 +519,14 @@
     <ClInclude Include="GameObject\Component\ParticleEffect.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
     <ClInclude Include="BuffDebuffICon.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateSpeak.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h">
+    <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
+    <ClInclude Include="GameObject\StatusWindow\Dialog.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
   </ItemGroup>

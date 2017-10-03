@@ -11,6 +11,8 @@
 #include"ParameterRender.h"
 #include"HoldItem2D.h"
 
+#include"Dialog.h"
+
 /**
 * アイテム表示画面クラス.
 */
@@ -193,6 +195,8 @@ private:
 	/** 装備アイテムリスト. */
 	vector<HoldItem2D*> _HoldItem2DList;
 
+	/** ダイアログ. */
+	Dialog* _Dialog = nullptr;
 
 	static const char* IconTextureNameList[static_cast<int>(IconIndex::MAX)];
 };
