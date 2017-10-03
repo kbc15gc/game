@@ -42,12 +42,12 @@ public:
 	{
 		if (dir == 0)
 		{
-			_ItemName->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+			_ItemName->SetAnchor(fbText::TextAnchorE::UpperLeft);
 			_ItemName->transform->SetLocalPosition(30.0f, -15.0f, 0.0f);
 		}
 		else
 		{
-			_ItemName->SetAnchor(fbText::TextAnchorE::MiddleRight);
+			_ItemName->SetAnchor(fbText::TextAnchorE::UpperRight);
 			_ItemName->transform->SetLocalPosition(-30.0f, -15.0f, 0.0f);
 		}
 	}

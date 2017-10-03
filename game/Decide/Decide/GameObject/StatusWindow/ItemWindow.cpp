@@ -28,23 +28,23 @@ const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = 
 */
 void ItemWindow::Awake()
 {
-	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", StatusWindow::WindowBackPriorty + 1);
-	itemWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
-	itemWindow->SetSize(Vector2(495.0f, 580.0f));
-	itemWindow->SetPivot(0.0f, 0.5f);
-	itemWindow->transform->SetParent(transform);
-	itemWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
+	_ItemBackWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", StatusWindow::WindowBackPriorty + 1);
+	_ItemBackWindow->SetTexture(LOADTEXTURE("UI/Panel5.png"));
+	_ItemBackWindow->SetSize(Vector2(495.0f, 580.0f));
+	_ItemBackWindow->SetPivot(0.0f, 0.5f);
+	_ItemBackWindow->transform->SetParent(transform);
+	_ItemBackWindow->transform->SetLocalPosition(Vector3(0.0f, 47.0f, 0.0f));
 
 	_WindowName = INSTANCE(GameObjectManager)->AddNew<TextObject>("WindowName", StatusWindow::WindowBackPriorty + 2);
 	_WindowName->Initialize(L"", 30.0f);
-	_WindowName->SetAnchor(fbText::TextAnchorE::MiddleCenter);
+	_WindowName->SetAnchor(fbText::TextAnchorE::UpperCenter);
 	_WindowName->transform->SetParent(transform);
 	_WindowName->transform->SetLocalPosition(Vector3(250.0f, -235.0f, 0.0f));
 
 	for (int i = 0; i < ItemCellSize; i++)
 	{
 		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", StatusWindow::WindowBackPriorty + 3);
-		item2D->transform->SetParent(itemWindow->transform);
+		item2D->transform->SetParent(_ItemBackWindow->transform);
 		item2D->transform->SetLocalPosition(Vector3(270.0f, -190.0f + (i * 52.0f), 0.0f));
 		_Item2DList.push_back(item2D);
 	}
@@ -81,7 +81,7 @@ void ItemWindow::Awake()
 	_EIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("EIconImage", StatusWindow::WindowBackPriorty + 3);
 	_EIconImage->SetTexture(LOADTEXTURE("UI/E.png"));
 	_EIconImage->SetSize(Vector2(30, 30));
-	_EIconImage->SetActive(false);
+	_EIconImage->SetActive(false, true);
 
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
@@ -93,6 +93,9 @@ void ItemWindow::Awake()
 void ItemWindow::Init(Item::ItemCodeE code)
 {
 	_ItemCode = code;
+
+	_Dialog = INSTANCE(GameObjectManager)->AddNew<Dialog>("", 9);
+	_Dialog->Init(code);
 
 	switch (_ItemCode)
 	{
@@ -181,7 +184,6 @@ void ItemWindow::Update()
 	{
 		if (itemList.size() > i + _StartLoadCount && itemList[i + _StartLoadCount] != nullptr)
 		{
-			_Item2DList[i]->SetActive(true, true);
 			_Item2DList[i]->SetItemData(itemList[i + _StartLoadCount]);
 
 			if (_ItemCode != Item::ItemCodeE::Item)
@@ -189,15 +191,15 @@ void ItemWindow::Update()
 				HoldEquipment* item = (HoldEquipment*)itemList[i + _StartLoadCount];
 				if (item->GetIsEquip())
 				{
-					_EIconImage->SetActive(true, false);
-					_EIconImage->transform->SetParent(_Item2DList[i]->transform);
+					_EIconImage->SetActive(true, true);
+					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition());
 					_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
 				}
 			}
 		}
 		else
 		{
-			_Item2DList[i]->SetActive(false, true);
+			_Item2DList[i]->SetItemData(nullptr);
 		}
 	}
 
@@ -222,156 +224,77 @@ void ItemWindow::Input()
 	_Cursor->SetMax(itemCount);
 	if (itemCount <= 0)
 	{
-		//_SelectCursor->SetActive(false, true);
 		_Cursor->SetActive(false, false);
 	}
 	else
 	{
-		//_SelectCursor->SetActive(true, true);
 		_Cursor->SetActive(true, true);
 
 		static float ChangeTime = 0.5f;
 		static float LocalTime = 0.0f;
 
-		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
-		LStick /= 32767.0f;
-		if (LStick.y >= 0.2f)
+		if (!_Dialog->GetActive())
 		{
-			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+			Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
+			LStick /= 32767.0f;
+			if (LStick.y >= 0.2f)
 			{
-				//if (_NowSelectItem <= 0)
-				//{
-				//	if (_StartLoadCount > 0)
-				//	{
-				//		_StartLoadCount--;
-				//	}
-				//	else
-				//	{
-				//		_StartLoadCount = max(0, itemCount - ItemCellSize);
-				//		_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
-				//	}
-				//}
-				//else
-				//{
-				//	_NowSelectItem = max(0, _NowSelectItem - 1);
-				//}
-
-				Cursor::CursorIndex index = _Cursor->PrevMove(1);
-				_NowSelectItem = index.rangeIndex;
-				_StartLoadCount = index.offset;
-				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+				{
+					Cursor::CursorIndex index = _Cursor->PrevMove(1);
+					_NowSelectItem = index.rangeIndex;
+					_StartLoadCount = index.offset;
+					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
+				LocalTime += Time::DeltaTime();
+				if (LocalTime >= ChangeTime)
+				{
+					LocalTime = 0.0f;
+					ChangeTime = 0.01f;
+					Cursor::CursorIndex index = _Cursor->PrevMove(1);
+					_NowSelectItem = index.rangeIndex;
+					_StartLoadCount = index.offset;
+					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
 			}
-			LocalTime += Time::DeltaTime();
-			if (LocalTime >= ChangeTime)
+			else if (LStick.y <= -0.2f)
 			{
-				//if (_NowSelectItem <= 0)
-				//{
-				//	if (_StartLoadCount > 0)
-				//	{
-				//		_StartLoadCount--;
-				//	}
-				//	else
-				//	{
-				//		_StartLoadCount = max(0, itemCount - ItemCellSize);
-				//		_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
-				//	}
-				//}
-				//else
-				//{
-				//	_NowSelectItem = max(0, _NowSelectItem - 1);
-				//}
-
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+				{
+					Cursor::CursorIndex index = _Cursor->NextMove(1);
+					_NowSelectItem = index.rangeIndex;
+					_StartLoadCount = index.offset;
+					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
+	
+				LocalTime += Time::DeltaTime();
+				if (LocalTime >= ChangeTime)
+				{
+					
+					LocalTime = 0.0f;
+					ChangeTime = 0.01f;
+					Cursor::CursorIndex index = _Cursor->NextMove(1);
+					_NowSelectItem = index.rangeIndex;
+					_StartLoadCount = index.offset;
+					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
+			}
+			else
+			{
 				LocalTime = 0.0f;
-				ChangeTime = 0.01f;
-				Cursor::CursorIndex index = _Cursor->PrevMove(1);
-				_NowSelectItem = index.rangeIndex;
-				_StartLoadCount = index.offset;
-				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				ChangeTime = 0.5f;
 			}
-		}
-		else if (LStick.y <= -0.2f)
-		{
 
-			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 			{
-				//if (_NowSelectItem >= ItemCellSize - 1)
-				//{
-				//	if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-				//	{
-				//		_StartLoadCount++;
-				//	}
-				//	else
-				//	{
-				//		_StartLoadCount = 0;
-				//		_NowSelectItem = 0;
-				//	}
-				//}
-				//else if (_NowSelectItem >= itemCount - 1)
-				//{
-				//	_NowSelectItem = 0;
-				//}
-				//else
-				//{
-				//	_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-				//}
-
-				Cursor::CursorIndex index = _Cursor->NextMove(1);
-				_NowSelectItem = index.rangeIndex;
-				_StartLoadCount = index.offset;
-				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			}
-			LocalTime += Time::DeltaTime();
-			if (LocalTime >= ChangeTime)
-			{
-				//if (_NowSelectItem >= ItemCellSize - 1)
-				//{
-				//	if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-				//	{
-				//		_StartLoadCount++;
-				//	}
-				//	else
-				//	{
-				//		_StartLoadCount = 0;
-				//		_NowSelectItem = 0;
-				//	}
-				//}
-				//else if (_NowSelectItem >= itemCount - 1)
-				//{
-				//	_NowSelectItem = 0;
-				//}
-				//else
-				//{
-				//	_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-				//}
-				LocalTime = 0.0f;
-				ChangeTime = 0.01f;
-				Cursor::CursorIndex index = _Cursor->NextMove(1);
-				_NowSelectItem = index.rangeIndex;
-				_StartLoadCount = index.offset;
-				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			}
-		}
-		else
-		{
-			ChangeTime = 0.5f;
-			LocalTime = 0.0f;
-		}
-
-		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-		{
-			if (_ItemCode != Item::ItemCodeE::Item)
-			{
+				_Dialog->Enable(_Item2DList[_NowSelectItem]);
 				_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
 			}
 			else if (_ItemCode == Item::ItemCodeE::Item)
 			{
-				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-				item->UseItem();
-				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
+				//ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+				//item->UseItem();
+				//INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);
 				itemCount = 0;
 				for (auto& item : itemList)
 				{
@@ -407,6 +330,48 @@ void ItemWindow::Input()
 				}
 			}
 		}
+		else
+		{
+			Dialog::DialogCommand commang = _Dialog->InputUpdate();
+
+			//if (_ItemCode != Item::ItemCodeE::Item)
+			//{
+			//	_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+			//}
+			//else if (_ItemCode == Item::ItemCodeE::Item)
+			//{
+			//	ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+			//	item->UseItem();
+			//	INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
+			//	itemCount = 0;
+			//	for (auto& item : itemList)
+			//	{
+			//		if (item != nullptr)
+			//		{
+			//			itemCount += 1;
+			//		}
+			//	}
+			//	if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
+			//	{
+			//		//表示位置を一個さげる.
+			//		_StartLoadCount--;
+			//	}
+			//	else if (_NowSelectItem >= itemCount)
+			//	{
+			//		//選択位置を一個下げる.
+			//		_NowSelectItem = max(0, _NowSelectItem - 1);
+			//	}
+			//	if (itemCount <= 0)
+			//	{
+			//		_SelectCursor->transform->SetParent(nullptr);
+			//		_SelectCursor->SetActive(false, true);
+			//	}
+			//	else
+			//	{
+			//		_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			//	}
+			//}
+		}
 
 		if (itemCount > ItemCellSize) {
 			// 所持枠を埋めているアイテムが表示限界枠より多い。
@@ -414,7 +379,7 @@ void ItemWindow::Input()
 			if (_StartLoadCount > 0) {
 				// 一番上に表示されているアイテムがアイテムリストの先頭ではない。
 
-				_UpArrow->SetActive(true,true);
+				_UpArrow->SetActive(true, true);
 			}
 			else {
 				_UpArrow->SetActive(false, false);
@@ -527,9 +492,9 @@ void ItemWindow::_ConfigParamRender()
 		case Item::ItemCodeE::Item:
 		{
 			int playerLevel = _Player->GetParam(CharacterParameter::Param::LV);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::LV)]), playerLevel, fbText::TextAnchorE::MiddleLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::HP)]), _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::MiddleLeft);
-			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MP)]), _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::MiddleLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->SetParam("LV", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::LV)]), playerLevel, fbText::TextAnchorE::UpperLeft, 40.0f, Vector2(40.0f, 40.0f),50.0f);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->SetParamMax("HP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::HP)]), _Player->GetParam(CharacterParameter::Param::HP), _Player->GetMaxHP(),fbText::TextAnchorE::UpperLeft);
+			_ParameterRenderList[static_cast<int>(CIShowStatus::MP)]->SetParamMax("MP", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MP)]), _Player->GetParam(CharacterParameter::Param::MP), _Player->GetMaxMP(), fbText::TextAnchorE::UpperLeft);
 			_ParameterRenderList[static_cast<int>(CIShowStatus::ATK)]->SetParamBuff("ATK", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::ATK)]), _Player->GetParam(CharacterParameter::Param::ATK), _Player->GetBuffParam(CharacterParameter::Param::ATK) - _Player->GetDebuffParam(CharacterParameter::Param::ATK));
 			_ParameterRenderList[static_cast<int>(CIShowStatus::MAT)]->SetParamBuff("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]), _Player->GetParam(CharacterParameter::Param::MAT), _Player->GetBuffParam(CharacterParameter::Param::MAT) - _Player->GetDebuffParam(CharacterParameter::Param::MAT));
 			_ParameterRenderList[static_cast<int>(CIShowStatus::DEF)]->SetParamBuff("DEF", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEF)]), _Player->GetParam(CharacterParameter::Param::DEF), _Player->GetBuffParam(CharacterParameter::Param::DEF) - _Player->GetDebuffParam(CharacterParameter::Param::DEF));

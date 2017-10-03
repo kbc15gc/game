@@ -250,7 +250,7 @@ namespace fbPhysicsCallback
 			//自身と衝突したか？ &&
 			//属性が合わなかった
 			if (convexResult.m_hitCollisionObject == _me ||
-				(_attribute & convexResult.m_hitCollisionObject->getUserIndex()) == 0)
+				(_attribute & convexResult.m_hitCollisionObject->getUserIndex()) > 0)
 			{
 				//ヒットしなかった。
 				return 0.0f;
@@ -275,7 +275,7 @@ namespace fbPhysicsCallback
 			return 0.0f;
 		}
 	private:
-		int _attribute;										//指定したコリジョン属性とのみ当たり判定をとる。
+		int _attribute;										//指定したコリジョン属性との当たり判定を無視する。
 		float _dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 		Vector3 _startPos = Vector3::zero;					//レイの始点。
 		const btCollisionObject* _me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。

@@ -87,6 +87,12 @@ public:
 	//歴史書から指定されたページを削除
 	void PutOutPage(LocationCodeE location, vector<HistoryPage*>& list);
 
+	//NPCへのポインタを管理しているベクターを取得。
+	vector<vector<NPC*>> GetNPCList()
+	{
+		return _NPCList;
+	}
+
 private:
 	
 	/**
@@ -146,7 +152,8 @@ private:
 
 	/** 全場所の歴史によって出されたオブジェクトへのポインタリスト. */
 	vector<vector<GameObject*>> _GameObjectList;
-
+	//NPCへのポインタをまとめたもの。
+	vector<vector<NPC*>> _NPCList;
 	/** ヒストリ―メニュークラスのポインタ. */
 	HistoryMenu* _HistoryMenu = nullptr;
 

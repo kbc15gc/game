@@ -18,6 +18,7 @@
 #include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
+#include "GameObject\Component\BuffDebuffICon.h"
 
 class SkinModel;
 class Animation;
@@ -154,8 +155,6 @@ public:
 	}
 	//プレイヤー解放
 	void Releace();
-	//プレイヤー走る処理。
-	void Run();
 	//敵が落とした物(経験値、お金)を受け取る。
 	void TakeDrop(int dropexp, int money)
 	{

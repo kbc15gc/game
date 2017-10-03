@@ -24,7 +24,7 @@ ShopS_Confirmation::ShopS_Confirmation(Shop * shop) : IShopState(shop)
 	_Text->SetText("はい\nいいえ");
 	_Text->SetFontSize(50);
 	_Text->transform->SetParent(_ConfirmationWindow->transform);
-	_Text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_Text->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	_Text->transform->SetLocalPosition(Vector3(-_Text->GetLength().x/2, -40, 0));
 
 	//ウィンドウを非アクティブに

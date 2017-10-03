@@ -3,7 +3,6 @@
 #include "fbEngine\_Object\_Component\_Physics\GostCollision.h"
 #include "fbEngine\_Object\_Component\_Physics\SphereCollider.h"
 #include "GameObject\Component\ParticleEffect.h"
-#include "BuffDebuffICon.h"
 #include"GameObject\Enemy\EnemyCharacter.h"
 
 namespace {

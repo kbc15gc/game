@@ -28,6 +28,8 @@ HistoryManager::HistoryManager()
 		//vectorを追加
 		vector<GameObject*> list;
 		_GameObjectList.push_back(list);
+		vector<NPC*> npcs;
+		_NPCList.push_back(npcs);
 	}
 
 	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
@@ -122,6 +124,12 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 		INSTANCE(GameObjectManager)->AddRemoveList(it);
 	}
 	_GameObjectList[(int)location].clear();
+	//前のNPCを削除
+	for (auto& it : _NPCList[(int)location])
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(it);
+	}
+	_NPCList[(int)location].clear();
 
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
@@ -245,12 +253,15 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
 					BoxCollider* box = obj->AddComponent<BoxCollider>();
 					RigidBody* coll = obj->AddComponent<RigidBody>();
+
 					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
 					RigidBodyInfo Rinfo;
 					Rinfo.physicsType = Collision::PhysicsType::Static;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
-					Rinfo.id = Collision_ID::BUILDING;
+					//カメラと当たらないコリジョンかどうか？
+					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+					//Rinfo.id = Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA;
 					Rinfo.offset = info->pos;
 					/*Quaternion q; /*q.SetEuler(info->ang);*/
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
@@ -260,13 +271,6 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
 					coll->Create(Rinfo, true);
-
-					//カメラと当たらないコリジョンかどうか？
-					if ((bool)info->hitcamera)
-					{
-						//コリジョンの属性に「カメラと当たらない」を追加する
-						//未実装。
-					}
 				}
 				else
 				{
@@ -299,7 +303,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		//管理用の配列に追加。
 		if (location >= 0)
 		{
-			_GameObjectList[location].push_back(npc);
+			_NPCList[location].push_back(npc);
 		}
 	}
 	//いらんので破棄。
