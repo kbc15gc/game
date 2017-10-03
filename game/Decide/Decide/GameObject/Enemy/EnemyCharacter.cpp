@@ -282,7 +282,8 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 				abort();
 			}
 #endif //  _DEBUG
-
+			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), -info->effectValue[idx], info->time);
+			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 		}
 	}
 
@@ -375,17 +376,6 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	else {
 		_damage = 0;
 	}
-}
-
-bool EnemyCharacter::ItemEffect(Item::ItemInfo* info) {
-	for (int idx = CharacterParameter::Param::ATK; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
-		_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), -info->effectValue[idx], info->time);
-		if () {
-			
-			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
-		}
-	}
-	return true;
 }
 
 /**
