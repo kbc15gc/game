@@ -255,11 +255,11 @@
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
-    <ClCompile Include="GameObject\StatusWindow\Dialog.cpp">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Cursor.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\Dialog.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
   </ItemGroup>
@@ -530,11 +530,11 @@
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
-    <ClInclude Include="GameObject\StatusWindow\Dialog.h">
-      <Filter>GameObject\StatusWindow</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\StatusWindow\Cursor.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\Dialog.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
   </ItemGroup>

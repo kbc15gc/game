@@ -162,6 +162,8 @@ private:
 	/** セルサイズ. */
 	static const int ItemCellSize = 8;
 
+	ImageObject* _ItemBackWindow = nullptr;
+
 	/** ウィンドウ名表示. */
 	TextObject* _WindowName = nullptr;
 

@@ -74,6 +74,6 @@ Dialog::DialogCommand Dialog::InputUpdate()
 void Dialog::Enable(Item2D * item)
 {
 	SetActive(true, true);
-	transform->SetParent(item->transform);
+	transform->SetLocalPosition(item->transform->GetPosition());
 	_Item = item->GetItemData();
 }

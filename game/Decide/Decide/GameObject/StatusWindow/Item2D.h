@@ -47,6 +47,9 @@ private:
 
 	HoldItemBase* _ItemData = nullptr;
 
+	/** 背景. */
+	ImageObject* _BackWindow = nullptr;
+
 	/** アイテム名表示. */
 	TextObject* _ItemNameText = nullptr;
 
