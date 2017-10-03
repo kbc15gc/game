@@ -32,11 +32,11 @@ public:
 	void UpdateWolrdMatrix();
 
 	// 右方向のベクトル取得。
-	Vector3 Transform::GetRight();
+	const Vector3& GetRight();
 	// 上方向のベクトル取得。
-	Vector3 Transform::GetUp();
+	const Vector3& GetUp();
 	//前向きのベクトル取得。
-	Vector3 GetForward();
+	const Vector3& GetForward();
 	//受け取ったベクトルをこいつから見た向きに変換
 	Vector3 Direction(const Vector3& v);
 	//ローカルな位置に変換(回転込み)
@@ -134,4 +134,7 @@ private:
 	Quaternion _LocalRotation;	//ローカル回転（クウォータニオン）
 	D3DXMATRIX _RotateMatrix;	//回転行列
 	D3DXMATRIX _WorldMatrix;	//ワールド行列
+	Vector3 _Right;				//ワールド座標での右方向。
+	Vector3 _Up;				//ワールド座標での上方向。
+	Vector3 _Forward;			//ワールド座標での前方向。
 };
