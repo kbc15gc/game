@@ -12,11 +12,12 @@ enum Collision_ID
 	GROUND = fbCollisionAttributeE::GROUND,
 	PLAYER = fbCollisionAttributeE::CHARACTER,
 	ENEMY = BIT(3),
-	BOSS = BIT(4),
+	NOTHITCAMERA = BIT(4),
 	ATTACK = BIT(5),
 	SPACE = BIT(6),
 	BUILDING = BIT(7),
 	ITEMRANGE = BIT(8),
+
 };
 
 

@@ -140,7 +140,7 @@ void PlayerCamera::Move()
 	to = from + dist;
 	//レイを飛ばす
 	// 衝突を無視する属性を減算。
-	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK) & ~(Collision_ID::PLAYER) & ~(Collision_ID::ENEMY) & ~(Collision_ID::BOSS);
+	int attri = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::ATTACK) & ~(Collision_ID::PLAYER) & ~(Collision_ID::ENEMY) & ~(Collision_ID::NOTHITCAMERA);
 	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere, from, to, attri);
 	//移動先ポジション
 	Vector3 next;

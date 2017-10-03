@@ -245,12 +245,14 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
 					BoxCollider* box = obj->AddComponent<BoxCollider>();
 					RigidBody* coll = obj->AddComponent<RigidBody>();
+
 					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
 					RigidBodyInfo Rinfo;
 					Rinfo.physicsType = Collision::PhysicsType::Static;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
-					Rinfo.id = Collision_ID::BUILDING;
+					//カメラと当たらないコリジョンかどうか？
+					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
 					Rinfo.offset = info->pos;
 					/*Quaternion q; /*q.SetEuler(info->ang);*/
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
@@ -260,13 +262,6 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
 					coll->Create(Rinfo, true);
-
-					//カメラと当たらないコリジョンかどうか？
-					if ((bool)info->hitcamera)
-					{
-						//コリジョンの属性に「カメラと当たらない」を追加する
-						//未実装。
-					}
 				}
 				else
 				{
