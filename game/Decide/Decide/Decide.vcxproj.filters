@@ -248,7 +248,6 @@
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="BuffDebuffICon.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateSpeak.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
@@ -259,6 +258,9 @@
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Cursor.cpp">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Component\BuffDebuffICon.cpp">
+      <Filter>GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -521,7 +523,6 @@
     <ClInclude Include="GameObject\Component\ParticleEffect.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="BuffDebuffICon.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateSpeak.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
@@ -532,6 +533,9 @@
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\StatusWindow\Cursor.h">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Component\BuffDebuffICon.h">
+      <Filter>GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,7 @@
 #include "HFSM\EnemyThreatState.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
+#include "GameObject\Component\BuffDebuffICon.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -165,9 +166,12 @@ void EnemyCharacter::_BarRenderUpdate() {
 		float distance = 60.0f;
 		if (Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length() <= distance) {
 			_MyComponent.HPBar->RenderEnable();
+			_MyComponent.BuffDebuffICon->RenderEnable();
 		}
 		else {
 			_MyComponent.HPBar->RenderDisable();
+			_MyComponent.BuffDebuffICon->RenderDisable();
+
 		}
 	}
 }
@@ -192,6 +196,9 @@ void EnemyCharacter::_BuildMyComponents() {
 
 	// パーティクルエフェクトコンポーネント追加。
 	_MyComponent.ParticleEffect = AddComponent<ParticleEffect>();
+
+	// バフデバフアイコンコンポーネント追加。
+	_MyComponent.BuffDebuffICon = AddComponent<BuffDebuffICon>();
 }
 
 void EnemyCharacter::_BuildCollision() {
@@ -267,6 +274,8 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 				abort();
 			}
 #endif //  _DEBUG
+			_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
+			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
 
 		}

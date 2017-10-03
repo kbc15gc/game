@@ -157,7 +157,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
-    <ClInclude Include="BuffDebuffICon.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\AttackValue2D.h" />
@@ -166,6 +165,7 @@
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
     <ClInclude Include="GameObject\Camera\ThirdPersonCamera.h" />
     <ClInclude Include="GameObject\Component\AnimationEvent.h" />
+    <ClInclude Include="GameObject\Component\BuffDebuffICon.h" />
     <ClInclude Include="GameObject\Component\CharacterParameter.h" />
     <ClInclude Include="GameObject\Component\ObjectRotation.h" />
     <ClInclude Include="GameObject\Component\ObjectSpawn.h" />
@@ -258,7 +258,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
-    <ClCompile Include="BuffDebuffICon.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\AttackValue2D.cpp" />
@@ -267,6 +266,7 @@
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
     <ClCompile Include="GameObject\Camera\ThirdPersonCamera.cpp" />
     <ClCompile Include="GameObject\Component\AnimationEvent.cpp" />
+    <ClCompile Include="GameObject\Component\BuffDebuffICon.cpp" />
     <ClCompile Include="GameObject\Component\CharacterParameter.cpp" />
     <ClCompile Include="GameObject\Component\ObjectRotation.cpp" />
     <ClCompile Include="GameObject\Component\ObjectSpawn.cpp" />

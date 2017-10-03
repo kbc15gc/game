@@ -17,6 +17,7 @@ class Animation;
 class EnemyState;
 class EnemyAttack;
 class ParticleEffect;
+class BuffDebuffICon;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -70,6 +71,8 @@ private:
 		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
 		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる関数。
 		ParticleEffect* ParticleEffect = nullptr;	// パーティクルエフェクト。
+		BuffDebuffICon*	BuffDebuffICon = nullptr;	// バフデバフアイコン。
+
 	};
 
 	struct CollisionInfo {
@@ -256,7 +259,6 @@ public:
 		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6 ,false,false);
 	}
 
-
 	// モデルファイルのパスを設定。
 	inline void SetFileName(const char* name) {
 		if (strlen(name) >= FILENAME_MAX) {
@@ -375,7 +377,6 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
-
 
 protected:
 	// ステート切り替え関数。

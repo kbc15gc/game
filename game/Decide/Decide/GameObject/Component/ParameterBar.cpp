@@ -386,7 +386,7 @@ void BarAdapter::_BreakEvent() {
 void BarAdapter::_ToScreenPos() {
 	if (!_isHud) {
 		// HUDとして使用せず、キャラクターの座標系を用いて周辺に表示する。
-
+		
 		// スクリーン座標系に変換して再設定。
 		_BarFrame->transform->SetPosition(Vector3(INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(transform->GetPosition()), 0.0f));
 	}

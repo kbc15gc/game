@@ -8,7 +8,7 @@
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
-#include "BuffDebuffICon.h"
+#include "GameObject\Component\BuffDebuffICon.h"
 
 namespace
 {
@@ -134,10 +134,7 @@ void Player::Awake()
 	_ParticleEffect = AddComponent<ParticleEffect>();
 
 	//バフデバフアイコン。
-	_BuffDebuffICon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
-
-	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
-	Re_SetEquipment();
+	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
 }
 
 void Player::Start()
@@ -182,6 +179,9 @@ void Player::Start()
 		_LevelUpSprite->SetEnable(true);
 		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
 	}*/
+
+	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
+	Re_SetEquipment();
 }
 
 void Player::Update()
@@ -521,6 +521,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 #endif //  _DEBUG
 
 			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			returnValue = true;
 		}
@@ -536,6 +537,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			}
 #endif //  _DEBUG
 			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			returnValue = true;
 		}
