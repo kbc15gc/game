@@ -58,8 +58,7 @@ void AttackCollision::DetectionCollision() {
 				break;
 			}
 			else if (collisions[idx]->getUserIndex() != Collision_ID::PLAYER && 
-				collisions[idx]->getUserIndex() != Collision_ID::ENEMY &&
-				collisions[idx]->getUserIndex() != Collision_ID::BOSS) {
+				collisions[idx]->getUserIndex() != Collision_ID::ENEMY) {
 				// コールバックを呼ばないコリジョンだった。
 				collisions.remove(collisions[idx]);
 			}

@@ -168,6 +168,13 @@ void Transform::UpdateWolrdMatrix()
 	//ワールド行列設定
 	_WorldMatrix = Scale * _RotateMatrix * Pos;
 
+	_Right = Vector3(_WorldMatrix.m[0][0], _WorldMatrix.m[0][1], _WorldMatrix.m[0][2]);
+	_Right.Normalize();
+	_Up = Vector3(_WorldMatrix.m[1][0], _WorldMatrix.m[1][1], _WorldMatrix.m[1][2]);
+	_Up.Normalize();
+	_Forward = Vector3(_WorldMatrix.m[2][0], _WorldMatrix.m[2][1], _WorldMatrix.m[2][2]);
+	_Forward.Normalize();
+
 	//子も更新する
 	for each (Transform* t in _Children)
 	{
@@ -175,25 +182,19 @@ void Transform::UpdateWolrdMatrix()
 	}
 }
 
-Vector3 Transform::GetRight()
+const Vector3& Transform::GetRight()
 {
-	Vector3 right(_WorldMatrix.m[0][0], _WorldMatrix.m[0][1], _WorldMatrix.m[0][2]);
-	right.Normalize();
-	return right;	// ワールド行列のX成分を返す。
+	return _Right;	// ワールド行列のX成分を返す。
 }
 
-Vector3 Transform::GetUp()
+const Vector3& Transform::GetUp()
 {
-	Vector3 up(_WorldMatrix.m[1][0], _WorldMatrix.m[1][1], _WorldMatrix.m[1][2]);
-	up.Normalize();
-	return up;	// ワールド行列のY成分を返す。
+	return _Up;	// ワールド行列のY成分を返す。
 }
 
-Vector3 Transform::GetForward()
+const Vector3& Transform::GetForward()
 {
-	Vector3 forward(_WorldMatrix.m[2][0], _WorldMatrix.m[2][1], _WorldMatrix.m[2][2]);
-	forward.Normalize();
-	return forward;/*Direction(Vector3::front)*/;	// ワールド行列のZ成分を返す。
+	return _Forward;;	// ワールド行列のZ成分を返す。
 }
 
 Vector3 Transform::Direction(const Vector3& v)

@@ -20,6 +20,14 @@ public:
 		Max
 	};
 
+	//矢印の種類。
+	enum class Arrow
+	{
+		Up,		//バフ矢印。
+		Down,	//デバフ矢印。
+		Max
+	};
+
 	//表示するアイコンの情報をまとめる用。
 	struct BuffDebuff
 	{
@@ -36,9 +44,7 @@ public:
 	}
 
 	//デストラクタ。
-	~BuffDebuffICon()
-	{
-	}
+	~BuffDebuffICon();
 
 	//初期化。
 	void Awake()override;
@@ -88,5 +94,12 @@ namespace {
 		"armor.png",		//鎧。
 		"cloaks.png",		//服。
 		"UI/S_Light01.png"	//クリティカル率。
+	};
+
+	//表示する矢印アイコン。
+	static char* ArrowIconText[static_cast<int>(BuffDebuffICon::Arrow::Max)] =
+	{
+		"BuffIArrow.png",	//バフ矢印。
+		"DebuffArrow.png"	//デバフ矢印。
 	};
 }

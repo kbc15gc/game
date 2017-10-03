@@ -9,7 +9,6 @@ public:
 	void Update()override;
 	void Enter()override;
 	void Leave()override;
-	void Move();
 	void DebugMove();
 private:
 };

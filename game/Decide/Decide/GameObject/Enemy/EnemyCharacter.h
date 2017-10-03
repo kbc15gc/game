@@ -11,6 +11,7 @@
 #include "GameObject\Component\AnimationEvent.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Player\Player.h"
+#include "fbEngine\_Object\_Component\_Physics\CharacterExtrude.h"
 
 class SkinModel;
 class Animation;
@@ -68,8 +69,9 @@ private:
 		CharacterParameter* Parameter = nullptr;//エネミーのパラメーター。
 		ParameterBar* HPBar = nullptr;			// ゲージHP用。
 		ObjectSpawn* Spawner = nullptr;		// リスポーン設定できる。
-		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる関数。
+		AnimationEventPlayer* AnimationEventPlayer = nullptr;	// アニメーションにイベントを設定できる。
 		ParticleEffect* ParticleEffect = nullptr;	// パーティクルエフェクト。
+		CharacterExtrude* CharacterExtrude = nullptr;	// このエネミーが他のオブジェクトを押し出す。
 	};
 
 	struct CollisionInfo {
