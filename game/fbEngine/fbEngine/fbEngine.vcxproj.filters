@@ -273,6 +273,9 @@
     <ClCompile Include="_Inputs\VirtualPad.cpp">
       <Filter>Input</Filter>
     </ClCompile>
+    <ClCompile Include="_Object\_Component\_Physics\CharacterExtrude.cpp">
+      <Filter>Object\Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -529,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="_Inputs\VirtualPad.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="_Object\_Component\_Physics\CharacterExtrude.h">
+      <Filter>Object\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -63,7 +63,6 @@ void Enemy::_StartSubClass(){
 }
 
 void Enemy::_UpdateSubClass() {
-	//_MyComponent.HadBar->SubValue(1.0f);
 	if (!(_MyComponent.CharacterController->IsOnGround())) {
 		// エネミーが地面から離れている。
 		if (_NowStateIdx != State::Fall) {

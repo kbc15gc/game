@@ -25,36 +25,45 @@ public:
 
 	/*!
 	* @brief	初期化。
-	* param		ゲームオブジェクト。
-	*			トランスフォーム。
-	*			モデルの中心とコリジョンの中心の差分。
+	* param		モデルの中心とコリジョンの中心の差分。
 	*			コリジョンの属性。
 	*			コリジョン形状。
 	*			重力。
-	*			衝突を取りたい属性(左右方向、レイヤーマスクなのでビット演算)。
-	*			衝突を取りたい属性(上下方向、レイヤーマスクなのでビット演算)。
+	*			衝突を取りたい属性(左右方向、押し戻されたい場合に設定、レイヤーマスクなのでビット演算)。
+	*			衝突を取りたい属性(上下方向、押し戻されたい場合に設定、レイヤーマスクなのでビット演算)。
 	*			即時に物理ワールドにコリジョンを登録する(falseにした場合は後で登録関数を呼ばないと登録されない)。
 	*/
-	void Init(GameObject* Object, Transform* tramsform, Vector3 off , int type, Collider* capsule , float gravity,int attributeXZ = -1, int attributeY = -1/*static_cast<int>(fbCollisionAttributeE::ALL)*/,bool isAddWorld = true);
+	void Init(Vector3 off , int type, Collider* coll , float gravity,int attributeXZ = -1, int attributeY = -1/*static_cast<int>(fbCollisionAttributeE::ALL)*/,bool isAddWorld = true);
 	
 	/*!
-	* @brief	実行。
+	* @brief	キャラクターコントローラに設定されている移動量分移動。
+	* 戻り値：　衝突解決した後の実際の移動量。
 	*/
-	void Execute();
+	const Vector3& Execute();
+
 	/*!
-	* @brief	移動速度を設定。
+	* @brief	移動量を設定。
 	*/
-	void SetMoveSpeed(const Vector3& speed)
-	{
+	inline void SetMoveSpeed(const Vector3& speed) {
 		m_moveSpeed = speed;
 	}
 	/*!
-	* @brief	移動速度を取得。
+	* @brief	移動量を取得。
 	*/
-	const Vector3& GetMoveSpeed() const
+	inline const Vector3& GetMoveSpeed() const
 	{
 		return m_moveSpeed;
 	}
+	// 外的要因で発生した移動量を加算。
+	inline void AddOutsideSpeed(const Vector3& add){
+		_outsideSpeed = _outsideSpeed + add;
+	}
+	// 衝突解決を含めた実際の移動量を取得。
+	// ※Excute関数が呼ばれる前に呼ばれた場合(0,0,0)か前回のExcuteの結果が返却される。
+	inline const Vector3& GetmoveSpeedExcute()const {
+		return _moveSpeedExcute;
+	}
+
 	/*!
 	* @brief	ジャンプさせる。
 	*/
@@ -166,11 +175,13 @@ public:
 	}
 
 private:
-	Vector3 				m_moveSpeed = Vector3::zero;	//移動速度。 
+	Vector3 				m_moveSpeed = Vector3::zero;	//キャラクターが自発的に移動する量。
+	Vector3					_outsideSpeed = Vector3::zero;	//キャラクターが外的要因で移動する量。 
+	Vector3					_moveSpeedExcute = Vector3::zero;				// 衝突解決終了後の実際に移動した量。
 	bool 					m_isJump = false;				//ジャンプ中？
 	bool					m_isOnGround = true;			//地面の上にいる？
 	Collider*				m_collider = nullptr;			//コライダー。
-	Vector3					_halfSize;							// コライダーのサイズ(実際のサイズの半分)。
+	Vector3					_halfSize;						// コライダーのサイズ(実際のサイズの半分)。
 	RigidBody*				m_rigidBody = nullptr;			//剛体。
 	float					m_gravity = -9.8f;				//重力。
 	int						m_attributeXZ;					// 衝突を取りたい属性(左右方向、衝突解決の省略のみでワールドで判定は取れる)。

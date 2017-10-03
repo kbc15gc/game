@@ -139,7 +139,7 @@ bool ConsumptionItem::UseItem() {
 
 		// デバフアイテム。
 		// 効果範囲内のエネミーを取得。
-		int attr = Collision_ID::ENEMY | Collision_ID::BOSS;
+		int attr = Collision_ID::ENEMY;
 		vector<Collision*> hit;
 		INSTANCE(PhysicsWorld)->AllHitsContactTest(_gost->GetAttachCollision(), hit, attr);
 

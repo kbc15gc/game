@@ -9,7 +9,7 @@
 #define TEST_CHARCON_Y
 
 
-void CCharacterController::Init(GameObject* Object, Transform* tramsform, Vector3 off, int type, Collider* capsule, float gravity, int attributeXZ, int attributeY, bool isAddWorld)
+void CCharacterController::Init(Vector3 off, int type, Collider* coll, float gravity, int attributeXZ, int attributeY, bool isAddWorld)
 {
 	//コリジョン作成。
 	//重力設定。
@@ -21,12 +21,12 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, Vector
 
 	m_rigidBody = gameObject->AddComponent<RigidBody>();
 	//リジッドボディ作成
-	m_rigidBody->Create(0.0f, capsule, type, Vector3::zero, off,Collision::PhysicsType::Kinematick,isAddWorld);
+	m_rigidBody->Create(0.0f, coll, type, Vector3::zero, off,Collision::PhysicsType::Kinematick,isAddWorld);
 	//スリープさせない(必要かどうかわからない。)
 	static_cast<btRigidBody*>(m_rigidBody->GetCollisionObj())->setSleepingThresholds(0, 0);
 
 
-	m_collider = capsule;
+	m_collider = coll;
 
 	btVector3 localScaling(1.0f,1.0f,1.0f); // Transformのスケール値。
 	localScaling = m_collider->GetBody()->getLocalScaling();
@@ -38,10 +38,11 @@ void CCharacterController::Init(GameObject* Object, Transform* tramsform, Vector
 	//もともとのフラグを残したまま新しいフラグを追加。
 	m_rigidBody->GetCollisionObj()->setCollisionFlags(m_rigidBody->GetCollisionObj()->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
 }
-void CCharacterController::Execute()
+const Vector3& CCharacterController::Execute()
 {
-	//速度に重力加速度を加える。
+	// y成分は重力を加算。
 	m_moveSpeed.y += m_gravity;
+
 	Vector3 nowPosTmp; 
 	Vector3 nextPosTmp;
 	Vector3 originalXZDir;
@@ -49,8 +50,8 @@ void CCharacterController::Execute()
 	{
 		nextPosTmp = nowPosTmp = m_rigidBody->GetOffsetPos();	// 移動前のコリジョンの座標(原点)を設定。
 		nextPosTmp.y = nowPosTmp.y = nowPosTmp.y - m_rigidBody->GetShape()->GetHalfSize().y;	// 位置情報をコリジョンの足元に合わせる。
-		//速度からこのフレームでの移動量を求める。オイラー積分。
-		Vector3 addPos = m_moveSpeed;
+		//キャラクターの移動量に外的要因による移動量を加算。
+		Vector3 addPos = m_moveSpeed + _outsideSpeed;
 		addPos.Scale(Time::DeltaTime());
 		nextPosTmp += addPos;
 
@@ -78,7 +79,7 @@ void CCharacterController::Execute()
 			btTransform start, end;
 			start.setIdentity();
 			end.setIdentity();
-			//始点はカプセルコライダーの足元の地点。
+			//始点はカプセルコライダーの中心。
 			// ※平らな地面に引っかからないよう少し上げる。
 			start.setOrigin(btVector3(nowPosTmp.x, nowPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y + 0.2f, nowPosTmp.z));
 			// ※平らな地面に引っかからないよう少し上げる。
@@ -190,14 +191,10 @@ void CCharacterController::Execute()
 			if (callback.isHit) {
 				//地面に接触している。
 
-				if (gameObject == INSTANCE(GameObjectManager)->FindObject("Player")) {
-					OutputDebugString("aa");
-				}
-
-				m_moveSpeed.y = 0.0f;
+				m_moveSpeed.y = 0.0f;	// 地面に当たったので移動量を0にする。
 				m_isJump = false;
 				m_isOnGround = true;
-				nextPosTmp.y = callback.hitPos.y;
+				nextPosTmp.y = callback.hitPos.y;	// 衝突点は足元なので、中心位置まで加算する。
 			}
 			else {
 				//地面上にいない。
@@ -210,8 +207,16 @@ void CCharacterController::Execute()
 
 	nextPosTmp.y += m_rigidBody->GetShape()->GetHalfSize().y;	// 足元の位置に設定していたのでコリジョンの中心に戻す。
 	//移動確定。
-	transform->SetPosition(nextPosTmp - m_rigidBody->GetOffset());	// nextPosTmpはモデルの原点とイコールでない可能性があるのでOffset分減算して設定する。
+	nextPosTmp -= m_rigidBody->GetOffset();	// nextPosTmpはモデルの原点とイコールでない可能性があるのでOffset分減算して設定する。
+
+	_moveSpeedExcute = nextPosTmp - transform->GetPosition();	// 実際の移動量を保存。
+
+	transform->SetPosition(nextPosTmp);
 	m_rigidBody->Update();	// transformを更新したのでコリジョンのTransfiormも更新する。
 	//剛体を動かす。
 	m_rigidBody->GetCollisionObj()->setActivationState(DISABLE_DEACTIVATION);
+
+	_outsideSpeed = Vector3::zero;
+
+	return _moveSpeedExcute;
 }
