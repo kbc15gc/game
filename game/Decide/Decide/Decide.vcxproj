@@ -221,6 +221,7 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
+    <ClInclude Include="GameObject\LevelUpImage.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
@@ -320,6 +321,7 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
+    <ClCompile Include="GameObject\LevelUpImage.cpp" />
     <ClCompile Include="GameObject\Log\Log.cpp" />
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />

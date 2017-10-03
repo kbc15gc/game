@@ -18,6 +18,7 @@
 #include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
+#include "..\LevelUpImage.h"
 
 class SkinModel;
 class Animation;
@@ -25,6 +26,7 @@ class ParameterBar;
 class ItemManager;
 class ParticleEffect;
 class BuffDebuffICon;
+class HistoryManager;
 
 namespace
 {
@@ -250,6 +252,7 @@ private:
 	// レベルアップ。
 	// 引数：		レベルアップに必要な経験値の値。
 	void _LevelUP();
+
 #ifdef _DEBUG
 	//デバッグ機能
 	void _DebugPlayer();
@@ -317,8 +320,6 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
-	//レベルアップスプライト
-	Sprite* _LevelUpSprite;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;
@@ -341,4 +342,10 @@ private:
 
 	//バフデバフアイコン。
 	BuffDebuffICon* _BuffDebuffICon = nullptr;
+
+	//レベルアップイメージ
+	LevelUpImage* _LevelUpImage;
+	
+	//歴史書
+	HistoryManager* _HistoryManager = nullptr;
 };

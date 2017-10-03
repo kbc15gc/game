@@ -2,8 +2,6 @@
 #include "Player.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
-#include <string>
-#include <sstream>
 #include "GameObject\SplitSpace.h"
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
@@ -170,13 +168,11 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 
-	//レベルアップ時のスプライト初期化
-	/*{
-		_LevelUpSprite = AddComponent<Sprite>();
-		_LevelUpSprite->SetTexture(LOADTEXTURE("levelup.png"));
-		_LevelUpSprite->SetEnable(true);
-		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
-	}*/
+	//レベルアップイメージ初期化
+	_LevelUpImage = INSTANCE(GameObjectManager)->AddNew<LevelUpImage>("LevelUP", 9);
+
+	//歴史書検索
+	_HistoryManager = (HistoryManager*)INSTANCE(GameObjectManager)->FindObject("HistoryManager");
 }
 
 void Player::Update()
@@ -206,6 +202,7 @@ void Player::Update()
 	if (_EXPTable.size() > 0 &&
 		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
 	{
+		_ParticleEffect->LevelUpEffect();
 		_LevelUP();
 	}
 	//ダメージを受ける処理。
@@ -219,6 +216,7 @@ void Player::Update()
 		//transform->UpdateTransform();
 
 	EffectUpdate();
+
 }
 
 void Player::ChangeState(State nextstate)
@@ -528,9 +526,14 @@ void Player::_LevelUP()
 	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
 	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
+	//レベルアップ時のイメージ表示。
+	_LevelUpImage->Init();
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
+	//レベルアップエフェクト
+	_ParticleEffect->SetLevelUPEffectFlag(true);
 }
+
 
 #ifdef _DEBUG
 void Player::_DebugPlayer()
