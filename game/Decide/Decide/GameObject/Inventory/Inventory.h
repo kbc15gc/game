@@ -27,7 +27,6 @@ public:
 		if (_InventoryInstance == nullptr)
 		{
 			_InventoryInstance = new Inventory();
-			_InventoryInstance->Initialize();
 		}
 		return _InventoryInstance;
 	}
