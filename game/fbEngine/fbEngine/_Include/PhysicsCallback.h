@@ -360,11 +360,16 @@ public:
 				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
 				//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitPosTmp), &hitPosTmp, &worldMat);	// ワールド座標に変換。			
 
+
 				//交点との距離を調べる。
 				Vector3 vDistTmp;
 				vDistTmp.Subtract(Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z), startPos);
 				float distTmp = Vector3(vDistTmp.x,0.0f, vDistTmp.z).Length();
 				if (distTmp < dist) {
+					if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(3)) {
+						OutputDebugString("aaa");
+					}
+
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
 					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z) ;
 					dist = distTmp;
@@ -375,4 +380,75 @@ public:
 			return 0.0f;
 		}
 	};
+
+	// 移動した際に他のコリジョンを押し出す処理で使用。
+	struct SweepResultExtrude : public btCollisionWorld::ConvexResultCallback
+	{
+		// 引数：	レイの始点。
+		//			自分自身。自分自身との衝突を除外するためのメンバ。
+		//			指定したコリジョン属性とのみ当たり判定をとる。
+		SweepResultExtrude(const Vector3& start, btCollisionObject* me,int attribute) {
+			_startPos = start;
+			_me = me;
+			_attribute = attribute;
+		}
+
+		~SweepResultExtrude() {
+			for (auto info : _hitInfo) {
+				SAFE_DELETE(info);
+			}
+			_hitInfo.clear();
+		}
+
+		struct hitInfo {
+			Vector3 hitPos = Vector3::zero;		//衝突点。
+			Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
+			Collision* collision = nullptr;	// 衝突したコリジョン。
+			float hitFraction = 0.0f;	// 開始位置から終端位置までの長さと、開始位置から衝突した位置までの比。
+		};
+
+		const vector<hitInfo*>& GetInfoArray() const{
+			return _hitInfo;
+		}
+
+		bool isHit = false;						//衝突フラグ。
+	private:
+
+		Vector3 _startPos = Vector3::zero;		//レイの始点。
+		btCollisionObject* _me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
+		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる。
+
+		vector<hitInfo*> _hitInfo;
+
+	public:
+		//衝突したときに呼ばれるコールバック関数。
+		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
+		{
+			if (convexResult.m_hitCollisionObject == _me) {
+				//自分に衝突した。
+				return 0.0f;
+			}
+
+			//衝突点の法線を引っ張ってくる。
+			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
+			if (_attribute & convexResult.m_hitCollisionObject->getUserIndex()) {
+				// 押し出す属性だった。
+
+				isHit = true;
+
+				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
+				hitInfo* info = new hitInfo;
+				info->hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
+				info->hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+				info->hitNormal = info->hitNormal * -1.0f;	// 欲しいのは自身の法線なので反転。
+				info->collision = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer());
+				info->hitFraction = convexResult.m_hitFraction;	// 開始位置から終端位置までの長さと、開始位置から衝突した位置までの比を取得。
+
+				_hitInfo.push_back(info);
+			}
+
+			return 0.0f;
+		}
+	};
+
 }
