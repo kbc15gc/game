@@ -85,17 +85,15 @@ void Player::Awake()
 	//_Model->SetAllBlend(Color::white * 13);
 	
 	//キャラクターコントローラー初期化
-	_CharacterController->Init(this, transform, Vector3(0.0f,_Height * 0.5f + _Radius,0.0f), Collision_ID::PLAYER, coll, _Gravity);
+	_CharacterController->Init(Vector3(0.0f,_Height * 0.5f + _Radius,0.0f), Collision_ID::PLAYER, coll, _Gravity);
 	// 以下衝突を取りたい属性(横方向)を指定。
 	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
-	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// ボスのコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
-	_CharacterController->SubAttributeY(Collision_ID::BOSS);	// ボスを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
@@ -387,6 +385,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 		{
 			_ParticleEffect->HeelHpEffect();
 		}
+		if (_HPBar) {
+			_HPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::HP));
+		}
 
 		returnValue = true;
 	}
@@ -395,6 +396,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 		if (_ParticleEffect)
 		{
 			_ParticleEffect->HeelMpEffect();
+		}
+		if (_MPBar) {
+			_MPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::MP));
 		}
 
 		returnValue = true;

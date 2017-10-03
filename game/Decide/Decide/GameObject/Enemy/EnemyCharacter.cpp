@@ -65,6 +65,9 @@ void EnemyCharacter::Start() {
 	_MyComponent.CharacterController->Execute();
 	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
 	
+	int Attribute = Collision_ID::PLAYER;
+	_MyComponent.CharacterExtrude->Init(_MyComponent.CharacterController->GetRigidBody(), Attribute);
+
 	//プレイヤー。
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
@@ -84,6 +87,9 @@ void EnemyCharacter::Update() {
 	// 継承先により変わる処理。
 	_UpdateSubClass();
 
+	// エネミーのエフェクト更新。
+	EffectUpdate();
+
 	if (_NowState == nullptr) {
 		// ステートを継承先で指定した？。
 		abort();
@@ -96,11 +102,11 @@ void EnemyCharacter::Update() {
 		_EndNowStateCallback(_NowStateIdx);
 	}
 
-	EffectUpdate();
-
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
 	_MyComponent.CharacterController->Execute();
+	// 移動した結果、指定した属性のものが衝突していれば押し出す。
+	_MyComponent.CharacterExtrude->Extrude(_MyComponent.CharacterController->GetmoveSpeedExcute());
 }
 
 void EnemyCharacter::LateUpdate() {
@@ -142,7 +148,7 @@ void EnemyCharacter::SearchView() {
 		// 視線に入っている。
 
 		// 威嚇ステートに移行。
-		_ChangeState(State::Threat);
+		//_ChangeState(State::Threat);
 	}
 }
 
@@ -192,6 +198,8 @@ void EnemyCharacter::_BuildMyComponents() {
 
 	// パーティクルエフェクトコンポーネント追加。
 	_MyComponent.ParticleEffect = AddComponent<ParticleEffect>();
+	// 剛体押し出しコンポーネント追加。
+	_MyComponent.CharacterExtrude = AddComponent<CharacterExtrude>();
 }
 
 void EnemyCharacter::_BuildCollision() {
@@ -209,7 +217,7 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(this, transform,_collisionInfo.offset, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
+	_MyComponent.CharacterController->Init(_collisionInfo.offset, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
@@ -248,54 +256,6 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
-}
-
-/**
-* アイテム効果.
-*/
-bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
-{
-	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
-		if (_MyComponent.Parameter)
-		{
-			if (_MyComponent.ParticleEffect) {
-				_MyComponent.ParticleEffect->DeBuffEffect();
-			}
-#ifdef  _DEBUG
-			else {
-				// エフェクトコンポーネントないよ。
-				abort();
-			}
-#endif //  _DEBUG
-			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(info->effectValue[idx])), info->time);
-
-		}
-	}
-
-	return true;
-}
-
-/**
-* エフェクト用更新.
-*/
-void EnemyCharacter::EffectUpdate()
-{
-	bool isBuffEffect = false;
-	bool isDeBuffEffect = false;
-	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
-
-		if (_MyComponent.Parameter->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
-		{
-			isBuffEffect = true;
-		}
-		if (_MyComponent.Parameter->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
-		{
-			isDeBuffEffect = true;
-		}
-	}
-
-	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
-	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
 }
 
 void EnemyCharacter::_ChangeState(State next) {
@@ -357,7 +317,7 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 
 		//受けたダメージ量を表示。
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::yellow);
+		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
 		attackvalue->transform->SetParent(transform);
 
 		if (_isDamageMotion) {
@@ -386,6 +346,32 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	}
 }
 
+bool EnemyCharacter::ItemEffect(Item::ItemInfo* info) {
+	for (int idx = CharacterParameter::Param::ATK; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
+		_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx),-info->effectValue[idx],info->time);
+	}
+	return true;
+}
+
+void EnemyCharacter::EffectUpdate() {
+	bool isBuffEffect = false;
+	bool isDeBuffEffect = false;
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+
+		if (_MyComponent.Parameter->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isBuffEffect = true;
+		}
+		if (_MyComponent.Parameter->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
+		{
+			isDeBuffEffect = true;
+		}
+	}
+	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+}
+
+
 
 // EnemyAttack。
 
@@ -406,3 +392,4 @@ bool EnemySingleAttack::Update(){
 	}
 	return false;
 }
+
