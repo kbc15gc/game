@@ -64,11 +64,11 @@ void SpaceCollisionObject::RegistrationObject()
 	_HitCollisions.clear();
 	if (GetCollision()) {
 		if (GetCollision()->GetCollisionObj()) {
-			vector<Collision*> hitCollisions;
+			vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*> hitCollisions;
 			hitCollisions = INSTANCE(PhysicsWorld)->AllHitsContactTest(GetCollision(), hitCollisions, _attribute);
 
-			for (auto coll : hitCollisions) {
-				_HitCollisions.push_back(coll->GetCollisionObj_shared());
+			for (auto info : hitCollisions) {
+				_HitCollisions.push_back(info->collision->GetCollisionObj_shared());
 			}
 		}
 	}
