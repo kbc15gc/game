@@ -28,6 +28,8 @@ HistoryManager::HistoryManager()
 		//vectorを追加
 		vector<GameObject*> list;
 		_GameObjectList.push_back(list);
+		vector<NPC*> npcs;
+		_NPCList.push_back(npcs);
 	}
 
 	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
@@ -122,6 +124,12 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 		INSTANCE(GameObjectManager)->AddRemoveList(it);
 	}
 	_GameObjectList[(int)location].clear();
+	//前のNPCを削除
+	for (auto& it : _NPCList[(int)location])
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(it);
+	}
+	_NPCList[(int)location].clear();
 
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
@@ -253,7 +261,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					Rinfo.coll = box;
 					//カメラと当たらないコリジョンかどうか？
 					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
-					Rinfo.id = Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA;
+					//Rinfo.id = Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA;
 					Rinfo.offset = info->pos;
 					/*Quaternion q; /*q.SetEuler(info->ang);*/
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
@@ -295,7 +303,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		//管理用の配列に追加。
 		if (location >= 0)
 		{
-			_GameObjectList[location].push_back(npc);
+			_NPCList[location].push_back(npc);
 		}
 	}
 	//いらんので破棄。
