@@ -233,7 +233,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
-    <ClInclude Include="GameObject\StatusWindow\Dialog.h" />
+    <ClInclude Include="GameObject\StatusWindow\Cursor.h" />
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
     <ClInclude Include="GameObject\StatusWindow\Item2D.h" />
     <ClInclude Include="GameObject\StatusWindow\ItemWindow.h" />
@@ -330,7 +330,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
-    <ClCompile Include="GameObject\StatusWindow\Dialog.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\Cursor.cpp" />
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Item2D.cpp" />
     <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp" />

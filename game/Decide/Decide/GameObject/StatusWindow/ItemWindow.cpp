@@ -45,22 +45,25 @@ void ItemWindow::Awake()
 	{
 		Item2D* item2D = INSTANCE(GameObjectManager)->AddNew<Item2D>("Item2D", StatusWindow::WindowBackPriorty + 3);
 		item2D->transform->SetParent(itemWindow->transform);
-		item2D->transform->SetLocalPosition(Vector3(270.0f, -195.0f + (i * 52.0f), 0.0f));
+		item2D->transform->SetLocalPosition(Vector3(270.0f, -190.0f + (i * 52.0f), 0.0f));
 		_Item2DList.push_back(item2D);
 	}
 
-	_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", StatusWindow::WindowBackPriorty + 3);
-	_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
-	_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
+	//_SelectCursor = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SelectCursor", StatusWindow::WindowBackPriorty + 3);
+	//_SelectCursor->SetTexture(LOADTEXTURE("cursor.png"));
+	//_SelectCursor->SetSize(Vector2(50.0f, 50.0f));
 	Quaternion rot = Quaternion::Identity;
-	rot.SetEuler(Vector3(0.0f, 0.0f, -90.0f));
-	_SelectCursor->transform->SetLocalRotation(rot);
-	_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-	_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+	//rot.SetEuler(Vector3(0.0f, 0.0f, -90.0f));
+	//_SelectCursor->transform->SetLocalRotation(rot);
+	//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+	//_SelectCursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+
+	_Cursor = INSTANCE(GameObjectManager)->AddNew<Cursor>("SelectCursor", StatusWindow::WindowBackPriorty + 3);
+	_Cursor->CreateCursor("cursor.png", _Item2DList[_NowSelectItem]->transform, Vector2(-230.0f, 0.0f), Vector2(50.0f, 50.0f),0.0f , ItemCellSize, ItemCellSize, true, -90.0f);
 
 	_UpArrow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("UpArrow", StatusWindow::WindowBackPriorty + 3);
 	_UpArrow->SetTexture(LOADTEXTURE("cursor.png"));
-	_UpArrow->SetSize(Vector2(50.0f, 50.0f));
+	_UpArrow->SetSize(Vector2(40.0f, 40.0f));
 	rot = Quaternion::Identity;
 	rot.SetEuler(Vector3(0.0f, 0.0f, -180.0f));
 	_UpArrow->transform->SetLocalRotation(rot);
@@ -70,7 +73,7 @@ void ItemWindow::Awake()
 
 	_DownArrow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DownArrow", StatusWindow::WindowBackPriorty + 3);
 	_DownArrow->SetTexture(LOADTEXTURE("cursor.png"));
-	_DownArrow->SetSize(Vector2(50.0f, 50.0f));
+	_DownArrow->SetSize(Vector2(40.0f, 40.0f));
 	_DownArrow->transform->SetParent(_Item2DList[ItemCellSize - 1]->transform);
 	_DownArrow->transform->SetLocalPosition(Vector3(0.0f, 40.0f, 0.0f));
 	_DownArrow->SetActive(false, false);
@@ -219,130 +222,184 @@ void ItemWindow::Input()
 		}
 	}
 
-	_SelectCursor->SetActive(false, true);
-
-	if(itemCount > 0)
+	_Cursor->SetMax(itemCount);
+	if (itemCount <= 0)
 	{
-		if (!_Dialog->GetActive())
-		{
-			_SelectCursor->SetActive(true, true);
+		//_SelectCursor->SetActive(false, true);
+		_Cursor->SetActive(false, false);
+	}
+	else
+	{
+		//_SelectCursor->SetActive(true, true);
+		_Cursor->SetActive(true, true);
 
 			static float ChangeTime = 0.5f;
 			static float LocalTime = 0.0f;
 
-			Vector2 LStick = XboxInput(0)->GetAnalog(AnalogInputE::L_STICK);
-			LStick /= 32767.0f;
-			if (LStick.y >= 0.2f)
+
+		Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
+		LStick /= 32767.0f;
+		if (LStick.y >= 0.2f)
+		{
+			if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 			{
-				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
-				{
-					if (_NowSelectItem <= 0)
-					{
-						if (_StartLoadCount > 0)
-						{
-							_StartLoadCount--;
-						}
-						else
-						{
-							_StartLoadCount = max(0, itemCount - ItemCellSize);
-							_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
-						}
-					}
-					else
-					{
-						_NowSelectItem = max(0, _NowSelectItem - 1);
-					}
-					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				}
-				LocalTime += Time::DeltaTime();
-				if (LocalTime >= ChangeTime)
-				{
-					if (_NowSelectItem <= 0)
-					{
-						if (_StartLoadCount > 0)
-						{
-							_StartLoadCount--;
-						}
-						else
-						{
-							_StartLoadCount = max(0, itemCount - ItemCellSize);
-							_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
-						}
-					}
-					else
-					{
-						_NowSelectItem = max(0, _NowSelectItem - 1);
-					}
-					LocalTime = 0.0f;
-					ChangeTime = 0.01f;
-					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				}
+				//if (_NowSelectItem <= 0)
+				//{
+				//	if (_StartLoadCount > 0)
+				//	{
+				//		_StartLoadCount--;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = max(0, itemCount - ItemCellSize);
+				//		_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+				//	}
+				//}
+				//else
+				//{
+				//	_NowSelectItem = max(0, _NowSelectItem - 1);
+				//}
+
+				Cursor::CursorIndex index = _Cursor->PrevMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+			}
+			LocalTime += Time::DeltaTime();
+			if (LocalTime >= ChangeTime)
+			{
+				//if (_NowSelectItem <= 0)
+				//{
+				//	if (_StartLoadCount > 0)
+				//	{
+				//		_StartLoadCount--;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = max(0, itemCount - ItemCellSize);
+				//		_NowSelectItem = min(ItemCellSize - 1, itemCount - 1);
+				//	}
+				//}
+				//else
+				//{
+				//	_NowSelectItem = max(0, _NowSelectItem - 1);
+				//}
+
+				LocalTime = 0.0f;
+				ChangeTime = 0.01f;
+				Cursor::CursorIndex index = _Cursor->PrevMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 			else if (LStick.y <= -0.2f)
 			{
 
-				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
-				{
-					if (_NowSelectItem >= ItemCellSize - 1)
-					{
-						if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-						{
-							_StartLoadCount++;
-						}
-						else
-						{
-							_StartLoadCount = 0;
-							_NowSelectItem = 0;
-						}
-					}
-					else if (_NowSelectItem >= itemCount - 1)
-					{
-						_NowSelectItem = 0;
-					}
-					else
-					{
-						_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-					}
-					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				}
-				LocalTime += Time::DeltaTime();
-				if (LocalTime >= ChangeTime)
-				{
-					if (_NowSelectItem >= ItemCellSize - 1)
-					{
-						if (_NowSelectItem + _StartLoadCount < itemCount - 1)
-						{
-							_StartLoadCount++;
-						}
-						else
-						{
-							_StartLoadCount = 0;
-							_NowSelectItem = 0;
-						}
-					}
-					else if (_NowSelectItem >= itemCount - 1)
-					{
-						_NowSelectItem = 0;
-					}
-					else
-					{
-						_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
-					}
-					LocalTime = 0.0f;
-					ChangeTime = 0.01f;
-					_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-				}
+				//if (_NowSelectItem >= ItemCellSize - 1)
+				//{
+				//	if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+				//	{
+				//		_StartLoadCount++;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = 0;
+				//		_NowSelectItem = 0;
+				//	}
+				//}
+				//else if (_NowSelectItem >= itemCount - 1)
+				//{
+				//	_NowSelectItem = 0;
+				//}
+				//else
+				//{
+				//	_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				//}
+
+				Cursor::CursorIndex index = _Cursor->NextMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
-			else
+			LocalTime += Time::DeltaTime();
+			if (LocalTime >= ChangeTime)
 			{
-				ChangeTime = 0.5f;
+				//if (_NowSelectItem >= ItemCellSize - 1)
+				//{
+				//	if (_NowSelectItem + _StartLoadCount < itemCount - 1)
+				//	{
+				//		_StartLoadCount++;
+				//	}
+				//	else
+				//	{
+				//		_StartLoadCount = 0;
+				//		_NowSelectItem = 0;
+				//	}
+				//}
+				//else if (_NowSelectItem >= itemCount - 1)
+				//{
+				//	_NowSelectItem = 0;
+				//}
+				//else
+				//{
+				//	_NowSelectItem = min(min(ItemCellSize - 1, itemCount - 1), _NowSelectItem + 1);
+				//}
 				LocalTime = 0.0f;
+				ChangeTime = 0.01f;
+				Cursor::CursorIndex index = _Cursor->NextMove(1);
+				_NowSelectItem = index.rangeIndex;
+				_StartLoadCount = index.offset;
+				_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 			}
 
 
 			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 			{
 				_Dialog->Enable(_Item2DList[_NowSelectItem]);
+				_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+			}
+			else if (_ItemCode == Item::ItemCodeE::Item)
+			{
+				ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+				item->UseItem();
+				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
+				itemCount = 0;
+				for (auto& item : itemList)
+				{
+					if (item != nullptr)
+					{
+						itemCount += 1;
+					}
+				}
+				_Cursor->SetMax(itemCount);	// 要素数を更新。
+				if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
+				{
+					//表示位置を一個さげる.
+					_StartLoadCount--;
+					//_Cursor->SetNowCursorIndex(_StartLoadCount);
+				}
+				else if (_NowSelectItem >= itemCount)
+				{
+					//選択位置を一個下げる.
+					//_NowSelectItem = max(0, _NowSelectItem - 1);
+					_NowSelectItem = _Cursor->NextMove(1).rangeIndex;
+				}
+				if (itemCount <= 0)
+				{
+					//_SelectCursor->transform->SetParent(nullptr);
+					//_SelectCursor->SetActive(false, true);
+					_Cursor->transform->SetParent(nullptr);
+					_Cursor->SetActive(false, false);
+				}
+				else
+				{
+					//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+				}
 			}
 
 		}

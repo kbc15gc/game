@@ -22,6 +22,8 @@ class EventManager
 {
 public:
 	EventManager();
+	//初期化
+	void ReSet();
 	//添え字に対応したイベントを実行。
 	//[in] 実行するイベントのID
 	//[in] 渡す引数。
@@ -56,7 +58,6 @@ private:
 		}
 		return _Camera;
 	}
-
 	//最初にイベントを追加する処理。
 	void AddEvent();
 private:
@@ -70,7 +71,7 @@ private:
 
 	//現在実行中のイベントの添え字。
 	Event::EventID _ActiveEvent = Event::EventID::None;
-
+private:
 	Player* _Player;
 	PlayerCamera* _Camera;
 };

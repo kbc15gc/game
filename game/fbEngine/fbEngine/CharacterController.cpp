@@ -190,10 +190,6 @@ void CCharacterController::Execute()
 			if (callback.isHit) {
 				//’n–Ê‚ÉÚG‚µ‚Ä‚¢‚éB
 
-				if (gameObject == INSTANCE(GameObjectManager)->FindObject("Player")) {
-					OutputDebugString("aa");
-				}
-
 				m_moveSpeed.y = 0.0f;
 				m_isJump = false;
 				m_isOnGround = true;

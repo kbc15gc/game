@@ -24,6 +24,7 @@ class Animation;
 class ParameterBar;
 class ItemManager;
 class ParticleEffect;
+class BuffDebuffICon;
 
 namespace
 {
@@ -153,6 +154,8 @@ public:
 	}
 	//プレイヤー解放
 	void Releace();
+	//プレイヤー走る処理。
+	void Run();
 	//敵が落とした物(経験値、お金)を受け取る。
 	void TakeDrop(int dropexp, int money)
 	{
@@ -206,37 +209,10 @@ public:
 	}
 
 	//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
-	void SetEquipment(HoldItemBase* equi)
-	{
-		//防具。
-		if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
+	void SetEquipment(HoldItemBase* equi);
 
-			if (_Equipment->armor != nullptr) {
-				//前に装備していた防具を外す。
-				_Equipment->armor->SetIsEquipFalse();
-				_Equipment->armor = nullptr;
-			}
-			//防具。
-			_Equipment->armor = static_cast<HoldArmor*>(equi);
-			//装備フラグをtrueにする。
-			_Equipment->armor->SetIsEquipTrue();
-		}
-		else
-			//武器。
-		{
-			if (_Equipment->weapon != nullptr) {
-				//前に装備していた武器を外す。
-				_Equipment->weapon->SetIsEquipFalse();
-				_Equipment->weapon = nullptr;
-
-
-			}
-			//武器。
-			_Equipment->weapon = static_cast<HoldWeapon*>(equi);
-			//装備フラグをtrueにする。
-			_Equipment->weapon->SetIsEquipTrue();
-		}
-	}
+	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
+	void Re_SetEquipment();
 
 	//プレイヤーの装備構造体を取得。
 	inline PlayerEquipment* GetEquipment() {
@@ -248,6 +224,17 @@ public:
 		return _HPBar;
 	}
 
+	//プレイヤーのMpBarを取得。
+	inline ParameterBar* GetPlayerMpBar() {
+		return _MPBar;
+	}
+
+	//バフデバフアイコンを取得。
+	inline BuffDebuffICon* GetBuffDebuffICon() {
+		return _BuffDebuffICon;
+	}
+
+
 	/**
 	* アイテムが使用された.
 	*/
@@ -257,10 +244,6 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
-
-	inline ParameterBar* GetPlayerMpBar() {
-		return _MPBar;
-	}
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
@@ -357,4 +340,7 @@ private:
 	
 	//パーティクルエフェクト。
 	ParticleEffect*	_ParticleEffect = nullptr;
+
+	//バフデバフアイコン。
+	BuffDebuffICon* _BuffDebuffICon = nullptr;
 };
