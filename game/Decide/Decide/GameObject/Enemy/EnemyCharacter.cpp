@@ -332,12 +332,12 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 	{
 		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) > 0)
 		{
-			GiveDamage(hitCollision->GetDamage(),hitCollision->GetIsMagic());
+			GiveDamage(hitCollision->GetDamageInfo()->value, hitCollision->GetDamageInfo()->isCritical,hitCollision->GetIsMagic());
 		}
 	}
 }
 
-void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
+void EnemyCharacter::GiveDamage(int damage,bool isCritical,bool isMagic) {
 	int _damage;
 	if (_NowState->IsPossibleDamage()) {
 		// ダメージを与えられるステートだった。
@@ -349,7 +349,7 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 
 		//受けたダメージ量を表示。
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(_damage, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
+		attackvalue->Init(_damage, isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
 		attackvalue->transform->SetParent(transform);
 
 		if (_isDamageMotion) {

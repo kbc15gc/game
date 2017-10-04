@@ -51,27 +51,11 @@ const Vector3& CCharacterController::Execute()
 	//次の移動先となる座標を計算する。
 	{
 		nextPosTmp = nowPosTmp = m_rigidBody->GetOffsetPos();	// 移動前のコリジョンの座標(原点)を設定。
+		
 		nextPosTmp.y = nowPosTmp.y = nowPosTmp.y - m_rigidBody->GetShape()->GetHalfSize().y;	// 位置情報をコリジョンの足元に合わせる。
-		//キャラクターの移動量と外的要因による移動量を比較してどちらの移動を優先するか決定。
+		//キャラクターの移動量と外的要因による移動量を加算。
 		Vector3 addPos;
-		//addPos.x = _MoveSpeedSelection(m_moveSpeed.x, _outsideSpeed.x);
-		//addPos.y = _MoveSpeedSelection(m_moveSpeed.y, _outsideSpeed.y);
-		//addPos.z = _MoveSpeedSelection(m_moveSpeed.z, _outsideSpeed.z);
-
-		//Vector3 outSpeed = _outsideSpeed;
-		//outSpeed.y = 0.0f;
-		//if (outSpeed.Length() > 0.0f) {
-		//	Vector3 mySpeed = m_moveSpeed;
-		//	mySpeed.y = 0.0f;
-		//	float outPower = outSpeed.Length();
-		//	outSpeed.Normalize();
-		//	mySpeed = outSpeed.Cross(Vector3::up) * (mySpeed.Length() + outPower);	// 滑らせる方向。
-		//	m_moveSpeed.x = mySpeed.x;
-		//	m_moveSpeed.z = mySpeed.z;
-		//}
 		addPos = m_moveSpeed + _outsideSpeed;
-
-		//addPos = m_moveSpeed;
 
 		addPos.Scale(deltaTime);
 		nextPosTmp += addPos;
@@ -103,8 +87,10 @@ const Vector3& CCharacterController::Execute()
 			//始点はカプセルコライダーの中心。
 			// ※平らな地面に引っかからないよう少し上げる。
 			start.setOrigin(btVector3(nowPosTmp.x, nowPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y + 0.2f, nowPosTmp.z));
+			start.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 			// ※平らな地面に引っかからないよう少し上げる。
 			end.setOrigin(btVector3(nextPosTmp.x, nowPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y + 0.2f, nextPosTmp.z));
+			end.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 
 			fbPhysicsCallback::SweepResultWall callback;
 			callback.me = m_rigidBody->GetCollisionObj();
@@ -174,6 +160,8 @@ const Vector3& CCharacterController::Execute()
 		end.setIdentity();
 		//始点は仮確定したカプセルコライダーの中心位置(Y成分は移動前)。
 		start.setOrigin(btVector3(nextPosTmp.x, nextPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y, nextPosTmp.z));
+		start.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
+
 		//終点は地面上にいない場合は1m下を見る。
 		//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 		//地面上にいなくて降下中の場合はそのまま落下先を調べる。
@@ -197,6 +185,7 @@ const Vector3& CCharacterController::Execute()
 			endPos.y -= 1.0f;
 		}
 		end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
+		end.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 		//スタートとエンドの差
 		btVector3 Sub = start.getOrigin() - end.getOrigin();
 		//差が0.0001以上なら衝突検出する。
@@ -241,46 +230,4 @@ const Vector3& CCharacterController::Execute()
 
 	_moveSpeedExcute = _moveSpeedExcute / deltaTime;
 	return _moveSpeedExcute;
-}
-
-float CCharacterController::_MoveSpeedSelection(float mySpeed, float outSpeed) {
-	float add = 0.0f;
-
-	if (mySpeed * outSpeed > 0) {
-		// 向きが同じ。
-		// 大きいほうを優先。
-
-		if (mySpeed >= outSpeed) {
-			add = mySpeed;
-		}
-		else {
-			add = outSpeed;
-		}
-	}
-	else if (mySpeed * outSpeed) {
-		// 向きが違う。
-
-		// 外的要因を優先。
-		add = outSpeed;
-	}
-	else {
-		// 外的要因か自発移動のどちらか、もしくはどちらもが発生していない。
-
-		if (fabsf(mySpeed) > 0.0f) {
-			// 自発移動している。
-
-			add = mySpeed;
-		}
-		else if (fabsf(outSpeed) > 0.0f) {
-			// 外的要因で移動している。
-
-			add = outSpeed;
-		}
-		else {
-			// 移動していない。
-
-			add = 0.0f;
-		}
-	}
-	return add;
 }

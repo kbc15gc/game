@@ -299,11 +299,6 @@ void Player::AnimationControl()
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
 		}
-		//話せるか。
-		else if (_State == State::Speak)
-		{
-			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
-		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
 		{
@@ -343,11 +338,11 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		// ダメージを与える処理
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamage(), hitCollision->GetIsMagic(), _Equipment->armor);
+		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamageInfo()->value, hitCollision->GetIsMagic(), _Equipment->armor);
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(damage, 1.5f, Vector3(0.0f, _Height, 0.0f));
+		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f));
 		attackvalue->transform->SetParent(transform);
 	}
 }

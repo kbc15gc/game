@@ -68,7 +68,6 @@ public:
 		Attack,				//攻撃
 		Death,				//死亡
 		Stop,				//移動などしないステートです
-		Speak,				//会話
 		StateNum,
 	};
 	//アニメーションのナンバー
