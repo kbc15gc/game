@@ -41,7 +41,7 @@ void Shop::Awake()
 	//説明文のテキスト。
 	_DescriptionText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
-	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 40, 0));
+	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 10, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
 	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	
@@ -53,9 +53,9 @@ void Shop::Awake()
 	//
 	_MoneyText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 	_MoneyText->transform->SetParent(_MoneyWindow->transform);
-	_MoneyText->transform->SetLocalPosition(Vector3(130, 0, 0));
 	_MoneyText->Initialize(L"0$", 40);
-	_MoneyText->SetAnchor(fbText::TextAnchorE::UpperRight);
+	_MoneyText->transform->SetLocalPosition(Vector3(130, -_MoneyText->GetLength().y, 0));
+	_MoneyText->SetAnchor(fbText::TextAnchorE::MiddleRight);
 	Pay(0);
 	//ステートの初期化。
 	SetState();

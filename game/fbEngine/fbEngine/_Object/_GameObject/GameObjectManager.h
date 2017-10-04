@@ -60,9 +60,6 @@ public:
 		return obj;
 	}
 
-	//Updateの前に一度だけ呼び出される
-	void StartObject();
-
 	//毎フレーム呼び出される。
 	void UpdateObject();
 	//毎フレームUpdateよりも後に呼び出される。

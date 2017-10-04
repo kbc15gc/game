@@ -33,7 +33,7 @@ public:
 
 	/*!
 	* @brief	押し出し実行。
-	* param		移動量。
+	* param		1秒単位での移動量(デルタタイムがかかってない移動量)。
 	* ※キャラクターコントローラがアタッチされていないオブジェクトは押し出せない。
 	*/
 	void Extrude(const Vector3& speed);

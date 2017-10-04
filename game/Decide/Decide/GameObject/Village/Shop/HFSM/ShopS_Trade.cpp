@@ -28,7 +28,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_ParmText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Parmtext", _ParmWindow->GetPriorty());
 
 	_ParmText->SetFontSize(30);
-	_ParmText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_ParmText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	_ParmText->transform->SetParent(_ParmWindow->transform);
 	_ParmText->transform->SetLocalPosition(Vector3(-120, 40, 0));
 	_ParmText->SetKerning(false);
@@ -45,13 +45,13 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_TopText->transform->SetParent(_TradeWindow->transform);
 	_TopText->transform->SetLocalPosition(Vector3(-370, 25, 0));
 	_TopText->Initialize(L"名称                 所持数 売買個数    値段", 35);
-	_TopText->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_TopText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	
 	_ValueText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ValueText", _TradeWindow->GetPriorty());
 	_ValueText->transform->SetParent(_TradeWindow->transform);
 	_ValueText->transform->SetLocalPosition(Vector3(372, 330, 0));
 	_ValueText->Initialize(L"合計金額      0$", 50);
-	_ValueText->SetAnchor(fbText::TextAnchorE::MiddleRight);
+	_ValueText->SetAnchor(fbText::TextAnchorE::UpperRight);
 	_ValueText->SetKerning(false);
 
 	//ウィンドウを非アクティブに
@@ -190,7 +190,7 @@ void ShopS_Trade::_CreateMenu()
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _TradeWindow->GetPriorty());
 
 		text->SetFontSize(50);
-		text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+		text->SetAnchor(fbText::TextAnchorE::UpperLeft);
 		text->transform->SetParent(_TradeWindow->transform);
 
 		//リストに追加。
@@ -199,7 +199,7 @@ void ShopS_Trade::_CreateMenu()
 		TextObject* money = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _TradeWindow->GetPriorty());
 
 		money->SetFontSize(50);
-		money->SetAnchor(fbText::TextAnchorE::MiddleRight);
+		money->SetAnchor(fbText::TextAnchorE::UpperRight);
 		money->transform->SetParent(text->transform);
 		money->SetKerning(false);
 

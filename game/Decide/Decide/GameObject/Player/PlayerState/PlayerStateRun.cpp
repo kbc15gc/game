@@ -72,7 +72,7 @@ void PlayerStateRun::Move()
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (_Player->_CharacterController->IsOnGround() == true)
+		if (_Player->_CharacterController->IsOnGround() == true && !_Player->_Speak)
 		{
 			//ジャンプパワーを設定
 			movespeed.y = _JumpSpeed;

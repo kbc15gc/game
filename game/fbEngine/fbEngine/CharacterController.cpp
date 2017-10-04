@@ -43,16 +43,21 @@ const Vector3& CCharacterController::Execute()
 	// y成分は重力を加算。
 	m_moveSpeed.y += m_gravity;
 
+	float deltaTime = Time::DeltaTime();
+
 	Vector3 nowPosTmp; 
 	Vector3 nextPosTmp;
 	Vector3 originalXZDir;
 	//次の移動先となる座標を計算する。
 	{
 		nextPosTmp = nowPosTmp = m_rigidBody->GetOffsetPos();	// 移動前のコリジョンの座標(原点)を設定。
+		
 		nextPosTmp.y = nowPosTmp.y = nowPosTmp.y - m_rigidBody->GetShape()->GetHalfSize().y;	// 位置情報をコリジョンの足元に合わせる。
-		//キャラクターの移動量に外的要因による移動量を加算。
-		Vector3 addPos = m_moveSpeed + _outsideSpeed;
-		addPos.Scale(Time::DeltaTime());
+		//キャラクターの移動量と外的要因による移動量を加算。
+		Vector3 addPos;
+		addPos = m_moveSpeed + _outsideSpeed;
+
+		addPos.Scale(deltaTime);
 		nextPosTmp += addPos;
 
 		originalXZDir = addPos;
@@ -82,8 +87,10 @@ const Vector3& CCharacterController::Execute()
 			//始点はカプセルコライダーの中心。
 			// ※平らな地面に引っかからないよう少し上げる。
 			start.setOrigin(btVector3(nowPosTmp.x, nowPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y + 0.2f, nowPosTmp.z));
+			start.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 			// ※平らな地面に引っかからないよう少し上げる。
 			end.setOrigin(btVector3(nextPosTmp.x, nowPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y + 0.2f, nextPosTmp.z));
+			end.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 
 			fbPhysicsCallback::SweepResultWall callback;
 			callback.me = m_rigidBody->GetCollisionObj();
@@ -153,6 +160,8 @@ const Vector3& CCharacterController::Execute()
 		end.setIdentity();
 		//始点は仮確定したカプセルコライダーの中心位置(Y成分は移動前)。
 		start.setOrigin(btVector3(nextPosTmp.x, nextPosTmp.y + m_rigidBody->GetShape()->GetHalfSize().y, nextPosTmp.z));
+		start.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
+
 		//終点は地面上にいない場合は1m下を見る。
 		//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 		//地面上にいなくて降下中の場合はそのまま落下先を調べる。
@@ -176,6 +185,7 @@ const Vector3& CCharacterController::Execute()
 			endPos.y -= 1.0f;
 		}
 		end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
+		end.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 		//スタートとエンドの差
 		btVector3 Sub = start.getOrigin() - end.getOrigin();
 		//差が0.0001以上なら衝突検出する。
@@ -218,5 +228,6 @@ const Vector3& CCharacterController::Execute()
 
 	_outsideSpeed = Vector3::zero;
 
+	_moveSpeedExcute = _moveSpeedExcute / deltaTime;
 	return _moveSpeedExcute;
 }

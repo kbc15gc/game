@@ -7,7 +7,7 @@ void FPS::Start()
 	
 	_Text->SetSize(40.0f);
 	_Text->SetText(L"FPS:0");
-	_Text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+	_Text->SetAnchor(fbText::TextAnchorE::UpperLeft);
 }
 
 void FPS::Update()
