@@ -220,31 +220,17 @@ public:
 	//			寿命(0.0より小さい値で無限)。
 	//			親(デフォルトはnull)。
 	//			コリジョン生成待ち時間。
+	//			ダメージ率(攻撃の種類などによる攻撃力に対する割合、この値に0.01f掛けた値を攻撃力に乗算する、単位はパーセント)。
 	// 戻り値:  生成した攻撃。
-	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& localRot, const Vector3& scale, float life, Transform* parent = nullptr, float interval = 0.0f) {
+	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& localRot, const Vector3& scale, float life, Transform* parent = nullptr,int percentage = 100) {
 		//攻撃コリジョン作成。
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(false)), false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, interval, parent);
+		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(false, nullptr, percentage)), false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent);
 		return attack;
 	}
 
 
-	// 全パラメーター設定。
-	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
-	//			HP。
-	//			HP最大値。
-	//			MP。
-	//			MP最大値。
-	//			攻撃力。
-	//			魔法攻撃力。
-	//			防御力。
-	//			魔法防御力。
-	//			器用度(クリティカル率)。
-	//inline void SetParamAll(const vector<BarColor>& color,int hp, int maxhp, int mp, int maxmp, int atk, int mat, int def,int mde, int dex,int lv, int exp, int dropexp,int money)const  {
-	//	_MyComponent.Parameter->ParamInit(hp, maxhp, mp, maxmp, atk, mat,def,mde, dex, lv, exp, dropexp,money);
-	//	_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), _MyComponent.Parameter->GetParam(CharacterParameter::Param::MAXHP), false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f), false);
-	//}
 	// 全パラメーター設定。
 	// 引数：	HPバーに設定する色(重ねる場合は先に追加したものから表示される)。
 	//			各種パラメーター。

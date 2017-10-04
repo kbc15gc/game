@@ -17,7 +17,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam1.scale = Vector3(1.5f, 1.5f, 1.5f);
 		attackparam1.attackframe = 10.0f;
 		attackparam1.lifetime = 0.5f;
-		attackparam1.atk = 1.2f;
+		attackparam1.atk = 120;
 		_AttackPram.push_back(attackparam1);
 	}
 	//UŒ‚‚Q
@@ -28,7 +28,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam2.scale = Vector3(1.5f, 1.5f, 1.5f);
 		attackparam2.attackframe = 10;
 		attackparam2.lifetime = 0.5f;
-		attackparam2.atk = 1.0f;
+		attackparam2.atk = 100;
 		_AttackPram.push_back(attackparam2);
 	}
 	//UŒ‚‚R
@@ -39,7 +39,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam3.scale = Vector3(1.5f, 1.5f, 1.5f);
 		attackparam3.attackframe = 10.0f;
 		attackparam3.lifetime = 0.5f;
-		attackparam3.atk = 1.2f;
+		attackparam3.atk = 120;
 		_AttackPram.push_back(attackparam3);
 	}
 	//UŒ‚‚S
@@ -50,7 +50,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam4.scale = Vector3(1.5f, 1.5f, 1.5f);
 		attackparam4.attackframe = 10;
 		attackparam4.lifetime = 0.5f;
-		attackparam4.atk = 1.0f;
+		attackparam4.atk = 100;
 		_AttackPram.push_back(attackparam4);
 	}
 	//UŒ‚‚T
@@ -61,7 +61,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam5.scale = Vector3(1.5f, 1.5f, 1.5f);
 		attackparam5.attackframe = 30;
 		attackparam5.lifetime = 0.5f;
-		attackparam5.atk = 2.0f;
+		attackparam5.atk = 200;
 		_AttackPram.push_back(attackparam5);
 	}
 	

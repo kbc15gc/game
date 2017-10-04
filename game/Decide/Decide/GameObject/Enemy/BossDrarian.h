@@ -31,12 +31,19 @@ public:
 
 	// アニメーションイベント関連。
 	void AnimationEvent_Kamituki();
+	void CreateAttackCollision_TailAttackSub1();	// 足の動きで弱ダメージ。
+	void CreateAttackCollision_TailAttackSub2();	// 足の動きで弱ダメージ。
+	void CreateAttackCollision_TailAttackSub3();	// 足の動きで弱ダメージ。
+	void CreateAttackCollision_TailAttackSub4();	// 足の動きで弱ダメージ。
 	void CreateAttackCollision_TailAttack1();
 	void CreateAttackCollision_TailAttack2();
 	void CreateAttackCollision_TailAttack3();
 	void CreateAttackCollision_TailAttack4();
 	void AnimationEvent_BreathStart();
 	void AnimationEvent_BreathEnd();
+	void CreateAttackCollision_BreathAttackSub1();	// 足の動きで弱ダメージ。
+	void CreateAttackCollision_BreathAttackSub2();	// 足の動きで弱ダメージ。
+
 
 
 protected:
