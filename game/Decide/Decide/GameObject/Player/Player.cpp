@@ -545,7 +545,7 @@ void Player::Speak()
 		//NPC
 		for (auto npc : village)
 		{
-			
+
 			//NPCからプレイヤーのベクトル
 			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
 			float len = dir.Length();
@@ -571,9 +571,12 @@ void Player::Speak()
 				_Speak = false;
 			}
 		}
+		//話す状態ならもう回さない。
+		if (_Speak)
+		{
+			break;
+		}
 	}
-	
-
 }
 
 
