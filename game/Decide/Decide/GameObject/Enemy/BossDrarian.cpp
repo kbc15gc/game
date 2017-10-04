@@ -125,25 +125,25 @@ void BossDrarian::AnimationEvent_Kamituki() {
 
 void BossDrarian::CreateAttackCollision_TailAttackSub1() 
 {
-	AttackCollision* attack = CreateAttack(Vector3(1.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform,20);
+	AttackCollision* attack = CreateAttack(Vector3(1.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform,false,true,20);
 	attack->RemoveParent();
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub2() 
 {
-	AttackCollision* attack = CreateAttack(Vector3(-1.0f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform,30);
+	AttackCollision* attack = CreateAttack(Vector3(-1.0f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform, false, true, 30);
 	attack->RemoveParent();
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub3()
 {
-	AttackCollision* attack = CreateAttack(Vector3(1.0f, -1.5f, 1.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform, 35);
+	AttackCollision* attack = CreateAttack(Vector3(1.0f, -1.5f, 1.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform, false, true, 35);
 	attack->RemoveParent();
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub4()
 {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.5f), Quaternion::Identity, Vector3(3.0f, 1.0f, 1.0f), 0.15f, transform, 40);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.5f), Quaternion::Identity, Vector3(3.0f, 1.0f, 1.0f), 0.15f, transform, false, true, 40);
 	attack->RemoveParent();
 }
 
@@ -200,12 +200,12 @@ void BossDrarian::AnimationEvent_BreathEnd() {
 
 void BossDrarian::CreateAttackCollision_BreathAttackSub1()
 {
-	AttackCollision* attack = CreateAttack(Vector3(1.5f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform, 30);
+	AttackCollision* attack = CreateAttack(Vector3(1.5f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform, false, true, 30);
 	attack->RemoveParent();
 }
 void BossDrarian::CreateAttackCollision_BreathAttackSub2() 
 {
-	AttackCollision* attack = CreateAttack(Vector3(-1.5f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform, 30);
+	AttackCollision* attack = CreateAttack(Vector3(-1.5f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform, false, true, 30);
 	attack->RemoveParent();
 }
 

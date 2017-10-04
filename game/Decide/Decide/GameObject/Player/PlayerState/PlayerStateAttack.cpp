@@ -153,7 +153,7 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 		if (_Player->GetEquipment()) {
-			attack->Create(move(_Player->_PlayerParam->GiveDamageMass(false, _Player->GetEquipment()->weapon, pram.atk)), false, pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, 0.0f, _Player->transform);
+			attack->Create(move(_Player->_PlayerParam->GiveDamageMass(false,false, _Player->GetEquipment()->weapon, pram.atk)),  pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, 0.0f, _Player->transform);
 		}
 	}
 }

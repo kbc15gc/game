@@ -46,19 +46,23 @@ void CharacterParameter::Update() {
 	_UpdateInfo();
 }
 
-int CharacterParameter::ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx) {
+int CharacterParameter::ReciveDamage(const DamageInfo& info, HoldArmor* armor, int defidx) {
 	//ダメージ分HPを減算。
-	return ReciveDamageThrough(ReceiveDamageMass(defaultDamage, isMagic, armor, defidx));
+	return ReciveDamageThrough(ReceiveDamageMass(info, armor, defidx));
 }
 
-int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor, int defidx)
+int CharacterParameter::ReceiveDamageMass(const DamageInfo& info, HoldArmor* armor, int defidx)
 {
+	if (info.isThrough) {
+		return info.value;	// 貫通攻撃なのでそのままの値。
+	}
+
 	//こちらの防御力も考慮したダメージ = 相手の与ダメージ-((防御力 + 装備品の防御力) * 属性的なやつ * キャラクターの行動による防御率)。
 	float element = 1.0f;// 属性による補正的なやつ(とりあえず作るだけ作っとく)※暫定処理。
 
-	short def;
+	int def;
 
-	if (isMagic) {
+	if (info.isMagic) {
 		def = _Info[Param::MDE].param;
 		if (armor) {
 			def += armor->GetMagicDef();
@@ -71,7 +75,7 @@ int CharacterParameter::ReceiveDamageMass(int defaultDamage, bool isMagic, HoldA
 		}
 	}
 
-	short damage = max(0, defaultDamage - (def * element * defidx));
+	int damage = max(0, info.value - (def * element * defidx));
 
 	return damage;
 }
@@ -89,7 +93,7 @@ int CharacterParameter::ReciveDamageThrough(int damage) {
 	return damage;
 }
 
-unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int percentage)
+unique_ptr<CharacterParameter::DamageInfo> CharacterParameter::GiveDamageMass(bool isMagic, bool isThrough, HoldWeapon* weapon, int percentage)
 {
 	int damage = 0;
 	int weaponDamage = 0;
@@ -114,7 +118,7 @@ unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMas
 	// キャラの攻撃力に武器の攻撃力を加算。
 	damage += weaponDamage;
 
-	unique_ptr<GiveDamageInfo> info(new GiveDamageInfo);
+	unique_ptr<DamageInfo> info(new DamageInfo);
 
 	if (crit > 0) {
 		int work = critMax / crit;
@@ -136,6 +140,8 @@ unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMas
 	}
 
 	info->value = damage * (static_cast<float>(percentage) * 0.01f);
+	info->isMagic = isMagic;
+	info->isThrough = isThrough;
 	return move(info);
 }
 
