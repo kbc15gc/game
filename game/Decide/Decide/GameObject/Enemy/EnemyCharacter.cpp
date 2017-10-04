@@ -141,7 +141,7 @@ void EnemyCharacter::SearchView() {
 	// Ž‹–ìŠp”»’èB
 	if (_SearchView.IsDiscovery(
 		transform->GetPosition(),
-		INSTANCE(GameObjectManager)->FindObject("Player")->transform->GetPosition(),
+		_Player->transform->GetPosition(),
 		transform->GetForward(),
 		_ViewAngle,
 		_ViewRange))

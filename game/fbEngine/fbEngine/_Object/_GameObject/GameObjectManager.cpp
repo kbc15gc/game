@@ -123,27 +123,21 @@ void GameObjectManager::ImageRenderObject()
 	}
 }
 
-void GameObjectManager::AddRemoveList(GameObject * obj)
+void GameObjectManager::AddRemoveList(GameObject * addres)
 {
-	//重複チェック。
-	if (_CheckUniqueRemoveList(obj) == FALSE)
+	//まだ登録されていないか(唯一性)チェック。
+	if (_CheckUniqueRemoveList(addres) == FALSE)
 		return;
 
+	//全ベクター探索。
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
-		list<GameObject*>::iterator it = _GameObjects[priority].begin();
-
-		while (it != _GameObjects[priority].end())
-		{
-			//アドレスの比較
-			if (obj == *it)
-			{
-				_AddRemoveList(it, priority);
-				return;
-			}
-			else
-				it++;
-		}
+		auto& vec = _GameObjects[priority];
+		//条件に一致するものを検索。
+		auto& itr = find(vec.begin(), vec.end(), addres);
+		//一致すれば追加。
+		if(itr != vec.end())
+			_AddRemoveList(itr, priority);
 	}
 }
 
@@ -151,43 +145,31 @@ void GameObjectManager::AddRemoveList(char * name)
 {
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
-		list<GameObject*>::iterator it = _GameObjects[priority].begin();
-
-		while (it != _GameObjects[priority].end())
+		auto& vec = _GameObjects[priority];
+		//名前が一致した場合イテレータを返す。
+		auto& itr = std::find_if(vec.begin(), vec.end(), [name](GameObject* obj) {return (strcmp(name, obj->GetName()) == 0); });
+		if (itr != vec.end())
 		{
-			//名前の比較
-			if (strcmp(name, (*it)->GetName()) == 0)
-			{
-				//重複チェック。
-				if (_CheckUniqueRemoveList((*it)) == FALSE)
-					return;
-
-				_AddRemoveList(it, priority);
+			//重複チェック。
+			if (_CheckUniqueRemoveList((*itr)) == FALSE)
 				return;
-			}
-			else
-				it++;
+
+			_AddRemoveList(itr, priority);
+			return;
 		}
 	}
 }
 
 GameObject* GameObjectManager::FindObject(char* name)
 {
-	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
+	for (auto& vec : _GameObjects)
 	{
-		list<GameObject*>::iterator it = _GameObjects[priority].begin();
-
-		while (it != _GameObjects[priority].end())
-		{
-			//名前の比較
-			if (strcmp(name, (*it)->GetName()) == 0)
-			{
-				return (*it);
-			}
-			else
-				it++;
-		}
+		//名前が一致した場合イテレータを返す。
+		auto& itr = std::find_if(vec.begin(), vec.end(), [name](GameObject* obj) {return (strcmp(name, obj->GetName()) == 0); });
+		if (itr != vec.end())
+			return (*itr);
 	}
+
 	//見つからなかった時はnullptrを返却
 	return nullptr;
 }
@@ -212,25 +194,17 @@ const vector<GameObject*>& GameObjectManager::FindObjects(char* name,vector<Game
 	return objArray;
 }
 
-bool GameObjectManager::_CheckUniqueRemoveList(GameObject * obj)
+bool GameObjectManager::_CheckUniqueRemoveList(GameObject * addres)
 {
-	for each (RemoveObj remove in _RemoveList)
-	{
-		//重複発見
-		if((*remove.iterator) == obj)
-		{
-			return FALSE;
-		}
-	}
-	//重複なし。
-	return TRUE;
+	//見つからなかったらtrueを返す。
+	return (_RemoveList.end() == find_if(_RemoveList.begin(), _RemoveList.end(), [addres](RemoveObj remove) {return ((*remove.iterator) == addres); }));
 }
 
-void GameObjectManager::_AddRemoveList(list<GameObject*>::iterator itr,int priority) {
-	(*itr)->OnDestroy();
-	(*itr)->GetComponentManager().OnDestroy();
-	RemoveObj remove(itr, priority);
-	_RemoveList.push_back(remove);
+void GameObjectManager::_AddRemoveList(list<GameObject*>::iterator iterator, int priority)
+{
+	(*iterator)->OnDestroy();
+	(*iterator)->GetComponentManager().OnDestroy();
+	_RemoveList.push_back(RemoveObj(iterator, priority));
 }
 
 void GameObjectManager::_RemoveObject()
@@ -245,39 +219,34 @@ void GameObjectManager::_RemoveObject()
 		//_RemoveListからイテレータ削除
 		removeIt = _RemoveList.erase(removeIt);
 	}
+
 	_RemoveList.clear();
 }
 
 void GameObjectManager::Release()
 {
+	//全ベクター探索。
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
-		if (_GameObjects.size() > 0)
+		auto& vec = _GameObjects[priority];
+		for (auto& itr = vec.begin(), end = vec.end(); itr != end; itr++)
 		{
-			list<GameObject*>::iterator it = _GameObjects[priority].begin();
-			//すべて追加
-			while (it != _GameObjects[priority].end())
+			auto& obj = (*itr);
+			//重複チェック。
+			if (_CheckUniqueRemoveList(obj) == FALSE)
+				continue;
+
+			if (obj->GetDiscard())
 			{
-				//重複チェック。
-				if (_CheckUniqueRemoveList(*it) == FALSE) {
-					it++;
-					continue;
-				}
-
-				if ((*it)->GetDiscard())
-				{
-					_AddRemoveList(it, priority);
-				}
-				else
-				{
-					//破棄しない
-					//次は破棄するようにする
-					(*it)->SetDiscard(true);
-				}
-
-				it++;
+				_AddRemoveList(itr, priority);
 			}
-		}
+			else
+			{
+				//破棄しない
+				//次は破棄するようにする
+				obj->SetDiscard(true);
+			}
+		}	
 	}
 	_RemoveObject();
 	mainCamera = nullptr;

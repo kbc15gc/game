@@ -3,11 +3,11 @@
 */
 #pragma once
 
-#include"HistoryInfo.h"
-#include"HistoryMenu\HistoryMenu.h"
-#include"HistoryBook\HistoryBook.h"
+#include "HistoryInfo.h"
+#include "HistoryMenu\HistoryMenu.h"
+#include "HistoryBook\HistoryBook.h"
 #include "GameObject\Village\NPC.h"
-#include"Effect\MysteryLight.h"
+#include "Effect\MysteryLight.h"
 
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
