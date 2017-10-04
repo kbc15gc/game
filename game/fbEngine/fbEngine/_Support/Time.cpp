@@ -1,39 +1,100 @@
 #include"fbstdafx.h"
 #include "Time.h"
 
-
 //これは,timeGetTimeを使うver
 //他には高分解能カウンタと高分解能周波数を使った,より精度の高い方法もある(KBCFreamworkでみた)
 
-double Time::deltaTime = 0.0f;
-//パソコンを起動して何ミリ秒経過したか取得
-DWORD Time::beforeTime = timeGetTime();
-float Time::fps = 0;
+Time* Time::_Instance = nullptr;
 
-float Time::fream = 0;
-double Time::time = 0;
-
-void Time::Update()
+namespace
 {
-	//今の時間を取得(ミリ秒)
-	DWORD afterTime = timeGetTime();
-	//前回と今の差をデルタタイムに設定(ミリ秒を秒に変換)
-	deltaTime = (afterTime - beforeTime) / 1000.0f;
-	//beforeを更新
-	beforeTime = afterTime;
-	
-	time += deltaTime;
-	fream++;
+	// QueryPerformanceCounter関数を使うフラグ
+	const int FPSCOUNTER_QUERYPER_COUNTER = 1;
+	// timeGetTime関数を使うフラグ
+	const int FPSCOUNTER_TIMEGETTIME = 2;
+}
 
-	//1秒経過したなら
-	if (time >= 1.0f)
-	{
-		//超過分
-		double over = (double)1.0f / time;
-		//FPS更新
-		fps = (float)(fream * over);
-
-		time = 0;
-		fream = 0;
+Time::Time() :
+	_DeltaTime(0.0f),
+	_SumTime(0.0f)
+{
+	if (QueryPerformanceCounter(&_Counter) != 0)
+	{		
+		_CounterFlag = FPSCOUNTER_QUERYPER_COUNTER;
+		// 生成時の時刻（クロック数）を取得
+		_OldLongCount = _Counter.QuadPart;        
+		LARGE_INTEGER Freq;
+		// 1秒当たりクロック数を取得
+		QueryPerformanceFrequency(&Freq);            
+		_dFreq = (double)Freq.QuadPart;
 	}
+	else
+	{
+		_CounterFlag = FPSCOUNTER_TIMEGETTIME;
+		//精度を上げる
+		timeBeginPeriod(1);
+		lastTime = timeGetTime();
+	}
+
+	
+	_FrameList.resize(_SampleNum, 0.0f);
+}
+
+void Time::_Update()
+{
+	//時差取得
+	double delta = _CalcDeltaTime();
+	_DeltaTime = delta / 1000.0f;
+
+	//一番古いデータを削除。
+	_FrameList.pop_front();
+	//新しいデータ追加。
+	_FrameList.push_back(delta);
+
+	//FPS算出.
+	double AveDef = (_SumTime + delta) / _SampleNum;
+	if (AveDef != 0)
+		_FPS = 1000.0 / AveDef;
+
+	// 共通加算部分の更新
+	_SumTime += delta - *_FrameList.begin();
+
+	_DeltaTime = delta / 1000.0f;
+}
+
+double Time::_CalcDeltaTime()
+{
+	// 差分時間を計測
+	if (_CounterFlag == FPSCOUNTER_QUERYPER_COUNTER)
+	{
+		// QueryPerformanceCounter関数による計測
+		QueryPerformanceCounter(&_Counter);                     // 現在の時刻を取得し、
+		LONGLONG LongDef = _Counter.QuadPart - _OldLongCount;   // 差分カウント数を算出する。
+		double dDef = (double)LongDef;                          // 倍精度浮動小数点に変換
+		_OldLongCount = _Counter.QuadPart;                      // 現在の時刻を保持
+		return dDef * 1000 / _dFreq;                            // 差分時間をミリ秒単位で返す
+	}
+
+	// timeGetTime関数による計測
+	//今の時間を取得(ミリ秒)
+	DWORD nowTime = timeGetTime();
+	//前回と今回の差を計算。
+	DWORD delta = nowTime - lastTime;
+	//beforeを更新
+	lastTime = nowTime;
+	return delta;
+}
+
+const double Time::_GetDeltaTime()
+{
+	if (_DeltaTime > (1.0 / 30.0))
+	{
+		return (1.0 / 30.0);
+	}
+	return _DeltaTime;
+}
+
+const float& Time::_GetFPS()
+{
+	return _FPS;
 }

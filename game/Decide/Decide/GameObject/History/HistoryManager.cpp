@@ -21,18 +21,16 @@ HistoryManager::HistoryManager()
 	//CSVから歴史情報読み取り。
 	Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 
-	FOR(i, _LocationHistoryList.size())
+	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
 	{
+		//グループ状態を0で初期化。
+		_NowGroupIDList.push_back(0);
+
 		//vectorを追加
 		vector<GameObject*> list;
 		_GameObjectList.push_back(list);
 		vector<NPC*> npcs;
 		_NPCList.push_back(npcs);
-	}
-
-	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
-	{
-		_NowGroupIDList.push_back(0);
 	}
 }
 
@@ -83,7 +81,7 @@ void HistoryManager::CreateObject()
 	{		
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		_CreateObject(-1, path, type);
+		_CreateObject((int)LocationCodeE::Common, path, type);
 	}
 }
 
@@ -228,10 +226,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			obj->LoadModel(objInfo[i]->filename);
 
 			//管理用の配列に追加。
-			if (location >= 0)
-			{
-				_GameObjectList[location].push_back(obj);
-			}
+			_GameObjectList[location].push_back(obj);
 
 			//次がコリジョンかどうか？
 			while (true)
@@ -299,10 +294,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		npc->transform->SetLocalScale(npcInfo[i]->sca);
 
 		//管理用の配列に追加。
-		if (location >= 0)
-		{
-			_NPCList[location].push_back(npc);
-		}
+		_NPCList[location].push_back(npc);
 	}
 	//いらんので破棄。
 	npcInfo.clear();
@@ -330,10 +322,7 @@ void HistoryManager::_CreateCollision(int location, const char * path)
 		coll->transform->SetRotation(colls[i]->ang);
 		coll->transform->SetLocalScale(colls[i]->sca);
 		//管理用の配列に追加。
-		if (location >= 0)
-		{
-			_GameObjectList[location].push_back(coll);
-		}
+		_GameObjectList[location].push_back(coll);
 	}
 
 	colls.clear();
