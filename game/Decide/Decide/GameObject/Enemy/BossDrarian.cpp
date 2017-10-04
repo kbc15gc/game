@@ -30,7 +30,7 @@ void BossDrarian::_StartSubClass() {
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 5.0f;
+	_AttackRange = 5.5f;
 
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
@@ -123,6 +123,31 @@ void BossDrarian::AnimationEvent_Kamituki() {
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
+void BossDrarian::CreateAttackCollision_TailAttackSub1() 
+{
+	AttackCollision* attack = CreateAttack(Vector3(1.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform,20);
+	attack->RemoveParent();
+}
+
+void BossDrarian::CreateAttackCollision_TailAttackSub2() 
+{
+	AttackCollision* attack = CreateAttack(Vector3(-1.0f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform,30);
+	attack->RemoveParent();
+}
+
+void BossDrarian::CreateAttackCollision_TailAttackSub3()
+{
+	AttackCollision* attack = CreateAttack(Vector3(1.0f, -1.5f, 1.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.15f, transform, 35);
+	attack->RemoveParent();
+}
+
+void BossDrarian::CreateAttackCollision_TailAttackSub4()
+{
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.5f), Quaternion::Identity, Vector3(3.0f, 1.0f, 1.0f), 0.15f, transform, 40);
+	attack->RemoveParent();
+}
+
+
 void BossDrarian::CreateAttackCollision_TailAttack1() {
 	//攻撃コリジョン作成。
 	Quaternion rot = Quaternion::Identity;
@@ -165,12 +190,24 @@ void BossDrarian::CreateAttackCollision_TailAttack4() {
 
 void BossDrarian::AnimationEvent_BreathStart() {
 	_breathAttack->BreathStart();
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack3);
 }
 
 void BossDrarian::AnimationEvent_BreathEnd() {
 	_breathAttack->BreathEnd();
 }
 
+void BossDrarian::CreateAttackCollision_BreathAttackSub1()
+{
+	AttackCollision* attack = CreateAttack(Vector3(1.5f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform, 30);
+	attack->RemoveParent();
+}
+void BossDrarian::CreateAttackCollision_BreathAttackSub2() 
+{
+	AttackCollision* attack = CreateAttack(Vector3(-1.5f, -1.5f, 2.5f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform, 30);
+	attack->RemoveParent();
+}
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
 	if (EndStateType == State::Wandering) {
@@ -287,8 +324,16 @@ void BossDrarian::_ConfigAnimationEvent() {
 	}
 	// しっぽ攻撃。
 	{
+		int eventFrame = 7;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
 
-		int eventFrame = 60;
+		eventFrame = 17;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
+
+		eventFrame = 27;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub3));
+
+		eventFrame = 60;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack1));
 
 		eventFrame = 62;
@@ -299,14 +344,30 @@ void BossDrarian::_ConfigAnimationEvent() {
 
 		eventFrame = 70;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack4));
+
+		eventFrame = 112;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub4));
+
 	}
 	// ブレス攻撃。
 	{
-		int eventFrame = 80.0f;
+		int eventFrame = 12;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_BreathAttackSub1));
+
+		eventFrame = 29;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_BreathAttackSub2));
+
+		eventFrame = 80;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathStart));
 
-		eventFrame = 120.0f;
+		eventFrame = 120;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathEnd));
+	
+		eventFrame = 140;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
+
+		eventFrame = 160;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 	}
 }
 
