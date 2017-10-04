@@ -249,7 +249,6 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
-    <ClCompile Include="BuffDebuffICon.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
@@ -261,12 +260,10 @@
     <ClCompile Include="GameObject\StatusWindow\Dialog.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\LevelUpImage.cpp">
-      <Filter>GameObject</Filter>
+    <ClCompile Include="GameObject\Component\BuffDebuffICon.cpp">
+      <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateSpeak.cpp">
-      <Filter>GameObject\Player\PlayerState</Filter>
-    </ClCompile>
+    <ClCompile Include="GameObject\LevelUpImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -529,7 +526,6 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
-    <ClInclude Include="BuffDebuffICon.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
@@ -541,12 +537,10 @@
     <ClInclude Include="GameObject\StatusWindow\Dialog.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\LevelUpImage.h">
-      <Filter>GameObject</Filter>
+    <ClInclude Include="GameObject\Component\BuffDebuffICon.h">
+      <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateSpeak.h">
-      <Filter>GameObject\Player\PlayerState</Filter>
-    </ClInclude>
+    <ClInclude Include="GameObject\LevelUpImage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

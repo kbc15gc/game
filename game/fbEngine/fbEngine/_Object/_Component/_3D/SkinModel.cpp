@@ -72,14 +72,14 @@ void SkinModel::DrawFrame(LPD3DXFRAME pFrame)
 
 void SkinModel::Awake()
 {
-	
+	//mainのものが設定されているならセットされる。
+	_Camera = INSTANCE(GameObjectManager)->mainCamera;
+	_Light = INSTANCE(GameObjectManager)->mainLight;
 }
 
 void SkinModel::Start()
 {
-	//mainのものが設定されているならセットされる。
-	_Camera = INSTANCE(GameObjectManager)->mainCamera;
-	_Light = INSTANCE(GameObjectManager)->mainLight;
+	
 }
 
 //モデルデータの行列更新
@@ -194,6 +194,7 @@ void SkinModel::DrawMeshContainer(
 		{
 			_Effect->SetTechnique("NormalRender");
 		}
+
 		//開始（必ず終了すること）
 		_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 		_Effect->BeginPass(0);

@@ -44,7 +44,7 @@ void AttackValue2D::Init(int damagevalue, float lifetime, Vector3 offset, Color 
 	//攻撃時の値を表示するテキスト。
 	_AttackText = INSTANCE(GameObjectManager)->AddNew<TextObject>("AttackValue", _Priority);
 	_AttackText->Initialize(L"", 40.0f,color);
-	_AttackText->SetAnchor(fbText::TextAnchorE::UpperCenter);
+	_AttackText->SetAnchor(fbText::TextAnchorE::Middle);
 	_Offset = offset;
 	_Pos = transform->GetPosition() + _Offset;
 

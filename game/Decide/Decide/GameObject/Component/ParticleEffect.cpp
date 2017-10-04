@@ -133,7 +133,7 @@ void ParticleEffect::DeBuffEffect() {
 	//デバフに使用するパーティクルパラメーターを設定。
 	_DebuffParticleParam.Init();
 	_DebuffParticleParam.texturePath = "ItemEfectBase.png";
-	_DebuffParticleParam.alphaBlendMode = 3;
+	_DebuffParticleParam.alphaBlendMode = 1;
 	_DebuffParticleParam.addVelocityRandomMargih = Vector3::zero;
 	_DebuffParticleParam.brightness = 1.0f;
 	_DebuffParticleParam.fadeTime = 0.1f;
@@ -151,7 +151,7 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.isParent = true;
 
 	_DebuffParticleEmitter->transform->SetParent(transform);
-	_DebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 2.4f, 0.0f));
+	_DebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.4f, 0.0f));
 	_DebuffParticleEmitter->Init(_DebuffParticleParam);
 	SetDebuffEffectFlag(true);
 }

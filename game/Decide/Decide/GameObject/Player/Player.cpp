@@ -6,7 +6,7 @@
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
-#include "BuffDebuffICon.h"
+#include "GameObject\Component\BuffDebuffICon.h"
 
 namespace
 {
@@ -33,10 +33,10 @@ Player::Player(const char * name) :
 	_DeathState(this),
 	//ストップステート
 	_StopState(this),
-	//スピークステート
-	_SpeakState(this),
 	//デバッグか
-	_Debug(false)
+	_Debug(false),
+	//話しているか
+	_Speak(false)
 {
 	//経験値テーブルをロード
 	_LoadEXPTable();
@@ -127,10 +127,7 @@ void Player::Awake()
 	_ParticleEffect = AddComponent<ParticleEffect>();
 
 	//バフデバフアイコン。
-	_BuffDebuffICon = (BuffDebuffICon*)INSTANCE(GameObjectManager)->FindObject("BuffDebuffICon");
-
-	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
-	Re_SetEquipment();
+	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
 }
 
 void Player::Start()
@@ -171,8 +168,8 @@ void Player::Start()
 	//レベルアップイメージ初期化
 	_LevelUpImage = INSTANCE(GameObjectManager)->AddNew<LevelUpImage>("LevelUP", 9);
 
-	//歴史書検索
-	_HistoryManager = (HistoryManager*)INSTANCE(GameObjectManager)->FindObject("HistoryManager");
+	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
+	Re_SetEquipment();
 }
 
 void Player::Update()
@@ -202,7 +199,6 @@ void Player::Update()
 	if (_EXPTable.size() > 0 &&
 		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
 	{
-		_ParticleEffect->LevelUpEffect();
 		_LevelUP();
 	}
 	//ダメージを受ける処理。
@@ -216,6 +212,9 @@ void Player::Update()
 		//transform->UpdateTransform();
 
 	EffectUpdate();
+
+	//NPCと話すか
+	Speak();
 
 }
 
@@ -248,9 +247,6 @@ void Player::ChangeState(State nextstate)
 		//ストップ状態
 		_CurrentState = &_StopState;
 		break;
-	case State::Speak:
-		_CurrentState = &_SpeakState;
-		break;
 	default:
 		//デフォルト
 		break;
@@ -282,7 +278,7 @@ void Player::AnimationControl()
 	}
 	//ジャンプアニメーション
 	//ストップじゃないならジャンプする。
-	if (_CharacterController->IsJump() && _State != State::Stop)
+	if (_CharacterController->IsJump() && _State != State::Stop && !_Speak)
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
 	}
@@ -417,6 +413,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 #endif //  _DEBUG
 
 			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			returnValue = true;
 		}
@@ -432,6 +429,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			}
 #endif //  _DEBUG
 			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
 			returnValue = true;
 		}
@@ -531,7 +529,55 @@ void Player::_LevelUP()
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
 	//レベルアップエフェクト
+	_ParticleEffect->LevelUpEffect();
 	_ParticleEffect->SetLevelUPEffectFlag(true);
+}
+
+void Player::Speak()
+{
+	//NPCを取得
+	vector<vector<NPC*>> npc;
+	npc = INSTANCE(HistoryManager)->GetNPCList();
+	//村
+	for (auto village : npc)
+	{
+		//サイズが0ならコンティニュー
+		if (village.size() == 0)
+		{
+			continue;
+		}
+		//NPC
+		for (auto npc : village)
+		{
+			
+			//NPCからプレイヤーのベクトル
+			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
+			float len = dir.Length();
+			//範囲内かどうか
+			if (npc->GetRadius() >= len)
+			{
+				//地面についていれば話しかけれる
+				if (_CharacterController->IsOnGround())
+				{
+					//話すフラグセット
+					npc->SetIsSpeak(true);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_Speak = true;
+					//これ以上処理は続けない
+					break;
+				}
+			}
+			else
+			{
+				//話すNPCがいないので
+				npc->SetIsSpeak(false);
+				_Speak = false;
+			}
+		}
+	}
+	
+
 }
 
 
