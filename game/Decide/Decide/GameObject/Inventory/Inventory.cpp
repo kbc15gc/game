@@ -13,7 +13,6 @@ Inventory* Inventory::_InventoryInstance = nullptr;
 
 Inventory::Inventory()
 {
-	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 }
 
 Inventory::~Inventory(){
@@ -25,6 +24,7 @@ Inventory::~Inventory(){
 }
 
 void Inventory::Initialize() {
+	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
 		// コードごとの最大ID数分配列確保。
@@ -376,10 +376,10 @@ void Inventory::ArrangementInventory()
 void Inventory::deleteList() {
 	
 
-	for (auto list : _InventoryItemList) {
+	for (auto& list : _InventoryItemList) {
 		list.clear();
 	}
 	_InventoryItemList.clear();
 
-	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+	//_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 }

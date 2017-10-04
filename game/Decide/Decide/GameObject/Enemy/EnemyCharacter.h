@@ -211,7 +211,7 @@ public:
 	// エネミーにダメージを与える処理。
 	// 引数：	ダメージ量。
 	//			魔法か。
-	void GiveDamage(int damage,bool isMagic);
+	void GiveDamage(int damage, bool isCritical, bool isMagic);
 
 	// 攻撃生成関数。
 	// 引数：	位置(ローカル座標)。
@@ -226,7 +226,7 @@ public:
 		//攻撃コリジョン作成。
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(_MyComponent.Parameter->GiveDamageMass(false,nullptr, percentage)->value, false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent);
+		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(false, nullptr, percentage)), false,localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent);
 		return attack;
 	}
 
