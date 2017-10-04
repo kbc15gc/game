@@ -27,15 +27,18 @@ void BuffDebuffICon::Awake() {
 }
 
 //バフアイコンの生成。
-void BuffDebuffICon::BuffIconCreate(Param param) {
+void BuffDebuffICon::BuffIconCreate(CharacterParameter::Param param) {
 
 	//アイコンに出すパラメーター以外が来たら何もしない。
-	if (param<Param::Atk || param>Param::Max) {
+	if (param == CharacterParameter::Param::HP ||
+		param == CharacterParameter::Param::MP ||
+		param == CharacterParameter::Param::CRT ||
+		param == CharacterParameter::Param::LV) {
 		return;
 	}
 
 	//すでに追加されているパラメーターかをチェック。
-	if (false == _AddCheck(param)) {
+	if (false == _AddCheck(param,true)) {
 		return;
 	}
 
@@ -102,15 +105,18 @@ void BuffDebuffICon::BuffIconCreate(Param param) {
 }
 
 //デバフアイコンの生成。
-void BuffDebuffICon::DebuffIconCreate(Param param) {
+void BuffDebuffICon::DebuffIconCreate(CharacterParameter::Param param) {
 
 	//アイコンに出すパラメーター以外が来たら何もしない。
-	if (param<Param::Atk || param>Param::Max) {
+	if (param == CharacterParameter::Param::HP ||
+		param == CharacterParameter::Param::MP ||
+		param == CharacterParameter::Param::CRT||
+		param == CharacterParameter::Param::LV) {
 		return;
 	}
 
 	//すでに追加されているパラメーターかをチェック。
-	if (false == _AddCheck(param)) {
+	if (false == _AddCheck(param,false)) {
 		return;
 	}
 	//構造体の初期化。
@@ -219,10 +225,10 @@ void BuffDebuffICon::Update() {
 }
 
 //追加するパラメーターを追加していいのかをチェック。
-bool BuffDebuffICon::_AddCheck(Param param) {
+bool BuffDebuffICon::_AddCheck(CharacterParameter::Param param,bool isBuff) {
 	for (int i = 0; i < _BuffDebuffList.size(); i++) {
 		//同じパラメーターがある。
-		if (_BuffDebuffList[i]->_Param == param) {
+		if (_BuffDebuffList[i]->_Param == param&&_BuffDebuffList[i]->_isBuff==isBuff) {
 			return false;
 		}
 	}
@@ -249,10 +255,13 @@ void BuffDebuffICon::RenderEnable() {
 }
 
 //バフアイコンの削除。
-void BuffDebuffICon::DeleteBuffIcon(Param param) {
+void BuffDebuffICon::DeleteBuffIcon(CharacterParameter::Param param) {
 
 	//アイコンに出すパラメーター以外が来たら何もしない。
-	if (param<Param::Atk || param>Param::Max) {
+	if (param == CharacterParameter::Param::HP ||
+		param == CharacterParameter::Param::MP ||
+		param == CharacterParameter::Param::CRT||
+		param == CharacterParameter::Param::LV) {
 		return;
 	}
 
@@ -276,10 +285,13 @@ void BuffDebuffICon::DeleteBuffIcon(Param param) {
 }
 
 //デバフアイコンの削除。
-void BuffDebuffICon::DeleteDebuffIcon(Param param) {
+void BuffDebuffICon::DeleteDebuffIcon(CharacterParameter::Param param) {
 
 	//アイコンに出すパラメーター以外が来たら何もしない。
-	if (param<Param::Atk || param>Param::Max) {
+	if (param == CharacterParameter::Param::HP ||
+		param == CharacterParameter::Param::MP ||
+		param == CharacterParameter::Param::CRT ||
+		param == CharacterParameter::Param::LV) {
 		return;
 	}
 
@@ -321,12 +333,39 @@ void BuffDebuffICon::Debug()
 	if (KeyBoardInput->isPush(DIK_I)) {
 		vector<GameObject*> list;
 		INSTANCE(GameObjectManager)->FindObjects("EnemyProt", list);
-		for (auto itr = list.begin(); itr!=list.end(); itr++)
-		{
-			static_cast<EnemyCharacter*>((*itr))->ItemEffect(static_cast<Item::ItemInfo*>(INSTANCE(ItemManager)->GetItemInfo(8, Item::ItemCodeE::Item)));
+		for (auto enemy : list) {
+			for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
+			{
+				Item::ItemInfo testInfo;
+				testInfo.time = 999.0f;
+				testInfo.effectValue[idx] = 100;
+				static_cast<EnemyCharacter*>(enemy)->ItemEffect(&testInfo);
+			}
+			for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
+			{
+				Item::ItemInfo testInfo;
+				testInfo.time = 999.0f;
+				testInfo.effectValue[idx] = -100;
+				static_cast<EnemyCharacter*>(enemy)->ItemEffect(&testInfo);
+			}
 		}
 		//static_cast<EnemyCharacter*>(INSTANCE(GameObjectManager)->FindObject("EnemyProt"))->ItemEffect(static_cast<Item::ItemInfo*>(INSTANCE(ItemManager)->GetItemInfo(8, Item::ItemCodeE::Item)));
-		static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"))->ItemEffect(static_cast<Item::ItemInfo*>(INSTANCE(ItemManager)->GetItemInfo(10, Item::ItemCodeE::Item)));
+		Player* p = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
+		Item::ItemInfo testInfo;
+		testInfo.time = 999.0f;
+
+		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
+		{
+			testInfo.effectValue[idx] = 100;
+		}
+		p->ItemEffect(&testInfo);
+
+		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
+		{
+			testInfo.effectValue[idx] = -100;
+		}
+		p->ItemEffect(&testInfo);
+
 	}
 }
 

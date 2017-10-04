@@ -307,7 +307,8 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 #endif //  _DEBUG
 
 			_MyComponent.Parameter->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
-			_MyComponent.BuffDebuffICon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
+			_MyComponent.BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 			returnValue = true;
 		}
 		else if (value < 0) {
@@ -323,7 +324,7 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 #endif //  _DEBUG
 			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
 			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
-			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 			returnValue = true;
 		}
 	}
@@ -432,7 +433,7 @@ void EnemyCharacter::EffectUpdate() {
 		}
 		else
 		{
-			_MyComponent.BuffDebuffICon->DeleteBuffIcon(static_cast<BuffDebuffICon::Param>(idx));
+			_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
 		}
 		if (_MyComponent.Parameter->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
 		{
@@ -440,7 +441,7 @@ void EnemyCharacter::EffectUpdate() {
 		}
 		else
 		{
-			_MyComponent.BuffDebuffICon->DeleteDebuffIcon(static_cast<BuffDebuffICon::Param>(idx));
+			_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
 		}
 	}
 	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
