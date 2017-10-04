@@ -39,11 +39,20 @@ void AttackValue2D::LateUpdate()
 {
 }
 
-void AttackValue2D::Init(int damagevalue, float lifetime, Vector3 offset, Color color)
+void AttackValue2D::Init(int damagevalue, bool critical, float lifetime, Vector3 offset, Color color)
 {
 	//攻撃時の値を表示するテキスト。
 	_AttackText = INSTANCE(GameObjectManager)->AddNew<TextObject>("AttackValue", _Priority);
-	_AttackText->Initialize(L"", 40.0f,color);
+	//クリティカルか。
+	if (critical)
+	{
+		_AttackText->Initialize(L"", 70.0f, Color::yellow);
+	}
+	else
+	{
+		_AttackText->Initialize(L"", 40.0f, color);
+	}
+	
 	_AttackText->SetAnchor(fbText::TextAnchorE::Middle);
 	_Offset = offset;
 	_Pos = transform->GetPosition() + _Offset;
