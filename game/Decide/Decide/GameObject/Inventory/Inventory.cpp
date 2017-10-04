@@ -191,7 +191,7 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 		{
 			//ˆê’v‚µ‚½‚Ì‚Å’†g‚ðíœB
 			INSTANCE(GameObjectManager)->AddRemoveList(*itr);
-			(*itr) = nullptr;
+			_InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)][itr - _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].begin()] = nullptr;
 			return;
 		}
 	}

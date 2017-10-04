@@ -50,6 +50,9 @@ private:
 	/** 背景. */
 	ImageObject* _BackWindow = nullptr;
 
+	/** アイコン. */
+	ImageObject* _Icon = nullptr;
+
 	/** アイテム名表示. */
 	TextObject* _ItemNameText = nullptr;
 

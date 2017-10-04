@@ -51,7 +51,7 @@ public:
 	/**
 	* 更新.
 	*/
-	void Update()override;
+	void LateUpdate()override;
 
 	/**
 	* パラメータ設定.
