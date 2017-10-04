@@ -334,6 +334,7 @@ void ItemWindow::Input()
 			//リストが詰められた可能性があるため表示を更新.
 			if (isPack)
 			{
+
 				itemCount = 0;
 				for (auto& item : itemList)
 				{

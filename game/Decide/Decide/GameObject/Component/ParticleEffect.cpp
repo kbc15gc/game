@@ -106,7 +106,7 @@ void ParticleEffect::BuffEffect() {
 	//バフに使用するパーティクルパラメーターを設定。
 	_BuffParticleParam.Init();
 	_BuffParticleParam.texturePath = "ItemEfectBase.png";
-	_BuffParticleParam.alphaBlendMode = 3;
+	_BuffParticleParam.alphaBlendMode = 1;
 	_BuffParticleParam.addVelocityRandomMargih = Vector3::zero;
 	_BuffParticleParam.brightness = 1.0f;
 	_BuffParticleParam.fadeTime = 0.1f;

@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "GameObject\SplitSpace.h"
 #include "GameObject\Enemy\BossDrarian.h"
+#include "GameObject\Component\ParticleEffect.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -94,6 +95,20 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 		if (object == enemy->Object) {
 			// このクラスで生成したエネミーが死亡している。
 
+			//バフデバフエフェクトを消す処理。
+			ParticleEffect* pe = object->GetComponent<ParticleEffect>();
+			if (pe) {
+				pe->SetBuffEffectFlag(false);
+				pe->SetDebuffEffectFlag(false);
+			}
+
+			//死んだのですべてのバフデバフアイコンを削除。
+			BuffDebuffICon* icon = object->GetComponent<BuffDebuffICon>();
+			if (icon) {
+				icon->DeleteAllBuffDebuffIcon();
+			}
+			
+			
 			// エネミーをリスポーン。
 			vector<BarColor> Color;
 			ObjectSpawn* Spawner = enemy->Object->GetSpawner();
