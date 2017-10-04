@@ -69,6 +69,11 @@ VS_OUTPUT vs_main(VS_INPUT In)
 */
 float4 ps_main(VS_OUTPUT In) : COLOR0
 {
+//#ifdef _DEBUG
+//	if (g_Pivotx - 0.03f < In.uv.x && In.uv.x < g_Pivotx + 0.03f &&
+//	(1-g_Pivoty) - 0.03f< In.uv.y && In.uv.y < (1-g_Pivoty) + 0.03f)
+//		return float4(1,1,0,1);
+//#endif	//_DEBUG
 	//テクスチャからカラー取得
 	float4 color = tex2D(g_textureSampler, In.uv);
 	

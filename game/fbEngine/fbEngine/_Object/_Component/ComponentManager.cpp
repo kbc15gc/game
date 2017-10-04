@@ -6,24 +6,13 @@ ComponentManager::~ComponentManager()
 	Release();
 }
 
-void ComponentManager::Start() const
+void ComponentManager::ConnoteUpdate() const
 {
 	for each (Component* c in _Components)
 	{
 		if (c->GetEnable())
 		{
-			c->Start();
-		}
-	}
-}
-
-void ComponentManager::Update() const
-{
-	for each (Component* c in _Components)
-	{
-		if (c->GetEnable())
-		{
-			c->Update();
+			c->ConnoteUpdate();
 		}
 	}
 }

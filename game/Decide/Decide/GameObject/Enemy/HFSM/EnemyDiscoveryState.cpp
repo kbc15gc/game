@@ -35,7 +35,7 @@ void EnemyDiscoveryState::_UpdateSubClass() {
 		_EnemyObject->ChangeStateRequest(EnemyCharacter::State::Wandering);
 	}
 	else if (!_isOutside) {
-		if (!_EnemyObject->IsOutsideWandering()) {
+		if (!_EnemyObject->IsOutsideDiscovery()) {
 			// s“®”ÍˆÍ“àB
 
 			// ’ÇÕˆ—B

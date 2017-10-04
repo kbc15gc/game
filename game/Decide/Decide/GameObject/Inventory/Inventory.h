@@ -27,7 +27,6 @@ public:
 		if (_InventoryInstance == nullptr)
 		{
 			_InventoryInstance = new Inventory();
-			_InventoryInstance->Initialize();
 		}
 		return _InventoryInstance;
 	}
@@ -95,6 +94,9 @@ public:
 	inline int GetHoldNum(Item::ItemCodeE code,int id) {
 		return _HoldNumList[static_cast<int>(code)][id];
 	}
+
+	//リストの中身を削除。
+	void deleteList();
 private:
 
 	//リストから指定されたアイテムを削除。
@@ -113,7 +115,6 @@ private:
 
 	//ID比較関数。
 	//bool IDComp(HoldItemBase* left, HoldItemBase* rigth);
-
 
 private:
 	

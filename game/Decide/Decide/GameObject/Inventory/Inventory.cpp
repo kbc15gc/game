@@ -372,3 +372,14 @@ void Inventory::ArrangementInventory()
 		}
 	}
 }
+
+void Inventory::deleteList() {
+	
+
+	for (auto list : _InventoryItemList) {
+		list.clear();
+	}
+	_InventoryItemList.clear();
+
+	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+}

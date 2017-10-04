@@ -8,7 +8,7 @@ namespace fbSprite
 	//エフェクトのフラグ
 	enum class SpriteEffectE : unsigned int
 	{
-		NONE = BIT(0),		//なし				00000000
+		NONE = BIT(0),		//なし				00000001
 		FADE = BIT(1),		//フェードフラグ	00000010
 		FADEOUT = BIT(1),	//フェードアウト	00000010
 		FADEIN = BIT(1) +1,	//フェードイン		00000011

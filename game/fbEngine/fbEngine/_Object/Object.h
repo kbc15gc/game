@@ -23,7 +23,7 @@ public:
 	//純粋仮想関数ではないので絶対オーバーライドしなくてもいい
 	virtual void Awake(){};
 
-	//シーンの初期化中に実行される。
+	//最初の一回のアップデートで呼ばれる。
 	//初期化を行う純粋仮想関数
 	virtual void Start(){};
 
@@ -33,6 +33,19 @@ public:
 	//更新の後に呼び出される関数
 	//純粋仮想関数ではないので絶対オーバーライドしなくてもいい
 	virtual void LateUpdate(){};
+
+	//内包されたアップデート。
+	void ConnoteUpdate()
+	{
+		//最初の一回ならStartを呼び出す。
+		if (_FirstUpdate)
+		{
+			Start();
+			_FirstUpdate = false;
+		}
+		else
+			Update();
+	}
 
 #ifdef _DEBUG
 	// デバッグ用のコードを呼び出す。
@@ -67,4 +80,7 @@ public:
 protected:
 	//オブジェクトの名前
 	char* _Name;
+private:
+	//最初の一回。
+	bool _FirstUpdate = true;
 };

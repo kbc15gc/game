@@ -18,7 +18,7 @@ void OutputData::Start()
 		strcpy_s(text, gameObject->GetName());
 		strcat_s(text, strlen(text) + strlen(":") + 1, ":");		// 名前に文字列を追加。
 
-		_CreateTextObject(OutputInfo::Name, "ObjectNameView", Vector3::zero, text,40.0f,Color::white,fbText::TextAnchorE::MiddleRight);
+		_CreateTextObject(OutputInfo::Name, "ObjectNameView", Vector3::zero, text,40.0f,Color::white,fbText::TextAnchorE::UpperRight);
 		_outputTexts[static_cast<int>(OutputInfo::Name)]->transform->SetPosition(Vector3(700.0f, 20.0f, 0.0f));
 		_root = nullptr;	// 名前は親にふくまない。
 		_lastChildren = nullptr;	// 名前箱に含まない。

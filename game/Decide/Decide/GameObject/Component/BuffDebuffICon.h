@@ -1,11 +1,19 @@
 #pragma once
-#include "fbEngine\_Object\Object.h"
-
+#include "fbEngine\_Object\_Component\Component.h"
 class ImageObject;
 
 //バフ、デバフを表示するクラス。
-class BuffDebuffICon :public GameObject
+class BuffDebuffICon :public Component
 {
+public:
+
+	BuffDebuffICon(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+#ifdef _DEBUG
+		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
+
+	};
+	~BuffDebuffICon();
 public:
 	//バフデバフがどのステータスに影響しているかを判断するのに使う。
 	enum class Param
@@ -37,14 +45,6 @@ public:
 		bool		 _isBuff;					//バフかデバフかどうかのフラグ。
 	};
 
-	//コンストラクタ。
-	BuffDebuffICon(char* name) :
-		GameObject(name)
-	{
-	}
-
-	//デストラクタ。
-	~BuffDebuffICon();
 
 	//初期化。
 	void Awake()override;
@@ -60,7 +60,6 @@ public:
 	//引数:デバフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DebuffIconCreate(Param param);
 
-
 	//バフアイコンの削除。
 	//引数:効果時間が切れたパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DeleteBuffIcon(Param param);
@@ -74,13 +73,18 @@ public:
 
 	//アイコンを描画する。
 	void RenderEnable();
+
+	//HpBarのtransformを設定。
+	void SetHpBarTransform(Transform* trns) {
+		_HpBarTransform = trns;
+	}
 private:
 	//追加するパラメーターを追加していいのかをチェック、追加が可能ならtrue、追加出来ないならfalse。
 	//引数:パラメーター(Atk,Matk,Def,MDef,Dex)。
 	bool _AddCheck(Param param);
 private:
-	vector<BuffDebuff*>	_PlayerBuffDebuffList;					//プレイヤーに掛かっているバフデバフのリスト。
-	Transform*			_PlayerHpBarTransform = nullptr;		//プレイヤーのHpBarのTransform参照用。
+	vector<BuffDebuff*>	_BuffDebuffList;				//バフデバフのリスト。
+	Transform*			_HpBarTransform = nullptr;		//HpBarのTransform参照用。
 };
 
 namespace {

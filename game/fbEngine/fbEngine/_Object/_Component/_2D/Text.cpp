@@ -174,13 +174,13 @@ void Text::_CalcAnchor(Vector3 & pos)
 	}
 
 	//è„â∫ÇÃà⁄ìÆ
-	if (anchor & (unsigned int)fbText::TextAnchorE::Upper)
+	if (anchor & (unsigned int)fbText::TextAnchorE::Middle)
 	{
-		pos.y += offset.y;
+		pos.y -= offset.y;
 	}
 	else if (anchor & (unsigned int)fbText::TextAnchorE::Lower)
 	{
-		pos.y -= offset.y;
+		pos.y -= offset.y * 2;
 	}
 }
 

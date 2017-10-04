@@ -14,6 +14,7 @@
 #include "HFSM\EnemyThreatState.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
+#include "GameObject\Component\BuffDebuffICon.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
@@ -117,10 +118,10 @@ void EnemyCharacter::LateUpdate() {
 }
 
 
-bool EnemyCharacter::IsOutsideWandering() {
+bool EnemyCharacter::IsOutsideDiscovery() {
 	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
-	if (NowRange > _WanderingRange) {
-		// 徘徊範囲外に出た。
+	if (NowRange > _discoveryRange) {
+		// 追跡範囲外に出た。
 		return true;
 	}
 	return false;
@@ -148,7 +149,7 @@ void EnemyCharacter::SearchView() {
 		// 視線に入っている。
 
 		// 威嚇ステートに移行。
-		//_ChangeState(State::Threat);
+		_ChangeState(State::Threat);
 	}
 }
 
@@ -171,9 +172,12 @@ void EnemyCharacter::_BarRenderUpdate() {
 		float distance = 60.0f;
 		if (Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length() <= distance) {
 			_MyComponent.HPBar->RenderEnable();
+			_MyComponent.BuffDebuffICon->RenderEnable();
 		}
 		else {
 			_MyComponent.HPBar->RenderDisable();
+			_MyComponent.BuffDebuffICon->RenderDisable();
+
 		}
 	}
 }
@@ -198,6 +202,9 @@ void EnemyCharacter::_BuildMyComponents() {
 
 	// パーティクルエフェクトコンポーネント追加。
 	_MyComponent.ParticleEffect = AddComponent<ParticleEffect>();
+
+	// バフデバフアイコンコンポーネント追加。
+	_MyComponent.BuffDebuffICon = AddComponent<BuffDebuffICon>();
 	// 剛体押し出しコンポーネント追加。
 	_MyComponent.CharacterExtrude = AddComponent<CharacterExtrude>();
 }
@@ -256,6 +263,31 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
+}
+
+/**
+* アイテム効果.
+*/
+bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
+{
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+		if (_MyComponent.Parameter)
+		{
+			if (_MyComponent.ParticleEffect) {
+				_MyComponent.ParticleEffect->DeBuffEffect();
+			}
+#ifdef  _DEBUG
+			else {
+				// エフェクトコンポーネントないよ。
+				abort();
+			}
+#endif //  _DEBUG
+			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), -info->effectValue[idx], info->time);
+			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+		}
+	}
+
+	return true;
 }
 
 void EnemyCharacter::_ChangeState(State next) {
@@ -346,13 +378,9 @@ void EnemyCharacter::GiveDamage(int damage,bool isMagic) {
 	}
 }
 
-bool EnemyCharacter::ItemEffect(Item::ItemInfo* info) {
-	for (int idx = CharacterParameter::Param::ATK; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
-		_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx),-info->effectValue[idx],info->time);
-	}
-	return true;
-}
-
+/**
+* エフェクト用更新.
+*/
 void EnemyCharacter::EffectUpdate() {
 	bool isBuffEffect = false;
 	bool isDeBuffEffect = false;

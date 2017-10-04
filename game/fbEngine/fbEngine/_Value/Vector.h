@@ -254,14 +254,14 @@ public:
 	/*!
 	 * @brief	“àÏB
 	 */
-	float Dot(const Vector3& in)
+	float Dot(const Vector3& in)const
 	{
 		return x * in.x + y * in.y + z * in.z;
 	}
 	/*!
 	 * @brief	ŠOÏB
 	 */
-	Vector3 Cross(const Vector3& in)
+	Vector3 Cross(const Vector3& in)const
 	{
 		float _x = (y * in.z) - (z * in.y);
 		float _y = (z * in.x) - (x * in.z);

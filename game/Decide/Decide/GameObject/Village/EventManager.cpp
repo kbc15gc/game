@@ -8,8 +8,6 @@
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 
-#include "BuffDebuffICon.h"
-
 EventManager*  EventManager::_Instance = nullptr;
 
 EventManager::EventManager()
@@ -43,7 +41,6 @@ bool EventManager::Execute(Event::EventID id, int idx)
 		//Ž~‚ß‚éB
 		GetPlayer()->GetPlayerHpBar()->RenderDisable();
 		GetPlayer()->GetPlayerMpBar()->RenderDisable();
-		GetPlayer()->GetBuffDebuffICon()->RenderDisable();
 		GetPlayer()->PlayerStopEnable();
 
 		GetCamera()->SetIsMove(false);
@@ -73,7 +70,6 @@ void EventManager::NotifyEndEvent()
 	{
 		GetPlayer()->GetPlayerHpBar()->RenderEnable();
 		GetPlayer()->GetPlayerMpBar()->RenderEnable();
-		GetPlayer()->GetBuffDebuffICon()->RenderEnable();
 		GetPlayer()->PlayerStopDisable();
 		GetCamera()->SetIsMove(true);
 		_ActiveEvent = Event::EventID::None;

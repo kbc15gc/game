@@ -71,7 +71,7 @@ void StatusWindow::Awake()
 */
 void StatusWindow::Update()
 {
-	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(), fbText::TextAnchorE::MiddleLeft);
+	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::UpperLeft);
 
 	bool isChange = false;
 	static float ChangeTime = 0.5f;

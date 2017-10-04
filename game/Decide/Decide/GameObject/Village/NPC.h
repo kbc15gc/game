@@ -48,6 +48,17 @@ public:
 	void LateUpdate()override;
 
 	void SetMesseage(const int& id, const bool show);
+
+	void SetIsSpeak(bool flag)
+	{
+		_IsSpeak = flag;
+	}
+
+	float GetRadius()
+	{
+		return _Radius;
+	}
+
 protected:
 	//話す
 	void _Speak();
@@ -62,4 +73,7 @@ protected:
 	float _Radius;
 	//タイトル表示するかどうか？
 	bool _ShowTitle;
+
+	//Playerと話しができるか
+	bool _IsSpeak;
 };

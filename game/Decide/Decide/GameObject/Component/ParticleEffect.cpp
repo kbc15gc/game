@@ -8,6 +8,8 @@ void ParticleEffect::Awake() {
 	_HeelMpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelMpParticleEffect", 8);
 	_HeelParticleAssistEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelParticleEffectAssist", 8);
 
+	_LevelUPParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("LevelUPEffect", 8);
+
 	//回復エフェクトのアシストに使用するパーティクルパラメーターを設定。
 	_HeelParticleAssistParam.Init();
 	_HeelParticleAssistParam.texturePath = "ItemEfectBase.png";
@@ -131,7 +133,7 @@ void ParticleEffect::DeBuffEffect() {
 	//デバフに使用するパーティクルパラメーターを設定。
 	_DebuffParticleParam.Init();
 	_DebuffParticleParam.texturePath = "ItemEfectBase.png";
-	_DebuffParticleParam.alphaBlendMode = 3;
+	_DebuffParticleParam.alphaBlendMode = 1;
 	_DebuffParticleParam.addVelocityRandomMargih = Vector3::zero;
 	_DebuffParticleParam.brightness = 1.0f;
 	_DebuffParticleParam.fadeTime = 0.1f;
@@ -149,7 +151,7 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.isParent = true;
 
 	_DebuffParticleEmitter->transform->SetParent(transform);
-	_DebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 2.4f, 0.0f));
+	_DebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.4f, 0.0f));
 	_DebuffParticleEmitter->Init(_DebuffParticleParam);
 	SetDebuffEffectFlag(true);
 }
@@ -181,6 +183,34 @@ void ParticleEffect::FireFly()
 	SetFireFlyEffectFlag(true);
 }
 
+void ParticleEffect::LevelUpEffect()
+{
+	//バフに使用するパーティクルパラメーターを設定。
+	_LevelUPParticleParam.Init();
+	_LevelUPParticleParam.texturePath = "par.png";
+	_LevelUPParticleParam.alphaBlendMode = 1;
+	_LevelUPParticleParam.addVelocityRandomMargih = Vector3::zero;
+	_LevelUPParticleParam.brightness = 5.0f;
+	_LevelUPParticleParam.fadeTime = 0.5f;
+	_LevelUPParticleParam.gravity = 0.0f;
+	_LevelUPParticleParam.initAlpha = 1.0f;
+	_LevelUPParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
+	_LevelUPParticleParam.initVelocity = Vector3::up * 5.0f;
+	_LevelUPParticleParam.initVelocityVelocityRandomMargin = Vector3(2.0f, 1.0f, 2.0f);
+	_LevelUPParticleParam.intervalTime = 0.01f;
+	_LevelUPParticleParam.isBillboard = true;
+	_LevelUPParticleParam.isFade = true;
+	_LevelUPParticleParam.life = 0.001f;
+	_LevelUPParticleParam.size = Vector2(0.1f, 0.1f);
+	_LevelUPParticleParam.mulColor = Color::yellow;
+	_LevelUPParticleParam.isParent = true;
+
+	_LevelUPParticleEmitter->transform->SetParent(transform);
+	_LevelUPParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.6f, 0.0f));
+	_LevelUPParticleEmitter->Init(_LevelUPParticleParam);
+	SetLevelUPEffectFlag(true);
+}
+
 void ParticleEffect::Update() {
 
 	//Hp回復エフェクトを消す処理。
@@ -198,6 +228,15 @@ void ParticleEffect::Update() {
 		if (_TotalHeelMpEffectTime > 1.0f) {
 			SetHeelMpEffectFlag(false);
 			_TotalHeelMpEffectTime = 0.0f;
+		}
+	}
+
+	//レベルアップエフェクトを消す処理。
+	if (_IsLevelUPFlag) {
+		_TotalLevelUPEffectTime += Time::DeltaTime();
+		if (_TotalLevelUPEffectTime > 2.0f) {
+			SetLevelUPEffectFlag(false);
+			_TotalLevelUPEffectTime = 0.0f;
 		}
 	}
 }

@@ -1,8 +1,6 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 
-class Camera;
-
 class AttackValue2D : public GameObject
 {
 public:
