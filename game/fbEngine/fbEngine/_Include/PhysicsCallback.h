@@ -122,11 +122,7 @@ namespace fbPhysicsCallback
 			Collision* collision = nullptr;		// 衝突したコリジョン(コリジョンB)。
 		};
 
-		inline const vector<hitInfo*>& GetHitInfoArray()const {
-			return hitInfoArray;
-		}
-
-		inline void SetHitInfoArray(const vector<hitInfo*>& hitInfo) {
+		inline void SetHitInfoArray(vector<unique_ptr<hitInfo>>* hitInfo) {
 			hitInfoArray = hitInfo;
 		}
 
@@ -148,35 +144,104 @@ namespace fbPhysicsCallback
 			if (hitObjectTmp)
 			{
 
-				//属性が一致するか？マスクをとる
-				if ((attribute & hitObjectTmp->GetCollisionObj()->getUserIndex()) != 0)
+				//属性が一致するかマスクをとる
+				if (attribute & hitObjectTmp->GetCollisionObj()->getUserIndex())
 				{
+
 					//重複チェック
-					for each (auto info in hitInfoArray)
+					for each (auto& info in *hitInfoArray)
 					{
 						//アドレス比較
 						if (info->collision == hitObjectTmp)
 						{
+
+							if (!_IsThroughCollision(cp)) {
+								// このコリジョンは無視しない。
+
+								if (_IsNearLength(info.get(),cp)) {
+									// 新しく衝突した点のほうがめり込み量が少ない。
+
+									// 新しい情報で以前の情報を上書き。
+									_ConfigInfo(info.get(), cp);
+								}
+							}
 							return 0.0f;
 						}
 					}
-					hitInfo* newInfo = new hitInfo;
-					newInfo->collision = hitObjectTmp;
-					newInfo->hitPosA = Vector3(cp.m_positionWorldOnA.x(), cp.m_positionWorldOnA.y(), cp.m_positionWorldOnA.z());
-					newInfo->hitPosB = Vector3(cp.m_positionWorldOnB.x(), cp.m_positionWorldOnB.y(), cp.m_positionWorldOnB.z());
-					newInfo->hitNormalB = Vector3(cp.m_normalWorldOnB.x(), cp.m_normalWorldOnB.y(), cp.m_normalWorldOnB.z());
+					unique_ptr<hitInfo> newInfo;
+					newInfo.reset(new hitInfo);
 
-					//コリジョンを追加
-					hitInfoArray.push_back(newInfo);
+					if (!_IsThroughCollision(cp)) {
+						newInfo->collision = hitObjectTmp;
+						_ConfigInfo(newInfo.get(), cp);
+						//コリジョンを追加
+						hitInfoArray->push_back(move(newInfo));
+					}
 				}
 			}
 			return 0.0f;
 		}
+
+	private:
+		void _ConfigInfo(hitInfo* info, btManifoldPoint& cp) {
+			info->hitPosA = Vector3(cp.m_positionWorldOnA.x(), cp.m_positionWorldOnA.y(), cp.m_positionWorldOnA.z());
+			info->hitPosB = Vector3(cp.m_positionWorldOnB.x(), cp.m_positionWorldOnB.y(), cp.m_positionWorldOnB.z());
+			info->hitNormalB = Vector3(cp.m_normalWorldOnB.x(), cp.m_normalWorldOnB.y(), cp.m_normalWorldOnB.z());
+		}
+
+		// 無視するコリジョンか調べる。
+		virtual bool _IsThroughCollision(btManifoldPoint& cp) {
+			return false;
+		}
+
+		virtual bool _IsNearLength(hitInfo* info,btManifoldPoint& cp) {
+			if (btVector3(cp.m_positionWorldOnA - cp.m_positionWorldOnB).length() < Vector3(info->hitPosA - info->hitPosB).Length()) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
 	public:
 		int attribute;					//指定したコリジョン属性とのみ当たり判定をとる
 		Collision* me = nullptr;		//自身のアドレス
 	private:
-		vector<hitInfo*> hitInfoArray;	//ヒットしたオブジェクト
+		vector<unique_ptr<hitInfo>>* hitInfoArray = nullptr;	//ヒットしたオブジェクト
+	};
+
+	// 押し出しコンポーネント用。
+	struct AllHitsContactResultExtrude : AllHitsContactResultCallback {
+		// 無視するコリジョンか調べる。
+		bool _IsThroughCollision(btManifoldPoint& cp)override {
+
+			btVector3 newVec = cp.m_positionWorldOnA - cp.m_positionWorldOnB;
+
+			// Y成分は除く。
+			newVec.setY(0.0f);
+			if (newVec.length() <= 0.001f) {
+				// Y成分のめり込みだった。
+
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		bool _IsNearLength(hitInfo* info, btManifoldPoint& cp)override {
+			btVector3 newVec = cp.m_positionWorldOnA - cp.m_positionWorldOnB;
+			Vector3 nowVec = info->hitPosA - info->hitPosB;
+			newVec.setY(0.0f);
+			nowVec.y = 0.0f;
+
+			if (newVec.length() < nowVec.Length()) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	};
 
 	//レイを飛ばしてヒットした中で最も近いものを返す。

@@ -66,8 +66,9 @@ bool ConsumptionItem::UseItem() {
 		// デバフアイテム。
 		// 効果範囲内のエネミーを取得。
 		int attr = Collision_ID::ENEMY;
-		vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*> hit;
-		INSTANCE(PhysicsWorld)->AllHitsContactTest(_gost->GetAttachCollision(), hit, attr);
+		vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> hit;
+		fbPhysicsCallback::AllHitsContactResultCallback callback;
+		INSTANCE(PhysicsWorld)->AllHitsContactTest(_gost->GetAttachCollision(), &hit,&callback, attr);
 
 		if (hit.size() > effectNumTable[static_cast<int>(static_cast<Item::ItemInfo*>(_Info)->rangeStrength)]) {
 			// 衝突した対象がアイテムの効果範囲より多い。
@@ -93,7 +94,7 @@ bool ConsumptionItem::UseItem() {
 			}
 		}
 		else {
-			for (auto info : hit) {
+			for (auto& info : hit) {
 				// 対象に取得したオブジェクトを追加。
 				targets.push_back(static_cast<EnemyCharacter*>(info->collision->gameObject));
 			}
