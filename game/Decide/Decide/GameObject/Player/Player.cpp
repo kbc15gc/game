@@ -130,6 +130,7 @@ void Player::Awake()
 
 	//バフデバフアイコン。
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
+	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 }
 
 void Player::Start()

@@ -15,6 +15,15 @@ public:
 	};
 	~BuffDebuffICon();
 public:
+
+	//使うアイコンのタイプ。
+	//プレイヤーだとHpBarの下。エネミーだとHpBarの上。
+	enum class UseIconType
+	{
+		Player = 0,
+		Enemy
+	};
+
 	//バフデバフがどのステータスに影響しているかを判断するのに使う。
 	enum class Param
 	{
@@ -52,6 +61,9 @@ public:
 	//更新。
 	void Update()override;
 
+#ifdef _DEBUG
+	void Debug()override;
+#endif
 	//バフアイコンを生成。
 	//引数:バフを掛けるパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void BuffIconCreate(Param param);
@@ -68,23 +80,65 @@ public:
 	//引数:効果時間が切れたパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DeleteDebuffIcon(Param param);
 
+	//全てのバフデバフアイコンを削除。
+	void DeleteAllBuffDebuffIcon();
+
 	//アイコンを描画しない。
 	void RenderDisable();
 
 	//アイコンを描画する。
 	void RenderEnable();
 
+	//使うアイコンタイプをプレイヤーに設定。
+	void SelectUseIconType_Player() {
+		_UseIconType = UseIconType::Player;
+	}
+
+	//使うアイコンタイプをエネミー設定。
+	void SelectUseIconType_Enemy() {
+		_UseIconType = UseIconType::Enemy;
+	}
+
 	//HpBarのtransformを設定。
 	void SetHpBarTransform(Transform* trns) {
-		_HpBarTransform = trns;
+		_HpBarTransform= trns;
+	}
+
+	//バフデバフアイコンのサイズを設定(サイズを指定しなくてもデフォルトサイズになる)。
+	void SetBuffDebfuuIconSize(const Vector2& size) {
+		_BuffDebfuuIconSize = size;
+	}
+
+	//矢印のサイズを設定(サイズを指定しなくてもデフォルトサイズになる)。
+	void ArrowIconSize(const Vector2& size) {
+		_ArrowSize = size;
 	}
 private:
 	//追加するパラメーターを追加していいのかをチェック、追加が可能ならtrue、追加出来ないならfalse。
 	//引数:パラメーター(Atk,Matk,Def,MDef,Dex)。
 	bool _AddCheck(Param param);
+
+	void SetPlayerOffset() {
+		_IconOffSet = 60.0f;
+		_IconPosOffset = { -148.0f,85.0f, 0.0f };
+		_ArrowPosOffet = { 20.0f, 12.0f, 0.0f };
+	}
+
+	void SetEnemyOffset() {
+		_IconOffSet = 30.0f;
+		_IconPosOffset = { -70.0f,-20.0f,0.0f };
+		_ArrowPosOffet = { 5.0f,5.0f,0.0f };
+	}
 private:
-	vector<BuffDebuff*>	_BuffDebuffList;				//バフデバフのリスト。
-	Transform*			_HpBarTransform = nullptr;		//HpBarのTransform参照用。
+	vector<BuffDebuff*>	_BuffDebuffList;								//バフデバフのリスト。
+	Transform*			_HpBarTransform = nullptr;						//HpBarのTransform参照用。
+	Vector2				_ScreenPos = Vector2::zero;						//HpBarのポジションからスクリーン座標に変換したもの。
+	Vector2				_BuffDebfuuIconSize = Vector2(40.0f, 40.0f);	//バフデバフアイコンサイズ。
+	Vector2				_ArrowSize = Vector2(13.0f, 20.0f);				//矢印のサイズ。
+	UseIconType			_UseIconType = UseIconType::Player;				//アイコンタイプ。
+	float				_IconOffSet = 0.0f;								//バフ、デバフを重ね掛けする際にずらすために使う。																		//エネミー時のアイコンをHpBarからどれだけ離すかのOFFSET。
+	Vector3				_IconPosOffset = { 0.0f,0.0f,0.0f };			//アイコンをHpBarからどれだけ離すかのOFFSET。
+	Vector3				_ArrowPosOffet = { 0.0f,.0f,0.0f };				//アイコンから矢印をどれだけ離すかのOFFSET。
 };
 
 namespace {

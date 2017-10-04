@@ -189,6 +189,13 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 		}
 		else
 		{
+			//武具を捨てようとしている。
+			if (item->GetInfo()->TypeID==Item::ItemCodeE::Armor|| item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
+				//装備している武具を捨てようとしている。
+				if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
+					return;
+				}
+			}
 			//一致したので中身を削除。
 			INSTANCE(GameObjectManager)->AddRemoveList(*itr);
 			(*itr) = nullptr;

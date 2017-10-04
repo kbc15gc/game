@@ -292,9 +292,9 @@ void ItemWindow::Input()
 			}
 			else if (_ItemCode == Item::ItemCodeE::Item)
 			{
-				//ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-				//item->UseItem();
-				//INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);
+				/*ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+				item->UseItem();
+				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);*/
 				itemCount = 0;
 				for (auto& item : itemList)
 				{
