@@ -45,6 +45,11 @@ void StatusWindow::Awake()
 	_ItemWindowList[1]->Init(Item::ItemCodeE::Weapon);
 	_ItemWindowList[2]->Init(Item::ItemCodeE::Armor);
 
+	for (int i = 0; i < _WindowCount; i++)
+	{
+		_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
+	}
+
 	// ‚¨‹à‚Ì•\Ž¦ì¬B
 	_MoneyFrame = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MoneyFrame", WindowBackPriorty + 2);
 	_MoneyFrame->transform->SetParent(transform);
@@ -66,8 +71,9 @@ void StatusWindow::Awake()
 */
 void StatusWindow::Update()
 {
-	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::MiddleLeft);
+	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(), fbText::TextAnchorE::MiddleLeft);
 
+	bool isChange = false;
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
@@ -82,6 +88,7 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow -= 1;
 			}
+			isChange = true;
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -94,6 +101,7 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow -= 1;
 			}
+			isChange = true;
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -110,6 +118,7 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow += 1;
 			}
+			isChange = true;
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -122,6 +131,7 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow += 1;
 			}
+			isChange = true;
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -132,8 +142,12 @@ void StatusWindow::Update()
 		LocalTime = 0.0f;
 	}
 
-	for (int i = 0; i < _WindowCount; i++)
+	if (isChange)
 	{
-		_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
+		for (int i = 0; i < _WindowCount; i++)
+		{
+			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
+		}
 	}
+
 }

@@ -50,7 +50,7 @@ void ParameterRender::Awake()
 /**
 * XV.
 */
-void ParameterRender::Update()
+void ParameterRender::LateUpdate()
 {
 	_ParamNameText->SetText(_ParamName);
 
