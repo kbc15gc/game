@@ -109,6 +109,19 @@ public:
 	*/
 	void Update()override;
 
+	/**
+	* 非アクティブ.
+	*/
+	void OnDisable()override
+	{
+		if (_EIconImage)
+			_EIconImage->SetActive(false, true);
+		if (_Dialog)
+			_Dialog->SetActive(false, true);
+	}
+
+
+
 private:
 
 	/**
@@ -130,6 +143,8 @@ private:
 	* 入力.
 	*/
 	void Input();
+
+	void ArrowUpdate();
 
 private:
 

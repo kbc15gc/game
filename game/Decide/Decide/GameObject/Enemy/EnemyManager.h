@@ -78,6 +78,7 @@ public:
 	// ※スポナーコンポーネントがあれば自動でリスポーンする。
 	void DeathEnemy(EnemyCharacter* object);
 
+
 private:
 	vector<ManagingData*> _enemys;
 private:

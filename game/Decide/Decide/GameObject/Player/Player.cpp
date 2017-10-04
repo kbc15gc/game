@@ -128,6 +128,7 @@ void Player::Awake()
 
 	//バフデバフアイコン。
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
+	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 }
 
 void Player::Start()
@@ -409,7 +410,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 
 			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
-			_BuffDebuffICon->BuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+			_BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 			returnValue = true;
 		}
 		else if (value < 0) {
@@ -425,7 +426,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 #endif //  _DEBUG
 			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
-			_BuffDebuffICon->DebuffIconCreate(static_cast<BuffDebuffICon::Param>(idx));
+			_BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 			returnValue = true;
 		}
 	}
@@ -447,7 +448,7 @@ void Player::EffectUpdate()
 		}
 		else
 		{
-			_BuffDebuffICon->DeleteBuffIcon(static_cast<BuffDebuffICon::Param>(idx));
+			_BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
 		}
 
 		if (_PlayerParam->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
@@ -456,7 +457,7 @@ void Player::EffectUpdate()
 		}
 		else
 		{
-			_BuffDebuffICon->DeleteDebuffIcon(static_cast<BuffDebuffICon::Param>(idx));
+			_BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
 		}
 	}
 

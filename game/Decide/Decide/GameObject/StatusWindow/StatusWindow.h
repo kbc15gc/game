@@ -41,10 +41,19 @@ public:
 	*/
 	void Update()override;
 
+	void OnEnable()override
+	{
+		for (int i = 0; i < _WindowCount; i++)
+		{
+			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
+		}
+	}
+
 	void OnDisable()override
 	{
 		INSTANCE(EventManager)->NotifyEndEvent();
 	}
+
 private:
 
 	/** プレイヤークラスのポインタ. */
