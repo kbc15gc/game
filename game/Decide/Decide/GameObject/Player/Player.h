@@ -6,7 +6,6 @@
 #include "PlayerState/PlayerStateAttack.h"
 #include "PlayerState\/PlayerStateDeath.h"
 #include "PlayerState\PlayerStateStop.h"
-#include "PlayerState\PlayerStateSpeak.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
@@ -18,7 +17,9 @@
 #include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
+#include "..\LevelUpImage.h"
 #include "GameObject\Component\BuffDebuffICon.h"
+
 
 class SkinModel;
 class Animation;
@@ -26,6 +27,7 @@ class ParameterBar;
 class ItemManager;
 class ParticleEffect;
 class BuffDebuffICon;
+class HistoryManager;
 
 namespace
 {
@@ -251,6 +253,9 @@ private:
 	// レベルアップ。
 	// 引数：		レベルアップに必要な経験値の値。
 	void _LevelUP();
+	//話す
+	void Speak();
+
 #ifdef _DEBUG
 	//デバッグ機能
 	void _DebugPlayer();
@@ -263,7 +268,6 @@ private:
 	friend class PlayerStateDeath;
 	friend class PlayerStateIdol;
 	friend class PlayerStateRun;
-	friend class PlayerStateSpeak;
 
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
@@ -304,8 +308,6 @@ private:
 	PlayerStateDeath _DeathState;
 	//プレイヤーステートストップ
 	PlayerStateStop _StopState;
-	//プレイヤーステートスピーク
-	PlayerStateSpeak _SpeakState;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSE = nullptr;
 	//レベルアップ時の音
@@ -318,8 +320,6 @@ private:
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	ParameterBar* _MPBar = nullptr;
-	//レベルアップスプライト
-	Sprite* _LevelUpSprite;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;
@@ -342,4 +342,13 @@ private:
 
 	//バフデバフアイコン。
 	BuffDebuffICon* _BuffDebuffICon = nullptr;
+
+	//レベルアップイメージ
+	LevelUpImage* _LevelUpImage;
+	
+	//歴史書
+	HistoryManager* _HistoryManager = nullptr;
+
+	//NPCと話すときジャンプしないため
+	bool _Speak;
 };

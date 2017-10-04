@@ -1,8 +1,6 @@
 #include"stdafx.h"
 #include "HistoryManager.h"
-
 #include "GameObject\Village\ContinentObject.h"
-#include "GameObject\Village\NPC.h"
 #include "fbEngine\_Object\_Component\_Physics\BoxCollider.h"
 
 namespace

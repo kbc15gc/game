@@ -2,8 +2,6 @@
 #include "Player.h"
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
-#include <string>
-#include <sstream>
 #include "GameObject\SplitSpace.h"
 #include "GameObject\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
@@ -35,10 +33,10 @@ Player::Player(const char * name) :
 	_DeathState(this),
 	//ストップステート
 	_StopState(this),
-	//スピークステート
-	_SpeakState(this),
 	//デバッグか
-	_Debug(false)
+	_Debug(false),
+	//話しているか
+	_Speak(false)
 {
 	//経験値テーブルをロード
 	_LoadEXPTable();
@@ -167,13 +165,8 @@ void Player::Start()
 	_NowAttackAnimNo = AnimationNo::AnimationInvalid;
 	_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 
-	//レベルアップ時のスプライト初期化
-	/*{
-		_LevelUpSprite = AddComponent<Sprite>();
-		_LevelUpSprite->SetTexture(LOADTEXTURE("levelup.png"));
-		_LevelUpSprite->SetEnable(true);
-		_LevelUpSprite->SetPivot(Vector2(0.5f, 1.0f));
-	}*/
+	//レベルアップイメージ初期化
+	_LevelUpImage = INSTANCE(GameObjectManager)->AddNew<LevelUpImage>("LevelUP", 9);
 
 	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
 	Re_SetEquipment();
@@ -219,6 +212,10 @@ void Player::Update()
 		//transform->UpdateTransform();
 
 	EffectUpdate();
+
+	//NPCと話すか
+	Speak();
+
 }
 
 void Player::ChangeState(State nextstate)
@@ -249,9 +246,6 @@ void Player::ChangeState(State nextstate)
 	case State::Stop:
 		//ストップ状態
 		_CurrentState = &_StopState;
-		break;
-	case State::Speak:
-		_CurrentState = &_SpeakState;
 		break;
 	default:
 		//デフォルト
@@ -284,7 +278,7 @@ void Player::AnimationControl()
 	}
 	//ジャンプアニメーション
 	//ストップじゃないならジャンプする。
-	if (_CharacterController->IsJump() && _State != State::Stop)
+	if (_CharacterController->IsJump() && _State != State::Stop && !_Speak)
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
 	}
@@ -530,9 +524,62 @@ void Player::_LevelUP()
 	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
 	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
+	//レベルアップ時のイメージ表示。
+	_LevelUpImage->Init();
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
+	//レベルアップエフェクト
+	_ParticleEffect->LevelUpEffect();
+	_ParticleEffect->SetLevelUPEffectFlag(true);
 }
+
+void Player::Speak()
+{
+	//NPCを取得
+	vector<vector<NPC*>> npc;
+	npc = INSTANCE(HistoryManager)->GetNPCList();
+	//村
+	for (auto village : npc)
+	{
+		//サイズが0ならコンティニュー
+		if (village.size() == 0)
+		{
+			continue;
+		}
+		//NPC
+		for (auto npc : village)
+		{
+			
+			//NPCからプレイヤーのベクトル
+			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
+			float len = dir.Length();
+			//範囲内かどうか
+			if (npc->GetRadius() >= len)
+			{
+				//地面についていれば話しかけれる
+				if (_CharacterController->IsOnGround())
+				{
+					//話すフラグセット
+					npc->SetIsSpeak(true);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_Speak = true;
+					//これ以上処理は続けない
+					break;
+				}
+			}
+			else
+			{
+				//話すNPCがいないので
+				npc->SetIsSpeak(false);
+				_Speak = false;
+			}
+		}
+	}
+	
+
+}
+
 
 #ifdef _DEBUG
 void Player::_DebugPlayer()

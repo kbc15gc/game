@@ -25,6 +25,7 @@ void NPC::Awake()
 	//テキストボックスを出す。
 	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox",StatusWindow::WindowBackPriorty - 1);
 	_TextBox->SetTextSpeed(12.0f);
+	_IsSpeak = false;
 }
 
 void NPC::Update()
@@ -51,48 +52,25 @@ void NPC::SetMesseage(const int & id, const bool show)
 
 void NPC::_Speak()
 {
-	if (_Player == nullptr)
+	//会話可能な距離か？
+	if (_IsSpeak)
 	{
-		_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+		//タイトル表示
+		if (_ShowTitle)
+		{
+			_TextBox->Title(true);
+		}
+		//本来は外部から呼び出す。
+		if (KeyBoardInput->isPush(DIK_SPACE) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
+		{
+			//会話する。
+			_TextBox->Speak();
+		}
 	}
 	else
 	{
-		//プレイヤーの向き
-		Vector3 pDir = _Player->transform->Direction(Vector3::front);
-		pDir.Normalize();
-		//プレイヤーから自分への向き。
-		Vector3 toMeDir = transform->GetPosition() - _Player->transform->GetPosition();
-		float len = toMeDir.Length();
-		toMeDir.Normalize();
+		//離れたなら閉じる
+		_TextBox->CloseMessage();
 
-		//会話可能な距離か？
-		if (len <= _Radius)
-		{
-			//タイトル表示
-			if (_ShowTitle)
-			{
-				_TextBox->Title(true);
-			}
-			//本来は外部から呼び出す。
-			if (KeyBoardInput->isPush(DIK_SPACE) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-			{
-				if (_Player->GetState() != Player::State::Speak && _Player->GetState() != Player::State::Stop)
-				{
-					_Player->ChangeState(Player::State::Speak);
-				}
-				//会話する。
-				_TextBox->Speak();
-			}
-		}
-		else
-		{
-			//離れたなら閉じる
-			_TextBox->CloseMessage();
-			if (_Player->GetState() == Player::State::Speak)
-			{
-				_Player->ChangeState(Player::State::Run);
-			}
-		}
 	}
-	
 }

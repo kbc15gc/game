@@ -37,6 +37,9 @@ public:
 	//蛍っぽいエフェクトを発生させる。
 	//引数はエフェクトを発生させる基点。
 	void FireFly();
+
+	//レベルアップエフェクトを発生。
+	void LevelUpEffect();
 	
 	//Hp回復エフェクトを発生させるかどうかのフラグ。
 	//tureで発生。falseで発生させない。
@@ -72,6 +75,13 @@ public:
 	void SetFireFlyEffectFlag(bool flag) {
 		_FireFlyParticleEmitter->SetEmitFlg(flag);
 	}
+	//レベルアップエフェクトを発生させるかフラグ。
+	//tureで発生。falseで発生させない。
+	void SetLevelUPEffectFlag(bool flag)
+	{
+		_LevelUPParticleEmitter->SetEmitFlg(flag);
+		_IsLevelUPFlag = flag;
+	}
 private:
 	ParticleEmitter*	_BuffParticleEmitter = nullptr;			//バフパーティクル発生元。
 	ParticleParameter	_BuffParticleParam;						//バフパーティクルパラメーター。
@@ -89,5 +99,10 @@ private:
 	float				_TotalHeelMpEffectTime = 0.0f;			//Mp回復エフェクトが始まって何秒経ったかの合計。
 	ParticleEmitter*	_FireFlyParticleEmitter = nullptr;		//蛍みたいなパーティクル発生元。
 	ParticleParameter	_FireFlyParticleParam;					//蛍みたいなバフパーティクルパラメーター。
+	/*レベルアップ*/
+	ParticleEmitter*	_LevelUPParticleEmitter = nullptr;		//レベルアップ時のパーティクル発生源。
+	ParticleParameter	_LevelUPParticleParam;					//レベルアップ時のパーティクルパラメター。
+	bool				_IsLevelUPFlag;							//レベルアップエフェクトフラグ。
+	float				_TotalLevelUPEffectTime = 0.0f;			//レベルアップエフェクトが始まって何秒経ったかの合計。
 };
 
