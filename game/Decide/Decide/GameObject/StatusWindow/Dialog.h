@@ -4,6 +4,7 @@
 #pragma once
 
 #include"Item2D.h"
+#include "GameObject\StatusWindow\Cursor.h"
 
 /**
 * ダイアログクラス.
@@ -66,9 +67,6 @@ public:
 
 private:
 
-	/** アイテム. */
-	HoldItemBase* _Item = nullptr;
-
 	/** 背景. */
 	ImageObject* _BackWindow = nullptr;
 
@@ -77,5 +75,12 @@ private:
 
 	/** コマンドリスト. */
 	vector<TextObject*> _CommandList;
+
+	int _NowSelect = 0;
+
+	/** カーソル. */
+	Cursor* _Cursor = nullptr;
+
+	Item::ItemCodeE _ItemCode;
 
 };

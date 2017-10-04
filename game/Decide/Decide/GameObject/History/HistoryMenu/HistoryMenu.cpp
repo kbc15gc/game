@@ -133,7 +133,8 @@ void HistoryMenu::EnableUpdate()
 	//左スティックの情報.
 	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 	LStick /= 32767.0f;
-	if (LStick.y >= 0.2f && fabsf(LStick.x) <= 0.1f)
+	//if (LStick.y >= 0.2f && fabsf(LStick.x) <= 0.1f)
+	if(XboxInput(0)->IsPressAnalog(AnalogE::L_STICKU,true))
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 		{
@@ -148,7 +149,8 @@ void HistoryMenu::EnableUpdate()
 			ChangeTime = 0.01f;
 		}
 	}
-	else if (LStick.y <= -0.2f && fabsf(LStick.x) <= 0.1f)
+	//else if (LStick.y <= -0.2f && fabsf(LStick.x) <= 0.1f)
+	else if(XboxInput(0)->IsPressAnalog(AnalogE::L_STICKD, true))
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 		{
@@ -216,14 +218,15 @@ void HistoryMenu::SelectPageUpdate()
 	LStick /= 32767.0f;
 	if (LStick.x >= 0.2f)
 	{
+		int size = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size();
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
 		{
-			_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+			_NowLookPage = min(max(0, size - 1), _NowLookPage + 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowLookPage = min(max(0, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() - 1), _NowLookPage + 1);
+			_NowLookPage = min(max(0, size - 1), _NowLookPage + 1);
 
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;

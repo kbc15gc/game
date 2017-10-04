@@ -175,7 +175,7 @@ void ItemWindow::ArmorInit()
 */
 void ItemWindow::Update()
 {
-	_ConfigParamRender();
+	Input();
 
 	_EIconImage->SetActive(false, true);
 
@@ -203,7 +203,9 @@ void ItemWindow::Update()
 		}
 	}
 
-	Input();
+	ArrowUpdate();
+
+	_ConfigParamRender();
 }
 
 /**
@@ -270,7 +272,6 @@ void ItemWindow::Input()
 				LocalTime += Time::DeltaTime();
 				if (LocalTime >= ChangeTime)
 				{
-					
 					LocalTime = 0.0f;
 					ChangeTime = 0.01f;
 					Cursor::CursorIndex index = _Cursor->NextMove(1);
@@ -288,13 +289,52 @@ void ItemWindow::Input()
 			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 			{
 				_Dialog->Enable(_Item2DList[_NowSelectItem]);
-				_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
 			}
-			else if (_ItemCode == Item::ItemCodeE::Item)
+
+		}
+		else
+		{
+			Dialog::DialogCommand commang = _Dialog->InputUpdate();
+
+			bool isPack = false;
+
+			switch (commang)
 			{
-				/*ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-				item->UseItem();
-				INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);*/
+				case Dialog::None:
+					//入力なし.
+					break;
+				case Dialog::Equip:
+					//装備もしくは外す.
+					_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+					break;
+				case Dialog::Dump:
+					//捨てる.
+					INSTANCE(Inventory)->SubHoldNum(_Item2DList[_NowSelectItem]->GetItemData()->GetInfo(), 1);
+					isPack = true;
+					break;
+				case Dialog::UseItem:
+					//アイテム使用.
+				{
+					ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
+					item->UseItem();
+					INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);
+					isPack = true;
+					break;
+				}
+				case Dialog::EquipItemUp:
+					break;
+				case Dialog::EquipItemDwon:
+					break;
+				case Dialog::EquipItemLeft:
+					break;
+				case Dialog::EquipItemRight:
+					break;
+			}
+
+			//リストが詰められた可能性があるため表示を更新.
+			if (isPack)
+			{
+
 				itemCount = 0;
 				for (auto& item : itemList)
 				{
@@ -308,98 +348,65 @@ void ItemWindow::Input()
 				{
 					//表示位置を一個さげる.
 					_StartLoadCount--;
-					//_Cursor->SetNowCursorIndex(_StartLoadCount);
 				}
 				else if (_NowSelectItem >= itemCount)
 				{
 					//選択位置を一個下げる.
-					//_NowSelectItem = max(0, _NowSelectItem - 1);
-					_NowSelectItem = _Cursor->NextMove(1).rangeIndex;
+					_NowSelectItem = _Cursor->PrevMove(1).rangeIndex;
 				}
 				if (itemCount <= 0)
 				{
-					//_SelectCursor->transform->SetParent(nullptr);
-					//_SelectCursor->SetActive(false, true);
 					_Cursor->transform->SetParent(nullptr);
-					_Cursor->SetActive(false, false);
+					_Cursor->SetActive(false, true);
 				}
 				else
 				{
-					//_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 				}
 			}
 		}
-		else
+
+
+	}
+}
+
+void ItemWindow::ArrowUpdate()
+{
+	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
+	int itemCount = 0;
+	for (auto& item : itemList)
+	{
+		if (item != nullptr)
 		{
-			Dialog::DialogCommand commang = _Dialog->InputUpdate();
-
-			//if (_ItemCode != Item::ItemCodeE::Item)
-			//{
-			//	_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
-			//}
-			//else if (_ItemCode == Item::ItemCodeE::Item)
-			//{
-			//	ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-			//	item->UseItem();
-			//	INSTANCE(Inventory)->SubHoldNum(item->GetInfo(),1);
-			//	itemCount = 0;
-			//	for (auto& item : itemList)
-			//	{
-			//		if (item != nullptr)
-			//		{
-			//			itemCount += 1;
-			//		}
-			//	}
-			//	if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
-			//	{
-			//		//表示位置を一個さげる.
-			//		_StartLoadCount--;
-			//	}
-			//	else if (_NowSelectItem >= itemCount)
-			//	{
-			//		//選択位置を一個下げる.
-			//		_NowSelectItem = max(0, _NowSelectItem - 1);
-			//	}
-			//	if (itemCount <= 0)
-			//	{
-			//		_SelectCursor->transform->SetParent(nullptr);
-			//		_SelectCursor->SetActive(false, true);
-			//	}
-			//	else
-			//	{
-			//		_SelectCursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-			//	}
-			//}
+			itemCount += 1;
 		}
+	}
+	if (itemCount > ItemCellSize) {
+		// 所持枠を埋めているアイテムが表示限界枠より多い。
 
-		if (itemCount > ItemCellSize) {
-			// 所持枠を埋めているアイテムが表示限界枠より多い。
+		if (_StartLoadCount > 0) {
+			// 一番上に表示されているアイテムがアイテムリストの先頭ではない。
 
-			if (_StartLoadCount > 0) {
-				// 一番上に表示されているアイテムがアイテムリストの先頭ではない。
-
-				_UpArrow->SetActive(true, true);
-			}
-			else {
-				_UpArrow->SetActive(false, false);
-			}
-
-			if (_StartLoadCount + ItemCellSize < itemCount) {
-				// 一番下に表示されているアイテムがアイテムリストの終端ではない。
-
-				_DownArrow->SetActive(true, true);
-			}
-			else {
-				_DownArrow->SetActive(false, false);
-			}
+			_UpArrow->SetActive(true, true);
 		}
 		else {
-			// 所持枠を埋めているアイテムが表示限界枠におさまっている。
-
 			_UpArrow->SetActive(false, false);
+		}
+
+		if (_StartLoadCount + ItemCellSize < itemCount) {
+			// 一番下に表示されているアイテムがアイテムリストの終端ではない。
+
+			_DownArrow->SetActive(true, true);
+		}
+		else {
 			_DownArrow->SetActive(false, false);
 		}
+	}
+	else {
+		// 所持枠を埋めているアイテムが表示限界枠におさまっている。
+
+		_UpArrow->SetActive(false, false);
+		_DownArrow->SetActive(false, false);
 	}
 }
 

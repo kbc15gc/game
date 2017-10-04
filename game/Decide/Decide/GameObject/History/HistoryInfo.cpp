@@ -8,12 +8,11 @@
 
 void LocationHistoryInfo::SetData(vector<HistoryPage*>& list)
 {
-	int i = 0;
-	for (auto it : list)
+	for (int i = 0; i < (int)ChipID::ChipNum;i++)
 	{
-		if (it != nullptr)
-		{
-			_ChipSlot[i++] = it->GetChipID();
-		}
+		if (i < list.size() && list[i] != nullptr)
+			_ChipSlot[i] = list[i]->GetChipID();
+		else
+			_ChipSlot[i] = ChipID::None;
 	}
 }

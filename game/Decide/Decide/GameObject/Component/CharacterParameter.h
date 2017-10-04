@@ -105,9 +105,9 @@ public:
 	//与ダメージ計算。
 	// 引数：	魔法攻撃か。
 	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
-	//			キャラクターの行動で発生する攻率力(攻撃の種類などによって変動する値、デフォルトは1)。
+	//			ダメージ率(攻撃の種類などによる攻撃力に対する割合、この値に0.01f掛けた値を攻撃力に乗算する、単位はパーセント、デフォルトは100)。
 	// 戻り値:	与えるダメージの情報。
-	unique_ptr<GiveDamageInfo> GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int atk = 1);
+	unique_ptr<GiveDamageInfo> GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int percentage = 100);
 
 	// HP回復関数。
 	// 引数：	回復量。

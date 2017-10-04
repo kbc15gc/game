@@ -89,7 +89,7 @@ int CharacterParameter::ReciveDamageThrough(int damage) {
 	return damage;
 }
 
-unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int atk)
+unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMass(bool isMagic, HoldWeapon* weapon, int percentage)
 {
 	int damage = 0;
 	int weaponDamage = 0;
@@ -135,7 +135,7 @@ unique_ptr<CharacterParameter::GiveDamageInfo> CharacterParameter::GiveDamageMas
 		}
 	}
 
-	info->value = damage * atk;
+	info->value = damage * (static_cast<float>(percentage) * 0.01f);
 	return move(info);
 }
 
