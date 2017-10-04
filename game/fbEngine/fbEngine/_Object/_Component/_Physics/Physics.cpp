@@ -128,15 +128,14 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll, int attr) c
 	return callback.hitObject;
 }
 
-const vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*>& HitInfoArray, int attr) const
+const vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>>* PhysicsWorld::AllHitsContactTest(Collision * coll, vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>>* HitInfoArray, fbPhysicsCallback::AllHitsContactResultCallback* callback, int attr) const
 {
-	HitInfoArray.clear();
-	fbPhysicsCallback::AllHitsContactResultCallback callback;
-	callback.me = coll;
-	callback.attribute = attr;
-	dynamicWorld->contactTest(coll->GetCollisionObj(), callback);
+	HitInfoArray->clear();
+	callback->me = coll;
+	callback->attribute = attr;
+	callback->SetHitInfoArray(HitInfoArray);
+	dynamicWorld->contactTest(coll->GetCollisionObj(), *callback);
 
-	HitInfoArray = callback.GetHitInfoArray();
 	return HitInfoArray;
 }
 

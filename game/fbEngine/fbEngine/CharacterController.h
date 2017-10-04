@@ -177,10 +177,6 @@ public:
 	}
 
 private:
-	// 要素別に移動量を選択する処理。
-	float _MoveSpeedSelection(float mySpeed, float outSpeed);
-
-private:
 	Vector3 				m_moveSpeed = Vector3::zero;	//キャラクターが自発的に移動する量。
 	Vector3					_outsideSpeed = Vector3::zero;	//キャラクターが外的要因で移動する量。 
 	Vector3					_moveSpeedExcute = Vector3::zero;				// 衝突解決終了後の実際に移動した量。
