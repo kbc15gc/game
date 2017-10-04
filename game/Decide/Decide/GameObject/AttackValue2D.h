@@ -19,7 +19,7 @@ public:
 	// 表示する時間。
 	// ずらす量。
 	//カラー。
-	void Init(int damagevalue, float lifetime = 1.0f, Vector3 offset = Vector3::zero, Color color = Color::red);
+	void Init(int damagevalue, bool critical, float lifetime = 1.0f, Vector3 offset = Vector3::zero, Color color = Color::red);
 private:
 	//攻撃量のテキスト
 	TextObject* _AttackText;
