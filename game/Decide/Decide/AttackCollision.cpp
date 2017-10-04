@@ -164,7 +164,7 @@ void AttackCollision::_CallBackExit(btCollisionObject* coll) {
 	}
 }
 
-void AttackCollision::Create(unique_ptr<CharacterParameter::GiveDamageInfo> info, bool isMagic, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
+void AttackCollision::Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
 
 	_DamageInfo = move(info);
 
@@ -180,7 +180,6 @@ void AttackCollision::Create(unique_ptr<CharacterParameter::GiveDamageInfo> info
 	}
 	transform->SetLocalPosition(pos);
 	transform->SetLocalRotation(rotation);
-	_isMagic = isMagic;
 
 	// ÉRÉäÉWÉáÉìê∂ê¨ÅB
 	CreateCollision();

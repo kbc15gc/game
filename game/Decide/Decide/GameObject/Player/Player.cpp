@@ -338,7 +338,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		// ダメージを与える処理
-		int damage = _PlayerParam->ReciveDamage(hitCollision->GetDamageInfo()->value, hitCollision->GetIsMagic(), _Equipment->armor);
+		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);

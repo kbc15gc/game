@@ -20,10 +20,12 @@ public:
 	// 物理属性(斬、打、魔など)。
 	enum class Physical { None = -1 };
 
-	// 作成した与ダメージ情報。
-	struct GiveDamageInfo {
+	// ダメージ情報。
+	struct DamageInfo {
 		int value = 0;	// ダメージ量。
 		bool isCritical = false;	// クリティカルか。
+		bool isMagic = false;	// 魔法攻撃か。
+		bool isThrough = false;	// 防御貫通攻撃か。
 		Element element;	// 元素属性(現在未使用)。
 		Physical physical;	// 物理属性(現在未使用)。
 	};
@@ -83,20 +85,18 @@ public:
 	void ParamReset(const vector<int>& param);
 
 	// 被ダメージ処理(パラメーターにダメージを与える)。
-	// 引数:		敵からのダメージ。
-	//				魔法攻撃か。
+	// 引数:		敵からのダメージ情報。
 	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
 	// 戻り値:		受けたダメージ。
-	int ReciveDamage(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr, int defidx = 1);
+	int ReciveDamage(const DamageInfo& info, HoldArmor* armor = nullptr, int defidx = 1);
 
 	// 被ダメージ計算(計算のみでパラメーターに影響はない)。
-	// 引数:		敵からのダメージ。
-	//				魔法攻撃か。
+	// 引数:		敵からのダメージ情報。
 	//				防具(デフォルトはnull、武器未装備時はnullを設定)。
 	//				キャラクターの行動で発生する防御率(防御行動などによって変動する値、デフォルトは1)。
 	// 戻り値:		受けるダメージ。
-	int ReceiveDamageMass(int defaultDamage, bool isMagic, HoldArmor* armor = nullptr,int defidx = 1);
+	int ReceiveDamageMass(const DamageInfo& info, HoldArmor* armor = nullptr,int defidx = 1);
 
 	// 防御力無視の被ダメージ処理。
 	// 引数:		敵からのダメージ。
@@ -104,10 +104,11 @@ public:
 
 	//与ダメージ計算。
 	// 引数：	魔法攻撃か。
+	//			防御貫通攻撃か。
 	//			武器(デフォルトはnull、武器未装備時はnullを設定)。	
 	//			ダメージ率(攻撃の種類などによる攻撃力に対する割合、この値に0.01f掛けた値を攻撃力に乗算する、単位はパーセント、デフォルトは100)。
 	// 戻り値:	与えるダメージの情報。
-	unique_ptr<GiveDamageInfo> GiveDamageMass(bool isMagic, HoldWeapon* weapon = nullptr, int percentage = 100);
+	unique_ptr<DamageInfo> GiveDamageMass(bool isMagic,bool isThrough, HoldWeapon* weapon = nullptr, int percentage = 100);
 
 	// HP回復関数。
 	// 引数：	回復量。
