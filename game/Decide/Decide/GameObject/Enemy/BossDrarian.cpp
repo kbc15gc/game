@@ -37,7 +37,10 @@ void BossDrarian::_StartSubClass() {
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
-	_WanderingRange = 10.0f;
+	_WanderingRange = 20.0f;
+
+	// 追跡範囲設定。
+	_discoveryRange = 30.0f;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
@@ -209,7 +212,7 @@ void BossDrarian::_ConfigCollision() {
 	// ※キャラクターコントローラーで使用するためのもの。
 	_collisionInfo.radius = 1.8f;
 	_collisionInfo.height = 6.0f;
-	_collisionInfo.offset = 0.125f;
+	_collisionInfo.offset = Vector3(0.0f,0.125f,0.0f);
 
 	//// 重力設定。
 	//_Gravity = -9.8f;

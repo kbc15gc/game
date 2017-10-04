@@ -29,36 +29,38 @@ public:
 	*			コリジョンの属性。
 	*			コリジョン形状。
 	*			重力。
-	*			衝突を取りたい属性(左右方向、押し戻されたい場合に設定、レイヤーマスクなのでビット演算)。
-	*			衝突を取りたい属性(上下方向、押し戻されたい場合に設定、レイヤーマスクなのでビット演算)。
+	*			衝突した際押し戻される属性(左右方向、設定した属性のコリジョンにキャラクターが押し戻される、レイヤーマスクなのでビット演算)。
+	*			衝突した際押し戻される属性(上下方向、設定した属性のコリジョンにキャラクターが押し戻される、レイヤーマスクなのでビット演算)。
 	*			即時に物理ワールドにコリジョンを登録する(falseにした場合は後で登録関数を呼ばないと登録されない)。
 	*/
 	void Init(Vector3 off , int type, Collider* coll , float gravity,int attributeXZ = -1, int attributeY = -1/*static_cast<int>(fbCollisionAttributeE::ALL)*/,bool isAddWorld = true);
 	
 	/*!
 	* @brief	キャラクターコントローラに設定されている移動量分移動。
-	* 戻り値：　衝突解決した後の実際の移動量。
+	* 戻り値：　衝突解決した後の実際の移動量(デルタタイムがかかってない移動量)。
 	*/
 	const Vector3& Execute();
 
 	/*!
-	* @brief	移動量を設定。
+	* @brief	移動量を設定(デルタタイムがかかってない移動量)。
 	*/
 	inline void SetMoveSpeed(const Vector3& speed) {
 		m_moveSpeed = speed;
 	}
 	/*!
-	* @brief	移動量を取得。
+	* @brief	移動量を取得(デルタタイムがかかってない移動量)。
 	*/
 	inline const Vector3& GetMoveSpeed() const
 	{
 		return m_moveSpeed;
 	}
 	// 外的要因で発生した移動量を加算。
+	// 引数：	1秒単位での移動量(デルタタイムがかかってない移動量)。
 	inline void AddOutsideSpeed(const Vector3& add){
 		_outsideSpeed = _outsideSpeed + add;
 	}
 	// 衝突解決を含めた実際の移動量を取得。
+	// 戻り値：	衝突解決した後の実際の移動量(デルタタイムがかかってない移動量)。
 	// ※Excute関数が呼ばれる前に呼ばれた場合(0,0,0)か前回のExcuteの結果が返却される。
 	inline const Vector3& GetmoveSpeedExcute()const {
 		return _moveSpeedExcute;
@@ -175,6 +177,10 @@ public:
 	}
 
 private:
+	// 要素別に移動量を選択する処理。
+	float _MoveSpeedSelection(float mySpeed, float outSpeed);
+
+private:
 	Vector3 				m_moveSpeed = Vector3::zero;	//キャラクターが自発的に移動する量。
 	Vector3					_outsideSpeed = Vector3::zero;	//キャラクターが外的要因で移動する量。 
 	Vector3					_moveSpeedExcute = Vector3::zero;				// 衝突解決終了後の実際に移動した量。
@@ -184,6 +190,6 @@ private:
 	Vector3					_halfSize;						// コライダーのサイズ(実際のサイズの半分)。
 	RigidBody*				m_rigidBody = nullptr;			//剛体。
 	float					m_gravity = -9.8f;				//重力。
-	int						m_attributeXZ;					// 衝突を取りたい属性(左右方向、衝突解決の省略のみでワールドで判定は取れる)。
-	int						m_attributeY;					// 衝突を取りたい属性(上下方向、衝突解決の省略のみでワールドで判定は取れる)。
+	int						m_attributeXZ;					// 衝突した際押し戻される属性(左右方向、設定した属性のコリジョンにキャラクターが押し戻される)。
+	int						m_attributeY;					// 衝突した際押し戻される属性(上下方向、設定した属性のコリジョンにキャラクターが押し戻される)。
 };

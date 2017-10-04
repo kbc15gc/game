@@ -46,6 +46,9 @@ void Enemy::_StartSubClass(){
 	// ※暫定処理。
 	_WanderingRange = 10.0f;
 
+	// 追跡範囲設定。
+	_discoveryRange = 10.0f;
+
 	// 歩行速度設定。
 	_walkSpeed = 1.0f;
 
@@ -128,7 +131,7 @@ void Enemy::_ConfigCollision() {
 
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
-	_collisionInfo.radius = 0.3f;
+	_collisionInfo.radius = 0.325f;
 	_collisionInfo.height = 0.3f;
 	_collisionInfo.offset = Vector3(0.0f, 0.46f, 0.0f);
 
@@ -143,6 +146,7 @@ void Enemy::_ConfigCharacterController() {
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
 	//_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::BUILDING);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();

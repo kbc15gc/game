@@ -166,8 +166,8 @@ public:
 		return _MyComponent.Animation->GetPlaying();
 	}
 
-	// エネミーが徘徊範囲外に出たか判定。
-	bool IsOutsideWandering();
+	// エネミーが追跡範囲外に出たか判定。
+	bool IsOutsideDiscovery();
 
 	// 引数の値を加算した結果、エネミーが徘徊範囲外に出たか判定。
 	bool IsOutsideWandering(const Vector3& Add);
@@ -494,6 +494,8 @@ protected:
 	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
+
+	float _discoveryRange = 0.0f;	// 追跡範囲。
 
 	float _walkSpeed = 0.0f;		// 歩行速度。
 

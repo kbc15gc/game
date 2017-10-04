@@ -128,16 +128,16 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll, int attr) c
 	return callback.hitObject;
 }
 
-const vector<Collision*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vector<Collision*>& HitCollisions, int attr) const
+const vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*>& PhysicsWorld::AllHitsContactTest(Collision * coll, vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*>& HitInfoArray, int attr) const
 {
-	HitCollisions.clear();
+	HitInfoArray.clear();
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	callback.me = coll;
 	callback.attribute = attr;
 	dynamicWorld->contactTest(coll->GetCollisionObj(), callback);
 
-	HitCollisions = callback.hitObjects;
-	return HitCollisions;
+	HitInfoArray = callback.GetHitInfoArray();
+	return HitInfoArray;
 }
 
 const Collision * PhysicsWorld::ClosestConvexSweepTest(Collision * coll, const Vector3 & s, const Vector3 & e, int attr) const

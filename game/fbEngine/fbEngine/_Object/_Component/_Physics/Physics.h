@@ -43,7 +43,7 @@ public:
 	//const vector<Collision*>&  衝突したコリジョンの配列。
 	//int　指定したコリジョンの属性とのみ当たりをとる
 	// 戻り値は第二引数と同じ。
-	const vector<Collision*>& AllHitsContactTest(Collision * coll,vector<Collision*>& HitCollisions, int attr = (int)fbCollisionAttributeE::ALL) const;
+	const vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*>& AllHitsContactTest(Collision * coll,vector<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo*>& HitInfoArray, int attr = (int)fbCollisionAttributeE::ALL) const;
 	//レイを飛ばしてヒットした中で最も近かったものを取得
 	//Vector3　レイの始点
 	//Vector3　レイの終点

@@ -43,6 +43,8 @@ const Vector3& CCharacterController::Execute()
 	// y成分は重力を加算。
 	m_moveSpeed.y += m_gravity;
 
+	float deltaTime = Time::DeltaTime();
+
 	Vector3 nowPosTmp; 
 	Vector3 nextPosTmp;
 	Vector3 originalXZDir;
@@ -50,9 +52,28 @@ const Vector3& CCharacterController::Execute()
 	{
 		nextPosTmp = nowPosTmp = m_rigidBody->GetOffsetPos();	// 移動前のコリジョンの座標(原点)を設定。
 		nextPosTmp.y = nowPosTmp.y = nowPosTmp.y - m_rigidBody->GetShape()->GetHalfSize().y;	// 位置情報をコリジョンの足元に合わせる。
-		//キャラクターの移動量に外的要因による移動量を加算。
-		Vector3 addPos = m_moveSpeed + _outsideSpeed;
-		addPos.Scale(Time::DeltaTime());
+		//キャラクターの移動量と外的要因による移動量を比較してどちらの移動を優先するか決定。
+		Vector3 addPos;
+		//addPos.x = _MoveSpeedSelection(m_moveSpeed.x, _outsideSpeed.x);
+		//addPos.y = _MoveSpeedSelection(m_moveSpeed.y, _outsideSpeed.y);
+		//addPos.z = _MoveSpeedSelection(m_moveSpeed.z, _outsideSpeed.z);
+
+		//Vector3 outSpeed = _outsideSpeed;
+		//outSpeed.y = 0.0f;
+		//if (outSpeed.Length() > 0.0f) {
+		//	Vector3 mySpeed = m_moveSpeed;
+		//	mySpeed.y = 0.0f;
+		//	float outPower = outSpeed.Length();
+		//	outSpeed.Normalize();
+		//	mySpeed = outSpeed.Cross(Vector3::up) * (mySpeed.Length() + outPower);	// 滑らせる方向。
+		//	m_moveSpeed.x = mySpeed.x;
+		//	m_moveSpeed.z = mySpeed.z;
+		//}
+		addPos = m_moveSpeed + _outsideSpeed;
+
+		//addPos = m_moveSpeed;
+
+		addPos.Scale(deltaTime);
 		nextPosTmp += addPos;
 
 		originalXZDir = addPos;
@@ -218,5 +239,48 @@ const Vector3& CCharacterController::Execute()
 
 	_outsideSpeed = Vector3::zero;
 
+	_moveSpeedExcute = _moveSpeedExcute / deltaTime;
 	return _moveSpeedExcute;
+}
+
+float CCharacterController::_MoveSpeedSelection(float mySpeed, float outSpeed) {
+	float add = 0.0f;
+
+	if (mySpeed * outSpeed > 0) {
+		// 向きが同じ。
+		// 大きいほうを優先。
+
+		if (mySpeed >= outSpeed) {
+			add = mySpeed;
+		}
+		else {
+			add = outSpeed;
+		}
+	}
+	else if (mySpeed * outSpeed) {
+		// 向きが違う。
+
+		// 外的要因を優先。
+		add = outSpeed;
+	}
+	else {
+		// 外的要因か自発移動のどちらか、もしくはどちらもが発生していない。
+
+		if (fabsf(mySpeed) > 0.0f) {
+			// 自発移動している。
+
+			add = mySpeed;
+		}
+		else if (fabsf(outSpeed) > 0.0f) {
+			// 外的要因で移動している。
+
+			add = outSpeed;
+		}
+		else {
+			// 移動していない。
+
+			add = 0.0f;
+		}
+	}
+	return add;
 }

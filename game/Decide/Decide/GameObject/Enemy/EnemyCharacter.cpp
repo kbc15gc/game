@@ -118,10 +118,10 @@ void EnemyCharacter::LateUpdate() {
 }
 
 
-bool EnemyCharacter::IsOutsideWandering() {
+bool EnemyCharacter::IsOutsideDiscovery() {
 	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
-	if (NowRange > _WanderingRange) {
-		// 徘徊範囲外に出た。
+	if (NowRange > _discoveryRange) {
+		// 追跡範囲外に出た。
 		return true;
 	}
 	return false;
@@ -149,7 +149,7 @@ void EnemyCharacter::SearchView() {
 		// 視線に入っている。
 
 		// 威嚇ステートに移行。
-		//_ChangeState(State::Threat);
+		_ChangeState(State::Threat);
 	}
 }
 
