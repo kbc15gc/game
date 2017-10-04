@@ -42,9 +42,10 @@ static const string ChipFileName[(int)ChipID::ChipNum] =
 */
 enum class LocationCodeE : int
 {
-	Begin = 0,		//!< ‚Í‚¶‚Ü‚è‚ÌW—Ž.
+	Begin,			//!< ‚Í‚¶‚Ü‚è‚ÌW—Ž.
 	Hunting,		//!< Žë—Â‚Ì‘º.
 	Prosperity,		//!< ”É‰h‚Ì’¬.
+	Common,			//!< ‹¤’Ê‚ÌNPC.
 	LocationNum,	//!< êŠ‚Ì”.
 };
 

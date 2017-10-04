@@ -11,14 +11,12 @@ namespace
 	struct RemoveObj
 	{
 	public:
-		RemoveObj(list<GameObject*>::iterator i, int p)
-		{
-			iterator = i;
-			priority = p;
-		}
+		RemoveObj(list<GameObject*>::iterator itr, int pri) :
+			iterator(itr),
+			priority(pri){}
 
-		int priority;								//優先度
-		list<GameObject*>::iterator iterator;		//イテレータ
+		list<GameObject*>::iterator iterator;		//削除するオブジェクトのイテレータ。
+		int priority;								//優先度。
 	};
 }
 
@@ -83,7 +81,7 @@ public:
 	
 	//破棄リストに追加
 	// この関数を呼ぶとフレーム終了時に削除される。
-	void AddRemoveList(GameObject* obj);
+	void AddRemoveList(GameObject* addres);
 	void AddRemoveList(char* name);
 
 	//オブジェクト検索関数
@@ -113,9 +111,11 @@ public:
 	Light* mainLight;
 private:
 	//リストに重複がないかチェックする。
-	bool _CheckUniqueRemoveList(GameObject* obj);
+	//[in] 重複をチェックしたいアドレス。
+	//[out] 重複がなかった場合はtrueを返す。
+	bool _CheckUniqueRemoveList(GameObject* addres);
 	// 各種チェックが終わった後に削除リストに積む。
-	void _AddRemoveList(list<GameObject*>::iterator itr, int priority);
+	void _AddRemoveList(list<GameObject*>::iterator iterator, int priority);
 	//削除リストのオブジェクトを削除する。
 	void _RemoveObject();
 private:
