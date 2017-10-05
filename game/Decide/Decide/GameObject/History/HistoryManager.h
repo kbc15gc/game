@@ -50,11 +50,6 @@ public:
 	* 初期化.
 	*/
 	void Start();
-	
-	/**
-	* 歴史オブジェクト生成.
-	*/
-	void CreateObject();
 
 	/**
 	* 歴史を変える.
