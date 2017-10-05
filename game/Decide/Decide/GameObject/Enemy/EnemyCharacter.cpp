@@ -64,11 +64,8 @@ void EnemyCharacter::Start() {
 
 	// 継承先で初期位置が設定された可能性があるため更新。
 	_MyComponent.CharacterController->Execute();
-	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
+	//_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
 	
-	int Attribute = Collision_ID::PLAYER;
-	_MyComponent.CharacterExtrude->Init(_MyComponent.CharacterController->GetRigidBody(), Attribute);
-
 	//プレイヤー。
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
@@ -224,12 +221,27 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(_collisionInfo.offset, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
+	_MyComponent.CharacterController->Init(_collisionInfo.offset, _collisionInfo.id, _MyComponent.Collider, _Gravity,true);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
 
 	_MyComponent.CharacterController->SetGravity(_Gravity);
+
+	// キャラクターコントローラ押し出しコンポーネント作成。
+	_CreateExtrudeCollision();
+
+	int Attribute = Collision_ID::NOT_ID;
+	if (_MyComponent.ExtrudeCollisions.size() > 0) {
+		_MyComponent.CharacterExtrude->Init(_MyComponent.ExtrudeCollisions, Attribute);
+	}
+	else {
+		// キャラクターコントローラ押し出し用の剛体を設定してない。
+
+		abort();
+	}
+
+	_ConfigCharacterExtrude();
 }
 
 void EnemyCharacter::_BuildModelData() {

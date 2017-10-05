@@ -64,7 +64,7 @@ void Animation::Awake()
 	
 }
 
-void Animation::PlayAnimation(const UINT& animationSetIndex)
+void Animation::PlayAnimation(const UINT animationSetIndex)
 {
 	if (animationSetIndex < _NumAnimSet) {
 		if (_AnimController) {
@@ -98,7 +98,7 @@ void Animation::PlayAnimation(const UINT& animationSetIndex)
 	}
 }
 
-void Animation::PlayAnimation(const UINT& animationSetIndex, const float& interpolateTime, const int& lnum)
+void Animation::PlayAnimation(const UINT animationSetIndex, const float interpolateTime, const int lnum)
 {
 	if (animationSetIndex < _NumAnimSet) {
 		if (_AnimController) {
@@ -133,7 +133,7 @@ void Animation::PlayAnimation(const UINT& animationSetIndex, const float& interp
 	}
 }
 
-bool Animation::PlayAnimation(const UINT& animationSetIndex, const float& interpolateTime, const float& transitionTime, const int& loopnum)
+bool Animation::PlayAnimation(const UINT animationSetIndex, const float interpolateTime, const float transitionTime, const int loopnum)
 {
 	bool play;
 	if(play = (transitionTime <= _TimeRatio))
@@ -172,7 +172,7 @@ void Animation::_NextQueue()
 	}
 }
 
-void Animation::_EndAnimation(const float& endtime)
+void Animation::_EndAnimation(const float endtime)
 {
 	if (_LoopNum != -1 &&		//無限ループではない
 		_LoopCount >= _LoopNum)	//カウントが指定した数以上になった
@@ -189,7 +189,7 @@ void Animation::_EndAnimation(const float& endtime)
 	}
 }
 
-void Animation::_InterpolateAnimation(const float& delta)
+void Animation::_InterpolateAnimation(const float delta)
 {
 	//補完するよ。
 	if (_IsInterpolate) {

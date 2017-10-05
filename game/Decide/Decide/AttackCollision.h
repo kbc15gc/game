@@ -75,6 +75,11 @@ private:
 			return nullptr;
 		}
 	}
+
+	// コリジョンに登録されているオブジェクトが既に登録されているオブジェクトかチェック。
+	// 引数：	チェックするコリジョン。
+	// 戻り値：	既に登録されているか。
+	bool _CheckObject(btCollisionObject* coll1);
 private:
 	Collider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。

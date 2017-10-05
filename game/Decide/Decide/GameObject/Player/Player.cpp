@@ -159,6 +159,8 @@ void Player::Start()
 	ChangeState(State::Idol);
 	//ポジション
 	_StartPos = Vector3(-148.0f, 68.5f, -34.0f);
+	//_StartPos = Vector3(-148.0f, 80.5f, -34.0f);
+
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -171,6 +173,9 @@ void Player::Start()
 
 	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
 	Re_SetEquipment();
+
+	// 初期位置に移動。
+	_CharacterController->Execute();
 }
 
 void Player::Update()

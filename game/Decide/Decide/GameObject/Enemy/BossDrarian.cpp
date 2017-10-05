@@ -244,21 +244,59 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 }
 
 void BossDrarian::_ConfigCollision() {
+	// 攻撃判定用のコリジョン。
+	{
+		// 足元。
+		{
+			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
 
-	// コリジョンのサイズを決定。
-	// ※キャラクターコントローラーで使用するためのもの。
-	_collisionInfo.radius = 1.8f;
-	_collisionInfo.height = 6.0f;
-	_collisionInfo.offset = Vector3(0.0f,0.125f,0.0f);
+			RigidBodyInfo info;
+			info.coll = AddComponent<BoxCollider>();
+			static_cast<BoxCollider*>(info.coll)->Create(Vector3(3.0f, 3.0f,1.0f));
+			info.id = Collision_ID::ENEMY;
+			info.mass = 0.0f;
+			info.physicsType = Collision::PhysicsType::Kinematick;
+			info.offset = Vector3(0.0f,0.0f,2.0f);
+			info.rotation = Quaternion::Identity;
+			coll->Create(info, true);
 
-	//// 重力設定。
-	//_Gravity = -9.8f;
+			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
+		}
+		// 胴体。
+		{
+			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
 
-	// コンポーネントにカプセルコライダーを追加。
+			RigidBodyInfo info;
+			info.coll = AddComponent<CCapsuleColliderZ>();
+			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 8.1f);
+			info.id = Collision_ID::ENEMY;
+			info.mass = 0.0f;
+			info.physicsType = Collision::PhysicsType::Kinematick;
+			info.offset = Vector3(0.0f,1.0f,0.0f);
+			info.rotation = Quaternion::Identity;
+			coll->Create(info, true);
 
-	_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
-	// カプセルコライダーを作成。
-	static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
+		}
+	}
+
+	// キャラクターコントローラ用。
+	{
+		// コリジョンのサイズを決定。
+		// ※キャラクターコントローラーで使用するためのもの。
+		_collisionInfo.radius = 1.8f;
+		_collisionInfo.height = 6.0f;
+		_collisionInfo.offset = Vector3(0.0f, 0.125f, 0.0f);
+		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;
+
+		// 重力設定。
+		_Gravity = -9.8f;
+
+		// コンポーネントにカプセルコライダーZを追加。
+		_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
+		// カプセルコライダーを作成。
+		static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height); 
+	}
 }
 
 void BossDrarian::_ConfigCharacterController() {
@@ -274,6 +312,9 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
 
+}
+
+void BossDrarian::_CreateExtrudeCollision() {
 }
 
 void BossDrarian::_BuildAnimation() {

@@ -133,11 +133,16 @@ namespace fbPhysicsCallback
 			Collision* hitObjectTmp = nullptr;
 
 			// col0 と col1 のどちらかは自分なのでアドレスを比較して確かめる
-			if (me->GetCollisionObj() == colObj0Wrap->getCollisionObject()) {
+			if (colObj0Wrap->getCollisionObject()->getUserPointer() && static_cast<Collision*>(colObj0Wrap->getCollisionObject()->getUserPointer())->gameObject && me == static_cast<Collision*>(colObj0Wrap->getCollisionObject()->getUserPointer())->gameObject) {
 				hitObjectTmp = (Collision*)colObj1Wrap->getCollisionObject()->getUserPointer();
 			}
-			else {
+			else if(colObj1Wrap->getCollisionObject()->getUserPointer() && static_cast<Collision*>(colObj1Wrap->getCollisionObject()->getUserPointer())->gameObject && me == static_cast<Collision*>(colObj1Wrap->getCollisionObject()->getUserPointer())->gameObject) {
 				hitObjectTmp = (Collision*)colObj0Wrap->getCollisionObject()->getUserPointer();
+			}
+
+			if (hitObjectTmp->gameObject && hitObjectTmp->gameObject == me) {
+				// 自分と衝突。
+				return 0.0f;
 			}
 
 			//hitオブジェクトがある
@@ -205,44 +210,11 @@ namespace fbPhysicsCallback
 
 	public:
 		int attribute;					//指定したコリジョン属性とのみ当たり判定をとる
-		Collision* me = nullptr;		//自身のアドレス
+		GameObject* me = nullptr;		//自身のアドレス
 	private:
 		vector<unique_ptr<hitInfo>>* hitInfoArray = nullptr;	//ヒットしたオブジェクト
 	};
 
-	// 押し出しコンポーネント用。
-	struct AllHitsContactResultExtrude : AllHitsContactResultCallback {
-		// 無視するコリジョンか調べる。
-		bool _IsThroughCollision(btManifoldPoint& cp)override {
-
-			btVector3 newVec = cp.m_positionWorldOnA - cp.m_positionWorldOnB;
-
-			// Y成分は除く。
-			newVec.setY(0.0f);
-			if (newVec.length() <= 0.001f) {
-				// Y成分のめり込みだった。
-
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		bool _IsNearLength(hitInfo* info, btManifoldPoint& cp)override {
-			btVector3 newVec = cp.m_positionWorldOnA - cp.m_positionWorldOnB;
-			Vector3 nowVec = info->hitPosA - info->hitPosB;
-			newVec.setY(0.0f);
-			nowVec.y = 0.0f;
-
-			if (newVec.length() < nowVec.Length()) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-	};
 
 	//レイを飛ばしてヒットした中で最も近いものを返す。
 	struct	ClosestRayResultCallback : public btCollisionWorld::RayResultCallback
@@ -357,18 +329,19 @@ namespace fbPhysicsCallback
 		Vector3 hitPos = Vector3(0.0f, -FLT_MAX, 0.0f);	//衝突点。
 		Vector3 startPos = Vector3::zero;					//レイの始点。
 		Vector3 hitNormal = Vector3::zero;				//衝突点の法線。
-		btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
+		GameObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
 		float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
-		//bool isSlip = false;	// 滑るか。
-		//float SlipAngle = 90.0f;			// 上方向との角度がこの角度以上なら滑る(度)。
+		int hitID = 0;		// 衝突したコリジョンの属性。
 
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject == me) {
-				//自分に衝突した。
-				return 0.0f;
+			if (convexResult.m_hitCollisionObject->getUserPointer()) {
+				if (static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject && static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject == me) {
+					//自分に衝突した。
+					return 0.0f;
+				}
 			}
 
 			//衝突点の法線を引っ張ってくる。
@@ -403,6 +376,7 @@ namespace fbPhysicsCallback
 					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
 					dist = distTmp;
 					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+					hitID = convexResult.m_hitCollisionObject->getUserIndex();
 					//if (angle >= D3DXToRadian(SlipAngle)) {
 					//	// 指定角度以上なので滑らせる。
 					//	isSlip = true;
@@ -421,15 +395,19 @@ namespace fbPhysicsCallback
 		Vector3 startPos = Vector3::zero;		//レイの始点。
 		float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 		Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
-		btCollisionObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
+		GameObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
 		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる
+
+		int hitID = 0;		// 衝突したコリジョンの属性。
 
 		//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject == me) {
-				//自分に衝突した。
-				return 0.0f;
+			if (convexResult.m_hitCollisionObject->getUserPointer()) {
+				if (static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject && static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject == me) {
+					//自分に衝突した。
+					return 0.0f;
+				}
 			}
 
 			//衝突点の法線を引っ張ってくる。
@@ -464,81 +442,11 @@ namespace fbPhysicsCallback
 					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
 					dist = distTmp;
 					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+					hitID = convexResult.m_hitCollisionObject->getUserIndex();
 				}
 			}
 
 			return 0.0f;
 		}
 	};
-
-	// 移動した際に他のコリジョンを押し出す処理で使用。
-	struct SweepResultExtrude : public btCollisionWorld::ConvexResultCallback
-	{
-		// 引数：	レイの始点。
-		//			自分自身。自分自身との衝突を除外するためのメンバ。
-		//			指定したコリジョン属性とのみ当たり判定をとる。
-		SweepResultExtrude(const Vector3& start, btCollisionObject* me, int attribute) {
-			_startPos = start;
-			_me = me;
-			_attribute = attribute;
-		}
-
-		~SweepResultExtrude() {
-			for (auto info : _hitInfo) {
-				SAFE_DELETE(info);
-			}
-			_hitInfo.clear();
-		}
-
-		struct hitInfo {
-			Vector3 hitPos = Vector3::zero;		//衝突点。
-			Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
-			Collision* collision = nullptr;	// 衝突したコリジョン。
-			float hitFraction = 0.0f;	// 開始位置から終端位置までの長さと、開始位置から衝突した位置までの比。
-		};
-
-		const vector<hitInfo*>& GetInfoArray() const {
-			return _hitInfo;
-		}
-
-		bool isHit = false;						//衝突フラグ。
-	private:
-
-		Vector3 _startPos = Vector3::zero;		//レイの始点。
-		btCollisionObject* _me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。
-		int	_attribute = 0;					//指定したコリジョン属性とのみ当たり判定をとる。
-
-		vector<hitInfo*> _hitInfo;
-
-	public:
-		//衝突したときに呼ばれるコールバック関数。
-		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
-		{
-			if (convexResult.m_hitCollisionObject == _me) {
-				//自分に衝突した。
-				return 0.0f;
-			}
-
-			//衝突点の法線を引っ張ってくる。
-			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
-			if (_attribute & convexResult.m_hitCollisionObject->getUserIndex()) {
-				// 押し出す属性だった。
-
-				isHit = true;
-
-				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
-				hitInfo* info = new hitInfo;
-				info->hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
-				info->hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
-				info->hitNormal = info->hitNormal * -1.0f;	// 欲しいのは自身の法線なので反転。
-				info->collision = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer());
-				info->hitFraction = convexResult.m_hitFraction;	// 開始位置から終端位置までの長さと、開始位置から衝突した位置までの比を取得。
-
-				_hitInfo.push_back(info);
-			}
-
-			return 0.0f;
-		}
-	};
-
 }

@@ -2,19 +2,25 @@
 #include "_Object\_Component\_Physics\CharacterExtrude.h"
 #include "CharacterController.h"
 
-void CharacterExtrude::Init(RigidBody* collision, int attributeXZ, int attributeY) {
-	// 衝突を検出したい属性を設定。
-	_attributeXZ = attributeXZ;
-	_attributeY = attributeY;
+void CharacterExtrude::Init(const vector<RigidBody*>& collisions, int attribute) {
+	_collisions.clear();
+	_halfSize.clear();
 
-	_collision = collision;
+	// 押し出したい属性を設定。
+	_attribute = attribute;
 
-	btVector3 localScaling(1.0f, 1.0f, 1.0f); // Transformのスケール値。
-	localScaling = _collision->GetShape()->GetBody()->getLocalScaling();
-	_halfSize = _collision->GetShape()->GetHalfSize();
-	_halfSize.x *= localScaling.getX();
-	_halfSize.y *= localScaling.getY();
-	_halfSize.z *= localScaling.getZ();
+	_collisions = collisions;
+
+	for (auto coll : _collisions) {
+		btVector3 localScaling(1.0f, 1.0f, 1.0f); // Transformのスケール値。
+		localScaling = coll->GetShape()->GetBody()->getLocalScaling();
+		Vector3 halfSize = coll->GetShape()->GetHalfSize();
+		halfSize.x *= localScaling.getX();
+		halfSize.y *= localScaling.getY();
+		halfSize.z *= localScaling.getZ();
+
+		_halfSize.push_back(halfSize);
+	}
 }
 
 void CharacterExtrude::Extrude(const Vector3& speed) {
@@ -105,54 +111,56 @@ void CharacterExtrude::Extrude(const Vector3& speed) {
 
 	// コンタクトテスト。
 	{
-		fbPhysicsCallback::AllHitsContactResultCallback callback;
-		vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> infoArray;
-		//衝突検出。
-		PhysicsWorld::Instance()->AllHitsContactTest(_collision, &infoArray, &callback, _attributeXZ);
+		for (auto coll : _collisions) {
+			fbPhysicsCallback::AllHitsContactResultCallback callback;
+			vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> infoArray;
+			//衝突検出。
+			PhysicsWorld::Instance()->AllHitsContactTest(coll, &infoArray, &callback, _attribute);
 
-		for (int idx = 0; idx < infoArray.size(); idx++) {
-			Vector3 vT0, vT1;
+			for (int idx = 0; idx < infoArray.size(); idx++) {
+				Vector3 vT0, vT1;
 
-			//めり込みが発生している移動ベクトルを求める。
-			Vector3 vMerikomi;
-			vMerikomi = infoArray[idx]->hitPosB - infoArray[idx]->hitPosA;
-			vMerikomi.y = 0.0f;
+				//めり込みが発生している移動ベクトルを求める。
+				Vector3 vMerikomi;
+				vMerikomi = infoArray[idx]->hitPosB - infoArray[idx]->hitPosA;
+				vMerikomi.y = 0.0f;
 
-			//押し出す方向を求める。
-			Vector3 hitNormalXZ = infoArray[idx]->hitPosA - _collision->GetOffsetPos();
-			hitNormalXZ.y = 0.0f;
-			hitNormalXZ.Normalize();
+				//押し出す方向を求める。
+				Vector3 hitNormalXZ = infoArray[idx]->hitPosA - coll->GetOffsetPos();
+				hitNormalXZ.y = 0.0f;
+				hitNormalXZ.Normalize();
 
-			//めり込みベクトルを法線に射影する。
-			float fT0 = hitNormalXZ.Dot(vMerikomi);
+				//めり込みベクトルを法線に射影する。
+				float fT0 = hitNormalXZ.Dot(vMerikomi);
 
-			if (fabsf(fT0) <= 0.0f) {
-				// Y成分のみのめり込みだった。
+				if (fabsf(fT0) <= 0.0f) {
+					// Y成分のみのめり込みだった。
 
-				// 例外処理。
-				// とりあえず前方向に押し出す。
-				hitNormalXZ = transform->GetForward();
+					// 例外処理。
+					// とりあえず前方向に押し出す。
+					hitNormalXZ = transform->GetForward();
 
-				// 押し出す量を算出。
-				Vector3 pos1 = _collision->GetOffsetPos();
-				Vector3 pos2 = infoArray[idx]->collision->GetOffsetPos();
-				pos1.y = 0.0f;
-				pos2.y = 0.0f;
-				Vector3 work = pos2 - pos1;
-				float fMerikomi = hitNormalXZ.Dot(work);
-				fT0 = -(_collision->GetShape()->GetHalfSize().z - fMerikomi);
-			}
+					// 押し出す量を算出。
+					Vector3 pos1 = coll->GetOffsetPos();
+					Vector3 pos2 = infoArray[idx]->collision->GetOffsetPos();
+					pos1.y = 0.0f;
+					pos2.y = 0.0f;
+					Vector3 work = pos2 - pos1;
+					float fMerikomi = hitNormalXZ.Dot(work);
+					fT0 = -(coll->GetShape()->GetHalfSize().z - fMerikomi);
+				}
 
-			//押し返すベクトルを求める。
-			//押し返すベクトルは法線に射影されためり込みベクトル。
-			Vector3 vOffset;
-			vOffset = hitNormalXZ * -fT0;
-			vOffset = vOffset / Time::DeltaTime();
+				//押し返すベクトルを求める。
+				//押し返すベクトルは法線に射影されためり込みベクトル。
+				Vector3 vOffset;
+				vOffset = hitNormalXZ * -fT0;
+				vOffset = vOffset / Time::DeltaTime();
 
-			// 衝突したコリジョンに力を加える。
-			CCharacterController* CC = infoArray[idx]->collision->gameObject->GetComponent<CCharacterController>();
-			if (CC) {
-				CC->AddOutsideSpeed(vOffset);
+				// 衝突したコリジョンに力を加える。
+				CCharacterController* CC = infoArray[idx]->collision->gameObject->GetComponent<CCharacterController>();
+				if (CC) {
+					CC->AddOutsideSpeed(vOffset);
+				}
 			}
 		}
 	}

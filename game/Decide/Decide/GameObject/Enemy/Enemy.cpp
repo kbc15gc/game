@@ -134,6 +134,7 @@ void Enemy::_ConfigCollision() {
 	_collisionInfo.radius = 0.325f;
 	_collisionInfo.height = 0.3f;
 	_collisionInfo.offset = Vector3(0.0f, 0.46f, 0.0f);
+	_collisionInfo.id = Collision_ID::ENEMY;
 
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
@@ -146,14 +147,17 @@ void Enemy::_ConfigCharacterController() {
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
-	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
-	//_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::BUILDING);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);	// プレイヤーは押し出すので押し戻されないようにする。
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+}
+
+void Enemy::_CreateExtrudeCollision() {
+	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// キャラクターコントローラの剛体をそのまま使用。
 }
 
 void Enemy::_BuildAnimation() {

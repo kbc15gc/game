@@ -83,6 +83,9 @@ void Collision::_UpdateCollisionTrans()
 {
 	//ゲームオブジェクトのトランスフォーム情報を物理エンジンに送る。
 	if (_CollisionObject.get() && _physicsType == PhysicsType::Kinematick) {
+
+		_UpdateOffsetPos();
+
 		//コリジョンのトランスフォームの参照を取得
 		btTransform& trans = _CollisionObject->getWorldTransform();
 		//移動を設定
@@ -90,11 +93,20 @@ void Collision::_UpdateCollisionTrans()
 		//回転を設定
 		trans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 
+
 #ifdef _DEBUG
 		// コリジョン描画用モデルのTransform情報更新。
 		_Shape->UpdateTransform(trans);
 #endif
 	}
+}
+
+void Collision::_UpdateOffsetPos() {
+	// オフセット後の位置を更新。
+	_OffsetPos = transform->GetPosition();
+	_OffsetPos = _OffsetPos + transform->GetRight() * _Offset.x;
+	_OffsetPos = _OffsetPos + transform->GetUp() * _Offset.y;
+	_OffsetPos = _OffsetPos + transform->GetForward() * _Offset.z;
 }
 
 // ワールドに登録。

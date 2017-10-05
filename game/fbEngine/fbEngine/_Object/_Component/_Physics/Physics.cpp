@@ -131,7 +131,7 @@ const Collision * PhysicsWorld::ClosestContactTest(Collision * coll, int attr) c
 const vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>>* PhysicsWorld::AllHitsContactTest(Collision * coll, vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>>* HitInfoArray, fbPhysicsCallback::AllHitsContactResultCallback* callback, int attr) const
 {
 	HitInfoArray->clear();
-	callback->me = coll;
+	callback->me = coll->gameObject;
 	callback->attribute = attr;
 	callback->SetHitInfoArray(HitInfoArray);
 	dynamicWorld->contactTest(coll->GetCollisionObj(), *callback);
@@ -166,7 +166,7 @@ const fbPhysicsCallback::SweepResultGround PhysicsWorld::FindOverlappedStage(btC
 	start.setOrigin(btVector3(s.x, s.y, s.z));
 	end.setOrigin(btVector3(e.x, e.y, e.z));
 
-	callback.me = colliObject;
+	callback.me = static_cast<Collision*>(colliObject->getUserPointer())->gameObject;
 	callback.startPos.Set(s);
 	dynamicWorld->convexSweepTest((const btConvexShape*)colliObject->getCollisionShape(), start, end, callback);
 	return callback;

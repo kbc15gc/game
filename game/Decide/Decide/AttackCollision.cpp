@@ -47,7 +47,12 @@ void AttackCollision::DetectionCollision() {
 	for (auto itr = _HitCollisions.begin(); itr != _HitCollisions.end();) {
 		bool isHit = false;	// 登録しているコリジョンが現在も衝突しているか。
 		for (int idx = 0; idx < collisions.size(); idx++) {
-			if ((*itr).get() == collisions[idx]) {
+			if ((*itr)->getUserPointer()
+				&& static_cast<Collision*>((*itr)->getUserPointer())->gameObject
+				&& collisions[idx]->getUserPointer()
+				&& static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject
+				&& static_cast<Collision*>((*itr)->getUserPointer())->gameObject == static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject) {
+			
 				// 既に登録されているコリジョンが衝突している。
 				isHit = true;
 
@@ -76,11 +81,15 @@ void AttackCollision::DetectionCollision() {
 		}
 	}
 
-	for (int idx = 0; idx < collisions.size();idx++) {
-		// 衝突をした瞬間に呼び出すコールバック処理。
-		_CallBackEnter(collisions[idx]);
-		// 衝突リストに追加。
-		_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj_shared());
+	for (int idx = 0; idx < collisions.size(); idx++) {
+
+		if (!_CheckObject(collisions[idx])) {
+			// 衝突をした瞬間に呼び出すコールバック処理。
+			_CallBackEnter(collisions[idx]);
+			// 衝突リストに追加。
+			_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj_shared());
+			break;
+		}
 	}
 }
 
@@ -162,6 +171,21 @@ void AttackCollision::_CallBackExit(btCollisionObject* coll) {
 			break;
 		}
 	}
+}
+
+bool AttackCollision::_CheckObject(btCollisionObject* coll1) {
+	GameObject* obj = _CollisionObjectToGameObject(coll1);
+	if (obj) {
+		for (auto coll : _HitCollisions) {
+			GameObject* obj2 = _CollisionObjectToGameObject(coll.get());
+			if (obj == obj2) {
+				// すでに衝突しているキャラクターだった。
+
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void AttackCollision::Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
