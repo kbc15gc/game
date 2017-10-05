@@ -19,7 +19,7 @@
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 #include "..\LevelUpImage.h"
 #include "GameObject\Component\BuffDebuffICon.h"
-
+#include "GameObject\Village\NPC.h"
 
 class SkinModel;
 class Animation;
@@ -97,6 +97,14 @@ public:
 		DEF,
 		DEX,
 		AGI
+	};
+	//プレイヤー攻撃ボイス
+	enum class AttackBoice
+	{
+		Start = 0,
+		Attack1 = Start,
+		Attack2,
+		End = Attack2
 	};
 
 	Player(const char* name);
@@ -325,29 +333,25 @@ private:
 #endif
 	//デバッグ
 	bool _Debug = false;
-
 	//レベルアップに必要な経験値のテーブル(LV - 1が添え字)。
 	std::vector<int> _EXPTable;
 	int _nowEXP = 0;	// 現在の経験値。
-
 	// レベルごとのパラメーターテーブル。
 	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
-
 	//プレイヤーの装備。
 	PlayerEquipment* _Equipment = nullptr;
-	
 	//パーティクルエフェクト。
 	ParticleEffect*	_ParticleEffect = nullptr;
-
 	//バフデバフアイコン。
 	BuffDebuffICon* _BuffDebuffICon = nullptr;
-
 	//レベルアップイメージ
 	LevelUpImage* _LevelUpImage;
-	
 	//歴史書
 	HistoryManager* _HistoryManager = nullptr;
-
 	//NPCと話すときジャンプしないため
 	bool _Speak;
+	//攻撃ボイス
+	vector<SoundSource*> _AttackBoiceSound;
+	//攻撃ボイスENUM
+	AttackBoice	_AttackBoice;
 };

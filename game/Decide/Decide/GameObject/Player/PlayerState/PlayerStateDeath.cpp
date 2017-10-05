@@ -23,7 +23,7 @@ void PlayerStateDeath::Update()
 		_Player->ChangeState(Player::State::Idol);
 		_Player->_PlayerParam->AddParam(CharacterParameter::HP, _Player->_PlayerParam->GetParam(CharacterParameter::MAXHP));
 		_Player->_HPBar->AddValue(_Player->_PlayerParam->GetParam(CharacterParameter::MAXHP));*/
-		//_Player->Releace();
+		_Player->Releace();
 		INSTANCE(SceneManager)->ChangeScene("TitleScene",true);
 	}
 }

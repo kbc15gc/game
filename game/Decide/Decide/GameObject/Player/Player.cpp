@@ -47,6 +47,14 @@ Player::~Player()
 	char text[256];
 	sprintf(text, "~Player address %x\n", *this);
 	OutputDebugString(text);
+	//for (auto& village : _NPC)
+	//{
+	//	for (auto& npc : village)
+	//	{
+	//		npc = nullptr;
+	//	}
+	//}
+	//_NPC.clear();
 }
 
 void Player::Awake()
@@ -116,11 +124,19 @@ void Player::Awake()
 	_DamageSE->Init("Asset/Sound/Damage_01.wav");
 	//レベルアップ音初期化
 	_LevelUP_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
-	_LevelUP_SE->Init("Asset/Sound/levelup.wav");
-	_LevelUP_SE->SetVolume(2.0f);
+	_LevelUP_SE->Init("Asset/Sound/lvup.wav");
+	_LevelUP_SE->SetVolume(1.0f);
+	//攻撃ボイス初期化
+	SoundSource* attack1 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
+	SoundSource* attack2 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
+	_AttackBoiceSound.push_back(attack1);
+	_AttackBoiceSound.push_back(attack2);
+	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/attack1.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/attack2.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
+	//プレイヤーの装備
 	_Equipment = new PlayerEquipment;
 
 	//パーティクルエフェクト。
@@ -175,11 +191,6 @@ void Player::Start()
 
 void Player::Update()
 {
-	//@todo for debug
-#ifdef _DEBUG
-	_DebugPlayer();
-#endif // _DEBUG
-
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
@@ -196,14 +207,25 @@ void Player::Update()
 		//MPバーの更新
 		_MPBar->Update();
 	}
-	//レベルアップするか。
-	if (_EXPTable.size() > 0 &&
-		_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
+	
+	if (_PlayerParam)
 	{
-		_LevelUP();
+		//レベルアップするか。
+		if (_EXPTable.size() > 0 &&
+			_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
+		{
+			_LevelUP();
+		}
+		//ダメージを受ける処理。
+		_Damage();
+		//エフェクト
+		EffectUpdate();
+		//@todo for debug
+#ifdef _DEBUG
+		_DebugPlayer();
+#endif // _DEBUG
 	}
-	//ダメージを受ける処理。
-	_Damage();
+	
 	//アニメーションコントロール
 	AnimationControl();
 	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
@@ -212,11 +234,8 @@ void Player::Update()
 		////トランスフォーム更新
 		//transform->UpdateTransform();
 
-	EffectUpdate();
-
 	//NPCと話すか
 	Speak();
-
 }
 
 void Player::ChangeState(State nextstate)
@@ -343,7 +362,17 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		_HPBar->SubValue(damage);
 		_DamageSE->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f));
+		Color c;
+		if (damage == 0)
+		{
+			//灰色に
+			c = Color::white * 0.3f;
+		}
+		else
+		{
+			c = Color::red;
+		}
+		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
 		attackvalue->transform->SetParent(transform);
 	}
 }
@@ -470,26 +499,30 @@ void Player::_Damage()
 {
 	//死亡ステート以外の時。
 	//ライフが0になると死亡する。
+
 	if (_PlayerParam->GetDeathFlg() == true && _State != State::Death)
 	{
 		ChangeState(State::Death);
 	}
-	//海に入るとダメージを食らう。
 
+	//海に入るとダメージを食らう。
 	static float time = 0.0f;
 	time += Time::DeltaTime();
 	//海の中の場合。
 	//HPが0以上なら。
 	//デバッグ時でない。
 	//2秒間隔で。
+
 	if (transform->GetLocalPosition().y < 48.5f && _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
 		if (fmod(time, 2.0f) >= 1.0f)
 		{
-			_HPBar->SubValue(_PlayerParam->ReciveDamageThrough(Oboreru));
+			//最大HPの1割ずつ減る。
+			_HPBar->SubValue(_PlayerParam->ReciveDamageThrough(_PlayerParam->GetMaxHP() * 0.1f));
 			time = 0.0f;
 		}
 	}
+
 }
 
 //経験値テーブルをロード。
@@ -525,8 +558,8 @@ void Player::_LevelUP()
 	//レベルアップ時の音再生。
 	_LevelUP_SE->Play(false);
 	//レベルアップエフェクト
-	_ParticleEffect->LevelUpEffect();
-	_ParticleEffect->SetLevelUPEffectFlag(true);
+	/*_ParticleEffect->LevelUpEffect();
+	_ParticleEffect->SetLevelUPEffectFlag(true);*/
 }
 
 void Player::Speak()
@@ -545,7 +578,10 @@ void Player::Speak()
 		//NPC
 		for (auto npc : village)
 		{
-
+			if (npc == nullptr)
+			{
+				continue;
+			}
 			//NPCからプレイヤーのベクトル
 			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
 			float len = dir.Length();

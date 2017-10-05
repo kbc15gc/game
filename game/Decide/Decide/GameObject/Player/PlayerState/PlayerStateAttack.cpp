@@ -18,6 +18,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam1.attackframe = 10.0f;
 		attackparam1.lifetime = 0.5f;
 		attackparam1.atk = 120;
+		attackparam1.attackboice = (int)Player::AttackBoice::Attack1;
 		_AttackPram.push_back(attackparam1);
 	}
 	//UŒ‚‚Q
@@ -29,6 +30,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam2.attackframe = 10;
 		attackparam2.lifetime = 0.5f;
 		attackparam2.atk = 100;
+		attackparam2.attackboice = (int)Player::AttackBoice::Attack1;
 		_AttackPram.push_back(attackparam2);
 	}
 	//UŒ‚‚R
@@ -40,6 +42,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam3.attackframe = 10.0f;
 		attackparam3.lifetime = 0.5f;
 		attackparam3.atk = 120;
+		attackparam3.attackboice = (int)Player::AttackBoice::Attack1;
 		_AttackPram.push_back(attackparam3);
 	}
 	//UŒ‚‚S
@@ -51,6 +54,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam4.attackframe = 10;
 		attackparam4.lifetime = 0.5f;
 		attackparam4.atk = 100;
+		attackparam4.attackboice = (int)Player::AttackBoice::Attack1;
 		_AttackPram.push_back(attackparam4);
 	}
 	//UŒ‚‚T
@@ -62,6 +66,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam5.attackframe = 30;
 		attackparam5.lifetime = 0.5f;
 		attackparam5.atk = 200;
+		attackparam5.attackboice = (int)Player::AttackBoice::Attack2;
 		_AttackPram.push_back(attackparam5);
 	}
 	
@@ -95,7 +100,7 @@ void PlayerStateAttack::Update()
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
-		|| KeyBoardInput->isPush(DIK_SPACE)
+		|| KeyBoardInput->isPush(DIK_B)
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
@@ -150,6 +155,8 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 	{
 		//UŒ‚Žž‚ÌƒTƒEƒ“ƒhÄ¶B
 		_SE->Play(false);
+		//UŒ‚ƒ{ƒCƒXÄ¶
+		_Player->_AttackBoiceSound[pram.attackboice]->Play(false);
 		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 		if (_Player->GetEquipment()) {
