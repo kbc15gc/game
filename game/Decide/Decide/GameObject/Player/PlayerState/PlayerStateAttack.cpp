@@ -96,11 +96,7 @@ void PlayerStateAttack::Update()
 	}
 	//攻撃ボタンが押される。
 	//連撃。
-	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X)
-		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
-		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
-		&& currentanimno == (int)_Player->_NowAttackAnimNo
-		|| KeyBoardInput->isPush(DIK_B)
+	else if (VPadInput->IsPush(fbEngine::VPad::ButtonA)
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo

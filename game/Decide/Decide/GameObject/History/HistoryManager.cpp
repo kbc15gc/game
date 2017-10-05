@@ -44,6 +44,16 @@ void HistoryManager::Start()
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
+	//共通オブジェクト生成。
+	char path[128];
+	FOR(type, 2)
+	{
+		//パス生成
+		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
+		_CreateObject((int)LocationCodeE::Common, path, type);
+	}
+
+	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
 		for (int j = 0; j < (int)ChipID::ChipNum; j++)
@@ -58,30 +68,6 @@ void HistoryManager::Start()
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
-	}
-
-	//歴史で生成されるオブジェクト生成。
-	CreateObject();
-}
-
-/**
-* 歴史オブジェクト生成.
-*/
-void HistoryManager::CreateObject()
-{
-	//FOR(i, _LocationHistoryList.size())
-	//{
-	//	//歴史のオブジェクト切り替え・生成
-	//	_ChangeLocation((LocationCodeE)i);
-	//}
-
-	//共通オブジェクト生成
-	char path[128];
-	FOR(type, 2)
-	{		
-		//パス生成
-		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		_CreateObject((int)LocationCodeE::Common, path, type);
 	}
 }
 
@@ -114,19 +100,6 @@ bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip)
 */
 void HistoryManager::_ChangeLocation(LocationCodeE location)
 {
-	//前のオブジェクトを削除
-	for (auto& it : _GameObjectList[(int)location])
-	{
-		INSTANCE(GameObjectManager)->AddRemoveList(it);
-	}
-	_GameObjectList[(int)location].clear();
-	//前のNPCを削除
-	for (auto& it : _NPCList[(int)location])
-	{
-		INSTANCE(GameObjectManager)->AddRemoveList(it);
-	}
-	_NPCList[(int)location].clear();
-
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
 	//どれかのグループに該当するのなら。
@@ -199,9 +172,27 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 void HistoryManager::_CreateObject(int location, const char * path, int type)
 {
 	if (type == 0)
+	{
+		//前のオブジェクトを削除
+		for (auto& it : _GameObjectList[(int)location])
+		{
+			INSTANCE(GameObjectManager)->AddRemoveList(it);
+		}
+		_GameObjectList[(int)location].clear();
+		//生成。
 		_CreateBuilding(location, path);
+	}
 	else if (type == 1)
+	{
+		//前のNPCを削除
+		for (auto& it : _NPCList[(int)location])
+		{
+			INSTANCE(GameObjectManager)->AddRemoveList(it);
+		}
+		_NPCList[(int)location].clear();
+		//生成。
 		_CreateNPC(location, path);
+	}
 }
 
 void HistoryManager::_CreateBuilding(int location, const char * path)
@@ -217,7 +208,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
 			//オブジェクト生成
-			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("Building", 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 			obj->transform->SetRotation(objInfo[i]->ang);
