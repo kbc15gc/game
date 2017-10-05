@@ -182,7 +182,8 @@ void TextBox::_SetText(const char * text)
 	float halfHeight = textSize.y / 2;
 	//カーソルの上にくるように移動。
 	_BoxImage[1]->transform->SetLocalPosition(Vector3(0, -(halfHeight + _BoxImage[0]->GetTexture()->Size.y), 0));
-  	_Text->transform->SetLocalPosition(Vector3(0, -_BoxImage[1]->GetSize().y/4, 0));
+
+	_Text->transform->SetLocalPosition(Vector3(0, -(textSize.y / 2 - space.y / 2), 0));
 }
 
 void TextBox::_SetMessage(const int & id)

@@ -17,7 +17,6 @@ enum Collision_ID
 	SPACE = BIT(6),
 	BUILDING = BIT(7),
 	ITEMRANGE = BIT(8),
-
 };
 
 

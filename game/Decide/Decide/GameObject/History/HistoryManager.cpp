@@ -217,7 +217,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
 			//オブジェクト生成
-			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("ContinentObject", 2);
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("Building", 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 			obj->transform->SetRotation(objInfo[i]->ang);
