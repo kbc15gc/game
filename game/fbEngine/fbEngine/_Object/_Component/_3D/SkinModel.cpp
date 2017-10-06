@@ -110,9 +110,8 @@ void SkinModel::PreRender()
 	//インスタンシングフラグをチェック。
 	if(_ModelDate->GetInstancing())
 	{
-		//ワールド行列を積む。
-		//どこに積もうか・・・？
-		
+		//開始。
+		_ModelDate->StartInstancing();
 	}
 }
 

@@ -7,6 +7,10 @@
 struct D3DXFRAME_DERIVED : public D3DXFRAME {
 	D3DXMATRIXA16	CombinedTransformationMatrix;	//合成済み行列。
 	D3DXMATRIX* RotationMatrix = nullptr;
+	//オリジナルへのポインタ。
+	D3DXFRAME_DERIVED* Original;
+	//インスタンシングで使う、ワールド行列を積むベクター。
+	vector<D3DXMATRIX*> WorldMatrixStack;
 };
 //メッシュコンテナを継承した拡張メッシュコンテナ
 struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER {
@@ -36,6 +40,7 @@ struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER {
 	IDirect3DVertexDeclaration9* vertexDecl = NULL;
 	//ワールド行列用のバッファの作成。
 	IDirect3DVertexBuffer9* worldMatrixBuffer = NULL;			//ワールド行列のバッファ。
+	
 };
 
 //モデルのデータを扱うクラス
@@ -111,24 +116,8 @@ public:
 		return _Instancing;
 	}
 
-	//オリジナルモデル取得。
-	SkinModelData* GetOriginal()
-	{
-		return _Original;
-	}
-
-
-	//インスタンシング処理。
 public:
 	//インスタンシング様にワールド行列を積む。
-	void StackWorldMatrix(const D3DXMATRIX &world)
-	{
-		_Original->_WorldMatrixStack.push_back(world);
-	}
-	vector<D3DXMATRIX> GetMatrixStack()
-	{
-		return _Original->_WorldMatrixStack;
-	}
 	//描画済みフラグ取得。
 	bool GetAlreadyDrawn()
 	{
@@ -142,7 +131,6 @@ public:
 	//インスタンシング終了。
 	void EndInstancing()
 	{
-		_Original->_WorldMatrixStack.clear();
 		_Original->_AlreadyDrawn = true;
 	}
 private:
@@ -167,12 +155,10 @@ private:
 	//とりあえずほじさせたかった。いつか消す。
 	Vector4 _TerrainSize;
 private:
-	//オリジナルモデルへのポインタ。
-	SkinModelData* _Original;
 	//インスタンシング描画フラグ。デフォルトはfalse。
 	bool _Instancing;
 	//描画済みフラグ。インスタンシングで使う。
 	bool _AlreadyDrawn;
-	//インスタンシングで使う、ワールド行列を積むベクター。
-	vector<D3DXMATRIX> _WorldMatrixStack;
+	//オリジナルモデルへのポインタ。
+	SkinModelData* _Original;
 };
