@@ -317,10 +317,6 @@ private:
 	PlayerStateDeath _DeathState;
 	//プレイヤーステートストップ
 	PlayerStateStop _StopState;
-	//プレイヤーがダメージ受けた時のSE
-	SoundSource* _DamageSE = nullptr;
-	//レベルアップ時の音
-	SoundSource* _LevelUP_SE = nullptr;
 	//プレイヤーのパラメーター
 	CharacterParameter* _PlayerParam = nullptr;
 	// 回転。
@@ -352,6 +348,18 @@ private:
 	HistoryManager* _HistoryManager = nullptr;
 	//NPCと話すときジャンプしないため
 	bool _Speak;
+	//プレイヤーがダメージ受けた時のSE
+	SoundSource* _DamageSound = nullptr;
+	//レベルアップ時の音
+	SoundSource* _LevelUpSound = nullptr;
+	//回復サウンド
+	SoundSource* _HeelSound;
+	//ステータスアップサウンド
+	SoundSource* _StatusUpSound;
+	//ステータスダウンサウンド
+	SoundSource* _StatusDownSound;
+	//プレイヤー死亡サウンド
+	SoundSource* _DeathSound = nullptr;
 	//攻撃ボイス
 	vector<SoundSource*> _AttackBoiceSound;
 	//攻撃ボイスENUM

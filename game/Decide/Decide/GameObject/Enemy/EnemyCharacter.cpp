@@ -396,7 +396,7 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 		}
 		else
 		{
-			c = Color::blue;
+			c = Color::red;
 		}
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 		attackvalue->Init(info.value, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);

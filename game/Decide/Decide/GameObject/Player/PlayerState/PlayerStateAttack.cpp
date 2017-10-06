@@ -8,7 +8,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)
 {
 	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
-	_SE->Init("Asset/Sound/PlayerAttack_00.wav");
+	_SE->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//UŒ‚‚P
 	{
 		AttackCollisionParameter attackparam1;

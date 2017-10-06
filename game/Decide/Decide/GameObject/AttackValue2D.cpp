@@ -79,8 +79,18 @@ void AttackValue2D::Init(int damagevalue, bool critical, float lifetime, Vector3
 		_CriticalText->transform->SetLocalPosition(0.0f, -30.0f, 0.0f);
 	}
 	//ダメージ量
-	char attack[4];
-	sprintf(attack, "%d", damagevalue);
+	char attack[6];
+	//限界ダメージは999
+	if (damagevalue > 999)
+	{
+		sprintf(attack, "%d", 999);
+
+	}
+	else
+	{
+		sprintf(attack, "%d", damagevalue);
+
+	}
 	_AttackText->SetText(attack);
 	_AttackText->SetEffectFlg(fbSprite::SpriteEffectE::OUTLINE);
 	//制限時間設定
