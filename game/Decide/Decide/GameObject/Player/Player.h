@@ -20,6 +20,7 @@
 #include "..\LevelUpImage.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 #include "GameObject\Village\NPC.h"
+#include "GameObject\Component\AnimationEvent.h"
 
 class SkinModel;
 class Animation;
@@ -104,7 +105,8 @@ public:
 		Start = 0,
 		Attack1 = Start,
 		Attack2,
-		End = Attack2
+		Attack3,
+		End = Attack3
 	};
 
 	Player(const char* name);
@@ -354,4 +356,7 @@ private:
 	vector<SoundSource*> _AttackBoiceSound;
 	//攻撃ボイスENUM
 	AttackBoice	_AttackBoice;
+
+	//アニメーションイベント
+	AnimationEventPlayer* _AnimationEventPlayer = nullptr;
 };

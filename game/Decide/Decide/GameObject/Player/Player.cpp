@@ -129,10 +129,13 @@ void Player::Awake()
 	//UŒ‚ƒ{ƒCƒX‰Šú‰»
 	SoundSource* attack1 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	SoundSource* attack2 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
+	SoundSource* attack3 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0);
 	_AttackBoiceSound.push_back(attack1);
 	_AttackBoiceSound.push_back(attack2);
+	_AttackBoiceSound.push_back(attack3);
 	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/attack2.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/attack1.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/attack2.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif

@@ -12,7 +12,7 @@ void LevelUpImage::Awake()
 {
 	//レベルアップImgae初期化
 	_LevelUpImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("LevelUPImage", StatusWindow::WindowBackPriorty - 1);
-	_LevelUpImage->SetTexture(LOADTEXTURE("levelup.png"));
+	_LevelUpImage->SetTexture(LOADTEXTURE("lvup.png"));
 	_Pos = { 640, 300, 0 };
 	_LevelUpImage->transform->SetPosition(_Pos);
 	_LevelUpImage->SetActive(false);

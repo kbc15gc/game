@@ -30,7 +30,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam2.attackframe = 10;
 		attackparam2.lifetime = 0.5f;
 		attackparam2.atk = 100;
-		attackparam2.attackboice = (int)Player::AttackBoice::Attack1;
+		attackparam2.attackboice = (int)Player::AttackBoice::Attack2;
 		_AttackPram.push_back(attackparam2);
 	}
 	//攻撃３
@@ -54,7 +54,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam4.attackframe = 10;
 		attackparam4.lifetime = 0.5f;
 		attackparam4.atk = 100;
-		attackparam4.attackboice = (int)Player::AttackBoice::Attack1;
+		attackparam4.attackboice = (int)Player::AttackBoice::Attack2;
 		_AttackPram.push_back(attackparam4);
 	}
 	//攻撃５
@@ -66,7 +66,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam5.attackframe = 30;
 		attackparam5.lifetime = 0.5f;
 		attackparam5.atk = 200;
-		attackparam5.attackboice = (int)Player::AttackBoice::Attack2;
+		attackparam5.attackboice = (int)Player::AttackBoice::Attack3;
 		_AttackPram.push_back(attackparam5);
 	}
 	
@@ -96,7 +96,7 @@ void PlayerStateAttack::Update()
 	}
 	//攻撃ボタンが押される。
 	//連撃。
-	else if (VPadInput->IsPush(fbEngine::VPad::ButtonA)
+	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X)
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
@@ -229,16 +229,8 @@ void PlayerStateAttack::Dir()
 
 								// 向きベクトルに移動量を積算。
 								//ダッシュボタンの場合
-		if (VPadInput->IsPush(fbEngine::VPad::ButtonRB1))
-		{
-			//ダッシュスピードを適用
-			dir = dir * _DashSpeed;
-		}
-		else
-		{
 			//通常のスピード
-			dir = dir * _Speed;
-		}
+		dir = dir * _Speed;
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;
 		movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。
