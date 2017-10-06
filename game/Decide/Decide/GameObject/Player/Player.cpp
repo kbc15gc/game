@@ -29,6 +29,8 @@ Player::Player(const char * name) :
 	_IdolState(this),
 	//攻撃ステート
 	_AttackState(this),
+	//ダメージを受けるステート
+	_ImpactState(this),
 	//死亡ステート
 	_DeathState(this),
 	//ストップステート
@@ -75,6 +77,8 @@ void Player::Awake()
 	_HPBar = AddComponent<ParameterBar>();
 	// MPバー。
 	_MPBar = AddComponent<ParameterBar>();
+	//アニメーションイベント。
+	//_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
@@ -140,7 +144,9 @@ void Player::Awake()
 	_StatusDownSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusDownSound", 0);
 	_StatusDownSound->Init("Asset/Sound/Player/statusdown.wav");
 	_StatusDownSound->SetVolume(2.0f);
-
+	//攻撃サウンド初期化
+	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
+	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//攻撃ボイス初期化
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
@@ -178,6 +184,7 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0f;		//攻撃3
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack04] = -1.0f;		//攻撃4
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack05] = -1.0f;		//攻撃5
+	_AnimationEndTime[(int)AnimationNo::AnimationImpact] = 0.6f;		//ダメージ	
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0f;		//死亡
 	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -189,7 +196,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-148.0f, 68.5f, -34.0f);
+	_StartPos = Vector3(-153.61, 67.5f, -38.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -202,6 +209,9 @@ void Player::Start()
 
 	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
 	Re_SetEquipment();
+
+	//アニメーションイベント追加
+	//AnimationEventControl();
 }
 
 void Player::Update()
@@ -274,6 +284,10 @@ void Player::ChangeState(State nextstate)
 		//攻撃状態
 		_CurrentState = &_AttackState;
 		break;
+	case State::Impact:
+		//ダメージを受けた状態
+		_CurrentState = &_ImpactState;
+		break;
 	case State::Death:					
 		//死亡状態
 		_CurrentState = &_DeathState;
@@ -308,7 +322,13 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
-		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 0);
+		return;
+	}
+	//ダメージを受けたアニメーション
+	if (_State == State::Impact)
+	{
+		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
 		return;
 	}
 	//ジャンプアニメーション
@@ -372,6 +392,9 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 			abort();
 		}
 #endif
+		//ダメージを受けた状態に変更
+		ChangeState(State::Impact);
+
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(damage);
@@ -408,6 +431,7 @@ void Player::Releace()
 	}
 	_AttackBoiceSound.clear();
 	_DeathSound = nullptr;
+	//_AnimationEventPlayer = nullptr;
 }
 
 /**
@@ -790,3 +814,100 @@ void Player::Re_SetEquipment() {
 		}
 	}
 }
+
+//
+//void Player::AnimationEventControl()
+//{
+//	//攻撃1
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
+//	}
+//	//攻撃2
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
+//
+//	}
+//	//攻撃3
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
+//
+//	}
+//	//攻撃4
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
+//	}
+//	//攻撃5
+//	{
+//		int eventframe = 20;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
+//	}
+//}
+//
+//void Player::Attack1()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack2()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack3()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack4()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack5()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 150)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}

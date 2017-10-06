@@ -41,10 +41,10 @@ ImageObject* g_depth;
 namespace
 {
 	//ƒ{ƒX
-	float BOSS_RADIUS = 30.0f;
+	float BOSS_RADIUS = 35.0f;
 	Vector3 BOSS_POS = { -712,68,48 };
 	//ŠX
-	float MATI_RADIUS = 30.0f;
+	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -406,67,-20 };
 }
 

@@ -48,7 +48,7 @@ void PlayerCamera::Start()
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を
-	static D3DXVECTOR3 baseDir(0.0f, 1.5f, -1.5f);
+	static D3DXVECTOR3 baseDir(0.5f, 0.3f, -0.7f);
 	D3DXVec3Normalize(&_ToPlayerDir, &baseDir);
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。

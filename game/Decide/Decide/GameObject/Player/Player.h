@@ -6,6 +6,7 @@
 #include "PlayerState/PlayerStateAttack.h"
 #include "PlayerState\/PlayerStateDeath.h"
 #include "PlayerState\PlayerStateStop.h"
+#include "PlayerState\PlayerStateImpact.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
@@ -67,8 +68,9 @@ public:
 		Idol = 0,			//アイドル
 		Run,				//走る
 		Attack,				//攻撃
+		Impact,				//ダメージを受けた
 		Death,				//死亡
-		Stop,				//移動などしないステートです
+		Stop,				//止まる
 		StateNum,
 	};
 	//アニメーションのナンバー
@@ -86,6 +88,7 @@ public:
 		AnimationAttack04,							//攻撃04
 		AnimationAttack05,							//攻撃03
 		AnimationAttackEnd = AnimationAttack05,
+		AnimationImpact,							//ダメージを受けた
 		AnimationDeath,								//死亡
 		AnimationNum,								//アニメーションの数
 	};
@@ -254,6 +257,20 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
+
+	//アニメーションイベント
+	void AnimationEventControl();
+	//攻撃1
+	void Attack1();
+	//攻撃2
+	void Attack2();
+	//攻撃3
+	void Attack3();
+	//攻撃4
+	void Attack4();
+	//攻撃5
+	void Attack5();
+
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
@@ -277,6 +294,7 @@ private:
 	friend class PlayerStateDeath;
 	friend class PlayerStateIdol;
 	friend class PlayerStateRun;
+	friend class PlayerStateImpact;
 
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
@@ -313,6 +331,8 @@ private:
 	PlayerStateIdol	_IdolState;
 	//プレイヤーステートアタック
 	PlayerStateAttack _AttackState;
+	//プレイヤーステートイン朴
+	PlayerStateImpact _ImpactState;
 	//プレイヤーステートデス
 	PlayerStateDeath _DeathState;
 	//プレイヤーステートストップ
@@ -360,6 +380,8 @@ private:
 	SoundSource* _StatusDownSound;
 	//プレイヤー死亡サウンド
 	SoundSource* _DeathSound = nullptr;
+	//攻撃時のSE
+	SoundSource* _AttackSoound = nullptr;
 	//攻撃ボイス
 	vector<SoundSource*> _AttackBoiceSound;
 	//攻撃ボイスENUM
