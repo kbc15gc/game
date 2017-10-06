@@ -25,7 +25,7 @@ namespace
 	{
 		{ "filename",Support::DataTypeE::STRING, offsetof(struct NPCInfo,filename),sizeof(char) * 256 },
 		{ "pos",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,pos),sizeof(Vector3) },
-		{ "ang",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,ang),sizeof(Vector3) },
+		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct NPCInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,sca),sizeof(Vector3) },
 		{ "NPCType",Support::DataTypeE::INT, offsetof(struct NPCInfo,NPCType),sizeof(NPCTypeE) },
 		{ "ShopID",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShopID),sizeof(int) },
