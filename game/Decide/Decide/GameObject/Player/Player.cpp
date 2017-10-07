@@ -82,7 +82,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.2f;
+	_Radius = 0.8f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 	//スキンモデル作成
@@ -322,13 +322,13 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
-		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 0);
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		return;
 	}
 	//ダメージを受けたアニメーション
 	if (_State == State::Impact)
 	{
-		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
+		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 1);
 		return;
 	}
 	//ジャンプアニメーション
@@ -679,7 +679,6 @@ void Player::Speak()
 		}
 	}
 }
-
 
 #ifdef _DEBUG
 void Player::_DebugPlayer()

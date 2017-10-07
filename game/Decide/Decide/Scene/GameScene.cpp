@@ -113,15 +113,15 @@ void GameScene::Start()
 
 	//’ÊíBGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldBGM->InitStreaming("Asset/Sound/Battle_BGM.wav");
+	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
 	
 	//BOSSBGM
 	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
-	_BossBGM->InitStreaming("Asset/Sound/boss1.wav");
+	_BossBGM->Init("Asset/Sound/boss1.wav");
 
 	//ŠXBGM
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
-	_MatiBGM->InitStreaming("Asset/Sound/mati1.wav");
+	_MatiBGM->Init("Asset/Sound/mati1.wav");
 
 	//Ä¶—pBGM
 	_GameBGM = _WorldBGM;
