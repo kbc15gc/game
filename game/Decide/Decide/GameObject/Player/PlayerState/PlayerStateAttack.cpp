@@ -8,7 +8,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)
 {
 	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
-	_SE->Init("Asset/Sound/PlayerAttack_00.wav");
+	_SE->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//攻撃１
 	{
 		AttackCollisionParameter attackparam1;
@@ -18,6 +18,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam1.attackframe = 10.0f;
 		attackparam1.lifetime = 0.5f;
 		attackparam1.atk = 120;
+		attackparam1.attackboice = (int)Player::AttackBoice::Attack1;
 		_AttackPram.push_back(attackparam1);
 	}
 	//攻撃２
@@ -29,6 +30,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam2.attackframe = 10;
 		attackparam2.lifetime = 0.5f;
 		attackparam2.atk = 100;
+		attackparam2.attackboice = (int)Player::AttackBoice::Attack2;
 		_AttackPram.push_back(attackparam2);
 	}
 	//攻撃３
@@ -40,6 +42,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam3.attackframe = 10.0f;
 		attackparam3.lifetime = 0.5f;
 		attackparam3.atk = 120;
+		attackparam3.attackboice = (int)Player::AttackBoice::Attack1;
 		_AttackPram.push_back(attackparam3);
 	}
 	//攻撃４
@@ -51,6 +54,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam4.attackframe = 10;
 		attackparam4.lifetime = 0.5f;
 		attackparam4.atk = 100;
+		attackparam4.attackboice = (int)Player::AttackBoice::Attack2;
 		_AttackPram.push_back(attackparam4);
 	}
 	//攻撃５
@@ -62,6 +66,7 @@ PlayerStateAttack::PlayerStateAttack(Player* player) :
 		attackparam5.attackframe = 30;
 		attackparam5.lifetime = 0.5f;
 		attackparam5.atk = 200;
+		attackparam5.attackboice = (int)Player::AttackBoice::Attack3;
 		_AttackPram.push_back(attackparam5);
 	}
 	
@@ -92,10 +97,6 @@ void PlayerStateAttack::Update()
 	//攻撃ボタンが押される。
 	//連撃。
 	else if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X)
-		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
-		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
-		&& currentanimno == (int)_Player->_NowAttackAnimNo
-		|| KeyBoardInput->isPush(DIK_SPACE)
 		&& currentanimno >= (int)Player::AnimationNo::AnimationAttackStart
 		&& currentanimno < (int)Player::AnimationNo::AnimationAttackEnd
 		&& currentanimno == (int)_Player->_NowAttackAnimNo
@@ -150,6 +151,8 @@ void PlayerStateAttack::Attack(AttackCollisionParameter pram)
 	{
 		//攻撃時のサウンド再生。
 		_SE->Play(false);
+		//攻撃ボイス再生
+		_Player->_AttackBoiceSound[pram.attackboice]->Play(false);
 		//攻撃コリジョン作成
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 		if (_Player->GetEquipment()) {
@@ -226,16 +229,8 @@ void PlayerStateAttack::Dir()
 
 								// 向きベクトルに移動量を積算。
 								//ダッシュボタンの場合
-		if (VPadInput->IsPush(fbEngine::VPad::ButtonRB1))
-		{
-			//ダッシュスピードを適用
-			dir = dir * _DashSpeed;
-		}
-		else
-		{
 			//通常のスピード
-			dir = dir * _Speed;
-		}
+		dir = dir * _Speed;
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;
 		movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。

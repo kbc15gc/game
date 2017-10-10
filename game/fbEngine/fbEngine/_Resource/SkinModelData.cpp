@@ -313,6 +313,8 @@ HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
 	pFrame->pFrameSibling = NULL;
 	pFrame->pFrameFirstChild = NULL;
 
+	pFrame->Original = pFrame;
+
 	*ppNewFrame = pFrame;
 	pFrame = NULL;
 
@@ -711,6 +713,7 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 	_FrameRoot->pFrameFirstChild = nullptr;
 	_FrameRoot->pFrameSibling = nullptr;
 	_FrameRoot->pMeshContainer = nullptr;
+	
 	//骨のクローン作製
 	CloneSkeleton(_FrameRoot, original->_FrameRoot);
 	//アニメーションコントローラを作成して、スケルトンと関連付けを行う。
@@ -742,9 +745,6 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 
 	//オリジナル設定。。
 	_Original = const_cast<SkinModelData*>(original);
-	//とりあえず、アニメーションがあるならインスタンシングしない。
-	if (m_pAnimationController)
-		_Instancing = false;
 }
 
 //骨をコピー
@@ -752,6 +752,12 @@ void SkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 {
 	//名前と行列をコピー。
 	dstFrame->TransformationMatrix = srcFrame->TransformationMatrix;
+
+	//スタックに積む。
+	auto derived = (D3DXFRAME_DERIVED*)dstFrame;
+	derived->Original = ((D3DXFRAME_DERIVED*)srcFrame)->Original;
+	derived->Original->WorldMatrixStack.push_back(&derived->CombinedTransformationMatrix);
+
 	//メッシュコンテナをコピー。メッシュは使いまわす。
 	if (srcFrame->pMeshContainer) {
 		dstFrame->pMeshContainer = new D3DXMESHCONTAINER_DERIVED;
@@ -785,6 +791,10 @@ void SkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 
 void SkinModelData::DeleteCloneSkeleton(LPD3DXFRAME frame)
 {
+	//スタックから削除。
+	auto derived = (D3DXFRAME_DERIVED*)frame;
+	auto& vec = derived->Original->WorldMatrixStack;
+	vec.erase(remove(vec.begin(), vec.end(), &derived->CombinedTransformationMatrix), vec.end());
 
 	if (frame->pFrameSibling != nullptr) {
 		//兄弟

@@ -23,6 +23,8 @@ public:
 private:
 	//攻撃量のテキスト
 	TextObject* _AttackText;
+	//クリティカルテキストテキスト
+	TextObject* _CriticalText;
 	//攻撃量の最大生存時間。
 	float _LifeTime;
 	//攻撃量の現在の時間。

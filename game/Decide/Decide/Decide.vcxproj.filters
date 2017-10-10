@@ -264,6 +264,9 @@
       <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\LevelUpImage.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -541,6 +544,9 @@
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\LevelUpImage.h" />
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

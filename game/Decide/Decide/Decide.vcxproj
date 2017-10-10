@@ -229,6 +229,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateDeath.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateIdol.h" />
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateIdol.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />

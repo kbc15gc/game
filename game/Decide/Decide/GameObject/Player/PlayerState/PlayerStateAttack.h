@@ -14,6 +14,7 @@ public:
 		int attackframe;//攻撃するフレーム。
 		float lifetime;	//コリジョンの発生時間。
 		float atk;		//攻撃モーション別の攻撃力。
+		int attackboice;//攻撃ボイス
 	};
 	PlayerStateAttack(Player* player);
 	~PlayerStateAttack();
