@@ -127,7 +127,9 @@ bool EnemyCharacter::IsOutsideDiscovery() {
 }
 
 bool EnemyCharacter::IsOutsideWandering(const Vector3& Add) {
-	float NowRange = Vector3(_InitPos - (transform->GetPosition() + Add)).Length();
+	Vector3 work = _InitPos - (transform->GetPosition() + Add);
+	work.y = 0.0f;
+	float NowRange = work.Length();
 	if (NowRange > _WanderingRange) {
 		// œpœj”ÍˆÍŠO‚Éo‚½B
 		return true;

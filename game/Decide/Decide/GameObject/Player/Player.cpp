@@ -385,6 +385,9 @@ void Player::AnimationControl()
 //UŒ‚‚ðŽó‚¯‚½‚Æ‚«B
 void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision) 
 {
+	if (_PlayerParam == nullptr) {
+		return;
+	}
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
 #ifdef _DEBUG

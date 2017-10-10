@@ -76,6 +76,7 @@ private:
 	inline void _ConfigCharacterExtrude()override {
 		_MyComponent.CharacterExtrude->Attribute_AllOff();
 		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::PLAYER);
+		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::ENEMY);
 	}
 
 	// 継承先でアニメーション番号のテーブルを作成。
