@@ -14,6 +14,20 @@ sampler_state
 	AddressV = Wrap;
 };
 
+//スペキュラマップ
+texture g_NormalMap;
+sampler g_NormalMapSampler =
+sampler_state
+{
+	Texture = <g_NormalMap>;
+	MipFilter = NONE;
+	MinFilter = NONE;
+	MagFilter = NONE;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
 float4 g_EffectFlg;	//xは投影、yはスペキュラ
 
@@ -64,6 +78,20 @@ const int AtomosphereFuncNone = 0;						//大気錯乱シミュレーションなし。
 const int AtomosphereFuncObjectFromAtomosphere = 1;		//オブジェクトを大気圏から見た場合の大気錯乱シミュレーション。
 const int AtomosphereFuncSkyFromAtomosphere = 2;		//空を大気圏から見た場合の大気錯乱シミュレーション。
 
+float3 CalcNormal(float3 InNormal, float3 InTangent, float2 InUV)
+{
+	float3 retNormal = InNormal;
+	if (g_MapFlg.x)
+	{
+		//法線マップあり
+		float3 normal = tex2D(g_NormalMapSampler, InUV);
+		float3 biNormal = normalize(cross(InTangent, InNormal));
+		normal = (normal * 2.0f) - 1.0f;
+		normal = InTangent * normal.x + biNormal * normal.y + InNormal * normal.z;
+		retNormal = normal;
+	}
+	return retNormal;
+}
 
 
 //ディフューズライトを計算。	
@@ -106,17 +134,21 @@ float3 CalcLimLight( float3 normal, float3 lightDir, float3 limColor)
  */
 float3 SpecLight(float3 normal, float3 worldPos, float2 uv)
 {
-	float specPow = tex2D(g_speculerMapSampler, uv);
 	float3 spec = 0.0f;
-	float3 toEyeDir = normalize( g_cameraPos.xyz - worldPos );
+	float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
 	float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
-	for( int i = 0; i < NUM_DIFFUSE_LIGHT; i++ ){
+	for (int i = 0; i < g_LightNum; i++) {
 		//スペキュラ成分を計算する。
 		//反射ベクトルを計算。
 		float3 L = -g_diffuseLightDirection[i].xyz;
-		spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L,R)), 2 ) * g_diffuseLightColor[i].w;	//スペキュラ強度。
+		spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[i].w;	//スペキュラ強度。
 	}
-	return spec * specPow;
+	if (g_MapFlg.y)
+	{
+		float specPow = tex2D(g_speculerMapSampler, uv);
+		spec *= specPow;
+	}
+	return spec;
 }
 /*!
  * @brief	ポイントライトを計算。

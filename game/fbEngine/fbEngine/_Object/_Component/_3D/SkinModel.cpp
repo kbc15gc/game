@@ -335,6 +335,21 @@ void SkinModel::DrawMeshContainer(
 					_Effect->SetTexture("g_diffuseTexture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 					_Effect->SetInt("Texflg", true);
+
+
+					D3DXVECTOR4 flag = D3DXVECTOR4(0, 0, 0, 0);
+					if (material->GetTexture(Material::TextureHandleE::NormalMap))
+					{
+						_Effect->SetTexture("g_NormalMap", material->GetTexture(Material::TextureHandleE::NormalMap));
+						flag.x = 1;
+					}
+					if (material->GetTexture(Material::TextureHandleE::SpecularMap))
+					{
+						_Effect->SetTexture("g_speculerMap", material->GetTexture(Material::TextureHandleE::SpecularMap));
+						flag.y = 1;
+					}
+					_Effect->SetVector("g_MapFlg", &flag);
+
 				}
 				//テクスチャがないならカラーセット
 				else if (Diffuse != NULL)
@@ -387,6 +402,19 @@ void SkinModel::DrawMeshContainer(
 						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 						_Effect->SetBool("Texflg", true);
+
+						D3DXVECTOR4 flag = D3DXVECTOR4(0, 0, 0, 0);
+						if (material->GetTexture(Material::TextureHandleE::NormalMap))
+						{
+							_Effect->SetTexture("g_NormalMap", material->GetTexture(Material::TextureHandleE::NormalMap));
+							flag.x = 1;
+						}
+						if (material->GetTexture(Material::TextureHandleE::SpecularMap))
+						{
+							_Effect->SetTexture("g_speculerMap", material->GetTexture(Material::TextureHandleE::SpecularMap));
+							flag.y = 1;
+						}
+						_Effect->SetVector("g_MapFlg", &flag);
 					}
 					else
 					{
@@ -456,9 +484,23 @@ void SkinModel::DrawMeshContainer(
 					//テクスチャが格納されていればセット
 					if (material != nullptr)
 					{
+						
 						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 						_Effect->SetInt("Texflg", true);
+
+						D3DXVECTOR4 flag = D3DXVECTOR4(0, 0, 0, 0);
+						if (material->GetTexture(Material::TextureHandleE::NormalMap))
+						{
+							_Effect->SetTexture("g_NormalMap", material->GetTexture(Material::TextureHandleE::NormalMap));
+							flag.x = 1;
+						}
+						if (material->GetTexture(Material::TextureHandleE::SpecularMap))
+						{
+							_Effect->SetTexture("g_speculerMap", material->GetTexture(Material::TextureHandleE::SpecularMap));
+							flag.y = 1;
+						}
+						_Effect->SetVector("g_MapFlg", &flag);
 
 						//スプラットマップ
 						IDirect3DBaseTexture9* splat = material->GetTexture(Material::TextureHandleE::SplatMap);
