@@ -150,7 +150,7 @@ void SceneManager::DrawScene()
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->ImageRender();
 	
-	//INSTANCE(GameObjectManager)->PostRenderObject();
+	INSTANCE(GameObjectManager)->PostRenderObject();
 	
 	//2D‚Æ‚©H
 	INSTANCE(GameObjectManager)->ImageRenderObject();
