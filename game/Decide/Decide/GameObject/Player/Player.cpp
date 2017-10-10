@@ -93,7 +93,12 @@ void Player::Awake()
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	//_Model->SetAllBlend(Color::white * 13);
-	
+
+	//アニメーションイベント追加
+	_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
+	_AnimationEventPlayer->Init((int)AnimationNo::AnimationNum);
+	AnimationEventControl();
+
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(Vector3(0.0f,_Height * 0.5f + _Radius,0.0f), Collision_ID::PLAYER, coll, _Gravity);
 	// 以下衝突を取りたい属性(横方向)を指定。
@@ -212,8 +217,6 @@ void Player::Start()
 
 	// 初期位置に移動。
 	_CharacterController->Execute();
-	//アニメーションイベント追加
-	//AnimationEventControl();
 }
 
 void Player::Update()
@@ -385,9 +388,6 @@ void Player::AnimationControl()
 //攻撃を受けたとき。
 void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision) 
 {
-	if (_PlayerParam == nullptr) {
-		return;
-	}
 	if (hitCollision->GetMaster() == AttackCollision::CollisionMaster::Enemy && _PlayerParam->GetParam(CharacterParameter::HP) > 0)
 	{
 #ifdef _DEBUG
@@ -819,99 +819,99 @@ void Player::Re_SetEquipment() {
 	}
 }
 
-//
-//void Player::AnimationEventControl()
-//{
-//	//攻撃1
-//	{
-//		int eventframe = 10;
-//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
-//	}
-//	//攻撃2
-//	{
-//		int eventframe = 10;
-//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
-//
-//	}
-//	//攻撃3
-//	{
-//		int eventframe = 10;
-//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
-//
-//	}
-//	//攻撃4
-//	{
-//		int eventframe = 10;
-//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
-//	}
-//	//攻撃5
-//	{
-//		int eventframe = 20;
-//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
-//	}
-//}
-//
-//void Player::Attack1()
-//{
-//	//攻撃時のサウンド再生。
-//	_AttackSoound->Play(false);
-//	//攻撃ボイス再生
-//	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
-//	//攻撃コリジョン作成
-//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-//	if (_Equipment) {
-//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
-//	}
-//}
-//
-//void Player::Attack2()
-//{
-//	//攻撃時のサウンド再生。
-//	_AttackSoound->Play(false);
-//	//攻撃ボイス再生
-//	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
-//	//攻撃コリジョン作成
-//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
-//	if (_Equipment) {
-//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
-//	}
-//}
-//
-//void Player::Attack3()
-//{
-//	//攻撃時のサウンド再生。
-//	_AttackSoound->Play(false);
-//	//攻撃ボイス再生
-//	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
-//	//攻撃コリジョン作成
-//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-//	if (_Equipment) {
-//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
-//	}
-//}
-//
-//void Player::Attack4()
-//{
-//	//攻撃時のサウンド再生。
-//	_AttackSoound->Play(false);
-//	//攻撃ボイス再生
-//	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
-//	//攻撃コリジョン作成
-//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
-//	if (_Equipment) {
-//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
-//	}
-//}
-//
-//void Player::Attack5()
-//{
-//	//攻撃時のサウンド再生。
-//	_AttackSoound->Play(false);
-//	//攻撃ボイス再生
-//	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
-//	//攻撃コリジョン作成
-//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
-//	if (_Equipment) {
-//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 150)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
-//	}
-//}
+
+void Player::AnimationEventControl()
+{
+	//攻撃1
+	{
+		int eventframe = 10;
+		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
+	}
+	//攻撃2
+	{
+		int eventframe = 10;
+		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
+
+	}
+	//攻撃3
+	{
+		int eventframe = 10;
+		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
+
+	}
+	//攻撃4
+	{
+		int eventframe = 10;
+		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
+	}
+	//攻撃5
+	{
+		int eventframe = 20;
+		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
+	}
+}
+
+void Player::Attack1()
+{
+	//攻撃時のサウンド再生。
+	_AttackSoound->Play(false);
+	//攻撃ボイス再生
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+	//攻撃コリジョン作成
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
+	if (_Equipment) {
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+	}
+}
+
+void Player::Attack2()
+{
+	//攻撃時のサウンド再生。
+	_AttackSoound->Play(false);
+	//攻撃ボイス再生
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
+	//攻撃コリジョン作成
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
+	if (_Equipment) {
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+	}
+}
+
+void Player::Attack3()
+{
+	//攻撃時のサウンド再生。
+	_AttackSoound->Play(false);
+	//攻撃ボイス再生
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+	//攻撃コリジョン作成
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
+	if (_Equipment) {
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+	}
+}
+
+void Player::Attack4()
+{
+	//攻撃時のサウンド再生。
+	_AttackSoound->Play(false);
+	//攻撃ボイス再生
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
+	//攻撃コリジョン作成
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
+	if (_Equipment) {
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+	}
+}
+
+void Player::Attack5()
+{
+	//攻撃時のサウンド再生。
+	_AttackSoound->Play(false);
+	//攻撃ボイス再生
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
+	//攻撃コリジョン作成
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
+	if (_Equipment) {
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 150)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+	}
+}
