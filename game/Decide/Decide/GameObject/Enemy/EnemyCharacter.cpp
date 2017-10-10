@@ -258,6 +258,8 @@ void EnemyCharacter::_BuildModelData() {
 	//モデルコンポーネントにモデルデータを設定。
 	_MyComponent.Model->SetModelData(modeldata);
 	//_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, false);
+
+	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 
 void EnemyCharacter::_BuildState() {

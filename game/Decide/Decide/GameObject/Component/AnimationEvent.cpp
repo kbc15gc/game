@@ -18,7 +18,6 @@ void AnimationEventPlayer::Init(int animationNum)
 {
 	// アニメーションの数だけ配列追加。
 	_animationEvents = vector<vector<EventData*>>(animationNum);
-	_isFirst = false;
 }
 
 void AnimationEventPlayer::Update() {

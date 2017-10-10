@@ -40,9 +40,6 @@ public:
 	//			アニメーションイベント(関数ポインタvoid(*AnimationEvent)(void))。
 	// ※生成されるコリジョン形状はボックスです。
 	void AddAnimationEvent(int animationNo, const float eventTime, AnimationEvent Event) {
-		if (_isFirst) {
-			Init();
-		}
 		EventData* work = nullptr;
 		work = new EventData;
 		work->playTime = eventTime;
@@ -51,6 +48,5 @@ public:
 	}
 
 private:
-	bool _isFirst = true;	// 最初の追加処理か。
 	vector<vector<EventData*>> _animationEvents;
 };
