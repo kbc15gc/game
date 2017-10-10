@@ -29,9 +29,28 @@ void AnimationEventPlayer::Update() {
 	if (work) {
 		//現在再生中のアニメーション番号取得。
 		int nowAnim = work->GetPlayAnimNo();
-		for (auto eventData : _animationEvents[nowAnim]) {
+		if (nowAnim != _playAnimationNo) {
+			// 別のアニメーションが再生された。
+
+			for (auto eventData : _animationEvents[_playAnimationNo]) {
+				eventData->isPlay = false;
+			}
+			_playAnimationNo = nowAnim;
+		}
+		else if(work->GetLocalAnimationTime() < _nowLocalTime){
+			// 1ループ終了した。
+			// もしくは同じアニメーションがもう一度再生された。
+
+			for (auto eventData : _animationEvents[_playAnimationNo]) {
+				eventData->isPlay = false;
+			}
+		}
+
+		_nowLocalTime = work->GetLocalAnimationTime();
+
+		for (auto eventData : _animationEvents[_playAnimationNo]) {
 			//時間が一致した時イベント呼び出し。
-			if (work->GetLocalAnimationTime() >= eventData->playTime)
+			if (_nowLocalTime >= eventData->playTime)
 			{
 				if (!eventData->isPlay) {
 					// イベントがまだ実行されてない。
@@ -40,12 +59,6 @@ void AnimationEventPlayer::Update() {
 					(gameObject->*(eventData->Event))();
 					eventData->isPlay = true;
 				}
-			}
-
-			if (!work->GetPlaying()) {
-				// アニメーションが終了している(ループ再生には非対応)。
-
-				eventData->isPlay = false;
 			}
 		}
 	}
