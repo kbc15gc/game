@@ -373,11 +373,11 @@ private:
 	//レベルアップ時の音
 	SoundSource* _LevelUpSound = nullptr;
 	//回復サウンド
-	SoundSource* _HeelSound;
+	SoundSource* _HeelSound = nullptr;
 	//ステータスアップサウンド
-	SoundSource* _StatusUpSound;
+	SoundSource* _StatusUpSound = nullptr;
 	//ステータスダウンサウンド
-	SoundSource* _StatusDownSound;
+	SoundSource* _StatusDownSound = nullptr;
 	//プレイヤー死亡サウンド
 	SoundSource* _DeathSound = nullptr;
 	//攻撃時のSE
