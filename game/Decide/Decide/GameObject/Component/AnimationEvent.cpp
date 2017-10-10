@@ -42,8 +42,8 @@ void AnimationEventPlayer::Update() {
 				}
 			}
 
-			if (work->GetLocalAnimationTime() >= work->GetAnimationEndTime(nowAnim)) {
-				// アニメーションが1ループ終了しているか。
+			if (!work->GetPlaying()) {
+				// アニメーションが終了している(ループ再生には非対応)。
 
 				eventData->isPlay = false;
 			}
