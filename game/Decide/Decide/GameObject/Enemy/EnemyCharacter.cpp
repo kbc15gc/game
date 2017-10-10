@@ -116,7 +116,9 @@ void EnemyCharacter::LateUpdate() {
 
 
 bool EnemyCharacter::IsOutsideDiscovery() {
-	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
+	Vector3 work = _InitPos - transform->GetPosition();
+	work.y = 0.0f;
+	float NowRange = work.Length();
 	if (NowRange > _discoveryRange) {
 		// 追跡範囲外に出た。
 		return true;
@@ -225,6 +227,8 @@ void EnemyCharacter::_BuildCollision() {
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
+
+	_Gravity = -0.98f;
 
 	_MyComponent.CharacterController->SetGravity(_Gravity);
 
