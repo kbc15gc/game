@@ -212,8 +212,11 @@ void Player::Start()
 
 	// 初期位置に移動。
 	_CharacterController->Execute();
+
 	//アニメーションイベント追加
-	//AnimationEventControl();
+	/*_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
+	_AnimationEventPlayer->Init();
+	AnimationEventControl();*/
 }
 
 void Player::Update()
