@@ -16,7 +16,7 @@ public:
 
 private:
 	struct EventData {
-		int playFrame;		// イベントが発生するフレーム。
+		float playTime;		// イベントが発生する時間。
 		AnimationEvent Event;	// イベント(GameObjectを継承したクラスのメンバ関数ポインタ)。
 	};
 
@@ -34,16 +34,16 @@ public:
 
 	// 指定したフレームにアニメーションイベントを設定する関数。
 	// 引数：	イベントを設定するアニメーション番号。
-	//			イベントを設定するフレーム。
+	//			イベントを設定する時間(秒)。
 	//			アニメーションイベント(関数ポインタvoid(*AnimationEvent)(void))。
 	// ※生成されるコリジョン形状はボックスです。
-	void AddAnimationEvent(int animationNo, const int eventFrame, AnimationEvent Event) {
+	void AddAnimationEvent(int animationNo, const float eventTime, AnimationEvent Event) {
 		if (_isFirst) {
 			Init();
 		}
 		EventData* work = nullptr;
 		work = new EventData;
-		work->playFrame = eventFrame;
+		work->playTime = eventTime;
 		work->Event = Event;
 		_animationEvents[animationNo].push_back(work);
 	}

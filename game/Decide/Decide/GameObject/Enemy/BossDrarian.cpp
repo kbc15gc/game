@@ -360,54 +360,54 @@ void BossDrarian::_BuildAnimation() {
 void BossDrarian::_ConfigAnimationEvent() {
 	// ‚©‚Ý‚Â‚«UŒ‚B
 	{
-		int eventFrame = 15;
+		float eventFrame = 0.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_Kamituki));
 	}
 	// ‚µ‚Á‚ÛUŒ‚B
 	{
-		int eventFrame = 7;
+		float eventFrame = 0.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
 
-		eventFrame = 17;
+		eventFrame = 0.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 
-		eventFrame = 27;
+		eventFrame = 1.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub3));
 
-		eventFrame = 60;
+		eventFrame = 2.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack1));
 
-		eventFrame = 62;
+		eventFrame = 2.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack2));
 
-		eventFrame = 65;
+		eventFrame = 2.2f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack3));
 
-		eventFrame = 70;
+		eventFrame = 2.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack4));
 
-		eventFrame = 112;
+		eventFrame = 4.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub4));
 
 	}
 	// ƒuƒŒƒXUŒ‚B
 	{
-		int eventFrame = 12;
+		float eventFrame = 0.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_BreathAttackSub1));
 
-		eventFrame = 29;
+		eventFrame = 1.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_BreathAttackSub2));
 
-		eventFrame = 80;
+		eventFrame = 2.7f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathStart));
 
-		eventFrame = 120;
+		eventFrame = 4.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathEnd));
 	
-		eventFrame = 140;
+		eventFrame = 5.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
 
-		eventFrame = 160;
+		eventFrame = 5.5f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 	}
 }
