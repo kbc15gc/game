@@ -11,5 +11,4 @@ public:
 	void Leave()override;
 	void Move();
 	void DebugMove();
-private:
 };

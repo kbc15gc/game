@@ -19,13 +19,11 @@ PlayerStateStop::~PlayerStateStop()
 void PlayerStateStop::Update()
 {
 	//ˆÚ“®‘¬“x
-	/*Vector3 movespeed = Vector3::zero;
+	Vector3 movespeed = Vector3::zero;
 	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
 
-	_Player->GetCharaCon().
-
 	_Player->GetCharaCon().SetMoveSpeed(movespeed);
-	_Player->GetCharaCon().Execute();*/
+	_Player->GetCharaCon().Execute();
 }
 
 void PlayerStateStop::Enter()

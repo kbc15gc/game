@@ -29,6 +29,8 @@ Player::Player(const char * name) :
 	_IdolState(this),
 	//攻撃ステート
 	_AttackState(this),
+	//ダメージを受けるステート
+	_ImpactState(this),
 	//死亡ステート
 	_DeathState(this),
 	//ストップステート
@@ -75,10 +77,12 @@ void Player::Awake()
 	_HPBar = AddComponent<ParameterBar>();
 	// MPバー。
 	_MPBar = AddComponent<ParameterBar>();
+	//アニメーションイベント。
+	//_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.2f;
+	_Radius = 0.8f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 	//スキンモデル作成
@@ -120,19 +124,36 @@ void Player::Awake()
 		_MPBar->Create(Colors, _PlayerParam->GetMaxMP(), _PlayerParam->GetParam(CharacterParameter::MP), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//ダメージSE初期化
-	_DamageSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSE", 0);
-	_DamageSE->Init("Asset/Sound/Damage_01.wav");
+	_DamageSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSound", 0);
+	_DamageSound->Init("Asset/Sound/Damage_01.wav");
 	//レベルアップ音初期化
-	_LevelUP_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUP", 0);
-	_LevelUP_SE->Init("Asset/Sound/lvup.wav");
-	_LevelUP_SE->SetVolume(1.0f);
+	_LevelUpSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUpSound", 0);
+	_LevelUpSound->Init("Asset/Sound/Player/lvup.wav");
+	_LevelUpSound->SetVolume(1.0f);
+	//死亡ボイス初期化
+	_DeathSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeathSound", 0);
+	_DeathSound->Init("Asset/Sound/Player/death.wav");
+	//回復SE初期化
+	_HeelSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("HeelSound", 0);
+	_HeelSound->Init("Asset/Sound/Player/heal02.wav");
+	//ステータスアップサウンド初期化
+	_StatusUpSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusUpSound", 0);
+	_StatusUpSound->Init("Asset/Sound/Player/statusup.wav");
+	_StatusUpSound->SetVolume(2.0f);
+	//ステータスダウンサウンド初期化
+	_StatusDownSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusDownSound", 0);
+	_StatusDownSound->Init("Asset/Sound/Player/statusdown.wav");
+	_StatusDownSound->SetVolume(2.0f);
+	//攻撃サウンド初期化
+	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
+	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//攻撃ボイス初期化
-	SoundSource* attack1 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
-	SoundSource* attack2 = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
-	_AttackBoiceSound.push_back(attack1);
-	_AttackBoiceSound.push_back(attack2);
-	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/attack2.wav");
+	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
+	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
+	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
+	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack1.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack2.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -163,6 +184,7 @@ void Player::Start()
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack03] = -1.0f;		//攻撃3
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack04] = -1.0f;		//攻撃4
 	_AnimationEndTime[(int)AnimationNo::AnimationAttack05] = -1.0f;		//攻撃5
+	_AnimationEndTime[(int)AnimationNo::AnimationImpact] = 0.6f;		//ダメージ	
 	_AnimationEndTime[(int)AnimationNo::AnimationDeath] = -1.0f;		//死亡
 	//各エンドタイムを設定
 	for (int i = 0; i < (int)AnimationNo::AnimationNum; i++)
@@ -174,7 +196,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-148.0f, 68.5f, -34.0f);
+	_StartPos = Vector3(-153.61, 67.5f, -38.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -187,12 +209,15 @@ void Player::Start()
 
 	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
 	Re_SetEquipment();
+
+	//アニメーションイベント追加
+	//AnimationEventControl();
 }
 
 void Player::Update()
 {
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
-	if (_CurrentState != nullptr && _State != State::Stop)
+	if (_CurrentState != nullptr)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
@@ -259,6 +284,10 @@ void Player::ChangeState(State nextstate)
 		//攻撃状態
 		_CurrentState = &_AttackState;
 		break;
+	case State::Impact:
+		//ダメージを受けた状態
+		_CurrentState = &_ImpactState;
+		break;
 	case State::Death:					
 		//死亡状態
 		_CurrentState = &_DeathState;
@@ -296,11 +325,17 @@ void Player::AnimationControl()
 		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
 		return;
 	}
+	//ダメージを受けたアニメーション
+	if (_State == State::Impact)
+	{
+		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 1);
+		return;
+	}
 	//ジャンプアニメーション
 	//ストップじゃないならジャンプする。
 	if (_CharacterController->IsJump() && _State != State::Stop && !_Speak)
 	{
-		PlayAnimation(AnimationNo::AnimationJump, 0.1f);
+		PlayAnimation(AnimationNo::AnimationJump, 0.1f, 0);
 	}
 	else
 	{
@@ -357,10 +392,13 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 			abort();
 		}
 #endif
+		//ダメージを受けた状態に変更
+		ChangeState(State::Impact);
+
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(damage);
-		_DamageSE->Play(false);//ダメージを受けたときのSE
+		_DamageSound->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 		Color c;
 		if (damage == 0)
@@ -370,7 +408,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 		else
 		{
-			c = Color::red;
+			c = Color::blue;
 		}
 		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
 		attackvalue->transform->SetParent(transform);
@@ -381,12 +419,19 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 void Player::Releace()
 {
 	_CharacterController = nullptr;
-	_DamageSE = nullptr;
+	_DamageSound = nullptr;
 	_Rotation = nullptr;
 	_PlayerParam = nullptr;
 	_CurrentState = nullptr;
 	_HPBar = nullptr;
 	_MPBar = nullptr;
+	for (auto &p : _AttackBoiceSound)
+	{
+		p = nullptr;
+	}
+	_AttackBoiceSound.clear();
+	_DeathSound = nullptr;
+	//_AnimationEventPlayer = nullptr;
 }
 
 /**
@@ -408,6 +453,8 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_HPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::HP));
 		}
 
+		_HeelSound->Play(false);
+		
 		returnValue = true;
 	}
 	if (_PlayerParam->HeelMP(info->effectValue[CharacterParameter::Param::MP]))
@@ -419,7 +466,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 		if (_MPBar) {
 			_MPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::MP));
 		}
-
+		
+		_HeelSound->Play(false);
+		
 		returnValue = true;
 	}
 
@@ -440,6 +489,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
+
+			_StatusUpSound->Play(false);
+
 			returnValue = true;
 		}
 		else if (value < 0) {
@@ -456,6 +508,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
+
+			_StatusDownSound->Play(false);
+
 			returnValue = true;
 		}
 	}
@@ -502,6 +557,7 @@ void Player::_Damage()
 
 	if (_PlayerParam->GetDeathFlg() == true && _State != State::Death)
 	{
+		_DeathSound->Play(false);
 		ChangeState(State::Death);
 	}
 
@@ -556,7 +612,7 @@ void Player::_LevelUP()
 	//レベルアップ時のイメージ表示。
 	_LevelUpImage->Init();
 	//レベルアップ時の音再生。
-	_LevelUP_SE->Play(false);
+	_LevelUpSound->Play(false);
 	//レベルアップエフェクト
 	/*_ParticleEffect->LevelUpEffect();
 	_ParticleEffect->SetLevelUPEffectFlag(true);*/
@@ -591,6 +647,9 @@ void Player::Speak()
 				//地面についていれば話しかけれる
 				if (_CharacterController->IsOnGround())
 				{
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderDisable();
+					_MPBar->RenderDisable();
 					//話すフラグセット
 					npc->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
@@ -604,7 +663,13 @@ void Player::Speak()
 			{
 				//話すNPCがいないので
 				npc->SetIsSpeak(false);
-				_Speak = false;
+				//話し終わると
+				if (_Speak)
+				{
+					_HPBar->RenderEnable();
+					_MPBar->RenderEnable();
+					_Speak = false;
+				}
 			}
 		}
 		//話す状態ならもう回さない。
@@ -614,7 +679,6 @@ void Player::Speak()
 		}
 	}
 }
-
 
 #ifdef _DEBUG
 void Player::_DebugPlayer()
@@ -749,3 +813,100 @@ void Player::Re_SetEquipment() {
 		}
 	}
 }
+
+//
+//void Player::AnimationEventControl()
+//{
+//	//攻撃1
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
+//	}
+//	//攻撃2
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
+//
+//	}
+//	//攻撃3
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
+//
+//	}
+//	//攻撃4
+//	{
+//		int eventframe = 10;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
+//	}
+//	//攻撃5
+//	{
+//		int eventframe = 20;
+//		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
+//	}
+//}
+//
+//void Player::Attack1()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack2()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack3()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack4()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack2]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}
+//
+//void Player::Attack5()
+//{
+//	//攻撃時のサウンド再生。
+//	_AttackSoound->Play(false);
+//	//攻撃ボイス再生
+//	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
+//	//攻撃コリジョン作成
+//	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
+//	if (_Equipment) {
+//		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 150)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, 0.0f, transform);
+//	}
+//}

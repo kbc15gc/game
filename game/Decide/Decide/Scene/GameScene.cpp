@@ -11,7 +11,7 @@
 #include "GameObject\Ground\Ground.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
 
-#include "GameObject/Player/Player.h"
+
 #include "GameObject\Enemy\Enemy.h"
 #include "GameObject\Enemy\BossDrarian.h"
 
@@ -38,6 +38,17 @@
 
 ImageObject* g_depth;
 
+namespace
+{
+	//ボス
+	float BOSS_RADIUS = 35.0f;
+	Vector3 BOSS_POS = { -712,68,48 };
+	//街
+	float MATI_RADIUS = 35.0f;
+	Vector3 MATI_POS = { -406,67,-20 };
+}
+
+
 void GameScene::Start()
 {
 	INSTANCE(EventManager)->ReSet();
@@ -46,7 +57,7 @@ void GameScene::Start()
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
 	//プレイヤー生成
-	Player* player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+	_Player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
 
 
 	//プレイヤーカメラ生成
@@ -100,9 +111,21 @@ void GameScene::Start()
 
 	INSTANCE(Inventory)->Initialize();
 
-	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");
-	_WorldSE->Play(true);
+	//通常BGM
+	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
+	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
+	
+	//BOSSBGM
+	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
+	_BossBGM->Init("Asset/Sound/boss1.wav");
+
+	//街BGM
+	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
+	_MatiBGM->Init("Asset/Sound/mati1.wav");
+
+	//再生用BGM
+	_GameBGM = _WorldBGM;
+	_GameBGM->Play(true);
 
 	//シャドウマップ有効.
 	_isShadowMap = true;
@@ -142,5 +165,56 @@ void GameScene::Update()
 	// テスト。
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)) {
 		INSTANCE(Inventory)->ArrangementInventory();
+	}
+	
+	//BGM変更したい
+	{
+		//ボス
+		Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
+		float boss_len = boss_dir.Length();
+		//街
+		Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
+		float mati_len = mati_dir.Length();
+		//街
+		if (mati_len < MATI_RADIUS)
+		{
+			ChangeBGM(BGM::MATI1);
+		}
+		//ボス
+		if (boss_len < BOSS_RADIUS)
+		{
+			ChangeBGM(BGM::BOSS1);
+		}
+		//ワールド
+		if(boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
+		{
+			ChangeBGM(BGM::WORLD);
+		}
+	}
+
+}
+
+void GameScene::ChangeBGM(BGM bgm)
+{
+	if (_BGM != bgm)
+	{
+		_BGM = bgm;
+		_GameBGM->Stop();
+		switch (bgm)
+		{
+		case GameScene::BGM::WORLD:
+			_GameBGM = _WorldBGM;
+			break;
+		case GameScene::BGM::BOSS1:
+			_GameBGM = _BossBGM;
+			break;
+		case GameScene::BGM::MATI1:
+			_GameBGM = _MatiBGM;
+			break;
+		default:
+			break;
+		}
+		_GameBGM->Play(true);
+
 	}
 }
