@@ -745,9 +745,6 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 
 	//オリジナル設定。。
 	_Original = const_cast<SkinModelData*>(original);
-	//とりあえず、アニメーションがあるならインスタンシングしない。
-	if (m_pAnimationController)
-		_Instancing = false;
 }
 
 //骨をコピー

@@ -67,7 +67,7 @@ public:
 	{
 		_ModelDate = pD;
 	}
-	const SkinModelData* GetModelData() {
+	SkinModelData* GetModelData() {
 		return _ModelDate;
 	}
 
