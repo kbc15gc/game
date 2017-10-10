@@ -196,7 +196,7 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
-	_StartPos = Vector3(-153.61, 67.5f, -38.0f);
+	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
