@@ -827,29 +827,29 @@ void Player::AnimationEventControl()
 {
 	//UŒ‚1
 	{
-		int eventframe = 10;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
 	}
 	//UŒ‚2
 	{
-		int eventframe = 10;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
 
 	}
 	//UŒ‚3
 	{
-		int eventframe = 10;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
 
 	}
 	//UŒ‚4
 	{
-		int eventframe = 10;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
 	}
 	//UŒ‚5
 	{
-		int eventframe = 20;
+		float eventframe = 1.1f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
 	}
 }

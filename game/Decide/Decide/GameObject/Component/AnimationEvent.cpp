@@ -31,7 +31,7 @@ void AnimationEventPlayer::Update() {
 		int nowAnim = work->GetPlayAnimNo();
 		for (auto eventData : _animationEvents[nowAnim]) {
 				//時間が一致した時イベント呼び出し。
-			if (fabsf(work->GetLocalAnimationTime() - eventData->playTime) <= 0.001f)
+			if (fabsf(work->GetLocalAnimationTime() - eventData->playTime) <= 0.05f)
 			{
 				// 関数ポインタに設定された関数を実行。
 				(gameObject->*(eventData->Event))();
