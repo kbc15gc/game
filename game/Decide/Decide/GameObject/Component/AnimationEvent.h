@@ -18,6 +18,7 @@ private:
 	struct EventData {
 		float playTime;		// イベントが発生する時間。
 		AnimationEvent Event;	// イベント(GameObjectを継承したクラスのメンバ関数ポインタ)。
+		bool isPlay = false;	// イベント実行済みか。
 	};
 
 public:
@@ -44,6 +45,7 @@ public:
 		work = new EventData;
 		work->playTime = eventTime;
 		work->Event = Event;
+		work->isPlay = false;
 		_animationEvents[animationNo].push_back(work);
 	}
 

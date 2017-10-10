@@ -30,11 +30,22 @@ void AnimationEventPlayer::Update() {
 		//現在再生中のアニメーション番号取得。
 		int nowAnim = work->GetPlayAnimNo();
 		for (auto eventData : _animationEvents[nowAnim]) {
-				//時間が一致した時イベント呼び出し。
-			if (fabsf(work->GetLocalAnimationTime() - eventData->playTime) <= 0.001f)
+			//時間が一致した時イベント呼び出し。
+			if (work->GetLocalAnimationTime() >= eventData->playTime)
 			{
-				// 関数ポインタに設定された関数を実行。
-				(gameObject->*(eventData->Event))();
+				if (!eventData->isPlay) {
+					// イベントがまだ実行されてない。
+
+					// 関数ポインタに設定された関数を実行。
+					(gameObject->*(eventData->Event))();
+					eventData->isPlay = true;
+				}
+			}
+
+			if (work->GetLocalAnimationTime() >= work->GetAnimationEndTime(nowAnim)) {
+				// アニメーションが1ループ終了しているか。
+
+				eventData->isPlay = false;
 			}
 		}
 	}
