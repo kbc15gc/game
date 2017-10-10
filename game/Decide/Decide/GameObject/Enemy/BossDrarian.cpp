@@ -30,7 +30,7 @@ void BossDrarian::_StartSubClass() {
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 5.5f;
+	_AttackRange = 6.5f;
 
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
@@ -305,6 +305,7 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ENEMY);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
@@ -386,7 +387,7 @@ void BossDrarian::_ConfigAnimationEvent() {
 		eventFrame = 2.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack4));
 
-		eventFrame = 4.0f;
+		eventFrame = 3.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub4));
 
 	}
@@ -404,10 +405,10 @@ void BossDrarian::_ConfigAnimationEvent() {
 		eventFrame = 4.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathEnd));
 	
-		eventFrame = 5.0f;
+		eventFrame = 4.9f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
 
-		eventFrame = 5.5f;
+		eventFrame = 5.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 	}
 }

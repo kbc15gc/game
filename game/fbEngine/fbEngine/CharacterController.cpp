@@ -100,13 +100,9 @@ const Vector3& CCharacterController::Execute()
 			//衝突検出。
 			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 
-			if (callback.isHit) {
+			if (callback.isHit && callback.hitID != static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST)) {
 				//当たった。
-
-				if (callback.hitID == static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST)) {
-					// ゴーストは無視。
-					continue;
-				}
+				// かつゴーストではない。
 
 				Vector3 vT0, vT1;
 				//XZ平面上での移動後の座標をvT0に、交点の座標をvT1に設定する。

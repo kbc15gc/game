@@ -56,7 +56,7 @@ void AttackValue2D::Init(int damagevalue, bool critical, float lifetime, Vector3
 		_AttackText->Initialize(L"", 70.0f, Color::yellow);
 		//クリティカルテキスト表示
 		_CriticalText = INSTANCE(GameObjectManager)->AddNew<TextObject>("CriticalText", _Priority);
-		_CriticalText->Initialize(L"Critical", 70.0f, Color::yellow);
+		_CriticalText->Initialize(L"Critical", 25.0f, Color::yellow);
 		_CriticalText->SetAnchor(fbText::TextAnchorE::UpperCenter);
 	}
 	else
@@ -76,7 +76,7 @@ void AttackValue2D::Init(int damagevalue, bool critical, float lifetime, Vector3
 	{
 		//クリティカルテキスト座標設定
 		_CriticalText->transform->SetParent(_AttackText->transform);
-		_CriticalText->transform->SetLocalPosition(0.0f, -30.0f, 0.0f);
+		_CriticalText->transform->SetLocalPosition(0.0f, -15.0f, 0.0f);
 	}
 	//ダメージ量
 	char attack[6];

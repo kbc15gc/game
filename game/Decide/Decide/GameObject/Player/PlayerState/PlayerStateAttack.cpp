@@ -7,69 +7,6 @@
 PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)
 {
-	_SE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
-	_SE->Init("Asset/Sound/Player/PlayerAttack_00.wav");
-	//UŒ‚‚P
-	{
-		AttackCollisionParameter attackparam1;
-		attackparam1.pos = Vector3(0.0f, 1.0f, 1.5f);
-		attackparam1.rot = Quaternion::Identity;
-		attackparam1.scale = Vector3(1.5f, 1.5f, 1.5f);
-		attackparam1.attackframe = 10.0f;
-		attackparam1.lifetime = 0.5f;
-		attackparam1.atk = 120;
-		attackparam1.attackboice = (int)Player::AttackBoice::Attack1;
-		_AttackPram.push_back(attackparam1);
-	}
-	//UŒ‚‚Q
-	{
-		AttackCollisionParameter attackparam2;
-		attackparam2.pos = Vector3(0.0f, 1.0f, 1.5f);
-		attackparam2.rot = Quaternion::Identity;
-		attackparam2.scale = Vector3(1.5f, 1.5f, 1.5f);
-		attackparam2.attackframe = 10;
-		attackparam2.lifetime = 0.5f;
-		attackparam2.atk = 100;
-		attackparam2.attackboice = (int)Player::AttackBoice::Attack2;
-		_AttackPram.push_back(attackparam2);
-	}
-	//UŒ‚‚R
-	{
-		AttackCollisionParameter attackparam3;
-		attackparam3.pos = Vector3(0.0f, 1.0f, 1.5f);
-		attackparam3.rot = Quaternion::Identity;
-		attackparam3.scale = Vector3(1.5f, 1.5f, 1.5f);
-		attackparam3.attackframe = 10.0f;
-		attackparam3.lifetime = 0.5f;
-		attackparam3.atk = 120;
-		attackparam3.attackboice = (int)Player::AttackBoice::Attack1;
-		_AttackPram.push_back(attackparam3);
-	}
-	//UŒ‚‚S
-	{
-		AttackCollisionParameter attackparam4;
-		attackparam4.pos = Vector3(0.0f, 1.0f, 1.5f);
-		attackparam4.rot = Quaternion::Identity;
-		attackparam4.scale = Vector3(1.5f, 1.5f, 1.5f);
-		attackparam4.attackframe = 10;
-		attackparam4.lifetime = 0.5f;
-		attackparam4.atk = 100;
-		attackparam4.attackboice = (int)Player::AttackBoice::Attack2;
-		_AttackPram.push_back(attackparam4);
-	}
-	//UŒ‚‚T
-	{
-		AttackCollisionParameter attackparam5;
-		attackparam5.pos = Vector3(0.0f, 1.0f, 1.5f);
-		attackparam5.rot = Quaternion::Identity;
-		attackparam5.scale = Vector3(1.5f, 1.5f, 1.5f);
-		attackparam5.attackframe = 30;
-		attackparam5.lifetime = 0.5f;
-		attackparam5.atk = 200;
-		attackparam5.attackboice = (int)Player::AttackBoice::Attack3;
-		_AttackPram.push_back(attackparam5);
-	}
-	
 }
 
 PlayerStateAttack::~PlayerStateAttack()
@@ -107,29 +44,6 @@ void PlayerStateAttack::Update()
 		//ƒRƒ“ƒ{I
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
 	}
-	//‚ ‚½‚è”»’èì¬
- 	switch (currentanimno)
-	{
-		//UŒ‚‚P‚ÌŽž
-	case (int)Player::AnimationNo::AnimationAttack01:
-		Attack(_AttackPram[0]);
-		break;
-		//UŒ‚‚Q‚ÌŽž
-	case (int)Player::AnimationNo::AnimationAttack02:
-		Attack(_AttackPram[1]);
-		break;
-		//UŒ‚‚R‚ÌŽž
-	case (int)Player::AnimationNo::AnimationAttack03:
-		Attack(_AttackPram[2]);
-		break;
-	case (int)Player::AnimationNo::AnimationAttack04:
-		Attack(_AttackPram[3]);
-		break;
-	case (int)Player::AnimationNo::AnimationAttack05:
-		Attack(_AttackPram[4]);
-		break;
-	}
-	
 }
 
 void PlayerStateAttack::Enter()
@@ -140,25 +54,6 @@ void PlayerStateAttack::Enter()
 void PlayerStateAttack::Leave()
 {
 
-}
-
-void PlayerStateAttack::Attack(AttackCollisionParameter pram)
-{
-	//UŒ‚Žž‚Ì‚ ‚½‚è”»’èì¬
-	//Œ»Ý‚ÌƒtƒŒ[ƒ€Žæ“¾
-	const int nowFrame = _Player->_Anim->NowFrame();
-	if (nowFrame == pram.attackframe)
-	{
-		//UŒ‚Žž‚ÌƒTƒEƒ“ƒhÄ¶B
-		_SE->Play(false);
-		//UŒ‚ƒ{ƒCƒXÄ¶
-		_Player->_AttackBoiceSound[pram.attackboice]->Play(false);
-		//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬
-		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
-		if (_Player->GetEquipment()) {
-			attack->Create(move(_Player->_PlayerParam->GiveDamageMass(false,false, _Player->GetEquipment()->weapon, pram.atk)),  pram.pos, pram.rot, pram.scale, AttackCollision::CollisionMaster::Player, pram.lifetime, 0.0f, _Player->transform);
-		}
-	}
 }
 
 void PlayerStateAttack::Dir()
