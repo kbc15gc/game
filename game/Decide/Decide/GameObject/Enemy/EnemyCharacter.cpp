@@ -116,7 +116,9 @@ void EnemyCharacter::LateUpdate() {
 
 
 bool EnemyCharacter::IsOutsideDiscovery() {
-	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
+	Vector3 work = _InitPos - transform->GetPosition();
+	work.y = 0.0f;
+	float NowRange = work.Length();
 	if (NowRange > _discoveryRange) {
 		// 追跡範囲外に出た。
 		return true;
@@ -125,7 +127,9 @@ bool EnemyCharacter::IsOutsideDiscovery() {
 }
 
 bool EnemyCharacter::IsOutsideWandering(const Vector3& Add) {
-	float NowRange = Vector3(_InitPos - (transform->GetPosition() + Add)).Length();
+	Vector3 work = _InitPos - (transform->GetPosition() + Add);
+	work.y = 0.0f;
+	float NowRange = work.Length();
 	if (NowRange > _WanderingRange) {
 		// 徘徊範囲外に出た。
 		return true;
@@ -226,6 +230,8 @@ void EnemyCharacter::_BuildCollision() {
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
 
+	_Gravity = -0.98f;
+
 	_MyComponent.CharacterController->SetGravity(_Gravity);
 
 	// キャラクターコントローラ押し出しコンポーネント作成。
@@ -252,6 +258,8 @@ void EnemyCharacter::_BuildModelData() {
 	//モデルコンポーネントにモデルデータを設定。
 	_MyComponent.Model->SetModelData(modeldata);
 	//_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, false);
+
+	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 
 void EnemyCharacter::_BuildState() {

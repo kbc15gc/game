@@ -14,19 +14,10 @@ AnimationEventPlayer::~AnimationEventPlayer() {
 	_animationEvents.clear();
 };
 
-void AnimationEventPlayer::Init()
+void AnimationEventPlayer::Init(int animationNum)
 {
 	// アニメーションの数だけ配列追加。
-	if (gameObject->GetComponent<Animation>()) {
-		_animationEvents = vector<vector<EventData*>>(gameObject->GetComponent<Animation>()->GetNumAnimationSet());
-	}
-#ifdef _DEBUG
-	else {
-		// ※アニメーションコンポーネントを先に追加したか。
-		abort();
-	}
-#endif // _DEBUG
-	_isFirst = false;
+	_animationEvents = vector<vector<EventData*>>(animationNum);
 }
 
 void AnimationEventPlayer::Update() {

@@ -195,7 +195,7 @@ void Enemy::_BuildAnimation() {
 }
 
 void Enemy::_ConfigAnimationEvent() {
-	int eventFrame = 30;
+	float eventFrame = 1.0f;
 	
 	_MyComponent.AnimationEventPlayer->AddAnimationEvent(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, eventFrame, static_cast<AnimationEvent>(&Enemy::CreateAttackCollision));
 }
