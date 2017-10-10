@@ -50,7 +50,7 @@ void HistoryManager::Start()
 	{
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		_CreateObject((int)LocationCodeE::Common, path, type);
+		//_CreateObject((int)LocationCodeE::Common, path, type);
 	}
 
 	//歴史オブジェクト生成。
@@ -208,7 +208,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
 			//オブジェクト生成
-			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("Building", 2);
+			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 			obj->transform->SetRotation(objInfo[i]->ang);
@@ -279,6 +279,8 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
 		npc->LoadModel(npcInfo[i]->filename);
+		auto model = npc->GetComponent<SkinModel>();
+		model->GetModelData()->SetInstancing(false);
 		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
 		npc->transform->SetLocalPosition(npcInfo[i]->pos);
 		npc->transform->SetRotation(npcInfo[i]->ang);
