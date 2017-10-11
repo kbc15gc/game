@@ -166,6 +166,11 @@ public:
 		return _AtomosphereParam;
 	}
 
+	LPDIRECT3DCUBETEXTURE9 GetNightTexture()
+	{
+		return _NightTexture;
+	}
+
 private:
 
 	/** ‹óƒ‚ƒfƒ‹. */
@@ -188,4 +193,5 @@ private:
 	/** –éŠÔ‚ÌŠÂ‹«Œõ. */
 	Vector3 _NightAmbientLight = Vector3(0.1f, 0.1f, 0.1f);
 
+	LPDIRECT3DCUBETEXTURE9 _NightTexture = nullptr;
 };
