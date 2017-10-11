@@ -64,11 +64,8 @@ void EnemyCharacter::Start() {
 
 	// 継承先で初期位置が設定された可能性があるため更新。
 	_MyComponent.CharacterController->Execute();
-	_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
+	//_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
 	
-	int Attribute = Collision_ID::PLAYER;
-	_MyComponent.CharacterExtrude->Init(_MyComponent.CharacterController->GetRigidBody(), Attribute);
-
 	//プレイヤー。
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
@@ -119,7 +116,9 @@ void EnemyCharacter::LateUpdate() {
 
 
 bool EnemyCharacter::IsOutsideDiscovery() {
-	float NowRange = Vector3(_InitPos - transform->GetPosition()).Length();
+	Vector3 work = _InitPos - transform->GetPosition();
+	work.y = 0.0f;
+	float NowRange = work.Length();
 	if (NowRange > _discoveryRange) {
 		// 追跡範囲外に出た。
 		return true;
@@ -128,7 +127,9 @@ bool EnemyCharacter::IsOutsideDiscovery() {
 }
 
 bool EnemyCharacter::IsOutsideWandering(const Vector3& Add) {
-	float NowRange = Vector3(_InitPos - (transform->GetPosition() + Add)).Length();
+	Vector3 work = _InitPos - (transform->GetPosition() + Add);
+	work.y = 0.0f;
+	float NowRange = work.Length();
 	if (NowRange > _WanderingRange) {
 		// 徘徊範囲外に出た。
 		return true;
@@ -224,12 +225,29 @@ void EnemyCharacter::_BuildCollision() {
 
 	// キャラクターコントローラー作成。
 	// ※コライダーコンポーネントは継承先で追加。
-	_MyComponent.CharacterController->Init(_collisionInfo.offset, Collision_ID::ENEMY, _MyComponent.Collider, _Gravity,false);
+	_MyComponent.CharacterController->Init(_collisionInfo.offset, _collisionInfo.id, _MyComponent.Collider, _Gravity,true);
 	
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
 
+	_Gravity = -0.98f;
+
 	_MyComponent.CharacterController->SetGravity(_Gravity);
+
+	// キャラクターコントローラ押し出しコンポーネント作成。
+	_CreateExtrudeCollision();
+
+	int Attribute = Collision_ID::NOT_ID;
+	if (_MyComponent.ExtrudeCollisions.size() > 0) {
+		_MyComponent.CharacterExtrude->Init(_MyComponent.ExtrudeCollisions, Attribute);
+	}
+	else {
+		// キャラクターコントローラ押し出し用の剛体を設定してない。
+
+		abort();
+	}
+
+	_ConfigCharacterExtrude();
 }
 
 void EnemyCharacter::_BuildModelData() {
@@ -240,6 +258,8 @@ void EnemyCharacter::_BuildModelData() {
 	//モデルコンポーネントにモデルデータを設定。
 	_MyComponent.Model->SetModelData(modeldata);
 	//_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, false);
+
+	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 
 void EnemyCharacter::_BuildState() {
@@ -389,8 +409,17 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 		_MyComponent.HPBar->SubValue(_damage);
 
 		//受けたダメージ量を表示。
+		Color c;
+		if (_damage == 0)
+		{
+			c = Color::white * 0.3f;
+		}
+		else
+		{
+			c = Color::red;
+		}
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(info.value, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::blue);
+		attackvalue->Init(_damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
 		attackvalue->transform->SetParent(transform);
 
 		if (_isDamageMotion) {

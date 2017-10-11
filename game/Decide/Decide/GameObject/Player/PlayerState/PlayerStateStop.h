@@ -12,4 +12,3 @@ public:
 	void Enter()override;
 	void Leave()override;
 };
-#pragma once

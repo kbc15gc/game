@@ -36,7 +36,7 @@ public:
 	//第一引数 btCollisionObject* バレットフィジックスのコリジョンオブジェクト
 	//第二引数 Collider* あたり判定の形状
 	//第三引数 const int コリジョンに設定するID
-	//第四引数 Vector3& 基点からの移動量
+	//第四引数 Vector3& 基点からの移動量(ローカル座標系)。
 	//第五引数 bool 生成時にワールドに追加するか。
 	void Create(btCollisionObject* collision, Collider* shape, const int& id = static_cast<int>(fbCollisionAttributeE::ALL),Vector3 offset = Vector3::zero,bool isAddWorld = true);
 	btCollisionObject* GetCollisionObj() const
@@ -54,9 +54,23 @@ public:
 		return _CollisionObject;
 	}
 	//オフセットした先のポジション取得
-	const Vector3 GetOffsetPos()
+	inline const Vector3 GetOffsetPos()
 	{
-		return transform->GetPosition() + _Offset;
+		_UpdateOffsetPos();
+		return _OffsetPos;
+	}
+
+	// 渡された位置からOffset分減算した値を返却。
+	inline const Vector3& SubOffset(Vector3& pos){
+		_UpdateOffsetPos();
+		pos = pos - (transform->GetRight() * _Offset.x);
+		pos = pos - (transform->GetUp() * _Offset.y);
+		pos = pos - (transform->GetForward() * _Offset.z);
+		return pos;
+	}
+
+	inline const Vector3& GetOffset()const {
+		return _Offset;
 	}
 
 	//Createより前に設定しといて。
@@ -144,9 +158,6 @@ public:
 	inline CollisionObjectType GetCollisionType()const {
 		return _MyObjectType;
 	}
-	inline const Vector3& GetOffset()const {
-		return _Offset;
-	}
 
 	inline Collider* GetShape()const {
 		return _Shape;
@@ -159,9 +170,12 @@ public:
 protected:
 	//コリジョンの位置や回転を更新
 	void _UpdateCollisionTrans();
+	void _UpdateOffsetPos();
 protected:
 	//ポジションからのオフセット量
 	Vector3 _Offset;
+	//差分の値分ずらした後の位置。
+	Vector3 _OffsetPos;
 	//自分の属するグループ
 	short _FilterGroup;
 	//当たり判定をとるグループ
@@ -172,5 +186,5 @@ protected:
 	std::shared_ptr<btCollisionObject>	_CollisionObject;
 	bool _isAddWorld = false;	// ワールドに追加したか。
 	CollisionObjectType _MyObjectType;	// 剛体かゴーストか。
-	PhysicsType _physicsType;
+	PhysicsType _physicsType = PhysicsType::Kinematick;
 };

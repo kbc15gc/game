@@ -139,7 +139,7 @@ void OutputData::OutputTextParam() {
 		wchar_t outPut[FILENAME_MAX];
 		wchar_t strNum[10];
 
-		wcscpy_s(outPut, wcslen(L"<Parameter>\n") + 1, L"<Parameter>\n");
+		wcscpy_s(outPut, wcslen(L"-Parameter-\n") + 1, L"-Parameter-\n");
 		CharacterParameter* Param = gameObject->GetComponent<CharacterParameter>();
 
 		wcscat_s(outPut, wcslen(outPut) + wcslen(L"MaxHP : ") + 1, L"MaxHP : ");	// char*Çwchar_t*Ç…ïœä∑ÅB
@@ -170,7 +170,7 @@ void OutputData::OutputTextTrans() {
 		wchar_t strTrans[FILENAME_MAX];
 		wchar_t strNum[FILENAME_MAX];
 
-		wcscpy_s(strTrans, wcslen(L"<Transform>\n") + 1, L"<Transform>\n");
+		wcscpy_s(strTrans, wcslen(L"-Transform-\n") + 1, L"-Transform-\n");
 		wcscat_s(strTrans, wcslen(strTrans) + wcslen(L"Position : ") + 1, L"Position : ");
 		Support::ToString(Vector4(gameObject->transform->GetPosition(), 0.0f), strNum, 2);
 		wcscat_s(strTrans, wcslen(strTrans) + wcslen(_TuckText(L" [ ", strNum, L" ]")) + 1, strNum);
@@ -194,7 +194,7 @@ void OutputData::OutputTextCollision() {
 
 		wchar_t out[FILENAME_MAX * 5];
 		wchar_t num[FILENAME_MAX];
-		wcscpy_s(out,wcslen(L"<Collision>\n") + 1 ,L"<Collision>\n");
+		wcscpy_s(out,wcslen(L"-Collision-\n") + 1 ,L"-Collision-\n");
 		wcscat_s(out, wcslen(out) + wcslen(L"Type         : ") + 1, L"Type         : ");
 		wcscpy_s(num,wcslen(Collision::TypeName[static_cast<int>(coll->GetCollisionType())]) + 1, Collision::TypeName[static_cast<int>(coll->GetCollisionType())]);
 		wcscat_s(out, wcslen(out) + wcslen(_TuckText(L" [ ", num, L" ]")) + 1, num);
@@ -262,7 +262,7 @@ void OutputData::OutputTextCollision() {
 void OutputData::OutputTextAttach() {
 	if (_outputTexts[static_cast<int>(OutputInfo::Attach)]) {
 		wchar_t out[FILENAME_MAX * 5];
-		wcscpy_s(out, wcslen(L"<AttachComponents>\n") + 1, L"<AttachComponents>\n");
+		wcscpy_s(out, wcslen(L"-AttachComponents-\n") + 1, L"-AttachComponents-\n");
 		for (auto component : gameObject->GetComponentAll()) {
 			wcscat_s(out, wcslen(out) + wcslen(component->GetDebugName()) + 1, component->GetDebugName());
 			char work[FILENAME_MAX];

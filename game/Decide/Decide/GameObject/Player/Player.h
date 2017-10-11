@@ -6,6 +6,7 @@
 #include "PlayerState/PlayerStateAttack.h"
 #include "PlayerState\/PlayerStateDeath.h"
 #include "PlayerState\PlayerStateStop.h"
+#include "PlayerState\PlayerStateImpact.h"
 #include "AttackCollision.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
@@ -19,7 +20,8 @@
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 #include "GameObject\TextImage\LevelUpImage.h"
 #include "GameObject\Component\BuffDebuffICon.h"
-
+#include "GameObject\Village\NPC.h"
+#include "GameObject\Component\AnimationEvent.h"
 
 class SkinModel;
 class Animation;
@@ -66,8 +68,9 @@ public:
 		Idol = 0,			//アイドル
 		Run,				//走る
 		Attack,				//攻撃
+		Impact,				//ダメージを受けた
 		Death,				//死亡
-		Stop,				//移動などしないステートです
+		Stop,				//止まる
 		StateNum,
 	};
 	//アニメーションのナンバー
@@ -85,6 +88,7 @@ public:
 		AnimationAttack04,							//攻撃04
 		AnimationAttack05,							//攻撃03
 		AnimationAttackEnd = AnimationAttack05,
+		AnimationImpact,							//ダメージを受けた
 		AnimationDeath,								//死亡
 		AnimationNum,								//アニメーションの数
 	};
@@ -97,6 +101,15 @@ public:
 		DEF,
 		DEX,
 		AGI
+	};
+	//プレイヤー攻撃ボイス
+	enum class AttackBoice
+	{
+		Start = 0,
+		Attack1 = Start,
+		Attack2,
+		Attack3,
+		End = Attack3
 	};
 
 	Player(const char* name);
@@ -244,6 +257,20 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
+
+	//アニメーションイベント
+	void AnimationEventControl();
+	//攻撃1
+	void Attack1();
+	//攻撃2
+	void Attack2();
+	//攻撃3
+	void Attack3();
+	//攻撃4
+	void Attack4();
+	//攻撃5
+	void Attack5();
+
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
@@ -267,6 +294,7 @@ private:
 	friend class PlayerStateDeath;
 	friend class PlayerStateIdol;
 	friend class PlayerStateRun;
+	friend class PlayerStateImpact;
 
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
@@ -303,14 +331,12 @@ private:
 	PlayerStateIdol	_IdolState;
 	//プレイヤーステートアタック
 	PlayerStateAttack _AttackState;
+	//プレイヤーステートイン朴
+	PlayerStateImpact _ImpactState;
 	//プレイヤーステートデス
 	PlayerStateDeath _DeathState;
 	//プレイヤーステートストップ
 	PlayerStateStop _StopState;
-	//プレイヤーがダメージ受けた時のSE
-	SoundSource* _DamageSE = nullptr;
-	//レベルアップ時の音
-	SoundSource* _LevelUP_SE = nullptr;
 	//プレイヤーのパラメーター
 	CharacterParameter* _PlayerParam = nullptr;
 	// 回転。
@@ -325,29 +351,42 @@ private:
 #endif
 	//デバッグ
 	bool _Debug = false;
-
 	//レベルアップに必要な経験値のテーブル(LV - 1が添え字)。
 	std::vector<int> _EXPTable;
 	int _nowEXP = 0;	// 現在の経験値。
-
 	// レベルごとのパラメーターテーブル。
 	vector<vector<int>> _ParamTable = vector<vector<int>>(MAXLV,vector<int>(CharacterParameter::MAX,0));
-
 	//プレイヤーの装備。
 	PlayerEquipment* _Equipment = nullptr;
-	
 	//パーティクルエフェクト。
 	ParticleEffect*	_ParticleEffect = nullptr;
-
 	//バフデバフアイコン。
 	BuffDebuffICon* _BuffDebuffICon = nullptr;
-
 	//レベルアップイメージ
 	LevelUpImage* _LevelUpImage;
-	
 	//歴史書
 	HistoryManager* _HistoryManager = nullptr;
-
 	//NPCと話すときジャンプしないため
 	bool _Speak;
+	//プレイヤーがダメージ受けた時のSE
+	SoundSource* _DamageSound = nullptr;
+	//レベルアップ時の音
+	SoundSource* _LevelUpSound = nullptr;
+	//回復サウンド
+	SoundSource* _HeelSound = nullptr;
+	//ステータスアップサウンド
+	SoundSource* _StatusUpSound = nullptr;
+	//ステータスダウンサウンド
+	SoundSource* _StatusDownSound = nullptr;
+	//プレイヤー死亡サウンド
+	SoundSource* _DeathSound = nullptr;
+	//攻撃時のSE
+	SoundSource* _AttackSoound = nullptr;
+	//攻撃ボイス
+	vector<SoundSource*> _AttackBoiceSound;
+	//攻撃ボイスENUM
+	AttackBoice	_AttackBoice;
+
+	//アニメーションイベント
+	AnimationEventPlayer* _AnimationEventPlayer = nullptr;
 };

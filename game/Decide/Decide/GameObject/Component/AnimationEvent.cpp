@@ -14,19 +14,10 @@ AnimationEventPlayer::~AnimationEventPlayer() {
 	_animationEvents.clear();
 };
 
-void AnimationEventPlayer::Init()
+void AnimationEventPlayer::Init(int animationNum)
 {
 	// アニメーションの数だけ配列追加。
-	if (gameObject->GetComponent<Animation>()) {
-		_animationEvents = vector<vector<EventData*>>(gameObject->GetComponent<Animation>()->GetNumAnimationSet());
-	}
-#ifdef _DEBUG
-	else {
-		// ※アニメーションコンポーネントを先に追加したか。
-		abort();
-	}
-#endif // _DEBUG
-	_isFirst = false;
+	_animationEvents = vector<vector<EventData*>>(animationNum);
 }
 
 void AnimationEventPlayer::Update() {
@@ -38,12 +29,36 @@ void AnimationEventPlayer::Update() {
 	if (work) {
 		//現在再生中のアニメーション番号取得。
 		int nowAnim = work->GetPlayAnimNo();
-		for (auto eventData : _animationEvents[nowAnim]) {
-				//フレームが一致した時イベント呼び出し。
-			if (work->NowFrame() == eventData->playFrame)
+		if (nowAnim != _playAnimationNo) {
+			// 別のアニメーションが再生された。
+
+			for (auto eventData : _animationEvents[_playAnimationNo]) {
+				eventData->isPlay = false;
+			}
+			_playAnimationNo = nowAnim;
+		}
+		else if(work->GetLocalAnimationTime() < _nowLocalTime){
+			// 1ループ終了した。
+			// もしくは同じアニメーションがもう一度再生された。
+
+			for (auto eventData : _animationEvents[_playAnimationNo]) {
+				eventData->isPlay = false;
+			}
+		}
+
+		_nowLocalTime = work->GetLocalAnimationTime();
+
+		for (auto eventData : _animationEvents[_playAnimationNo]) {
+			//時間が一致した時イベント呼び出し。
+			if (_nowLocalTime >= eventData->playTime)
 			{
-				// 関数ポインタに設定された関数を実行。
-				(gameObject->*(eventData->Event))();
+				if (!eventData->isPlay) {
+					// イベントがまだ実行されてない。
+
+					// 関数ポインタに設定された関数を実行。
+					(gameObject->*(eventData->Event))();
+					eventData->isPlay = true;
+				}
 			}
 		}
 	}

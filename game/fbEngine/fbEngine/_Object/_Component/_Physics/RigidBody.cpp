@@ -38,26 +38,40 @@ void RigidBody::LateUpdate()
 		//シュミレート後の結果を送る
 		btTransform trans = _CollisionObject->getWorldTransform();
 
-		btVector3 pos = trans.getOrigin();
+		Vector3 pos = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
 		btQuaternion rot = trans.getRotation();
-		//ポジションはずらされているので戻す。
-		transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
 		//クォータニオンを各軸の回転量に変換
 		transform->SetRotation(Quaternion(rot.x(), rot.y(), rot.z(), rot.w()));
+
+		//ポジションはずらされているので戻す。
+		pos = pos - (transform->GetRight() * _Offset.x);
+		pos = pos - (transform->GetUp() * _Offset.y);
+		pos = pos - (transform->GetForward() * _Offset.z);
+		transform->SetPosition(pos);
+		//transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
+
+		_UpdateOffsetPos();
+
+		_Shape->UpdateTransform(trans);
 	}
 }
-void RigidBody::Create(RigidBodyInfo & rbInfo, bool isAddWorld)
+void RigidBody::Create(RigidBodyInfo& rbInfo, bool isAddWorld)
 {
 	//前回の内容解放
 	Release();
 	_Offset = rbInfo.offset;
+	//StartTrans.setOrigin(btVector3(transform->GetPosition().x + _Offset.x, transform->GetPosition().y + _Offset.y, transform->GetPosition().z + _Offset.z));
+	// オフセットした位置は回転を考慮する。
+	_UpdateOffsetPos();
+
 	//回転と移動設定
 	btTransform StartTrans;
 	StartTrans.setIdentity();
 	//ポジション
-	StartTrans.setOrigin(btVector3(transform->GetPosition().x + _Offset.x, transform->GetPosition().y + _Offset.y, transform->GetPosition().z + _Offset.z));
+	StartTrans.setOrigin(btVector3(_OffsetPos.x, _OffsetPos.y, _OffsetPos.z));
 	//回転
 	StartTrans.setRotation(btQuaternion(rbInfo.rotation.x, rbInfo.rotation.y, rbInfo.rotation.z, rbInfo.rotation.w));
+
 	myMotionState = new btDefaultMotionState(StartTrans);
 	//剛体を作成。
 	btRigidBody::btRigidBodyConstructionInfo btRbInfo(rbInfo.mass, myMotionState, rbInfo.coll->GetBody(), btVector3(rbInfo.inertia.x, rbInfo.inertia.y, rbInfo.inertia.z));
@@ -72,10 +86,15 @@ void RigidBody::Create(float mass, Collider* coll, int id, Vector3 inertia, Vect
 	//前回の内容解放
 	Release();
 	_Offset = off;
+
+	// オフセットした位置は回転を考慮する。
+	_UpdateOffsetPos();
+
 	//回転と移動設定
 	btTransform StartTrans;
 	StartTrans.setIdentity();
-	StartTrans.setOrigin(btVector3(transform->GetPosition().x + _Offset.x, transform->GetPosition().y + _Offset.y, transform->GetPosition().z + _Offset.z));
+	//ポジション
+	StartTrans.setOrigin(btVector3(_OffsetPos.x, _OffsetPos.y, _OffsetPos.z));
 	StartTrans.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 	myMotionState = new btDefaultMotionState(StartTrans);
 	//剛体を作成。

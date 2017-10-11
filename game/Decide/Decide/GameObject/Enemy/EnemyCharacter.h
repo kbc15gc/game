@@ -61,6 +61,7 @@ private:
 	// このクラスで使用するコンポーネント。
 	// ※コンポーネントは勝手に削除されるため、このクラスでは削除しない。
 	// ※このクラス独自のメンバ変数と住み分けを行うために構造体化する。
+	// ※ここで登録されているものがエネミーにアタッチされているコンポーネントのすべてではないので注意。
 	struct Components {
 		SkinModel* Model = nullptr;	// このオブジェクトのモデル。
 		Animation* Animation = nullptr;	// このオブジェクトのアニメーション。
@@ -74,12 +75,14 @@ private:
 		ParticleEffect* ParticleEffect = nullptr;	// パーティクルエフェクト。
 		BuffDebuffICon*	BuffDebuffICon = nullptr;	// バフデバフアイコン。
 		CharacterExtrude* CharacterExtrude = nullptr;	// このエネミーが他のオブジェクトを押し出す。
+		vector<RigidBody*> ExtrudeCollisions;	// キャラクターコントローラの押し戻しに使用する剛体。
 	};
 
 	struct CollisionInfo {
 		float radius = 0.0f;	// コリジョンサイズ(幅)。
 		float height = 0.0f;	// コリジョンサイズ(高さ)。
 		Vector3 offset = Vector3::zero;	// 差分。
+		Collision_ID id = Collision_ID::ENEMY;	// コリジョン属性。
 	};
 
 public:
@@ -430,6 +433,16 @@ private:
 	// 衝突するコリジョン属性や重力の値などをここで設定する。
 	// ※処理自体は継承先に委譲。
 	virtual void _ConfigCharacterController() = 0;
+
+	// キャラクターコントローラ押し出しコンポーネント用の剛体作成関数。
+	// コリジョン属性や形状などを設定し、作成する。
+	// ※処理自体は継承先に委譲。
+	virtual void _CreateExtrudeCollision() = 0;
+
+	// キャラクターコントローラ押し出しコンポーネントのパラメーターを設定する関数。
+	// 衝突するコリジョン属性や重力の値などをここで設定する。
+	// ※処理自体は継承先に委譲。
+	virtual void _ConfigCharacterExtrude() = 0;
 
 	// パラメーターで剛体を生成。
 	void _BuildCollision();
