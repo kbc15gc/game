@@ -32,7 +32,9 @@ public:
 	// ※この関数を呼んだだけではエミットは開始されない。
 	// ※エミットする際はエミッターのSetEmitFlg関数を呼ぶ。
 	void SetParticleList(unique_ptr<vector<Particle*>> list) {
-		_particleList = move(list);
+		if (list) {
+			_particleList = move(list);
+		}
 	}
 
 	// ブレス発射開始。

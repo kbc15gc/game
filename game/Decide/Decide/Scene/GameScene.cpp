@@ -39,6 +39,8 @@
 #include "GameObject\TextImage\BackWindowAndAttentionText.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
 
+#include "GameObject\ItemManager\DropItem\DropItem.h"
+
 ImageObject* g_depth;
 
 namespace
@@ -118,6 +120,8 @@ void GameScene::Start()
 	INSTANCE(Inventory)->Initialize();
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
+
+	INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 
 	//’ÊíBGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

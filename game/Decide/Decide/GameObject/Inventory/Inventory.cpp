@@ -134,9 +134,6 @@ HoldEquipment* Inventory::AddEquipment(Item::BaseInfo* info, bool isRandParam) {
 }
 
 bool Inventory::AddEquipment(HoldEquipment* add) {
-	if (_IsAddErrorFlag == true) {
-		return false;
-	}
 
 	for (int idx = 0; idx < _InventoryItemList[static_cast<int>((add->GetInfo()->TypeID))].size(); idx++) {
 		if (_InventoryItemList[static_cast<int>(add->GetInfo()->TypeID)][idx] == nullptr) {

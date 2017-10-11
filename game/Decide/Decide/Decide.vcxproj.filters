@@ -272,6 +272,10 @@
     <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp">
       <Filter>GameObject\TextImage</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp" />
+    <ClCompile Include="GameObject\ItemManager\DropItem\DropItem.cpp">
+      <Filter>GameObject\ItemManager\DropItem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -557,6 +561,10 @@
     <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h">
       <Filter>GameObject\TextImage</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h" />
+    <ClInclude Include="GameObject\ItemManager\DropItem\DropItem.h">
+      <Filter>GameObject\ItemManager\DropItem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -640,6 +648,9 @@
     </Filter>
     <Filter Include="GameObject\TextImage">
       <UniqueIdentifier>{1807d9d7-82e5-4dfa-859e-576b3927f8e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager\DropItem">
+      <UniqueIdentifier>{1b1930a2-99cd-4896-9704-02e155fc978a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
