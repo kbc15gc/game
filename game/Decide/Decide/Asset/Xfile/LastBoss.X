@@ -18159,7 +18159,7 @@ Frame obj2 {
     0.762000;0.762000;0.762000;;
 
     TextureFilename Diffuse {
-     "\203\Éâ\203\ÉX\203\É{\203\ÉX.";
+     "LastBoss.png";
     }
    }
   }
