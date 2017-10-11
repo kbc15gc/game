@@ -26,8 +26,8 @@ void Ground::Awake()
 	model->SetModelData(modeldata);
 	model->terain = true;
 	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
-	//model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
-
+	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+	//model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
 	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);

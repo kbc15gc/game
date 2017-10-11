@@ -33,7 +33,9 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_SkyBox(false),
 	_CullMode(D3DCULL_CCW)
 {
+#ifdef _DEBUG
 	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 SkinModel::~SkinModel()

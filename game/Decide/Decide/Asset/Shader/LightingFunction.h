@@ -7,9 +7,9 @@ sampler g_speculerMapSampler =
 sampler_state
 {
 	Texture = <g_speculerMap>;
-    MipFilter = NONE;
-    MinFilter = NONE;
-    MagFilter = NONE;
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
     AddressU = Wrap;
 	AddressV = Wrap;
 };
@@ -20,9 +20,9 @@ sampler g_NormalMapSampler =
 sampler_state
 {
 	Texture = <g_NormalMap>;
-	MipFilter = NONE;
-	MinFilter = NONE;
-	MagFilter = NONE;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
@@ -143,6 +143,8 @@ float3 SpecLight(float3 normal, float3 worldPos, float2 uv)
 		float3 L = -g_diffuseLightDirection[i].xyz;
 		spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[i].w;	//スペキュラ強度。
 	}
+	//spec += g_ambientLight.xyz * pow(max(0.0f, dot(normal, R)), 2) * 10.0f;	//スペキュラ強度。
+
 	if (g_MapFlg.y)
 	{
 		float specPow = tex2D(g_speculerMapSampler, uv);

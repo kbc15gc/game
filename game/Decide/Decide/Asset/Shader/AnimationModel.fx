@@ -95,6 +95,7 @@ VS_OUTPUT VSMain( VS_INPUT In )
     float LastWeight = 0.0f;
     float3 pos = 0.0f;
     float3 normal = 0.0f;
+    float3 tangent = 0.0f;
 	//ボーン数ループ?
     for (int iBone = 0; iBone < g_numBone-1; iBone++)
     {
@@ -102,13 +103,15 @@ VS_OUTPUT VSMain( VS_INPUT In )
         
         pos += mul(In._Pos, g_mWorldMatrixArray[IndexArray[iBone]]) * BlendWeightsArray[iBone];
         normal += mul(In._Normal, g_mWorldMatrixArray[IndexArray[iBone]]) * BlendWeightsArray[iBone];
+        tangent += mul(In._Tangent, g_mWorldMatrixArray[IndexArray[iBone]]) * BlendWeightsArray[iBone];
     }
     LastWeight = 1.0f - LastWeight; 
 
     //？？
 	pos += (mul(In._Pos, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
     normal += (mul(In._Normal, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
-
+	tangent += (mul(In._Tangent, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
+	
 	o._World = float4(pos.xyz, 1.0f);
 
 	//ワールド行列
@@ -125,7 +128,7 @@ VS_OUTPUT VSMain( VS_INPUT In )
 
     o._UV = In._UV;
 	o._Color = In._Color;
-
+	o._Tangent = tangent;
 	//大気散乱.
 	CalcMieAndRayleighColors(o._MieColor, o._RayColor, o._PosToCameraDir, o._World.xyz);
 
@@ -170,7 +173,7 @@ PSOutput PSMain( VS_OUTPUT In )
 	if(Spec)
 	{
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-	}
+    }
 
 	float3 cascadeColor = 0;
 
@@ -197,8 +200,6 @@ PSOutput PSMain( VS_OUTPUT In )
 
 	PSOutput Out = (PSOutput)0;
 
-    //float4 OutColor = 1.0f;
-    //OutColor.xyz = In._Tangent;
     Out.Color = color;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
