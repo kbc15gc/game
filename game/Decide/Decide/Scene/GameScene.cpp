@@ -9,6 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
+#include"GameObject\Ground\Dungeon.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
 
 
@@ -35,6 +36,7 @@
 
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
+#include "GameObject\Enemy\LastBoss.h"
 
 #include"_Debug\TestObject.h"
 
@@ -89,12 +91,26 @@ void GameScene::Start()
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	//ダンジョン生成
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
-	
+
+	// テスト。
+	// ラスボス作成。
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 100);
+	enemy->SetParamAll(Color, param);
+
 	FOR(i,2)
 	{
 		//歴史チップ

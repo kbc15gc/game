@@ -12,7 +12,7 @@ EnemyAttackState::~EnemyAttackState()
 }
 
 void EnemyAttackState::_EntrySubClass() {
-
+	_attack = _EnemyObject->GetNowSelectAttack();
 }
 
 void EnemyAttackState::_Start() {

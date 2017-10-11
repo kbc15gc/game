@@ -82,7 +82,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.8f;
+	_Radius = 0.3f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 	//スキンモデル作成
@@ -249,7 +249,7 @@ void Player::Update()
 			_LevelUP();
 		}
 		//ダメージを受ける処理。
-		_Damage();
+		//_Damage();
 		//エフェクト
 		EffectUpdate();
 		//@todo for debug
@@ -829,24 +829,24 @@ void Player::AnimationEventControl()
 {
 	//攻撃1
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
 	}
 	//攻撃2
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
 
 	}
 	//攻撃3
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
 
 	}
 	//攻撃4
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
 	}
 	//攻撃5

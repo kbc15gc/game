@@ -4,7 +4,6 @@
     <FxCompile Include="Asset\Shader\Ocean.fx" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -200,7 +199,6 @@
     <ClCompile Include="GameObject\Inventory\Inventory.cpp">
       <Filter>GameObject\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp" />
     <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp">
       <Filter>GameObject\StatusWindow</Filter>
@@ -226,7 +224,6 @@
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Trade.cpp">
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\ConsumptionItem.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
@@ -248,7 +245,6 @@
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClCompile>
@@ -263,16 +259,53 @@
     <ClCompile Include="GameObject\Component\BuffDebuffICon.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\LevelUpImage.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="_Debug\TestObject.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Ground\Dungeon.cpp">
+      <Filter>GameObject\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemySpeakState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossDownState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossMagicianState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossThroneState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\LastBoss.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackCollision.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\LevelUpImage.cpp">
+      <Filter>GameObject\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameSystem.h" />
@@ -485,8 +518,6 @@
     <ClInclude Include="GameObject\Inventory\Inventory.h">
       <Filter>GameObject\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BreathObject.h" />
-    <ClInclude Include="GameObject\Enemy\LaserBreath.h" />
     <ClInclude Include="GameObject\GameManager.h" />
     <ClInclude Include="GameObject\StatusWindow\StatusWindow.h">
       <Filter>GameObject\StatusWindow</Filter>
@@ -512,7 +543,6 @@
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Trade.h">
       <Filter>GameObject\Village\Shop\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\EnemyDrarian.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\ConsumptionItem.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
@@ -531,7 +561,6 @@
     <ClInclude Include="GameObject\Component\ParticleEffect.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h">
       <Filter>GameObject\ItemManager\HoldItem</Filter>
     </ClInclude>
@@ -546,12 +575,53 @@
     <ClInclude Include="GameObject\Component\BuffDebuffICon.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\LevelUpImage.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="_Debug\TestObject.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Ground\Dungeon.h">
+      <Filter>GameObject\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemyDrarian.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemySpeakState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossDownState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossMagicianState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossThroneState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\LastBoss.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\LaserBreath.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BreathObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackCollision.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\LevelUpImage.h">
+      <Filter>GameObject\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

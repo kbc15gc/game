@@ -295,6 +295,10 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetValue("g_atmosParam", &atmos, sizeof(AtmosphericScatteringParamS));
 		_Effect->SetInt("g_atmosFlag", _AtomosphereFunc);
 
+		if (_SkyBox)
+		{
+			_Effect->SetTexture("g_NightTexture", INSTANCE(SceneManager)->GetSky()->GetNightTexture());
+		}
 	
 		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);

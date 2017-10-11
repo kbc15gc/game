@@ -49,6 +49,19 @@ sampler_state
 	AddressV = Wrap;
 };
 
+
+texture g_NightTexture; //テクスチャ。
+samplerCUBE g_NightSampler =
+sampler_state
+{
+    Texture = <g_NightTexture>;
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
 //頂点情報構造体
 
 struct VS_INPUT
@@ -189,20 +202,20 @@ PSOutput PSMain(VS_OUTPUT In)
 			//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
 			float cloudRate = pow(Y, 3.0f);
 
-            cloudRate *= 0.2f;
-
-			color = In._RayColor + 0.25f * In._MieColor;
-
-			//大気の色もモノクロ化
-			float colorY = max(0.0f, dot(mono, color.xyz));
+            //星空の白い要素を抜き出す.
+            float starRate = pow(dot(mono, texCUBE(g_NightSampler, normal * -1.0f).xyz), 3.0f);
 
 			float nightRate = max(0.0f,dot(float3(0.0f,1.0f,0.0f), g_atmosParam.v3LightDirection));
 
 			//雲の色.
-			float cloudColor = lerp(3.0f, 0.1f, pow(1.0f - nightRate, 3.0f));
+			float cloudColor = lerp(1.0f, 0.1f, pow(1.0f - nightRate, 3.0f));
+            float starColor = lerp(3.0f, 0.1f, pow(nightRate, 3.0f));
+
+            color = In._RayColor + 0.25f * In._MieColor;
 
 			//空の色.
 			color.xyz = lerp(color.xyz, cloudColor, cloudRate);
+            color.xyz = lerp(color.xyz, starColor, starRate);
 
 			color.w = 1.0f;
 
