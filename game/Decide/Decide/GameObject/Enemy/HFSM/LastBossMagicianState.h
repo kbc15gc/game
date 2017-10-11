@@ -1,14 +1,11 @@
 #pragma once
-
 #include "EnemyState.h"
 
-class Player;
-
-// エネミー発見ステート。
-class EnemyDiscoveryState : public EnemyState {
+// ラスボス魔術師(魔王直接戦闘、魔王にバフ、ダメージ計算通常)ステート。
+class LastBossMagicianState : public EnemyState {
 public:
-	EnemyDiscoveryState(EnemyCharacter* Object);
-	~EnemyDiscoveryState();
+	LastBossMagicianState(EnemyCharacter* Object);
+	~LastBossMagicianState();
 	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
@@ -19,7 +16,6 @@ private:
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
-	bool IsPossibleChangeState(EnemyCharacter::State next)override;
-
 private:
+	bool _isOutsideRange = false;	// 範囲外に出たか。
 };

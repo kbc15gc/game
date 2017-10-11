@@ -2,23 +2,22 @@
 #include "EnemyCharacter.h"
 
 // 継承クラス。
-// 雑魚エネミー(プロト)。
-class Enemy :
+// ボスエネミー(ラスボス)。
+class LastBoss :
 	public EnemyCharacter
 {
-private:
-	// エネミー(プロト)のアニメーション番号。
-	enum class AnimationProt {
-		Death = 0,
-		Damage,
-		Attack,
-		Walk,
-		Stand,
-		Max
-	};
 public:
-	Enemy(const char* name);
-	~Enemy();
+	enum class LastBossState { LastBossThrone = static_cast<int>(State::Death) + 1, LastBossMagician, LastBossHistory, LastBossDown };
+
+private:
+	// エネミー(ラスボス)のアニメーション番号。
+	enum class AnimationLastBoss {
+		Max = 1,
+	};
+
+public:
+	LastBoss(const char* name);
+	~LastBoss();
 
 	void CreateAttackCollision();
 protected:
@@ -51,7 +50,11 @@ private:
 	inline void _ConfigCharacterExtrude()override {
 		_MyComponent.CharacterExtrude->Attribute_AllOff();
 		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::PLAYER);
+		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::ENEMY);
 	}
+
+	// 絶対に他のクラスでも使わないステートはこっちに登録。
+	void _BuildStateSubClass()override;
 
 	// アニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
@@ -70,4 +73,3 @@ private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理。
 };
-

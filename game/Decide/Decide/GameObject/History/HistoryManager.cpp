@@ -277,7 +277,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 	FOR(i, npcInfo.size())
 	{
 		//¶¬
-		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
 		npc->LoadModel(npcInfo[i]->filename);
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
