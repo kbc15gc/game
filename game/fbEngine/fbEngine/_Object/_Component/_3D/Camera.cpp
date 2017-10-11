@@ -3,7 +3,7 @@
 
 Camera::~Camera()
 {
-	SetViewPoint(nullptr);
+
 }
 
 void Camera::Awake()
@@ -12,7 +12,6 @@ void Camera::Awake()
 	D3DXMatrixIdentity(&_View);
 	D3DXMatrixIdentity(&_Projection);
 
-	_ViewPoint = nullptr;
 	_ViewAngle = 45.0f;
 	_Aspect = (16.0f / 9.0f);
 	_near = 1.0f;
@@ -32,10 +31,10 @@ void Camera::Update()
 
 void Camera::ViewMatrixUpdate()
 {
-	if (_ViewPoint)
+	if (_Target)
 	{
 		//’Ž‹“_‚ðŽg‚¤
-		D3DXMatrixLookAtLH(&_View, (D3DXVECTOR3*)&transform->GetPosition(), (D3DXVECTOR3*)_ViewPoint, (D3DXVECTOR3*)&transform->Direction(Vector3::up));
+		D3DXMatrixLookAtLH(&_View, (D3DXVECTOR3*)&transform->GetPosition(), (D3DXVECTOR3*)_Target, (D3DXVECTOR3*)&transform->Direction(Vector3::up));
 	}
 	else
 	{

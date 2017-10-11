@@ -38,6 +38,9 @@ public:
 	}
 private:
 
+	//バネ移動。
+	Vector3 SpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen);
+
 	/**
 	* カメラ横回転.
 	*
@@ -64,7 +67,6 @@ private:
 
 
 private:
-
 	//レイの形状
 	SphereCollider* _Sphere;
 	//プレイヤーへ向かうベクトル
@@ -80,4 +82,8 @@ private:
 	/** 移動可能フラグ. */
 	bool _IsMove = true;
 
+	//前フレームのポジション。
+	Vector3 _PrevPosition = Vector3::zero;
+
+	//
 };

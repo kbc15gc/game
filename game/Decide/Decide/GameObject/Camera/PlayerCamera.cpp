@@ -86,6 +86,69 @@ void PlayerCamera::UpdateSubClass()
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 }
 
+void PlayerCamera::Move()
+{
+	Vector3 trg = _Camera->GetTarget();
+	Vector3 ppos = (*_PlayerPos) + PLAYER_HEIGHT;
+	auto pos = SpringDamp(trg, ppos, _PrevPosition,Time::DeltaTime(), 7.0f, 0.8f, 0.1f);
+	_PrevPosition = ppos;
+	//プレイヤーの方を向く
+	_Camera->SetTarget(pos);
+
+	//プレイヤーとカメラの距離
+	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
+	Vector3 from, to;
+	//注視点
+	from = pos;
+	//カメラの移動先
+	to = from + dist;
+	//レイを飛ばす
+	// 衝突を無視する属性を設定。
+	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::NOTHITCAMERA);
+	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere, from, to, attri);
+	//移動先ポジション
+	Vector3 next;
+	//レイが何かに当たったかどうか？
+	if (ray.hitObject)
+	{
+		//衝突点の法線方向に半径分移動するベクトル。
+		Vector3 normal = ray.hitNormal;
+		normal.Scale(_Radius);
+		//衝突点から法線の方向に押し出し、移動先を算出。
+		next = ray.hitPos + normal;
+	}
+	else
+	{
+		//どこにも当たらなかったので、レイの終点に移動する。
+		next = to;
+	}
+
+
+	//移動
+	auto now = transform->GetPosition();
+	now.Lerp(next, 0.2f);
+	transform->SetPosition(now);
+}
+
+Vector3 PlayerCamera::SpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen)
+{
+	Vector3 disp;//変位。
+	Vector3 velocity;//速度。
+	float forceMag;//力の大きさ。
+
+	//バネの力を計算。
+	disp = curr - trgpos;
+	velocity = (prevtrg - trgpos) * delta;
+	
+	forceMag = spring * (springlen - disp.Length()) + damp * (disp.Dot(velocity)) / disp.Length();
+
+	//バネの力を適用。
+	disp.Normalize();
+	disp = disp * forceMag * delta;
+	curr += disp;
+	return curr;
+}
+
 void PlayerCamera::_RotTransversal(float roty)
 {
 	D3DXQUATERNION mAxisY;
@@ -129,39 +192,6 @@ void PlayerCamera::_RotLongitudinal(float rotx)
 	}
 }
 
-void PlayerCamera::Move()
-{
-	//プレイヤーとカメラの距離
-	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
-	Vector3 from, to;
-	//注視点
-	from = (*_PlayerPos) + PLAYER_HEIGHT;
-	//カメラの移動先
-	to = from + dist;
-	//レイを飛ばす
-	// 衝突を無視する属性を設定。
-	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::NOTHITCAMERA);
-	fbPhysicsCallback::ClosestConvexResultCallback ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere, from, to, attri);
-	//移動先ポジション
-	Vector3 next;
-	//レイが何かに当たったかどうか？
-	if (ray.hitObject)
-	{
-		//衝突点の法線方向に半径分移動するベクトル。
-		Vector3 normal = ray.hitNormal;
-		normal.Scale(_Radius);
-		//衝突点から法線の方向に押し出し、移動先を算出。
-		next = ray.hitPos + normal;
-	}
-	else
-	{
-		//どこにも当たらなかったので、レイの終点に移動する。
-		next = to;
-	}
-	//移動
-	transform->SetPosition(next);
-}
-
 /**
 * 通常時のカメラ挙動.
 */
@@ -190,9 +220,4 @@ void PlayerCamera::_StandardBehavior()
 
 	//移動
 	Move();
-
-	//プレイヤーの方を向く
-	transform->LockAt((*_PlayerPos) + PLAYER_HEIGHT);
-	_Camera->SetTarget((*_PlayerPos) + PLAYER_HEIGHT);
-
 }
