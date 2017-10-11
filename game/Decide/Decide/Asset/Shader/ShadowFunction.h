@@ -82,7 +82,7 @@ float CalcShadow(float3 worldPos,out float3 color)
 
 			float depth = min(posInLVP.z, 1.0f);
 
-			if (true)
+			if (false)
 			{
 				if (depth > shadow_val.r)
 				{

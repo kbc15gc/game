@@ -51,4 +51,6 @@ public:
 
 private:
 	vector<vector<EventData*>> _animationEvents;
+	int _playAnimationNo;	// 再生中のアニメーション番号。
+	double _nowLocalTime = 0.0f;	// 現在の再生時間。
 };

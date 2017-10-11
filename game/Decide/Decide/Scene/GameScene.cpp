@@ -37,7 +37,11 @@
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
 
+#include"_Debug\TestObject.h"
+
 ImageObject* g_depth;
+
+//#define _NKMT_
 
 namespace
 {
@@ -113,6 +117,10 @@ void GameScene::Start()
 	INSTANCE(ItemManager)->LoadAllItemData();
 
 	INSTANCE(Inventory)->Initialize();
+
+#ifdef _NKMT_
+	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 0);
+#endif
 
 	//’ÊíBGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

@@ -51,8 +51,9 @@ void RigidBody::LateUpdate()
 		//transform->SetLocalPosition(Vector3(pos.x() - _Offset.x, pos.y() - _Offset.y, pos.z() - _Offset.z));
 
 		_UpdateOffsetPos();
-
+#ifdef _DEBUG
 		_Shape->UpdateTransform(trans);
+#endif
 	}
 }
 void RigidBody::Create(RigidBodyInfo& rbInfo, bool isAddWorld)

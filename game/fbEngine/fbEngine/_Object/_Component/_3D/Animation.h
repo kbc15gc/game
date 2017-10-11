@@ -78,7 +78,7 @@ public:
 	{
 		return _CurrentAnimationSetNo;
 	}
-	//アニメーションが終了しているかどうか
+	//アニメーションが再生中か
 	const bool GetPlaying()
 	{
 		return _IsPlaying;

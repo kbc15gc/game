@@ -267,8 +267,8 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Ground\Dungeon.cpp">
-      <Filter>GameObject\Ground</Filter>
+    <ClCompile Include="_Debug\TestObject.cpp">
+      <Filter>Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -550,8 +550,8 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Ground\Dungeon.h">
-      <Filter>GameObject\Ground</Filter>
+    <ClInclude Include="_Debug\TestObject.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -633,6 +633,9 @@
     </Filter>
     <Filter Include="GameObject\History\Effect">
       <UniqueIdentifier>{594e76b4-ad44-4582-bc81-c2cf8b53d462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{0e110077-829a-4ce1-ade4-7f8ef76be220}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
