@@ -31,7 +31,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_Light(nullptr),
 	_TextureBlend(Color::white),
 	_AllBlend(Color::white),
-	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW)),
+	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
 	_SkyBox(false),
 	_CullMode(D3DCULL_CCW),
 	_Culling(new CObjectFrustumCulling)
@@ -100,7 +100,11 @@ void SkinModel::Start()
 //モデルデータの行列更新
 void SkinModel::LateUpdate()
 {
-	//_Culling->Execute();
+	if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+	{
+		_ModelDate->UpdateAABB(transform->GetPosition());
+		_Culling->Execute(_ModelDate->GetAABB());
+	}
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{

@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "_Object/Noncopyable.h"
+#include "_Value\AABB.h"
 
 struct D3DXFRAME_DERIVED : public D3DXFRAME {
 	D3DXMATRIXA16	CombinedTransformationMatrix;	//合成済み行列。
@@ -55,6 +56,20 @@ public:
 	 *@brief	デストラクタ。
 	 */
 	~SkinModelData();
+	
+	//AABB更新。
+	void UpdateAABB(Vector3 center)
+	{
+		Vector3 half = _Size;
+		half.Scale(0.5f);
+		_AABB.Update(center, half);
+	}
+
+	//AABBを取得。
+	AABB GetAABB()
+	{
+		return _AABB;
+	}
 	
 	//モデルデータをロード。
 	//[in]	filePath	ファイルパス。
@@ -155,6 +170,8 @@ private:
 	Vector4 _TerrainSize;
 	//
 	Vector3 _Size;
+	//
+	AABB _AABB;
 private:
 	//インスタンシング描画フラグ。デフォルトはfalse。
 	bool _Instancing;
