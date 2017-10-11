@@ -9,14 +9,16 @@ static const UINT HISTORY_CHIP_NUM = 3;
 
 enum Collision_ID
 {
+	NOT_ID = fbCollisionAttributeE::NOTHING,
 	GROUND = fbCollisionAttributeE::GROUND,
 	PLAYER = fbCollisionAttributeE::CHARACTER,
-	ENEMY = BIT(3),
-	NOTHITCAMERA = BIT(4),
-	ATTACK = BIT(5),
-	SPACE = BIT(6),
-	BUILDING = BIT(7),
-	ITEMRANGE = BIT(8),
+	CHARACTER_GHOST = fbCollisionAttributeE::CHARACTER_GHOST,	//キャラクターコントローラ生成時に使用するが、他のオブジェクトに影響を与えたくないときなどに使用(キャラクターコントローラがこの属性のコリジョンと衝突した場合、アトリビュートに関係なく衝突解決を行わないので注意。この属性のキャラクターコントローラが他のオブジェクトに当たったときは衝突解決される、つまり一方通行)。
+	ENEMY = BIT(4),	// プレイヤーを押し戻すコリジョンと攻撃判定用のコリジョンとして使用(コリジョンを一つしか持たない単純形状のエネミーならばキャラクターコントローラにもこれを使用する)。
+	NOTHITCAMERA = BIT(5),
+	ATTACK = BIT(6),
+	SPACE = BIT(7),
+	BUILDING = BIT(8),
+	ITEMRANGE = BIT(9),
 };
 
 

@@ -33,6 +33,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_SkyBox(false),
 	_CullMode(D3DCULL_CCW)
 {
+	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 }
 
 SkinModel::~SkinModel()

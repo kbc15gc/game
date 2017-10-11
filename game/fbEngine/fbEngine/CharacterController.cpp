@@ -38,6 +38,7 @@ void CCharacterController::Init(Vector3 off, int type, Collider* coll, float gra
 	//もともとのフラグを残したまま新しいフラグを追加。
 	m_rigidBody->GetCollisionObj()->setCollisionFlags(m_rigidBody->GetCollisionObj()->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
 }
+
 const Vector3& CCharacterController::Execute()
 {
 	// y成分は重力を加算。
@@ -93,15 +94,16 @@ const Vector3& CCharacterController::Execute()
 			end.setRotation(btQuaternion(transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w));
 
 			fbPhysicsCallback::SweepResultWall callback;
-			callback.me = m_rigidBody->GetCollisionObj();
+			callback.me = gameObject;
 			callback.startPos = Vector3(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 			callback._attribute = m_attributeXZ;
 			//衝突検出。
 			PhysicsWorld::Instance()->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
 
-			if (callback.isHit) {
+			if (callback.isHit && callback.hitID != static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST)) {
 				//当たった。
-				//壁。
+				// かつゴーストではない。
+
 				Vector3 vT0, vT1;
 				//XZ平面上での移動後の座標をvT0に、交点の座標をvT1に設定する。
 				vT0.Set(nextPosTmp.x, 0.0f, nextPosTmp.z);
@@ -193,7 +195,7 @@ const Vector3& CCharacterController::Execute()
 		{
 			//衝突検出。
 			fbPhysicsCallback::SweepResultGround callback;
-			callback.me = m_rigidBody->GetCollisionObj();
+			callback.me = gameObject;
 			callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 			callback._attribute = m_attributeY;
 
@@ -201,10 +203,15 @@ const Vector3& CCharacterController::Execute()
 			if (callback.isHit) {
 				//地面に接触している。
 
-				m_moveSpeed.y = 0.0f;	// 地面に当たったので移動量を0にする。
-				m_isJump = false;
-				m_isOnGround = true;
-				nextPosTmp.y = callback.hitPos.y;	// 衝突点は足元なので、中心位置まで加算する。
+				if (callback.hitID == static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST)) {
+					// ゴーストは無視。
+				}
+				else {
+					m_moveSpeed.y = 0.0f;	// 地面に当たったので移動量を0にする。
+					m_isJump = false;
+					m_isOnGround = true;
+					nextPosTmp.y = callback.hitPos.y;	// 衝突点は足元なので、中心位置まで加算する。
+				}
 			}
 			else {
 				//地面上にいない。
@@ -217,12 +224,12 @@ const Vector3& CCharacterController::Execute()
 
 	nextPosTmp.y += m_rigidBody->GetShape()->GetHalfSize().y;	// 足元の位置に設定していたのでコリジョンの中心に戻す。
 	//移動確定。
-	nextPosTmp -= m_rigidBody->GetOffset();	// nextPosTmpはモデルの原点とイコールでない可能性があるのでOffset分減算して設定する。
+	nextPosTmp = m_rigidBody->SubOffset(nextPosTmp);	// nextPosTmpはモデルの原点とイコールでない可能性があるのでOffset分減算して設定する。
 
 	_moveSpeedExcute = nextPosTmp - transform->GetPosition();	// 実際の移動量を保存。
 
 	transform->SetPosition(nextPosTmp);
-	m_rigidBody->Update();	// transformを更新したのでコリジョンのTransfiormも更新する。
+	m_rigidBody->Update();	// transformを更新したのでコリジョンのTransformも更新する。
 	//剛体を動かす。
 	m_rigidBody->GetCollisionObj()->setActivationState(DISABLE_DEACTIVATION);
 

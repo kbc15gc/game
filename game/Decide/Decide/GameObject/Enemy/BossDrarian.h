@@ -66,6 +66,19 @@ private:
 	// 衝突するコリジョン属性や重力の値などをここで設定する。
 	void _ConfigCharacterController()override;
 
+	// キャラクターコントローラ押し出しコンポーネント用の剛体作成関数。
+	// コリジョン属性や形状などを設定し、作成する。
+	void _CreateExtrudeCollision()override;
+
+	// キャラクターコントローラ押し出しコンポーネントのパラメーターを設定する関数。
+	// 衝突するコリジョン属性や重力の値などをここで設定する。
+	// ※処理自体は継承先に委譲。
+	inline void _ConfigCharacterExtrude()override {
+		_MyComponent.CharacterExtrude->Attribute_AllOff();
+		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::PLAYER);
+		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::ENEMY);
+	}
+
 	// 継承先でアニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
 	void _BuildAnimation()override;

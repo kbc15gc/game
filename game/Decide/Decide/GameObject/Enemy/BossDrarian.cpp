@@ -30,7 +30,7 @@ void BossDrarian::_StartSubClass() {
 	_ViewRange = 30.0f;
 
 	// 攻撃可能範囲設定。
-	_AttackRange = 5.5f;
+	_AttackRange = 6.5f;
 
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
@@ -244,21 +244,59 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 }
 
 void BossDrarian::_ConfigCollision() {
+	// 攻撃判定用のコリジョン。
+	{
+		// 足元。
+		{
+			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
 
-	// コリジョンのサイズを決定。
-	// ※キャラクターコントローラーで使用するためのもの。
-	_collisionInfo.radius = 1.8f;
-	_collisionInfo.height = 6.0f;
-	_collisionInfo.offset = Vector3(0.0f,0.125f,0.0f);
+			RigidBodyInfo info;
+			info.coll = AddComponent<BoxCollider>();
+			static_cast<BoxCollider*>(info.coll)->Create(Vector3(3.0f, 3.0f,1.0f));
+			info.id = Collision_ID::ENEMY;
+			info.mass = 0.0f;
+			info.physicsType = Collision::PhysicsType::Kinematick;
+			info.offset = Vector3(0.0f,0.0f,2.0f);
+			info.rotation = Quaternion::Identity;
+			coll->Create(info, true);
 
-	//// 重力設定。
-	//_Gravity = -9.8f;
+			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
+		}
+		// 胴体。
+		{
+			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
 
-	// コンポーネントにカプセルコライダーを追加。
+			RigidBodyInfo info;
+			info.coll = AddComponent<CCapsuleColliderZ>();
+			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 8.1f);
+			info.id = Collision_ID::ENEMY;
+			info.mass = 0.0f;
+			info.physicsType = Collision::PhysicsType::Kinematick;
+			info.offset = Vector3(0.0f,1.0f,0.0f);
+			info.rotation = Quaternion::Identity;
+			coll->Create(info, true);
 
-	_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
-	// カプセルコライダーを作成。
-	static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
+		}
+	}
+
+	// キャラクターコントローラ用。
+	{
+		// コリジョンのサイズを決定。
+		// ※キャラクターコントローラーで使用するためのもの。
+		_collisionInfo.radius = 1.8f;
+		_collisionInfo.height = 6.0f;
+		_collisionInfo.offset = Vector3(0.0f, 0.125f, 0.0f);
+		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;
+
+		// 重力設定。
+		_Gravity = -9.8f;
+
+		// コンポーネントにカプセルコライダーZを追加。
+		_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
+		// カプセルコライダーを作成。
+		static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height); 
+	}
 }
 
 void BossDrarian::_ConfigCharacterController() {
@@ -267,6 +305,7 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ENEMY);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
@@ -274,6 +313,9 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
 
+}
+
+void BossDrarian::_CreateExtrudeCollision() {
 }
 
 void BossDrarian::_BuildAnimation() {
@@ -319,54 +361,54 @@ void BossDrarian::_BuildAnimation() {
 void BossDrarian::_ConfigAnimationEvent() {
 	// かみつき攻撃。
 	{
-		int eventFrame = 15;
+		float eventFrame = 0.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_Kamituki));
 	}
 	// しっぽ攻撃。
 	{
-		int eventFrame = 7;
+		float eventFrame = 0.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
 
-		eventFrame = 17;
+		eventFrame = 0.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 
-		eventFrame = 27;
+		eventFrame = 1.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub3));
 
-		eventFrame = 60;
+		eventFrame = 2.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack1));
 
-		eventFrame = 62;
+		eventFrame = 2.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack2));
 
-		eventFrame = 65;
+		eventFrame = 2.2f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack3));
 
-		eventFrame = 70;
+		eventFrame = 2.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttack4));
 
-		eventFrame = 112;
+		eventFrame = 3.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::TailAttackRight), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub4));
 
 	}
 	// ブレス攻撃。
 	{
-		int eventFrame = 12;
+		float eventFrame = 0.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_BreathAttackSub1));
 
-		eventFrame = 29;
+		eventFrame = 1.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_BreathAttackSub2));
 
-		eventFrame = 80;
+		eventFrame = 2.7f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathStart));
 
-		eventFrame = 120;
+		eventFrame = 4.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_BreathEnd));
 	
-		eventFrame = 140;
+		eventFrame = 4.9f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub1));
 
-		eventFrame = 160;
+		eventFrame = 5.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 	}
 }
