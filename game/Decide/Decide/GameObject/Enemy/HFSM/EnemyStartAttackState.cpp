@@ -19,24 +19,13 @@ void EnemyStartAttackState::_EntrySubClass() {
 }
 
 void EnemyStartAttackState::_Start() {
-	Vector3 EnemyToPlayer(_Player->transform->GetPosition() - _EnemyObject->transform->GetPosition());
+	// エネミーにどの攻撃を行うかを判断させる。
+	// ※エネミーの攻撃パターンを選別するステートを作ってしまうと、
+	//   エネミーの種類に応じてステートが爆発的に増えてしまうため、攻撃パターンの選別は各自エネミーに行わせる。
+	_EnemyObject->AttackSelect();
 
-	if (EnemyToPlayer.Length() > _EnemyObject->GetAttackRange()) {
-		// プレイヤーが攻撃範囲外に離脱した。
-
-		// 再び追跡させる。
-		_EnemyObject->ChangeStateRequest(EnemyCharacter::State::Discovery);
-	}
-	else {
-		// プレイヤーを攻撃可能。
-
-		_ChangeLocalState(EnemyCharacter::State::Attack);
-
-		// エネミーにどの攻撃を行うかを判断させる。
-		// ※エネミーの攻撃パターンを選別するステートを作ってしまうと、
-		//   エネミーの種類に応じてステートが爆発的に増えてしまうため、攻撃パターンの選別は各自エネミーに行わせる。
-		static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(_EnemyObject->AttackSelect());
-	}
+	// 攻撃可能範囲まで追跡させる。
+	_ChangeLocalState(EnemyCharacter::State::Chace);
 }
 
 void EnemyStartAttackState::_UpdateSubClass() {
@@ -50,7 +39,15 @@ void EnemyStartAttackState::Exit(EnemyCharacter::State next) {
 }
 
 void EnemyStartAttackState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
-	// 攻撃終了。
+	if (EndLocalStateType == EnemyCharacter::State::Chace) {
+		// 攻撃範囲内。
 
-	_EndState();
+		// 攻撃開始。
+		_ChangeLocalState(EnemyCharacter::State::Attack);
+	}
+	else if (EndLocalStateType == EnemyCharacter::State::Attack) {
+		// 攻撃終了。
+
+		_EndState();
+	}
 }

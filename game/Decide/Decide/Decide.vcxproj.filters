@@ -267,6 +267,27 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\LastBoss.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemySpeakState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossThroneState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossMagicianState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossDownState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -546,6 +567,27 @@
     <ClInclude Include="GameObject\LevelUpImage.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h">
       <Filter>GameObject\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\LastBoss.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemySpeakState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossThroneState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossMagicianState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossDownState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

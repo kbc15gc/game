@@ -4,11 +4,11 @@
 
 class Player;
 
-// エネミー発見ステート。
-class EnemyDiscoveryState : public EnemyState {
+// エネミー追跡ステート。
+class EnemyChaceState : public EnemyState {
 public:
-	EnemyDiscoveryState(EnemyCharacter* Object);
-	~EnemyDiscoveryState();
+	EnemyChaceState(EnemyCharacter* Object);
+	~EnemyChaceState();
 	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
@@ -22,4 +22,7 @@ private:
 	bool IsPossibleChangeState(EnemyCharacter::State next)override;
 
 private:
+	Player* _Player = nullptr;
+	float _Speed = 0.0f;	// 移動速度。
+	bool _isOutside = false;
 };

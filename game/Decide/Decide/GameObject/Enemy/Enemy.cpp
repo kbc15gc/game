@@ -39,9 +39,6 @@ void Enemy::_StartSubClass(){
 	_ViewAngle = 90.0f;
 	_ViewRange = 10.0f;
 
-	// 攻撃可能範囲設定。
-	_AttackRange = 1.3f;
-
 	// 徘徊範囲設定。
 	// ※暫定処理。
 	_WanderingRange = 10.0f;
@@ -57,12 +54,12 @@ void Enemy::_StartSubClass(){
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No,0.2f);
+	_singleAttack->Init(1.3f,_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No,0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Wandering);
-
+	_initState = State::Wandering;
+	_ChangeState(_initState);
 }
 
 void Enemy::_UpdateSubClass() {
@@ -83,7 +80,7 @@ void Enemy::_LateUpdateSubClass()
 }
 
 
-EnemyAttack* Enemy::AttackSelect() {
+EnemyAttack* Enemy::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
@@ -97,16 +94,11 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 		// 再度徘徊。
 		_ChangeState(State::Wandering);
 	}
-	else if (EndStateType == State::Discovery) {
-		// 発見ステートの処理完了。
-
-		_ChangeState(State::StartAttack);
-	}
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
-		// プレイヤーとの位置関係再調整。
-		_ChangeState(State::Discovery);
+		// もう一度攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 	else if (EndStateType == State::Fall) {
 		// 落下ステート終了。
@@ -116,13 +108,13 @@ void Enemy::_EndNowStateCallback(State EndStateType) {
 	}
 	else if (EndStateType == State::Damage) {
 		// 攻撃を受けた。
-		// 発見状態に移行。
-		_ChangeState(State::Discovery);
+		// 攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 	else if (EndStateType == State::Threat) {
 		// 威嚇終了。
-		// 発見状態に移行。
-		_ChangeState(State::Discovery);
+		// 攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 
 }
