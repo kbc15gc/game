@@ -279,7 +279,12 @@
     <ClCompile Include="_Object\_Component\_Physics\CharacterExtrude.cpp">
       <Filter>Object\Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="_Culling\ObjectFrustumCulling.cpp" />
+    <ClCompile Include="_Culling\ObjectFrustumCulling.cpp">
+      <Filter>Cullimg</Filter>
+    </ClCompile>
+    <ClCompile Include="_Value\AABB.cpp">
+      <Filter>Value</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -545,6 +550,9 @@
     </ClInclude>
     <ClInclude Include="_Culling\ObjectFrustumCulling.h">
       <Filter>Cullimg</Filter>
+    </ClInclude>
+    <ClInclude Include="_Value\AABB.h">
+      <Filter>Value</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -97,6 +97,7 @@
     <ClCompile Include="_Support\Time.cpp" />
     <ClCompile Include="_System\Game.cpp" />
     <ClCompile Include="_System\GraphicsDevice.cpp" />
+    <ClCompile Include="_Value\AABB.cpp" />
     <ClCompile Include="_Value\Color.cpp" />
     <ClCompile Include="_Value\Vector.cpp" />
   </ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="_System\Game.h" />
     <ClInclude Include="_System\GraphicsDevice.h" />
     <ClInclude Include="_System\System.h" />
+    <ClInclude Include="_Value\AABB.h" />
     <ClInclude Include="_Value\Color.h" />
     <ClInclude Include="_Value\NameKey.h" />
     <ClInclude Include="_Value\Vector.h" />
