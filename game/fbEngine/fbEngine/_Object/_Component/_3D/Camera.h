@@ -34,8 +34,8 @@ public:
 	//[in] 当たり判定をとりたい属性。
 	Collision* GetClickCollision(float rayLength, int attribute);
 
-	const D3DXMATRIX& GetViewMat(){ return _View; }
-	const D3DXMATRIX& GetProjectionMat(){ return _Projection; }
+	const D3DXMATRIX& GetViewMat()const{ return _View; }
+	const D3DXMATRIX& GetProjectionMat()const{ return _Projection; }
 
 	//画角設定
 	void SetViewAngle(const float& theta)
@@ -66,42 +66,16 @@ public:
 	{
 		_Aspect = asp;
 	}
-	//注視点設定
-	void SetViewPoint(const Vector3& pos)
-	{
-		//アドレス確保されていない
-		if (_ViewPoint == nullptr)
-		{
-			//確保するよ。
-			_ViewPoint = new Vector3();
-		}
-		*_ViewPoint = pos;
-	}
-	//注視点のポインタを渡す。
-	void SetViewPoint(Vector3* point)
-	{
-		if (_ViewPoint != nullptr)
-		{
-			//前のアドレス削除
-			SAFE_DELETE(_ViewPoint);
-		}
-		_ViewPoint = point;
-	}
-	Vector3 GetViewPoint()
-	{
-		if (_ViewPoint == nullptr)
-		{
-			_ViewPoint = new Vector3();
-		}
-		return *_ViewPoint;
-	}
-
 	/**
 	* 注視点を取得.
 	*/
-	const Vector3& GetTarget() const
+	const Vector3& GetTarget()
 	{
-		return _Target;
+		if (_Target == nullptr)
+		{
+			_Target = new Vector3();
+		}
+		return *_Target;
 	}
 
 	/**
@@ -109,7 +83,14 @@ public:
 	*/
 	void SetTarget(const Vector3& tar)
 	{
-		_Target = tar;
+		if(_Target == nullptr)
+		{
+			_Target = new Vector3(tar);
+		}
+		else
+		{
+			*_Target = tar;
+		}
 	}
 
 	/**
@@ -123,15 +104,13 @@ public:
 protected:
 
 	/** 注視点. */
-	Vector3 _Target = Vector3::zero;
+	Vector3* _Target = nullptr;
 
 	//ビュー行列
 	D3DXMATRIX _View;
 	//プロジェクション行列
 	D3DXMATRIX _Projection;
 
-	//注視点
-	Vector3* _ViewPoint;
 	float _ViewAngle;	//画角
 	float _near;		//近平面
 	float _far;		//遠平面

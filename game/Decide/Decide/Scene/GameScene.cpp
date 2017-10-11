@@ -9,6 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
+#include"GameObject\Ground\Dungeon.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
 
 
@@ -37,7 +38,11 @@
 #include"GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\Enemy\LastBoss.h"
 
+#include"_Debug\TestObject.h"
+
 ImageObject* g_depth;
+
+//#define _NKMT_
 
 namespace
 {
@@ -86,6 +91,8 @@ void GameScene::Start()
 
 	//’n–Ê¶¬
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	//ƒ_ƒ“ƒWƒ‡ƒ“¶¬
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//ŠC¶¬.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
@@ -123,6 +130,10 @@ void GameScene::Start()
 	INSTANCE(ItemManager)->LoadAllItemData();
 
 	INSTANCE(Inventory)->Initialize();
+
+#ifdef _NKMT_
+	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 0);
+#endif
 
 	//’ÊíBGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

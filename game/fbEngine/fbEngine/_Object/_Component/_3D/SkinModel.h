@@ -5,6 +5,7 @@ class Effect;
 class Camera;
 class Light;
 class ShadowCamera;
+class IObjectCulling;
 
 //エフェクトをかけるか？
 enum ModelEffectE
@@ -146,7 +147,9 @@ private:
 	Effect* _Effect;
 	//モデルデータへアクセスするためのポインタ保持
 	SkinModelData* _ModelDate;
+	//カメラ。
 	Camera* _Camera;
+	//ライト。
 	Light* _Light;
 	//ブレンドする色
 	Color _TextureBlend, _AllBlend;
@@ -166,4 +169,7 @@ private:
 
 	//描画する面
 	D3DCULL _CullMode;
+
+	//オブジェクトカリング。
+	IObjectCulling* _Culling;
 };

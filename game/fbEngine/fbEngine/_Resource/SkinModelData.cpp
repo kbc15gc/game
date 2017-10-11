@@ -4,10 +4,33 @@
 #include"fbstdafx.h"
 #include "SkinModelData.h"
 
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include<shlwapi.h>
+
 //UINT                        g_NumBoneMatricesMax = 0;
 //D3DXMATRIXA16*              g_pBoneMatrices = NULL;
 //インスタンシングで描画可能な最大数。
 const int MAX_INSTANCING_NUM = 1000;
+
+namespace
+{
+	/**
+	* ファイル名を特定.
+	*/
+	vector<string> FileNameSearch(const string& str)
+	{
+		std::stringstream ss(str);
+		string buffer;
+		vector<string> fileName;
+		while (getline(ss, buffer, '.'))
+		{
+			fileName.push_back(buffer);
+		}
+		return fileName;
+	}
+}
 
 //モデルのFrame更新
 void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix)
@@ -529,7 +552,31 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 					break;
 				}
 				
+				vector<string> fileName = FileNameSearch(pMeshContainer->pMaterials[iMaterial].pTextureFilename);
 				
+				string normalFileName = baseDir + fileName[0] + "_Normal." + fileName[1];
+				if (PathFileExists(normalFileName.c_str()))
+				{
+					LPDIRECT3DBASETEXTURE9 nTexture;
+					D3DXCreateTextureFromFile(
+						pd3dDevice,
+						normalFileName.c_str(),
+						(LPDIRECT3DTEXTURE9*)&nTexture);
+
+					pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::NormalMap, nTexture);
+				}
+
+				string specularFileName = baseDir + fileName[0] + "_Specular." + fileName[1];
+				if (PathFileExists(specularFileName.c_str()))
+				{
+					LPDIRECT3DBASETEXTURE9 sTexture;
+					D3DXCreateTextureFromFile(
+						pd3dDevice,
+						specularFileName.c_str(),
+						(LPDIRECT3DTEXTURE9*)&sTexture);
+
+					pMeshContainer->material[iMaterial]->SetTexture(Material::TextureHandleE::SpecularMap, sTexture);
+				}
 				
 					// don't remember a pointer into the dynamic memory, just forget the name after loading
 					//よくわからんがファイルパスを消している。
@@ -548,14 +595,23 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 	}
 	pMeshContainer->pOrigMesh = pMesh;
 	pMesh->AddRef();
+
+	D3DVERTEXELEMENT9 decl[] = {
+		{ 0, 0 ,	D3DDECLTYPE_FLOAT4		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION		, 0 },
+		{ 0, 16,    D3DDECLTYPE_FLOAT4		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT	, 0 },
+		{ 0, 32,    D3DDECLTYPE_FLOAT4		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES	, 0 },
+		{ 0, 48,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL		, 0 },
+		{ 0, 60,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT		, 0 },
+		{ 0, 72,	D3DDECLTYPE_FLOAT2		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD		, 0 },
+		D3DDECL_END()
+	};
+
 	// if there is skinning information, save off the required data and then setup for HW skinning
 	if (pSkinInfo != NULL)
 	{
 		// first save off the SkinInfo and original mesh data
 		pMeshContainer->pSkinInfo = pSkinInfo;
 		pSkinInfo->AddRef();
-
-		
 
 		//ボーンの数だけボーンのオフセット行列確保
 		cBones = pSkinInfo->GetNumBones();
@@ -574,6 +630,97 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 
 		//メッシュ頂点をグループに分ける
 		hr = GenerateSkinnedMesh(pd3dDevice, pMeshContainer);
+		if (FAILED(hr))
+			goto e_Exit;
+		
+
+		LPD3DXMESH pOutMesh, pTmpMesh;
+		hr = pMeshContainer->MeshData.pMesh->CloneMesh(
+			pMeshContainer->MeshData.pMesh->GetOptions(),
+			decl,
+			pd3dDevice, &pOutMesh);
+
+		if (FAILED(hr))
+			goto e_Exit;
+
+		//一時メッシュに退避。
+		pTmpMesh = pOutMesh;
+		//D3DXComputeTangentFrameExを実行すると属性テーブルの情報が失われる・・・。
+		DWORD numAttributeTable;
+		pMeshContainer->MeshData.pMesh->GetAttributeTable(NULL, &numAttributeTable);
+		pMeshContainer->pAttributeTable = new D3DXATTRIBUTERANGE[numAttributeTable];
+		pMeshContainer->MeshData.pMesh->GetAttributeTable(pMeshContainer->pAttributeTable, NULL);
+
+		hr = D3DXComputeTangentFrameEx(
+			pTmpMesh,
+			D3DDECLUSAGE_TEXCOORD,
+			0,
+			D3DDECLUSAGE_TANGENT,
+			0,
+			D3DX_DEFAULT,
+			0,
+			D3DDECLUSAGE_NORMAL,
+			0,
+			0,
+			NULL,
+			0.01f,    //ボケ具合.値をおおきくするとぼけなくなる
+			0.25f,
+			0.01f,
+			&pOutMesh,
+			NULL
+		);
+
+		//一時メッシュを破棄。
+		SAFE_RELEASE(pTmpMesh);
+		SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
+		pMeshContainer->MeshData.pMesh = pOutMesh;
+
+		if (FAILED(hr))
+		{
+			goto e_Exit;
+		}
+	}
+	else
+	{
+		LPD3DXMESH pOutMesh, pTmpMesh;
+		DWORD numVert = pMeshContainer->MeshData.pMesh->GetNumVertices();
+		hr = pMeshContainer->MeshData.pMesh->CloneMesh(
+			pMeshContainer->MeshData.pMesh->GetOptions(),
+			decl,
+			pd3dDevice, &pOutMesh);
+		DWORD numAttributeTable;
+		pMeshContainer->MeshData.pMesh->GetAttributeTable(NULL, &numAttributeTable);
+		pMeshContainer->pAttributeTable = new D3DXATTRIBUTERANGE[numAttributeTable];
+		pMeshContainer->MeshData.pMesh->GetAttributeTable(pMeshContainer->pAttributeTable, NULL);
+		numVert = pMeshContainer->MeshData.pMesh->GetNumVertices();
+
+		//一時メッシュに退避。
+		pTmpMesh = pOutMesh;
+
+		hr = D3DXComputeTangentFrameEx(
+			pTmpMesh,
+			D3DDECLUSAGE_TEXCOORD,
+			0,
+			D3DDECLUSAGE_TANGENT,
+			0,
+			D3DX_DEFAULT,
+			0,
+			D3DDECLUSAGE_NORMAL,
+			0,
+			0,
+			NULL,
+			0.01f,    //ボケ具合.値をおおきくするとぼけなくなる
+			0.25f,
+			0.01f,
+			&pOutMesh,
+			NULL
+		);
+
+		//一時メッシュを破棄。
+		SAFE_RELEASE(pTmpMesh);
+		numVert = pOutMesh->GetNumVertices();
+		SAFE_RELEASE(pMesh);
+		pMeshContainer->MeshData.pMesh = pOutMesh;
 		if (FAILED(hr))
 			goto e_Exit;
 	}
@@ -697,6 +844,8 @@ bool SkinModelData::LoadModelData(const char* filePath)
 
 		//メッシュリストを作成。
 		_CreateMeshList();
+		//サイズ測定。
+		Measurement();
 		//オリジナル。
 		_Original = this;
 		return true;
@@ -739,6 +888,8 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 	this->_MeshList = original->_MeshList;
 	//
 	this->_TerrainSize = original->_TerrainSize;
+	//
+	this->_Size = original->_Size;
 	
 	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 
@@ -880,15 +1031,12 @@ LPD3DXMESH SkinModelData::GetOrgMeshFirst() const
 	return GetOrgMesh(_FrameRoot);
 }
 
-void SkinModelData::CalcWidthAndHeight()
+void SkinModelData::Measurement()
 {
-	const std::vector<LPD3DXMESH>& meshList = GetMeshList();
 	//番兵設定
-	float minX = FLT_MAX;
-	float minZ = FLT_MAX;
-	float maxX = -FLT_MAX;
-	float maxZ = -FLT_MAX;
-	for (auto& mesh : meshList) {
+	Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	//
+	for (auto& mesh : _MeshList) {
 		//頂点バッファを取得。
 		LPDIRECT3DVERTEXBUFFER9 vb;
 		mesh->GetVertexBuffer(&vb);
@@ -901,10 +1049,14 @@ void SkinModelData::CalcWidthAndHeight()
 		vb->Lock(0, desc.Size, (void**)&vertexPos, D3DLOCK_READONLY);
 		//頂点数ループ
 		for (unsigned int i = 0; i < mesh->GetNumVertices(); i++) {
-			minX = min(minX, vertexPos->x);
-			minZ = min(minZ, vertexPos->z);
-			maxX = max(maxX, vertexPos->x);
-			maxZ = max(maxZ, vertexPos->z);
+			//最小。
+			Min.x = min(Min.x, vertexPos->x);
+			Min.y = min(Min.y, vertexPos->z);
+			Min.z = min(Min.z, vertexPos->z);
+			//最大。
+			Max.x = max(Max.x, vertexPos->x);
+			Max.y = max(Max.y, vertexPos->x);
+			Max.z = max(Max.z, vertexPos->z);
 			//次の頂点へ。
 			char* p = (char*)vertexPos;
 			p += stride;
@@ -913,10 +1065,12 @@ void SkinModelData::CalcWidthAndHeight()
 		vb->Unlock();
 		vb->Release();
 	}
-	_TerrainSize.x = minX;
-	_TerrainSize.y = maxX;
-	_TerrainSize.z = minZ;
-	_TerrainSize.w = maxZ;
+	_TerrainSize.x = Min.x;
+	_TerrainSize.y = Max.x;
+	_TerrainSize.z = Min.z;
+	_TerrainSize.w = Max.z;
+
+	_Size = Max - Min;
 }
 
 void SkinModelData::_CreateMeshList()

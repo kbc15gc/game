@@ -50,7 +50,7 @@ void HistoryManager::Start()
 	{
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		//_CreateObject((int)LocationCodeE::Common, path, type);
+		_CreateObject((int)LocationCodeE::Common, path, type);
 	}
 
 	//歴史オブジェクト生成。

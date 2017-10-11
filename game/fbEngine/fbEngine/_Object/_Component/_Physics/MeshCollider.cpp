@@ -27,7 +27,7 @@ MeshCollider::~MeshCollider()
  * @brief	CSkinModelからメッシュコライダーを生成。
  *@param[in]	model		スキンモデル。
  */
-void MeshCollider::Create(SkinModel* model)
+void MeshCollider::Create(SkinModel* model, Vector3 offset)
 {
 	stridingMeshInterface = new btTriangleIndexVertexArray;
 	//CSkinModelからコリジョンで使用する、頂点バッファとインデックスバッファを作成する。
@@ -50,7 +50,7 @@ void MeshCollider::Create(SkinModel* model)
 			int numVertex = mesh->GetNumVertices();
 			//当たりデータで使用する頂点バッファを作成。
 			for (int v = 0; v < numVertex; v++) {
-				Vector3 posTmp = *pos;
+				Vector3 posTmp = *pos + offset;
 
 				vertexBuffer->push_back(posTmp);
 				char* p = (char*)pos;
