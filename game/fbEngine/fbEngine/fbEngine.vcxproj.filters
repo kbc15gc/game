@@ -55,6 +55,9 @@
     <Filter Include="Resource\Support">
       <UniqueIdentifier>{f58ec9e8-9358-45f6-aeaf-76135b8851b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cullimg">
+      <UniqueIdentifier>{1aa789f7-0128-47b5-8acc-ee2145b486a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -276,6 +279,7 @@
     <ClCompile Include="_Object\_Component\_Physics\CharacterExtrude.cpp">
       <Filter>Object\Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="_Culling\ObjectFrustumCulling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -535,6 +539,12 @@
     </ClInclude>
     <ClInclude Include="_Object\_Component\_Physics\CharacterExtrude.h">
       <Filter>Object\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="_Culling\IObjectCulling.h">
+      <Filter>Cullimg</Filter>
+    </ClInclude>
+    <ClInclude Include="_Culling\ObjectFrustumCulling.h">
+      <Filter>Cullimg</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

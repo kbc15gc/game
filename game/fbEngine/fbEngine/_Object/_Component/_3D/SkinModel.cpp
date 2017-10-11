@@ -6,6 +6,8 @@
 #include "_Object\_Component\_3D\Camera.h"
 #include "_Object\_Component\_3D\ShadowCamera.h"
 
+#include "_Culling\ObjectFrustumCulling.h"
+
 #include"_Nature\Sky.h"
 
 //extern UINT                 g_NumBoneMatricesMax;
@@ -31,7 +33,8 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_AllBlend(Color::white),
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW)),
 	_SkyBox(false),
-	_CullMode(D3DCULL_CCW)
+	_CullMode(D3DCULL_CCW),
+	_Culling(new CObjectFrustumCulling)
 {
 	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 }
@@ -44,6 +47,10 @@ SkinModel::~SkinModel()
 //再帰関数
 void SkinModel::DrawFrame(LPD3DXFRAME pFrame)
 {
+	//カリングするならスキップ。
+	if (_Culling->IsCulling())
+		return;
+
 	//描画済みなのでスキップ。
 	if ((_ModelDate->GetInstancing() == true) && (_ModelDate->GetAlreadyDrawn() == true))
 		return;
@@ -85,12 +92,13 @@ void SkinModel::Awake()
 
 void SkinModel::Start()
 {
-	
+	dynamic_cast<CObjectFrustumCulling*>(_Culling)->SetCamera(*_Camera);
 }
 
 //モデルデータの行列更新
 void SkinModel::LateUpdate()
 {
+	//_Culling->Execute();
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{

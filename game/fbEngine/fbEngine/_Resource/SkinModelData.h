@@ -92,9 +92,8 @@ public:
 	//一番最初のメッシュを取得
 	LPD3DXMESH GetOrgMeshFirst() const;
 
-	//テラインのXZ軸の縦幅と横幅を求める関数
-	//いつか消す
-	void CalcWidthAndHeight();
+	//モデルのサイズを測定する。
+	void Measurement();
 	
 	//スキンモデルのメッシュのリストを取得。
 	const std::vector<LPD3DXMESH>& GetMeshList() const
@@ -154,6 +153,8 @@ private:
 	ID3DXAnimationController* m_pAnimationController;
 	//とりあえずほじさせたかった。いつか消す。
 	Vector4 _TerrainSize;
+	//
+	Vector3 _Size;
 private:
 	//インスタンシング描画フラグ。デフォルトはfalse。
 	bool _Instancing;

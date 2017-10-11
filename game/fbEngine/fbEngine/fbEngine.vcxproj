@@ -25,6 +25,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fbstdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="_Culling\ObjectFrustumCulling.cpp" />
     <ClCompile Include="_Effect\Blur.cpp" />
     <ClCompile Include="_Effect\EffectManager.cpp" />
     <ClCompile Include="_Effect\GaussianBlur.cpp" />
@@ -103,6 +104,8 @@
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="fbstdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="_Culling\IObjectCulling.h" />
+    <ClInclude Include="_Culling\ObjectFrustumCulling.h" />
     <ClInclude Include="_Effect\Blur.h" />
     <ClInclude Include="_Effect\Effect.h" />
     <ClInclude Include="_Effect\EffectManager.h" />
