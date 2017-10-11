@@ -270,6 +270,9 @@
     <ClCompile Include="_Debug\TestObject.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Ground\Dungeon.cpp">
+      <Filter>GameObject\Ground</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -552,6 +555,9 @@
     </ClInclude>
     <ClInclude Include="_Debug\TestObject.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Ground\Dungeon.h">
+      <Filter>GameObject\Ground</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

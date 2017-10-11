@@ -12,6 +12,10 @@ Dungeon::Dungeon(const char * name) :
 
 void Dungeon::Awake()
 {
+	Vector3 StartPos = { 0.0f,120.0f,0.0f };
+	transform->SetLocalPosition(StartPos);
+	transform->SetLocalScale(Vector3::one);
+
 	//スキンモデル作成
 	SkinModel* model = AddComponent<SkinModel>();
 	//モデルデータ作成
@@ -23,11 +27,9 @@ void Dungeon::Awake()
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
-	mesh->Create(model);
+	mesh->Create(model, StartPos);
 	rigid->Create(0, mesh, Collision_ID::GROUND);
 
-	transform->SetLocalPosition(Vector3::zero);
-	transform->SetLocalScale(Vector3::one);
 }
 
 void Dungeon::Start() {

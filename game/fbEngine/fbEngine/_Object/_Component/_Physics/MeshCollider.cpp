@@ -27,7 +27,7 @@ MeshCollider::~MeshCollider()
  * @brief	CSkinModelからメッシュコライダーを生成。
  *@param[in]	model		スキンモデル。
  */
-void MeshCollider::Create(SkinModel* model, Vector3 offset = Vector3::zero)
+void MeshCollider::Create(SkinModel* model, Vector3 offset)
 {
 	stridingMeshInterface = new btTriangleIndexVertexArray;
 	//CSkinModelからコリジョンで使用する、頂点バッファとインデックスバッファを作成する。
