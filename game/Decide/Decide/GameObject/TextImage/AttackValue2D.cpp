@@ -1,5 +1,5 @@
 #include"stdafx.h"
-#include "GameObject\AttackValue2D.h"
+#include "AttackValue2D.h"
 
 void AttackValue2D::Awake()
 {

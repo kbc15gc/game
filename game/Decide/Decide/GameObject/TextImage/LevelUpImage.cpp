@@ -1,6 +1,6 @@
 #include"stdafx.h"
-#include "GameObject\LevelUpImage.h"
-#include "StatusWindow\StatusWindow.h"
+#include "LevelUpImage.h"
+#include "GameObject\StatusWindow\StatusWindow.h"
 
 namespace
 {

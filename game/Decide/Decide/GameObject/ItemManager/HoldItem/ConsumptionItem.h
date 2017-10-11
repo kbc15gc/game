@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\CollisionObject.h"
 
 class GameObject;
+class TextObject;
 #include"GameObject\Player\Player.h"
 
 //消費アイテムのクラス。
@@ -119,4 +120,9 @@ private:
 	CollisionObject* _gost = nullptr;	// 対象の探索に必要。
 
 	const static int holdMax;
+
+	TextObject*	_NoEffectText			= nullptr;			//アイテムを使って効果が無い時に出てくるテキスト。
+	Vector3		_NoEffectTextPos		= Vector3::zero;	//テキストを表示する場所。
+	float		_NoEffectTextFontSize	= 0.0f;				//テキストのサイズ。
+	Color		_NoEffectTextColor		= Color::red;		//テキストのカラー。
 };

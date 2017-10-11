@@ -7,6 +7,7 @@
 #include"ParameterRender.h"
 #include"ItemWindow.h"
 #include "GameObject\Village\EventManager.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
 
 /**
 * ステータス画面クラス.
@@ -52,6 +53,7 @@ public:
 	void OnDisable()override
 	{
 		INSTANCE(EventManager)->NotifyEndEvent();
+		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->DeleteList();
 	}
 
 private:
