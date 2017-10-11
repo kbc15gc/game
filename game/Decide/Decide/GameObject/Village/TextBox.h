@@ -41,6 +41,13 @@ public:
 	{
 		_TextSpeed = speed;
 	}
+
+
+
+	// 最後のメッセージか取得。
+	inline bool IsLastMessage()const {
+		return (_Message->NextID <= -1);
+	}
 private:
 	//メッセージボックスを開く。
 	void _OpenMessage();

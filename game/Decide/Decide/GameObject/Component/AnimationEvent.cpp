@@ -44,6 +44,8 @@ void AnimationEventPlayer::Update() {
 			for (auto eventData : _animationEvents[_playAnimationNo]) {
 				eventData->isPlay = false;
 			}
+			_nowLocalTime = work->GetLocalAnimationTime();
+			return;
 		}
 
 		_nowLocalTime = work->GetLocalAnimationTime();

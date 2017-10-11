@@ -54,6 +54,9 @@ public:
 		_IsSpeak = flag;
 	}
 
+	// ‰ï˜bI—¹‚©æ“¾B
+	bool GetIsSpeakEnd()const;
+
 	float GetRadius()
 	{
 		return _Radius;

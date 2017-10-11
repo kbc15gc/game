@@ -15,6 +15,8 @@ void Sky::Awake()
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Sky.X"));
 	
+	D3DXCreateCubeTextureFromFile(graphicsDevice(), "Asset/Texture/night.dds", &_NightTexture);
+
 	_SkyModel->SetModelData(modeldata);
 	_SkyModel->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
 	_SkyModel->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
@@ -41,7 +43,7 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 1.0f;
+		const float TMP = 10.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 		_SunAngle += 0.02f * Time::DeltaTime() * TMP;
 

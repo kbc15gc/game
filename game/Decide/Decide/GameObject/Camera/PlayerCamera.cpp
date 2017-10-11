@@ -30,7 +30,6 @@ void PlayerCamera::Awake()
 
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
-	//_Camera->SetNear(0.01f);
 	_Camera->SetNear(0.01f);
 	_Camera->SetFar(10000.0f);
 	INSTANCE(GameObjectManager)->mainCamera = _Camera;
@@ -96,7 +95,6 @@ void PlayerCamera::Move()
 	//プレイヤーの方を向く
 	_Camera->SetTarget(pos);
 	transform->LockAt(pos);
-
 	//プレイヤーとカメラの距離
 	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
 	Vector3 from, to;

@@ -34,8 +34,8 @@ public:
 	//[in] “–‚½‚è”»’è‚ğ‚Æ‚è‚½‚¢‘®«B
 	Collision* GetClickCollision(float rayLength, int attribute);
 
-	const D3DXMATRIX& GetViewMat(){ return _View; }
-	const D3DXMATRIX& GetProjectionMat(){ return _Projection; }
+	const D3DXMATRIX& GetViewMat()const{ return _View; }
+	const D3DXMATRIX& GetProjectionMat()const{ return _Projection; }
 
 	//‰æŠpİ’è
 	void SetViewAngle(const float& theta)

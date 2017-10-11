@@ -6,6 +6,8 @@
 #include "_Object\_Component\_3D\Camera.h"
 #include "_Object\_Component\_3D\ShadowCamera.h"
 
+#include "_Culling\ObjectFrustumCulling.h"
+
 #include"_Nature\Sky.h"
 
 //extern UINT                 g_NumBoneMatricesMax;
@@ -31,9 +33,12 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_AllBlend(Color::white),
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW)),
 	_SkyBox(false),
-	_CullMode(D3DCULL_CCW)
+	_CullMode(D3DCULL_CCW),
+	_Culling(new CObjectFrustumCulling)
 {
+#ifdef _DEBUG
 	mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
+#endif
 }
 
 SkinModel::~SkinModel()
@@ -44,6 +49,10 @@ SkinModel::~SkinModel()
 //再帰関数
 void SkinModel::DrawFrame(LPD3DXFRAME pFrame)
 {
+	//カリングするならスキップ。
+	if (_Culling->IsCulling())
+		return;
+
 	//描画済みなのでスキップ。
 	if ((_ModelDate->GetInstancing() == true) && (_ModelDate->GetAlreadyDrawn() == true))
 		return;
@@ -85,12 +94,13 @@ void SkinModel::Awake()
 
 void SkinModel::Start()
 {
-	
+	dynamic_cast<CObjectFrustumCulling*>(_Culling)->SetCamera(*_Camera);
 }
 
 //モデルデータの行列更新
 void SkinModel::LateUpdate()
 {
+	//_Culling->Execute();
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -281,6 +291,10 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetValue("g_atmosParam", &atmos, sizeof(AtmosphericScatteringParamS));
 		_Effect->SetInt("g_atmosFlag", _AtomosphereFunc);
 
+		if (_SkyBox)
+		{
+			_Effect->SetTexture("g_NightTexture", INSTANCE(SceneManager)->GetSky()->GetNightTexture());
+		}
 	
 		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);
@@ -336,6 +350,21 @@ void SkinModel::DrawMeshContainer(
 					_Effect->SetTexture("g_diffuseTexture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 					_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 					_Effect->SetInt("Texflg", true);
+
+
+					D3DXVECTOR4 flag = D3DXVECTOR4(0, 0, 0, 0);
+					if (material->GetTexture(Material::TextureHandleE::NormalMap))
+					{
+						_Effect->SetTexture("g_NormalMap", material->GetTexture(Material::TextureHandleE::NormalMap));
+						flag.x = 1;
+					}
+					if (material->GetTexture(Material::TextureHandleE::SpecularMap))
+					{
+						_Effect->SetTexture("g_speculerMap", material->GetTexture(Material::TextureHandleE::SpecularMap));
+						flag.y = 1;
+					}
+					_Effect->SetVector("g_MapFlg", &flag);
+
 				}
 				//テクスチャがないならカラーセット
 				else if (Diffuse != NULL)
@@ -388,6 +417,19 @@ void SkinModel::DrawMeshContainer(
 						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 						_Effect->SetBool("Texflg", true);
+
+						D3DXVECTOR4 flag = D3DXVECTOR4(0, 0, 0, 0);
+						if (material->GetTexture(Material::TextureHandleE::NormalMap))
+						{
+							_Effect->SetTexture("g_NormalMap", material->GetTexture(Material::TextureHandleE::NormalMap));
+							flag.x = 1;
+						}
+						if (material->GetTexture(Material::TextureHandleE::SpecularMap))
+						{
+							_Effect->SetTexture("g_speculerMap", material->GetTexture(Material::TextureHandleE::SpecularMap));
+							flag.y = 1;
+						}
+						_Effect->SetVector("g_MapFlg", &flag);
 					}
 					else
 					{
@@ -457,9 +499,23 @@ void SkinModel::DrawMeshContainer(
 					//テクスチャが格納されていればセット
 					if (material != nullptr)
 					{
+						
 						_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
 						_Effect->SetVector("g_Textureblendcolor", (D3DXVECTOR4*)&material->GetBlendColor());
 						_Effect->SetInt("Texflg", true);
+
+						D3DXVECTOR4 flag = D3DXVECTOR4(0, 0, 0, 0);
+						if (material->GetTexture(Material::TextureHandleE::NormalMap))
+						{
+							_Effect->SetTexture("g_NormalMap", material->GetTexture(Material::TextureHandleE::NormalMap));
+							flag.x = 1;
+						}
+						if (material->GetTexture(Material::TextureHandleE::SpecularMap))
+						{
+							_Effect->SetTexture("g_speculerMap", material->GetTexture(Material::TextureHandleE::SpecularMap));
+							flag.y = 1;
+						}
+						_Effect->SetVector("g_MapFlg", &flag);
 
 						//スプラットマップ
 						IDirect3DBaseTexture9* splat = material->GetTexture(Material::TextureHandleE::SplatMap);

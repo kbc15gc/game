@@ -34,7 +34,7 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State { Wandering = 0,Discovery, Threat, StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death };
+	enum class State { Wandering = 0,Discovery, Chace,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
 
 	// アニメーションデータテーブルの添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
@@ -128,9 +128,10 @@ public:
 
 	// 攻撃処理を決定する関数。
 	// 戻り値：	実行したい攻撃処理クラスのポインタ。
-	// ※継承先で実装。
-	// ※複数攻撃パターンがある場合は攻撃処理を分岐させる。
-	virtual EnemyAttack* AttackSelect() = 0;
+	inline EnemyAttack* AttackSelect() {
+		_nowAttack = _AttackSelectSubClass();
+		return _nowAttack;
+	}
 
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ(テーブルのほう)。
@@ -261,6 +262,10 @@ public:
 		strcpy(_FileName, name);
 	}
 
+	inline const char* GetFileName()const {
+		return _FileName;
+	}
+
 	// ステート配列を読み取り専用で返す関数。
 	inline const vector<unique_ptr<EnemyState>>& GetMyState() const {
 		return _MyState;
@@ -284,11 +289,6 @@ public:
 	// 見える距離設定。
 	inline void SetViewRange(float range) {
 		_ViewRange = range;
-	}
-
-	// 攻撃可能範囲取得。
-	inline float GetAttackRange()const {
-		return _AttackRange;
 	}
 
 	// 徘徊範囲返却。
@@ -354,6 +354,20 @@ public:
 	inline const AnimationData& GetAnimationData(AnimationType type)const {
 		return _AnimationData[static_cast<int>(type)];
 	}
+
+	// 初期ステート取得。
+	inline const State GetInitState()const {
+		return _initState;
+	}
+
+	// 現在エネミーが選択している攻撃の発動距離を返却。
+	float GetNowSelectAttackRange()const;
+
+	inline EnemyAttack* GetNowSelectAttack() {
+		return _nowAttack;
+	}
+
+
 
 	// 死亡時のドロップ処理。
 	inline void Drop() {
@@ -450,11 +464,14 @@ private:
 	// モデルデータ初期化関数。
 	void _BuildModelData();
 
-	// 継承先で使用するすべてのステートを登録する関数。
+	// 継承先で汎用的に使用するすべてのステートを登録する関数。
 	// ※ステートを追加したら必ずこの関数内に記述を追加する
 	// ※追加する際はこのクラスのState列挙体に対応する順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内のState列挙体も更新すること。
 	void _BuildState();
+
+	// 絶対に他のクラスでも使わないステートはこっちに登録。
+	virtual void _BuildStateSubClass() {};
 
 	// 継承先でアニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
@@ -472,8 +489,16 @@ private:
 	// ※継承先によって異なる処理。
 	virtual inline void _DropSubClass() = 0;
 
+	// 攻撃処理を決定する関数。
+	// 戻り値：	実行したい攻撃処理クラスのポインタ。
+	// ※複数攻撃パターンがある場合は攻撃処理を分岐させる。
+	// ※継承先で実装。
+	virtual EnemyAttack* _AttackSelectSubClass() = 0;
+
 protected:
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
+
+	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
 	CollisionInfo _collisionInfo;
 
@@ -482,6 +507,7 @@ protected:
 
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
+	State _initState;	// 初期ステート。
 
 	float _Gravity = -0.98f;	// 重力。
 
@@ -490,8 +516,6 @@ protected:
 	SearchViewAngle _SearchView;	// 視野角判定。
 	float _ViewAngle = 0.0f;		// 視野角(度)。
 	float _ViewRange = 0.0f;		// 見える距離。
-
-	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 
 	float _WanderingRange = 0.0f;	// 徘徊範囲。
 
@@ -503,11 +527,11 @@ protected:
 	bool _isDamageMotionRandom = true;		// のけぞりモーションをランダムで再生するか(ランダムにしない場合は必ずのけぞる)。
 	unsigned short _damageMotionProbability = 1;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
 
+	EnemyAttack* _nowAttack = nullptr;
+
 private:
 	int _dropExp;	// 落とす経験値。
 	int _dropMoney; // 落とす金額。
-
-	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
 
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
 
@@ -531,10 +555,11 @@ public:
 	}
 
 	// 初期化関数。
-	// 引数：	再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
+	// 引数：	攻撃可能範囲。
+	//			再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
 	//			アニメーション補間時間(初期値は0)。
 	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
-	void Init(int animType = -1, float interpolate = 0.0f, int animLoopNum = 1);
+	void Init(float attackRange,int animType = -1, float interpolate = 0.0f, int animLoopNum = 1);
 	virtual void Entry() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
 	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
 	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
@@ -559,11 +584,15 @@ public:
 	inline void SetIsPlaying(bool flg) {
 		_isPlaying = flg;
 	}
+	inline float GetAttackRange()const {
+		return _AttackRange;
+	}
 protected:
 	int _animType = -1;	// 再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
 	float _interpolate = 0.0f;	// アニメーション補間時間(初期値は0)。
 	int _animLoopNum = 1;	// アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	bool _isPlaying = false;	// アニメーション再生中かのフラグ(更新処理時に攻撃ステートから設定される)。
+	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 	EnemyCharacter* _enemyObject = nullptr;
 };
 

@@ -12,12 +12,19 @@
 #include "HFSM\EnemyDeathState.h"
 #include "HFSM\EnemyDamageReactionState.h"
 #include "HFSM\EnemyThreatState.h"
+#include "HFSM\EnemySpeakState.h"
+#include "HFSM\EnemyChaceState.h"
+#include "HFSM\LastBossThroneState.h"
+#include "HFSM\LastBossMagicianState.h"
+#include "HFSM\LastBossHistoryTamperingState.h"
+#include "HFSM\LastBossDownState.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
+
 }
 
 EnemyCharacter::~EnemyCharacter()
@@ -230,8 +237,6 @@ void EnemyCharacter::_BuildCollision() {
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
 
-	_Gravity = -0.98f;
-
 	_MyComponent.CharacterController->SetGravity(_Gravity);
 
 	// キャラクターコントローラ押し出しコンポーネント作成。
@@ -267,8 +272,12 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
 	// 発見ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
+	// 追跡ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyChaceState>(new EnemyChaceState(this)));
 	// 威嚇ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyThreatState>(new EnemyThreatState(this)));
+	// 会話ステートを追加。
+	_MyState.push_back(unique_ptr<EnemySpeakState>(new EnemySpeakState(this)));
 	// 攻撃開始ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyStartAttackState>(new EnemyStartAttackState(this)));
 	// 攻撃ステートを追加。
@@ -283,6 +292,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
+
+	_BuildStateSubClass();
 }
 
 /**
@@ -448,6 +459,14 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 	}
 }
 
+float EnemyCharacter::GetNowSelectAttackRange()const {
+	if (_nowAttack) {
+		return _nowAttack->GetAttackRange();
+	}
+	return 0.0f;
+}
+
+
 /**
 * エフェクト用更新.
 */
@@ -481,7 +500,8 @@ void EnemyCharacter::EffectUpdate() {
 
 // EnemyAttack。
 
-void EnemyAttack::Init(int animType, float interpolate, int animLoopNum) {
+void EnemyAttack::Init(float attackRange,int animType, float interpolate, int animLoopNum) {
+	_AttackRange = attackRange;
 	_animType = animType;
 	_interpolate = interpolate;
 	_animLoopNum = animLoopNum;

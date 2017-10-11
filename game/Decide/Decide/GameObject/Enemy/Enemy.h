@@ -31,7 +31,7 @@ private:
 	void _LateUpdateSubClass()override;
 
 
-	EnemyAttack* AttackSelect()override;
+	EnemyAttack* _AttackSelectSubClass()override;
 
 	// コリジョン定義関数。
 	// コリジョンの形状やパラメータを設定する関数。

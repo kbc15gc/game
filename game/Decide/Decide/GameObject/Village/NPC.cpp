@@ -50,6 +50,10 @@ void NPC::SetMesseage(const int & id, const bool show)
 	_ShowTitle = show;
 }
 
+bool NPC::GetIsSpeakEnd()const {
+	return _TextBox->IsLastMessage();
+}
+
 void NPC::_Speak()
 {
 	//‰ï˜b‰Â”\‚È‹——£‚©H
