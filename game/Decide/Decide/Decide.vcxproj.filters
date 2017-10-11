@@ -14,9 +14,6 @@
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\AttackValue2D.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
@@ -263,7 +260,18 @@
     <ClCompile Include="GameObject\Component\BuffDebuffICon.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\LevelUpImage.cpp" />
+    <ClCompile Include="GameObject\TextImage\AttackValue2D.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
@@ -277,9 +285,6 @@
     </ClInclude>
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\AttackValue2D.h">
-      <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\SpaceCollisionObject.h">
       <Filter>GameObject</Filter>
@@ -540,7 +545,18 @@
     <ClInclude Include="GameObject\Component\BuffDebuffICon.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\LevelUpImage.h" />
+    <ClInclude Include="GameObject\TextImage\AttackValue2D.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\LevelUpImage.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -621,6 +637,9 @@
     </Filter>
     <Filter Include="GameObject\History\Effect">
       <UniqueIdentifier>{594e76b4-ad44-4582-bc81-c2cf8b53d462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\TextImage">
+      <UniqueIdentifier>{1807d9d7-82e5-4dfa-859e-576b3927f8e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

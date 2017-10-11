@@ -148,6 +148,7 @@ void StatusWindow::Update()
 		{
 			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
 		}
+		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->DeleteList();
 	}
 
 }

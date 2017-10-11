@@ -76,7 +76,6 @@ public:
 		DEX,		//!< 器用度.
 		MAX			//!< 数.
 	};
-
 public:
 
 	/**
@@ -119,9 +118,6 @@ public:
 		if (_Dialog)
 			_Dialog->SetActive(false, true);
 	}
-
-
-
 private:
 
 	/**
@@ -167,7 +163,6 @@ private:
 	* パラメータ表示クラスのインスタンスに値を設定.
 	*/
 	void _ConfigParamRender();
-
 private:
 
 	Player* _Player = nullptr;

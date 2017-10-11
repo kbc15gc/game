@@ -36,6 +36,9 @@
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
 
+#include "GameObject\TextImage\BackWindowAndAttentionText.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
+
 ImageObject* g_depth;
 void DebugNPC();
 
@@ -92,6 +95,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//—ðŽj‘
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+
+	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
+
 	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
@@ -100,6 +106,10 @@ void GameScene::Start()
 	INSTANCE(ItemManager)->LoadAllItemData();
 
 	INSTANCE(Inventory)->Initialize();
+
+	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
+
+	
 
 	_WorldSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldSE->InitStreaming("Asset/Sound/Battle_BGM.wav");

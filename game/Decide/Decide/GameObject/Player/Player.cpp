@@ -3,7 +3,7 @@
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "GameObject\SplitSpace.h"
-#include "GameObject\AttackValue2D.h"
+#include "GameObject\TextImage\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"

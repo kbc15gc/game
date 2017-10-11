@@ -1,5 +1,5 @@
 #include"stdafx.h"
-#include "GameObject\LevelUpImage.h"
+#include "LevelUpImage.h"
 
 
 

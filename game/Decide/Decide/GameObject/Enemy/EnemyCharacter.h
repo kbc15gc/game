@@ -7,7 +7,7 @@
 #include "GameObject\Component\CharacterParameter.h"
 #include "GameObject\Component\ParameterBar.h"
 #include "GameObject\Component\ObjectSpawn.h"
-#include "GameObject\AttackValue2D.h"
+#include "GameObject\TextImage\AttackValue2D.h"
 #include "GameObject\Component\AnimationEvent.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Player\Player.h"

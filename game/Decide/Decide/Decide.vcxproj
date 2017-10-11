@@ -159,7 +159,6 @@
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
-    <ClInclude Include="GameObject\AttackValue2D.h" />
     <ClInclude Include="GameObject\Camera\FreeCamera.h" />
     <ClInclude Include="GameObject\Camera\GameCamera.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
@@ -221,7 +220,6 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldItemFactory.h" />
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
-    <ClInclude Include="GameObject\LevelUpImage.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
@@ -240,6 +238,10 @@
     <ClInclude Include="GameObject\StatusWindow\ItemWindow.h" />
     <ClInclude Include="GameObject\StatusWindow\ParameterRender.h" />
     <ClInclude Include="GameObject\StatusWindow\StatusWindow.h" />
+    <ClInclude Include="GameObject\TextImage\AttackValue2D.h" />
+    <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h" />
+    <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h" />
+    <ClInclude Include="GameObject\TextImage\LevelUpImage.h" />
     <ClInclude Include="GameObject\Village\ContinentObject.h" />
     <ClInclude Include="GameObject\Village\EventManager.h" />
     <ClInclude Include="GameObject\Village\MessageManager.h" />
@@ -261,7 +263,6 @@
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="GameObject\AttackValue2D.cpp" />
     <ClCompile Include="GameObject\Camera\FreeCamera.cpp" />
     <ClCompile Include="GameObject\Camera\GameCamera.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
@@ -320,7 +321,6 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldItemFactory.cpp" />
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
-    <ClCompile Include="GameObject\LevelUpImage.cpp" />
     <ClCompile Include="GameObject\Log\Log.cpp" />
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
@@ -338,6 +338,10 @@
     <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp" />
     <ClCompile Include="GameObject\StatusWindow\ParameterRender.cpp" />
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp" />
+    <ClCompile Include="GameObject\TextImage\AttackValue2D.cpp" />
+    <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp" />
+    <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp" />
+    <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\EventManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
