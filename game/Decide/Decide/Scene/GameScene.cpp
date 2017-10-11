@@ -9,6 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
+#include"GameObject\Ground\Dungeon.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
 
 
@@ -85,6 +86,8 @@ void GameScene::Start()
 
 	//’n–Ê¶¬
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	//ƒ_ƒ“ƒWƒ‡ƒ“¶¬
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//ŠC¶¬.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 

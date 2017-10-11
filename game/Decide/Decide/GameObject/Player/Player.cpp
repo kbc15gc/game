@@ -247,7 +247,7 @@ void Player::Update()
 			_LevelUP();
 		}
 		//É_ÉÅÅ[ÉWÇéÛÇØÇÈèàóùÅB
-		_Damage();
+		//_Damage();
 		//ÉGÉtÉFÉNÉg
 		EffectUpdate();
 		//@todo for debug
@@ -827,24 +827,24 @@ void Player::AnimationEventControl()
 {
 	//çUåÇ1
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
 	}
 	//çUåÇ2
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
 
 	}
 	//çUåÇ3
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
 
 	}
 	//çUåÇ4
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
 	}
 	//çUåÇ5
