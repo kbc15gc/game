@@ -5,6 +5,8 @@
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "GameObject\Inventory\Inventory.h"
 #include "GameObject\ItemManager\HoldItem\HoldItemFactory.h"
+#include "GameObject\Component\ParticleEffect.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
@@ -109,26 +111,54 @@ void DropItem::Update() {
 					//アイテム。
 				case Item::ItemCodeE::Item:
 					//追加。
-					INSTANCE(Inventory)->AddItem(static_cast<Item::ItemInfo*>(_DropItemInfo), _DropNum);
+					if (INSTANCE(Inventory)->AddItem(static_cast<Item::ItemInfo*>(_DropItemInfo), _DropNum) == false) {
+						wchar_t ErrorText[256];
+						wcscpy_s(ErrorText, wcslen(L"アイテムを拾えませんでした。") + 1, L"アイテムを拾えませんでした。");
+						static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
+							ErrorText, 
+							Vector3(600.0f, 260.0f, 0.0f),
+							33.0f,
+							Color::red,
+							AttentionTextOnly::MoveType::Up
+						);
+					}
 					break;
 					//防具。
 				case Item::ItemCodeE::Armor:
 					//武器。
 				case Item::ItemCodeE::Weapon:
 					//追加。
-					INSTANCE(Inventory)->AddEquipment(_DropEquipment);
+					if (INSTANCE(Inventory)->AddEquipment(_DropEquipment) == false) {
+						wchar_t ErrorText[256];
+						if (_DropEquipment->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
+							wcscpy_s(ErrorText, wcslen(L"防具を拾えませんでした。") + 1, L"防具を拾えませんでした。");
+						}
+						else
+						{
+							wcscpy_s(ErrorText, wcslen(L"武器を拾えませんでした。") + 1, L"武器を拾えませんでした。");
+						}
+						static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
+							ErrorText,
+							Vector3(600.0f, 260.0f, 0.0f),
+							33.0f,
+							Color::red,
+							AttentionTextOnly::MoveType::Up
+						);
+					}
 					break;
 				default:
-					
-					char error[256];
-					sprintf(error, "ドロップアイテムのInfoが空でした。");
-					MessageBoxA(0, error, "ドロップアイテムの取得失敗", MB_ICONWARNING);
 					break;
 				}
 
 				//アイコンとオブジェクトを消す。
 				INSTANCE(GameObjectManager)->AddRemoveList(_ButtonIconImage);
 				INSTANCE(GameObjectManager)->AddRemoveList(this);
+			}
+			else
+			{
+				char error[256];
+				sprintf(error, "ドロップアイテムのInfoが空でした。");
+				MessageBoxA(0, error, "ドロップアイテムの取得失敗", MB_ICONWARNING);
 			}
 			
 		}
