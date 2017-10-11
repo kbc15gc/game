@@ -155,13 +155,13 @@ void BackWindowAndAttentionText::Debug()
 	//画像表示用。
 	if ((KeyBoardInput->isPush(DIK_O))) {
 		wchar_t ErrorText[256];
-		wcscpy_s(ErrorText, wcslen(L"所持品が一杯でアイテムを追加出来ませんでした。\n所持品を整理してください。Aボタンで閉じる。") + 1, L"所持品が一杯でアイテムを追加出来ませんでした。\n所持品を整理してください。Aボタンで閉じる。");
+		wcscpy_s(ErrorText, wcslen(L"所持品が一杯でアイテムを追加出来ませんでした。\n所持品を整理してください。AボタンまはたキーボードのPで閉じる。") + 1, L"所持品が一杯でアイテムを追加出来ませんでした。\n所持品を整理してください。AボタンまはたキーボードのPで閉じる。");
 		Create(ErrorText, Vector3(642.0f, 363.0f, 0.0f), Vector2(793.0f, 229.0f), Vector3(1.0f, -20.0f, 0.0), 33.0f, Color::red);
 		SetActiveTrue();
 	}
 
 	//画像を閉じる。
-	if ((VPadInput->IsPush(fbEngine::VPad::ButtonA))) {
+	if ((VPadInput->IsPush(fbEngine::VPad::ButtonA)||(KeyBoardInput->isPush(DIK_P)))) {
 		SetActiveFalse();
 	}
 }
