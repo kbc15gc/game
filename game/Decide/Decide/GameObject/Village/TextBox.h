@@ -46,7 +46,7 @@ public:
 
 	// 最後のメッセージか取得。
 	inline bool IsLastMessage()const {
-		return (_Message->NextID <= -1);
+		return (_State == TextBoxStateE::CLOSING);
 	}
 private:
 	//メッセージボックスを開く。
