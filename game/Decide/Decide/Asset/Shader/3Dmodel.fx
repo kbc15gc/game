@@ -56,6 +56,7 @@ struct VS_INPUT
 	float4	_Pos	: POSITION;
 	float4	_Color	: COLOR0;
 	float3	_Normal	: NORMAL;
+    float3 _Tangent : TANGENT;
 	float2	_UV		: TEXCOORD0;
 };
 
@@ -72,6 +73,7 @@ struct VS_OUTPUT
 	float4	_Pos			: POSITION;
 	float4	_Color			: COLOR0;
 	float3	_Normal			: NORMAL;
+    float3 _Tangent : TANGENT;
 	float2	_UV				: TEXCOORD0;
 	float4  _World			: TEXCOORD1;	//xyzにワールド座標。wには射影空間でのdepthが格納される。
 	float4  _WVP			: TEXCOORD2;	//カメラから見た行列
@@ -105,6 +107,7 @@ VS_OUTPUT VSMain(VS_INPUT In)
 	Out._Color = In._Color;
 	Out._UV = In._UV;
     Out._Normal = mul(In._Normal, (float3x4)g_rotationMatrix); //法線を回す。
+    Out._Tangent = mul(In._Tangent, (float3x4) g_rotationMatrix); //法線を回す。
 	
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
@@ -144,6 +147,7 @@ VS_OUTPUT VSMainInstancing(VS_INPUT_INSTANCING In)
 	rotM[1] = In._World2;
 	rotM[2] = In._World3;
 	Out._Normal = mul(In.base._Normal, rotM);	//法線を回す。
+    Out._Tangent = mul(In.base._Tangent, rotM); //法線を回す。
 
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
@@ -164,7 +168,10 @@ PSOutput PSMain(VS_OUTPUT In)
 {
 	float4 color = 0.0f;	//最終的に出力するカラー
 	float4 diff = 0.0f;	//メッシュのマテリアル
-	float3 normal = normalize(In._Normal.xyz);
+
+    //法線計算.
+    float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
+
 	//カラー
 	if (Texflg)
 	{
@@ -226,21 +233,10 @@ PSOutput PSMain(VS_OUTPUT In)
 	light = DiffuseLight(normal);
 
 	//スペキュラーライト
-	if (Spec)
-	{
-		float3 spec = 0.0f;
-		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World.xyz);
-		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
-		for (int i = 0; i < g_LightNum; i++)
-		{
-			//スペキュラ成分を計算する。
-			//反射ベクトルを計算。
-			float3 L = -g_diffuseLightDirection[i].xyz;
-			spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[i].w;	//スペキュラ強度。
-		}
-
-		light.rgb += spec.xyz;
-	}
+    if (Spec)
+    {
+        light.xyz += SpecLight(normal, In._World.xyz, In._UV);
+    }
 
 	float3 cascadeColor = 0;
 

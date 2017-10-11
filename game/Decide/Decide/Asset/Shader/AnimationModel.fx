@@ -60,6 +60,7 @@ struct VS_INPUT
     float4  _BlendWeights    : BLENDWEIGHT;
     float4  _BlendIndices    : BLENDINDICES;
     float3  _Normal          : NORMAL;
+    float3 _Tangent : TANGENT;
 	float4	_Color			: COLOR0;
     float2  _UV            : TEXCOORD0;
 };
@@ -71,8 +72,9 @@ struct VS_OUTPUT
 {
 	float4  _Pos    : POSITION;
 	float4	_Color	: COLOR0;
-    float3  _Normal	: TEXCOORD0;
-    float2  _UV		: TEXCOORD1;
+    float3 _Normal : NORMAL;
+    float3 _Tangent : TANGENT;
+    float2 _UV : TEXCOORD1;
 	float4  _World	: TEXCOORD2;	//ワールド座標
 	float4  _WVP	: TEXCOORD3;	//カメラから見た行列
 	float4	_MieColor		: TEXCOORD4;	//ミー錯乱色。
@@ -93,6 +95,7 @@ VS_OUTPUT VSMain( VS_INPUT In )
     float LastWeight = 0.0f;
     float3 pos = 0.0f;
     float3 normal = 0.0f;
+    float3 tangent = 0.0f;
 	//ボーン数ループ?
     for (int iBone = 0; iBone < g_numBone-1; iBone++)
     {
@@ -100,13 +103,15 @@ VS_OUTPUT VSMain( VS_INPUT In )
         
         pos += mul(In._Pos, g_mWorldMatrixArray[IndexArray[iBone]]) * BlendWeightsArray[iBone];
         normal += mul(In._Normal, g_mWorldMatrixArray[IndexArray[iBone]]) * BlendWeightsArray[iBone];
+        tangent += mul(In._Tangent, g_mWorldMatrixArray[IndexArray[iBone]]) * BlendWeightsArray[iBone];
     }
     LastWeight = 1.0f - LastWeight; 
 
     //？？
 	pos += (mul(In._Pos, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
     normal += (mul(In._Normal, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
-
+	tangent += (mul(In._Tangent, g_mWorldMatrixArray[IndexArray[g_numBone-1]]) * LastWeight);
+	
 	o._World = float4(pos.xyz, 1.0f);
 
 	//ワールド行列
@@ -123,7 +128,7 @@ VS_OUTPUT VSMain( VS_INPUT In )
 
     o._UV = In._UV;
 	o._Color = In._Color;
-
+	o._Tangent = tangent;
 	//大気散乱.
 	CalcMieAndRayleighColors(o._MieColor, o._RayColor, o._PosToCameraDir, o._World.xyz);
 
@@ -143,8 +148,10 @@ PSOutput PSMain( VS_OUTPUT In )
 {
 	float4 color = (float4)0;	//最終的に出力するカラー
 	float4 diff = (float4)0;	//メッシュのマテリアル
-	float3 normal = normalize(In._Normal);
-	//カラー
+    
+    float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
+
+    //カラー
 	if (Texflg)
 	{
 		diff = tex2D(g_diffuseTextureSampler, In._UV) * g_Textureblendcolor;
@@ -165,19 +172,8 @@ PSOutput PSMain( VS_OUTPUT In )
 	//スペキュラーライト
 	if(Spec)
 	{
-		float3 spec = 0.0f;
-		float3 toEyeDir = normalize(g_cameraPos.xyz - In._World);
-		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
-		for (int i = 0; i < g_LightNum; i++)
-		{
-			//スペキュラ成分を計算する。
-			//反射ベクトルを計算。
-			float3 L = -g_diffuseLightDirection[i].xyz;
-			spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[i].w;	//スペキュラ強度。
-		}
-
-		light.xyz += spec.xyz;
-	}
+        light.xyz += SpecLight(normal, In._World.xyz, In._UV);
+    }
 
 	float3 cascadeColor = 0;
 
@@ -204,7 +200,7 @@ PSOutput PSMain( VS_OUTPUT In )
 
 	PSOutput Out = (PSOutput)0;
 
-	Out.Color = color;
+    Out.Color = color;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
 
