@@ -15,7 +15,7 @@ void Ground::Awake()
 	SkinModel* model = AddComponent<SkinModel>();
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Ground.X"));
-	modeldata->CalcWidthAndHeight();
+	//modeldata->CalcWidthAndHeight();
 	//マテリアル取得
 	Material* material = modeldata->FindMaterial("ground4_Diffuse.tga");
 	//スプラットマップセット

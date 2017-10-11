@@ -844,6 +844,8 @@ bool SkinModelData::LoadModelData(const char* filePath)
 
 		//メッシュリストを作成。
 		_CreateMeshList();
+		//サイズ測定。
+		Measurement();
 		//オリジナル。
 		_Original = this;
 		return true;
@@ -886,6 +888,8 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 	this->_MeshList = original->_MeshList;
 	//
 	this->_TerrainSize = original->_TerrainSize;
+	//
+	this->_Size = original->_Size;
 	
 	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 
@@ -1027,15 +1031,12 @@ LPD3DXMESH SkinModelData::GetOrgMeshFirst() const
 	return GetOrgMesh(_FrameRoot);
 }
 
-void SkinModelData::CalcWidthAndHeight()
+void SkinModelData::Measurement()
 {
-	const std::vector<LPD3DXMESH>& meshList = GetMeshList();
 	//番兵設定
-	float minX = FLT_MAX;
-	float minZ = FLT_MAX;
-	float maxX = -FLT_MAX;
-	float maxZ = -FLT_MAX;
-	for (auto& mesh : meshList) {
+	Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	//
+	for (auto& mesh : _MeshList) {
 		//頂点バッファを取得。
 		LPDIRECT3DVERTEXBUFFER9 vb;
 		mesh->GetVertexBuffer(&vb);
@@ -1048,10 +1049,14 @@ void SkinModelData::CalcWidthAndHeight()
 		vb->Lock(0, desc.Size, (void**)&vertexPos, D3DLOCK_READONLY);
 		//頂点数ループ
 		for (unsigned int i = 0; i < mesh->GetNumVertices(); i++) {
-			minX = min(minX, vertexPos->x);
-			minZ = min(minZ, vertexPos->z);
-			maxX = max(maxX, vertexPos->x);
-			maxZ = max(maxZ, vertexPos->z);
+			//最小。
+			Min.x = min(Min.x, vertexPos->x);
+			Min.y = min(Min.y, vertexPos->z);
+			Min.z = min(Min.z, vertexPos->z);
+			//最大。
+			Max.x = max(Max.x, vertexPos->x);
+			Max.y = max(Max.y, vertexPos->x);
+			Max.z = max(Max.z, vertexPos->z);
 			//次の頂点へ。
 			char* p = (char*)vertexPos;
 			p += stride;
@@ -1060,10 +1065,12 @@ void SkinModelData::CalcWidthAndHeight()
 		vb->Unlock();
 		vb->Release();
 	}
-	_TerrainSize.x = minX;
-	_TerrainSize.y = maxX;
-	_TerrainSize.z = minZ;
-	_TerrainSize.w = maxZ;
+	_TerrainSize.x = Min.x;
+	_TerrainSize.y = Max.x;
+	_TerrainSize.z = Min.z;
+	_TerrainSize.w = Max.z;
+
+	_Size = Max - Min;
 }
 
 void SkinModelData::_CreateMeshList()
