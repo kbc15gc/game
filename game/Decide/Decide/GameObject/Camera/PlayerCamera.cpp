@@ -94,7 +94,7 @@ void PlayerCamera::Move()
 	_PrevPosition = ppos;
 	//プレイヤーの方を向く
 	_Camera->SetTarget(pos);
-
+	transform->LockAt(pos);
 	//プレイヤーとカメラの距離
 	Vector3 dist = (Vector3)(_ToPlayerDir * _Dist);
 	Vector3 from, to;
