@@ -90,7 +90,7 @@ void PlayerCamera::Move()
 {
 	Vector3 trg = _Camera->GetTarget();
 	Vector3 ppos = (*_PlayerPos) + PLAYER_HEIGHT;
-	auto pos = SpringDamp(trg, ppos, _PrevPosition,Time::DeltaTime(), 7.0f, 0.8f, 0.1f);
+	auto pos = SpringDamp(trg, ppos, _PrevPosition,Time::DeltaTime(), 9.0f, 0.8f, 0.01f);
 	_PrevPosition = ppos;
 	//ƒvƒŒƒCƒ„[‚Ì•û‚ðŒü‚­
 	_Camera->SetTarget(pos);
