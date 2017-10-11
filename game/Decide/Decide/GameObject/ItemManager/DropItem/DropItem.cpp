@@ -24,7 +24,7 @@ void DropItem::Awake() {
 	//スキンモデル作成。
 	SkinModelData* modeldata = new SkinModelData();
 
-	//モデルデータ作成。
+	//モデルデータ作成(ファイルパスはテスト用)。
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Debug/SphereCollision.X"));
 
 	//モデル設定。
@@ -36,7 +36,7 @@ void DropItem::Awake() {
 
 	_Player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
 
-	//アイコン画像設定。
+	//アイコン画像設定(アイコン画像はテスト用)。
 	_ButtonIconImage= INSTANCE(GameObjectManager)->AddNew<ImageObject>("DropButtonIconImage", 9);
 	_ButtonIconImage->SetTexture(LOADTEXTURE("UI/up.png"));
 	_ButtonIconImage->SetActive(false, false);
