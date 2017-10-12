@@ -18,14 +18,18 @@ PlayerStateIdol::~PlayerStateIdol()
 
 void PlayerStateIdol::Update()
 {
+	if (_Player->_CharacterController == nullptr)
+	{
+		return;
+	}
 	//移動速度
 	Vector3 movespeed = Vector3::zero;
-	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
+	movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
 	//キーボードのJ　or　パッドのAボタンでジャンプ
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (_Player->GetCharaCon().IsOnGround() == true && !_Player->_Speak)
+		if (_Player->GetCharaCon().IsOnGround() == true && !_Player->_NoJump)
 		{
 			//ジャンプパワーを設定
 			movespeed.y = _JumpSpeed;
