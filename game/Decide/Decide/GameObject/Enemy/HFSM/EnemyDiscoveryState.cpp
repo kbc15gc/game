@@ -27,7 +27,7 @@ void EnemyDiscoveryState::_UpdateSubClass() {
 	_EndState();
 }
 
-void EnemyDiscoveryState::Exit(EnemyCharacter::State next) {
+void EnemyDiscoveryState::_ExitSubClass(EnemyCharacter::State next) {
 
 }
 

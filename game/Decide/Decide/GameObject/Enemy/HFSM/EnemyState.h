@@ -21,8 +21,8 @@ public:
 	bool Update();
 
 	// 引数は次のステート。
-	// ※次のステートに移行する前に呼ばれる。
-	virtual void Exit(EnemyCharacter::State next) {};
+	// ※次のステートに移行する際に呼ばれる。
+	void Exit(EnemyCharacter::State next);
 
 	// このステートから移行できるステートを選別する関数。
 	// ※デフォルトではすべてのステートに移行できる。
@@ -71,6 +71,11 @@ private:
 	// 継承先での更新処理。
 	// ※継承先で必ず上書きして使用。
 	virtual void _UpdateSubClass() = 0;
+
+	// 引数は次のステート。
+	// ※次のステートに移行する際に呼ばれる。
+	// ※継承先で実装。
+	virtual void _ExitSubClass(EnemyCharacter::State next) = 0;
 
 	// 現在のローカルステートが終了した際に呼ばれるコールバック関数。
 	// 引数は現在のローカルステートの添え字。

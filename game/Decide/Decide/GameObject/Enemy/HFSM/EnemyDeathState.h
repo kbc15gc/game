@@ -9,13 +9,14 @@ class EnemyDeathState : public EnemyState {
 public:
 	EnemyDeathState(EnemyCharacter* Object);
 	~EnemyDeathState();
-	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
 
 	void _Start()override;
 
 	void _UpdateSubClass()override;
+
+	void _ExitSubClass(EnemyCharacter::State next)override;
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 

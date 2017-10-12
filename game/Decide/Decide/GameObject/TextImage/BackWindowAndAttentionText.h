@@ -62,13 +62,13 @@ public:
 	//アクティブフラグをtrueに変更。
 	void SetActiveTrue() {
 		_AttentionBackWindowImage->SetActive(true, true);
-		static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"))->PlayerStopEnable();
+		//static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"))->PlayerStopEnable();
 	}
 
 	//アクティブフラグをfalseに変更。
 	void SetActiveFalse() {
 		_AttentionBackWindowImage->SetActive(false, true);
-		static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"))->PlayerStopDisable();
+		//static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"))->PlayerStopDisable();
 	}
 private:
 	ImageObject*	_AttentionBackWindowImage	= nullptr;			//背景画像。

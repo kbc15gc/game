@@ -42,7 +42,7 @@ void EnemyDeathState::_UpdateSubClass() {
 	}
 }
 
-void EnemyDeathState::Exit(EnemyCharacter::State next) {
+void EnemyDeathState::_ExitSubClass(EnemyCharacter::State next) {
 }
 
 void EnemyDeathState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

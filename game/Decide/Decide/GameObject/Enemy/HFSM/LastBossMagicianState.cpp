@@ -16,6 +16,8 @@ LastBossMagicianState::~LastBossMagicianState()
 void LastBossMagicianState::_EntrySubClass() {
 	// 無敵解除。
 
+	_ChangeLocalState(EnemyCharacter::State::StartAttack);
+	_timeCounter = 0.0f;
 }
 
 void LastBossMagicianState::_Start() {
@@ -26,16 +28,26 @@ void LastBossMagicianState::_Start() {
 void LastBossMagicianState::_UpdateSubClass() {
 	// 常にプレイヤーと距離判定し、バトル範囲外に出たら初期ステートに戻す。
 
-	// 確率で攻撃と魔王へのバフを行う。
 
-	// 一定時間で歴史改ざんに移行しステート終了。
 
-	// ※暫定処理。
-	_EndState();
+	if (_timeCounter >= _interval) {
+		// 一定時間で歴史改ざんに移行しステート終了。
+
+		_EndState();
+	}
+	else {
+		_timeCounter += Time::DeltaTime();
+	}
 }
 
-void LastBossMagicianState::Exit(EnemyCharacter::State next) {
+void LastBossMagicianState::_ExitSubClass(EnemyCharacter::State next) {
 }
 
 void LastBossMagicianState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
+	// 確率で攻撃と魔王へのバフを行う。
+
+	if (EndLocalStateType == EnemyCharacter::State::StartAttack) {
+		_ChangeLocalState(EnemyCharacter::State::StartAttack);
+	}
+
 }

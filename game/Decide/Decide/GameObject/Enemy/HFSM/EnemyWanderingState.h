@@ -6,13 +6,14 @@ class EnemyWanderingState : public EnemyState {
 public:
 	EnemyWanderingState(EnemyCharacter* Object);
 	~EnemyWanderingState();
-	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
 
 	void _Start()override;
 
 	void _UpdateSubClass()override;
+
+	void _ExitSubClass(EnemyCharacter::State next)override {};
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 

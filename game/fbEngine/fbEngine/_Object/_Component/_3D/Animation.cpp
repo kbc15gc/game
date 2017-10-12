@@ -68,6 +68,13 @@ void Animation::PlayAnimation(const UINT animationSetIndex)
 {
 	if (animationSetIndex < _NumAnimSet) {
 		if (_AnimController) {
+
+			for (auto& call : _callback) {
+				// 関数ポインタに設定された関数を実行。
+
+				(call->object->*(call->callback))(animationSetIndex);
+			}
+
 			//再生開始
 			_IsPlaying = true;
 			_CurrentFrame = 0;
@@ -102,6 +109,12 @@ void Animation::PlayAnimation(const UINT animationSetIndex, const float interpol
 {
 	if (animationSetIndex < _NumAnimSet) {
 		if (_AnimController) {
+			for (auto& call : _callback) {
+				// 関数ポインタに設定された関数を実行。
+
+				(call->object->*(call->callback))(animationSetIndex);
+			}
+
 			//ループ数設定
 			_LoopNum = lnum;
 			_LoopCount = 0;

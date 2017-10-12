@@ -41,9 +41,7 @@ void LastBossDownState::_UpdateSubClass() {
 	_EndState();
 }
 
-void LastBossDownState::Exit(EnemyCharacter::State next) {
-	// ã ç¿è¢ä´ÅB
-
+void LastBossDownState::_ExitSubClass(EnemyCharacter::State next) {
 }
 
 void LastBossDownState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {

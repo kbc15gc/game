@@ -39,7 +39,7 @@ void LastBossHistoryTamperingState::_UpdateSubClass() {
 	_EndState();
 }
 
-void LastBossHistoryTamperingState::Exit(EnemyCharacter::State next) {
+void LastBossHistoryTamperingState::_ExitSubClass(EnemyCharacter::State next) {
 	// —ğj‘‚ğÁ‚·B
 
 }

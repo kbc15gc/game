@@ -12,6 +12,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Player\Player.h"
 #include "fbEngine\_Object\_Component\_Physics\CharacterExtrude.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
 
 class SkinModel;
 class Animation;
@@ -34,7 +35,7 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State { Wandering = 0,Discovery, Chace,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
+	enum class State {None = -1, Wandering = 0,Discovery, Chace,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
 
 	// アニメーションデータテーブルの添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
@@ -351,6 +352,42 @@ public:
 
 	}
 
+	inline int GetParam(CharacterParameter::Param param)const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetParam(param);
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline int GetPigmentParam(CharacterParameter::Param param)const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetPigmentParam(param);
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline int GetMaxHP()const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetMaxHP();
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline int GetMaxMP()const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetMaxMP();
+		}
+		else {
+			return 0;
+		}
+	}
+
 	inline const AnimationData& GetAnimationData(AnimationType type)const {
 		return _AnimationData[static_cast<int>(type)];
 	}
@@ -385,8 +422,13 @@ public:
 	*/
 	void EffectUpdate();
 
+	inline State GetNowStateIndex()const {
+		return _NowStateIdx;
+	}
+
 protected:
 	// ステート切り替え関数。
+	// ※Noneを渡すとステートがオフになる。
 	void _ChangeState(State next);
 
 	// アニメーションタイプにアニメーションデータを関連付ける関数。
