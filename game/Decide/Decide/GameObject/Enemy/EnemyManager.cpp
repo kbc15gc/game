@@ -91,6 +91,7 @@ void EnemyManager::CreateEnemy() {
 
 void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 	INSTANCE(GameObjectManager)->AddRemoveList(object);
+
 	for (auto enemy : _enemys) {
 		if (object == enemy->Object) {
 			// このクラスで生成したエネミーが死亡している。

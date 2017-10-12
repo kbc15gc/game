@@ -8,10 +8,6 @@ public:
 	EnemyTranslationState(EnemyCharacter* Object);
 	~EnemyTranslationState();
 
-
-	void Exit(EnemyCharacter::State next)override;
-
-
 	// ˆÚ“®‚·‚é•ûŒü‚ğw’èB
 	inline void SetDir(const Vector3& dir) {
 		_Direction = dir;
@@ -44,6 +40,8 @@ private:
 	void _Start()override;
 
 	void _UpdateSubClass()override;
+
+	void _ExitSubClass(EnemyCharacter::State next)override {};
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 

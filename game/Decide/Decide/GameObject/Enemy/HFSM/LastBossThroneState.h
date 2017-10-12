@@ -6,7 +6,6 @@ class LastBossThroneState : public EnemyState {
 public:
 	LastBossThroneState(EnemyCharacter* Object);
 	~LastBossThroneState();
-	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
 
@@ -14,8 +13,14 @@ private:
 
 	void _UpdateSubClass()override;
 
+	void _ExitSubClass(EnemyCharacter::State next)override;
+
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 private:
 	bool _isOutsideRange = false;	// 範囲外に出たか。
+	float _timeCounter;
+
+	static const int _entourageNum;	// 側近の数。
+	vector<EnemyCharacter*> _entourageEnemys;	// 側近。
 };

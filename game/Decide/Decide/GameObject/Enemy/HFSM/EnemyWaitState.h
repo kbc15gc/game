@@ -8,9 +8,6 @@ public:
 	EnemyWaitState(EnemyCharacter* Object);
 	~EnemyWaitState();
 
-	void Exit(EnemyCharacter::State next)override;
-
-
 	// ‘Ò‹@ŠÔİ’èB
 	inline void SetInterval(const float time) {
 		_Interval = time;
@@ -21,6 +18,8 @@ private:
 	void _Start()override;
 
 	void _UpdateSubClass()override;
+
+	void _ExitSubClass(EnemyCharacter::State next)override {};
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 private:

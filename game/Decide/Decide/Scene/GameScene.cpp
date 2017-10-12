@@ -108,7 +108,7 @@ void GameScene::Start()
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 100);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
 	enemy->SetParamAll(Color, param);
 
 	FOR(i,2)

@@ -45,10 +45,6 @@ void EnemyWaitState::_UpdateSubClass() {
 	}
 }
 
-void EnemyWaitState::Exit(EnemyCharacter::State next) {
-
-}
-
 void EnemyWaitState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
 	// 現在のローカルステートの処理が終了した。
 

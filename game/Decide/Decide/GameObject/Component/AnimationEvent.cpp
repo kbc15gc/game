@@ -25,34 +25,23 @@ void AnimationEventPlayer::Update() {
 		// アニメーションイベントが一つも設定されていない。
 		return;
 	}
+
 	Animation* work = gameObject->GetComponent<Animation>();
 	if (work) {
+		if (!_isSetCallBack) {
+
+			// コールバック関数設定。
+			work->AddCallBack(move(unique_ptr<Animation::StartAnimationCallBack>(new Animation::StartAnimationCallBack(this, static_cast<Animation::CallBack>(&AnimationEventPlayer::StartAnimation)))));
+			_isSetCallBack = true;
+		}
+
 		//現在再生中のアニメーション番号取得。
 		int nowAnim = work->GetPlayAnimNo();
-		if (nowAnim != _playAnimationNo) {
-			// 別のアニメーションが再生された。
 
-			for (auto eventData : _animationEvents[_playAnimationNo]) {
-				eventData->isPlay = false;
-			}
-			_playAnimationNo = nowAnim;
-		}
-		else if(work->GetLocalAnimationTime() < _nowLocalTime){
-			// 1ループ終了した。
-			// もしくは同じアニメーションがもう一度再生された。
 
-			for (auto eventData : _animationEvents[_playAnimationNo]) {
-				eventData->isPlay = false;
-			}
-			_nowLocalTime = work->GetLocalAnimationTime();
-			return;
-		}
-
-		_nowLocalTime = work->GetLocalAnimationTime();
-
-		for (auto eventData : _animationEvents[_playAnimationNo]) {
+		for (auto eventData : _animationEvents[nowAnim]) {
 			//時間が一致した時イベント呼び出し。
-			if (_nowLocalTime >= eventData->playTime)
+			if (work->GetLocalAnimationTime() >= eventData->playTime)
 			{
 				if (!eventData->isPlay) {
 					// イベントがまだ実行されてない。
@@ -67,5 +56,11 @@ void AnimationEventPlayer::Update() {
 	else {
 		// Animationコンポーネントがアタッチされていない。
 		abort();
+	}
+}
+
+void AnimationEventPlayer::StartAnimation(int animationNo) {
+	for (auto eventData : _animationEvents[animationNo]) {
+		eventData->isPlay = false;
 	}
 }

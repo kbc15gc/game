@@ -95,16 +95,18 @@ void EnemyCharacter::Update() {
 	// エネミーのエフェクト更新。
 	EffectUpdate();
 
-	if (_NowState == nullptr) {
-		// ステートを継承先で指定した？。
-		abort();
-	}
-	// 現在のステートを更新。
-	if (_NowState->Update()) {
-		// ステート処理終了。
+	if (_NowState) {
+		// 現在のステートを更新。
+		if (_NowState->Update()) {
+			// ステート処理終了。
 
-		// ステートが終了したことを通知。
-		_EndNowStateCallback(_NowStateIdx);
+			EnemyCharacter::State work = _NowStateIdx;	// 終了したステートを保存。
+			// とりあえずステートを切り替えて必ず終了処理を呼ぶ。
+			_ChangeState(EnemyCharacter::State::None);
+
+			// ステートが終了したことを通知。
+			_EndNowStateCallback(work);
+		}
 	}
 
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
@@ -363,7 +365,7 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 }
 
 void EnemyCharacter::_ChangeState(State next) {
-	if (static_cast<int>(next) >= _MyState.size() || static_cast<int>(next) < 0) {
+	if (next != EnemyCharacter::State::None && static_cast<int>(next) >= _MyState.size()) {
 		// 渡された数字が配列の容量を超えている。
 		abort();
 	}
@@ -381,15 +383,21 @@ void EnemyCharacter::_ChangeState(State next) {
 		}
 	}
 
-	// 新しいステートに切り替え。
-	_NowState = _MyState[static_cast<int>(next)].get();
-	_NowState->Entry();
+	if (next == State::None) {
+		// 次のステートが指定されていない。
+		_NowState = nullptr;
+	}
+	else {
+		// 新しいステートに切り替え。
+		_NowState = _MyState[static_cast<int>(next)].get();
+		_NowState->Entry();
+	}
 
 	// 現在のステートの添え字を保存。
 	_NowStateIdx = next;
 }
 
-	void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
 	strcpy(_SoundData[static_cast<int>(idx)].Path, filePath);
 	_SoundData[static_cast<int>(idx)].Is3D = is3D;
 	_SoundData[static_cast<int>(idx)].IsLoop = isLoop;
@@ -411,7 +419,7 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 
 void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 	int _damage;
-	if (_NowState->IsPossibleDamage()) {
+	if ((_NowState && _NowState->IsPossibleDamage()) || _NowState == nullptr) {
 		// ダメージを与えられるステートだった。
 
 		_damage = _MyComponent.Parameter->ReciveDamage(info);
