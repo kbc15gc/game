@@ -45,7 +45,7 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 10.0f;
+		const float TMP = 1.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 		_SunAngle += 0.02f * Time::DeltaTime() * TMP;
 
