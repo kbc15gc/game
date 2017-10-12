@@ -29,9 +29,6 @@ void BossDrarian::_StartSubClass() {
 	_ViewAngle = 100.0f;
 	_ViewRange = 30.0f;
 
-	// 攻撃可能範囲設定。
-	_AttackRange = 6.5f;
-
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
 
@@ -47,9 +44,9 @@ void BossDrarian::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
+	_singleAttack->Init(6.5f,_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
 	_tailAttack.reset(new EnemySingleAttack(this));
-	_tailAttack->Init(static_cast<int>(AnimationBossDrarian::TailAttackRight), 0.2f);
+	_tailAttack->Init(6.5f,static_cast<int>(AnimationBossDrarian::TailAttackRight), 0.2f);
 
 	// 攻撃処理に使用するパーティクル設定。
 	ParticleParameter param;
@@ -72,11 +69,12 @@ void BossDrarian::_StartSubClass() {
 
 	// ブレス攻撃生成。
 	_breathAttack.reset(new EnemyBreathAttack(this, param, Vector3(0.0f, 0.0f, 5.0f)));
-	_breathAttack->Init(static_cast<int>(AnimationBossDrarian::Breath), 0.2f);
+	_breathAttack->Init(13.0f,static_cast<int>(AnimationBossDrarian::Breath), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_ChangeState(State::Wandering);
+	_initState = State::Wandering;
+	_ChangeState(_initState);
 }
 
 void BossDrarian::_UpdateSubClass() {
@@ -98,7 +96,7 @@ void BossDrarian::_LateUpdateSubClass()
 }
 
 
-EnemyAttack* BossDrarian::AttackSelect() {
+EnemyAttack* BossDrarian::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
@@ -214,11 +212,6 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 		// 徘徊ステート終了。
 		_ChangeState(State::Wandering);
 	}
-	else if (EndStateType == State::Discovery) {
-		// 発見ステートの処理完了。
-
-		_ChangeState(State::StartAttack);
-	}
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
@@ -233,13 +226,13 @@ void BossDrarian::_EndNowStateCallback(State EndStateType) {
 	}
 	else if (EndStateType == State::Damage) {
 		// 攻撃を受けた。
-		// 発見状態に移行。
-		_ChangeState(State::Discovery);
+		// 攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 	else if (EndStateType == State::Threat) {
 		// 威嚇終了。
-		// 発見状態に移行。
-		_ChangeState(State::Discovery);
+		// 攻撃開始。
+		_ChangeState(State::StartAttack);
 	}
 }
 

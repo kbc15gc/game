@@ -7,12 +7,15 @@
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 #include "GameObject\ItemManager\HoldItem\HoldItemFactory.h"
+#include "fbEngine\_Object\_GameObject\ImageObject.h"
+#include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\TextImage\BackWindowAndAttentionText.h"
 
 Inventory* Inventory::_InventoryInstance = nullptr;
 
-
 Inventory::Inventory()
 {
+	
 }
 
 Inventory::~Inventory(){
@@ -26,6 +29,7 @@ Inventory::~Inventory(){
 void Inventory::Initialize() {
 	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 
+
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
 		// コードごとの最大ID数分配列確保。
 		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx)) + 1,0));
@@ -37,6 +41,7 @@ void Inventory::Initialize() {
 
 //アイテムをインベントリに追加。
 bool Inventory::AddItem(Item::ItemInfo* item, int num) {
+	
 	Item::BaseInfo* Info = item;
 	char error[256];
 	int work = num;
@@ -79,9 +84,9 @@ bool Inventory::AddItem(Item::ItemInfo* item, int num) {
 	//エラー報告。
 	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
 	if(work > 0){
-		char error[256];
-		sprintf(error, "インベントリが一杯で%sが%dこ追加されませんでした。",Info->Name,work);
-		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		wchar_t ErrorText[256];
+		wcscpy_s(ErrorText, wcslen(L"所持品が一杯でアイテムを追加出来ませんでした。\n所持品を整理してください。Aボタンで閉じる。") + 1, L"所持品が一杯でアイテムを追加出来ませんでした。\n所持品を整理してください。Aボタンで閉じる。");
+		static_cast<BackWindowAndAttentionText*>(INSTANCE(GameObjectManager)->FindObject("BackWindowAndAttentionText"))->Create(ErrorText,Vector3(642.0f, 363.0f, 0.0f), Vector2(793.0f, 229.0f), Vector3(1.0f, -20.0f, 0.0), 33.0f, Color::red);
 		return false;
 	}
 
@@ -121,15 +126,15 @@ HoldEquipment* Inventory::AddEquipment(Item::BaseInfo* info, bool isRandParam) {
 	//エラー報告。
 	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
 	{
-		char error[256];
-		sprintf(error, "インベントリが一杯で追加されませんでした。");
-		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		wchar_t ErrorText[256];
+		wcscpy_s(ErrorText, wcslen(L"装備品が一杯で装備品を追加出来ませんでした。\n装備品を整理してください。Aボタンで閉じる。") + 1, L"装備品が一杯で装備品を追加出来ませんでした。\n装備品を整理してください。Aボタンで閉じる。");
+		static_cast<BackWindowAndAttentionText*>(INSTANCE(GameObjectManager)->FindObject("BackWindowAndAttentionText"))->Create(ErrorText, Vector3(642.0f, 363.0f, 0.0f), Vector2(793.0f, 229.0f), Vector3(1.0f, -20.0f, 0.0), 33.0f, Color::red);
+		return nullptr;
 	}
-
-	return nullptr;
 }
 
 bool Inventory::AddEquipment(HoldEquipment* add) {
+
 	for (int idx = 0; idx < _InventoryItemList[static_cast<int>((add->GetInfo()->TypeID))].size(); idx++) {
 		if (_InventoryItemList[static_cast<int>(add->GetInfo()->TypeID)][idx] == nullptr) {
 			// 空き枠がある。
@@ -147,12 +152,10 @@ bool Inventory::AddEquipment(HoldEquipment* add) {
 	//エラー報告。
 	// ※暫定処理(追加できない場合は捨てるアイテムをプレイヤーに選択させる必要がある)。
 	{
-		char error[256];
-		sprintf(error, "インベントリが一杯で追加されませんでした。");
-		MessageBoxA(0, error, "インベントリに追加失敗", MB_ICONWARNING);
+		return false;
 	}
 
-	return false;
+	
 }
 
 void Inventory::UseItem() {
@@ -380,6 +383,7 @@ void Inventory::ArrangementInventory()
 	}
 }
 
+//リストの中身を全て削除。
 void Inventory::deleteList() {
 	
 
@@ -387,6 +391,4 @@ void Inventory::deleteList() {
 		list.clear();
 	}
 	_InventoryItemList.clear();
-
-	//_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 }

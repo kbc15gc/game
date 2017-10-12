@@ -12,7 +12,7 @@ EnemyAttackState::~EnemyAttackState()
 }
 
 void EnemyAttackState::_EntrySubClass() {
-
+	_attack = _EnemyObject->GetNowSelectAttack();
 }
 
 void EnemyAttackState::_Start() {
@@ -51,7 +51,7 @@ void EnemyAttackState::_UpdateSubClass() {
 	}
 }
 
-void EnemyAttackState::Exit(EnemyCharacter::State next) {
+void EnemyAttackState::_ExitSubClass(EnemyCharacter::State next) {
 	_attack->Exit();
 }
 

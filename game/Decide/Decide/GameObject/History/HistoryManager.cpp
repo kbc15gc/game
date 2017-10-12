@@ -50,7 +50,7 @@ void HistoryManager::Start()
 	{
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		//_CreateObject((int)LocationCodeE::Common, path, type);
+		_CreateObject((int)LocationCodeE::Common, path, type);
 	}
 
 	//歴史オブジェクト生成。
@@ -202,7 +202,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
-	for (short i = 0; i < objInfo.size();)
+	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
@@ -277,7 +277,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 	FOR(i, npcInfo.size())
 	{
 		//生成
-		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>("NPC", 2);
+		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
 		npc->LoadModel(npcInfo[i]->filename);
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);

@@ -18,6 +18,7 @@ enum ModelEffectE
 	TOON = BIT(4),				//トゥーン
 	LIMLIGHT = BIT(5),			//リムライト
 	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
+	FRUSTUM_CULLING = BIT(7)	//フラスタムカリングを行うかどうか？
 };
 
 /**

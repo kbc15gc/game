@@ -18,7 +18,7 @@
 #include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
-#include "..\LevelUpImage.h"
+#include "GameObject\TextImage\LevelUpImage.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 #include "GameObject\Village\NPC.h"
 #include "GameObject\Component\AnimationEvent.h"
@@ -222,6 +222,16 @@ public:
 	{
 		ChangeState(State::Idol);
 	}
+	//プレイヤージャンプしない。
+	void PlayerJumpEnable()
+	{
+		_NoJump = true;
+	}
+	//ジャンプする。
+	void PlayerJumpDisable()
+	{
+		_NoJump = false;
+	}
 
 	//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
 	void SetEquipment(HoldItemBase* equi);
@@ -368,8 +378,8 @@ private:
 	LevelUpImage* _LevelUpImage;
 	//歴史書
 	HistoryManager* _HistoryManager = nullptr;
-	//NPCと話すときジャンプしないため
-	bool _Speak;
+	//ジャンプしないため
+	bool _NoJump;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSound = nullptr;
 	//レベルアップ時の音

@@ -31,7 +31,7 @@ private:
 	void _LateUpdateSubClass()override;
 
 
-	EnemyAttack* AttackSelect()override;
+	EnemyAttack* _AttackSelectSubClass()override;
 
 	// コリジョン定義関数。
 	// コリジョンの形状やパラメータを設定する関数。
@@ -64,6 +64,8 @@ private:
 	void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Armor), transform->GetPosition(), 2);
 	}
 
 private:

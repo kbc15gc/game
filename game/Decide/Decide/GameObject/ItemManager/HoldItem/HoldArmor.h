@@ -38,8 +38,8 @@ public:
 
 	//防具の基準値と差分値の割合を算出。
 	inline float ParamRaitoMass()override {
-		float offset = _DefRnd + _MDefRnd;
-		float sum = _Def + _MagicDef;
+		float offset = static_cast<float>(_DefRnd + _MDefRnd);
+		float sum = static_cast<float>(_Def + _MagicDef);
 		float par = offset / sum;
 		return par;
 	}
@@ -52,7 +52,7 @@ public:
 		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な物理防御力を算出。
-		_DefRnd = baseParam * raito;
+		_DefRnd = static_cast<int>(baseParam * raito);
 		_Def = baseParam + _DefRnd;
 	}
 
@@ -64,7 +64,7 @@ public:
 		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な魔法防御力。
-		_MDefRnd = baseParam * raito;
+		_MDefRnd = static_cast<int>(baseParam * raito);
 		_MagicDef = baseParam + _MDefRnd;
 	}
 

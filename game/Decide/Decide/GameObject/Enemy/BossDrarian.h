@@ -56,7 +56,7 @@ private:
 	void _LateUpdateSubClass()override;
 
 
-	EnemyAttack* AttackSelect()override;
+	EnemyAttack* _AttackSelectSubClass()override;
 
 	// コリジョン定義関数。
 	// コリジョンの形状やパラメータを設定する関数。
@@ -92,6 +92,8 @@ private:
 	inline void _DropSubClass()override {
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 		chip->SetDropChipID(ChipID::Oil, transform->GetPosition());
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(7, Item::ItemCodeE::Weapon), transform->GetPosition(), 2);
 	}
 
 private:

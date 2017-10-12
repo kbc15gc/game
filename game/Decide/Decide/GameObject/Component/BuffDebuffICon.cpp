@@ -4,6 +4,7 @@
 #include "GameObject\Enemy\EnemyCharacter.h"
 #include "GameObject\ItemManager\ItemManager.h"
 #include "GameObject\Player\Player.h"
+#include"GameObject\StatusWindow\StatusWindow.h"
 
 namespace
 {
@@ -15,15 +16,12 @@ namespace
 
 //デストラクタ。
 BuffDebuffICon::~BuffDebuffICon() {
-	for (auto BuffDebuff : _BuffDebuffList)
-	{
-		delete BuffDebuff;
-	}
+	DeleteAllBuffDebuffIcon();
 }
 
 //初期化。
 void BuffDebuffICon::Awake() {
-
+	_Priority = StatusWindow::WindowBackPriorty - 1;
 }
 
 //バフアイコンの生成。
@@ -47,10 +45,10 @@ void BuffDebuffICon::BuffIconCreate(CharacterParameter::Param param) {
 	BuffDebuff* buffdebuff = new BuffDebuff;
 
 	//矢印アイコン。
-	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", 8);
+	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", _Priority);
 
 	//パラメーターのアイコン。
-	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 7);
+	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", _Priority);
 
 	switch (_UseIconType)
 	{
@@ -123,10 +121,10 @@ void BuffDebuffICon::DebuffIconCreate(CharacterParameter::Param param) {
 	BuffDebuff* buffdebuff = new(BuffDebuff);
 
 	//矢印アイコン。
-	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", 8);
+	ImageObject* arrowIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ArrowIconImage", _Priority);
 
 	//パラメーターのアイコン。
-	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", 7);
+	ImageObject* buffDebuffTypeIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuffDebuffTypeIconImage", _Priority);
 
 	switch (_UseIconType)
 	{
@@ -185,7 +183,7 @@ void BuffDebuffICon::DebuffIconCreate(CharacterParameter::Param param) {
 //更新。
 void BuffDebuffICon::Update() {
 	//バフデバフリストにつまれている分。
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		//バフを重ね掛けするさい、横にずらす。
 		//OFFSETの値で、どれだけ横にずらすか。
 		Vector3 iconPos = { 0.0f,0.0f,0.0f };
@@ -226,7 +224,7 @@ void BuffDebuffICon::Update() {
 
 //追加するパラメーターを追加していいのかをチェック。
 bool BuffDebuffICon::_AddCheck(CharacterParameter::Param param,bool isBuff) {
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		//同じパラメーターがある。
 		if (_BuffDebuffList[i]->_Param == param&&_BuffDebuffList[i]->_isBuff==isBuff) {
 			return false;
@@ -239,8 +237,7 @@ bool BuffDebuffICon::_AddCheck(CharacterParameter::Param param,bool isBuff) {
 
 //アイコンを描画しない。
 void BuffDebuffICon::RenderDisable() {
-
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		_BuffDebuffList[i]->_ArrowIconImage->SetActive(false);
 		_BuffDebuffList[i]->_BuffDebuffTypeIconImage->SetActive(false);
 	}
@@ -248,7 +245,7 @@ void BuffDebuffICon::RenderDisable() {
 
 //アイコンを描画する。
 void BuffDebuffICon::RenderEnable() {
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		_BuffDebuffList[i]->_ArrowIconImage->SetActive(true);
 		_BuffDebuffList[i]->_BuffDebuffTypeIconImage->SetActive(true);
 	}
@@ -315,9 +312,10 @@ void BuffDebuffICon::DeleteDebuffIcon(CharacterParameter::Param param) {
 	}
 }
 
+//自身に掛かっている全てのバフデバフアイコンを削除。
 void BuffDebuffICon::DeleteAllBuffDebuffIcon() {
-	//デバフアイコンを削除する処理。
-	for (auto itr = _BuffDebuffList.begin(); itr != _BuffDebuffList.end();itr++) {
+	//自身に掛かっているバフデバフアイコンを削除する処理。
+	for (auto itr = _BuffDebuffList.begin(); itr != _BuffDebuffList.end();) {
 
 		//削除。
 		INSTANCE(GameObjectManager)->AddRemoveList((*itr)->_ArrowIconImage);

@@ -29,9 +29,6 @@ void EnemyDrarian::_StartSubClass() {
 	_ViewAngle = 100.0f;
 	_ViewRange = 30.0f;
 
-	// 攻撃可能範囲設定。
-	_AttackRange = 5.0f;
-
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
 
@@ -89,7 +86,7 @@ void EnemyDrarian::_LateUpdateSubClass()
 }
 
 
-EnemyAttack* EnemyDrarian::AttackSelect() {
+EnemyAttack* EnemyDrarian::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	// ※とりあえず暫定処理。
@@ -214,7 +211,7 @@ void EnemyDrarian::_BuildAnimation() {
 void EnemyDrarian::_ConfigAnimationEvent() {
 	// かみつき攻撃。
 	{
-		int eventFrame = 15;
+		float eventFrame = 15;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemyCharacter::AnimationType::Attack1), eventFrame, static_cast<AnimationEvent>(&EnemyDrarian::AnimationEvent_Kamituki));
 	}
 }

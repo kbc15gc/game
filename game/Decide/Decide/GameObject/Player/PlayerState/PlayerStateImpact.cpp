@@ -22,16 +22,13 @@ void PlayerStateImpact::Update()
 	Vector3 movespeed = Vector3::zero;
 	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
 
-	_Player->GetCharaCon().SetMoveSpeed(movespeed);
-	_Player->GetCharaCon().Execute();
-
 	if (_Player->_Anim->GetPlaying() != true)
 	{
 		_Player->ChangeState(Player::State::Idol);
 		return;
 	}
-
-
+	_Player->GetCharaCon().SetMoveSpeed(movespeed);
+	_Player->GetCharaCon().Execute();
 }
 
 void PlayerStateImpact::Enter()

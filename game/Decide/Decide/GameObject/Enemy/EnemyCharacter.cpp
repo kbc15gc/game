@@ -12,12 +12,19 @@
 #include "HFSM\EnemyDeathState.h"
 #include "HFSM\EnemyDamageReactionState.h"
 #include "HFSM\EnemyThreatState.h"
+#include "HFSM\EnemySpeakState.h"
+#include "HFSM\EnemyChaceState.h"
+#include "HFSM\LastBossThroneState.h"
+#include "HFSM\LastBossMagicianState.h"
+#include "HFSM\LastBossHistoryTamperingState.h"
+#include "HFSM\LastBossDownState.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
+
 }
 
 EnemyCharacter::~EnemyCharacter()
@@ -88,16 +95,18 @@ void EnemyCharacter::Update() {
 	// エネミーのエフェクト更新。
 	EffectUpdate();
 
-	if (_NowState == nullptr) {
-		// ステートを継承先で指定した？。
-		abort();
-	}
-	// 現在のステートを更新。
-	if (_NowState->Update()) {
-		// ステート処理終了。
+	if (_NowState) {
+		// 現在のステートを更新。
+		if (_NowState->Update()) {
+			// ステート処理終了。
 
-		// ステートが終了したことを通知。
-		_EndNowStateCallback(_NowStateIdx);
+			EnemyCharacter::State work = _NowStateIdx;	// 終了したステートを保存。
+			// とりあえずステートを切り替えて必ず終了処理を呼ぶ。
+			_ChangeState(EnemyCharacter::State::None);
+
+			// ステートが終了したことを通知。
+			_EndNowStateCallback(work);
+		}
 	}
 
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
@@ -230,8 +239,6 @@ void EnemyCharacter::_BuildCollision() {
 	// キャラクターコントローラーにパラメーターを設定。
 	_ConfigCharacterController();
 
-	_Gravity = -0.98f;
-
 	_MyComponent.CharacterController->SetGravity(_Gravity);
 
 	// キャラクターコントローラ押し出しコンポーネント作成。
@@ -267,8 +274,12 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
 	// 発見ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
+	// 追跡ステートを追加。
+	_MyState.push_back(unique_ptr<EnemyChaceState>(new EnemyChaceState(this)));
 	// 威嚇ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyThreatState>(new EnemyThreatState(this)));
+	// 会話ステートを追加。
+	_MyState.push_back(unique_ptr<EnemySpeakState>(new EnemySpeakState(this)));
 	// 攻撃開始ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyStartAttackState>(new EnemyStartAttackState(this)));
 	// 攻撃ステートを追加。
@@ -283,6 +294,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDamageReactionState>(new EnemyDamageReactionState(this)));
 	// 死亡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDeathState>(new EnemyDeathState(this)));
+
+	_BuildStateSubClass();
 }
 
 /**
@@ -352,7 +365,7 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 }
 
 void EnemyCharacter::_ChangeState(State next) {
-	if (static_cast<int>(next) >= _MyState.size() || static_cast<int>(next) < 0) {
+	if (next != EnemyCharacter::State::None && static_cast<int>(next) >= static_cast<int>(_MyState.size())) {
 		// 渡された数字が配列の容量を超えている。
 		abort();
 	}
@@ -370,15 +383,21 @@ void EnemyCharacter::_ChangeState(State next) {
 		}
 	}
 
-	// 新しいステートに切り替え。
-	_NowState = _MyState[static_cast<int>(next)].get();
-	_NowState->Entry();
+	if (next == State::None) {
+		// 次のステートが指定されていない。
+		_NowState = nullptr;
+	}
+	else {
+		// 新しいステートに切り替え。
+		_NowState = _MyState[static_cast<int>(next)].get();
+		_NowState->Entry();
+	}
 
 	// 現在のステートの添え字を保存。
 	_NowStateIdx = next;
 }
 
-	void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
 	strcpy(_SoundData[static_cast<int>(idx)].Path, filePath);
 	_SoundData[static_cast<int>(idx)].Is3D = is3D;
 	_SoundData[static_cast<int>(idx)].IsLoop = isLoop;
@@ -400,13 +419,13 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 
 void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 	int _damage;
-	if (_NowState->IsPossibleDamage()) {
+	if ((_NowState && _NowState->IsPossibleDamage()) || _NowState == nullptr) {
 		// ダメージを与えられるステートだった。
 
 		_damage = _MyComponent.Parameter->ReciveDamage(info);
 
 		// ダメージ値をもとにパラメーター更新。
-		_MyComponent.HPBar->SubValue(_damage);
+		_MyComponent.HPBar->SubValue(static_cast<float>(_damage));
 
 		//受けたダメージ量を表示。
 		Color c;
@@ -448,6 +467,14 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 	}
 }
 
+float EnemyCharacter::GetNowSelectAttackRange()const {
+	if (_nowAttack) {
+		return _nowAttack->GetAttackRange();
+	}
+	return 0.0f;
+}
+
+
 /**
 * エフェクト用更新.
 */
@@ -481,7 +508,8 @@ void EnemyCharacter::EffectUpdate() {
 
 // EnemyAttack。
 
-void EnemyAttack::Init(int animType, float interpolate, int animLoopNum) {
+void EnemyAttack::Init(float attackRange,int animType, float interpolate, int animLoopNum) {
+	_AttackRange = attackRange;
 	_animType = animType;
 	_interpolate = interpolate;
 	_animLoopNum = animLoopNum;

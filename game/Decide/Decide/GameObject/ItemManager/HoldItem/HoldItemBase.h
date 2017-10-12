@@ -26,7 +26,7 @@ public:
 	}
 
 	//-50‚©‚ç100‚Ì’l‚ğƒ‰ƒ“ƒ_ƒ€‚Åæ“¾B
-	inline float GetRand_S50to100() {
+	inline int GetRand_S50to100() {
 		return (rand() % 151) - 50;
 	}
 

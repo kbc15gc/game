@@ -41,6 +41,13 @@ public:
 	{
 		_TextSpeed = speed;
 	}
+
+
+
+	// 最後のメッセージか取得。
+	inline bool IsLastMessage()const {
+		return (_State == TextBoxStateE::CLOSING);
+	}
 private:
 	//メッセージボックスを開く。
 	void _OpenMessage();

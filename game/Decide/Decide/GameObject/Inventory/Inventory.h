@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "GameObject\ItemManager\ItemManager.h"
-
 class SoundSource;
 class HoldItemBase;
 class HoldEquipment;
 class HoldWeapon;
 class HoldArmor;
 class ConsumptionItem;
+
+class ImageObject;
+class TextObject;
 
 const int INVENTORYLISTNUM = 20;
 
@@ -95,8 +97,9 @@ public:
 		return _HoldNumList[static_cast<int>(code)][id];
 	}
 
-	//リストの中身を削除。
+	//リストの中身を全て削除。
 	void deleteList();
+
 private:
 
 	//リストから指定されたアイテムを削除。
@@ -135,4 +138,6 @@ private:
 	vector<vector<int>> _HoldNumList;
 
 	static Inventory* _InventoryInstance;
+
+	bool _IsAddErrorFlag = false;		//アイテムを追加出来なかった(インベントリが一杯で追加しようとするとtrueになる)。
 };

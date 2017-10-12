@@ -9,6 +9,7 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
+#include"GameObject\Ground\Dungeon.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
 
 
@@ -35,8 +36,12 @@
 
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
+#include "GameObject\Enemy\LastBoss.h"
 
 #include"_Debug\TestObject.h"
+
+#include "GameObject\TextImage\BackWindowAndAttentionText.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
 
 ImageObject* g_depth;
 
@@ -46,10 +51,10 @@ namespace
 {
 	//ボス
 	float BOSS_RADIUS = 35.0f;
-	Vector3 BOSS_POS = { -712,68,48 };
+	Vector3 BOSS_POS = { -686.0f,61.9f,68.0f };
 	//街
 	float MATI_RADIUS = 35.0f;
-	Vector3 MATI_POS = { -406,67,-20 };
+	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 }
 
 
@@ -89,12 +94,26 @@ void GameScene::Start()
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	//ダンジョン生成
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
-	
+
+	// テスト。
+	// ラスボス作成。
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
+
 	FOR(i,2)
 	{
 		//歴史チップ
@@ -106,6 +125,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+
+	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
+
 	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
@@ -115,9 +137,11 @@ void GameScene::Start()
 
 	INSTANCE(Inventory)->Initialize();
 
-#ifdef _NKMT_
-	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 0);
-#endif
+	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
+
+#ifdef _NKMT
+	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
+#endif // _NKMT
 
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

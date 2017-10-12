@@ -9,7 +9,6 @@ class EnemyDiscoveryState : public EnemyState {
 public:
 	EnemyDiscoveryState(EnemyCharacter* Object);
 	~EnemyDiscoveryState();
-	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
 
@@ -17,12 +16,11 @@ private:
 
 	void _UpdateSubClass()override;
 
+	void _ExitSubClass(EnemyCharacter::State next)override;
+
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 	bool IsPossibleChangeState(EnemyCharacter::State next)override;
 
 private:
-	Player* _Player = nullptr;
-	float _Speed = 0.0f;	// à⁄ìÆë¨ìxÅB
-	bool _isOutside = false;
 };

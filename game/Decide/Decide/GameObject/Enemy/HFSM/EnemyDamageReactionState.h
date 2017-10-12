@@ -13,6 +13,8 @@ private:
 
 	void _UpdateSubClass()override;
 
+	void _ExitSubClass(EnemyCharacter::State next)override {};
+
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 	inline bool IsPossibleChangeState(EnemyCharacter::State next) {

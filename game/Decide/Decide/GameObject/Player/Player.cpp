@@ -3,10 +3,11 @@
 #include "fbEngine\_Object\_Component\_3D\SkinModel.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "GameObject\SplitSpace.h"
-#include "GameObject\AttackValue2D.h"
+#include "GameObject\TextImage\AttackValue2D.h"
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
 
 namespace
 {
@@ -38,7 +39,7 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false),
 	//話しているか
-	_Speak(false)
+	_NoJump(false)
 {
 	//経験値テーブルをロード
 	_LoadEXPTable();
@@ -46,9 +47,9 @@ Player::Player(const char * name) :
 
 Player::~Player()
 {
-	char text[256];
+	/*char text[256];
 	sprintf(text, "~Player address %x\n", *this);
-	OutputDebugString(text);
+	OutputDebugString(text);*/
 	//for (auto& village : _NPC)
 	//{
 	//	for (auto& npc : village)
@@ -82,7 +83,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.8f;
+	_Radius = 0.3f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 	//スキンモデル作成
@@ -122,13 +123,13 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL);
+		_HPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxHP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true, true, NULL);
 	}
 	// MPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
-		_MPBar->Create(Colors, _PlayerParam->GetMaxMP(), _PlayerParam->GetParam(CharacterParameter::MP), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+		_MPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxMP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//ダメージSE初期化
 	_DamageSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSound", 0);
@@ -238,7 +239,7 @@ void Player::Start()
 void Player::Update()
 {
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
-	if (_CurrentState != nullptr)
+	if (_CurrentState != nullptr && _State != State::Stop)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
@@ -253,9 +254,8 @@ void Player::Update()
 		//MPバーの更新
 		_MPBar->Update();
 	}
-	
 	if (_PlayerParam)
-	{
+	{	
 		//レベルアップするか。
 		if (_EXPTable.size() > 0 &&
 			_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
@@ -338,23 +338,21 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	if (!_CharacterController)
+	{
+		return;
+	}
 	//アニメーションスピードは基本１
 	_Anim->SetAnimeSpeed(NormalAnimationSpeed);
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
-		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
-		return;
-	}
-	//ダメージを受けたアニメーション
-	if (_State == State::Impact)
-	{
-		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 1);
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 0);
 		return;
 	}
 	//ジャンプアニメーション
 	//ストップじゃないならジャンプする。
-	if (_CharacterController->IsJump() && _State != State::Stop && !_Speak)
+	if (_CharacterController->IsJump() && _State != State::Stop && !_NoJump)
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f, 0);
 	}
@@ -374,6 +372,11 @@ void Player::AnimationControl()
 		else if (_State == State::Stop)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+		}
+		//ダメージを受けたアニメーション
+		else if (_State == State::Impact)
+		{
+			PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
@@ -583,6 +586,7 @@ void Player::_Damage()
 	{
 		_DeathSound->Play(false);
 		ChangeState(State::Death);
+		return;
 	}
 
 	//海に入るとダメージを食らう。
@@ -630,9 +634,9 @@ void Player::_LevelUP()
 	_PlayerParam->ParamReset(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
 
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
+	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
+	_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 	//レベルアップ時のイメージ表示。
 	_LevelUpImage->Init();
 	//レベルアップ時の音再生。
@@ -678,7 +682,7 @@ void Player::Speak()
 					npc->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
 					//ジャンプしなくなる
-					_Speak = true;
+					_NoJump = true;
 					//これ以上処理は続けない
 					break;
 				}
@@ -688,16 +692,16 @@ void Player::Speak()
 				//話すNPCがいないので
 				npc->SetIsSpeak(false);
 				//話し終わると
-				if (_Speak)
+				if (_NoJump)
 				{
 					_HPBar->RenderEnable();
 					_MPBar->RenderEnable();
-					_Speak = false;
+					_NoJump = false;
 				}
 			}
 		}
 		//話す状態ならもう回さない。
-		if (_Speak)
+		if (_NoJump)
 		{
 			break;
 		}
@@ -753,15 +757,21 @@ void Player::_DebugPlayer()
 			_DebugLevel(level);
 		}
 	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon),transform->GetPosition(), 2);
+	}
 }
 void Player::_DebugLevel(int lv)
 {
 	// 次のレベルのパラメータを設定。
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
+	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
+	_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 }
 #endif // _DEBUG
 
@@ -843,24 +853,24 @@ void Player::AnimationEventControl()
 {
 	//攻撃1
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack01, eventframe, static_cast<AnimationEvent>(&Player::Attack1));
 	}
 	//攻撃2
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack02, eventframe, static_cast<AnimationEvent>(&Player::Attack2));
 
 	}
 	//攻撃3
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack03, eventframe, static_cast<AnimationEvent>(&Player::Attack3));
 
 	}
 	//攻撃4
 	{
-		float eventframe = 0.6f;
+		float eventframe = 0.5f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack04, eventframe, static_cast<AnimationEvent>(&Player::Attack4));
 	}
 	//攻撃5

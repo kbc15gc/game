@@ -27,8 +27,6 @@ void EnemyFallState::_UpdateSubClass() {
 	}
 }
 
-void EnemyFallState::Exit(EnemyCharacter::State next) {
-}
 
 void EnemyFallState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
 }

@@ -330,7 +330,7 @@ public:
 		*this += (ToI * wariai);
 	}
 
-	static Vector3& Lerp(const Vector3& a, const Vector3& b,float wariai)
+	static Vector3 Lerp(const Vector3& a, const Vector3& b,float wariai)
 	{
 		wariai = min(1.0f, max(0.0f, wariai));
 		//ƒxƒNƒgƒ‹‚ğ‹‚ß‚é
