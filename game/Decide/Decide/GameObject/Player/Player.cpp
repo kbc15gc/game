@@ -8,7 +8,6 @@
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
-#include "Sword.h"
 
 namespace
 {

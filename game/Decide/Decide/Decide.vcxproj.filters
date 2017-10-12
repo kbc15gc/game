@@ -300,9 +300,6 @@
     <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp" />
     <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp" />
     <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp" />
-    <ClCompile Include="GameObject\Player\Sword.cpp">
-      <Filter>GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Player\Player.cpp">
       <Filter>GameObject\Player</Filter>
     </ClCompile>
@@ -624,9 +621,6 @@
     <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h" />
     <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h" />
     <ClInclude Include="GameObject\TextImage\LevelUpImage.h" />
-    <ClInclude Include="GameObject\Player\Sword.h">
-      <Filter>GameObject\Player</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
