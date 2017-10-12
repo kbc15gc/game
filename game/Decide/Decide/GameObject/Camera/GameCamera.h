@@ -50,9 +50,9 @@ public:
 			_isActivate = false;
 		}
 	}
-	// 継承先の更新処理。
-	virtual void Move() = 0;
 protected:
+	// 継承先の更新処理。
+	virtual void _Move() = 0;
 	void ActivateFlg() {
 		_isActive = true;
 	}

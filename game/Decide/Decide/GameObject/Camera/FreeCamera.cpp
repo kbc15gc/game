@@ -73,13 +73,13 @@ void FreeCamera::UpdateSubClass()
 	FreeCameraMoveUpDown();
 
 	//前後左右の移動。
-	Move();	
+	_Move();	
 
 	//定点カメラの切り替え。
 	ChangePointCamera();
 }
 
-void FreeCamera::Move()
+void FreeCamera::_Move()
 {
 	Vector3 movespeed = Vector3::zero;
 	//ゲームパッドから取得した方向。
