@@ -43,8 +43,6 @@
 #include "GameObject\TextImage\BackWindowAndAttentionText.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
 
-#include "GameObject\ItemManager\DropItem\DropItem.h"
-
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -140,8 +138,6 @@ void GameScene::Start()
 	INSTANCE(Inventory)->Initialize();
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
-
-	INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);

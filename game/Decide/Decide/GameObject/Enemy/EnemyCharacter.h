@@ -12,6 +12,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Player\Player.h"
 #include "fbEngine\_Object\_Component\_Physics\CharacterExtrude.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
 
 class SkinModel;
 class Animation;

@@ -7,6 +7,7 @@
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
 
 namespace
 {
@@ -738,6 +739,12 @@ void Player::_DebugPlayer()
 			level -= 5;
 			_DebugLevel(level);
 		}
+	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon),transform->GetPosition(), 2);
 	}
 }
 void Player::_DebugLevel(int lv)
