@@ -102,8 +102,8 @@ void SkinModel::LateUpdate()
 {
 	if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 	{
-		_ModelDate->UpdateAABB(transform->GetPosition());
-		_Culling->Execute(_ModelDate->GetAABB());
+		_ModelDate->UpdateAABB(transform->GetPosition(), transform->GetScale());
+		_Culling->Execute(_ModelDate->GetAABB(),transform->GetRotateMatrix());
 	}
 	//モデルデータがあるなら
 	if (_ModelDate)

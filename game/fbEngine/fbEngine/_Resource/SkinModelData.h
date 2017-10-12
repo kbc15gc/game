@@ -58,11 +58,11 @@ public:
 	~SkinModelData();
 	
 	//AABB更新。
-	void UpdateAABB(Vector3 center)
+	void UpdateAABB(Vector3 pos,Vector3 scale)
 	{
-		Vector3 half = _Size;
+		Vector3 half = _Size * scale;
 		half.Scale(0.5f);
-		_AABB.Update(center, half);
+		_AABB.Update(pos + _Center, half);
 	}
 
 	//AABBを取得。
@@ -170,6 +170,8 @@ private:
 	Vector4 _TerrainSize;
 	//
 	Vector3 _Size;
+	//中心座標
+	Vector3 _Center;
 	//
 	AABB _AABB;
 private:

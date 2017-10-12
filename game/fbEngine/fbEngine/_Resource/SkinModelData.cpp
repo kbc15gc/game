@@ -1071,6 +1071,7 @@ void SkinModelData::Measurement()
 	_TerrainSize.w = Max.z;
 
 	_Size = Max - Min;
+	_Center = (Max + Min) / 2;
 }
 
 void SkinModelData::_CreateMeshList()

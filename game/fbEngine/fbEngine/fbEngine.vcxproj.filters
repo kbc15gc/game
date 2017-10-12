@@ -285,6 +285,9 @@
     <ClCompile Include="_Value\AABB.cpp">
       <Filter>Value</Filter>
     </ClCompile>
+    <ClCompile Include="_Value\AABB2D.cpp">
+      <Filter>Value</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -552,6 +555,9 @@
       <Filter>Cullimg</Filter>
     </ClInclude>
     <ClInclude Include="_Value\AABB.h">
+      <Filter>Value</Filter>
+    </ClInclude>
+    <ClInclude Include="_Value\AABB2D.h">
       <Filter>Value</Filter>
     </ClInclude>
   </ItemGroup>
