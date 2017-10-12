@@ -55,18 +55,17 @@ void EnemyWanderingState::_UpdateSubClass() {
 	_EnemyObject->SearchView();
 }
 
-void EnemyWanderingState::Exit(EnemyCharacter::State next) {
-}
-
 void EnemyWanderingState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
 	// 現在のローカルステートの処理が終了した。
 	if (EndLocalStateType == EnemyCharacter::State::Translation) {
 		// 移動ステート終了。
 
-		_isOutsideRange = static_cast<EnemyTranslationState*>(_NowLocalState)->GetIsOutsideRange();
-		_ChangeLocalState(EnemyCharacter::State::Wait);		// 待機ステートに移行。
-		// パラメータ設定。
-		static_cast<EnemyWaitState*>(_NowLocalState)->SetInterval(4.5f);
+		if (_NowLocalState) {
+			_isOutsideRange = static_cast<EnemyTranslationState*>(_NowLocalState)->GetIsOutsideRange();
+			_ChangeLocalState(EnemyCharacter::State::Wait);		// 待機ステートに移行。
+			// パラメータ設定。
+			static_cast<EnemyWaitState*>(_NowLocalState)->SetInterval(4.5f);
+		}
 	}
 	else if (EndLocalStateType == EnemyCharacter::State::Wait) {
 		// 待機ステート終了。

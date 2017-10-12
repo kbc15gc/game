@@ -35,7 +35,7 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State { Wandering = 0,Discovery, Chace,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
+	enum class State {None = -1, Wandering = 0,Discovery, Chace,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
 
 	// アニメーションデータテーブルの添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
@@ -241,7 +241,7 @@ public:
 	//			各種パラメーター。
 	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
 		_MyComponent.Parameter->ParamReset(param);
-		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6,false, false);
+		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6,false, false);
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 		
 	}
@@ -250,7 +250,7 @@ public:
 	//			各種パラメーター。
 	inline void SetParamAll(const vector<BarColor>& color, const vector<int>& param) const {
 		_MyComponent.Parameter->ParamReset(param);
-		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6 ,false,false);
+		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6 ,false,false);
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 	}
 
@@ -352,6 +352,42 @@ public:
 
 	}
 
+	inline int GetParam(CharacterParameter::Param param)const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetParam(param);
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline int GetPigmentParam(CharacterParameter::Param param)const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetPigmentParam(param);
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline int GetMaxHP()const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetMaxHP();
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline int GetMaxMP()const {
+		if (_MyComponent.Parameter) {
+			return _MyComponent.Parameter->GetMaxMP();
+		}
+		else {
+			return 0;
+		}
+	}
+
 	inline const AnimationData& GetAnimationData(AnimationType type)const {
 		return _AnimationData[static_cast<int>(type)];
 	}
@@ -386,8 +422,13 @@ public:
 	*/
 	void EffectUpdate();
 
+	inline State GetNowStateIndex()const {
+		return _NowStateIdx;
+	}
+
 protected:
 	// ステート切り替え関数。
+	// ※Noneを渡すとステートがオフになる。
 	void _ChangeState(State next);
 
 	// アニメーションタイプにアニメーションデータを関連付ける関数。

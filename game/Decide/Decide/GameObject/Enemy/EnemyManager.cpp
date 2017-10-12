@@ -32,7 +32,7 @@ void EnemyManager::LoadEnemyOrigin() {
 	//CSVからエネミー情報読み取り。
 	Support::LoadCSVData<EnemyInfo>("Asset/Data/EnemyData/CommonGroupEnemy.csv", EnemyInfoDecl, ARRAY_SIZE(EnemyInfoDecl), infoDatas);
 
-	for (int idx = 0; idx < infoDatas.size(); idx++) {
+	for (int idx = 0; idx < static_cast<int>(infoDatas.size()); idx++) {
 		// 読み取ったデータを管理用構造体で登録。
 		ManagingData* data(new ManagingData());
 		data->Object = nullptr;
@@ -91,6 +91,7 @@ void EnemyManager::CreateEnemy() {
 
 void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 	INSTANCE(GameObjectManager)->AddRemoveList(object);
+
 	for (auto enemy : _enemys) {
 		if (object == enemy->Object) {
 			// このクラスで生成したエネミーが死亡している。

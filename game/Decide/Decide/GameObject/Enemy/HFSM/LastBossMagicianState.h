@@ -6,7 +6,6 @@ class LastBossMagicianState : public EnemyState {
 public:
 	LastBossMagicianState(EnemyCharacter* Object);
 	~LastBossMagicianState();
-	void Exit(EnemyCharacter::State next)override;
 private:
 	void _EntrySubClass()override;
 
@@ -14,8 +13,12 @@ private:
 
 	void _UpdateSubClass()override;
 
+	void _ExitSubClass(EnemyCharacter::State next)override;
+
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 private:
 	bool _isOutsideRange = false;	// 範囲外に出たか。
+	float _timeCounter;
+	float _interval = 9999.0f;	// 大魔法に移行するまでの時間。
 };
