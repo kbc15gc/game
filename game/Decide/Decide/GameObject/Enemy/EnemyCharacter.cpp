@@ -266,6 +266,8 @@ void EnemyCharacter::_BuildModelData() {
 	_MyComponent.Model->SetModelData(modeldata);
 	//_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, false);
 
+	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 
