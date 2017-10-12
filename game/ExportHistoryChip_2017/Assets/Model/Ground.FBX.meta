@@ -1,23 +1,16 @@
 fileFormatVersion: 2
-guid: bdd6d3f192241254aaf577a088c19423
-timeCreated: 1507598611
+guid: 8b910fb86171c154abfe0c59876a3cf4
+timeCreated: 1507769663
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Plane001_MeshPart0
-    100004: Plane001_MeshPart1
     400000: //RootNode
-    400002: Plane001_MeshPart0
-    400004: Plane001_MeshPart1
     2100000: 'Material #24'
-    2300000: Plane001_MeshPart0
-    2300002: Plane001_MeshPart1
-    3300000: Plane001_MeshPart0
-    3300002: Plane001_MeshPart1
-    4300000: Plane001_MeshPart0
-    4300002: Plane001_MeshPart1
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Plane001
     9500000: //RootNode
   externalObjects: {}
   materials:

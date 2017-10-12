@@ -146,33 +146,33 @@ public:
 	}
 
 	// フィルターマスクに加算(左右、衝突解決の省略のみでワールドで判定は取れる)。
-	inline void AddAttributeXZ(short bit) {
+	inline void AddAttributeXZ(int bit) {
 		SetAttributeXZ(m_attributeXZ | bit);
 	}
 	// フィルターマスクに加算(上下、衝突解決の省略のみでワールドで判定は取れる)。
-	inline void AddAttributeY(short bit) {
+	inline void AddAttributeY(int bit) {
 		SetAttributeY(m_attributeY | bit);
 	}
 
 	// フィルターマスクから減算(左右、衝突解決の省略のみでワールドで判定は取れる)。
-	inline void SubAttributeXZ(short bit) {
+	inline void SubAttributeXZ(int bit) {
 		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
 		bit = ~bit;
 		SetAttributeXZ(m_attributeXZ & bit);
 	}
 	// フィルターマスクから減算(上下、衝突解決の省略のみでワールドで判定は取れる)。
-	inline void SubAttributeY(short bit) {
+	inline void SubAttributeY(int bit) {
 		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
 		bit = ~bit;
 		SetAttributeY(m_attributeY & bit);
 	}
 
 	// 衝突を取りたい属性を設定(左右、衝突解決の省略のみでワールドで判定は取れる)。
-	inline void SetAttributeXZ(short mask) {
+	inline void SetAttributeXZ(int mask) {
 		m_attributeXZ = mask;
 	}
 	// 衝突を取りたい属性を設定(上下、衝突解決の省略のみでワールドで判定は取れる)。
-	inline void SetAttributeY(short mask) {
+	inline void SetAttributeY(int mask) {
 		m_attributeY = mask;
 	}
 

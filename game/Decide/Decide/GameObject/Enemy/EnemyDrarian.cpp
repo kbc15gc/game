@@ -211,7 +211,7 @@ void EnemyDrarian::_BuildAnimation() {
 void EnemyDrarian::_ConfigAnimationEvent() {
 	// ‚©‚Ý‚Â‚«UŒ‚B
 	{
-		int eventFrame = 15;
+		float eventFrame = 15;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemyCharacter::AnimationType::Attack1), eventFrame, static_cast<AnimationEvent>(&EnemyDrarian::AnimationEvent_Kamituki));
 	}
 }

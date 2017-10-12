@@ -19,7 +19,7 @@ public:
 		GetInstance()->_Update();
 	}
 	//デルタタイム取得
-	static const double DeltaTime()
+	static const float DeltaTime()
 	{
 		return GetInstance()->_GetDeltaTime();
 	}

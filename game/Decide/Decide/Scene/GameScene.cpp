@@ -40,6 +40,11 @@
 
 #include"_Debug\TestObject.h"
 
+#include "GameObject\TextImage\BackWindowAndAttentionText.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
+
+#include "GameObject\ItemManager\DropItem\DropItem.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -122,6 +127,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//—ðŽj‘
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+
+	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
+
 	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
 	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
@@ -131,9 +139,13 @@ void GameScene::Start()
 
 	INSTANCE(Inventory)->Initialize();
 
-#ifdef _NKMT_
-	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 0);
-#endif
+	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
+
+	INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+
+#ifdef _NKMT
+	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
+#endif // _NKMT
 
 	//’ÊíBGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

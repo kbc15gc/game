@@ -15,7 +15,6 @@ void Ground::Awake()
 	SkinModel* model = AddComponent<SkinModel>();
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Ground.X"));
-	//modeldata->CalcWidthAndHeight();
 	//マテリアル取得
 	Material* material = modeldata->FindMaterial("ground4_Diffuse.tga");
 	//スプラットマップセット
@@ -29,6 +28,8 @@ void Ground::Awake()
 	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 	//model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
 	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
+	//カリング処理をしないようにする。
+	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
 

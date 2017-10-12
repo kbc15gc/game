@@ -8,6 +8,7 @@
 #include"GameObject\ItemManager\HoldItem\HoldItemBase.h"
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
 
 const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = {
 	"UI/gem.png",
@@ -21,7 +22,6 @@ const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = 
 	"UI/S_Light01.png",	// 暫定。
 	"UI/gem.png",	// 暫定。
 };
-
 
 /**
 * 初期化.
@@ -316,7 +316,10 @@ void ItemWindow::Input()
 					//アイテム使用.
 				{
 					ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
-					item->UseItem();
+					//アイテム使用が失敗したかどうかをチェック。
+					if (item->UseItem() == false) {
+						
+					}
 					INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);
 					isPack = true;
 					break;

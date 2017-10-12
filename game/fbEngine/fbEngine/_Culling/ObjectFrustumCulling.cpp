@@ -1,6 +1,7 @@
 #include "fbstdafx.h"
 #include "ObjectFrustumCulling.h"
 #include "_Object\_Component\_3D\Camera.h"
+#include "_Value\AABB.h"
 
 CObjectFrustumCulling::CObjectFrustumCulling()
 {
@@ -20,7 +21,12 @@ void CObjectFrustumCulling::Execute(const AABB & aabb)
 		//x、yが1.0～-1.0、zが0.0～1.0の範囲内にいたら画面内にいるということになる。
 		//8頂点すべてが画面の外ならカリングする。
 		for (int i = 0; i < 8; i++) {
-			D3DXVECTOR4 vertPos;// (aabb.GetVertexPosition(i));
+			D3DXVECTOR4 vertPos;
+			auto v = aabb.GetVertexPosition(i);
+			vertPos.x = v.x;
+			vertPos.y = v.y;
+			vertPos.z = v.z;
+			vertPos.w = 1.0f;
 			//行列をかけて、スクリーン座標に変換。
 			D3DXVec4Transform(&vertPos, &vertPos, &viewProjMatrix);
 			//正規化座標系に変換。

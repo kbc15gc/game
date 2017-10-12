@@ -117,7 +117,7 @@ void CharacterExtrude::Extrude(const Vector3& speed) {
 			//衝突検出。
 			PhysicsWorld::Instance()->AllHitsContactTest(coll, &infoArray, &callback, _attribute);
 
-			for (int idx = 0; idx < infoArray.size(); idx++) {
+			for (int idx = 0; idx < static_cast<int>(infoArray.size()); idx++) {
 				Vector3 vT0, vT1;
 
 				//めり込みが発生している移動ベクトルを求める。
