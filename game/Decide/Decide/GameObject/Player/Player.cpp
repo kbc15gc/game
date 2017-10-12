@@ -744,7 +744,7 @@ void Player::_DebugPlayer()
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon),transform->GetPosition(), 2);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon), transform->GetPosition(), 2);
 	}
 }
 void Player::_DebugLevel(int lv)

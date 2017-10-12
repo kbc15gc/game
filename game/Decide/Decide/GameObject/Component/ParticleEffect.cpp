@@ -219,14 +219,14 @@ void ParticleEffect::RareDropEffect()
 	_RareDropParam.Init();
 	_RareDropParam.texturePath = "par.png";
 	_RareDropParam.alphaBlendMode = 1;
-	_RareDropParam.addVelocityRandomMargih = Vector3(1.0f, 0.0, 1.0f);
+	_RareDropParam.addVelocityRandomMargih = Vector3(0.0f, 0.0, 0.0f);
 	_RareDropParam.brightness = 3.0f;
 	_RareDropParam.fadeTime = 0.5f;
 	_RareDropParam.gravity = 0.0f;
 	_RareDropParam.initAlpha = 1.0f;
-	_RareDropParam.initPositionRandomMargin = Vector3(0.5f, 0.0f, 0.5f);
-	_RareDropParam.initVelocity = Vector3::up* 10.0f;
-	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(2.0f, 2.0f, 2.0f);
+	_RareDropParam.initPositionRandomMargin = Vector3(0.0f, 0.0f, 0.0f);
+	_RareDropParam.initVelocity = Vector3(0.0f, 0.0f, 0.0f) *0.0f;
+	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(2.0f, 0.5f, 2.0f);
 	_RareDropParam.intervalTime = 0.01f;
 	_RareDropParam.isBillboard = true;
 	_RareDropParam.isFade = true;
@@ -236,7 +236,7 @@ void ParticleEffect::RareDropEffect()
 	_RareDropParam.isParent = true;
 
 	_RareDropEmitter->transform->SetParent(transform);
-	_RareDropEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.0f, 0.0f));
+	_RareDropEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.3f, 0.0f));
 	_RareDropEmitter->Init(_RareDropParam);
 	SetRareDropEffectFlag(true);
 }
