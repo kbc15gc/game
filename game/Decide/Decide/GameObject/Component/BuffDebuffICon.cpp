@@ -185,7 +185,7 @@ void BuffDebuffICon::DebuffIconCreate(CharacterParameter::Param param) {
 //更新。
 void BuffDebuffICon::Update() {
 	//バフデバフリストにつまれている分。
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		//バフを重ね掛けするさい、横にずらす。
 		//OFFSETの値で、どれだけ横にずらすか。
 		Vector3 iconPos = { 0.0f,0.0f,0.0f };
@@ -226,7 +226,7 @@ void BuffDebuffICon::Update() {
 
 //追加するパラメーターを追加していいのかをチェック。
 bool BuffDebuffICon::_AddCheck(CharacterParameter::Param param,bool isBuff) {
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		//同じパラメーターがある。
 		if (_BuffDebuffList[i]->_Param == param&&_BuffDebuffList[i]->_isBuff==isBuff) {
 			return false;
@@ -240,7 +240,7 @@ bool BuffDebuffICon::_AddCheck(CharacterParameter::Param param,bool isBuff) {
 //アイコンを描画しない。
 void BuffDebuffICon::RenderDisable() {
 
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		_BuffDebuffList[i]->_ArrowIconImage->SetActive(false);
 		_BuffDebuffList[i]->_BuffDebuffTypeIconImage->SetActive(false);
 	}
@@ -248,7 +248,7 @@ void BuffDebuffICon::RenderDisable() {
 
 //アイコンを描画する。
 void BuffDebuffICon::RenderEnable() {
-	for (int i = 0; i < _BuffDebuffList.size(); i++) {
+	for (int i = 0; i < static_cast<int>(_BuffDebuffList.size()); i++) {
 		_BuffDebuffList[i]->_ArrowIconImage->SetActive(true);
 		_BuffDebuffList[i]->_BuffDebuffTypeIconImage->SetActive(true);
 	}

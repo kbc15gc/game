@@ -51,7 +51,7 @@ void EnemyState::_ChangeLocalState(EnemyCharacter::State next) {
 	// エネミーの持つステート配列を参照で受け取る。
 	const vector<unique_ptr<EnemyState>>& enemyState = _EnemyObject->GetMyState();
 	
-	if (static_cast<int>(next) >= enemyState.size() || static_cast<int>(next) < 0) {
+	if (static_cast<int>(next) >= static_cast<int>(enemyState.size()) || static_cast<int>(next) < 0) {
 		// 渡された数字が配列の容量を超えている。
 		abort();
 	}

@@ -135,11 +135,11 @@ unique_ptr<CharacterParameter::DamageInfo> CharacterParameter::GiveDamageMass(bo
 				// 武器のクリティカル威力を加算。
 				crt += weapon->GetCrt();
 			}
-			damage += damage * static_cast<float>(crt) * 0.01f;
+			damage += static_cast<int>(damage * static_cast<float>(crt) * 0.01f);
 		}
 	}
 
-	info->value = damage * (static_cast<float>(percentage) * 0.01f);
+	info->value = static_cast<int>(damage * (static_cast<float>(percentage) * 0.01f));
 	info->isMagic = isMagic;
 	info->isThrough = isThrough;
 	return move(info);
@@ -214,7 +214,7 @@ void CharacterParameter::BuffClear(Param idx) {
 }
 
 void CharacterParameter::BuffClearAll() {
-	for (int idx = 0; idx < _Info.size(); idx++) {
+	for (int idx = 0; idx < static_cast<int>(_Info.size()); idx++) {
 		BuffClear(static_cast<Param>(idx));
 	}
 }
@@ -249,7 +249,7 @@ void CharacterParameter::DebuffClear(Param idx) {
 }
 
 void CharacterParameter::DebuffClearAll() {
-	for (int idx = 0; idx < _Info.size(); idx++) {
+	for (int idx = 0; idx < static_cast<int>(_Info.size()); idx++) {
 		DebuffClear(static_cast<Param>(idx));
 	}
 }
@@ -257,8 +257,8 @@ void CharacterParameter::DebuffClearAll() {
 void CharacterParameter::_UpdateParam(Param idx) {
 	_Info[idx].param = _Info[idx].originParam;	// 基礎パラメータ。
 	
-	_Info[idx].param += _Info[idx].originParam * static_cast<float>(_Info[idx].buffPercentage) * 0.01f;	// バフ値を加算。
-	_Info[idx].param -= _Info[idx].originParam * static_cast<float>(_Info[idx].debuffPercentage) * 0.01f;	// デバフ値を減算。
+	_Info[idx].param += static_cast<int>(_Info[idx].originParam * static_cast<float>(_Info[idx].buffPercentage) * 0.01f);	// バフ値を加算。
+	_Info[idx].param -= static_cast<int>(_Info[idx].originParam * static_cast<float>(_Info[idx].debuffPercentage) * 0.01f);	// デバフ値を減算。
 }
 
 void CharacterParameter::_UpdateInfo() {

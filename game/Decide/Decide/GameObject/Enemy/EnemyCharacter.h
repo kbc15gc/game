@@ -240,7 +240,7 @@ public:
 	//			各種パラメーター。
 	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
 		_MyComponent.Parameter->ParamReset(param);
-		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6,false, false);
+		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6,false, false);
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 		
 	}
@@ -249,7 +249,7 @@ public:
 	//			各種パラメーター。
 	inline void SetParamAll(const vector<BarColor>& color, const vector<int>& param) const {
 		_MyComponent.Parameter->ParamReset(param);
-		_MyComponent.HPBar->Create(color, _MyComponent.Parameter->GetMaxHP(), _MyComponent.Parameter->GetParam(CharacterParameter::Param::HP), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6 ,false,false);
+		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),6 ,false,false);
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 	}
 

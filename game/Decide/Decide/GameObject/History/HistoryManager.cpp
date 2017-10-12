@@ -202,7 +202,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	Support::LoadCSVData<ObjectInfo>(path, ObjectInfoData, ARRAY_SIZE(ObjectInfoData), objInfo);
 
 	//情報からオブジェクト生成。
-	for (short i = 0; i < objInfo.size();)
+	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)

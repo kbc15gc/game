@@ -54,8 +54,8 @@ public:
 
 	//武器の基準値と差分値の割合を算出。
 	inline float ParamRaitoMass()override {
-		float offset = _AtkRnd + _MAtkRnd + _DexRnd;
-		float sum = _Atk + _MagicAtk + _Dex;
+		float offset = static_cast<float>(_AtkRnd + _MAtkRnd + _DexRnd);
+		float sum = static_cast<float>(_Atk + _MagicAtk + _Dex);
 		float par = offset / sum;
 		return par;
 	}
@@ -68,7 +68,7 @@ public:
 		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な物理攻撃力を算出。
-		_AtkRnd = baseParam * raito;
+		_AtkRnd = static_cast<int>(baseParam * raito);
 		_Atk = baseParam + _AtkRnd;
 	}
 
@@ -79,7 +79,7 @@ public:
 		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な魔法攻撃力を算出。
-		_MAtkRnd = baseParam * raito;
+		_MAtkRnd = static_cast<int>(baseParam * raito);
 		_MagicAtk = baseParam + _MAtkRnd;
 	}
 
@@ -91,7 +91,7 @@ public:
 		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的なクリティカル率を算出。
-		_DexRnd = baseParam * raito;
+		_DexRnd = static_cast<int>(baseParam * raito);
 		_Dex = baseParam + _DexRnd;
 	}
 

@@ -176,7 +176,7 @@ public:
 			// バフとデバフに対応していないものは非対応。
 			abort();
 		}
-		return static_cast<float>(_Info[idx].buffPercentage) * 0.01f * _Info[idx].originParam;
+		return static_cast<int>(static_cast<float>(_Info[idx].buffPercentage) * 0.01f * _Info[idx].originParam);
 	}
 	// 指定したパラメーターの現在のデバフ値取得。
 	// 引数：	パラメータータイプ。
@@ -185,7 +185,7 @@ public:
 			// バフとデバフに対応していないものは非対応。
 			abort();
 		}
-		return static_cast<float>(_Info[idx].debuffPercentage) * 0.01f * _Info[idx].originParam;
+		return static_cast<int>(static_cast<float>(_Info[idx].debuffPercentage) * 0.01f * _Info[idx].originParam);
 	}
 
 	inline int GetMaxHP()const {

@@ -46,9 +46,9 @@ Player::Player(const char * name) :
 
 Player::~Player()
 {
-	char text[256];
+	/*char text[256];
 	sprintf(text, "~Player address %x\n", *this);
-	OutputDebugString(text);
+	OutputDebugString(text);*/
 	//for (auto& village : _NPC)
 	//{
 	//	for (auto& npc : village)
@@ -122,13 +122,13 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, _PlayerParam->GetMaxHP(), _PlayerParam->GetParam(CharacterParameter::HP),true, true, NULL);
+		_HPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxHP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true, true, NULL);
 	}
 	// MPのバーを表示。
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
-		_MPBar->Create(Colors, _PlayerParam->GetMaxMP(), _PlayerParam->GetParam(CharacterParameter::MP), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+		_MPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxMP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//ダメージSE初期化
 	_DamageSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSound", 0);
@@ -249,7 +249,7 @@ void Player::Update()
 			_LevelUP();
 		}
 		//ダメージを受ける処理。
-		//_Damage();
+		_Damage();
 		//エフェクト
 		EffectUpdate();
 		//@todo for debug
@@ -329,13 +329,13 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
-		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 1);
+		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 0);
 		return;
 	}
 	//ダメージを受けたアニメーション
 	if (_State == State::Impact)
 	{
-		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 1);
+		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
 		return;
 	}
 	//ジャンプアニメーション
@@ -616,9 +616,9 @@ void Player::_LevelUP()
 	_PlayerParam->ParamReset(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
 
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
+	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
+	_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 	//レベルアップ時のイメージ表示。
 	_LevelUpImage->Init();
 	//レベルアップ時の音再生。
@@ -745,9 +745,9 @@ void Player::_DebugLevel(int lv)
 	// 次のレベルのパラメータを設定。
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(_PlayerParam->GetParam(CharacterParameter::HP), _PlayerParam->GetParam(CharacterParameter::HP),true);
+	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(_PlayerParam->GetParam(CharacterParameter::MP), _PlayerParam->GetParam(CharacterParameter::MP),true);
+	_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 }
 #endif // _DEBUG
 
