@@ -23,6 +23,8 @@
 #include "GameObject\Village\NPC.h"
 #include "GameObject\Component\AnimationEvent.h"
 
+#include"fbEngine\_Object\_Component\_3D\Light.h"
+
 class SkinModel;
 class Animation;
 class ParameterBar;
@@ -399,4 +401,8 @@ private:
 
 	//アニメーションイベント
 	AnimationEventPlayer* _AnimationEventPlayer = nullptr;
+
+	/** キャラクターライト. */
+	CharacterLight _CharaLight;
+
 };
