@@ -6,6 +6,7 @@ class SkinModel;
 class Player;
 class ImageObject;
 class HoldEquipment;
+class ParticleEffect;
 
 //ドロップアイテム。
 class DropItem :public GameObject
@@ -48,29 +49,15 @@ public:
 
 
 private:
-	SkinModel* _Model = nullptr;
-
-	//落ちる場所。
-	Vector3 _DropPos;
-
-	//ドロップアイテムのInfo。
-	Item::BaseInfo* _DropItemInfo = nullptr;
-
-	//距離判定に使う。
-	Player* _Player = nullptr;
-
-	//ボタンのアイコン。
-	ImageObject* _ButtonIconImage = nullptr;
-
-	//寿命。
-	float		 _Life = 0.0f;
-
-	//フィールドに現れてから経った時間。
-	float		 _TotalDeltaTime = 0.0f;
-	
-	//何個アイテムを落とすかの数。
-	short int	 _DropNum = 1;
-
-	//落とした装備品。
-	HoldEquipment* _DropEquipment = nullptr;
+	SkinModel*			_Model			 = nullptr;
+	Vector3				_DropPos		 = Vector3::zero;//落ちる場所。
+	Item::BaseInfo*		_DropItemInfo	 = nullptr;		 //ドロップアイテムのInfo。
+	Player*				_Player			 = nullptr;		 //距離判定に使う。
+	ImageObject*		_ButtonIconImage = nullptr;		 //ボタンのアイコン。
+	float				_Life			 = 0.0f;		 //寿命。
+	float				_TotalDeltaTime  = 0.0f;		 //フィールドに現れてから経った時間。
+	short int			_DropNum		 = 1;			 //何個アイテムを落とすかの数(デフォルトは1つ)。
+	HoldEquipment*		_DropEquipment	 = nullptr;		 //落とした装備品。
+	ParticleEffect*		_RareDropPE		 = nullptr;		 //レアドロップアイテム用のエフェクト。
+	ParticleEffect*		_NormalDropPE	 = nullptr;		 //レア以外のドロップアイテム用エフェクト。
 };

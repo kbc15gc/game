@@ -50,19 +50,19 @@ public:
 	}
 
 	// 押し出したい属性に加算。
-	inline void AddAttribute(short bit) {
+	inline void AddAttribute(int bit) {
 		SetAttribute(_attribute | bit);
 	}
 
 	// 押し出したい属性から減算。
-	inline void SubAttribute(short bit) {
+	inline void SubAttribute(int bit) {
 		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
 		bit = ~bit;
 		SetAttribute(_attribute & bit);
 	}
 
 	// 押し出したい属性を設定。
-	inline void SetAttribute(short mask) {
+	inline void SetAttribute(int mask) {
 		_attribute = mask;
 	}
 

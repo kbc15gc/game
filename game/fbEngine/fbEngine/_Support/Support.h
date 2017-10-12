@@ -337,7 +337,7 @@ namespace Support {
 	template<class T>
 	extern bool OutputCSV(const char* filepath, const Support::DATARECORD* datas, const int& datanum, const vector<unique_ptr<T>>& output) {
 		vector<T*> work;
-		for (int idx = 0; idx < output.size(); idx++) {
+		for (int idx = 0; idx < static_cast<int>(output.size()); idx++) {
 			work.push_back(output[idx].get());
 		}
 		return OutputCSV(filepath, datas, datanum, work);

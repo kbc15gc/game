@@ -363,7 +363,7 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 }
 
 void EnemyCharacter::_ChangeState(State next) {
-	if (static_cast<int>(next) >= _MyState.size() || static_cast<int>(next) < 0) {
+	if (static_cast<int>(next) >= static_cast<int>(_MyState.size()) || static_cast<int>(next) < 0) {
 		// 渡された数字が配列の容量を超えている。
 		abort();
 	}
@@ -417,7 +417,7 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 		_damage = _MyComponent.Parameter->ReciveDamage(info);
 
 		// ダメージ値をもとにパラメーター更新。
-		_MyComponent.HPBar->SubValue(_damage);
+		_MyComponent.HPBar->SubValue(static_cast<float>(_damage));
 
 		//受けたダメージ量を表示。
 		Color c;
