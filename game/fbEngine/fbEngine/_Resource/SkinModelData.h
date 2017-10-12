@@ -58,11 +58,11 @@ public:
 	~SkinModelData();
 	
 	//AABB更新。
-	void UpdateAABB(Vector3 center)
+	void UpdateAABB(Vector3 pos,Vector3 scale)
 	{
-		Vector3 half = _Size;
+		Vector3 half = _Size * scale;
 		half.Scale(0.5f);
-		_AABB.Update(center, half);
+		_AABB.Update(pos + (_Center*scale), half);
 	}
 
 	//AABBを取得。
@@ -164,12 +164,15 @@ private:
 	LPD3DXFRAME					_FrameRoot;		//フレームルート(大本)。
 	std::vector<Material*>		_Materials;		//マテリアルのリスト
 	std::vector<LPD3DXMESH>		_MeshList;		//メッシュのリスト。
+	std::vector<LPD3DXFRAME>	_FrameList;
 	//アニメーションコントローラー
 	ID3DXAnimationController* m_pAnimationController;
 	//とりあえずほじさせたかった。いつか消す。
 	Vector4 _TerrainSize;
 	//
 	Vector3 _Size;
+	//中心座標
+	Vector3 _Center;
 	//
 	AABB _AABB;
 private:

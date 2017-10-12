@@ -51,7 +51,7 @@ void ThirdPersonCamera::UpdateSubClass()
 		//低い高さの移動スピードを設定。
 		SetCameraSpeed(_LowCameraSpeed);
 
-		Move();
+		_Move();
 		break;
 		//高さ:中。
 	case ThirdPersonCamera::Camera_Height::Middle:
@@ -60,7 +60,7 @@ void ThirdPersonCamera::UpdateSubClass()
 		//ダッシュのスピードと中の高さの移動スピードを設定。
 		DeicideCameraSpeed(_MiddleCameraDashSpeed, _MiddleCameraSpeed);
 
-		Move();
+		_Move();
 		break;
 		//高さ:高。
 	case ThirdPersonCamera::Camera_Height::Height:
@@ -71,7 +71,7 @@ void ThirdPersonCamera::UpdateSubClass()
 	}
 }
 
-void ThirdPersonCamera::Move()
+void ThirdPersonCamera::_Move()
 {
 	//ゲームパッドから取得した方向。
 	Vector3 dir = Vector3::zero;
