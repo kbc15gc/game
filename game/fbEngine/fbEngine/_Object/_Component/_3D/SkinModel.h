@@ -4,6 +4,7 @@
 class Effect;
 class Camera;
 class Light;
+class CharacterLight;
 class ShadowCamera;
 class IObjectCulling;
 
@@ -131,6 +132,15 @@ public:
 		_CullMode = flg;
 	}
 	bool terain = false;
+
+	/**
+	* キャラクターライトを設定.
+	*/
+	void SetCharacterLight(CharacterLight* cLight)
+	{
+		_CharaLight = cLight;
+	}
+
 private:
 	//子とか兄弟も一括で描画するための再帰関数
 	void DrawFrame(LPD3DXFRAME pFrame);
@@ -154,6 +164,9 @@ private:
 	Light* _Light;
 	//ブレンドする色
 	Color _TextureBlend, _AllBlend;
+
+	/** キャラクターライト. */
+	CharacterLight* _CharaLight = nullptr;
 
 	//エフェクトを描けるかどうかのフラグ
 	ModelEffectE _ModelEffect;

@@ -205,17 +205,19 @@ PSOutput PSMain(VS_OUTPUT In)
             //星空の白い要素を抜き出す.
             float starRate = pow(dot(mono, texCUBE(g_NightSampler, normal * -1.0f).xyz), 3.0f);
 
-			float nightRate = max(0.0f,dot(float3(0.0f,1.0f,0.0f), g_atmosParam.v3LightDirection));
+			float nightRate = max(0.0f,dot(float3(0.0f,-1.0f,0.0f), g_atmosParam.v3LightDirection));
 
 			//雲の色.
-			float cloudColor = lerp(1.0f, 0.1f, pow(1.0f - nightRate, 3.0f));
-            float starColor = lerp(3.0f, 0.1f, pow(nightRate, 3.0f));
+            float3 eyeToPos = normalize(In._World.xyz - g_cameraPos.xyz);
+            float t = saturate(dot(eyeToPos, g_cameraDir));
+			float cloudColor = lerp(0.1f, 1.0f, pow(1.0f - nightRate, 3.0f));
+            float starColor = lerp(0.0f, 30.0f, pow(nightRate, 2.0f)) * starRate * pow(t, 10.0f);
 
             color = In._RayColor + 0.25f * In._MieColor;
 
 			//空の色.
 			color.xyz = lerp(color.xyz, cloudColor, cloudRate);
-            color.xyz = lerp(color.xyz, starColor, starRate);
+            color.xyz += starColor;
 
 			color.w = 1.0f;
 
@@ -244,11 +246,13 @@ PSOutput PSMain(VS_OUTPUT In)
 
 	//デフューズライトを計算。
 	light = DiffuseLight(normal);
+    light.xyz += CalcCharaLight(normal, (float3x3) g_rotationMatrix);
 
 	//スペキュラーライト
     if (Spec)
     {
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
+        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
     }
 
 	float3 cascadeColor = 0;
@@ -270,9 +274,15 @@ PSOutput PSMain(VS_OUTPUT In)
 		color.xyz = In._RayColor + color * In._MieColor;
 	}
 
-	//アンビエントライトを加算。
-	color.rgb += diff.rgb * g_ambientLight.rgb;
+    float3 ambient = g_ambientLight.rgb;
+	
+    if (g_CharaLightParam.x)
+    {
+        ambient += g_CharaLight.Ambient.rgb;
+    }
 
+    //アンビエントライトを加算。
+    color.rgb += diff.rgb * ambient;
 
 	PSOutput Out = (PSOutput)0;
 
@@ -426,6 +436,7 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	float3 normal = normalize(In._Normal);
 	//ディフューズライト
 	float4 light = DiffuseLight(normal);
+    light.xyz += CalcCharaLight(normal, (float3x3) g_rotationMatrix);
 
 	float3 cascadeColor = 1;
 
@@ -445,8 +456,15 @@ PSOutput PSTerrain(VS_OUTPUT In)
 		color.xyz = In._RayColor + color * In._MieColor;
     }
 
-	//アンビエントライトを加算。
-	color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
+    float3 ambient = g_ambientLight.rgb;
+	
+    if (g_CharaLightParam.x)
+    {
+        ambient += g_CharaLight.Ambient.rgb;
+    }
+
+    //アンビエントライトを加算。
+    color.rgb += diffuseColor.rgb * ambient;
 
 	PSOutput Out = (PSOutput)0;
 

@@ -96,6 +96,7 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, true);
 	_Model->SetModelEffect(ModelEffectE::LIMLIGHT, true);
+	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	//_Model->SetAllBlend(Color::white * 13);
 
 	//アニメーションイベント追加
@@ -176,10 +177,19 @@ void Player::Awake()
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
 	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 
-	//持ち手のフレーム取得
-	//D3DXFRAME_DERIVED* handframe = (D3DXFRAME_DERIVED*)D3DXFrameFind(modeldata->GetFrameRoot(), "RightHandIndex1");
-	//Sword* sword = INSTANCE(GameObjectManager)->AddNew<Sword>("Sword",1);
-	//sword->SetMatrix(&handframe->CombinedTransformationMatrix);
+	_Model->SetCharacterLight(&_CharaLight);
+
+	_CharaLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
+	_CharaLight.SetDiffuseLightDirection(1, Vector3(0.0f, 0.0f, 0.0f));
+	_CharaLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 0.0f));
+	_CharaLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
+	
+	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 10.0f));
+	_CharaLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_CharaLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	
+	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 }
 
 void Player::Start()

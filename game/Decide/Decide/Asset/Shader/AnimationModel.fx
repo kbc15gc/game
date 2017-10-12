@@ -168,11 +168,13 @@ PSOutput PSMain( VS_OUTPUT In )
 
 	//デフューズライトを計算。
 	light = DiffuseLight(normal);
+    
 
 	//スペキュラーライト
 	if(Spec)
 	{
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
+        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
     }
 
 	float3 cascadeColor = 0;
@@ -194,9 +196,21 @@ PSOutput PSMain( VS_OUTPUT In )
 	{
         color.xyz = In._RayColor + color * In._MieColor;
 	}
+	float3 charaLig = CalcCharaLight(normal, (float3x3) g_rotationMatrix) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
+	if(Spec)
+	{
+		charaLig.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
+	}
+	color.xyz += diff.rgb * charaLig;
+    float3 ambient = g_ambientLight.rgb;
+	
+    if (g_CharaLightParam.x)
+    {
+        ambient += g_CharaLight.Ambient.rgb;
+    }
 
-	//アンビエントライトを加算。
-	color.rgb += diff.rgb * g_ambientLight.rgb;
+    //アンビエントライトを加算。
+    color.rgb += diff.rgb * ambient;
 
 	PSOutput Out = (PSOutput)0;
 

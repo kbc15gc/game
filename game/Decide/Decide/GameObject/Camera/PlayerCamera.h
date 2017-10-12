@@ -30,44 +30,39 @@ public:
 	*/
 	void UpdateSubClass()override;
 
-	//移動関数
-	void Move()override;
 	void SetIsMove(bool value)
 	{
 		_IsMove = value;
 	}
 private:
-
-	//バネ移動。
-	Vector3 SpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen);
-
-	/**
-	* カメラ横回転.
-	*
-	* @param roty	回転角度.
-	*/
-	void _RotTransversal(float roty);
-
-	/**
-	* カメラが縦に回転.
-	*
-	* @param roty	回転角度.
-	*/
-	void _RotLongitudinal(float rotx);
-
 	//通常時のカメラ挙動
 	void _StandardBehavior();
+
+	//カメラをY軸に回転(横)。
+	void _RotateHorizon(float roty);
+
+	//カメラをX軸に回転(縦)。
+	void _RotateVertical(float rotx);
+
+	//プレイヤーの方向を向く。
+	void _LookAtPlayer();
+
+	//カメラを移動させる処理。
+	void _Move()override;
+
+	//レイを飛ばして、カメラの移動先を確認。
+	Vector3 _ClosetRay();
+
+	//バネ移動を計算。
+	Vector3 _CalcSpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen);
 
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
 		//プレイヤーの更新を止める。
 		_Player->SetIsStopUpdate(false);
 	}
-
-
-
 private:
-	//レイの形状
+	//当たり判定をとるためのレイの形状
 	SphereCollider* _Sphere;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
@@ -84,6 +79,4 @@ private:
 
 	//前フレームのポジション。
 	Vector3 _PrevPosition = Vector3::zero;
-
-	//
 };
