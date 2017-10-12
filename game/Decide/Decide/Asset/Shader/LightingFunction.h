@@ -332,7 +332,7 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 	float3 v3Ray = worldPos - cameraPos;
 	float fFar = length(v3Ray);
 	v3Ray /= fFar;
-
+	
 	// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
 	//	float fNear = getNearIntersection(g_cameraPos.xyz, v3Ray, g_atmosParam.fCameraHeight2, g_atmosParam.fOuterRadius2);
 
@@ -366,8 +366,8 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
 
-	mieColor.rgb = v3Attenuate;
-	rayColor.rgb = v3FrontColor * (g_atmosParam.v3InvWavelength * g_atmosParam.fKrESun + g_atmosParam.fKmESun);
+	mieColor.rgb = min(float3( 1.0f, 1.0f, 1.0f), v3Attenuate);
+	rayColor.rgb = min(float3( 0.6f, 0.6f, 0.6f), v3FrontColor * (g_atmosParam.v3InvWavelength * g_atmosParam.fKrESun + g_atmosParam.fKmESun));
 	posToCameraDir = cameraPos - worldPos;
 }
 /*!

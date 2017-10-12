@@ -98,6 +98,8 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	//_Model->SetAllBlend(Color::white * 13);
 
+	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
 	//アニメーションイベント追加
 	_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	_AnimationEventPlayer->Init((int)AnimationNo::AnimationNum);

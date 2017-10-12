@@ -135,8 +135,7 @@ void Ocean::Render()
 
 	AtmosphericScatteringParamS atmos = INSTANCE(SceneManager)->GetSky()->GetAtmosphericScatteringParam();
 	_Effect->SetValue("g_atmosParam", &atmos, sizeof(atmos));
-	_Effect->SetInt("g_atmosFlag", AtmosphereFunc::enAtomosphereFuncNone);
-
+	_Effect->SetInt("g_atmosFlag", AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 	//ƒ‰ƒCƒg.
 	{
