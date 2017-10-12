@@ -53,10 +53,10 @@ namespace
 {
 	//ƒ{ƒX
 	float BOSS_RADIUS = 35.0f;
-	Vector3 BOSS_POS = { -712,68,48 };
+	Vector3 BOSS_POS = { -686.0f,61.9f,68.0f };
 	//ŠX
 	float MATI_RADIUS = 35.0f;
-	Vector3 MATI_POS = { -406,67,-20 };
+	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 }
 
 

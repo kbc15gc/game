@@ -272,9 +272,20 @@
     <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp">
       <Filter>GameObject\TextImage</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp" />
     <ClCompile Include="GameObject\ItemManager\DropItem\DropItem.cpp">
       <Filter>GameObject\ItemManager\DropItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemySpeakState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossDownState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossMagicianState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\LastBossThroneState.cpp" />
+    <ClCompile Include="GameObject\Enemy\LastBoss.cpp" />
+    <ClCompile Include="GameObject\Ground\Dungeon.cpp" />
+    <ClCompile Include="_Debug\TestObject.cpp" />
+    <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -561,9 +572,20 @@
     <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h">
       <Filter>GameObject\TextImage</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h" />
     <ClInclude Include="GameObject\ItemManager\DropItem\DropItem.h">
       <Filter>GameObject\ItemManager\DropItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemySpeakState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossDownState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossMagicianState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\LastBossThroneState.h" />
+    <ClInclude Include="GameObject\Enemy\LastBoss.h" />
+    <ClInclude Include="GameObject\Ground\Dungeon.h" />
+    <ClInclude Include="_Debug\TestObject.h" />
+    <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h">
+      <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

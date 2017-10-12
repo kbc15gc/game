@@ -17,13 +17,6 @@ PlayerStateAttack::~PlayerStateAttack()
 
 void PlayerStateAttack::Update()
 {
-	//移動速度設定
-	Vector3 movespeed = _Player->GetCharaCon().GetMoveSpeed();
-	//急に止まらないように
-	movespeed.Scale(0.3f);
-	_Player->GetCharaCon().SetMoveSpeed(movespeed);
-	_Player->GetCharaCon().Execute();
-
 	//現在のアニメーションナンバー
 	int currentanimno = _Player->_Anim->GetPlayAnimNo();
 	//アニメーションの再生が終わる && 次のアニメーションがない場合、待機状態に変更
@@ -59,21 +52,8 @@ void PlayerStateAttack::Leave()
 void PlayerStateAttack::Dir()
 {
 	//移動速度
-	Vector3 movespeed = Vector3::zero;
-	movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
-
-	//キーボードのJ　or　パッドのAボタンでジャンプ
-	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
-	{
-		//地面上にいる場合
-		if (_Player->_CharacterController->IsOnGround() == true && !_Player->_Speak)
-		{
-			//ジャンプパワーを設定
-			movespeed.y = _JumpSpeed;
-			//キャラクターコントローラーをジャンプに
-			_Player->_CharacterController->Jump();
-		}
-	}
+	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
+	movespeed.Scale(0.3f);
 
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
@@ -124,8 +104,8 @@ void PlayerStateAttack::Dir()
 
 								// 向きベクトルに移動量を積算。
 								//ダッシュボタンの場合
-			//通常のスピード
-		dir = dir * _Speed;
+		//通常のスピード
+		dir = dir;
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;
 		movespeed.y = movespeed.y;	//上方向は固定なのでそのまま。
