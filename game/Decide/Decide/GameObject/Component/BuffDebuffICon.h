@@ -38,7 +38,7 @@ public:
 		ImageObject*				_ArrowIconImage;			//BuffDebuffTypeIconに添える矢印アイコン。
 		ImageObject*				_BuffDebuffTypeIconImage;	//何のステータスが上がっているかを表すアイコン。
 		CharacterParameter::Param   _Param;						//どのパラメーターかを保持する用。
-		bool						 _isBuff;					//バフかデバフかどうかのフラグ。
+		bool						_isBuff;					//バフかデバフかどうかのフラグ。
 	};
 
 
@@ -67,7 +67,7 @@ public:
 	//引数:効果時間が切れたパラメーター(Atk,Matk,Def,MDef,Dex)。
 	void DeleteDebuffIcon(CharacterParameter::Param param);
 
-	//全てのバフデバフアイコンを削除。
+	//自身に掛かっている全てのバフデバフアイコンを削除。
 	void DeleteAllBuffDebuffIcon();
 
 	//アイコンを描画しない。
@@ -118,14 +118,15 @@ private:
 	}
 private:
 	vector<BuffDebuff*>	_BuffDebuffList;								//バフデバフのリスト。
-	Transform*			_HpBarTransform = nullptr;						//HpBarのTransform参照用。
-	Vector2				_ScreenPos = Vector2::zero;						//HpBarのポジションからスクリーン座標に変換したもの。
+	Transform*			_HpBarTransform		= nullptr;					//HpBarのTransform参照用。
+	Vector2				_ScreenPos			= Vector2::zero;			//HpBarのポジションからスクリーン座標に変換したもの。
 	Vector2				_BuffDebfuuIconSize = Vector2(40.0f, 40.0f);	//バフデバフアイコンサイズ。
-	Vector2				_ArrowSize = Vector2(13.0f, 20.0f);				//矢印のサイズ。
-	UseIconType			_UseIconType = UseIconType::Player;				//アイコンタイプ。
-	float				_IconOffSet = 0.0f;								//バフ、デバフを重ね掛けする際にずらすために使う。																		//エネミー時のアイコンをHpBarからどれだけ離すかのOFFSET。
-	Vector3				_IconPosOffset = { 0.0f,0.0f,0.0f };			//アイコンをHpBarからどれだけ離すかのOFFSET。
-	Vector3				_ArrowPosOffet = { 0.0f,.0f,0.0f };				//アイコンから矢印をどれだけ離すかのOFFSET。
+	Vector2				_ArrowSize			= Vector2(13.0f, 20.0f);	//矢印のサイズ。
+	UseIconType			_UseIconType		= UseIconType::Player;		//アイコンタイプ。
+	float				_IconOffSet			= 0.0f;						//バフ、デバフを重ね掛けする際にずらすために使う。																		//エネミー時のアイコンをHpBarからどれだけ離すかのOFFSET。
+	Vector3				_IconPosOffset		= { 0.0f,0.0f,0.0f };		//アイコンをHpBarからどれだけ離すかのOFFSET。
+	Vector3				_ArrowPosOffet		= { 0.0f,.0f,0.0f };		//アイコンから矢印をどれだけ離すかのOFFSET。
+	int					_Priority			= 0;						//優先度。
 };
 
 namespace {
@@ -139,8 +140,8 @@ namespace {
 		"armor.png",		//鎧。
 		"cloaks.png",		//服。
 		"UI/S_Light01.png", //クリティカル率。
+		"Crt.png",
 		"Lv.png",
-		"Max"
 	};
 
 	//表示する矢印アイコン。

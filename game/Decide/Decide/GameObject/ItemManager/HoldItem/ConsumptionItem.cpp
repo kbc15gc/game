@@ -4,6 +4,7 @@
 #include "fbEngine\_Object\_Component\_Physics\SphereCollider.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include"GameObject\Enemy\EnemyCharacter.h"
+#include "fbEngine\_Object\_GameObject\TextObject.h"
 
 namespace {
 	// 効果を及ぼす人数のテーブル。
@@ -17,6 +18,7 @@ const int ConsumptionItem::holdMax = 99;
 
 ConsumptionItem::ConsumptionItem(char* name) :HoldItemBase(name)
 {
+	_NoEffectTextColor = Color::red;
 }
 
 
@@ -51,9 +53,9 @@ bool ConsumptionItem::UseItem() {
 		// 暫定処理。
 		// ※ゲーム内で何とか効果がないことをお知らせすべき。
 		if (!ret) {
-			char error[256];
-			sprintf(error, "何の成果も得られませんでしたぁっ！！");
-			MessageBoxA(0, error, "バフも回復もできないよ！", MB_ICONWARNING);
+			//char error[256];
+			//sprintf(error, "何の成果も得られませんでしたぁっ！！");
+			//MessageBoxA(0, error, "バフも回復もできないよ！", MB_ICONWARNING);
 			return false;
 		}
 
@@ -104,9 +106,9 @@ bool ConsumptionItem::UseItem() {
 
 			// 暫定処理。
 			// ※ゲーム内で何とか効果がないことをお知らせすべき。
-			char error[256];
-			sprintf(error, "何の成果も得られませんでしたぁっ！！");
-			MessageBoxA(0, error, "デバフなのに効果範囲内に敵がいないよ", MB_ICONWARNING);
+			//char error[256];
+			//sprintf(error, "何の成果も得られませんでしたぁっ！！");
+			//MessageBoxA(0, error, "デバフなのに効果範囲内に敵がいないよ", MB_ICONWARNING);
 
 			return false;
 		}
