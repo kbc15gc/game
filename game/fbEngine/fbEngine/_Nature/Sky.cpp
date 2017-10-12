@@ -33,6 +33,8 @@ void Sky::Awake()
 	_SunPlate->SetSize(Vector2(50.0f, 50.0f));
 	_SunPlate->SetBillboard(true);
 	_SunPlate->SetActive(false);
+
+	//_SunAngle = D3DXToRadian(270.0f);
 }
 
 /**
