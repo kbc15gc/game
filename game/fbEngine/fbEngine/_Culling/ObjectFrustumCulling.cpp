@@ -19,7 +19,7 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& rotatio
 		//ビュープロジェクション行列作成。
 		auto viewProjMatrix = _Camera->GetViewMat() * _Camera->GetProjectionMat();
 		SetCullingFlag(true);
-		const float sikii = 1.5f;
+		const float sikii = 1.0f;
 		Vector2 ru = Vector2(-FLT_MAX, -FLT_MAX), ld = Vector2(FLT_MAX, FLT_MAX);
 
 		//AABBの８頂点をスクリーン空間の正規化座標系に変換する。
@@ -57,7 +57,7 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& rotatio
 				) {
 				//画面内にいる
 				SetCullingFlag(false);
-				break;
+				return;
 			}
 		}
 

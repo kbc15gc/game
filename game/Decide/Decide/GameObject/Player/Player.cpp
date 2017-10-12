@@ -94,6 +94,7 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, true);
 	_Model->SetModelEffect(ModelEffectE::LIMLIGHT, true);
+	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	//_Model->SetAllBlend(Color::white * 13);
 
 	//アニメーションイベント追加

@@ -887,9 +887,13 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 	//メッシュリストコピー
 	this->_MeshList = original->_MeshList;
 	//
+	this->_FrameList = original->_FrameList;
+	//
 	this->_TerrainSize = original->_TerrainSize;
 	//
 	this->_Size = original->_Size;
+	//
+	this->_Center = original->_Center;
 	
 	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 
@@ -911,7 +915,7 @@ void SkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 
 	//メッシュコンテナをコピー。メッシュは使いまわす。
 	if (srcFrame->pMeshContainer) {
-		dstFrame->pMeshContainer = new D3DXMESHCONTAINER_DERIVED;
+		dstFrame->pMeshContainer = new D3DXMESHCONTAINER_DERIVED();
 		memcpy(dstFrame->pMeshContainer, srcFrame->pMeshContainer, sizeof(D3DXMESHCONTAINER_DERIVED));
 	}
 	else {
@@ -922,7 +926,7 @@ void SkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 
 	if (srcFrame->pFrameSibling != nullptr) {
 		//兄弟がいるので、兄弟のためのメモリを確保。
-		dstFrame->pFrameSibling = new D3DXFRAME_DERIVED;
+		dstFrame->pFrameSibling = new D3DXFRAME_DERIVED();
 		dstFrame->pFrameSibling->pFrameFirstChild = nullptr;
 		dstFrame->pFrameSibling->pFrameSibling = nullptr;
 		dstFrame->pFrameSibling->pMeshContainer = nullptr;
@@ -931,7 +935,7 @@ void SkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 	if (srcFrame->pFrameFirstChild != nullptr)
 	{
 		//子供がいるので、子供のためのメモリを確保。
-		dstFrame->pFrameFirstChild = new D3DXFRAME_DERIVED;
+		dstFrame->pFrameFirstChild = new D3DXFRAME_DERIVED();
 		dstFrame->pFrameFirstChild->pFrameFirstChild = nullptr;
 		dstFrame->pFrameFirstChild->pFrameSibling = nullptr;
 		dstFrame->pFrameFirstChild->pMeshContainer = nullptr;
@@ -1036,35 +1040,51 @@ void SkinModelData::Measurement()
 	//番兵設定
 	Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 	//
-	for (auto& mesh : _MeshList) {
-		//頂点バッファを取得。
-		LPDIRECT3DVERTEXBUFFER9 vb;
-		mesh->GetVertexBuffer(&vb);
-		//頂点定義を取得。
-		D3DVERTEXBUFFER_DESC desc;
-		vb->GetDesc(&desc);
-		//頂点ストライドを取得。
-		int stride = mesh->GetNumBytesPerVertex();
-		D3DXVECTOR3* vertexPos;
-		vb->Lock(0, desc.Size, (void**)&vertexPos, D3DLOCK_READONLY);
-		//頂点数ループ
-		for (unsigned int i = 0; i < mesh->GetNumVertices(); i++) {
-			//最小。
-			Min.x = min(Min.x, vertexPos->x);
-			Min.y = min(Min.y, vertexPos->z);
-			Min.z = min(Min.z, vertexPos->z);
-			//最大。
-			Max.x = max(Max.x, vertexPos->x);
-			Max.y = max(Max.y, vertexPos->x);
-			Max.z = max(Max.z, vertexPos->z);
-			//次の頂点へ。
-			char* p = (char*)vertexPos;
-			p += stride;
-			vertexPos = (D3DXVECTOR3*)p;
+	for(auto& frame:_FrameList)
+	{
+		auto container = frame->pMeshContainer;
+		//コンテナが存在する限り。
+		while (container != nullptr)
+		{
+			//メッシュ取得。
+			auto& mesh = container->MeshData.pMesh;
+
+			//頂点バッファを取得。
+			LPDIRECT3DVERTEXBUFFER9 vb;
+			mesh->GetVertexBuffer(&vb);
+			//頂点定義を取得。
+			D3DVERTEXBUFFER_DESC desc;
+			vb->GetDesc(&desc);
+			//頂点ストライドを取得。
+			int stride = mesh->GetNumBytesPerVertex();
+			D3DXVECTOR3* vertexPos;
+			vb->Lock(0, desc.Size, (void**)&vertexPos, D3DLOCK_READONLY);
+			//頂点数ループ
+			for (unsigned int i = 0; i < mesh->GetNumVertices(); i++) {
+				//行列でスケーリングしたい。
+				D3DXVECTOR4 vpos;
+				D3DXVec3Transform(&vpos, vertexPos, &frame->TransformationMatrix);
+				//最小。
+				Min.x = min(Min.x, vpos.x);
+				Min.y = min(Min.y, vpos.y);
+				Min.z = min(Min.z, vpos.z);
+				//最大。
+				Max.x = max(Max.x, vpos.x);
+				Max.y = max(Max.y, vpos.y);
+				Max.z = max(Max.z, vpos.z);
+				//次の頂点へ。
+				char* p = (char*)vertexPos;
+				p += stride;
+				vertexPos = (D3DXVECTOR3*)p;
+			}
+			vb->Unlock();
+			vb->Release();
+
+			//次のコンテナ
+			container = container->pNextMeshContainer;
 		}
-		vb->Unlock();
-		vb->Release();
 	}
+	
 	_TerrainSize.x = Min.x;
 	_TerrainSize.y = Max.x;
 	_TerrainSize.z = Min.z;
@@ -1084,6 +1104,8 @@ void SkinModelData::_QueryMeshes(LPD3DXFRAME frame)
 {
 	LPD3DXMESHCONTAINER pMeshContainer;
 	pMeshContainer = frame->pMeshContainer;
+	//
+	_FrameList.push_back(frame);
 	//全てのメッシュコンテナを見る
 	while (pMeshContainer != NULL)
 	{

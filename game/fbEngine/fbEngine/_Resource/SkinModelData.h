@@ -62,7 +62,7 @@ public:
 	{
 		Vector3 half = _Size * scale;
 		half.Scale(0.5f);
-		_AABB.Update(pos + _Center, half);
+		_AABB.Update(pos + (_Center*scale), half);
 	}
 
 	//AABBを取得。
@@ -164,6 +164,7 @@ private:
 	LPD3DXFRAME					_FrameRoot;		//フレームルート(大本)。
 	std::vector<Material*>		_Materials;		//マテリアルのリスト
 	std::vector<LPD3DXMESH>		_MeshList;		//メッシュのリスト。
+	std::vector<LPD3DXFRAME>	_FrameList;
 	//アニメーションコントローラー
 	ID3DXAnimationController* m_pAnimationController;
 	//とりあえずほじさせたかった。いつか消す。
