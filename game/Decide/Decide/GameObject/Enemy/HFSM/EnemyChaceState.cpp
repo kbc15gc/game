@@ -78,7 +78,7 @@ void EnemyChaceState::_UpdateSubClass() {
 	}
 }
 
-void EnemyChaceState::Exit(EnemyCharacter::State next) {
+void EnemyChaceState::_ExitSubClass(EnemyCharacter::State next) {
 
 }
 

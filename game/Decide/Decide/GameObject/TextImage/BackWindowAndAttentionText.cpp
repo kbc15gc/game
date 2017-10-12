@@ -161,8 +161,6 @@ void BackWindowAndAttentionText::Debug()
 	}
 
 	//‰æ‘œ‚ð•Â‚¶‚éB
-	if ((VPadInput->IsPush(fbEngine::VPad::ButtonA)||(KeyBoardInput->isPush(DIK_P)))) {
-		SetActiveFalse();
-	}
+	
 }
 #endif // DEBUG

@@ -10,6 +10,8 @@ void ParticleEffect::Awake() {
 
 	_LevelUPParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("LevelUPEffect", 8);
 
+	_RareDropEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("RareDropEffect", 8);
+
 	//回復エフェクトのアシストに使用するパーティクルパラメーターを設定。
 	_HeelParticleAssistParam.Init();
 	_HeelParticleAssistParam.texturePath = "ItemEfectBase.png";
@@ -210,6 +212,35 @@ void ParticleEffect::LevelUpEffect()
 	_LevelUPParticleEmitter->Init(_LevelUPParticleParam);
 	SetLevelUPEffectFlag(true);
 }
+
+void ParticleEffect::RareDropEffect()
+{
+	//レアドロップに使用するパーティクルパラメーターを設定。
+	_RareDropParam.Init();
+	_RareDropParam.texturePath = "par.png";
+	_RareDropParam.alphaBlendMode = 1;
+	_RareDropParam.addVelocityRandomMargih = Vector3(1.0f, 0.0, 1.0f);
+	_RareDropParam.brightness = 3.0f;
+	_RareDropParam.fadeTime = 0.5f;
+	_RareDropParam.gravity = 0.0f;
+	_RareDropParam.initAlpha = 1.0f;
+	_RareDropParam.initPositionRandomMargin = Vector3(0.5f, 0.0f, 0.5f);
+	_RareDropParam.initVelocity = Vector3::up* 10.0f;
+	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(2.0f, 2.0f, 2.0f);
+	_RareDropParam.intervalTime = 0.01f;
+	_RareDropParam.isBillboard = true;
+	_RareDropParam.isFade = true;
+	_RareDropParam.life = 0.001f;
+	_RareDropParam.size = Vector2(0.1f, 0.1f);
+	_RareDropParam.mulColor = Color::yellow;
+	_RareDropParam.isParent = true;
+
+	_RareDropEmitter->transform->SetParent(transform);
+	_RareDropEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.0f, 0.0f));
+	_RareDropEmitter->Init(_RareDropParam);
+	SetRareDropEffectFlag(true);
+}
+
 
 void ParticleEffect::Update() {
 

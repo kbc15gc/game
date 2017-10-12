@@ -7,6 +7,7 @@
 #include "..\History\HistoryManager.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
 
 namespace
 {
@@ -38,7 +39,7 @@ Player::Player(const char * name) :
 	//デバッグか
 	_Debug(false),
 	//話しているか
-	_Speak(false)
+	_NoJump(false)
 {
 	//経験値テーブルをロード
 	_LoadEXPTable();
@@ -225,7 +226,7 @@ void Player::Start()
 void Player::Update()
 {
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
-	if (_CurrentState != nullptr)
+	if (_CurrentState != nullptr && _State != State::Stop)
 	{
 		//ステートアップデート
 		_CurrentState->Update();
@@ -240,9 +241,8 @@ void Player::Update()
 		//MPバーの更新
 		_MPBar->Update();
 	}
-	
 	if (_PlayerParam)
-	{
+	{	
 		//レベルアップするか。
 		if (_EXPTable.size() > 0 &&
 			_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
@@ -325,6 +325,10 @@ void Player::PlayAnimation(AnimationNo animno, float interpolatetime , int loopn
 
 void Player::AnimationControl()
 {
+	if (!_CharacterController)
+	{
+		return;
+	}
 	//アニメーションスピードは基本１
 	_Anim->SetAnimeSpeed(NormalAnimationSpeed);
 	//死亡アニメーション
@@ -333,15 +337,9 @@ void Player::AnimationControl()
 		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 0);
 		return;
 	}
-	//ダメージを受けたアニメーション
-	if (_State == State::Impact)
-	{
-		PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
-		return;
-	}
 	//ジャンプアニメーション
 	//ストップじゃないならジャンプする。
-	if (_CharacterController->IsJump() && _State != State::Stop && !_Speak)
+	if (_CharacterController->IsJump() && _State != State::Stop && !_NoJump)
 	{
 		PlayAnimation(AnimationNo::AnimationJump, 0.1f, 0);
 	}
@@ -361,6 +359,11 @@ void Player::AnimationControl()
 		else if (_State == State::Stop)
 		{
 			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+		}
+		//ダメージを受けたアニメーション
+		else if (_State == State::Impact)
+		{
+			PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
@@ -570,6 +573,7 @@ void Player::_Damage()
 	{
 		_DeathSound->Play(false);
 		ChangeState(State::Death);
+		return;
 	}
 
 	//海に入るとダメージを食らう。
@@ -665,7 +669,7 @@ void Player::Speak()
 					npc->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
 					//ジャンプしなくなる
-					_Speak = true;
+					_NoJump = true;
 					//これ以上処理は続けない
 					break;
 				}
@@ -675,16 +679,16 @@ void Player::Speak()
 				//話すNPCがいないので
 				npc->SetIsSpeak(false);
 				//話し終わると
-				if (_Speak)
+				if (_NoJump)
 				{
 					_HPBar->RenderEnable();
 					_MPBar->RenderEnable();
-					_Speak = false;
+					_NoJump = false;
 				}
 			}
 		}
 		//話す状態ならもう回さない。
-		if (_Speak)
+		if (_NoJump)
 		{
 			break;
 		}
@@ -739,6 +743,12 @@ void Player::_DebugPlayer()
 			level -= 5;
 			_DebugLevel(level);
 		}
+	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon),transform->GetPosition(), 2);
 	}
 }
 void Player::_DebugLevel(int lv)

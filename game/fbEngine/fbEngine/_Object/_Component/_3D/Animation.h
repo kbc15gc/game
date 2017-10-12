@@ -10,6 +10,18 @@
  */
 class Animation : public Component{
 public:
+	typedef void (Object::*CallBack)(int);	// 関数ポインタ(引数は再生されたアニメーション番号)。
+
+	struct StartAnimationCallBack {
+		Object* object = nullptr;	// コールバック関数の持ち主。
+		CallBack callback = nullptr;	// アニメーション終了時に呼び出したい関数のポインタ。
+
+		StartAnimationCallBack(Object* obj, CallBack call) {
+			object = obj;
+			callback = call;
+		}
+	};
+
 	//アニメーション再生に必要な情報
 	struct PlayAnimInfo
 	{
@@ -130,6 +142,9 @@ public:
 		_AnimController->AdvanceTime(0.0, NULL);
 	}
 
+	inline void AddCallBack(unique_ptr<StartAnimationCallBack> callback) {
+		_callback.push_back(move(callback));
+	}
 private:
 	//アニメーションの補完をする関数。
 	void _InterpolateAnimation(const float delta);
@@ -160,4 +175,6 @@ private:
 	bool _IsPlaying;					//アニメーション再生中であることを示す。
 
 	std::queue<PlayAnimInfo*> _AnimationQueue;	//アニメーションを保持するキュー。
+
+	vector<unique_ptr<StartAnimationCallBack>> _callback;	// アニメーションがスタートする際に呼ばれるコールバック(ループ再生なら1ループごとに呼ばれる)。
 };
