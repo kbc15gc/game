@@ -13,9 +13,6 @@
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\AttackValue2D.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
@@ -239,9 +236,6 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Player\Player.cpp">
-      <Filter>GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -298,11 +292,19 @@
     <ClCompile Include="AttackCollision.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\LevelUpImage.cpp">
-      <Filter>GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp">
       <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\DropItem\DropItem.cpp" />
+    <ClCompile Include="GameObject\TextImage\AttackValue2D.cpp" />
+    <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp" />
+    <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp" />
+    <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp" />
+    <ClCompile Include="GameObject\Player\Sword.cpp">
+      <Filter>GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -316,9 +318,6 @@
     </ClInclude>
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\AttackValue2D.h">
-      <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\SpaceCollisionObject.h">
       <Filter>GameObject</Filter>
@@ -617,11 +616,16 @@
     <ClInclude Include="AttackCollision.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\LevelUpImage.h">
-      <Filter>GameObject\Player</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Enemy\EnemyDrarian.h">
       <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\DropItem\DropItem.h" />
+    <ClInclude Include="GameObject\TextImage\AttackValue2D.h" />
+    <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h" />
+    <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h" />
+    <ClInclude Include="GameObject\TextImage\LevelUpImage.h" />
+    <ClInclude Include="GameObject\Player\Sword.h">
+      <Filter>GameObject\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

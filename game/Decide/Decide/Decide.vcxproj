@@ -239,6 +239,7 @@
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateImpact.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateRun.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateStop.h" />
+    <ClInclude Include="GameObject\Player\Sword.h" />
     <ClInclude Include="GameObject\SpaceCollisionObject.h" />
     <ClInclude Include="GameObject\SplitSpace.h" />
     <ClInclude Include="GameObject\StatusWindow\Cursor.h" />
@@ -350,6 +351,7 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateImpact.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateRun.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp" />
+    <ClCompile Include="GameObject\Player\Sword.cpp" />
     <ClCompile Include="GameObject\SpaceCollisionObject.cpp" />
     <ClCompile Include="GameObject\SplitSpace.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Cursor.cpp" />

@@ -8,6 +8,7 @@
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
+#include "Sword.h"
 
 namespace
 {
@@ -174,6 +175,11 @@ void Player::Awake()
 	//バフデバフアイコン。
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
 	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
+
+	//持ち手のフレーム取得
+	//D3DXFRAME_DERIVED* handframe = (D3DXFRAME_DERIVED*)D3DXFrameFind(modeldata->GetFrameRoot(), "RightHandIndex1");
+	//Sword* sword = INSTANCE(GameObjectManager)->AddNew<Sword>("Sword",1);
+	//sword->SetMatrix(&handframe->CombinedTransformationMatrix);
 }
 
 void Player::Start()
