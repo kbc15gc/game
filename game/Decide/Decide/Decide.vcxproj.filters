@@ -454,9 +454,6 @@
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h">
       <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Player\Player.h">
-      <Filter>GameObject\Player</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
@@ -621,6 +618,9 @@
     <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h" />
     <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h" />
     <ClInclude Include="GameObject\TextImage\LevelUpImage.h" />
+    <ClInclude Include="GameObject\Player\Player.h">
+      <Filter>GameObject\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
