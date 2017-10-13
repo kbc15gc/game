@@ -112,20 +112,26 @@ void ParticleEmitter::Emit()
 	{
 		_Timer += Time::DeltaTime();
 		if (_Timer >= _Param.intervalTime) {
-			//パーティクルを生成。
-			Particle* p = INSTANCE(GameObjectManager)->AddNew<Particle>("particle",8);
-			if (_Param.isParent) {
-				// エミッターを親として設定。
-				p->transform->SetParent(transform);
-				p->Init(_Param, Vector3::zero);
-			}
-			else {
-				p->Init(_Param, transform->GetPosition());
-			}
-			_Timer = 0.0f;
-			_ParticleList.push_back(p);
-			if (_achievedArray) {
-				_achievedArray->push_back(p);
+			// PCの処理能力を考慮。
+			short num = static_cast<short>(_Timer / _Param.intervalTime);
+			// 二個以上生成される分の時間が1フレームで経過していた場合複数生成する。
+
+			for (int idx = 0; idx < num; idx++) {
+				//パーティクルを生成。
+				Particle* p = INSTANCE(GameObjectManager)->AddNew<Particle>("particle", 8);
+				if (_Param.isParent) {
+					// エミッターを親として設定。
+					p->transform->SetParent(transform);
+					p->Init(_Param, Vector3::zero);
+				}
+				else {
+					p->Init(_Param, transform->GetPosition());
+				}
+				_Timer = 0.0f;
+				_ParticleList.push_back(p);
+				if (_achievedArray) {
+					_achievedArray->push_back(p);
+				}
 			}
 		}
 	}

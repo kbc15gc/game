@@ -17,6 +17,8 @@ LastBossThroneState::~LastBossThroneState()
 }
 
 void LastBossThroneState::_EntrySubClass() {
+	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle, 0.1f);
+
 	// ë§ãﬂè¢ä´ÅB
 	float dir = 1.0f;
 	for (int idx = 0; idx < _entourageNum; idx++) {

@@ -6,7 +6,7 @@
 #include "fbEngine\CharacterController.h"
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
-
+#include "GameObject\Enemy\EnemyAttack.h"
 
 EnemyDrarian::EnemyDrarian(const char* name) : EnemyCharacter(name)
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include "EnemyCharacter.h"
 
+
 // 継承クラス。
 // ボスエネミー(ラスボス)。
 class LastBoss :
@@ -12,14 +13,20 @@ public:
 private:
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
-		Max = 1,
+		Move = 0,
+		SordAttack,
+		Magic,
+		Max,
 	};
 
 public:
 	LastBoss(const char* name);
 	~LastBoss();
 
-	void CreateAttackCollision();
+	void SordAttackEvent();
+	void MagicAttackStart();
+	void MagicAttackEnd();
+
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -71,5 +78,6 @@ private:
 
 private:
 	State _saveState;
-	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理。
+	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
+	unique_ptr<EnemyBreathAttack> _magicAttack;
 };

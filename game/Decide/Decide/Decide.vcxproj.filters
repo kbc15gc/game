@@ -236,6 +236,9 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player</Filter>
+    </ClCompile>
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -283,9 +286,6 @@
     <ClCompile Include="GameObject\Enemy\LastBoss.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
@@ -300,8 +300,14 @@
     <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp" />
     <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp" />
     <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp" />
-    <ClCompile Include="GameObject\Player\Player.cpp">
-      <Filter>GameObject\Player</Filter>
+    <ClCompile Include="GameObject\Enemy\EnemyAttack.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\LastBossMagic.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
+      <Filter>GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -454,6 +460,9 @@
     <ClInclude Include="GameObject\History\HistoryBook\HistoryPage\HFSM\HistoryPageStateTurn.h">
       <Filter>GameObject\History\HistoryBook\HistoryPage\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\Player\Player.h">
+      <Filter>GameObject\Player</Filter>
+    </ClInclude>
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClInclude>
@@ -598,12 +607,6 @@
     <ClInclude Include="GameObject\Enemy\LastBoss.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\LaserBreath.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BreathObject.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h">
       <Filter>GameObject\StatusWindow</Filter>
     </ClInclude>
@@ -618,8 +621,17 @@
     <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h" />
     <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h" />
     <ClInclude Include="GameObject\TextImage\LevelUpImage.h" />
-    <ClInclude Include="GameObject\Player\Player.h">
-      <Filter>GameObject\Player</Filter>
+    <ClInclude Include="GameObject\Enemy\EnemyAttack.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\LastBossMagic.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\LaserBreath.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BreathObject.h">
+      <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

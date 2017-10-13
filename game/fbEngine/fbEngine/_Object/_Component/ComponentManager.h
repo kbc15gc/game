@@ -54,7 +54,7 @@ public:
 	template <class T>
 	void RemoveComponent()
 	{
-		char* name = (char*)typeid(T).name();
+		char* name = (char*)typeid(T*).name();
 
 		vector<Component*>::iterator it = _Components.begin();
 		while (it != _Components.end())

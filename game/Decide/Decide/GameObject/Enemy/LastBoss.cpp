@@ -8,7 +8,9 @@
 #include "HFSM\LastBossMagicianState.h"
 #include "HFSM\LastBossHistoryTamperingState.h"
 #include "HFSM\LastBossDownState.h"
-
+#include "fbEngine\_Object\_GameObject\Particle.h"
+#include "GameObject\Enemy\EnemyAttack.h"
+#include "GameObject\Enemy\LastBossMagic.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 
@@ -22,15 +24,23 @@ LastBoss::~LastBoss()
 {
 }
 
-void LastBoss::CreateAttackCollision() {
+void LastBoss::SordAttackEvent() {
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
 	attack->RemoveParent();
 
 	// 攻撃音再生。
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+}
+
+void LastBoss::MagicAttackStart() {
+	_magicAttack->BreathStart<LastBossMagic>(this,Vector3::zero);
+}
+
+void LastBoss::MagicAttackEnd() {
+	_magicAttack->BreathEnd();
 }
 
 void LastBoss::_AwakeSubClass() {
@@ -62,12 +72,15 @@ void LastBoss::_StartSubClass() {
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
-	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(2.0f,_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
+	_sordAttack.reset(new EnemySingleAttack(this));
+	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
+	_magicAttack.reset(new EnemyBreathAttack(this));
+	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_initState = State::Speak;
+	_initState = static_cast<State>(LastBossState::LastBossMagician);
+	//_initState = State::Speak;
 	_ChangeState(_initState);
 }
 
@@ -91,9 +104,40 @@ void LastBoss::_LateUpdateSubClass()
 
 EnemyAttack* LastBoss::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
+	EnemyAttack* attack = nullptr;
 
-	// ※とりあえず暫定処理。
-	return _singleAttack.get();
+	int rnd;
+
+	if (_NowStateIdx == static_cast<State>(LastBossState::LastBossMagician)) {
+		// 魔術師ステート。
+		// 確率で攻撃と魔王へのバフを行う。
+
+		rnd = rand() % 2;
+		//rnd = rand() % 4;
+
+		if (rnd == 0) {
+			// 剣攻撃。
+
+			attack = _sordAttack.get();
+		}
+		else if (rnd == 1) {
+			// 魔法攻撃。
+
+			attack = _magicAttack.get();
+		}
+		//else if(rnd == 2){
+		//	// バフ。
+
+		//	attack = _tailAttack.get();
+		//}
+		//else {
+		//	// 鎌攻撃。
+
+		//	attack = 
+		//}
+	}
+
+	return attack;
 }
 
 void LastBoss::_EndNowStateCallback(State EndStateType) {
@@ -130,7 +174,7 @@ void LastBoss::_ConfigCollision() {
 	_collisionInfo.radius = 0.5f;
 	_collisionInfo.height = 3.6f;
 	_collisionInfo.offset = Vector3(0.0f, 0.46f, 0.0f);
-	_collisionInfo.id = Collision_ID::ENEMY;
+	_collisionInfo.id = Collision_ID::BOSS;
 
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
@@ -145,6 +189,7 @@ void LastBoss::_ConfigCharacterController() {
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);	// プレイヤーは押し出すので押し戻されないようにする。
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
@@ -180,19 +225,19 @@ void LastBoss::_BuildAnimation() {
 		Datas.push_back(move(data));
 	}
 
-	//// アニメーションタイプにデータを関連づけ。
-	//// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
-	////   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
-	//{
-	//	// 待機状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationProt::Stand)].get());
-	//	// 歩行状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationProt::Walk)].get());
-	//	// 走行状態。
-	//	// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationProt::Walk)].get());
-	//	// 攻撃状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationProt::Attack)].get());
+	// アニメーションタイプにデータを関連づけ。
+	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
+	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
+	{
+		// 待機状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		// 歩行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		 //走行状態。
+		 //※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		//// 攻撃状態。
+		//_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationProt::Attack)].get());
 	//	// 落下状態。
 	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
@@ -200,13 +245,26 @@ void LastBoss::_BuildAnimation() {
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationProt::Damage)].get());
 	//	// 死亡状態。
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
-	//}
+	}
 }
 
 void LastBoss::_ConfigAnimationEvent() {
-	//float eventFrame = 1.0f;
 
-	//_MyComponent.AnimationEventPlayer->AddAnimationEvent(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, eventFrame, static_cast<AnimationEvent>(&LastBoss::CreateAttackCollision));
+	float eventFrame;
+
+	// 剣攻撃。
+	{
+		eventFrame = 1.6f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent));
+	}
+
+	// 魔法攻撃。
+	{
+		eventFrame = 2.3f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart));
+		eventFrame = 2.4f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd));
+	}
 }
 
 void LastBoss::_BuildSoundTable() {

@@ -23,18 +23,8 @@ public:
 	}
 
 	// 初期化。
-	void Init(EnemyCharacter* enemy) {
+	virtual void Init(EnemyCharacter* enemy,const Vector3& emitPosLocal) {
 		_enemyObject = enemy;
-	}
-
-	// このブレスを形成するパーティクルを登録する配列のポインタを設定。
-	// 引数：	パーティクル配列のポインタ。
-	// ※この関数を呼んだだけではエミットは開始されない。
-	// ※エミットする際はエミッターのSetEmitFlg関数を呼ぶ。
-	void SetParticleList(unique_ptr<vector<Particle*>> list) {
-		if (list) {
-			_particleList = move(list);
-		}
 	}
 
 	// ブレス発射開始。
@@ -61,7 +51,7 @@ public:
 
 private:
 	// 衝突判定コリジョンの更新。
-	virtual void _UpdateCollision() = 0;
+	virtual void _UpdateCollision() {};
 
 protected:
 	unique_ptr<vector<Particle*>> _particleList;
