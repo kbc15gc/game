@@ -108,7 +108,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 
 		if (_NowGroupIDList[(int)location] != group)
 		{
-			_MysteryLight->SetActive(true, true);
+			//_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
 		}
 
