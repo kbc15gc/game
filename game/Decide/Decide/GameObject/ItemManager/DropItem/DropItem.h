@@ -6,8 +6,9 @@
 class SkinModel;
 class Player;
 class ImageObject;
-class HoldEquipment;
+class HoldItemBase;
 class ParticleEffect;
+class CCharacterController;
 
 //ドロップアイテム。
 class DropItem :public GameObject
@@ -35,9 +36,9 @@ public:
 		_DropItemInfo = info;
 	}
 
-	//寿命を外部から設定する用。
-	void SetLife(float life) {
-		_Life = life;
+	//フィールド上に存在できる最大時間を外部から設定する用。
+	void SetAppearMaxTime(float life) {
+		_AppearMaxTime = life;
 	}
 
 	//落とすアイテムの数。
@@ -49,20 +50,40 @@ public:
 	void Debug()override;
 #endif // _DEBUG
 
+private:
+
+	//生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
+	void _EquipmentRankCheck_SelectSEAndEffect();
+
+	//このクラスでGameobjectに登録したオブジェクトを全削除用関数。
+	void _Release();
+
+	//AttentionTextに送る文字列をアイテムコードを見て適した文字列を決める。
+	void _SelectText(Item::ItemCodeE code);
+
+	//AttentionTextに文字列を設定。
+	void _SetText(const wchar_t* string);
+
+	//拾ったアイテムをインベントリのAdd関数に送る。
+	bool _AddInventory(Item::ItemCodeE code);
 
 private:
-	SkinModel*			_Model				 = nullptr;		 //モデル。
-	Vector3				_DropPos			 = Vector3::zero;//落ちる場所。
-	Item::BaseInfo*		_DropItemInfo		 = nullptr;		 //ドロップアイテムのInfo。
-	Player*				_Player				 = nullptr;		 //距離判定に使う。
-	ImageObject*		_ButtonIconImage	 = nullptr;		 //ボタンのアイコン。
-	float				_Life				 = 0.0f;		 //寿命。
-	float				_TotalDeltaTime		 = 0.0f;		 //フィールドに現れてから経った時間。
-	short int			_DropNum			 = 1;			 //何個アイテムを落とすかの数(デフォルトは1つ)。
-	HoldEquipment*		_DropEquipment		 = nullptr;		 //落とした装備品。
-	ParticleEffect*		_RareDropPE			 = nullptr;		 //レアドロップアイテム用のエフェクト。
-	float				_GetLength			 = 5.0f;		 //ドロップアイテムが拾える距離。
-	float				_ButtonIconPosOffSet = 100.0f;		 //アイコンを出す位置を調整する用。
-	SoundSource*		_RareDropSE			 = nullptr;		 //レアドロップした時の音。
-	SoundSource*		_DropSE				 = nullptr;		 //ドロップした時の音。
+	SkinModel*			  _Model				= nullptr;	    //モデル。
+	Vector3				  _DropPos			    = Vector3::zero;//落ちる場所。
+	Item::BaseInfo*		  _DropItemInfo		    = nullptr;	    //ドロップアイテムのInfo。
+	Player*				  _Player			    = nullptr;	    //距離判定に使う。
+	ImageObject*		  _ButtonIconImage	    = nullptr;	    //ボタンのアイコン。
+	float				  _AppearMaxTime		= 0.0f;		    //フィールド上に存在できる最大時間。
+	float				  _TotalAppearTime	    = 0.0f;		    //フィールドに現れてから経った時間。
+	short int			  _DropNum			    = 1;		    //何個アイテムを落とすかの数(デフォルトは1つ)。
+	HoldItemBase*		  _DropEquipment		= nullptr;	    //落とした装備品。
+	ParticleEffect*		  _RareDropPE		    = nullptr;	    //レアドロップアイテム用のエフェクト。
+	float				  _GetLength			= 5.0f;		     //ドロップアイテムが拾える距離。
+	float				  _ButtonIconPosOffSet  = 100.0f;	     //アイコンを出す位置を調整する用。
+	SoundSource*		  _RareDropSE		    = nullptr;	     //レアドロップした時の音。
+	SoundSource*		  _DropSE			    = nullptr;	     //ドロップした時の音。
+	int					  _ButtonIconPriority   = 0;			 //アイコンの優先度。
+	Color				  _ModelColor		    = Color::zero;   //モデルを透明にしていくために使う。
+	CCharacterController* _CCharacterController = nullptr;       //キャラクターコントローラー。															 
+	float				  _Gravity				= 0.0f;			 //重力。
 };
