@@ -261,55 +261,33 @@ void DropItem::_Release()
 	_RareDropPE = nullptr;
 	_RareDropSE = nullptr;
 	_DropSE = nullptr;
-	_DropEquipment = nullptr;
 
 	if (this) {
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 }
-//AttentionTextにアイテムコードを見て適した文字列を設定する。
-void DropItem::_SelectText(Item::ItemCodeE code, bool flag)
+
+//flagを見て取得成功か、失敗の適した文字列を決める。
+void DropItem::_SelectText(bool flag)
 {
 	wchar_t Text[256];
-	//wcscpy_s(Text, wcslen(L"_DropItemInfo->Name。") + 1, L"_DropItemInfo->Name。");
-	//if (flag == false) {
-	//	//取得成功の文字列選択。
-	//	switch (code)
-	//	{
-	//		
-	//	case Item::ItemCodeE::Item:
-	//		//wcscpy_s(Text, wcslen(L"アイテム取得しました。") + 1, L"アイテムを取得しました。");
-	//		break;
-	//	case Item::ItemCodeE::Armor:
-	//		//wcscpy_s(Text, wcslen(L"防具を取得しました。") + 1, L"防具を取得しました。");
-	//		break;
-	//	case Item::ItemCodeE::Weapon:
-	//		//wcscpy_s(Text, wcslen(L"武器を取得しました。") + 1, L"武器を取得しました。");
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//}
-	//else
+	char	Name[256];
+
+	//アイテムの名前をコピー。
+	strcpy(Name,_DropItemInfo->Name);
+	if (flag == true) {
+		//取得成功の文字列選択。
+		strcat(Name, "を入手しました。");
+	}
+	else
 	{
 		//取得失敗の文字列選択。
-		switch (code)
-		{
-		case Item::ItemCodeE::Item:
-			wcscpy_s(Text, wcslen(L"インベントリが一杯でアイテムを拾えませんでした。") + 1, L"インベントリが一杯でアイテムを拾えませんでした。");
-			break;
-		case Item::ItemCodeE::Armor:
-			wcscpy_s(Text, wcslen(L"インベントリが一杯で防具を拾えませんでした。") + 1, L"インベントリが一杯で防具を拾えませんでした。");
-			break;
-		case Item::ItemCodeE::Weapon:
-			wcscpy_s(Text, wcslen(L"インベントリが一杯で武器を拾えませんでした。") + 1, L"インベントリが一杯で武器を拾えませんでした。");
-			break;
-		default:
-			break;
-		}
+		strcat(Name, "を入手できませんでした。");
 	}
 
-	
+	//chatrからwchra_tに変換。
+	mbstowcs(Text, Name, sizeof(Name));
+
 	//テキストに設定。
 	_SetText(Text, flag);
 }
@@ -335,7 +313,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 			Vector3(600.0f, 260.0f, 0.0f),
 			33.0f,
 			Color::white,
-			AttentionTextOnly::MoveType::Up
+			AttentionTextOnly::MoveType::Down
 		);
 	}
 }
@@ -349,12 +327,14 @@ bool DropItem::_AddInventory(Item::ItemCodeE code)
 	case Item::ItemCodeE::Item:
 		//追加。
 		if (INSTANCE(Inventory)->AddItem(static_cast<Item::ItemInfo*>(_DropItemInfo), _DropNum) == false) {
-			_SelectText(_DropItemInfo->TypeID,false);
+			//取得失敗。
+			_SelectText(false);
 			return false;
 		}
 		else
 		{
-			_SelectText(_DropItemInfo->TypeID, true);
+			//取得成功。
+			_SelectText(true);
 			return true;
 		}
 		break;
@@ -364,12 +344,14 @@ bool DropItem::_AddInventory(Item::ItemCodeE code)
 	case Item::ItemCodeE::Weapon:
 		//追加。
 		if (INSTANCE(Inventory)->AddEquipment(static_cast<HoldEquipment*>(_DropEquipment)) == false) {
-			_SelectText(_DropItemInfo->TypeID,false);
+			//取得失敗。
+			_SelectText(false);
 			return false;
 		}
 		else
 		{
-			_SelectText(_DropItemInfo->TypeID, true);
+			//取得成功。
+			_SelectText(true);
 			return true;
 		}
 		break;

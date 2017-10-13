@@ -59,10 +59,10 @@ private:
 	//このクラスでGameobjectに登録したオブジェクトを全削除用関数。
 	void _Release();
 
-	//flagを見て取得成功か、失敗の文字列をアイテムコードを見て適した文字列を決める。
-	void _SelectText(Item::ItemCodeE code, bool flag);
+	//flagを見て取得成功か、失敗の適した文字列を決める。
+	void _SelectText(bool flag);
 
-	//flagを見て取得成功か失敗の文字列を設定。
+	//flagを見て取得成功か失敗の文字列をAttentionTextに設定。
 	void _SetText(const wchar_t* string, bool flag);
 
 	//拾ったアイテムをインベントリのAdd関数に送る。
