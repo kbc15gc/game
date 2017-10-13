@@ -7,10 +7,14 @@
 #include "GameObject\ItemManager\HoldItem\HoldItemFactory.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
+#include "GameObject\StatusWindow\StatusWindow.h"
+#include "fbEngine/CharacterController.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
-	GameObject(name)
+	GameObject(name),
+	_CCharacterController(NULL),
+	_Gravity(-0.98f)
 {
 
 }
@@ -18,10 +22,13 @@ DropItem::DropItem(const char * name) :
 //デストラクタ。
 DropItem::~DropItem()
 {
-
 }
 
 void DropItem::Awake() {
+
+	//優先度設定。
+	_ButtonIconPriority = StatusWindow::WindowBackPriorty - 1;
+
 	//レアドロップ用のサウンド。
 	_RareDropSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("RareDropSE", 0);
 	_RareDropSE->Init("Asset/Sound/Drop/RareDropSE.wav");
@@ -31,38 +38,63 @@ void DropItem::Awake() {
 	_DropSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DropSE", 0);
 	_DropSE->Init("Asset/Sound/Drop/DropSE.wav");
 	_DropSE->SetVolume(1.0f);
+
 	//パーティクルエフェクトコンポーネント追加。
 	_RareDropPE = AddComponent<ParticleEffect>();
 
 	//モデルコンポーネント追加。
 	_Model = AddComponent<SkinModel>();
 
+	//キャラクターコントローラーコンポーネント追加。
+	_CCharacterController = AddComponent<CCharacterController>();
+
+	//球体コライダーコンポーネント追加。
+	BoxCollider* coll = AddComponent<BoxCollider>();
+
+	//重力設定。
+	_Gravity = -0.98f;
+
+	//コライダー作成。
+	coll->Create(Vector3(1.0f, 0.5f, 1.0f));
+
 	//スキンモデル作成。
 	SkinModelData* modeldata = new SkinModelData();
 
 	//モデルデータ作成(ファイルパスはテスト用)。
-	modeldata->CloneModelData(SkinModelManager::LoadModel("Debug/SphereCollision.X"));
+	modeldata->CloneModelData(SkinModelManager::LoadModel("Chest.X"));
 
 	//モデル設定。
 	_Model->SetModelData(modeldata);
+	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
 
 	//初期座標。
 	_DropPos = Vector3(0.0f, 0.0f, 0.0f);
 	transform->SetLocalPosition(_DropPos);
 
+	//プレイヤー取得。
 	_Player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
 
 	//アイコン画像設定(アイコン画像はテスト用)。
-	_ButtonIconImage= INSTANCE(GameObjectManager)->AddNew<ImageObject>("DropButtonIconImage", 9);
+	_ButtonIconImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("DropButtonIconImage", _ButtonIconPriority);
 	_ButtonIconImage->SetTexture(LOADTEXTURE("UI/up.png"));
 	_ButtonIconImage->SetActive(false, false);
 
-	//寿命設定(テスト)。
-	_Life = 10.0f;
+	//最大時間を設定。
+	_AppearMaxTime = 5.0f;
 
 	//初期化。
 	_DropEquipment = nullptr;
 
+	_CCharacterController->Init(Vector3(0.0f, 0.0f, 0.0f), Collision_ID::DROPITEM, coll, _Gravity);
+	//以下衝突を取りたい属性(横方向)を指定。
+	_CCharacterController->AttributeXZ_AllOff();	//全衝突無視。
+	_CCharacterController->AddAttributeXZ(Collision_ID::GROUND);		//地面コリジョンを追加。
+
+	//以下衝突を取りたい属性(縦方向)を指定。
+	_CCharacterController->AttributeY_AllOff();		//全衝突無視。
+	_CCharacterController->AddAttributeY(Collision_ID::GROUND);	//地面コリジョンを追加。
+	
+	_CCharacterController->SetGravity(_Gravity);
 }
 
 //ドロップアイテムを作成。
@@ -77,13 +109,14 @@ void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
 	//武具の場合。
 	{
 		//武具は一つしか落ちない。
-		_DropEquipment = static_cast<HoldEquipment*>(HoldItemFactory::CreateItem(static_cast<Item::BaseInfo*>(info), true));
+		_DropEquipment = HoldItemFactory::CreateItem(static_cast<Item::BaseInfo*>(info), true);
 	}
 
 	SetInfo(info);
 
 	//落下場所を設定。
 	_DropPos = pos;
+	_DropPos.y += 0.5f;
 	transform->SetLocalPosition(_DropPos);
 
 	//アイコンの親設定。
@@ -92,38 +125,49 @@ void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
 	//アイコンの座標を初期化。
 	_ButtonIconImage->transform->SetPosition(Vector3::zero);
 
-	//レアドロップ用のエフェクト開始。
-	if (_DropEquipment->GetRank() <= HoldEquipment::Rank::B) 
-	{
-		_RareDropPE->RareDropEffect();
-		_RareDropSE->Play(false);
-	}
-	else
-	{
-		_DropSE->Play(false);
-	}
+	//生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
+	_EquipmentRankCheck_SelectSEAndEffect();
+	
+	_ModelColor = Color::white;
 }
 
 //更新。
 void DropItem::Update() {
 
-//#ifdef _DEBUG
-//	Debug();
-//#endif // _DEBUG
+#ifdef _DEBUG
+	Debug();
+#endif // _DEBUG
+	
+	float deltaTime = Time::DeltaTime();
 
+	Vector3 moveSpeed=Vector3::zero;
+	moveSpeed.y = _CCharacterController->GetMoveSpeed().y;
 
-	//時間を加算。
-	_TotalDeltaTime += Time::DeltaTime();
+	//出現時間に加算。
+	_TotalAppearTime += deltaTime;
+
+	//モデルを段々透明にする。
+	//_ModelColor.a -= 0.1f*deltaTime;
+	//_Model->SetAllBlend(_ModelColor);
+	//_Model->SetModelEffect(ModelEffectE::NONE);
+	//_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+	//this->_Model->SetTextureBlend(_ModelColor);
 
 	//プレイヤーとの距離を計算。
 	Vector3 v = _Player->transform->GetPosition() - _DropPos;
 	float len = v.Length();
 	Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(this->transform->GetPosition());
 	
+	_CCharacterController->SetMoveSpeed(moveSpeed);
+	_CCharacterController->Execute();
+
 	//近くならアイコンを表示。
 	if (len < _GetLength) {
 		_ButtonIconImage->transform->SetPosition(_ScreenPos.x, _ScreenPos.y - _ButtonIconPosOffSet, 0.0f);
 		_ButtonIconImage->SetActive(true, false);
+
+		//アイテムを取得する時にジャンプしないように設定。
+		_Player->PlayerJumpEnable();
 
 		//範囲内でAボタンを押されたら取得。
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonA)) {
@@ -131,58 +175,15 @@ void DropItem::Update() {
 			//中身がある時。
 			if (_DropItemInfo) {
 
-				//取得したアイテムのアイテムコードを見てインベントリに追加。
-				switch (_DropItemInfo->TypeID)
+				//取得したアイテムのアイテムコードを見てインベントリのAdd関数に送る。
+				if (_AddInventory(_DropItemInfo->TypeID) == true) 
 				{
-					//アイテム。
-				case Item::ItemCodeE::Item:
-					//追加。
-					if (INSTANCE(Inventory)->AddItem(static_cast<Item::ItemInfo*>(_DropItemInfo), _DropNum) == false) {
-						wchar_t ErrorText[256];
-						wcscpy_s(ErrorText, wcslen(L"アイテムを拾えませんでした。") + 1, L"アイテムを拾えませんでした。");
-						static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
-							ErrorText, 
-							Vector3(600.0f, 260.0f, 0.0f),
-							33.0f,
-							Color::red,
-							AttentionTextOnly::MoveType::Up
-						);
-						return;
-					}
-					break;
-					//防具。
-				case Item::ItemCodeE::Armor:
-					//武器。
-				case Item::ItemCodeE::Weapon:
-					//追加。
-					if (INSTANCE(Inventory)->AddEquipment(_DropEquipment) == false) {
-						wchar_t ErrorText[256];
-						if (_DropEquipment->GetInfo()->TypeID==Item::ItemCodeE::Armor) {
-							wcscpy_s(ErrorText, wcslen(L"防具を拾えませんでした。") + 1, L"防具を拾えませんでした。");
-						}
-						else
-						{
-							wcscpy_s(ErrorText, wcslen(L"武器を拾えませんでした。") + 1, L"武器を拾えませんでした。");
-						}
-						static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
-							ErrorText,
-							Vector3(600.0f, 260.0f, 0.0f),
-							33.0f,
-							Color::red,
-							AttentionTextOnly::MoveType::Up
-						);
-						return;
-					}
-					break;
-				default:
-					break;
+					//アイテムの取得が出来たならオブジェクト関係を削除。
+					_Release();
 				}
-
-				_RareDropPE->SetRareDropEffectFlag(false);
-
-				//アイコンとオブジェクトを消す。
-				INSTANCE(GameObjectManager)->AddRemoveList(_ButtonIconImage);
-				INSTANCE(GameObjectManager)->AddRemoveList(this);
+				
+				//とりあえず取得が終わったのでプレイヤーのジャンプを出来るようにする。
+				_Player->PlayerJumpEnable();
 			}
 			else
 			{
@@ -190,7 +191,6 @@ void DropItem::Update() {
 				sprintf(error, "ドロップアイテムのInfoが空でした。");
 				MessageBoxA(0, error, "ドロップアイテムの取得失敗", MB_ICONWARNING);
 			}
-			
 		}
 	}
 	else
@@ -200,21 +200,131 @@ void DropItem::Update() {
 	}
 
 	//フィールド上に出てから一定時間経ったら消す。
-	if (_Life < _TotalDeltaTime) {
-		//アイコンとオブジェクトとエフェクトを消す。
-		_RareDropPE->SetRareDropEffectFlag(false);
+	if (_AppearMaxTime < _TotalAppearTime) {
+		//オブジェクト関係を削除。
+		_Release();
+	}
+}
+
+//生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
+void DropItem::_EquipmentRankCheck_SelectSEAndEffect()
+{
+	if (static_cast<HoldEquipment*>(_DropEquipment)->GetRank() <= HoldEquipment::Rank::B)
+	{
+		//S以上ならレアドロップ用のエフェクトとSE開始。
+		_RareDropPE->RareDropEffect();
+		_RareDropSE->Play(false);
+	}
+	else
+	{
+		//ドロップSE再生。
+		_DropSE->Play(false);
+	}
+}
+
+//このクラスでGameobjectに登録したオブジェクトを全削除用関数。
+void DropItem::_Release()
+{
+
+	//エフェクトを消す。
+	_RareDropPE->SetRareDropEffectFlag(false);
+
+	//ボタンアイコン削除。
+	if (_ButtonIconImage) {
 		INSTANCE(GameObjectManager)->AddRemoveList(_ButtonIconImage);
-		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 
+	//ドロップ用SEを削除。
+	if (_DropSE) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_DropSE);
+	}
+
+	//レアドロップ用のSE削除。
+	if (_RareDropSE) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_RareDropSE);
+	}
+
+	//装備品を削除。
+	if (_DropEquipment) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_DropEquipment);
+	}
+
+	//_CCharacterController = nullptr;
+	//_RareDropPE = nullptr;
+
+	if (this) {
+		INSTANCE(GameObjectManager)->AddRemoveList(this);
+	}
+}
+//AttentionTextにアイテムコードを見て適した文字列を設定する。
+void DropItem::_SelectText(Item::ItemCodeE code)
+{
+	wchar_t ErrorText[256];
+	//文字列選択。
+	switch (code)
+	{
+	case Item::ItemCodeE::Item:
+		wcscpy_s(ErrorText, wcslen(L"インベントリが一杯でアイテムを拾えませんでした。") + 1, L"インベントリが一杯でアイテムを拾えませんでした。");
+		break;
+	case Item::ItemCodeE::Armor:
+		wcscpy_s(ErrorText, wcslen(L"インベントリが一杯で防具を拾えませんでした。") + 1, L"インベントリが一杯で防具を拾えませんでした。");
+		break;
+	case Item::ItemCodeE::Weapon:
+		wcscpy_s(ErrorText, wcslen(L"インベントリが一杯で武器を拾えませんでした。") + 1, L"インベントリが一杯で武器を拾えませんでした。");
+		break;
+	default:
+		break;
+	}
+	//テキストに設定。
+	_SetText(ErrorText);
+}
+
+//AttentionTextに文字列を設定。
+void DropItem::_SetText(const wchar_t* string) 
+{
+	//AttentionText作成。
+	static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
+		string,
+		Vector3(600.0f, 260.0f, 0.0f),
+		33.0f,
+		Color::red,
+		AttentionTextOnly::MoveType::Up
+	);
+}
+
+//拾ったアイテムをインベントリのAdd関数に送る。
+bool DropItem::_AddInventory(Item::ItemCodeE code) 
+{
+	switch (code)
+	{
+		//アイテム。
+	case Item::ItemCodeE::Item:
+		//追加。
+		if (INSTANCE(Inventory)->AddItem(static_cast<Item::ItemInfo*>(_DropItemInfo), _DropNum) == false) {
+			_SelectText(_DropItemInfo->TypeID);
+			return false;
+		}
+		break;
+		//防具。
+	case Item::ItemCodeE::Armor:
+		//武器。
+	case Item::ItemCodeE::Weapon:
+		//追加。
+		if (INSTANCE(Inventory)->AddEquipment(static_cast<HoldEquipment*>(_DropEquipment)) == false) {
+			_SelectText(_DropItemInfo->TypeID);
+			return false;
+		}
+		break;
+	default:
+		break;
+	}
+	return true;
 }
 
 #ifdef _DEBUG
 void DropItem::Debug() {
 	if (KeyBoardInput->isPush(DIK_L)) {
-	/*	DropItem* item =INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor), Vector3(-212.0f, 58.0f, -156.0f),2);*/
-
+	
 	}
 }
 #endif // _DEBUG
