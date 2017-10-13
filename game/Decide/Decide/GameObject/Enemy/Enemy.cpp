@@ -140,12 +140,14 @@ void Enemy::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);	// プレイヤーは押し出すので押し戻されないようにする。
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::DROPITEM);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
 }
 
 void Enemy::_CreateExtrudeCollision() {

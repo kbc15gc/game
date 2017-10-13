@@ -19,6 +19,7 @@ enum Collision_ID
 	SPACE = BIT(7),
 	BUILDING = BIT(8),
 	ITEMRANGE = BIT(9),
+	DROPITEM=BIT(10),	//ドロップアイテム用のコリジョンID(地面意外と当たり判定を行わない)。
 };
 
 

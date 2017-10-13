@@ -299,12 +299,14 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ENEMY);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::DROPITEM);
 	// Õ“Ë‚·‚é‘®«‚ðÝ’è(c)B
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
 
 }
 

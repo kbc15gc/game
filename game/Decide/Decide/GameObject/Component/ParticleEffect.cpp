@@ -187,7 +187,7 @@ void ParticleEffect::FireFly()
 
 void ParticleEffect::LevelUpEffect()
 {
-	//バフに使用するパーティクルパラメーターを設定。
+	//レベルアップに使用するパーティクルパラメーターを設定。
 	_LevelUPParticleParam.Init();
 	_LevelUPParticleParam.texturePath = "par.png";
 	_LevelUPParticleParam.alphaBlendMode = 1;
@@ -225,8 +225,8 @@ void ParticleEffect::RareDropEffect()
 	_RareDropParam.gravity = 0.0f;
 	_RareDropParam.initAlpha = 1.0f;
 	_RareDropParam.initPositionRandomMargin = Vector3(0.0f, 0.0f, 0.0f);
-	_RareDropParam.initVelocity = Vector3(0.0f, 0.0f, 0.0f) *0.0f;
-	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(2.0f, 0.5f, 2.0f);
+	_RareDropParam.initVelocity = Vector3(1.0f, 0.0f, 1.0f)*2.0f;
+	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(2.5f, 0.5f, 2.5f);
 	_RareDropParam.intervalTime = 0.01f;
 	_RareDropParam.isBillboard = true;
 	_RareDropParam.isFade = true;

@@ -113,6 +113,7 @@ void Player::Awake()
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
+	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
 
