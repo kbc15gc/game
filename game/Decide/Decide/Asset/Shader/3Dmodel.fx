@@ -119,8 +119,8 @@ VS_OUTPUT VSMain(VS_INPUT In)
 
 	Out._Color = In._Color;
 	Out._UV = In._UV;
-    Out._Normal = mul(In._Normal, (float3x4)g_rotationMatrix); //法線を回す。
-    Out._Tangent = mul(In._Tangent, (float3x4) g_rotationMatrix); //法線を回す。
+    Out._Normal = normalize(mul(In._Normal, (float3x4) g_rotationMatrix)); //法線を回す。
+    Out._Tangent = normalize(mul(In._Tangent, (float3x4) g_rotationMatrix)); //法線を回す。
 	
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
@@ -159,8 +159,8 @@ VS_OUTPUT VSMainInstancing(VS_INPUT_INSTANCING In)
 	rotM[0] = In._World1;
 	rotM[1] = In._World2;
 	rotM[2] = In._World3;
-	Out._Normal = mul(In.base._Normal, rotM);	//法線を回す。
-    Out._Tangent = mul(In.base._Tangent, rotM); //法線を回す。
+    Out._Normal = normalize(mul(In.base._Normal, rotM)); //法線を回す。
+    Out._Tangent = normalize(mul(In.base._Tangent, rotM)); //法線を回す。
 
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
@@ -252,7 +252,6 @@ PSOutput PSMain(VS_OUTPUT In)
     if (Spec)
     {
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
     }
 
 	float3 cascadeColor = 0;
@@ -273,7 +272,12 @@ PSOutput PSMain(VS_OUTPUT In)
 	{
 		color.xyz = In._RayColor + color * In._MieColor;
 	}
-
+    float3 charaLig = CalcCharaLight(normal, (float3x3) g_rotationMatrix) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
+    if (Spec)
+    {
+        charaLig.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
+    }
+    color.xyz += diff.rgb * charaLig;
     float3 ambient = g_ambientLight.rgb;
 	
     if (g_CharaLightParam.x)
