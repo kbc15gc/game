@@ -47,6 +47,7 @@ void PlayerStateRun::Update()
 			{
 				_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
 				_Player->ChangeState(Player::State::Attack);
+				return;
 			}
 		}
 	}
@@ -72,7 +73,7 @@ void PlayerStateRun::Move()
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//地面上にいる場合
-		if (_Player->_CharacterController->IsOnGround() == true && !_Player->_Speak)
+		if (_Player->_CharacterController->IsOnGround() == true && !_Player->_NoJump)
 		{
 			//ジャンプパワーを設定
 			movespeed.y = _JumpSpeed;

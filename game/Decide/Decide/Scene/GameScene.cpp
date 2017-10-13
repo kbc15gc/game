@@ -43,8 +43,6 @@
 #include "GameObject\TextImage\BackWindowAndAttentionText.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
 
-#include "GameObject\ItemManager\DropItem\DropItem.h"
-
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -53,10 +51,10 @@ namespace
 {
 	//ƒ{ƒX
 	float BOSS_RADIUS = 35.0f;
-	Vector3 BOSS_POS = { -712,68,48 };
+	Vector3 BOSS_POS = { -686.0f,61.9f,68.0f };
 	//ŠX
 	float MATI_RADIUS = 35.0f;
-	Vector3 MATI_POS = { -406,67,-20 };
+	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 }
 
 
@@ -140,8 +138,6 @@ void GameScene::Start()
 	INSTANCE(Inventory)->Initialize();
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
-
-	INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);

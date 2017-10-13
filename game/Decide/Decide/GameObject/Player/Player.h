@@ -23,6 +23,8 @@
 #include "GameObject\Village\NPC.h"
 #include "GameObject\Component\AnimationEvent.h"
 
+#include"fbEngine\_Object\_Component\_3D\Light.h"
+
 class SkinModel;
 class Animation;
 class ParameterBar;
@@ -220,6 +222,16 @@ public:
 	{
 		ChangeState(State::Idol);
 	}
+	//プレイヤージャンプしない。
+	void PlayerJumpEnable()
+	{
+		_NoJump = true;
+	}
+	//ジャンプする。
+	void PlayerJumpDisable()
+	{
+		_NoJump = false;
+	}
 
 	//プレイヤーに装備をセット(中でアイテムコードを見て武器か防具をセット)。
 	void SetEquipment(HoldItemBase* equi);
@@ -366,8 +378,8 @@ private:
 	LevelUpImage* _LevelUpImage;
 	//歴史書
 	HistoryManager* _HistoryManager = nullptr;
-	//NPCと話すときジャンプしないため
-	bool _Speak;
+	//ジャンプしないため
+	bool _NoJump;
 	//プレイヤーがダメージ受けた時のSE
 	SoundSource* _DamageSound = nullptr;
 	//レベルアップ時の音
@@ -389,4 +401,8 @@ private:
 
 	//アニメーションイベント
 	AnimationEventPlayer* _AnimationEventPlayer = nullptr;
+
+	/** キャラクターライト. */
+	CharacterLight _CharaLight;
+
 };

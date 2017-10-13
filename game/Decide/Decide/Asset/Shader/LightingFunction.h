@@ -27,7 +27,6 @@ sampler_state
 	AddressV = Wrap;
 };
 
-
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
 float4 g_EffectFlg;	//xは投影、yはスペキュラ
 
@@ -38,6 +37,21 @@ float4	g_ambientLight;								//環境光。
 
 float4	g_cameraPos;	//!<カメラの座標。
 float3	g_cameraDir;	//!<カメラ方向。
+
+#define NUM_CHARA_DIFFLIGHT 4
+/**
+* キャラクターライトクラス.
+*/
+struct CharacterLightS
+{
+	float4	DiffuseDir[NUM_CHARA_DIFFLIGHT];	//ディフューズライトの方向.
+	float4	DiffuseColor[NUM_CHARA_DIFFLIGHT];		//ディフューズライトのカラー.
+	float4	Ambient;								//環境光.
+	int LightCount;
+};
+
+CharacterLightS g_CharaLight;
+float4 g_CharaLightParam; // x:有効.
 
 /*!
 * @brief	大気散乱パラメータ。
@@ -93,9 +107,8 @@ float3 CalcNormal(float3 InNormal, float3 InTangent, float2 InUV)
 	return retNormal;
 }
 
-
 //ディフューズライトを計算。	
-float4 DiffuseLight( float3 normal )
+float4 DiffuseLight( float3 normal)
 {
 	float4 color = 0.0f;
 	
@@ -112,9 +125,26 @@ float4 DiffuseLight( float3 normal )
 		t = min(1.0f, pow(t, 2.0f));
 		color.xyz *= t;
 	}
-	
-	color.w = 1.0f;
 
+	color.w = 1.0f;
+	
+	return color;
+}
+
+/**
+* キャラクターライトを計算.
+*/
+float4 CalcCharaLight(float3 normal, float3x3 rotMatrix)
+{
+	float4 color = 0.0f;
+	if (g_CharaLightParam.x)
+	{
+		for (int i = 0; i < g_CharaLight.LightCount; i++)
+		{
+			float3 dir = normalize(mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix));
+			color.xyz += max(0.0f, -dot(normal, dir)) * g_CharaLight.DiffuseColor[i].xyz;
+		}
+	}
 	return color;
 }
 
@@ -142,6 +172,30 @@ float3 SpecLight(float3 normal, float3 worldPos, float2 uv)
 		//反射ベクトルを計算。
 		float3 L = -g_diffuseLightDirection[i].xyz;
 		spec += g_diffuseLightColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[i].w;	//スペキュラ強度。
+	}
+	//spec += g_ambientLight.xyz * pow(max(0.0f, dot(normal, R)), 2) * 10.0f;	//スペキュラ強度。
+
+	if (g_MapFlg.y)
+	{
+		float specPow = tex2D(g_speculerMapSampler, uv);
+		spec *= specPow;
+	}
+	return spec;
+}
+
+/*!
+*@brief	スペキュラライトを計算。
+*/
+float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv,float3x3 rotMatrix)
+{
+	float3 spec = 0.0f;
+	float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
+	float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
+	for (int i = 0; i < g_CharaLight.LightCount; i++) {
+		//スペキュラ成分を計算する。
+		//反射ベクトルを計算。
+		float3 L = normalize(-mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix));
+		spec += g_CharaLight.DiffuseColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_CharaLight.DiffuseColor[i].w;	//スペキュラ強度。
 	}
 	//spec += g_ambientLight.xyz * pow(max(0.0f, dot(normal, R)), 2) * 10.0f;	//スペキュラ強度。
 
@@ -278,7 +332,7 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 	float3 v3Ray = worldPos - cameraPos;
 	float fFar = length(v3Ray);
 	v3Ray /= fFar;
-
+	
 	// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
 	//	float fNear = getNearIntersection(g_cameraPos.xyz, v3Ray, g_atmosParam.fCameraHeight2, g_atmosParam.fOuterRadius2);
 
@@ -312,8 +366,8 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
 
-	mieColor.rgb = v3Attenuate;
-	rayColor.rgb = v3FrontColor * (g_atmosParam.v3InvWavelength * g_atmosParam.fKrESun + g_atmosParam.fKmESun);
+	mieColor.rgb = min(float3( 1.0f, 1.0f, 1.0f), v3Attenuate);
+	rayColor.rgb = min(float3( 0.6f, 0.6f, 0.6f), v3FrontColor * (g_atmosParam.v3InvWavelength * g_atmosParam.fKrESun + g_atmosParam.fKmESun));
 	posToCameraDir = cameraPos - worldPos;
 }
 /*!

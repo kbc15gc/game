@@ -1,6 +1,7 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 #include "GameObject\ItemManager\ItemManager.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 class SkinModel;
 class Player;
@@ -12,6 +13,7 @@ class ParticleEffect;
 class DropItem :public GameObject
 {
 public:
+
 
 	//コンストラクタ。
 	DropItem(const char* name);
@@ -44,20 +46,23 @@ public:
 	}
 
 #ifdef _DEBUG
-	void Debug();
+	void Debug()override;
 #endif // _DEBUG
 
 
 private:
-	SkinModel*			_Model			 = nullptr;
-	Vector3				_DropPos		 = Vector3::zero;//落ちる場所。
-	Item::BaseInfo*		_DropItemInfo	 = nullptr;		 //ドロップアイテムのInfo。
-	Player*				_Player			 = nullptr;		 //距離判定に使う。
-	ImageObject*		_ButtonIconImage = nullptr;		 //ボタンのアイコン。
-	float				_Life			 = 0.0f;		 //寿命。
-	float				_TotalDeltaTime  = 0.0f;		 //フィールドに現れてから経った時間。
-	short int			_DropNum		 = 1;			 //何個アイテムを落とすかの数(デフォルトは1つ)。
-	HoldEquipment*		_DropEquipment	 = nullptr;		 //落とした装備品。
-	ParticleEffect*		_RareDropPE		 = nullptr;		 //レアドロップアイテム用のエフェクト。
-	ParticleEffect*		_NormalDropPE	 = nullptr;		 //レア以外のドロップアイテム用エフェクト。
+	SkinModel*			_Model				 = nullptr;		 //モデル。
+	Vector3				_DropPos			 = Vector3::zero;//落ちる場所。
+	Item::BaseInfo*		_DropItemInfo		 = nullptr;		 //ドロップアイテムのInfo。
+	Player*				_Player				 = nullptr;		 //距離判定に使う。
+	ImageObject*		_ButtonIconImage	 = nullptr;		 //ボタンのアイコン。
+	float				_Life				 = 0.0f;		 //寿命。
+	float				_TotalDeltaTime		 = 0.0f;		 //フィールドに現れてから経った時間。
+	short int			_DropNum			 = 1;			 //何個アイテムを落とすかの数(デフォルトは1つ)。
+	HoldEquipment*		_DropEquipment		 = nullptr;		 //落とした装備品。
+	ParticleEffect*		_RareDropPE			 = nullptr;		 //レアドロップアイテム用のエフェクト。
+	float				_GetLength			 = 5.0f;		 //ドロップアイテムが拾える距離。
+	float				_ButtonIconPosOffSet = 100.0f;		 //アイコンを出す位置を調整する用。
+	SoundSource*		_RareDropSE			 = nullptr;		 //レアドロップした時の音。
+	SoundSource*		_DropSE				 = nullptr;		 //ドロップした時の音。
 };

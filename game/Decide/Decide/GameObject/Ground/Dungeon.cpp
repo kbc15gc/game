@@ -24,6 +24,8 @@ void Dungeon::Awake()
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Dungeon.X"));
 	model->SetModelData(modeldata);
 
+	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 

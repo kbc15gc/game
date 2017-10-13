@@ -109,7 +109,6 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 				icon->DeleteAllBuffDebuffIcon();
 			}
 			
-			
 			// エネミーをリスポーン。
 			vector<BarColor> Color;
 			ObjectSpawn* Spawner = enemy->Object->GetSpawner();

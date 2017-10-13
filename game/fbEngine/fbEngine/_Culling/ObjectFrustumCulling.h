@@ -17,7 +17,7 @@ public:
 	}
 	//カリングアルゴリズムの実行。
 	//[in] カリングを行いたいオブジェクトを内包するAABB。
-	void Execute(const AABB& aabb) override;
+	void Execute(const AABB& aabb, const D3DXMATRIX& rotation) override;
 private:
 	const Camera*	_Camera = nullptr;
 };

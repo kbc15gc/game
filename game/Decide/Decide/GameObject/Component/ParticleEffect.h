@@ -19,27 +19,25 @@ public:
 	void Update()override;
 
 	//HP回復のエフェクトを発生させる。
-	//引数はエフェクトを発生させる基点。
 	void HeelHpEffect();
 
 	//MP回復のエフェクトを発生させる。
-	//引数はエフェクトを発生させる基点。
 	void HeelMpEffect();
 
 	//バフのエフェクトを発生させる。
-	//引数はエフェクトを発生させる基点。
 	void BuffEffect();
 
 	//デバフのエフェクトを発生させる。
-	//引数はエフェクトを発生させる基点。
 	void DeBuffEffect();
 
 	//蛍っぽいエフェクトを発生させる。
-	//引数はエフェクトを発生させる基点。
 	void FireFly();
 
 	//レベルアップエフェクトを発生。
 	void LevelUpEffect();
+
+	//レアドロップ用のエフェクト。
+	void RareDropEffect();
 	
 	//Hp回復エフェクトを発生させるかどうかのフラグ。
 	//tureで発生。falseで発生させない。
@@ -82,23 +80,31 @@ public:
 		_LevelUPParticleEmitter->SetEmitFlg(flag);
 		_IsLevelUPFlag = flag;
 	}
+
+	//レアドロップエフェクトを発生させるかフラグ。
+	//tureで発生。falseで発生させない。
+	void SetRareDropEffectFlag(bool flag) {
+		_RareDropEmitter->SetEmitFlg(flag);
+	}
 private:
-	ParticleEmitter*	_BuffParticleEmitter = nullptr;			//バフパーティクル発生元。
+	ParticleEmitter*	_BuffParticleEmitter		= nullptr;	//バフパーティクル発生元。
 	ParticleParameter	_BuffParticleParam;						//バフパーティクルパラメーター。
-	ParticleEmitter*	_DebuffParticleEmitter = nullptr;		//デバフパーティクル発生元。
+	ParticleEmitter*	_DebuffParticleEmitter		= nullptr;	//デバフパーティクル発生元。
 	ParticleParameter	_DebuffParticleParam;					//デバフパーティクルパラメーター。
 	ParticleParameter	_HeelHpParticleParam;					//Hp回復パーティクルパラメーター。
-	ParticleEmitter*	_HeelHpParticleEmitter = nullptr;		//Hp回復エフェクトパーティクルの発生元。
-	ParticleEmitter*	_HeelParticleAssistEmitter = nullptr;	//回復エフェクトを補助するパーティクルの発生元。	
+	ParticleEmitter*	_HeelHpParticleEmitter		= nullptr;	//Hp回復エフェクトパーティクルの発生元。
+	ParticleEmitter*	_HeelParticleAssistEmitter  = nullptr;	//回復エフェクトを補助するパーティクルの発生元。	
 	ParticleParameter	_HeelParticleAssistParam;				//回復エフェクトを補助するパーティクルパラメーター。
 	ParticleParameter	_HeelMpParticleParam;					//Mp回復パーティクルパラメーター。
-	ParticleEmitter*	_HeelMpParticleEmitter = nullptr;		//Mp回復エフェクトパーティクルの発生元。
+	ParticleEmitter*	_HeelMpParticleEmitter		= nullptr;	//Mp回復エフェクトパーティクルの発生元。
 	bool				_IsHeelHpFlag;							//Hp回復エフェクトが始まった。
-	float				_TotalHeelHpEffectTime = 0.0f;			//Hp回復エフェクトが始まって何秒経ったかの合計。
+	float				_TotalHeelHpEffectTime		= 0.0f;		//Hp回復エフェクトが始まって何秒経ったかの合計。
 	bool				_IsHeelMpFlag;							//Mp回復エフェクトが始まった。
-	float				_TotalHeelMpEffectTime = 0.0f;			//Mp回復エフェクトが始まって何秒経ったかの合計。
-	ParticleEmitter*	_FireFlyParticleEmitter = nullptr;		//蛍みたいなパーティクル発生元。
+	float				_TotalHeelMpEffectTime		= 0.0f;		//Mp回復エフェクトが始まって何秒経ったかの合計。
+	ParticleEmitter*	_FireFlyParticleEmitter		= nullptr;	//蛍みたいなパーティクル発生元。
 	ParticleParameter	_FireFlyParticleParam;					//蛍みたいなバフパーティクルパラメーター。
+	ParticleEmitter*	_RareDropEmitter			= nullptr;	//レアドロップパーティクルの発生元。
+	ParticleParameter	_RareDropParam;							//レアドロップパーティクルパラメーター。
 	/*レベルアップ*/
 	ParticleEmitter*	_LevelUPParticleEmitter = nullptr;		//レベルアップ時のパーティクル発生源。
 	ParticleParameter	_LevelUPParticleParam;					//レベルアップ時のパーティクルパラメター。
