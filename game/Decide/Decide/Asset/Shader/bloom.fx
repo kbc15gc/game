@@ -40,8 +40,8 @@ float4 PSSamplingLuminance( VS_OUTPUT In ) : COLOR
 	//テクスチャから1以上の数値が取れるのか？
 	float4 color = tex2D(g_SceneSampler, In.tex);
 	float t;
-	//t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-	t = dot(color.xyz, float3(0.2f, 0.2f, 0.2f));
+	t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	//t = dot(color.xyz, float3(0.2f, 0.2f, 0.2f));
 	clip(t - 1.001f);			//輝度が1.0以下ならピクセルキル
 	color.xyz *= (t - 1.0f);
 	return color;

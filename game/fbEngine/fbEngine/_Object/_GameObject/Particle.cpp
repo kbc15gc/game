@@ -112,6 +112,15 @@ void Particle::Render()
 	wvp = transform->GetWorldMatrix() * _Camera->GetViewMat() * _Camera->GetProjectionMat();
 
 	//シェーダー適用開始。
+
+	// レンダーステート保存。
+	DWORD alphaBlendEnable,srcBlend,destBlend, ZWriteEnable,zEnable;
+	(*graphicsDevice()).GetRenderState(D3DRS_ALPHABLENDENABLE, &alphaBlendEnable);
+	(*graphicsDevice()).GetRenderState(D3DRS_SRCBLEND, &srcBlend);
+	(*graphicsDevice()).GetRenderState(D3DRS_DESTBLEND, &destBlend);
+	(*graphicsDevice()).GetRenderState(D3DRS_ZWRITEENABLE, &ZWriteEnable);
+	(*graphicsDevice()).GetRenderState(D3DRS_ZENABLE, &zEnable);
+
 	//αブレンド許可
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	switch (_AlphaBlendMode)
@@ -149,11 +158,18 @@ void Particle::Render()
 	_Effect->End();
 
 	//変更したステートを元に戻す
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+	//(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	//(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	//(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlendEnable);
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, srcBlend);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, destBlend);
+	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, ZWriteEnable);
+	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, zEnable);
+
 }
 
 void Particle::Init(const ParticleParameter & param,const Vector3 & emitPosition)

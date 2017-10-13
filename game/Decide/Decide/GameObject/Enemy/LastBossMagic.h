@@ -1,17 +1,16 @@
 #pragma once
 
-#include "BreathObject.h"
+#include "GameObject\Enemy\BreathObject.h"
 
-
-class LaserBreath :
+class LastBossMagic :
 	public BreathObject
 {
 public:
 	// 引数はオブジェクトの名前。
-	LaserBreath(const char* name) :BreathObject(name) {
+	LastBossMagic(const char* name) :BreathObject(name) {
 
 	}
-	~LaserBreath() {
+	~LastBossMagic() {
 		INSTANCE(GameObjectManager)->AddRemoveList(_particleEmitter);
 	}
 
@@ -25,25 +24,18 @@ public:
 	void Update()override;
 
 	// ブレス発射開始。
-	void BreathStart();
+	void BreathStart()override;
 
 	// ブレス発射終了。
 	inline void BreathEnd()override {
-		_particleEmitter->SetEmitFlg(false);
-		_particleEmitter->AchievedCreateParticleEnd();
-		_particleEmitter->SetActive(false);
 	}
 
 private:
-	// 衝突判定コリジョンの更新。
-	void _UpdateCollision()override;
-
-
-private:
-	Particle* _start = nullptr;	// 攻撃時、最初に生成されたパーティクル(ブレスの先頭)。
-	Particle* _end = nullptr;	// 攻撃時、最後に生成されたパーティクル(ブレスの終端)。
-	Vector3 _breathScale;
 
 	ParticleEmitter* _particleEmitter = nullptr;
 	ParticleParameter _initParticleParam;
+	Vector3 _initEmitPos = Vector3::zero;
+	Vector3 _direction = Vector3::zero;
+	float _timeCounter;
+	float _interval = 3.0f;
 };
