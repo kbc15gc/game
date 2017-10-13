@@ -6,7 +6,7 @@
 #include "fbEngine\CharacterController.h"
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
-
+#include "GameObject\Enemy\EnemyAttack.h"
 
 BossDrarian::BossDrarian(const char* name) : EnemyCharacter(name)
 {
@@ -48,27 +48,8 @@ void BossDrarian::_StartSubClass() {
 	_tailAttack.reset(new EnemySingleAttack(this));
 	_tailAttack->Init(6.5f,static_cast<int>(AnimationBossDrarian::TailAttackRight), 0.2f);
 
-	// 攻撃処理に使用するパーティクル設定。
-	ParticleParameter param;
-	param.Init();
-	param.texturePath = "t1.png";
-	param.alphaBlendMode = 1;
-	param.addVelocityRandomMargih = Vector3::zero;
-	param.brightness = 7.0f;
-	param.fadeTime = 0.2f;
-	param.gravity = 0.0f;
-	param.initAlpha = 1.0f;
-	param.initPositionRandomMargin = Vector3::zero;
-	param.initVelocity = Vector3::front * 10.0f;
-	param.initVelocityVelocityRandomMargin = Vector3::zero;
-	param.intervalTime = 0.001f;
-	param.isBillboard = true;
-	param.isFade = true;
-	param.life = -1.0f;
-	param.size = Vector2(0.5f, 0.5f);
-
 	// ブレス攻撃生成。
-	_breathAttack.reset(new EnemyBreathAttack(this, param, Vector3(0.0f, 0.0f, 5.0f)));
+	_breathAttack.reset(new EnemyBreathAttack(this));
 	_breathAttack->Init(13.0f,static_cast<int>(AnimationBossDrarian::Breath), 0.2f);
 
 	// 初期ステートに移行。
@@ -187,7 +168,7 @@ void BossDrarian::CreateAttackCollision_TailAttack4() {
 }
 
 void BossDrarian::AnimationEvent_BreathStart() {
-	_breathAttack->BreathStart();
+	_breathAttack->BreathStart<LaserBreath>(this,Vector3(0.0f, 0.0f, 5.0f));
 	// 攻撃音再生。
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack3);
 }
@@ -246,7 +227,7 @@ void BossDrarian::_ConfigCollision() {
 			RigidBodyInfo info;
 			info.coll = AddComponent<BoxCollider>();
 			static_cast<BoxCollider*>(info.coll)->Create(Vector3(3.0f, 3.0f,1.0f));
-			info.id = Collision_ID::ENEMY;
+			info.id = Collision_ID::BOSS;
 			info.mass = 0.0f;
 			info.physicsType = Collision::PhysicsType::Kinematick;
 			info.offset = Vector3(0.0f,0.0f,2.0f);
@@ -262,7 +243,7 @@ void BossDrarian::_ConfigCollision() {
 			RigidBodyInfo info;
 			info.coll = AddComponent<CCapsuleColliderZ>();
 			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 8.1f);
-			info.id = Collision_ID::ENEMY;
+			info.id = Collision_ID::BOSS;
 			info.mass = 0.0f;
 			info.physicsType = Collision::PhysicsType::Kinematick;
 			info.offset = Vector3(0.0f,1.0f,0.0f);
@@ -299,12 +280,14 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ENEMY);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::DROPITEM);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
 
 }
 
@@ -413,22 +396,3 @@ void BossDrarian::_BuildSoundTable() {
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack3, "Buoonn.wav", false, false);
 }
 
-
-// EnemyBreathAttack。
-EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object, ParticleParameter& param, const Vector3& emitPos):EnemyAttack(object) {
-	_player = INSTANCE(GameObjectManager)->FindObject("Player");
-	_initParticleParam = param;
-	AddParticleEmitter(param, emitPos,_enemyObject->transform);
-}
-
-bool EnemyBreathAttack::Update() {
-	ParticleParameter param = _particleEmitter[0]->GetParam();
-	param.size.y -= 0.1f * Time::DeltaTime();
-	_particleEmitter[0]->SetParam(param);
-
-	if (!_isPlaying) {
-		// モーション再生終了。
-		return true;
-	}
-	return false;
-}

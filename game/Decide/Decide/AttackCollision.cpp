@@ -99,7 +99,7 @@ void AttackCollision::_CallBackEnter(btCollisionObject* coll) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS) {
 				// 敵と衝突した。
 				// ゲームオブジェクトがある。
 				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionEnter(this);
@@ -127,7 +127,7 @@ void AttackCollision::_CallBackStay(btCollisionObject* coll) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS) {
 				// 敵と衝突した。
 				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionStay(this);
 			}
@@ -153,7 +153,7 @@ void AttackCollision::_CallBackExit(btCollisionObject* coll) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::ENEMY) {
+			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS) {
 				// 敵と衝突した。
 				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionExit(this);
 			}

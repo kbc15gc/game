@@ -124,11 +124,11 @@ VS_OUTPUT VSMain( VS_INPUT In )
 
 	//法線
 	//o._Normal = mul(normal, g_rotationMatrix);	//法線を回す。
-	o._Normal = normal;
+    o._Normal = normalize(normal);
 
     o._UV = In._UV;
 	o._Color = In._Color;
-	o._Tangent = tangent;
+    o._Tangent = normalize(tangent);
 	//大気散乱.
 	CalcMieAndRayleighColors(o._MieColor, o._RayColor, o._PosToCameraDir, o._World.xyz);
 
@@ -174,7 +174,6 @@ PSOutput PSMain( VS_OUTPUT In )
 	if(Spec)
 	{
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
     }
 
 	float3 cascadeColor = 0;

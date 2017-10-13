@@ -6,7 +6,7 @@
 #include "fbEngine\CharacterController.h"
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
-
+#include "GameObject\Enemy\EnemyAttack.h"
 
 EnemyDrarian::EnemyDrarian(const char* name) : EnemyCharacter(name)
 {
@@ -160,12 +160,14 @@ void EnemyDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::DROPITEM);
 	// Õ“Ë‚·‚é‘®«‚ðÝ’è(c)B
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
 }
 
 void EnemyDrarian::_BuildAnimation() {

@@ -33,6 +33,8 @@ void ContinentObject::LoadModel(const char * filename)
 	_Model->SetModelData(data);
 	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
 
+	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
 	////“–‚½‚è”»’è’Ç‰ÁB
 	//RigidBody* rigid = AddComponent<RigidBody>();
 	//MeshCollider* mesh = AddComponent<MeshCollider>();

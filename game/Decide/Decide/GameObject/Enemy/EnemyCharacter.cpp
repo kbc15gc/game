@@ -266,6 +266,8 @@ void EnemyCharacter::_BuildModelData() {
 	_MyComponent.Model->SetModelData(modeldata);
 	//_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, false);
 
+	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 
@@ -505,25 +507,4 @@ void EnemyCharacter::EffectUpdate() {
 }
 
 
-
-// EnemyAttack。
-
-void EnemyAttack::Init(float attackRange,int animType, float interpolate, int animLoopNum) {
-	_AttackRange = attackRange;
-	_animType = animType;
-	_interpolate = interpolate;
-	_animLoopNum = animLoopNum;
-}
-
-
-
-// EnemySingleAttack。
-
-bool EnemySingleAttack::Update(){
-	if (!_isPlaying) {
-		// 攻撃モーション一度終了。
-		return true;
-	}
-	return false;
-}
 

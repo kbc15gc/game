@@ -55,7 +55,7 @@ void Dialog::Init(Item::ItemCodeE code)
 			text->Initialize(ItemCommandName[i], 30.0f);
 			text->transform->SetParent(_BackWindow->transform);
 			text->transform->SetLocalPosition(pos);
-			text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+			text->SetAnchor(fbText::TextAnchorE::UpperLeft);
 			pos.y += 35.0f;
 			_CommandList.push_back(text);
 		}
@@ -70,7 +70,7 @@ void Dialog::Init(Item::ItemCodeE code)
 			text->Initialize(EquipCommandName[i], 30.0f);
 			text->transform->SetParent(_BackWindow->transform);
 			text->transform->SetLocalPosition(pos);
-			text->SetAnchor(fbText::TextAnchorE::MiddleLeft);
+			text->SetAnchor(fbText::TextAnchorE::UpperLeft);
 			pos.y += 35.0f;
 			_CommandList.push_back(text);
 		}

@@ -141,7 +141,7 @@ float4 CalcCharaLight(float3 normal, float3x3 rotMatrix)
 	{
 		for (int i = 0; i < g_CharaLight.LightCount; i++)
 		{
-			float3 dir = mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix);
+			float3 dir = normalize(mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix));
 			color.xyz += max(0.0f, -dot(normal, dir)) * g_CharaLight.DiffuseColor[i].xyz;
 		}
 	}
@@ -194,7 +194,7 @@ float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv,float3x3 rot
 	for (int i = 0; i < g_CharaLight.LightCount; i++) {
 		//スペキュラ成分を計算する。
 		//反射ベクトルを計算。
-		float3 L = -mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix);
+		float3 L = normalize(-mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix));
 		spec += g_CharaLight.DiffuseColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_CharaLight.DiffuseColor[i].w;	//スペキュラ強度。
 	}
 	//spec += g_ambientLight.xyz * pow(max(0.0f, dot(normal, R)), 2) * 10.0f;	//スペキュラ強度。
@@ -332,7 +332,7 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 	float3 v3Ray = worldPos - cameraPos;
 	float fFar = length(v3Ray);
 	v3Ray /= fFar;
-
+	
 	// Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
 	//	float fNear = getNearIntersection(g_cameraPos.xyz, v3Ray, g_atmosParam.fCameraHeight2, g_atmosParam.fOuterRadius2);
 
@@ -366,8 +366,8 @@ void CalcMieAndRayleighColorsObjectFromAtomosphere(out float4 mieColor, out floa
 
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
 
-	mieColor.rgb = v3Attenuate;
-	rayColor.rgb = v3FrontColor * (g_atmosParam.v3InvWavelength * g_atmosParam.fKrESun + g_atmosParam.fKmESun);
+	mieColor.rgb = min(float3( 1.0f, 1.0f, 1.0f), v3Attenuate);
+	rayColor.rgb = min(float3( 0.6f, 0.6f, 0.6f), v3FrontColor * (g_atmosParam.v3InvWavelength * g_atmosParam.fKrESun + g_atmosParam.fKmESun));
 	posToCameraDir = cameraPos - worldPos;
 }
 /*!
