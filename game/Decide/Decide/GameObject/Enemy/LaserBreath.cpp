@@ -11,14 +11,14 @@ void LaserBreath::Awake() {
 	_initParticleParam.texturePath = "t1.png";
 	_initParticleParam.alphaBlendMode = 1;
 	_initParticleParam.addVelocityRandomMargih = Vector3::zero;
-	_initParticleParam.brightness = 7.0f;
+	_initParticleParam.brightness = 1.0f;
 	_initParticleParam.fadeTime = 0.2f;
 	_initParticleParam.gravity = 0.0f;
 	_initParticleParam.initAlpha = 1.0f;
 	_initParticleParam.initPositionRandomMargin = Vector3::zero;
 	_initParticleParam.initVelocity = Vector3::front * 10.0f;
 	_initParticleParam.initVelocityVelocityRandomMargin = Vector3::zero;
-	_initParticleParam.intervalTime = 0.001f;
+	_initParticleParam.intervalTime = 0.01f;
 	_initParticleParam.isBillboard = true;
 	_initParticleParam.isFade = true;
 	_initParticleParam.life = -1.0f;
@@ -100,7 +100,7 @@ void LaserBreath::_UpdateCollision() {
 						_end = end;
 					}
 
-					float sizeXYOrigin = 4.0f;
+					float sizeXYOrigin = 3.0f;
 					static_cast<BoxCollider*>(const_cast<Collider*>(Gost->GetShape()))->Resize(Vector3(sizeXYOrigin * start->transform->GetScale().y, sizeXYOrigin * start->transform->GetScale().y, sizeZ));
 					//const_cast<Collider*>(Gost->GetShape())->RenderDisable();
 

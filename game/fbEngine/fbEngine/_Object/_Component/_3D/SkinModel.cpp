@@ -100,11 +100,6 @@ void SkinModel::Start()
 //モデルデータの行列更新
 void SkinModel::LateUpdate()
 {
-	if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
-	{
-		_ModelDate->UpdateAABB(transform->GetPosition(), transform->GetScale());
-		_Culling->Execute(_ModelDate->GetAABB(),transform->GetRotateMatrix());
-	}
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -114,6 +109,12 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
+
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			_ModelDate->UpdateAABB();
+			_Culling->Execute(_ModelDate->GetAABB(), wolrd);
+		}
 	}
 }
 

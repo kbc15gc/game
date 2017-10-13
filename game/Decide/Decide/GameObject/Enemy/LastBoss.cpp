@@ -79,8 +79,8 @@ void LastBoss::_StartSubClass() {
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_initState = static_cast<State>(LastBossState::LastBossMagician);
-	//_initState = State::Speak;
+	//_initState = static_cast<State>(LastBossState::LastBossMagician);
+	_initState = State::Speak;
 	_ChangeState(_initState);
 }
 

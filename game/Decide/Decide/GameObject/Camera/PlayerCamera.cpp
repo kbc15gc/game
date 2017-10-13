@@ -11,7 +11,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 2.5f;
+	const float CAMERA_SPEED = 3.5f;
 
 }
 
@@ -50,10 +50,11 @@ void PlayerCamera::Start()
 	//正規化した方向を
 	static D3DXVECTOR3 baseDir(0.5f, 0.3f, -0.7f);
 	D3DXVec3Normalize(&_ToPlayerDir, &baseDir);
+	_Camera->SetTarget(_GetPlayerPos());
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{
-		_Move();
+		transform->SetPosition(_GetPlayerPos() + Vector3::back);
 		_Camera->Update();
 	}
 
@@ -86,11 +87,19 @@ void PlayerCamera::UpdateSubClass()
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 }
 
+Vector3 PlayerCamera::_GetPlayerPos()
+{
+	return (*_PlayerPos) + PLAYER_HEIGHT;
+}
+
 /**
 * 通常時のカメラ挙動.
 */
 void PlayerCamera::_StandardBehavior()
 {
+	auto toC = transform->GetPosition() - _GetPlayerPos();
+	_ToCamera = D3DXVECTOR3(toC.x, toC.y, toC.z);
+
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
@@ -111,6 +120,9 @@ void PlayerCamera::_StandardBehavior()
 	{
 		_RotateVertical(-CAMERA_SPEED * Time::DeltaTime());
 	}
+
+	//移動先ポジションを取得。
+	_TargetPos = _ClosetRay();
 
 	//プレイヤーを見る。
 	_LookAtPlayer();
@@ -134,16 +146,20 @@ void PlayerCamera::_RotateHorizon(float roty)
 	_ToPlayerDir.x = v.x;
 	_ToPlayerDir.y = v.y;
 	_ToPlayerDir.z = v.z;
+
+	D3DXVec3Transform(&v, &_ToCamera, &rot);
+	transform->SetPosition(_GetPlayerPos() + Vector3(v.x, v.y, v.z));
 }
 
 void PlayerCamera::_RotateVertical(float rotx)
 {
+	//前の角度を保持。
+	D3DXVECTOR3 before = _ToPlayerDir;
+
 	D3DXVECTOR3 Cross;
 	D3DXQUATERNION zAxis;
 	D3DXVECTOR4 v;
 	D3DXMATRIX rot;
-	//前の角度を保持。
-	D3DXVECTOR3 oldDir = _ToPlayerDir;
 
 	//外積で直交するベクトルを取得
 	D3DXVec3Cross(&Cross, &(const D3DXVECTOR3&)Vector3::up, &_ToPlayerDir);
@@ -159,37 +175,24 @@ void PlayerCamera::_RotateVertical(float rotx)
 	//正規化する。
 	D3DXVECTOR3 toPosDir;
 	D3DXVec3Normalize(&toPosDir, &_ToPlayerDir);
+	bool notlimit = true;
 	//カメラの上下の上限
 	if (toPosDir.y < -0.5f)
 	{
-		_ToPlayerDir = oldDir;
+		_ToPlayerDir = before;
+		notlimit = false;
 	}
 	else if (toPosDir.y > 0.8f)
 	{
-		_ToPlayerDir = oldDir;
+		_ToPlayerDir = before;
+		notlimit = false;
 	}
-}
 
-void PlayerCamera::_LookAtPlayer()
-{
-	Vector3 now = _Camera->GetTarget();
-	Vector3 trg = (*_PlayerPos) + PLAYER_HEIGHT;
-	auto pos = _CalcSpringDamp(now, trg, _PrevPosition, Time::DeltaTime(), 9.0f, 0.8f, 0.01f);
-	_PrevPosition = trg;
-	//プレイヤーの方を向く
-	_Camera->SetTarget(pos);
-	transform->LockAt(pos);
-}
-
-void PlayerCamera::_Move()
-{
-	//移動先ポジションを取得。
-	Vector3 next = _ClosetRay();
-
-	//移動
-	auto now = transform->GetPosition();
-	now.Lerp(next, 0.2f);
-	transform->SetPosition(now);
+	if (notlimit)
+	{
+		D3DXVec3Transform(&v, &_ToCamera, &rot);
+		transform->SetPosition(_GetPlayerPos() + Vector3(v.x, v.y, v.z));
+	}
 }
 
 Vector3 PlayerCamera::_ClosetRay()
@@ -201,14 +204,14 @@ Vector3 PlayerCamera::_ClosetRay()
 	from = _Camera->GetTarget();
 	//カメラの移動先
 	to = from + dist;
-	
+
 	// 衝突を無視する属性を設定。
 	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::NOTHITCAMERA);
 	//レイを飛ばす
 	auto ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere, from, to, attri);
-	
+
 	//レイが何かに当たったかどうか？
-	if (ray.hitObject)
+	if (_IsHitObject = ray.hitObject)
 	{
 		//衝突点の法線方向に半径分移動するベクトル。
 		Vector3 normal = ray.hitNormal;
@@ -218,9 +221,42 @@ Vector3 PlayerCamera::_ClosetRay()
 	}
 	else
 	{
-		//どこにも当たらなかったので、レイの終点に移動する。
+		//どこにも当たらなかったので、レイの終点を返す。
 		return to;
 	}
+}
+
+void PlayerCamera::_LookAtPlayer()
+{
+
+	//Vector3 now = _Camera->GetTarget();
+	//Vector3 trg = _GetPlayerPos();
+	//auto pos = _CalcSpringDamp(now, trg, _PrevPosition, Time::DeltaTime(), 9.0f, 0.8f, 0.01f);
+	//_PrevPosition = trg;
+	////プレイヤーの方を向く
+	//_Camera->SetTarget(pos);
+	//transform->LockAt(pos);
+
+	auto pos = _Camera->GetTarget();
+	auto trg = _GetPlayerPos();
+	pos.Lerp(trg, 0.7f);
+	_Camera->SetTarget(pos);
+	transform->LockAt(pos);
+}
+
+void PlayerCamera::_Move()
+{
+	//補完。
+	auto now = transform->GetPosition();
+	//移動先計算。
+	auto pos = _CalcSpringDamp(now, _TargetPos, _PrevPosition, Time::DeltaTime(), 9.0f, 0.8f, 0.01f);
+	_PrevPosition = _TargetPos;
+	transform->SetPosition(pos);
+
+	//移動
+	/*auto now = transform->GetPosition();
+	now.Lerp(_TargetPos, 0.8f);
+	transform->SetPosition(now);*/
 }
 
 Vector3 PlayerCamera::_CalcSpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen)
@@ -231,6 +267,8 @@ Vector3 PlayerCamera::_CalcSpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prev
 				   
 	//バネの力を計算。
 	disp = curr - trgpos;
+	if (disp.Length() == 0.0f)
+		return curr;
 	velocity = (prevtrg - trgpos) * delta;
 
 	forceMag = spring * (springlen - disp.Length()) + damp * (disp.Dot(velocity)) / disp.Length();
