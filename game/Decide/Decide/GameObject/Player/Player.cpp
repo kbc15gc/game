@@ -121,6 +121,9 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
+	/*
+	*	セーブデータがあれば、ここにレベルを入れる。
+	*/
 	_PlayerParam->ParamReset(_ParamTable[0]);
 	
 	// HPのバーを表示。
@@ -698,9 +701,12 @@ void Player::Speak()
 				//話し終わると
 				if (_NoJump)
 				{
-					_HPBar->RenderEnable();
-					_MPBar->RenderEnable();
-					_NoJump = false;
+					if (_HPBar && _MPBar)
+					{
+						_HPBar->RenderEnable();
+						_MPBar->RenderEnable();
+						_NoJump = false;
+					}
 				}
 			}
 		}
