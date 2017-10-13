@@ -79,8 +79,8 @@ void LastBoss::_StartSubClass() {
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_initState = static_cast<State>(LastBossState::LastBossMagician);
-	//_initState = State::Speak;
+	//_initState = static_cast<State>(LastBossState::LastBossMagician);
+	_initState = State::Speak;
 	_ChangeState(_initState);
 }
 
@@ -94,6 +94,10 @@ void LastBoss::_UpdateSubClass() {
 	//		_ChangeState(State::Fall);
 	//	}
 	//}
+#ifdef _DEBUG
+	Debug();
+#endif // _DEBUG
+
 }
 
 void LastBoss::_LateUpdateSubClass()
@@ -273,3 +277,18 @@ void LastBoss::_BuildSoundTable() {
 	// 攻撃音登録。
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
 }
+
+#ifdef _DEBUG
+void LastBoss::Debug() {
+	if(KeyBoardInput->isPressed(DIK_X)&&KeyBoardInput->isPush(DIK_B))
+	{
+		this->SetActive(false, true);
+	}
+
+	if (KeyBoardInput->isPressed(DIK_X) && KeyBoardInput->isPush(DIK_V))
+	{
+		this->SetActive(true, true);
+	}
+}
+#endif // _DEBUG
+

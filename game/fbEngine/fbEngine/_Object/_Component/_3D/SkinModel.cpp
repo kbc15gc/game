@@ -100,11 +100,6 @@ void SkinModel::Start()
 //モデルデータの行列更新
 void SkinModel::LateUpdate()
 {
-	if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
-	{
-		_ModelDate->UpdateAABB(transform->GetPosition(), transform->GetScale());
-		_Culling->Execute(_ModelDate->GetAABB(),transform->GetRotateMatrix());
-	}
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -114,6 +109,12 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
+
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			_ModelDate->UpdateAABB();
+			_Culling->Execute(_ModelDate->GetAABB(), wolrd);
+		}
 	}
 }
 
@@ -320,6 +321,7 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);*/
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
+
 		//@todo 半透明描画のパスでは半透明合成にするように > 誰か
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -331,6 +333,7 @@ void SkinModel::DrawMeshContainer(
 		//	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 		//	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 		}
+
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)

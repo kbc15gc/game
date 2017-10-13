@@ -15,7 +15,6 @@ const wchar_t* Collider::ShapeName[] = {
 Collider::~Collider(){
 #ifdef _DEBUG
 	if (_CollisionModel) {
-		_CollisionModel->transform->SetParent(nullptr);
 		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
 	}
 #endif //_DEBUG

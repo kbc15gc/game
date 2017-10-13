@@ -769,9 +769,21 @@ void Player::_DebugPlayer()
 	}
 
 	//ドロップアイテムを出す。
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4)) {
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_5)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon), transform->GetPosition(), 2);
+	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_6)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor), transform->GetPosition(), 2);
+	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item), transform->GetPosition(), 2);
 	}
 }
 void Player::_DebugLevel(int lv)
