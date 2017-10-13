@@ -24,6 +24,8 @@ void HistoryMenu::Start()
 	//表示名を設定.
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
+	_LocationNameRender->SetAnchor(fbText::TextAnchorE::UpperCenter);
+
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
@@ -191,15 +193,75 @@ void HistoryMenu::EnableUpdate()
 */
 void HistoryMenu::SelectLocationUpdate()
 {
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
+
+	//前回の場所.
+	int beforeSelectLocation = _NowSelectLocation;
+
+	static float ChangeTime = 0.5f;
+	static float LocalTime = 0.0f;
+	//左スティックの情報.
+	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
+	LStick /= 32767.0f;
+	if (LStick.x >= 0.2f)
 	{
-		//左トリガー.
-		//_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+		{
+			_NowSelectLocation = max(0, _NowSelectLocation - 1);
+		}
+		LocalTime += Time::DeltaTime();
+		if (LocalTime >= ChangeTime)
+		{
+			_NowSelectLocation = max(0, _NowSelectLocation - 1);
+			LocalTime = 0.0f;
+			ChangeTime = 0.01f;
+		}
 	}
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+	else if (LStick.x <= -0.2f)
 	{
-		//右トリガー.
-		//_NowSelectLocation = max(0, _NowSelectLocation - 1);
+		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+		{
+			_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+		}
+		LocalTime += Time::DeltaTime();
+		if (LocalTime >= ChangeTime)
+		{
+			_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+			LocalTime = 0.0f;
+			ChangeTime = 0.01f;
+		}
+	}
+	else
+	{
+		ChangeTime = 0.5f;
+		LocalTime = 0.0f;
+	}
+
+	if (beforeSelectLocation != _NowSelectLocation)
+	{
+		auto& pageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
+		if (beforeSelectLocation < _NowSelectLocation)
+		{
+			//現在の場所が前回より大きい数値.
+			for (auto it : pageList)
+			{
+				it->SetRotAngle(90.0f);
+				it->ChangeState(HistoryPage::StateCodeE::Turn);
+			}
+		}
+		else if (beforeSelectLocation > _NowSelectLocation)
+		{
+			for (auto it : pageList)
+			{
+				it->SetRotAngle(-90.0f);
+				it->ChangeState(HistoryPage::StateCodeE::Turn);
+			}
+			pageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
+			for (auto it : pageList)
+			{
+				it->SetRotAngle(-90.0f);
+				it->ChangeState(HistoryPage::StateCodeE::Turn);
+			}
+		}
 	}
 }
 
@@ -305,12 +367,12 @@ void HistoryMenu::SelectChipUpdate()
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
 		{
-			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
+			_NowSelectChip = max(0, _NowSelectChip - 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
+			_NowSelectChip = max(0, _NowSelectChip - 1);
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -319,12 +381,12 @@ void HistoryMenu::SelectChipUpdate()
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
 		{
-			_NowSelectChip = max(0, _NowSelectChip - 1);
+			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectChip = max(0, _NowSelectChip - 1);
+			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
