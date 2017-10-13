@@ -33,6 +33,8 @@ void Sky::Awake()
 	_SunPlate->SetSize(Vector2(50.0f, 50.0f));
 	_SunPlate->SetBillboard(true);
 	_SunPlate->SetActive(false);
+
+	//_SunAngle = D3DXToRadian(270.0f);
 }
 
 /**
@@ -43,7 +45,7 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 10.0f;
+		const float TMP = 1.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 		_SunAngle += 0.02f * Time::DeltaTime() * TMP;
 

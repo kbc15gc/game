@@ -102,8 +102,8 @@ void SkinModel::LateUpdate()
 {
 	if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 	{
-		_ModelDate->UpdateAABB(transform->GetPosition());
-		_Culling->Execute(_ModelDate->GetAABB());
+		_ModelDate->UpdateAABB(transform->GetPosition(), transform->GetScale());
+		_Culling->Execute(_ModelDate->GetAABB(),transform->GetRotateMatrix());
 	}
 	//モデルデータがあるなら
 	if (_ModelDate)
@@ -246,10 +246,23 @@ void SkinModel::DrawMeshContainer(
 		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
 		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 
+		float isCharaLight = 0;
+		if (_CharaLight)
+		{
+			_Effect->SetValue("g_CharaLight", _CharaLight, sizeof(CharacterLight));
+			isCharaLight = 1;
+		}
+
+		_Effect->SetVector("g_CharaLightParam", &D3DXVECTOR4(isCharaLight, 0, 0, 0));
+
 		//カメラのポジションセット(スペキュラライト用)
 		Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
 		_Effect->SetValue("g_cameraPos", &D3DXVECTOR4(campos.x, campos.y, campos.z, 1.0f), sizeof(D3DXVECTOR4));
-		
+		Vector3 camTar = INSTANCE(GameObjectManager)->mainCamera->GetTarget();
+		Vector3 camDir = camTar - campos;
+		camDir.Normalize();
+		_Effect->SetVector("g_cameraDir", &D3DXVECTOR4(camDir.x, camDir.y, camDir.z, 1.0f));
+
 		//各行列を送信
 		_Effect->SetMatrix("g_rotationMatrix", transform->GetRotateMatrixAddress());
 		

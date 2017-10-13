@@ -30,10 +30,9 @@ public:
 
 	//更新。
 	void UpdateSubClass()override;
-
-	void Move()override;
-
 private:
+	void _Move()override;
+
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
 		//プレイヤーの更新を止める。
