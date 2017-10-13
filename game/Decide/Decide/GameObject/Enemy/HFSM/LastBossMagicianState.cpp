@@ -44,10 +44,8 @@ void LastBossMagicianState::_ExitSubClass(EnemyCharacter::State next) {
 }
 
 void LastBossMagicianState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
-	// 確率で攻撃と魔王へのバフを行う。
 
 	if (EndLocalStateType == EnemyCharacter::State::StartAttack) {
 		_ChangeLocalState(EnemyCharacter::State::StartAttack);
 	}
-
 }

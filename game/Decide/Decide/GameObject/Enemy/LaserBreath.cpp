@@ -3,15 +3,50 @@
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
-void LaserBreath::Start() {
+void LaserBreath::Awake() {
+	ParticleEmitter* p = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BreathEmitter", 8);
+
+	// 攻撃処理に使用するパーティクル設定。
+	_initParticleParam.Init();
+	_initParticleParam.texturePath = "t1.png";
+	_initParticleParam.alphaBlendMode = 1;
+	_initParticleParam.addVelocityRandomMargih = Vector3::zero;
+	_initParticleParam.brightness = 7.0f;
+	_initParticleParam.fadeTime = 0.2f;
+	_initParticleParam.gravity = 0.0f;
+	_initParticleParam.initAlpha = 1.0f;
+	_initParticleParam.initPositionRandomMargin = Vector3::zero;
+	_initParticleParam.initVelocity = Vector3::front * 10.0f;
+	_initParticleParam.initVelocityVelocityRandomMargin = Vector3::zero;
+	_initParticleParam.intervalTime = 0.001f;
+	_initParticleParam.isBillboard = true;
+	_initParticleParam.isFade = true;
+	_initParticleParam.life = -1.0f;
+	_initParticleParam.size = Vector2(0.5f, 0.5f);
+	p->Init(_initParticleParam);
+	p->SetEmitFlg(false);
+
+	_particleEmitter = p;
+}
+
+void LaserBreath::Init(EnemyCharacter* obj, const Vector3& emitPosLocal){
+	BreathObject::Init(obj, emitPosLocal);
+	_particleEmitter->transform->SetParent(_enemyObject->transform);
+	_particleEmitter->transform->SetLocalPosition(emitPosLocal);
 }
 
 void LaserBreath::Update() {
+
+	ParticleParameter param = _particleEmitter->GetParam();
+	param.size.y -= 0.3f * Time::DeltaTime();
+	_particleEmitter->SetParam(param);
+
 	if (_particleList) {
 		for (auto particle : *_particleList) {
-			Vector3 size = particle->transform->GetLocalScale();
-			size.y -= 0.1f * Time::DeltaTime();
-			particle->transform->SetLocalScale(size);
+			//Vector3 size = particle->transform->GetLocalScale();
+			//size.y -= 0.1f * Time::DeltaTime();
+			//particle->transform->SetLocalScale(size);
+			particle->transform->SetScale(Vector3(param.size));
 		}
 	}
 
@@ -19,6 +54,17 @@ void LaserBreath::Update() {
 }
 
 void LaserBreath::BreathStart(){
+	// パーティクルの飛ぶ方向をエネミーの向きに再設定。
+	Vector3 initVelocity = _enemyObject->transform->GetForward();
+	initVelocity.Normalize();
+	_initParticleParam.initVelocity = initVelocity * _particleEmitter->GetInitVelocity().Length();
+	_particleEmitter->SetParam(_initParticleParam);
+
+	// 作成したパーティクルを収集。
+	_particleList.reset(new vector<Particle*>);
+	_particleEmitter->AchievedCreateParticleStart(_particleList.get());
+	_particleEmitter->SetEmitFlg(true);
+
 	//攻撃コリジョン作成。
 	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(0.0f, 0.0f, 0.0f), -1.0f, _enemyObject->transform);
 	attack->RemoveParent();
@@ -55,7 +101,7 @@ void LaserBreath::_UpdateCollision() {
 					}
 
 					float sizeXYOrigin = 4.0f;
-					static_cast<BoxCollider*>(const_cast<Collider*>(Gost->GetShape()))->Resize(Vector3(sizeXYOrigin * start->transform->GetLocalScale().y, sizeXYOrigin * start->transform->GetLocalScale().y, sizeZ));
+					static_cast<BoxCollider*>(const_cast<Collider*>(Gost->GetShape()))->Resize(Vector3(sizeXYOrigin * start->transform->GetScale().y, sizeXYOrigin * start->transform->GetScale().y, sizeZ));
 					//const_cast<Collider*>(Gost->GetShape())->RenderDisable();
 
 					// 位置設定。

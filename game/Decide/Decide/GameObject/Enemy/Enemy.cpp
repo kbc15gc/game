@@ -4,7 +4,7 @@
 #include "HFSM\EnemyTranslationState.h"
 #include "HFSM\EnemyWaitState.h"
 #include "fbEngine\CharacterController.h"
-
+#include "GameObject\Enemy\EnemyAttack.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 

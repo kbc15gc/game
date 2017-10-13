@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EnemyState.h"
+#include "GameObject\Enemy\EnemyAttack.h"
 
 // エネミー攻撃ステート。
 class EnemyAttackState : public EnemyState {
