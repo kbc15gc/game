@@ -469,12 +469,14 @@ void ShopS_Trade::SellItem()
 	_Shop->SetDescriptionText("まいどあり。");
 
 	bool erase = false;
+	int offset = 0;
 	for (int idx : _IndexList)
 	{
 		//インベントリから排除。
-		if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]))
+		if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx-offset]->GetInfo(), _TradeNum[idx-offset]))
 		{
 			erase = true;
+			offset++;
 		}
 	}
 	if(erase)

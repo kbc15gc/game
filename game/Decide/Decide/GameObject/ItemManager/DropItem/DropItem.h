@@ -2,6 +2,7 @@
 #include "fbEngine\_Object\_GameObject\GameObject.h"
 #include "GameObject\ItemManager\ItemManager.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
+#include"fbEngine\_Object\_Component\_3D\Light.h"
 
 class SkinModel;
 class Player;
@@ -58,11 +59,11 @@ private:
 	//このクラスでGameobjectに登録したオブジェクトを全削除用関数。
 	void _Release();
 
-	//AttentionTextに送る文字列をアイテムコードを見て適した文字列を決める。
-	void _SelectText(Item::ItemCodeE code);
+	//flagを見て取得成功か、失敗の文字列をアイテムコードを見て適した文字列を決める。
+	void _SelectText(Item::ItemCodeE code, bool flag);
 
-	//AttentionTextに文字列を設定。
-	void _SetText(const wchar_t* string);
+	//flagを見て取得成功か失敗の文字列を設定。
+	void _SetText(const wchar_t* string, bool flag);
 
 	//拾ったアイテムをインベントリのAdd関数に送る。
 	bool _AddInventory(Item::ItemCodeE code);
@@ -78,12 +79,13 @@ private:
 	short int			  _DropNum			    = 1;		    //何個アイテムを落とすかの数(デフォルトは1つ)。
 	HoldItemBase*		  _DropEquipment		= nullptr;	    //落とした装備品。
 	ParticleEffect*		  _RareDropPE		    = nullptr;	    //レアドロップアイテム用のエフェクト。
-	float				  _GetLength			= 5.0f;		     //ドロップアイテムが拾える距離。
-	float				  _ButtonIconPosOffSet  = 100.0f;	     //アイコンを出す位置を調整する用。
-	SoundSource*		  _RareDropSE		    = nullptr;	     //レアドロップした時の音。
-	SoundSource*		  _DropSE			    = nullptr;	     //ドロップした時の音。
-	int					  _ButtonIconPriority   = 0;			 //アイコンの優先度。
-	Color				  _ModelColor		    = Color::zero;   //モデルを透明にしていくために使う。
-	CCharacterController* _CCharacterController = nullptr;       //キャラクターコントローラー。															 
-	float				  _Gravity				= 0.0f;			 //重力。
+	float				  _GetLength			= 5.0f;		    //ドロップアイテムが拾える距離。
+	float				  _ButtonIconPosOffSet  = 120.0f;	    //アイコンを出す位置を調整する用。
+	SoundSource*		  _RareDropSE		    = nullptr;	    //レアドロップした時の音。
+	SoundSource*		  _DropSE			    = nullptr;	    //ドロップした時の音。
+	int					  _ButtonIconPriority   = 0;			//アイコンの優先度。
+	Color				  _ModelColor		    = Color::zero;  //モデルを透明にしていくために使う。
+	CCharacterController* _CCharacterController = nullptr;      //キャラクターコントローラー。															 
+	float				  _Gravity				= 0.0f;			//重力。
+	CharacterLight		  _CharacterLight;						//宝箱のライト。
 };
