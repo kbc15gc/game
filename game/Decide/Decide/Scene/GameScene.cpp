@@ -97,7 +97,7 @@ void GameScene::Start()
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//海生成.
-	//INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
+	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
