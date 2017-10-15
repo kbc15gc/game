@@ -9,6 +9,7 @@
 #include "GameObject\TextImage\AttentionTextOnly.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "fbEngine/CharacterController.h"
+#include "GameObject\History\HistoryBook\HistoryBook.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
@@ -182,24 +183,31 @@ void DropItem::Update() {
 		//範囲内でAボタンを押されたら取得。
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonA)) {
 
-			//中身がある時。
-			if (_DropItemInfo) {
+			StatusWindow* status = (StatusWindow*)INSTANCE(GameObjectManager)->FindObject("StatusWindow");
+			HistoryBook* book = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
-				//取得したアイテムのアイテムコードを見てインベントリのAdd関数に送る。
-				if (_AddInventory(_DropItemInfo->TypeID) == true) 
-				{
-					//アイテムの取得が出来たならオブジェクト関係を削除。
-					_Release();
+			//ステータス画面も歴史書も開いていない時にアイテム拾う。
+			if (status->GetActive() == false && book->GetActive() == false) {
+
+				//中身がある時。
+				if (_DropItemInfo) {
+
+					//取得したアイテムのアイテムコードを見てインベントリのAdd関数に送る。
+					if (_AddInventory(_DropItemInfo->TypeID) == true)
+					{
+						//アイテムの取得が出来たならオブジェクト関係を削除。
+						_Release();
+					}
+
+					//とりあえず取得が終わったのでプレイヤーのジャンプを出来るようにする。
+					_Player->PlayerJumpEnable();
 				}
-				
-				//とりあえず取得が終わったのでプレイヤーのジャンプを出来るようにする。
-				_Player->PlayerJumpEnable();
-			}
-			else
-			{
-				char error[256];
-				sprintf(error, "ドロップアイテムのInfoが空でした。");
-				MessageBoxA(0, error, "ドロップアイテムの取得失敗", MB_ICONWARNING);
+				else
+				{
+					char error[256];
+					sprintf(error, "ドロップアイテムのInfoが空でした。");
+					MessageBoxA(0, error, "ドロップアイテムの取得失敗", MB_ICONWARNING);
+				}
 			}
 		}
 	}
