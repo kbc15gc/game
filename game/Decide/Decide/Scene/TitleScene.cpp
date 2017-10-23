@@ -18,6 +18,9 @@ void TitleScene::Start()
 	_StartColor = Color::white;
 	_StartAlpha = 0.01f;
 
+	_StartSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+	_StartSE->Init("Asset/Sound/start.wav");
+
 	_TitleBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TitleBGM", 0);
 	_TitleBGM->InitStreaming("Asset/Sound/titleBgm.WAV");
 	_TitleBGM->Play(true);
@@ -34,10 +37,11 @@ void TitleScene::Update()
 	{
 		//ゲームシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+		_StartSE->Play(false);
 		return;
 	}
 
-	//透明にしたり。
+	//点滅させる。
 	Alpha();
 }
 

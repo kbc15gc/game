@@ -15,4 +15,5 @@ private:
 	ImageObject* _Start;
 	Color		_StartColor;
 	float		_StartAlpha;
+	SoundSource* _StartSE;
 };

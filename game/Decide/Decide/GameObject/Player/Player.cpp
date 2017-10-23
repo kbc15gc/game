@@ -431,7 +431,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
-		_HPBar->SubValue(damage);
+		_HPBar->SubValue(static_cast<float>(damage));
 		_DamageSound->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 		Color c;
@@ -484,7 +484,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_ParticleEffect->HeelHpEffect();
 		}
 		if (_HPBar) {
-			_HPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::HP));
+			_HPBar->SetValue(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::Param::HP)));
 		}
 
 		_HeelSound->Play(false);
@@ -498,7 +498,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_ParticleEffect->HeelMpEffect();
 		}
 		if (_MPBar) {
-			_MPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::MP));
+			_MPBar->SetValue(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::Param::MP)));
 		}
 		
 		_HeelSound->Play(false);
@@ -609,7 +609,7 @@ void Player::_Damage()
 		if (fmod(time, 2.0f) >= 1.0f)
 		{
 			//最大HPの1割ずつ減る。
-			_HPBar->SubValue(_PlayerParam->ReciveDamageThrough(_PlayerParam->GetMaxHP() * 0.1f));
+			_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(static_cast<int>(_PlayerParam->GetMaxHP() * 0.1f)))));
 			time = 0.0f;
 		}
 	}
