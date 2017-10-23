@@ -117,6 +117,15 @@ void DropItem::Awake() {
 	_TextFontSize = 33.0f;
 }
 
+//ドロップアイテムに使うモデルを読み込みクローンを作成。
+void DropItem::Load() {
+	//スキンモデル作成。
+	SkinModelData* modeldata = new SkinModelData();
+
+	//モデルデータ作成(ファイルパスはテスト用)。
+	modeldata->CloneModelData(SkinModelManager::LoadModel("Chest.X"));
+}
+
 //ドロップアイテムを作成。
 void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
 
@@ -167,7 +176,7 @@ void DropItem::Update() {
 	_TotalAppearTime += deltaTime;
 
 	//モデルを段々透明にする。
-	_ModelColor.a -= 0.1f*deltaTime;
+	_ModelColor.a -= 0.8f*deltaTime;
 	_Model->SetAllBlend(_ModelColor);
 	
 	//プレイヤーとの距離を計算。
@@ -284,26 +293,27 @@ void DropItem::_Release()
 //flagを見て取得成功か、失敗の適した文字列を決める。
 void DropItem::_SelectText(bool flag)
 {
-	wchar_t Text[256];
-	char	Name[256];
+	wchar_t WText[256];
+	char	CText[256];
 
-	//アイテムの名前をコピー。
-	strcpy(Name,_DropItemInfo->Name);
+	
 	if (flag == true) {
+		//アイテムの名前をコピー。
+		strcpy(CText, _DropItemInfo->Name);
 		//取得成功の文字列選択。
-		strcat(Name, "を入手しました。");
+		strcat(CText, "を入手しました。");
 	}
 	else
 	{
 		//取得失敗の文字列選択。
-		strcat(Name, "を入手できませんでした。");
+		strcpy(CText, "アイテムを入手できませんでした。");
 	}
 
 	//chatrからwchra_tに変換。
-	mbstowcs(Text, Name, sizeof(Name));
+	mbstowcs(WText, CText, sizeof(CText));
 
 	//テキストに設定。
-	_SetText(Text, flag);
+	_SetText(WText, flag);
 }
 
 //AttentionTextに文字列を設定。
@@ -314,7 +324,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
 			string,
 			_TextPos,
-			33.0f,
+			_TextFontSize,
 			Color::red,
 			AttentionTextOnly::MoveType::Up
 		);
@@ -325,7 +335,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
 			string,
 			_TextPos,
-			33.0f,
+			_TextFontSize,
 			Color::white,
 			AttentionTextOnly::MoveType::Down
 		);
