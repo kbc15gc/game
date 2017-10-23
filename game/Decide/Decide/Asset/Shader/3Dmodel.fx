@@ -10,7 +10,6 @@ int Texflg;							//テクスチャ
 int Spec; //スペキュラ
 int ReceiveShadow; //影を写す
 
-float g_Alpha; //アルファのしきい値.
 
 int SkyBox;
 
