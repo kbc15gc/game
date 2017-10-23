@@ -115,6 +115,10 @@ public:
 	{
 		return _MeshList;
 	}
+	const vector<LPD3DXFRAME>& GetFrameList()const
+	{
+		return _FrameList;
+	}
 	const Vector4& GetTerrainSize()
 	{
 		return _TerrainSize;

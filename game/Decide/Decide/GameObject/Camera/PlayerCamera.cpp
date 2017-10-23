@@ -48,13 +48,13 @@ void PlayerCamera::Start()
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を
-	static D3DXVECTOR3 baseDir(0.5f, 0.3f, -0.7f);
+	D3DXVECTOR3 baseDir(0.5f, 0.3f, -0.7f);
 	D3DXVec3Normalize(&_ToPlayerDir, &baseDir);
-	_Camera->SetTarget(_GetPlayerPos());
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{
-		transform->SetPosition(_GetPlayerPos() + Vector3::back);
+		_Camera->SetTarget(_GetPlayerPos());
+		transform->SetPosition(_GetPlayerPos() + (_ToPlayerDir * _Dist));
 		_Camera->Update();
 	}
 

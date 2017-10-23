@@ -107,6 +107,8 @@ void SkinModel::LateUpdate()
 		D3DXMATRIX wolrd;
 		D3DXMatrixIdentity(&wolrd);
 		wolrd = transform->GetWorldMatrix();
+		if (strcmp(this->gameObject->GetName(), "Dungeon") == 0)
+			int a = 0;
 		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 
