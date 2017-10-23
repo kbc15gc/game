@@ -88,4 +88,6 @@ private:
 	CCharacterController* _CCharacterController = nullptr;      //キャラクターコントローラー。															 
 	float				  _Gravity				= 0.0f;			//重力。
 	CharacterLight		  _CharacterLight;						//宝箱のライト。
+	Vector3				  _TextPos				= Vector3::zero;//テキストを出す場所。
+	float				  _TextFontSize			= 0.0f;			//テキストのサイズ。
 };

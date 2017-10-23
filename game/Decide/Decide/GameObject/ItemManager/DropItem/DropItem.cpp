@@ -109,6 +109,12 @@ void DropItem::Awake() {
 	_CCharacterController->AddAttributeY(Collision_ID::GROUND);	//地面コリジョンを追加。
 	
 	_CCharacterController->SetGravity(_Gravity);
+
+	//テキストを出す位置。
+	_TextPos = Vector3(600.0f, 260.0f, 0.0f);
+
+	//テキストサイズ。
+	_TextFontSize = 33.0f;
 }
 
 //ドロップアイテムを作成。
@@ -307,7 +313,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 		//AttentionText作成。
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
 			string,
-			Vector3(600.0f, 260.0f, 0.0f),
+			_TextPos,
 			33.0f,
 			Color::red,
 			AttentionTextOnly::MoveType::Up
@@ -318,7 +324,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 		//AttentionText作成。
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
 			string,
-			Vector3(600.0f, 260.0f, 0.0f),
+			_TextPos,
 			33.0f,
 			Color::white,
 			AttentionTextOnly::MoveType::Down

@@ -47,16 +47,16 @@ void AttentionTextOnly::Update() {
 	{
 		//テキストの移動。
 		(*itr)->_Text->transform->SetPosition(
-			(*itr)->_Text->transform->GetPosition().x + (*itr)->_Dir.x,
-			(*itr)->_Text->transform->GetPosition().y + (*itr)->_Dir.y,
-			(*itr)->_Dir.z);
+			(*itr)->_Text->transform->GetPosition().x + ((*itr)->_Dir.x/**_MoveSpeed*Time::DeltaTime()*/),
+			(*itr)->_Text->transform->GetPosition().y + ((*itr)->_Dir.y/**_MoveSpeed*Time::DeltaTime()*/),
+			(*itr)->_Text->transform->GetPosition().z + ((*itr)->_Dir.z/**_MoveSpeed*Time::DeltaTime()*/));
 
 		//各テキストが少しずつ透明にしていく。
 		(*itr)->_Text->SetBlendColor(
 			Color((*itr)->_Color.r,
 			(*itr)->_Color.g,
 				(*itr)->_Color.b,
-				(*itr)->_Color.a -= 0.05f));
+				(*itr)->_Color.a-= 0.05f*Time::DeltaTime()));
 
 		//テキストが透明になりきるとリストから削除。
 		if ((*itr)->_Color.a < 0.0f) {
