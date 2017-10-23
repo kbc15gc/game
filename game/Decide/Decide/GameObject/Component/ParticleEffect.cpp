@@ -2,32 +2,32 @@
 #include "ParticleEffect.h"
 
 void ParticleEffect::Awake() {
-	_BuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BuffParticleEffect", 8);
-	_DebuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("DebuffParticleEffect", 8);
-	_HeelHpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelHPParticleEffect", 8);
-	_HeelMpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelMpParticleEffect", 8);
-	_HeelParticleAssistEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelParticleEffectAssist", 8);
+	_BuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BuffParticleEffect", 10);
+	_DebuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("DebuffParticleEffect", 10);
+	_HeelHpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelHPParticleEffect", 10);
+	_HeelMpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelMpParticleEffect", 10);
+	_HeelParticleAssistEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelParticleEffectAssist", 10);
 
-	_LevelUPParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("LevelUPEffect", 8);
+	_LevelUPParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("LevelUPEffect", 10);
 
-	_RareDropEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("RareDropEffect", 8);
+	_RareDropEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("RareDropEffect", 10);
 
 	//回復エフェクトのアシストに使用するパーティクルパラメーターを設定。
 	_HeelParticleAssistParam.Init();
 	_HeelParticleAssistParam.texturePath = "ItemEfectBase.png";
 	_HeelParticleAssistParam.alphaBlendMode = 1;
 	_HeelParticleAssistParam.addVelocityRandomMargih = Vector3::zero;
-	_HeelParticleAssistParam.brightness = 7.0f;
+	_HeelParticleAssistParam.brightness = 3.0f;
 	_HeelParticleAssistParam.fadeTime = 1.0f;
 	_HeelParticleAssistParam.gravity = 0.0f;
 	_HeelParticleAssistParam.initAlpha = 1.0f;
 	_HeelParticleAssistParam.initPositionRandomMargin = Vector3(1.0f, 1.0f, 1.0f);
 	_HeelParticleAssistParam.initVelocity = Vector3::up * 3.0f;
 	_HeelParticleAssistParam.initVelocityVelocityRandomMargin = Vector3::zero;
-	_HeelParticleAssistParam.intervalTime = 0.001f;
+	_HeelParticleAssistParam.intervalTime = 0.05f;
 	_HeelParticleAssistParam.isBillboard = true;
 	_HeelParticleAssistParam.isFade = true;
-	_HeelParticleAssistParam.life = 0.001f;
+	_HeelParticleAssistParam.life = 0.1f;
 	_HeelParticleAssistParam.size = Vector2(0.03f, 0.03f);
 	_HeelParticleAssistParam.mulColor = Color::yellow;
 	_HeelParticleAssistParam.isParent = true;
@@ -40,17 +40,17 @@ void ParticleEffect::HeelHpEffect() {
 	_HeelHpParticleParam.texturePath = "ItemEfectBase.png";
 	_HeelHpParticleParam.alphaBlendMode = 1;
 	_HeelHpParticleParam.addVelocityRandomMargih = Vector3::zero;
-	_HeelHpParticleParam.brightness = 10.0f;
+	_HeelHpParticleParam.brightness = 4.0f;
 	_HeelHpParticleParam.fadeTime = 1.0f;
 	_HeelHpParticleParam.gravity = 0.0f;
 	_HeelHpParticleParam.initAlpha = 1.0f;
 	_HeelHpParticleParam.initPositionRandomMargin = Vector3(1.0f, 1.0f, 1.0f);
 	_HeelHpParticleParam.initVelocity = Vector3::up * 3.0f;
 	_HeelHpParticleParam.initVelocityVelocityRandomMargin = Vector3::zero;
-	_HeelHpParticleParam.intervalTime = 0.07f;
+	_HeelHpParticleParam.intervalTime = 0.1f;
 	_HeelHpParticleParam.isBillboard = true;
 	_HeelHpParticleParam.isFade = true;
-	_HeelHpParticleParam.life = 0.001f;
+	_HeelHpParticleParam.life = 0.1f;
 	_HeelHpParticleParam.size = Vector2(0.05f, 0.05f);
 	_HeelHpParticleParam.mulColor = Color::green;
 	_HeelHpParticleParam.isParent = true;
@@ -83,10 +83,10 @@ void ParticleEffect::HeelMpEffect() {
 	_HeelMpParticleParam.initPositionRandomMargin = Vector3(1.0f, 1.0f, 1.0f);
 	_HeelMpParticleParam.initVelocity = Vector3::up * 3.0f;
 	_HeelMpParticleParam.initVelocityVelocityRandomMargin = Vector3::zero;
-	_HeelMpParticleParam.intervalTime = 0.07f;
+	_HeelMpParticleParam.intervalTime = 0.1f;
 	_HeelMpParticleParam.isBillboard = true;
 	_HeelMpParticleParam.isFade = true;
-	_HeelMpParticleParam.life = 0.001f;
+	_HeelMpParticleParam.life = 0.1f;
 	_HeelMpParticleParam.size = Vector2(0.05f, 0.05f);
 	_HeelMpParticleParam.mulColor = Color::blue * 0.7f;
 
@@ -117,10 +117,10 @@ void ParticleEffect::BuffEffect() {
 	_BuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
 	_BuffParticleParam.initVelocity = Vector3::up * 5.0f;
 	_BuffParticleParam.initVelocityVelocityRandomMargin = Vector3::up;
-	_BuffParticleParam.intervalTime = 0.01f;
+	_BuffParticleParam.intervalTime = 0.07f;
 	_BuffParticleParam.isBillboard = true;
 	_BuffParticleParam.isFade = true;
-	_BuffParticleParam.life = 0.001f;
+	_BuffParticleParam.life = 0.1f;
 	_BuffParticleParam.size = Vector2(0.01f, 0.3f);
 	_BuffParticleParam.mulColor = Color::red;
 	_BuffParticleParam.isParent = true;
@@ -144,10 +144,10 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
 	_DebuffParticleParam.initVelocity = Vector3::down * 5.0f;
 	_DebuffParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
-	_DebuffParticleParam.intervalTime = 0.01f;
+	_DebuffParticleParam.intervalTime = 0.07f;
 	_DebuffParticleParam.isBillboard = true;
 	_DebuffParticleParam.isFade = true;
-	_DebuffParticleParam.life = 0.001f;
+	_DebuffParticleParam.life = 0.01f;
 	_DebuffParticleParam.size = Vector2(0.01f, 0.3f);
 	_DebuffParticleParam.mulColor = Color::blue;
 	_DebuffParticleParam.isParent = true;
@@ -172,10 +172,10 @@ void ParticleEffect::FireFly()
 	_FireFlyParticleParam.initPositionRandomMargin = Vector3(10.0f, 10.0f, 10.0f);
 	_FireFlyParticleParam.initVelocity = Vector3::up * 2.0f;
 	_FireFlyParticleParam.initVelocityVelocityRandomMargin = Vector3(-10.0f, -10.0f,-10.0f);
-	_FireFlyParticleParam.intervalTime = 0.01f;
+	_FireFlyParticleParam.intervalTime = 0.1f;
 	_FireFlyParticleParam.isBillboard = true;
 	_FireFlyParticleParam.isFade = true;
-	_FireFlyParticleParam.life = 0.01f;
+	_FireFlyParticleParam.life = 0.1f;
 	_FireFlyParticleParam.size = Vector2(0.1f, 0.1f);
 	_FireFlyParticleParam.mulColor = Color::green;
 
@@ -187,7 +187,7 @@ void ParticleEffect::FireFly()
 
 void ParticleEffect::LevelUpEffect()
 {
-	//バフに使用するパーティクルパラメーターを設定。
+	//レベルアップに使用するパーティクルパラメーターを設定。
 	_LevelUPParticleParam.Init();
 	_LevelUPParticleParam.texturePath = "par.png";
 	_LevelUPParticleParam.alphaBlendMode = 1;
@@ -219,24 +219,24 @@ void ParticleEffect::RareDropEffect()
 	_RareDropParam.Init();
 	_RareDropParam.texturePath = "par.png";
 	_RareDropParam.alphaBlendMode = 1;
-	_RareDropParam.addVelocityRandomMargih = Vector3(1.0f, 0.0, 1.0f);
+	_RareDropParam.addVelocityRandomMargih = Vector3::zero;
 	_RareDropParam.brightness = 3.0f;
 	_RareDropParam.fadeTime = 0.5f;
 	_RareDropParam.gravity = 0.0f;
 	_RareDropParam.initAlpha = 1.0f;
-	_RareDropParam.initPositionRandomMargin = Vector3(0.5f, 0.0f, 0.5f);
-	_RareDropParam.initVelocity = Vector3::up* 10.0f;
-	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(2.0f, 2.0f, 2.0f);
-	_RareDropParam.intervalTime = 0.01f;
+	_RareDropParam.initPositionRandomMargin = Vector3::zero;
+	_RareDropParam.initVelocity = Vector3(1.0f,0.0f,1.0);
+	_RareDropParam.initVelocityVelocityRandomMargin = Vector3(3.0f, 0.5f, 3.0f);
+	_RareDropParam.intervalTime = 0.1f;
 	_RareDropParam.isBillboard = true;
 	_RareDropParam.isFade = true;
-	_RareDropParam.life = 0.001f;
+	_RareDropParam.life = 0.1f;
 	_RareDropParam.size = Vector2(0.1f, 0.1f);
 	_RareDropParam.mulColor = Color::yellow;
-	_RareDropParam.isParent = true;
+	//_RareDropParam.isParent = true;
 
 	_RareDropEmitter->transform->SetParent(transform);
-	_RareDropEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.0f, 0.0f));
+	_RareDropEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.3f, 0.0f));
 	_RareDropEmitter->Init(_RareDropParam);
 	SetRareDropEffectFlag(true);
 }

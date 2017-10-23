@@ -47,7 +47,7 @@ float4 PSMainTrans( VS_OUTPUT In ) : COLOR0
 {
 	float4 tex = tex2D(g_textureSampler, In.uv);
 	tex *= g_mulColor;
-	return float4(tex.xyz, tex.a * g_alpha );
+	return float4(tex.xyz * g_brightness, g_alpha  * tex.a);
 }
 /*!
  * @brief	加算合成用のピクセルシェーダー。
@@ -56,7 +56,8 @@ float4 PSMainAdd( VS_OUTPUT In ) : COLOR0
 {
 	float4 tex = tex2D(g_textureSampler, In.uv);
 	tex *= g_mulColor;
-	return float4(tex.xyz * g_brightness, g_alpha);
+
+	return float4(tex.xyz * g_brightness * tex.a, g_alpha);
 }
 /*!
  * @brief	半透明合成用のテクニック。

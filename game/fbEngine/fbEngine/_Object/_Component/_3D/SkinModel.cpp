@@ -100,11 +100,6 @@ void SkinModel::Start()
 //モデルデータの行列更新
 void SkinModel::LateUpdate()
 {
-	if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
-	{
-		_ModelDate->UpdateAABB(transform->GetPosition(), transform->GetScale());
-		_Culling->Execute(_ModelDate->GetAABB(),transform->GetRotateMatrix());
-	}
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
@@ -114,6 +109,12 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
+
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			_ModelDate->UpdateAABB();
+			_Culling->Execute(_ModelDate->GetAABB(), wolrd);
+		}
 	}
 }
 
@@ -316,7 +317,9 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+		/*(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);*/
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
 		if((_ModelEffect & ModelEffectE::ALPHA) > 0)

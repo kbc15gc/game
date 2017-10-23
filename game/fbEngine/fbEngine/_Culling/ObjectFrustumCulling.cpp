@@ -13,7 +13,7 @@ CObjectFrustumCulling::~CObjectFrustumCulling()
 {
 }
 
-void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& rotation)
+void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world)
 {
 	if (_Camera != nullptr) {
 		//ビュープロジェクション行列作成。
@@ -32,8 +32,9 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& rotatio
 			vertPos.y = v.y;
 			vertPos.z = v.z;
 			vertPos.w = 1.0f;
-			//回転を考慮。
-			//D3DXVec4Transform(&vertPos, &vertPos, &rotation);
+			//ワールド変換。
+			D3DXVec4Transform(&vertPos, &vertPos, &world);
+
 			//行列をかけて、スクリーン座標に変換。
 			D3DXVec4Transform(&vertPos, &vertPos, &viewProjMatrix);
 			//正規化座標系に変換。
@@ -70,9 +71,6 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& rotatio
 		{
 			SetCullingFlag(false);
 			return;
-		}else
-		{
-			int a = 0;
 		}
 	}
 }

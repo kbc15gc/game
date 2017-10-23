@@ -93,7 +93,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
 
 	//地面生成
-	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//海生成.
