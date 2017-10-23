@@ -319,6 +319,7 @@
     <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp">
       <Filter>GameObject\TextImage</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyGolem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -653,6 +654,7 @@
     <ClInclude Include="GameObject\TextImage\LevelUpImage.h">
       <Filter>GameObject\TextImage</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyGolem.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
