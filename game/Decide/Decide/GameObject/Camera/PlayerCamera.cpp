@@ -239,9 +239,9 @@ void PlayerCamera::_LookAtPlayer()
 
 	auto pos = _Camera->GetTarget();
 	auto trg = _GetPlayerPos();
-	pos.Lerp(trg, 0.7f);
-	_Camera->SetTarget(pos);
-	transform->LockAt(pos);
+	//pos.Lerp(trg, 0.7f);
+	_Camera->SetTarget(trg);
+	transform->LockAt(trg);
 }
 
 void PlayerCamera::_Move()
