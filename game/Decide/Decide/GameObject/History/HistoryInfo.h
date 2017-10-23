@@ -12,8 +12,14 @@ enum class ChipID : int
 {
 	None = -1,	//!< 設定なし.
 	Fire,		//!< 火のチップ.
+	Tree,		//!< 木のチップ.
+	Stone,		//!< 石のチップ.
+	Hunt,		//!< 狩りのチップ.
+	Agriculture,//!< 農業のチップ
+	Copper,		//!< 銅のチップ.
 	Iron,		//!< 鉄のチップ.
 	Oil,		//!< 石油のチップ.
+	Medicine,	//!< 薬のチップ.
 	ChipNum,	//!< チップの数.
 };
 
@@ -23,8 +29,14 @@ enum class ChipID : int
 static const string ChipName[(int)ChipID::ChipNum] =
 {
 	"火のチップ",
+	"木のチップ",
+	"石のチップ",
+	"狩りのチップ",
+	"農業のチップ",
+	"銅のチップ",
 	"鉄のチップ",
 	"石油のチップ",
+	"薬のチップ",
 };
 
 /**
@@ -33,8 +45,14 @@ static const string ChipName[(int)ChipID::ChipNum] =
 static const string ChipFileName[(int)ChipID::ChipNum] = 
 {
 	"FirePage.png",
+	"TreePage.png",
+	"StonePage.png",
+	"HuntPage.png",
+	"AgriculturePage.png",
+	"CopperPage",
 	"IronPage.png",
 	"OilPage.png",
+	"MedicinePage.png",
 };
 
 /**

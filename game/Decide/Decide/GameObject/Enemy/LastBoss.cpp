@@ -94,6 +94,10 @@ void LastBoss::_UpdateSubClass() {
 	//		_ChangeState(State::Fall);
 	//	}
 	//}
+#ifdef _DEBUG
+	Debug();
+#endif // _DEBUG
+
 }
 
 void LastBoss::_LateUpdateSubClass()
@@ -273,3 +277,18 @@ void LastBoss::_BuildSoundTable() {
 	// UŒ‚‰¹“o˜^B
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
 }
+
+#ifdef _DEBUG
+void LastBoss::Debug() {
+	if(KeyBoardInput->isPressed(DIK_X)&&KeyBoardInput->isPush(DIK_B))
+	{
+		this->SetActive(false, true);
+	}
+
+	if (KeyBoardInput->isPressed(DIK_X) && KeyBoardInput->isPush(DIK_V))
+	{
+		this->SetActive(true, true);
+	}
+}
+#endif // _DEBUG
+

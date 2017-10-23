@@ -214,6 +214,7 @@ PSOutput PSMain( VS_OUTPUT In )
 	PSOutput Out = (PSOutput)0;
 
     Out.Color = color;
+    Out.Color.w = diff.a;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
 
