@@ -47,6 +47,11 @@ public:
 	* 更新.
 	*/
 	void Update()override;
+
+	/*
+	* 描画.
+	*/
+	void Render()override;
 	
 	/**
 	* チップIDを設定.
@@ -68,5 +73,10 @@ private:
 
 	/** サウンドのポインタ. */
 	SoundSource* _SE = nullptr;
+
+	//モデル
+	SkinModel* _Model = nullptr;
+	//マテリアル
+	Material* _Material = nullptr;
 
 };

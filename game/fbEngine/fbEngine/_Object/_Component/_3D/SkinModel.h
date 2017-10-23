@@ -18,7 +18,8 @@ enum ModelEffectE
 	TOON = BIT(4),				//トゥーン
 	LIMLIGHT = BIT(5),			//リムライト
 	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
-	FRUSTUM_CULLING = BIT(7)	//フラスタムカリングを行うかどうか？
+	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
+	ALPHA = BIT(8),				//!< アルファ.
 };
 
 /**
@@ -95,6 +96,15 @@ public:
 	void SetAllBlend(const Color& c)
 	{
 		_AllBlend = c;
+	}
+
+	/**
+	* アルファのしきい値を設定.
+	*/
+	void SetAlpha(bool flag,float a = 0.0f)
+	{
+		SetModelEffect(ModelEffectE::ALPHA, flag);
+		_Alpha = a;
 	}
 
 	/**
@@ -186,4 +196,7 @@ private:
 
 	//オブジェクトカリング。
 	IObjectCulling* _Culling;
+
+	/** アルファの閾値. */
+	float _Alpha = 0.0f;
 };
