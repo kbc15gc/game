@@ -333,6 +333,8 @@ void SkinModel::DrawMeshContainer(
 			(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 		}
 
+		_Effect->SetFloat("g_Alpha", _Alpha);
+
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
 		{

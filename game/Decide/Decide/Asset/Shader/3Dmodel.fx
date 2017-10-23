@@ -10,6 +10,8 @@ int Texflg;							//テクスチャ
 int Spec; //スペキュラ
 int ReceiveShadow; //影を写す
 
+float g_Alpha; //アルファのしきい値.
+
 int SkyBox;
 
 /** 環境マップフラグ. */
@@ -291,7 +293,7 @@ PSOutput PSMain(VS_OUTPUT In)
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-	clip(diff.a -0.9f);		//@todo アルファテストの閾値を定数レジスタで送りたいなぁ > 平松君
+    clip(diff.a - g_Alpha); //@todo アルファテストの閾値を定数レジスタで送りたいなぁ > 平松君
 	Out.Color.w = diff.a;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
