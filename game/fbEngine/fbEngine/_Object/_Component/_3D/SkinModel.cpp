@@ -321,19 +321,19 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);*/
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
-
-		//@todo 半透明描画のパスでは半透明合成にするように > 誰か
+		
+		if((_ModelEffect & ModelEffectE::ALPHA) > 0)
 		{
 			(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		}
-		//@todo 不透明描画のパスではこっちにする。>誰か
-		//@todo 草の描画テストのためにいったんコメントアウト
+		else
 		{
-		//	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-		//	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+			(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+			(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 		}
 
+		_Effect->SetFloat("g_Alpha", _Alpha);
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
