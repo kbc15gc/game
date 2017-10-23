@@ -679,6 +679,10 @@ void Player::Speak()
 			//範囲内かどうか
 			if (npc->GetRadius() >= len)
 			{
+				if (_CharacterController == nullptr)
+				{
+					return;
+				}
 				//地面についていれば話しかけれる
 				if (_CharacterController->IsOnGround())
 				{
@@ -784,6 +788,12 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item), transform->GetPosition(), 2);
+	}
+
+	//プレイヤー死亡
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_D))
+	{
+		_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP)))));
 	}
 }
 void Player::_DebugLevel(int lv)

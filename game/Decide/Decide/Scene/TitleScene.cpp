@@ -20,6 +20,7 @@ void TitleScene::Start()
 
 	_StartSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 	_StartSE->Init("Asset/Sound/start.wav");
+	_StartSE->SetVolume(1.5f);
 
 	_TitleBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TitleBGM", 0);
 	_TitleBGM->InitStreaming("Asset/Sound/titleBgm.WAV");

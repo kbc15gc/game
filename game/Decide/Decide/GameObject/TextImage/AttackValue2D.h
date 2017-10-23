@@ -23,14 +23,10 @@ public:
 private:
 	//攻撃量のテキスト
 	TextObject* _AttackText;
-	//クリティカルテキストテキスト
-	TextObject* _CriticalText;
 	//攻撃量の最大生存時間。
 	float _LifeTime;
 	//攻撃量の現在の時間。
 	float _Time;
-	//攻撃量テキストが作成されているか。
-	bool _CreatAttackValue;
 	//ポジション。
 	Vector3 _Pos;
 	//位置を基準点からの距離で表した値。
