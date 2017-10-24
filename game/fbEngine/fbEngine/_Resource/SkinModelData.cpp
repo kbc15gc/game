@@ -804,6 +804,8 @@ _Instancing(false)
  */
 SkinModelData::~SkinModelData()
 {
+	_MeshList.clear();
+	_Materials.clear();
 	Release();
 }
 
@@ -860,7 +862,7 @@ bool SkinModelData::LoadModelData(const char* filePath)
 void SkinModelData::CloneModelData(const SkinModelData* original, Animation* anim)
 {
 	//
-	memcpy(this, original, sizeof(SkinModelData));
+	//memcpy(this, original, sizeof(SkinModelData));
 	//フレームを新しく作成
 	_FrameRoot = new D3DXFRAME_DERIVED;
 	_FrameRoot->pFrameFirstChild = nullptr;
@@ -888,6 +890,19 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 	}
 	//骨の更新。
 	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
+
+	//マテリアルコピー
+	this->_Materials = original->_Materials;
+	//メッシュリストコピー
+	this->_MeshList = original->_MeshList;
+	//
+	this->_FrameList = original->_FrameList;
+	//
+	this->_TerrainSize = original->_TerrainSize;
+	//
+	this->_Size = original->_Size;
+	//
+	this->_Center = original->_Center;
 
 	//オリジナル設定。。
 	_Original = const_cast<SkinModelData*>(original);

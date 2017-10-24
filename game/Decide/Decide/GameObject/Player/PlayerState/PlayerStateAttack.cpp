@@ -37,6 +37,15 @@ void PlayerStateAttack::Update()
 		//コンボ！
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
 	}
+
+	//移動速度
+	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
+	movespeed.Scale(0.7f);
+	//重力の影響を受けるため。
+	movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
+	//キャラクターコントローラー更新
+	_Player->_CharacterController->SetMoveSpeed(movespeed);
+	_Player->_CharacterController->Execute();
 }
 
 void PlayerStateAttack::Enter()
@@ -53,7 +62,6 @@ void PlayerStateAttack::Dir()
 {
 	//移動速度
 	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
-	movespeed.Scale(0.3f);
 
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
@@ -119,8 +127,4 @@ void PlayerStateAttack::Dir()
 		//回転
 		_Player->_Rotation->RotationToDirection_XZ(vec);
 	}
-
-	//キャラクターコントローラー更新
-	_Player->_CharacterController->SetMoveSpeed(movespeed);
-	_Player->_CharacterController->Execute();
 }

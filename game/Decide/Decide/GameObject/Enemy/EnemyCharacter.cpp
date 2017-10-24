@@ -22,6 +22,9 @@
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 
+
+EnemyCharacter::NearEnemyInfo EnemyCharacter::nearEnemyInfo = NearEnemyInfo(FLT_MAX,nullptr);
+
 EnemyCharacter::EnemyCharacter(const char* name) :GameObject(name)
 {
 
@@ -86,6 +89,16 @@ void EnemyCharacter::Update() {
 			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
 		}
 	}
+	else {
+		// 死んでない。
+
+		float work = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length();
+		if (work < nearEnemyInfo.length) {
+			// プレイヤーとの距離が最短距離だった。
+			nearEnemyInfo.length = work;
+			nearEnemyInfo.object = this;
+		}
+	}
 
 	_BarRenderUpdate();
 
@@ -121,6 +134,9 @@ void EnemyCharacter::LateUpdate() {
 	_LateUpdateSubClass();
 
 	_MoveSpeed = Vector3::zero;	// 使い終わったので初期化。
+
+	// 最短エネミーの情報をリセット。
+	nearEnemyInfo = NearEnemyInfo(FLT_MAX, nullptr);
 }
 
 
@@ -440,8 +456,7 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 			c = Color::red;
 		}
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(_damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
-		attackvalue->transform->SetParent(transform);
+		attackvalue->Init(transform, _damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
 
 		if (_isDamageMotion) {
 			// のけぞるか。

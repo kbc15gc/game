@@ -30,6 +30,16 @@ class EnemyCharacter :
 	public GameObject
 {
 public:
+	// プレイヤーと最も近いエネミーの情報。
+	struct NearEnemyInfo {
+		NearEnemyInfo(float len, EnemyCharacter* obj) {
+			length = len;
+			object = obj;
+		}
+		float length = FLT_MAX;
+		EnemyCharacter* object = nullptr;
+	};
+
 	// 自分がどの種類のエネミーか。
 	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
 	enum class EnemyType{Born = 0,BossDrarian,Drarian, Golem};
@@ -222,7 +232,7 @@ public:
 
 	// 攻撃生成関数。
 	// 引数：	位置(ローカル座標)。
-	//			回転(ローカル座標)。
+	//			回転。
 	//			拡縮。
 	//			寿命(0.0より小さい値で無限)。
 	//			親(デフォルトはnull)。
@@ -230,11 +240,11 @@ public:
 	//			防御無視攻撃か(デフォルトはfalse)。
 	//			ダメージ率(攻撃の種類などによる攻撃力に対する割合、この値に0.01f掛けた値を攻撃力に乗算する、単位はパーセント)。
 	// 戻り値:  生成した攻撃。
-	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& localRot, const Vector3& scale, float life, Transform* parent = nullptr,bool isMagic = false,bool isThroughDamage = false,int percentage = 100) {
+	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& rot, const Vector3& scale, float life, Transform* parent = nullptr,bool isMagic = false,bool isThroughDamage = false,int percentage = 100) {
 		//攻撃コリジョン作成。
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(isMagic, isThroughDamage,nullptr, percentage)),localPos, localRot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent);
+		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(isMagic, isThroughDamage,nullptr, percentage)),localPos, rot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent);
 		return attack;
 	}
 
@@ -583,5 +593,8 @@ private:
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
 
 	Player* _Player = nullptr;			//プレイヤー
+
+public:
+	static NearEnemyInfo nearEnemyInfo;
 };
 

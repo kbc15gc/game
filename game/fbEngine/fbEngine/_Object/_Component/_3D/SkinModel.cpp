@@ -43,7 +43,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 
 SkinModel::~SkinModel()
 {
-	SAFE_DELETE(_ModelDate)
+	SAFE_DELETE(_ModelDate);
 }
 
 //Ä‹AŠÖ”

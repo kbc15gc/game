@@ -17,17 +17,18 @@ public:
 	// ブレスオブジェクト初期化。
 	// 引数：	ブレスを出すキャラクター。
 	//			ブレス発生位置(ローカル座標、親はキャラクターのTransform)。
-	void Init(EnemyCharacter* obj, const Vector3& emitPosLocal)override;
+	//			ブレス速度(向きとスピードを持つ)。
+	void Init(EnemyCharacter* obj, const Vector3& emitPosLocal,const Vector3& speed);
 
 	void Awake()override;
 
 	void Update()override;
 
 	// ブレス発射開始。
-	void BreathStart()override;
+	void _BreathStartSubClass()override;
 
 	// ブレス発射終了。
-	inline void BreathEnd()override {
+	inline void _BreathEndSubClass()override {
 	}
 
 private:
@@ -36,6 +37,7 @@ private:
 	ParticleParameter _initParticleParam;
 	Vector3 _initEmitPos = Vector3::zero;
 	Vector3 _direction = Vector3::zero;
+	Vector3 _speed = Vector3::zero;
 	float _timeCounter;
 	float _interval = 3.0f;
 };
