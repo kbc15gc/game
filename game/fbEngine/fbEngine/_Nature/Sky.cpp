@@ -6,6 +6,12 @@
 
 #include"_Object\_Component\_3D\Light.h"
 
+//#define ON(A,B,C)		\
+//void Set##B(A valse)	\
+//{ C = valse;}			\
+//A Get##B()				\
+//{ return C;}
+
 /**
 * ‰Šú‰».
 */
@@ -45,9 +51,11 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 1.0f;
+		const float TMP = 20.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
-		_SunAngle += 0.02f * Time::DeltaTime() * TMP;
+
+		//100•b‚Åˆê“ú.
+		_SunAngle += (PI * 0.01f) * Time::DeltaTime() * TMP;
 
 		//XŽ²‰ñ“].
 		_SunPosition.Set(0.0f, sinf(_SunAngle), cosf(_SunAngle));
@@ -59,11 +67,11 @@ void Sky::Update()
 
 		//‘¾—z‚Ì•ûŒü‚É‘ã“ü.
 		_SunDir = _SunPosition;
+		_SunDir.Normalize();
 		_SunPosition.Scale(1000000.0f);
 
 		//‘å‹CŽU——pƒpƒ‰ƒ[ƒ^‚ðXV.
 		_AtomosphereParam.Update(camera->GetPosition(), _SunPosition);
-
 
 		Light* light = INSTANCE(GameObjectManager)->mainLight;
 		if (light != nullptr && light->GetLight().size() > 0)
@@ -72,6 +80,15 @@ void Sky::Update()
 			Vector3 limLightDir = _SunDir;
 			limLightDir.Scale(-1.0f);
 			limLightDir.Normalize();
+
+			if (_SunDir.Dot(Vector3::up) <= 0.0f)
+			{
+				light->GetLight()[1]->SetDirection(limLightDir * -1);
+			}
+			else
+			{
+				light->GetLight()[1]->SetDirection(Vector3::zero);
+			}
 
 			//•½sŒõŒ¹‚Ì0”Ô–Ú‚ðXV.
 			light->GetLight()[0]->SetDirection(limLightDir);
