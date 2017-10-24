@@ -105,15 +105,15 @@ void GameScene::Start()
 
 	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 
 	FOR(i,2)
 	{
@@ -140,8 +140,8 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
-	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 8);
-	item->Load();
+	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+	INSTANCE(GameObjectManager)->AddRemoveList(item);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
