@@ -439,6 +439,10 @@ public:
 		return _NowStateIdx;
 	}
 
+	inline short GetDamageMotionRandNum()const {
+		return _damageMotionRandNum
+	}
+
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。
@@ -577,6 +581,8 @@ protected:
 	float _discoveryRange = 0.0f;	// 追跡範囲。
 
 	float _walkSpeed = 0.0f;		// 歩行速度。
+
+	short _damageMotionRandNum = 1;	// 怯む確率(攻撃時以外)。
 
 	bool _isDamageMotion = true;			// のけぞりモーションを再生するか。
 	bool _isDamageMotionRandom = true;		// のけぞりモーションをランダムで再生するか(ランダムにしない場合は必ずのけぞる)。

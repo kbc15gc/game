@@ -18,8 +18,14 @@ public:
 
 	}
 	~BreathObject() {
-		ReleaseCollisionAll();
-		ReleaceParticleAll();
+	}
+
+	void OnDestroy()override {
+		if (_isStart) {
+			BreathEnd();
+			ReleaseCollisionAll();
+			ReleaceParticleAll();
+		}
 	}
 
 	// ブレス発射開始。

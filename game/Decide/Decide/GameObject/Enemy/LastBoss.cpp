@@ -106,12 +106,16 @@ void LastBoss::_StartSubClass() {
 	// 歩行速度設定。
 	_walkSpeed = 5.0f;
 
+	// 何回に一回くらい怯むか設定。
+	_damageMotionRandNum = 1;
+
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
 	_sordAttack.reset(new EnemySingleAttack(this));
 	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
+	//_sordAttack
 	_magicAttack.reset(new EnemyBreathAttack(this));
 	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 
@@ -207,6 +211,12 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 		// 魔術師ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossMagician));
 	}
+	else if (EndStateType == EnemyCharacter::State::Damage) {
+		// ダメージステート終了。
+
+		// 一瞬前のステートに移行。
+		_ChangeState(static_cast<EnemyCharacter::State>(_saveState));
+	}
 }
 
 void LastBoss::_ConfigCollision() {
@@ -274,21 +284,21 @@ void LastBoss::_BuildAnimation() {
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationLastBoss::Wait)].get());
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationLastBoss::Wait)].get());
 		 //走行状態。
 		 //※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationLastBoss::Wait)].get());
 		//// 攻撃状態。
 		//_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationProt::Attack)].get());
 	//	// 落下状態。
 	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
-	//	// ダメージ状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationProt::Damage)].get());
-	//	// 死亡状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
+		// ダメージ状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationLastBoss::Damage)].get());
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationLastBoss::Damage)].get());
 	}
 }
 

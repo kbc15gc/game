@@ -7,7 +7,6 @@
 #include "GameObject\Enemy\EnemyAttack.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
-
 Enemy::Enemy(const char* name) : EnemyCharacter(name)
 {
 
@@ -76,7 +75,6 @@ void Enemy::_UpdateSubClass() {
 
 void Enemy::_LateUpdateSubClass()
 {
-	
 }
 
 

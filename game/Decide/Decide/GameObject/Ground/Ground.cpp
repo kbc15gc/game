@@ -42,7 +42,7 @@ void Ground::Awake()
 	transform->SetLocalScale(Vector3::one);
 
 }
-
+//#define OFF_SPLITSPACE
 void Ground::Start() {
 #ifdef OFF_SPLITSPACE
 #else
