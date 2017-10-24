@@ -48,13 +48,13 @@ void PlayerCamera::Start()
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 	//正規化した方向を
-	static D3DXVECTOR3 baseDir(0.5f, 0.3f, -0.7f);
+	D3DXVECTOR3 baseDir(0.5f, 0.3f, -0.7f);
 	D3DXVec3Normalize(&_ToPlayerDir, &baseDir);
-	_Camera->SetTarget(_GetPlayerPos());
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{
-		transform->SetPosition(_GetPlayerPos() + Vector3::back);
+		_Camera->SetTarget(_GetPlayerPos());
+		transform->SetPosition(_GetPlayerPos() + (_ToPlayerDir * _Dist));
 		_Camera->Update();
 	}
 
@@ -206,7 +206,7 @@ Vector3 PlayerCamera::_ClosetRay()
 	to = from + dist;
 
 	// 衝突を無視する属性を設定。
-	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::NOTHITCAMERA);
+	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::BOSS) | (Collision_ID::NOTHITCAMERA) | (Collision_ID::CHARACTER_GHOST);
 	//レイを飛ばす
 	auto ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere, from, to, attri);
 
@@ -239,9 +239,9 @@ void PlayerCamera::_LookAtPlayer()
 
 	auto pos = _Camera->GetTarget();
 	auto trg = _GetPlayerPos();
-	pos.Lerp(trg, 0.7f);
-	_Camera->SetTarget(pos);
-	transform->LockAt(pos);
+	//pos.Lerp(trg, 0.7f);
+	_Camera->SetTarget(trg);
+	transform->LockAt(trg);
 }
 
 void PlayerCamera::_Move()

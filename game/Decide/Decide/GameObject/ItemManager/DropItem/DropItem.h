@@ -25,6 +25,9 @@ public:
 
 	void Awake()override;
 
+	//ドロップアイテムに使うモデルを読み込みクローンを作成。
+	void Load();
+
 	//ドロップアイテムを作成。
 	//落とすアイテムのInfo、座標、落とす数(武具の場合は設定しても1つになる)。
 	void Create(Item::BaseInfo* info, const Vector3& pos, int dropNum = 1);

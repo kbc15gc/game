@@ -6,13 +6,19 @@ class AttackCollision : public GameObject
 {
 public:
 	enum class CollisionMaster{Player = 0,Enemy, Other};	// 誰がコリジョンを発生させたか。
+
+	struct HitObjectInfo {
+		GameObject* object = nullptr;		// 衝突したオブジェクト。
+		shared_ptr<btCollisionObject> coll;
+		bool isCallStay = false;
+	};
 public:
 	AttackCollision(const char * name) :GameObject(name)
 	{
 
 	};
 	~AttackCollision() {
-		_HitCollisions.clear();
+		_hitInfos.clear();
 	}
 
 	void Awake()override;
@@ -58,9 +64,9 @@ private:
 	// 衝突した瞬間呼ぶコールバック処理。
 	void _CallBackEnter(btCollisionObject* coll);
 	// 衝突している間呼び続けるコールバック処理。
-	void _CallBackStay(btCollisionObject* coll);
+	void _CallBackStay(GameObject* coll);
 	// 衝突した瞬間呼ぶコールバック処理。
-	void _CallBackExit(btCollisionObject* coll);
+	void _CallBackExit(GameObject* coll);
 	// コリジョンオブジェクトからゲームオブジェクトを取得する。
 	GameObject* _CollisionObjectToGameObject(btCollisionObject* coll) {
 		if (!coll) {
@@ -76,10 +82,6 @@ private:
 		}
 	}
 
-	// コリジョンに登録されているオブジェクトが既に登録されているオブジェクトかチェック。
-	// 引数：	チェックするコリジョン。
-	// 戻り値：	既に登録されているか。
-	bool _CheckObject(btCollisionObject* coll1);
 private:
 	Collider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。
@@ -87,7 +89,7 @@ private:
 	float _waitTime = 0.0f;		// コリジョン生成待ち時間。
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
-	vector<shared_ptr<btCollisionObject>> _HitCollisions;	// 当たっているコリジョン。
+	vector<unique_ptr<HitObjectInfo>> _hitInfos;	// 当たっているオブジェクト情報。
 	bool _isCreateCollision = false;	// コリジョンを生成したか。
 	unique_ptr<CharacterParameter::DamageInfo> _DamageInfo;
 };

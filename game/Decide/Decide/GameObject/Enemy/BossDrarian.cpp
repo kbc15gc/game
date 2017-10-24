@@ -168,7 +168,10 @@ void BossDrarian::CreateAttackCollision_TailAttack4() {
 }
 
 void BossDrarian::AnimationEvent_BreathStart() {
-	_breathAttack->BreathStart<LaserBreath>(this,Vector3(0.0f, 0.0f, 5.0f));
+	LaserBreath* breath = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	breath->Init(this, Vector3(0.0f, 0.0f, 5.0f), 10.0f,Vector3::axisY,0.0f);
+
+	_breathAttack->BreathStart(breath);
 	// UŒ‚‰¹Ä¶B
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack3);
 }
