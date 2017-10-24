@@ -13,12 +13,11 @@ void AttackValue2D::Update()
 	//生存時間以内なら
 	if (_Time < _LifeTime)
 	{
-		_Up += 0.01f;
-		_Pos = transform->GetPosition() + _Offset;
-		_Pos.y += _Up;
-		Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(_Pos);
-		_Pos = Vector3(_ScreenPos.x, _ScreenPos.y, 0.0f);
-		_AttackText->transform->SetLocalPosition(_Pos);
+		_Up -= 1.0f;
+		//スクリーン座標に変換
+		Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(trans->GetPosition() + _Offset);
+		//攻撃テキスト座標設定
+		_AttackText->transform->SetPosition(_ScreenPos.x, _ScreenPos.y + _Up, 0.0f);
 	}
 	//生存時間を過ぎた。
 	else
@@ -36,7 +35,7 @@ void AttackValue2D::LateUpdate()
 {
 }
 
-void AttackValue2D::Init(int damagevalue, bool critical, float lifetime, Vector3 offset, Color color)
+void AttackValue2D::Init(Transform* t, int damagevalue, bool critical, float lifetime, Vector3 offset, Color color)
 {
 	//攻撃時の値を表示するテキスト。
 	if (critical)
@@ -51,15 +50,15 @@ void AttackValue2D::Init(int damagevalue, bool critical, float lifetime, Vector3
 		_AttackText->Initialize(L"", 40.0f, color);
 		_AttackText->SetAnchor(fbText::TextAnchorE::MiddleCenter);
 	}
-	
 	//オフセット設定
 	_Offset = offset;
-	_Pos = transform->GetPosition() + _Offset;
+	//親子関係
+	trans = t;
+	transform->SetParent(trans);
 	//スクリーン座標に変換
-	Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(_Pos);
-	_Pos = Vector3(_ScreenPos.x, _ScreenPos.y, 0.0f);
+	Vector2 _ScreenPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(trans->GetPosition() + _Offset);
 	//攻撃テキスト座標設定
-	_AttackText->transform->SetLocalPosition(_Pos);
+	_AttackText->transform->SetPosition(_ScreenPos.x, _ScreenPos.y, 0.0f);
 	//ダメージ量
 	char attack[6];
 	//限界ダメージは999

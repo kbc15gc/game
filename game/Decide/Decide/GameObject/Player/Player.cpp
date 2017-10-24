@@ -444,7 +444,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			c = Color::blue;
 		}
-		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
+		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
 		attackvalue->transform->SetParent(transform);
 	}
 }
