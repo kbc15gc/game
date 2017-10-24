@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject\Component\ObjectSpawn.h"
 #include "fbEngine\_Support\Time.h"
+#include "GameObject\SplitSpace.h"
 
 SplitSpace* Spawner::_splitSpace = nullptr;
 
