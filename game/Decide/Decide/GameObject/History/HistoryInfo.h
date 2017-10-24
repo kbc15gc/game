@@ -111,12 +111,18 @@ namespace
 {
 
 	//メンバ変数の情報設定
-	const Support::DATARECORD HistoryInfoData[4] =
+	const Support::DATARECORD HistoryInfoData[] =
 	{
 		{ "ContinentID",Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_LocationID),	sizeof(int) },
 		{ "Slot[0]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[0]),	sizeof(int) },
 		{ "Slot[1]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[1]),	sizeof(int) },
-		{ "Slot[2]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[2]),	sizeof(int) }
+		{ "Slot[2]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[2]),	sizeof(int) },
+		{ "Slot[3]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[3]),	sizeof(int) },
+		{ "Slot[4]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[4]),	sizeof(int) },
+		{ "Slot[5]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[5]),	sizeof(int) },
+		{ "Slot[6]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[6]),	sizeof(int) },
+		{ "Slot[7]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[7]),	sizeof(int) },
+		{ "Slot[8]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[8]),	sizeof(int) },
 	};
 
 	//オブジェクトの情報
@@ -129,12 +135,18 @@ namespace
 	};
 
 	//メンバ変数の情報設定
-	const Support::DATARECORD VillageGroupData[4] =
+	const Support::DATARECORD VillageGroupData[] =
 	{
 		{ "GroupID",Support::DataTypeE::INT, offsetof(struct VillageGroup,GroupID),sizeof(int) },
 		{ "Slot[0]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[0]),sizeof(ChipID) },
 		{ "Slot[1]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[1]),sizeof(ChipID) },
 		{ "Slot[2]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[2]),sizeof(ChipID) },
+		{ "Slot[3]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[3]),sizeof(ChipID) },
+		{ "Slot[4]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[4]),sizeof(ChipID) },
+		{ "Slot[5]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[5]),sizeof(ChipID) },
+		{ "Slot[6]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[6]),sizeof(ChipID) },
+		{ "Slot[7]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[7]),sizeof(ChipID) },
+		{ "Slot[8]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[8]),sizeof(ChipID) },
 	};
 
 }
