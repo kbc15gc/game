@@ -11,6 +11,7 @@
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "GameObject\Enemy\EnemyAttack.h"
 #include "GameObject\Enemy\LastBossMagic.h"
+#include "GameObject\Enemy\LaserBreath.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 
@@ -31,15 +32,52 @@ void LastBoss::SordAttackEvent() {
 	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
 	attack->RemoveParent();
 
+	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 3.0f), 10.0f, Vector3::axisX ,-90.0f,Color(1.0f,0.0f,1.0f));
+	_sordAttackLaser->BreathStart();
+
 	// 攻撃音再生。
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
-void LastBoss::MagicAttackStart() {
-	_magicAttack->BreathStart<LastBossMagic>(this,Vector3::zero);
+void LastBoss::SordAttackEvent2() {
+	_sordAttackLaser->BreathEnd();
 }
 
-void LastBoss::MagicAttackEnd() {
+void LastBoss::MagicAttackStart1() {
+	LastBossMagic* breath = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(20.0f));
+	breath->Init(this, Vector3(-0.5f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+
+	_magicAttack->BreathStart(breath);
+}
+
+void LastBoss::MagicAttackEnd1() {
+	_magicAttack->BreathEnd();
+}
+
+void LastBoss::MagicAttackStart2() {
+	LastBossMagic* breath = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(-20.0f));
+	breath->Init(this, Vector3(-0.5f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+
+	_magicAttack->BreathStart(breath);
+}
+
+void LastBoss::MagicAttackEnd2() {
+	_magicAttack->BreathEnd();
+}
+
+void LastBoss::MagicAttackStart3() {
+	LastBossMagic* breath = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	breath->Init(this, Vector3(-0.5f, 0.0f, 5.0f), (transform->GetForward() * 15.0f));
+
+	_magicAttack->BreathStart(breath);
+}
+
+void LastBoss::MagicAttackEnd3() {
 	_magicAttack->BreathEnd();
 }
 
@@ -79,8 +117,8 @@ void LastBoss::_StartSubClass() {
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	//_initState = static_cast<State>(LastBossState::LastBossMagician);
-	_initState = State::Speak;
+	_initState = static_cast<State>(LastBossState::LastBossMagician);
+	//_initState = State::Speak;
 	_ChangeState(_initState);
 }
 
@@ -258,14 +296,29 @@ void LastBoss::_ConfigAnimationEvent() {
 	{
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent));
+
+		eventFrame += 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
+
 	}
 
 	// 魔法攻撃。
 	{
-		eventFrame = 2.3f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart));
-		eventFrame = 2.4f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd));
+		eventFrame = 2.01f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart1));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd1));
+
+		eventFrame += 0.2f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart2));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd2));
+		
+		eventFrame += 0.2f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart3));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd3));
+
 	}
 }
 

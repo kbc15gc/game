@@ -244,11 +244,6 @@ void DropItem::_Release()
 		INSTANCE(GameObjectManager)->AddRemoveList(_RareDropSE);
 	}
 
-	//‘•”õ•i‚ðíœB
-	if (_DropEquipment) {
-		INSTANCE(GameObjectManager)->AddRemoveList(_DropEquipment);
-	}
-
 	//_CCharacterController = nullptr;
 	//_RareDropPE = nullptr;
 

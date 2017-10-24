@@ -203,7 +203,7 @@ Vector3 PlayerCamera::_ClosetRay()
 	to = from + dist;
 	
 	// Õ“Ë‚ð–³Ž‹‚·‚é‘®«‚ðÝ’èB
-	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::NOTHITCAMERA);
+	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::BOSS) | (Collision_ID::NOTHITCAMERA) | (Collision_ID::CHARACTER_GHOST);
 	//ƒŒƒC‚ð”ò‚Î‚·
 	auto ray = INSTANCE(PhysicsWorld)->ClosestRayShape(_Sphere, from, to, attri);
 	

@@ -41,6 +41,7 @@ public:
 	//ヒットしたコリジョンを全て取得
 	//引数：　コリジョン
 	//		  衝突したコリジョンの配列。
+	//		  コールバック。
 	//		　指定したコリジョンの属性とのみ当たりをとる
 	// 戻り値は第二引数と同じ。
 	const vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>>* AllHitsContactTest(Collision * coll, vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>>* HitInfoArray, fbPhysicsCallback::AllHitsContactResultCallback* callback, int attr = (int)fbCollisionAttributeE::ALL) const;

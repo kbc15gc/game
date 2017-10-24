@@ -1,5 +1,6 @@
 #pragma once
 #include "EnemyCharacter.h"
+#include "GameObject\Enemy\LaserBreath.h"
 
 
 // 継承クラス。
@@ -24,8 +25,13 @@ public:
 	~LastBoss();
 
 	void SordAttackEvent();
-	void MagicAttackStart();
-	void MagicAttackEnd();
+	void SordAttackEvent2();
+	void MagicAttackStart1();
+	void MagicAttackEnd1();
+	void MagicAttackStart2();
+	void MagicAttackEnd2();
+	void MagicAttackStart3();
+	void MagicAttackEnd3();
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -80,4 +86,6 @@ private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
 	unique_ptr<EnemyBreathAttack> _magicAttack;
+
+	LaserBreath* _sordAttackLaser = nullptr;
 };

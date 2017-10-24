@@ -8,6 +8,7 @@
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
+#include "GameObject\Enemy\EnemyCharacter.h"
 
 namespace
 {
@@ -68,6 +69,7 @@ void Player::Awake()
 	_Anim = AddComponent<Animation>();
 	//カプセルコライダー
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
+
 	//キャラクターコントローラー
 	_CharacterController = AddComponent<CCharacterController>();
 	//キャラクターパラメーター
@@ -83,9 +85,10 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.3f;
+	_Radius = 0.2f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
+
 	//スキンモデル作成
 	SkinModelData* modeldata = new SkinModelData();
 	//モデルデータ作成
@@ -107,6 +110,7 @@ void Player::Awake()
 
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(Vector3(0.0f,_Height * 0.5f + _Radius,0.0f), Collision_ID::PLAYER, coll, _Gravity);
+
 	// 以下衝突を取りたい属性(横方向)を指定。
 	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
