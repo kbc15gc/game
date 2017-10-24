@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
+    <ClInclude Include="EnemyGolem.h" />
     <ClInclude Include="GameLight.h" />
     <ClInclude Include="GameObject\Camera\FreeCamera.h" />
     <ClInclude Include="GameObject\Camera\GameCamera.h" />
@@ -289,6 +290,7 @@
   <ItemGroup>
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
+    <ClCompile Include="EnemyGolem.cpp" />
     <ClCompile Include="GameLight.cpp" />
     <ClCompile Include="GameObject\Camera\FreeCamera.cpp" />
     <ClCompile Include="GameObject\Camera\GameCamera.cpp" />

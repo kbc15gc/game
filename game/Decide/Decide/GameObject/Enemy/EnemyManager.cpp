@@ -6,6 +6,7 @@
 #include "GameObject\SplitSpace.h"
 #include "GameObject\Enemy\BossDrarian.h"
 #include "GameObject\Component\ParticleEffect.h"
+#include "EnemyGolem.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -67,6 +68,11 @@ void EnemyManager::CreateEnemy() {
 			// ※まだ作成しない。
 			Color.push_back(BarColor::Red);
 			break;
+		case EnemyCharacter::EnemyType::Golem:
+			//ゴーレム生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);	
+			Color.push_back(BarColor::Red);
+			break;
 		}
 
 		if (enemy) {
@@ -124,6 +130,9 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					Color.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::Drarian:
+					// まだ何もしない。
+					break;
+				case EnemyCharacter::EnemyType::Golem:
 					// まだ何もしない。
 					break;
 				}
