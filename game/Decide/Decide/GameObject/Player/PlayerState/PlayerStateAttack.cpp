@@ -3,6 +3,13 @@
 #include "PlayerStateAttack.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "../Decide/Decide/AttackCollision.h"
+#include "GameObject\Enemy\EnemyCharacter.h"
+
+namespace
+{
+	//プレイヤーの周り。
+	float Circumference = 6.0f;
+}
 
 PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)
@@ -33,9 +40,15 @@ void PlayerStateAttack::Update()
 		)
 	{
 		//方向を変える。
-		Dir();
+		//Dir();
 		//コンボ！
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
+	}
+
+	//近くのエネミーの方向を向く。
+	if (EnemyCharacter::nearEnemyInfo.length <= Circumference)
+	{
+		_Player->_Rotation->RotationToObject_XZ(*EnemyCharacter::nearEnemyInfo.object);
 	}
 
 	//移動速度

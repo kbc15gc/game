@@ -744,12 +744,12 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
 	}
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
 	}
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
