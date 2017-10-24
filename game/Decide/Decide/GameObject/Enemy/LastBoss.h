@@ -33,6 +33,11 @@ public:
 	void MagicAttackStart3();
 	void MagicAttackEnd3();
 
+#ifdef _DEBUG
+	void Debug()override;
+#endif // _DEBUG
+
+
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 

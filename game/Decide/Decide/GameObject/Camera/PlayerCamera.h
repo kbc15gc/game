@@ -35,6 +35,7 @@ public:
 		_IsMove = value;
 	}
 private:
+	Vector3 _GetPlayerPos();
 	//通常時のカメラ挙動
 	void _StandardBehavior();
 
@@ -44,14 +45,14 @@ private:
 	//カメラをX軸に回転(縦)。
 	void _RotateVertical(float rotx);
 
+	//レイを飛ばして、カメラの移動先を確認。
+	Vector3 _ClosetRay();
+
 	//プレイヤーの方向を向く。
 	void _LookAtPlayer();
 
 	//カメラを移動させる処理。
 	void _Move()override;
-
-	//レイを飛ばして、カメラの移動先を確認。
-	Vector3 _ClosetRay();
 
 	//バネ移動を計算。
 	Vector3 _CalcSpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen);
@@ -79,4 +80,12 @@ private:
 
 	//前フレームのポジション。
 	Vector3 _PrevPosition = Vector3::zero;
+
+	//カメラがオブジェクトと衝突しているか？
+	bool _IsHitObject;
+
+	//カメラが最終的に到達する目標座標。
+	Vector3 _TargetPos;
+
+	D3DXVECTOR3 _ToCamera;
 };

@@ -31,21 +31,24 @@ SceneManager::SceneManager():
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
-	//アンチエイリアスの作成.
+#ifdef RELEASE_LOW
+	_AntiAliasing.SetEnable(false);
+	_DepthofField.SetEnable(false);
+	_Bloom.SetEnable(false);
+#else
 	_AntiAliasing.SetEnable(true);
-	_AntiAliasing.Create();
-
-	//被写界深度の作成
 	_DepthofField.SetEnable(true);
-	_DepthofField.Create();
-
-	//ブルームの準備
 	_Bloom.SetEnable(true);
-	_Bloom.Create();
+#endif
 
+	//アンチエイリアスの作成.
+	_AntiAliasing.Create();
+	//被写界深度の作成
+	_DepthofField.Create();
+	//ブルームの準備
+	_Bloom.Create();
 	//シャドウマップの初期化.
 	_ShadowMap.Create();
-
 	//環境マップの初期化.
 	_EnvironmentMap.Create();
 
@@ -134,14 +137,14 @@ void SceneManager::DrawScene()
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
-	//ブルームの描画.
-	_Bloom.Render();
+	////ブルームの描画.
+	//_Bloom.Render();
 
-	//被写界深度の描画.
-	_DepthofField.Render();
-	
-	//アンチエイリアスの描画.
-	_AntiAliasing.Render();
+	////被写界深度の描画.
+	//_DepthofField.Render();
+	//
+	////アンチエイリアスの描画.
+	//_AntiAliasing.Render();
 
 	//レンダーターゲットを元に戻す
 	INSTANCE(RenderTargetManager)->BeforeRT();

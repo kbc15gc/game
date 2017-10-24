@@ -162,7 +162,7 @@ public:
 	static const Vector3 axisZ;
 	static const Vector3 one;
 public:
-	operator D3DXVECTOR3() { return (*this); }
+	operator D3DXVECTOR3() { return static_cast<D3DXVECTOR3>(*this); }
 	operator LPVOID() { return static_cast<LPVOID>(this); }
 	
 	Vector3() 
@@ -336,6 +336,18 @@ public:
 		//ベクトルを求める
 		Vector3 To = b - a;
 		return a + (To * wariai);
+	}
+
+	//
+	void Transform(const D3DXMATRIX& matrix)
+	{
+		D3DXVECTOR4 out;
+		D3DXVECTOR3 vec3(x, y, z);
+		D3DXVec3Transform(&out, &vec3, &matrix);
+		//自身に代入。
+		this->x = out.x;
+		this->y = out.y;
+		this->z = out.z;
 	}
 
 	void operator += (Vector3 in)

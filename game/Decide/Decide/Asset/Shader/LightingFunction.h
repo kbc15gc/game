@@ -38,6 +38,8 @@ float4	g_ambientLight;								//環境光。
 float4	g_cameraPos;	//!<カメラの座標。
 float3	g_cameraDir;	//!<カメラ方向。
 
+float g_Alpha; //アルファのしきい値.
+
 #define NUM_CHARA_DIFFLIGHT 4
 /**
 * キャラクターライトクラス.

@@ -295,11 +295,6 @@
     <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\ItemManager\DropItem\DropItem.cpp" />
-    <ClCompile Include="GameObject\TextImage\AttackValue2D.cpp" />
-    <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp" />
-    <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp" />
-    <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttack.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
@@ -308,6 +303,21 @@
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\LaserBreath.cpp">
       <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\ItemManager\DropItem\DropItem.cpp">
+      <Filter>GameObject\ItemManager\DropItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\AttackValue2D.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp">
+      <Filter>GameObject\TextImage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp">
+      <Filter>GameObject\TextImage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -616,11 +626,6 @@
     <ClInclude Include="GameObject\Enemy\EnemyDrarian.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\ItemManager\DropItem\DropItem.h" />
-    <ClInclude Include="GameObject\TextImage\AttackValue2D.h" />
-    <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h" />
-    <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h" />
-    <ClInclude Include="GameObject\TextImage\LevelUpImage.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttack.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
@@ -632,6 +637,21 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\BreathObject.h">
       <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\ItemManager\DropItem\DropItem.h">
+      <Filter>GameObject\ItemManager\DropItem</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\AttackValue2D.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\AttentionTextOnly.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\BackWindowAndAttentionText.h">
+      <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\TextImage\LevelUpImage.h">
+      <Filter>GameObject\TextImage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -716,6 +736,12 @@
     </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{0e110077-829a-4ce1-ade4-7f8ef76be220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ItemManager\DropItem">
+      <UniqueIdentifier>{483621b7-b897-4975-8e64-6a7bfe480260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\TextImage">
+      <UniqueIdentifier>{f5cad695-1d77-483f-9ced-c1ff8fefec4b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

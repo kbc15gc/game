@@ -58,11 +58,11 @@ public:
 	~SkinModelData();
 	
 	//AABB更新。
-	void UpdateAABB(Vector3 pos,Vector3 scale)
+	void UpdateAABB()
 	{
-		Vector3 half = _Size * scale;
+		Vector3 half = _Size;
 		half.Scale(0.5f);
-		_AABB.Update(pos + (_Center*scale), half);
+		_AABB.Update(_Center, half);
 	}
 
 	//AABBを取得。
@@ -114,6 +114,10 @@ public:
 	const std::vector<LPD3DXMESH>& GetMeshList() const
 	{
 		return _MeshList;
+	}
+	const vector<LPD3DXFRAME>& GetFrameList()const
+	{
+		return _FrameList;
 	}
 	const Vector4& GetTerrainSize()
 	{

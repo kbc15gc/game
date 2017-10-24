@@ -42,6 +42,7 @@
 
 #include "GameObject\TextImage\BackWindowAndAttentionText.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
 
 ImageObject* g_depth;
 
@@ -93,7 +94,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
 
 	//’n–Ê¶¬
-	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 1);
+	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo ‘‚Ì•`‰æƒeƒXƒg‚Ì‚½‚ß‚É•`‰æ—Dæ‚ð1‚©‚ç0‚É•ÏX‚µ‚Ä‚¢‚éB
 	//ƒ_ƒ“ƒWƒ‡ƒ“¶¬
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//ŠC¶¬.
@@ -138,6 +139,9 @@ void GameScene::Start()
 	INSTANCE(Inventory)->Initialize();
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
+
+	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 8);
+	item->Load();
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);

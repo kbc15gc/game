@@ -33,7 +33,7 @@ namespace
 }
 
 //モデルのFrame更新
-void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix)
+void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix = nullptr)
 {
 	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
 
@@ -804,6 +804,8 @@ _Instancing(false)
  */
 SkinModelData::~SkinModelData()
 {
+	_MeshList.clear();
+	_Materials.clear();
 	Release();
 }
 
@@ -839,6 +841,8 @@ bool SkinModelData::LoadModelData(const char* filePath)
 	
 	if (_FrameRoot)
 	{
+		//
+		UpdateFrameMatrices(_FrameRoot);
 		//骨に行列をセットする
 		SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 
@@ -857,6 +861,8 @@ bool SkinModelData::LoadModelData(const char* filePath)
 //すべてクローンで作成する。
 void SkinModelData::CloneModelData(const SkinModelData* original, Animation* anim)
 {
+	//
+	//memcpy(this, original, sizeof(SkinModelData));
 	//フレームを新しく作成
 	_FrameRoot = new D3DXFRAME_DERIVED;
 	_FrameRoot->pFrameFirstChild = nullptr;
@@ -882,6 +888,9 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 			anim->Initialize(m_pAnimationController);
 		}
 	}
+	//骨の更新。
+	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
+
 	//マテリアルコピー
 	this->_Materials = original->_Materials;
 	//メッシュリストコピー
@@ -894,9 +903,6 @@ void SkinModelData::CloneModelData(const SkinModelData* original, Animation* ani
 	this->_Size = original->_Size;
 	//
 	this->_Center = original->_Center;
-	
-	SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
-
 
 	//オリジナル設定。。
 	_Original = const_cast<SkinModelData*>(original);
@@ -910,7 +916,10 @@ void SkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 
 	//スタックに積む。
 	auto derived = (D3DXFRAME_DERIVED*)dstFrame;
-	derived->Original = ((D3DXFRAME_DERIVED*)srcFrame)->Original;
+	auto source = (D3DXFRAME_DERIVED*)srcFrame;
+	derived->CombinedTransformationMatrix = source->CombinedTransformationMatrix;
+
+	derived->Original = source->Original;
 	derived->Original->WorldMatrixStack.push_back(&derived->CombinedTransformationMatrix);
 
 	//メッシュコンテナをコピー。メッシュは使いまわす。
@@ -1042,7 +1051,8 @@ void SkinModelData::Measurement()
 	//
 	for(auto& frame:_FrameList)
 	{
-		auto container = frame->pMeshContainer;
+		D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)frame;
+		auto container = pFrame->pMeshContainer;
 		//コンテナが存在する限り。
 		while (container != nullptr)
 		{
@@ -1063,7 +1073,7 @@ void SkinModelData::Measurement()
 			for (unsigned int i = 0; i < mesh->GetNumVertices(); i++) {
 				//行列でスケーリングしたい。
 				D3DXVECTOR4 vpos;
-				D3DXVec3Transform(&vpos, vertexPos, &frame->TransformationMatrix);
+				D3DXVec3Transform(&vpos, vertexPos, &pFrame->CombinedTransformationMatrix);
 				//最小。
 				Min.x = min(Min.x, vpos.x);
 				Min.y = min(Min.y, vpos.y);

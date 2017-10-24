@@ -12,7 +12,7 @@ Dungeon::Dungeon(const char * name) :
 
 void Dungeon::Awake()
 {
-	Vector3 StartPos = { 0.0f,120.0f,0.0f };
+	Vector3 StartPos = { 0.0f,70.0f,0.0f };
 	transform->SetLocalPosition(StartPos);
 	transform->SetLocalScale(Vector3::one);
 
@@ -24,6 +24,7 @@ void Dungeon::Awake()
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Dungeon.X"));
 	model->SetModelData(modeldata);
 
+	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 	RigidBody* rigid = AddComponent<RigidBody>();

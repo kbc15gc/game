@@ -125,6 +125,9 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
+	/*
+	*	セーブデータがあれば、ここにレベルを入れる。
+	*/
 	_PlayerParam->ParamReset(_ParamTable[0]);
 	
 	// HPのバーを表示。
@@ -432,7 +435,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
-		_HPBar->SubValue(damage);
+		_HPBar->SubValue(static_cast<float>(damage));
 		_DamageSound->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 		Color c;
@@ -485,7 +488,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_ParticleEffect->HeelHpEffect();
 		}
 		if (_HPBar) {
-			_HPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::HP));
+			_HPBar->SetValue(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::Param::HP)));
 		}
 
 		_HeelSound->Play(false);
@@ -499,7 +502,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			_ParticleEffect->HeelMpEffect();
 		}
 		if (_MPBar) {
-			_MPBar->SetValue(_PlayerParam->GetParam(CharacterParameter::Param::MP));
+			_MPBar->SetValue(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::Param::MP)));
 		}
 		
 		_HeelSound->Play(false);
@@ -610,7 +613,7 @@ void Player::_Damage()
 		if (fmod(time, 2.0f) >= 1.0f)
 		{
 			//最大HPの1割ずつ減る。
-			_HPBar->SubValue(_PlayerParam->ReciveDamageThrough(_PlayerParam->GetMaxHP() * 0.1f));
+			_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(static_cast<int>(_PlayerParam->GetMaxHP() * 0.1f)))));
 			time = 0.0f;
 		}
 	}
@@ -702,9 +705,12 @@ void Player::Speak()
 				//話し終わると
 				if (_NoJump)
 				{
-					_HPBar->RenderEnable();
-					_MPBar->RenderEnable();
-					_NoJump = false;
+					if (_HPBar && _MPBar)
+					{
+						_HPBar->RenderEnable();
+						_MPBar->RenderEnable();
+						_NoJump = false;
+					}
 				}
 			}
 		}
@@ -767,9 +773,21 @@ void Player::_DebugPlayer()
 	}
 
 	//ドロップアイテムを出す。
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4)) {
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_5)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon), transform->GetPosition(), 2);
+	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_6)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor), transform->GetPosition(), 2);
+	}
+
+	//ドロップアイテムを出す。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item), transform->GetPosition(), 2);
 	}
 }
 void Player::_DebugLevel(int lv)

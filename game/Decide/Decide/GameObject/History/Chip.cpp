@@ -7,19 +7,19 @@
 
 namespace
 {
-	//各コインのファイルネーム
-	char* filename[] = {
-		"FireChip.X",
-		"TetuChip.X",
-		"AburaChip.X"
-	};
-
 	//各コインのポジション
 	Vector3 pos[] =
 	{
-		Vector3(-481.0f, 66.0f, 266.0f),
-		Vector3(-453.0f, 58.0f, -295.0f),
-		Vector3(-1060, 69, -1950),
+		Vector3(-481.0f, 66.0f, 266.0f),		//火
+		Vector3(-453.0f, 58.0f, -295.0f),		//木
+		Vector3(-1060, 69, -1950),				//石
+		//!< 狩りのチップ.
+		//!< 農業のチップ
+		//!< 銅のチップ.
+		//!< 鉄のチップ.
+		//!< 石油のチップ.
+		//!< 薬のチップ.
+		//!< チップの数.
 	};
 
 	//あたり判定の距離。
@@ -74,6 +74,12 @@ void Chip::Update()
 	}
 }
 
+void Chip::Render()
+{
+	TEXTURE* texture = LOADTEXTURE((char*)ChipFileName[(int)_ChipID].c_str());
+	_Material->SetTexture(Material::TextureHandleE::DiffuseMap, texture->pTexture);
+}
+
 /**
 * チップIDを設定.
 */
@@ -83,31 +89,35 @@ void Chip::SetChipID(ChipID chipID)
 	_ChipID = chipID;
 
 	//設定されたIDのモデルをロード。
-	SkinModel* model = AddComponent<SkinModel>();
-	SkinModelData* modeldata = new SkinModelData();
-	modeldata->CloneModelData(SkinModelManager::LoadModel(filename[(int)_ChipID]));
-	model->SetModelData(modeldata);
-	model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
-	model->SetModelEffect(ModelEffectE::SPECULAR, true);
-	model->SetAllBlend(Color::white * 13);
+	_Model = AddComponent<SkinModel>();
+	SkinModelData* modelData = new SkinModelData();
+	modelData->CloneModelData(SkinModelManager::LoadModel("Page.x"));
+	_Material = modelData->FindMaterial("HuntingPage.png");
+	_Model->SetModelData(modelData);
+	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+	//model->SetModelEffect(ModelEffectE::SPECULAR, true);
+	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos[(int)_ChipID]);
 	transform->SetLocalScale(Vector3::one);
+
 }
 
 void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
+
 {
 	//外部からセットしたIDを設定。
 	_ChipID = chipID;
 
 	//設定されたIDのモデルをロード。
-	SkinModel* model = AddComponent<SkinModel>();
-	SkinModelData* modeldata = new SkinModelData();
-	modeldata->CloneModelData(SkinModelManager::LoadModel(filename[(int)_ChipID]));
-	model->SetModelData(modeldata);
-	model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
-	model->SetModelEffect(ModelEffectE::SPECULAR, true);
-	model->SetAllBlend(Color::white * 13);
+	_Model = AddComponent<SkinModel>();
+	SkinModelData* modelData = new SkinModelData();
+	modelData->CloneModelData(SkinModelManager::LoadModel("Page.x"));
+	_Material = modelData->FindMaterial("HuntingPage.png");
+	_Model->SetModelData(modelData);
+	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+	//model->SetModelEffect(ModelEffectE::SPECULAR, true);
+	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos);
 	transform->SetLocalScale(Vector3::one);

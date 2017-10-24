@@ -8,6 +8,12 @@ public:
 	TitleScene() {};
 	void Start()override;
 	void Update()override;
+
+	void Alpha();
 private:
 	SoundSource* _TitleBGM;
+	ImageObject* _Start;
+	Color		_StartColor;
+	float		_StartAlpha;
+	SoundSource* _StartSE;
 };
