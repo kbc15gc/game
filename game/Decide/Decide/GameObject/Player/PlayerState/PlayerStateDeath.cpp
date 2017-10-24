@@ -18,7 +18,7 @@ void PlayerStateDeath::Update()
 {
 	if (_Player->_Anim->GetPlaying() != true)
 	{
-		_Player->Releace();
+		//_Player->Releace();
 		INSTANCE(SceneManager)->ChangeScene("TitleScene", true);
 	}
 	if (_DeadColor.a < 1.0f)

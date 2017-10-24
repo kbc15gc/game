@@ -133,7 +133,8 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					// ‚Ü‚¾‰½‚à‚µ‚È‚¢B
 					break;
 				case EnemyCharacter::EnemyType::Golem:
-					// ‚Ü‚¾‰½‚à‚µ‚È‚¢B
+					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Red);
 					break;
 				}
 			}

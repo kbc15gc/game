@@ -168,7 +168,7 @@ void DropItem::Update() {
 	_TotalAppearTime += deltaTime;
 
 	//モデルを段々透明にする。
-	_ModelColor.a -= 0.05f*deltaTime;
+	_ModelColor.a -= 0.01f*deltaTime;
 	_Model->SetAllBlend(_ModelColor);
 	
 	//プレイヤーとの距離を計算。
