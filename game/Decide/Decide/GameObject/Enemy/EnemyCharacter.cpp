@@ -456,8 +456,7 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 			c = Color::red;
 		}
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(_damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
-		attackvalue->transform->SetParent(transform);
+		attackvalue->Init(transform, _damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
 
 		if (_isDamageMotion) {
 			// ÇÃÇØÇºÇÈÇ©ÅB

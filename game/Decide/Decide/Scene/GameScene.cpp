@@ -67,7 +67,7 @@ void GameScene::Start()
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
 	//プレイヤー生成
-	_Player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+	_Player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 2);
 
 
 	//プレイヤーカメラ生成
@@ -118,7 +118,7 @@ void GameScene::Start()
 	FOR(i,2)
 	{
 		//歴史チップ
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 1);
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
 		chip->SetChipID((ChipID)i);
 	}
 
@@ -140,8 +140,8 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
-	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 8);
-	item->Load();
+	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+	INSTANCE(GameObjectManager)->AddRemoveList(item);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);

@@ -448,7 +448,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			c = Color::blue;
 		}
-		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
+		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
 		attackvalue->transform->SetParent(transform);
 	}
 }
@@ -683,6 +683,10 @@ void Player::Speak()
 			//範囲内かどうか
 			if (npc->GetRadius() >= len)
 			{
+				if (_CharacterController == nullptr)
+				{
+					return;
+				}
 				//地面についていれば話しかけれる
 				if (_CharacterController->IsOnGround())
 				{
@@ -740,12 +744,12 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
 	}
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
 	}
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
@@ -788,6 +792,12 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item), transform->GetPosition(), 2);
+	}
+
+	//プレイヤー死亡
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_D))
+	{
+		_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP)))));
 	}
 }
 void Player::_DebugLevel(int lv)

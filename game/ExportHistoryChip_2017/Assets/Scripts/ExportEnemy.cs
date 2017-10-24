@@ -10,6 +10,7 @@ public class ExportEnemy : MonoBehaviour {
         Bone,   	//骨
         BossDrarian,//第１のボスドラリアン
         Drarian,	//第１のボスドラリアンの取り巻き
+        Golem,      //ゴーレム
     }
     //エネミーのタイプ指定。
     public EnemyType _EnemyType;
