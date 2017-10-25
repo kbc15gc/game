@@ -23,9 +23,9 @@ public:
 	void OnDestroy()override {
 		if (_isStart) {
 			BreathEnd();
-			ReleaseCollisionAll();
-			ReleaceParticleAll();
 		}
+		ReleaseCollisionAll();
+		ReleaceParticleAll();
 	}
 
 	// ブレス発射開始。

@@ -193,6 +193,7 @@
     <ClInclude Include="GameObject\Enemy\EnemyDrarian.h" />
     <ClInclude Include="GameObject\Enemy\EnemyGolem.h" />
     <ClInclude Include="GameObject\Enemy\EnemyManager.h" />
+    <ClInclude Include="GameObject\Enemy\EnemySoldier.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.h" />
@@ -283,6 +284,7 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="Scene\LastBossTestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="_Debug\TestObject.h" />
@@ -310,6 +312,7 @@
     <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyGolem.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.cpp" />
@@ -394,6 +397,7 @@
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="Scene\LastBossTestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -52,7 +52,7 @@ void RigidBody::LateUpdate()
 
 		_UpdateOffsetPos();
 #ifdef _DEBUG
-		_Shape->UpdateTransform(trans);
+		_Shape->UpdateTransform();
 #endif
 	}
 }

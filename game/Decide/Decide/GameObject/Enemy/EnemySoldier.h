@@ -1,17 +1,14 @@
 #pragma once
 #include "GameObject\Enemy\EnemyCharacter.h"
-
-//雑魚敵(ゴーレム)。
-class EnemyGolem :public EnemyCharacter
+class EnemySoldier :public EnemyCharacter
 {
 private:
-
 	//ゴーレムのアニメーション番号
-	enum class EnemyGolemAnim
+	enum class EnemySoldierAnim
 	{
+
 		Death = 0,
 		Damage,
-		Fall,
 		Attack01,
 		Run,
 		Walk,
@@ -20,9 +17,8 @@ private:
 	};
 
 public:
-	EnemyGolem(const char* name);
-	~EnemyGolem();
-
+	EnemySoldier(const char* name);
+	~EnemySoldier();
 private:
 	void _AwakeSubClass()override;
 	void _StartSubClass()override;
@@ -72,3 +68,4 @@ protected:
 private:
 	unique_ptr<EnemySingleAttack> _SingleAttack;	// 単攻撃処理。
 };
+

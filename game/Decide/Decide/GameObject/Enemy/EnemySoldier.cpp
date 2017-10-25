@@ -1,22 +1,27 @@
 #include "stdafx.h"
-#include "EnemyGolem.h"
+#include "EnemySoldier.h"
 #include "fbEngine\CharacterController.h"
 #include "GameObject\Enemy\EnemyAttack.h"
 
-EnemyGolem::EnemyGolem(const char* name) : EnemyCharacter(name)
+EnemySoldier::EnemySoldier(const char* name) : EnemyCharacter(name)
 {
 }
 
 
-EnemyGolem::~EnemyGolem()
+EnemySoldier::~EnemySoldier()
 {
 }
 
-void EnemyGolem::_AwakeSubClass() {
-	SetFileName("enemy_01.X");
+void EnemySoldier::_AwakeSubClass() {
+	SetFileName("enemy_02.X");
 }
 
-void EnemyGolem::_StartSubClass() {
+void EnemySoldier::_StartSubClass() {
+
+	//ポジション
+	_InitPos = Vector3(-222.0f, 60.0f, -156.0f);
+	transform->SetPosition(_InitPos);
+
 	//視野角生成。
 	_ViewAngle = 100.0f;
 	_ViewRange = 20.0f;
@@ -35,34 +40,34 @@ void EnemyGolem::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_SingleAttack.reset(new EnemySingleAttack(this));
-	_SingleAttack->Init(1.5f, static_cast<int>(EnemyGolemAnim::Attack01), 0.2f);
+	_SingleAttack->Init(1.3f, static_cast<int>(EnemySoldierAnim::Attack01), 0.2f);
 
 	// 初期ステートに移行。
 	_initState = State::Wandering;
 	_ChangeState(_initState);
 }
 
-void EnemyGolem::CreateAttackCollsion()
+void EnemySoldier::CreateAttackCollsion()
 {
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3(2.0f,3.0f,1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 1.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
 	attack->RemoveParent();
 
-	//攻撃音再生。
+	// 攻撃音再生。
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
-void EnemyGolem::_UpdateSubClass() 
+void EnemySoldier::_UpdateSubClass()
 {
-	if (_MyComponent.CharacterController->IsOnGround()==false) {
+	if (_MyComponent.CharacterController->IsOnGround() == false) {
 		//落下ステートに切り替え。
 		_ChangeState(State::Fall);
 	}
 }
 
-EnemyAttack* EnemyGolem::_AttackSelectSubClass() 
+EnemyAttack* EnemySoldier::_AttackSelectSubClass()
 {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
@@ -70,13 +75,13 @@ EnemyAttack* EnemyGolem::_AttackSelectSubClass()
 	return _SingleAttack.get();
 }
 
-void EnemyGolem::_ConfigCollision()
+void EnemySoldier::_ConfigCollision()
 {
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
-	_collisionInfo.radius = 0.6f;
-	_collisionInfo.height = 0.3f;
-	_collisionInfo.offset = Vector3(0.0f, 0.66f, 0.0f);
+	_collisionInfo.radius = 0.3f;
+	_collisionInfo.height = 0.1f;
+	_collisionInfo.offset = Vector3(0.0f, -0.5f, 0.0f);
 	_collisionInfo.id = Collision_ID::ENEMY;
 
 	// コンポーネントにカプセルコライダーを追加。
@@ -85,7 +90,7 @@ void EnemyGolem::_ConfigCollision()
 	static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
 }
 
-void EnemyGolem::_ConfigCharacterController() 
+void EnemySoldier::_ConfigCharacterController()
 {
 	// 衝突する属性を設定(横)。
 	_MyComponent.CharacterController->AttributeXZ_AllOn();
@@ -102,55 +107,50 @@ void EnemyGolem::_ConfigCharacterController()
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
 }
 
-void EnemyGolem::_CreateExtrudeCollision() 
+void EnemySoldier::_CreateExtrudeCollision()
 {
 	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// キャラクターコントローラの剛体をそのまま使用。
 }
 
-void EnemyGolem::_BuildAnimationSubClass(vector<double>& datas)
+void EnemySoldier::_BuildAnimationSubClass(vector<double>& datas)
 {
-
+	
 	// アニメーションタイプにデータを関連づけ。
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(EnemyGolemAnim::Stand));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(EnemySoldierAnim::Stand));
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(EnemyGolemAnim::Walk));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(EnemySoldierAnim::Walk));
 		// 走行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(EnemyGolemAnim::Run));
+		//datas[static_cast<int>(EnemyCharacter::AnimationType::Dash)] = 0.1f;
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(EnemySoldierAnim::Run));
 		// 落下状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(EnemyGolemAnim::Fall));
+		//落ちるモーションが無いので待機で代用。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(EnemySoldierAnim::Stand));
 		// ダメージ状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(EnemyGolemAnim::Damage));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(EnemySoldierAnim::Damage));
 		// 死亡状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(EnemyGolemAnim::Death));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(EnemySoldierAnim::Death));
 	}
-
-
+	
 }
 
-void EnemyGolem::_ConfigAnimationEvent()
+void EnemySoldier::_ConfigAnimationEvent()
 {
-	float eventFrame = 0.4f;
+	float eventFrame = 0.2f;
 
-	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemyGolemAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemyGolem::CreateAttackCollsion));
+	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemySoldierAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemySoldier::CreateAttackCollsion));
 }
 
-void EnemyGolem::_BuildSoundTable()
+void EnemySoldier::_BuildSoundTable()
 {
 	// 攻撃音登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "EnemyGolemAttack01.wav", false, false);
-
-	// 死んだ時の声登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav", false, false);
-
-	// ダメージを受けた時の声登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "EnemyGolemDamage.wav", false, false);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
 }
 
-void EnemyGolem::_EndNowStateCallback(State EndStateType) {
+void EnemySoldier::_EndNowStateCallback(State EndStateType) {
 	if (EndStateType == State::Wandering) {
 		// 徘徊の挙動いったん終了。
 

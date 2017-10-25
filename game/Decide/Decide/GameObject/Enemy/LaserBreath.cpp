@@ -37,15 +37,12 @@ void LaserBreath::Init(EnemyCharacter* obj, const Vector3& emitPosLocal, float p
 	_axis = axis;
 	_mulColor = mul;
 
+
 	Quaternion rot;
+	rot = Quaternion::Identity;
 	rot.SetRotation(_axis, _rad);
 
-	D3DXMATRIX mat = rot.GetRotationMatrix();
-
-	Vector3 dir;
-	dir.x = mat.m[2][0];
-	dir.y = mat.m[2][1];
-	dir.z = mat.m[2][2];
+	Vector3 dir = rot.RotationVector3(obj->transform->GetForward());
 	dir.Normalize();
 
 	_velocity = dir * power;
@@ -89,7 +86,7 @@ void LaserBreath::_BreathStartSubClass(){
 
 	AttackCollision* attack = _enemyObject->CreateAttack(Vector3::zero, rot, Vector3::zero, -1.0f, _particleEmitter->transform/*_enemyObject->transform*/);
 	attack->RemoveParent();
-	attack->transform->SetRotation(rot);
+	//attack->transform->SetRotation(rot);
 	_attack.push_back(attack);
 }
 

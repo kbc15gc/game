@@ -47,7 +47,7 @@ void BossDrarian::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(6.5f,_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
+	_singleAttack->Init(6.5f,static_cast<int>(AnimationBossDrarian::Attack), 0.2f);
 	_tailAttack.reset(new EnemySingleAttack(this));
 	_tailAttack->Init(6.5f,static_cast<int>(AnimationBossDrarian::TailAttackRight), 0.2f);
 
@@ -300,43 +300,28 @@ void BossDrarian::_ConfigCharacterController() {
 void BossDrarian::_CreateExtrudeCollision() {
 }
 
-void BossDrarian::_BuildAnimation() {
-	vector<unique_ptr<AnimationData>> Datas;
-	for (int idx = 0; idx < _MyComponent.Animation->GetNumAnimationSet(); idx++) {
-		// アニメーションセットの番号と再生時間をセットにしたデータを作成。
-		unique_ptr<AnimationData> data(new AnimationData);
-		data->No = idx;
-		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
-		// 配列に追加。
-		Datas.push_back(move(data));
-	}
+void BossDrarian::_BuildAnimationSubClass(vector<double>& datas) {
 
 	// アニメーションタイプにデータを関連づけ。
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationBossDrarian::Wait)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossDrarian::Wait));
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationBossDrarian::Walk)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossDrarian::Walk));
 		// 走行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationBossDrarian::Dash)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossDrarian::Dash));
 		// 吠える。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, *Datas[static_cast<int>(AnimationBossDrarian::Barking)].get());
-		// 攻撃状態(噛みつき)。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationBossDrarian::Attack)].get());
-		// 攻撃状態(しっぽ)。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack2, *Datas[static_cast<int>(AnimationBossDrarian::TailAttackRight)].get());
-		// 攻撃状態(ブレス)。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack3, *Datas[static_cast<int>(AnimationBossDrarian::Breath)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, static_cast<unsigned int>(AnimationBossDrarian::Barking));
 		// ダメージ反応。
-		Datas[static_cast<int>(AnimationBossDrarian::Damage)]->Time = 8.0f / 30.0f;
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationBossDrarian::Damage)].get());
+		datas[static_cast<int>(AnimationBossDrarian::Damage)] = 8.0f / 30.0f;
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationBossDrarian::Damage));
 		//// 落下状態。
 		//// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 		//_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
 		// 死亡状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationBossDrarian::Death)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationBossDrarian::Death));
 	}
 }
 

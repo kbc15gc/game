@@ -316,6 +316,25 @@ void EnemyCharacter::_BuildState() {
 	_BuildStateSubClass();
 }
 
+void EnemyCharacter::_BuildAnimation() {
+
+	// テーブル初期化。
+	for (int idx = 0; idx < static_cast<int>(AnimationType::Max); idx++) {
+		_AnimationNo[idx] = -1;
+	}
+
+	// アニメーションの再生時間テーブルを作成。
+	vector<double> Datas = vector<double>(_MyComponent.Animation->GetNumAnimationSet(), -1.0);
+
+	// 継承先でアニメーションの終了時間とエネミー共通のアニメーション列挙子への関連付けを行う。
+	_BuildAnimationSubClass(Datas);
+
+	// アニメーションの終了時間をコンポーネントに通知。
+	for (int idx = 0; idx < static_cast<int>(Datas.size()); idx++) {
+		_MyComponent.Animation->SetAnimationEndTime(static_cast<UINT>(idx), Datas[idx]);
+	}
+};
+
 /**
 * アイテム効果.
 */

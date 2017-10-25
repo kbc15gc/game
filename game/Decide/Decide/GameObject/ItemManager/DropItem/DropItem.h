@@ -26,8 +26,8 @@ public:
 	void Awake()override;
 
 	//ドロップアイテムを作成。
-	//落とすアイテムのInfo、座標、落とす数(武具の場合は設定しても1つになる)。
-	void Create(Item::BaseInfo* info, const Vector3& pos, int dropNum = 1);
+	//落とすアイテムのIDとアイテムコード、座標、落とす数(武具の場合は設定しても1つになる)。
+	void Create(int id,int typeId, const Vector3& pos, int dropNum = 1);
 
 	//更新。
 	void Update()override;

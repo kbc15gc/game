@@ -2,25 +2,22 @@
 #include "EnemyThreatState.h"
 
 void EnemyThreatState::_EntrySubClass() {
-	if (_EnemyObject->GetAnimationData(EnemyCharacter::AnimationType::Threat).No >= 0) {
+	if (_EnemyObject->GetAnimationNo(EnemyCharacter::AnimationType::Threat) >= 0) {
 		// テーブルにアニメーションが設定されている。
 		_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Threat, 0.5f);
+		_isNotMotion = false;
 	}
-	//else {
-	//	_EndState();
-	//}
+	else {
+		_isNotMotion = true;
+	}
 }
 
 void EnemyThreatState::Start() {
-	// てすと
-	//if (_EnemyObject->GetAnimationData(EnemyCharacter::AnimationType::Threat).No >= 0) {
-	//	// テーブルにアニメーションが設定されている。
-	//	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Threat, 0.5f);
-	//}
 }
 
 void EnemyThreatState::_UpdateSubClass() {
-	if (!_EnemyObject->GetIsPlaying()) {
+	if (_isNotMotion || !_EnemyObject->GetIsPlaying()) {
+		
 		_EndState();
 	}
 }

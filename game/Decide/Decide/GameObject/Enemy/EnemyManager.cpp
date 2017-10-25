@@ -7,6 +7,7 @@
 #include "GameObject\Enemy\BossDrarian.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "EnemyGolem.h"
+#include "EnemySoldier.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -73,6 +74,11 @@ void EnemyManager::CreateEnemy() {
 			enemy = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);	
 			Color.push_back(BarColor::Red);
 			break;
+		case EnemyCharacter::EnemyType::Soldier:
+			//兵士を生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+			Color.push_back(BarColor::Red);
+			break;
 		}
 
 		if (enemy) {
@@ -86,6 +92,7 @@ void EnemyManager::CreateEnemy() {
 			// ドロップ設定。
 			enemy->SetDropEXP(info->InfoData->exp);
 			enemy->SetDropMoney(info->InfoData->money);
+			enemy->SetItemType(info->InfoData->type);
 		}
 		else {
 			// 生成失敗。
@@ -134,6 +141,10 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					break;
 				case EnemyCharacter::EnemyType::Golem:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::Soldier:
+					enemy->Object = Spawner->DeathAndRespawnObject<EnemySoldier>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					Color.push_back(BarColor::Red);
 					break;
 				}

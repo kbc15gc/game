@@ -43,10 +43,12 @@
 #include "GameObject\TextImage\BackWindowAndAttentionText.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
+#include "GameObject\Enemy\EnemySoldier.h"
 
 ImageObject* g_depth;
 
 //#define _NKMT_
+//#define _NOBO_
 
 namespace
 {
@@ -105,15 +107,24 @@ void GameScene::Start()
 
 	// テスト。
 	// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	//// パラメーター設定。
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//enemy->SetParamAll(Color, param);
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
+
+	//テスト。
+	//敵(兵士)作成。
+	EnemySoldier* soldier = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+	// パラメーター設定。
+	vector<BarColor> cl;
+	cl.push_back(BarColor::Red);
+	vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	soldier->SetParamAll(cl, par);
 
 	FOR(i,2)
 	{
@@ -140,8 +151,6 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
-	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-	INSTANCE(GameObjectManager)->AddRemoveList(item);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
@@ -166,8 +175,10 @@ void GameScene::Start()
 
 	//再生用BGM
 	_GameBGM = _WorldBGM;
+	
+#ifndef _NOBO_
 	_GameBGM->Play(true);
-
+#endif // !_NOBO_
 	//シャドウマップ有効.
 	_isShadowMap = true;
 	//環境マップ有効.
