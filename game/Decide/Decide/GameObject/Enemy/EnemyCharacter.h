@@ -443,6 +443,10 @@ public:
 		return _damageMotionRandNum;
 	}
 
+	inline int GetNowPlayAnimation()const {
+		return _MyComponent.Animation->GetPlayAnimNo();
+	}
+
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。

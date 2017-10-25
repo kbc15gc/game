@@ -33,8 +33,17 @@ void LastBoss::SordAttackEvent() {
 	attack->RemoveParent();
 
 	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,Color(1.0f,0.0f,1.0f));
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,Color(5.0f,0.0f,0.0f,1.0f));
 	_sordAttackLaser->BreathStart();
+
+	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 4.0f), 10.0f, transform->GetRight(), -90.0f, Color(5.0f, 0.0f, 0.0f, 1.0f));
+	_sordAttackLaser->BreathStart();
+
+	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 5.0f), 10.0f, transform->GetRight(), -90.0f, Color(5.0f, 0.0f, 0.0f, 1.0f));
+	_sordAttackLaser->BreathStart();
+
 
 	// UŒ‚‰¹Ä¶B
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);

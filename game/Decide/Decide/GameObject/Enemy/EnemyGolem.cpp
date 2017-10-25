@@ -127,6 +127,8 @@ void EnemyGolem::_BuildAnimationSubClass(vector<double>& datas)
 		// €–Só‘ÔB
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(EnemyGolemAnim::Death));
 	}
+
+
 }
 
 void EnemyGolem::_ConfigAnimationEvent()

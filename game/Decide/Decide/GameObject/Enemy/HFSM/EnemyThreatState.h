@@ -18,4 +18,7 @@ private:
 	void _ExitSubClass(EnemyCharacter::State next)override {};
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
+
+private:
+	bool _isNotMotion = false;
 };

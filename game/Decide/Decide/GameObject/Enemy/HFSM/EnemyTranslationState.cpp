@@ -33,6 +33,7 @@ void EnemyTranslationState::_UpdateSubClass() {
 
 		// ‰ŠúˆÊ’u‚©‚ç‚Ì‹——£‚ðŽZoB
 		Vector3 StartToNowVec = _EnemyObject->transform->GetLocalPosition() - _InitPos;
+		StartToNowVec.y = 0.0f;
 		float Length = StartToNowVec.Length();
 
 		if (Length >= _MoveLength) {

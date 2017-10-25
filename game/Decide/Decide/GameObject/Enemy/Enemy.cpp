@@ -159,19 +159,19 @@ void Enemy::_BuildAnimationSubClass(vector<double>& datas) {
 	// EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationProt::Stand));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<int>(AnimationProt::Stand));
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationProt::Walk));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<int>(AnimationProt::Walk));
 		// 走行状態。
 		// ※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationProt::Walk));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<int>(AnimationProt::Walk));
 		// 落下状態。
 		// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(AnimationProt::Stand));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<int>(AnimationProt::Stand));
 		// ダメージ状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationProt::Damage));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<int>(AnimationProt::Damage));
 		// 死亡状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationProt::Death));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<int>(AnimationProt::Death));
 	}
 }
 

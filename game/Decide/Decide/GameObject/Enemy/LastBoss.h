@@ -80,7 +80,8 @@ private:
 	void _BuildStateSubClass()override;
 
 	// アニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationTypeを使用。
+	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
+	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
 	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
