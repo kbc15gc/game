@@ -356,11 +356,12 @@ public:
 	}
 
 	// 落とすアイテムの種類を設定。
-	inline void SetItemType(int* type) {
-		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
-		{
-			_Type[idx] = type[idx];
-		}
+	inline void SetItemType(int item, int bougu, int buki) {
+
+		_Type[static_cast<int>(Item::ItemCodeE::Item)] = item;
+		_Type[static_cast<int>(Item::ItemCodeE::Armor)] = bougu;
+		_Type[static_cast<int>(Item::ItemCodeE::Weapon)] = buki;
+
 	}
 
 	inline float GetWalkSpeed()const {

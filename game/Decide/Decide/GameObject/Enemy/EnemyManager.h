@@ -18,7 +18,9 @@ namespace {
 		Vector3 position;	// 位置。
 		Quaternion rotation;	// 回転。
 		Vector3 scale;	// 拡縮。
-		int id[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムの種類。
+		int item;
+		int bougu;
+		int buki;
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -36,7 +38,9 @@ namespace {
 		{ "position",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,position),	sizeof(Vector3) },
 		{ "rotation",	Support::DataTypeE::QUATERNION, offsetof(struct EnemyInfo,rotation),	sizeof(Quaternion) },
 		{ "scale",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,scale),	sizeof(Vector3) },
-		{ "id",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,type),	sizeof(EnemyInfo::id) },
+		{ "item",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
+		{ "bougu",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,bougu),	sizeof(EnemyInfo::bougu) },
+		{ "buki",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,buki),	sizeof(EnemyInfo::buki) },
 	};
 }
 
