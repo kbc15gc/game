@@ -161,7 +161,7 @@ void DropItem::Update() {
 	
 	float deltaTime = Time::DeltaTime();
 
-	Vector3 moveSpeed=Vector3::zero;
+	Vector3 moveSpeed = Vector3::zero;
 	moveSpeed.y = _CCharacterController->GetMoveSpeed().y;
 
 	//oŒ»ŽžŠÔ‚É‰ÁŽZB
@@ -271,11 +271,6 @@ void DropItem::_Release()
 	if (_RareDropSE) {
 		INSTANCE(GameObjectManager)->AddRemoveList(_RareDropSE);
 	}
-
-	_CCharacterController = nullptr;
-	_RareDropPE = nullptr;
-	_RareDropSE = nullptr;
-	_DropSE = nullptr;
 
 	if (this) {
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
