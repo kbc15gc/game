@@ -38,15 +38,17 @@ void Collider::Debug(){
 #ifdef _DEBUG
 void Collider::RecreateViewModel() {
 	bool isEnable = _CollisionModel->GetSkinModel()->GetEnable();
-	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+	CreateViewModel();
 	_CollisionModel->GetSkinModel()->SetEnable(isEnable);	// 直前の描画状態を設定。
 }
 
-void Collider::CreateViewModel(const btTransform& collisionTr){
+void Collider::CreateViewModel(){
 
 //前に設定されていたアドレスを削除
 	if (_CollisionModel)
 		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
+
+	_CollisionModel = nullptr;
 
 	// 形状に応じたモデルをロード。
 	ColliderModelLoad();
@@ -77,7 +79,7 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 		// コリジョンのTransform情報生成。
 		//_CollisionTr.reset(new Transform(nullptr,nullptr));
 		
-		UpdateTransform(collisionTr);
+		UpdateTransform();
 
 		////コリジョン描画用モデルの中心点とコリジョンの中心点の差分を設定。
 		//_CollisionModel->transform->SetLocalPosition(_CollisionModelOffset);
@@ -85,18 +87,7 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 }
 
 
-void Collider::UpdateTransform(const btTransform& collisionTr) {
-
-	//if (_CollisionTr.get()) {
-	//	// 位置情報設定。
-	//	btVector3 pos = collisionTr.getOrigin();
-	//	_CollisionTr->SetPosition(pos.getX(), pos.getY(), pos.getZ());
-	//	// 回転情報設定。
-	//	btQuaternion rot = collisionTr.getRotation();
-	//	_CollisionTr->SetRotation(rot.getX(), rot.getY(), rot.getZ(), rot.getW());
-	//	// コリジョンのTransform情報を親に設定。
-	//	_CollisionModel->transform->SetParent(_CollisionTr.get());
-	//}
+void Collider::UpdateTransform() {
 
 	if (_CollisionModel) {
 		_CollisionModel->transform->SetParent(transform);

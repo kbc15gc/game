@@ -23,7 +23,7 @@ void PlayerStateDeath::Update()
 	}
 	if (_DeadColor.a < 1.0f)
 	{
-		_DeadImage->SetBlendColor(Color(_DeadColor.r, _DeadColor.g, _DeadColor.b, _DeadColor.a += 0.02f));
+		_DeadImage->SetBlendColor(Color(_DeadColor.r, _DeadColor.g, _DeadColor.b, _DeadColor.a += 0.01f));
 	}
 }
 

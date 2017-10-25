@@ -18,6 +18,12 @@ public:
 
 	}
 	~BreathObject() {
+	}
+
+	void OnDestroy()override {
+		if (_isStart) {
+			BreathEnd();
+		}
 		ReleaseCollisionAll();
 		ReleaceParticleAll();
 	}

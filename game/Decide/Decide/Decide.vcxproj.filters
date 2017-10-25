@@ -322,8 +322,8 @@
     <ClCompile Include="GameObject\Enemy\EnemyGolem.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp">
-      <Filter>GameObject\Enemy</Filter>
+    <ClCompile Include="Scene\LastBossTestScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -662,8 +662,8 @@
     <ClInclude Include="GameObject\Enemy\EnemyGolem.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\EnemySoldier.h">
-      <Filter>GameObject\Enemy</Filter>
+    <ClInclude Include="Scene\LastBossTestScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

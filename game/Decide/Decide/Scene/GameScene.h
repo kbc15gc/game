@@ -10,7 +10,8 @@ public:
 	{
 		WORLD = 0,
 		BOSS1,
-		MATI1
+		MATI1,
+		DEAD,
 	};
 	GameScene() {};
 	void Start()override;
@@ -22,6 +23,7 @@ private:
 	SoundSource* _BossBGM;
 	SoundSource* _MatiBGM;
 	SoundSource* _GameBGM;
+	SoundSource* _DeadBGM;
 	BGM _BGM;
 	Player* _Player;
 

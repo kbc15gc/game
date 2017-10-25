@@ -24,7 +24,7 @@ void EnemyChaceState::_Start() {
 	// アニメーション再生。
 	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Dash, 0.2f);
 	// のけぞり設定。
-	_EnemyObject->ConfigDamageReaction(true, 3);
+	_EnemyObject->ConfigDamageReaction(true, _EnemyObject->GetDamageMotionRandNum());
 }
 
 void EnemyChaceState::_UpdateSubClass() {

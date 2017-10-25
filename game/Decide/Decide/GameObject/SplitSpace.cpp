@@ -310,3 +310,16 @@ void SplitSpace::ChangeActivateSpace(SpaceCollisionObject* Obj) {
 		_nowHitSpace = Obj;
 	}
 }
+
+void SplitSpace::_ReleaseSpaceCollisions() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				INSTANCE(GameObjectManager)->AddRemoveList(z);
+			}
+			y.clear();
+		}
+		x.clear();
+	}
+	_SpaceCollisions.clear();
+}

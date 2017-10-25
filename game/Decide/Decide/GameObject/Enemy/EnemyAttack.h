@@ -66,6 +66,8 @@ class EnemySingleAttack :public EnemyAttack {
 public:
 	EnemySingleAttack(EnemyCharacter* object);
 	void Entry()override;
+
+	// 戻り値：	攻撃が終了したか。
 	bool Update()override;
 
 	void Exit()override {};
@@ -106,8 +108,10 @@ public:
 
 	// ブレス終了。
 	inline void BreathEnd() {
+		if (_breath) {
 			_breath->BreathEnd();
 			_breath = nullptr;
+		}
 	}
 
 private:

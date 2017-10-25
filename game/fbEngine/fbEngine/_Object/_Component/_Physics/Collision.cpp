@@ -59,7 +59,7 @@ void Collision::Create(btCollisionObject * collision, Collider * shape, const in
 
 #ifdef _DEBUG
 	// とりあえずここでコライダーの描画をオンにする。
-	_Shape->CreateViewModel(_CollisionObject->getWorldTransform());
+	_Shape->CreateViewModel();
 #endif
 }
 
@@ -96,7 +96,7 @@ void Collision::_UpdateCollisionTrans()
 
 #ifdef _DEBUG
 		// コリジョン描画用モデルのTransform情報更新。
-		_Shape->UpdateTransform(trans);
+		_Shape->UpdateTransform();
 #endif
 	}
 }

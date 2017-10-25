@@ -107,15 +107,15 @@ void GameScene::Start()
 
 	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 
 	//テスト。
 	//敵(兵士)作成。
@@ -151,8 +151,6 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
-	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-	INSTANCE(GameObjectManager)->AddRemoveList(item);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
@@ -169,6 +167,11 @@ void GameScene::Start()
 	//街BGM
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
+
+	//死亡BGM
+	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
+	_DeadBGM->Init("Asset/Sound/dead.wav");
+	_DeadBGM->SetVolume(3.0f);
 
 	//再生用BGM
 	_GameBGM = _WorldBGM;
@@ -218,27 +221,35 @@ void GameScene::Update()
 	
 	//BGM変更したい
 	{
-		//ボス
-		Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
-		float boss_len = boss_dir.Length();
-		//街
-		Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
-		float mati_len = mati_dir.Length();
-		//街
-		if (mati_len < MATI_RADIUS)
+		if (_Player->GetState() == Player::State::Death)
 		{
-			ChangeBGM(BGM::MATI1);
+			ChangeBGM(BGM::DEAD);
 		}
-		//ボス
-		if (boss_len < BOSS_RADIUS)
+		else
 		{
-			ChangeBGM(BGM::BOSS1);
+			//ボス
+			Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
+			float boss_len = boss_dir.Length();
+			//街
+			Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
+			float mati_len = mati_dir.Length();
+			//街
+			if (mati_len < MATI_RADIUS)
+			{
+				ChangeBGM(BGM::MATI1);
+			}
+			//ボス
+			if (boss_len < BOSS_RADIUS)
+			{
+				ChangeBGM(BGM::BOSS1);
+			}
+			//ワールド
+			if (boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
+			{
+				ChangeBGM(BGM::WORLD);
+			}
 		}
-		//ワールド
-		if(boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
-		{
-			ChangeBGM(BGM::WORLD);
-		}
+		
 	}
 
 }
@@ -259,6 +270,9 @@ void GameScene::ChangeBGM(BGM bgm)
 			break;
 		case GameScene::BGM::MATI1:
 			_GameBGM = _MatiBGM;
+			break;
+		case GameScene::BGM::DEAD:
+			_GameBGM = _DeadBGM;
 			break;
 		default:
 			break;

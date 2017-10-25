@@ -36,8 +36,12 @@ void TitleScene::Update()
 	//エンターキー
 	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
 	{
-		//ゲームシーンへ移行
+		////ゲームシーンへ移行
 		INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+	
+		// テスト。
+		//INSTANCE(SceneManager)->ChangeScene("LastBossTestScene", true);
+
 		_StartSE->Play(false);
 		return;
 	}

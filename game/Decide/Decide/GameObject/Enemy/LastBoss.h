@@ -14,9 +14,11 @@ public:
 private:
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
-		Move = 0,
+		Wait = 0,
 		SordAttack,
 		Magic,
+		Damage,
+		Move,
 		Max,
 	};
 
@@ -37,6 +39,9 @@ public:
 	void Debug()override;
 #endif // _DEBUG
 
+	inline void SetSaveState(LastBossState state) {
+		_saveState = state;
+	}
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -75,8 +80,8 @@ private:
 	void _BuildStateSubClass()override;
 
 	// アニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
-	void _BuildAnimation()override;
+	// ※添え字にはこのクラス定義したAnimationTypeを使用。
+	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
@@ -87,8 +92,9 @@ private:
 	inline void _DropSubClass()override {
 	}
 
+
 private:
-	State _saveState;
+	LastBossState _saveState;
 	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
 	unique_ptr<EnemyBreathAttack> _magicAttack;
 

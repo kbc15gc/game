@@ -2,7 +2,7 @@
 #include "EnemyThreatState.h"
 
 void EnemyThreatState::_EntrySubClass() {
-	if (_EnemyObject->GetAnimationData(EnemyCharacter::AnimationType::Threat).No >= 0) {
+	if (_EnemyObject->GetAnimationNo(EnemyCharacter::AnimationType::Threat) >= 0) {
 		// テーブルにアニメーションが設定されている。
 		_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Threat, 0.5f);
 	}

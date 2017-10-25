@@ -79,7 +79,7 @@ private:
 
 	// 継承先でアニメーション番号のテーブルを作成。
 	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
-	void _BuildAnimation()override;
+	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;

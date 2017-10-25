@@ -6,9 +6,9 @@ void Animation::Initialize(ID3DXAnimationController* anim)
 	_AnimController = anim;
 	_NumAnimSet = _AnimController->GetMaxNumAnimationSets();
 	_NumMaxTracks = _AnimController->GetMaxNumTracks();
-	_BlendRateTable.reset(new float[_NumMaxTracks]);
+	_BlendRateTable = vector<float>(_NumMaxTracks);
 	_AnimationSets.reset(new ID3DXAnimationSet*[_NumAnimSet]);
-	_EndTime.reset(new double[_NumAnimSet]);
+	_EndTime = vector<double>(_NumAnimSet);
 	FOR(i, _NumMaxTracks)
 	{
 		_BlendRateTable[i] = 1.0f;
@@ -46,8 +46,8 @@ Animation::~Animation()
 {
 	//ユニークポインタ破棄
 	_AnimationSets.release();
-	_BlendRateTable.release();
-	_EndTime.release();
+	_EndTime.clear();
+	_BlendRateTable.clear();
 
 	//キューを解放
 	unsigned int size = _AnimationQueue.size();
@@ -109,6 +109,7 @@ void Animation::PlayAnimation(const UINT animationSetIndex, const float interpol
 {
 	if (animationSetIndex < _NumAnimSet) {
 		if (_AnimController) {
+
 			for (auto& call : _callback) {
 				// 関数ポインタに設定された関数を実行。
 
@@ -276,6 +277,7 @@ void Animation::Update()
 		//アニメーション終了時間を超えた。(1Loop終了した。)
 		if (endtime <= _LocalAnimationTime) 
 		{
+
 			//経過したフレーム初期化
 			_CurrentFrame = 0.0f;
 			//ループ数増加

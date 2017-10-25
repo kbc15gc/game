@@ -255,16 +255,19 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
 	if (_HPBar != nullptr)
 	{
 		//HPバーの更新
 		_HPBar->Update();
 	}
+
 	if (_MPBar != nullptr)
 	{
 		//MPバーの更新
 		_MPBar->Update();
 	}
+
 	if (_PlayerParam)
 	{	
 		//レベルアップするか。
