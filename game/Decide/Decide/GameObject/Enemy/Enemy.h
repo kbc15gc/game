@@ -65,12 +65,12 @@ private:
 	void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
-		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
 		{
 			//落とすアイテムかをチェック。
 			if (_Type[idx] != -1)
 			{
+				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。
 				item->Create(_Type[idx], idx, transform->GetPosition(), 2);
 			}
