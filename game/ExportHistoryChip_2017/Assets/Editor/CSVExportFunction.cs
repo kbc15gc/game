@@ -189,7 +189,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("type,hp,mp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca");
+        sw.WriteLine("type,hp,mp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca,item,armor,weapon");
         foreach (Transform child in Children)
         {
             if (child.name == enemys.name)
@@ -214,8 +214,12 @@ public class CSVExportFunction : Editor
             string quaternion = QuaternionToString(child.rotation);
             string sca = Vector3ToString(child.lossyScale);
 
+            string item = Convert.ToString(e._Item);
+            string armor = Convert.ToString(e._Armor);
+            string weapon = Convert.ToString(e._Weapon);
+
             //
-            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca);
+            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14},{15},{16},{17}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca, item, armor, weapon);
 
 
             //列書き出し

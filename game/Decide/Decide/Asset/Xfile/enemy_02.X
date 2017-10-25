@@ -33398,34 +33398,10 @@ AnimationSet Run {
    0;3;0.000000,-0.000000,-0.460674;;;
   }
  }
-
- Animation Anim- {
-  
-  { Box001 }
-
-  AnimationKey rot {
-   0;
-   1;
-   0;4;1.000000,0.000000,0.000000,0.000000;;;
-  }
-
-  AnimationKey scale {
-   1;
-   1;
-   0;3;2.840006,1.000000,2.249688;;;
-  }
-
-  AnimationKey pos {
-   2;
-   1;
-   0;3;0.005106,-0.914780,0.004817;;;
-  }
- }
 }
 
 AnimationSet Walk {
  
-
  Animation Anim- {
   
   { HEI }

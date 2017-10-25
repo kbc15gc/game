@@ -10,6 +10,7 @@
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "fbEngine/CharacterController.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
+#include "GameObject\ItemManager\ItemManager.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
@@ -119,10 +120,11 @@ void DropItem::Awake() {
 }
 
 //ドロップアイテムを作成。
-void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
+void DropItem::Create(int id, int typeId, const Vector3& pos, int dropNum) {
 
+	_DropItemInfo = INSTANCE(ItemManager)->GetItemInfo(id, static_cast<Item::ItemCodeE>(typeId));
 	//アイテムの場合。
-	if (info->TypeID == Item::ItemCodeE::Item) {
+	if (_DropItemInfo->TypeID == Item::ItemCodeE::Item) {
 		//アイテムの場合は指定された数分落とす。
 		_DropNum = dropNum;
 	}
@@ -130,10 +132,8 @@ void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
 	//武具の場合。
 	{
 		//武具は一つしか落ちない。
-		_DropEquipment = HoldItemFactory::CreateItem(static_cast<Item::BaseInfo*>(info), true);
+		_DropEquipment = HoldItemFactory::CreateItem(_DropItemInfo, true);
 	}
-
-	SetInfo(info);
 
 	//落下場所を設定。
 	_DropPos = pos;

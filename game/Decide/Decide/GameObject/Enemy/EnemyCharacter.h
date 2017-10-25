@@ -355,6 +355,14 @@ public:
 		return _dropMoney;
 	}
 
+	// 落とすアイテムの種類を設定。
+	inline void SetItemType(int* type) {
+		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
+		{
+			_Type[idx] = type[idx];
+		}
+	}
+
 	inline float GetWalkSpeed()const {
 		return _walkSpeed;
 	}
@@ -595,6 +603,8 @@ protected:
 	unsigned short _damageMotionProbability = 1;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
 
 	EnemyAttack* _nowAttack = nullptr;
+
+	int _Type[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムのID。
 
 private:
 	int _dropExp;	// 落とす経験値。

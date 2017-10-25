@@ -23,14 +23,14 @@ void EnemySoldier::_StartSubClass() {
 	transform->SetPosition(_InitPos);
 
 	//視野角生成。
-	_ViewAngle = 90.0f;
-	_ViewRange = 10.0f;
+	_ViewAngle = 100.0f;
+	_ViewRange = 20.0f;
 
 	//徘徊範囲設定。
-	_WanderingRange = 30.0f;
+	_WanderingRange = 10.0f;
 
 	//追跡範囲設定。
-	_discoveryRange = 30.0f;
+	_discoveryRange = 10.0f;
 
 	//歩行速度設定。
 	_walkSpeed = 1.5f;
@@ -40,7 +40,7 @@ void EnemySoldier::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_SingleAttack.reset(new EnemySingleAttack(this));
-	_SingleAttack->Init(1.4f, static_cast<int>(EnemySoldierAnim::Attack01), 0.2f);
+	_SingleAttack->Init(1.3f, static_cast<int>(EnemySoldierAnim::Attack01), 0.2f);
 
 	// 初期ステートに移行。
 	_initState = State::Wandering;
@@ -52,8 +52,11 @@ void EnemySoldier::CreateAttackCollsion()
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.5f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 1.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, 0.0f, transform);
 	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
 void EnemySoldier::_UpdateSubClass()
@@ -121,6 +124,7 @@ void EnemySoldier::_BuildAnimationSubClass(vector<double>& datas)
 		// 歩行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(EnemySoldierAnim::Walk));
 		// 走行状態。
+		//datas[static_cast<int>(EnemyCharacter::AnimationType::Dash)] = 0.1f;
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(EnemySoldierAnim::Run));
 		// 落下状態。
 		//落ちるモーションが無いので待機で代用。
@@ -130,7 +134,7 @@ void EnemySoldier::_BuildAnimationSubClass(vector<double>& datas)
 		// 死亡状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(EnemySoldierAnim::Death));
 	}
-
+	
 }
 
 void EnemySoldier::_ConfigAnimationEvent()

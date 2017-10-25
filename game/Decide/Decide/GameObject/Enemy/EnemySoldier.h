@@ -49,7 +49,8 @@ private:
 	}
 
 	// アニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
+	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
+	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
 	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
@@ -59,8 +60,16 @@ private:
 	void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
-		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Armor), transform->GetPosition(), 2);
+		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
+		{
+			//落とすアイテムかをチェック。
+			if (_Type[idx] != -1)
+			{
+				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+				//落とすアイテムのidとコードを指定。
+				item->Create(_Type[idx], idx, transform->GetPosition(), 2);
+			}
+		}
 	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
