@@ -193,6 +193,7 @@
     <ClInclude Include="GameObject\Enemy\EnemyDrarian.h" />
     <ClInclude Include="GameObject\Enemy\EnemyGolem.h" />
     <ClInclude Include="GameObject\Enemy\EnemyManager.h" />
+    <ClInclude Include="GameObject\Enemy\EnemySoldier.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.h" />
@@ -310,6 +311,7 @@
     <ClCompile Include="GameObject\Enemy\EnemyDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyGolem.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.cpp" />
