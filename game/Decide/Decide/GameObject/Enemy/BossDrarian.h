@@ -92,7 +92,7 @@ private:
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 		chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f,-1.5f,0.0f));
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(7, Item::ItemCodeE::Weapon), transform->GetPosition(), 2);
+		item->Create(0,2, transform->GetPosition(), 2);
 	}
 
 private:

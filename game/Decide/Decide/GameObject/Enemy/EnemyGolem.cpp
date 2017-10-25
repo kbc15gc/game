@@ -18,14 +18,14 @@ void EnemyGolem::_AwakeSubClass() {
 
 void EnemyGolem::_StartSubClass() {
 	//視野角生成。
-	_ViewAngle = 90.0f;
-	_ViewRange = 10.0f;
+	_ViewAngle = 100.0f;
+	_ViewRange = 20.0f;
 
 	//徘徊範囲設定。
-	_WanderingRange = 30.0f;
+	_WanderingRange = 10.0f;
 
 	//追跡範囲設定。
-	_discoveryRange = 30.0f;
+	_discoveryRange = 10.0f;
 
 	//歩行速度設定。
 	_walkSpeed = 1.5f;

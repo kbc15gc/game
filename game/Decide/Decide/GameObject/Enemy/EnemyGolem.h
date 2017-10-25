@@ -65,7 +65,7 @@ private:
 
 	inline void _DropSubClass()override {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Armor), transform->GetPosition(), 2);
+		item->Create(0,1, transform->GetPosition(), 2);
 	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
