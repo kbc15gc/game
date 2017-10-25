@@ -22,17 +22,7 @@ void EnemyAttackState::_Start() {
 		_attack->Entry();	// 初期化。
 		if (_attack->GetAnimationType() >= 0) {
 			// 再生するアニメーション番号が設定されている。
-			if (_attack->GetAnimationLoopNum() < 0) {
-				// 無限ループ再生。
-			}
-			else if(_attack->GetAnimationLoopNum() > 0){
-				// 指定回数ループ再生。
-				_EnemyObject->PlayAnimation_OriginIndex(_attack->GetAnimationType(), _attack->GetInterpolate(), _attack->GetAnimationLoopNum());
-			}
-			else {
-				// 再生回数に0が設定された。
-				abort();
-			}
+			_EnemyObject->PlayAnimation_OriginIndex(_attack->GetAnimationType(), _attack->GetInterpolate(), _attack->GetAnimationLoopNum());
 		}
 	}
 	else {

@@ -18,6 +18,7 @@ private:
 		SordAttack,
 		Magic,
 		Damage,
+		Move,
 		Max,
 	};
 
@@ -79,8 +80,8 @@ private:
 	void _BuildStateSubClass()override;
 
 	// アニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
-	void _BuildAnimation()override;
+	// ※添え字にはこのクラス定義したAnimationTypeを使用。
+	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;

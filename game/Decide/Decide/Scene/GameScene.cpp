@@ -140,8 +140,6 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
-	DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-	INSTANCE(GameObjectManager)->AddRemoveList(item);
 
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);

@@ -283,6 +283,7 @@
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="Scene\LastBossTestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="_Debug\TestObject.h" />
@@ -394,6 +395,7 @@
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="Scene\LastBossTestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -53,13 +53,8 @@ public:
 	// アニメーションデータテーブルの添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーション番号のテーブルを作成する。
-	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Threat, Attack1,Attack2,Attack3,Attack4, Fall,Damage, Death,Max };
-
-	// アニメーションデータ構造体。
-	struct AnimationData {
-		int No = -1;	// アニメーション番号。
-		float Time;	// 再生時間。
-	};
+	// ※攻撃モーションはモデルによって数が異なるのでここでは扱わない。
+	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Threat, Fall,Damage, Death,Max };
 
 	// サウンドデータテーブルの添え字。
 	enum class SoundIndex{None = -1, Attack1 = 0, Attack2, Attack3, Threat,Damage,Death, Max};
@@ -151,22 +146,26 @@ public:
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
 	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime) {
-		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime);
+		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime,-1);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
-	//			ループ回数。
+	//			ループ回数(デフォルトは1)。
 	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1) {
-		_MyComponent.Animation->PlayAnimation(_AnimationData[static_cast<unsigned int>(animationType)].No, interpolateTime, loopCount);
+		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime, loopCount);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
-	// 引数：	アニメーションタイプ(モデルごとのアニメーション番号)。
+	// 引数：	アニメーションタイプ(モデルごとのアニメーション番号、-1で再生しない)。
 	//			補間時間。
-	//			ループ回数。
+	//			ループ回数(-1で無限ループ)。
 	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1) {
+		if (animationNum == -1) {
+			// アニメーションを再生しない。
+			return;
+		}
 		_MyComponent.Animation->PlayAnimation(animationNum, interpolateTime, loopCount);
 	}
 
@@ -401,8 +400,9 @@ public:
 		}
 	}
 
-	inline const AnimationData& GetAnimationData(AnimationType type)const {
-		return _AnimationData[static_cast<int>(type)];
+	// エネミー共通のアニメーション列挙子から各モデルのアニメーション番号を取得。
+	inline int GetAnimationNo(AnimationType type)const {
+		return _AnimationNo[static_cast<int>(type)];
 	}
 
 	// 初期ステート取得。
@@ -440,7 +440,7 @@ public:
 	}
 
 	inline short GetDamageMotionRandNum()const {
-		return _damageMotionRandNum
+		return _damageMotionRandNum;
 	}
 
 protected:
@@ -448,14 +448,17 @@ protected:
 	// ※Noneを渡すとステートがオフになる。
 	void _ChangeState(State next);
 
+	// アニメーションテーブル作成関数。
+	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
+	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
+	// ※純粋仮想関数。
+	virtual void _BuildAnimationSubClass(vector<double>& datas) = 0;
+
 	// アニメーションタイプにアニメーションデータを関連付ける関数。
 	// 引数：	アニメーションタイプの列挙子。
-	//			第1引数に関連付けたいアニメーションデータ。
-	// ※この関数に渡されたアニメーションの終了時間が設定されます。
-	inline void _ConfigAnimationType(AnimationType Type, const AnimationData& Data) {
-		_AnimationData[static_cast<unsigned int>(Type)] = Data;
-		// アニメーションコンポーネントにアニメーションの終了時間設定。
-		_MyComponent.Animation->SetAnimationEndTime(Data.No,Data.Time);
+	//			各モデルのアニメーション番号。
+	inline void _ConfigAnimationType(AnimationType Type, const int animNo) {
+		_AnimationNo[static_cast<unsigned int>(Type)] = animNo;
 	}
 
 	// 引数のパラメータをサウンドテーブルに登録する関数。
@@ -532,9 +535,8 @@ private:
 	// 絶対に他のクラスでも使わないステートはこっちに登録。
 	virtual void _BuildStateSubClass() {};
 
-	// 継承先でアニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
-	virtual void _BuildAnimation() = 0;
+	// アニメーションのテーブル作成に使用するデータを作成。
+	void _BuildAnimation();
 
 	// アニメーションイベントを設定する関数。
 	// ※処理自体は継承先に委譲。
@@ -561,7 +563,7 @@ protected:
 
 	CollisionInfo _collisionInfo;
 
-	AnimationData _AnimationData[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
+	int _AnimationNo[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	SoundData _SoundData[static_cast<int>(SoundIndex::Max)];
 
 	State _NowStateIdx;		// 現在のステートの添え字。

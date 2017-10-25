@@ -35,12 +35,12 @@ public:
 	void Debug()override;
 	// コライダーの形状を視覚化するためのモデルを生成する関数。
 	// 引数：	コリジョンのTransform情報。
-	void CreateViewModel(const btTransform& collisionTr);
+	void CreateViewModel();
 	// コライダーの描画を再作成。
 	void RecreateViewModel();
 
 	// コリジョン描画用モデルのTransform情報更新。
-	void UpdateTransform(const btTransform& collisionTr);
+	void UpdateTransform();
 
 	// 描画中か。
 	bool GetIsRender();
@@ -76,7 +76,5 @@ protected:
 	//当たり判定を視覚化した3Dオブジェクト。
 	ModelObject* _CollisionModel = nullptr;
 	Vector3 _CollisionModelOffset = Vector3::zero;	// コリジョン視覚化用モデルの中心点とコリジョンの中心点の差分(継承先によって変更)。
-private:
-	unique_ptr<Transform> _CollisionTr;	// コリジョンのTransform情報。
 #endif
 };
