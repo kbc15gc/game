@@ -18,7 +18,7 @@ namespace {
 		Vector3 position;	// 位置。
 		Quaternion rotation;	// 回転。
 		Vector3 scale;	// 拡縮。
-		int id[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムのID。
+		int id[static_cast<int>(Item::ItemCodeE::Max)]; //落とすアイテムのID。
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
