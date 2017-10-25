@@ -356,12 +356,13 @@ public:
 	}
 
 	// 落とすアイテムの種類を設定。
-	inline void SetItemType(int item, int bougu, int buki) {
-
-		_Type[static_cast<int>(Item::ItemCodeE::Item)] = item;
-		_Type[static_cast<int>(Item::ItemCodeE::Armor)] = bougu;
-		_Type[static_cast<int>(Item::ItemCodeE::Weapon)] = buki;
-
+	inline void SetItem(int* item, int* armor, int* weapon) {
+		for (int idx = 0; idx < 5; idx++)
+		{
+			_Type[static_cast<int>(Item::ItemCodeE::Item)][idx] = item[idx];
+			_Type[static_cast<int>(Item::ItemCodeE::Armor)][idx] = armor[idx];
+			_Type[static_cast<int>(Item::ItemCodeE::Weapon)][idx] = weapon[idx];
+		}
 	}
 
 	inline float GetWalkSpeed()const {
@@ -605,7 +606,7 @@ protected:
 
 	EnemyAttack* _nowAttack = nullptr;
 
-	int _Type[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムのID。
+	int _Type[static_cast<int>(Item::ItemCodeE::Max)][5];//落とすアイテムのID。
 
 private:
 	int _dropExp;	// 落とす経験値。
