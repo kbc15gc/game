@@ -92,7 +92,7 @@ void EnemyManager::CreateEnemy() {
 			// ドロップ設定。
 			enemy->SetDropEXP(info->InfoData->exp);
 			enemy->SetDropMoney(info->InfoData->money);
-			enemy->SetItemType(info->InfoData->type);
+			enemy->SetItemType(info->InfoData->id);
 		}
 		else {
 			// 生成失敗。

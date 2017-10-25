@@ -604,10 +604,11 @@ protected:
 
 	EnemyAttack* _nowAttack = nullptr;
 
+	int _Type[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムのID。
+
 private:
 	int _dropExp;	// 落とす経験値。
 	int _dropMoney; // 落とす金額。
-	int _Type[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムの種類。
 
 	char _FileName[FILENAME_MAX];	// モデルのファイル名。
 

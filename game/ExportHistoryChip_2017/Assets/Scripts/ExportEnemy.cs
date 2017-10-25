@@ -29,7 +29,7 @@ public class ExportEnemy : MonoBehaviour {
     public int _MONEY;
 
     //落とすアイテムの種類。
-    //落とすアイテムには1、落とさないアイテムは-1を入れる。
+    //落とすアイテムのID、落とさないアイテムは-1を入れる。
     public int _Item;
     public int _Armor;
     public int _Weapon;

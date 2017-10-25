@@ -61,7 +61,15 @@ private:
 
 	inline void _DropSubClass()override {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,1, transform->GetPosition(), 2);
+		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
+		{
+			//落とすアイテムかをチェック。
+			if (_Type[idx] != -1)
+			{
+				//落とすアイテムのidとコードを指定。
+				item->Create(_Type[idx], idx, transform->GetPosition(), 2);
+			}
+		}
 	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
