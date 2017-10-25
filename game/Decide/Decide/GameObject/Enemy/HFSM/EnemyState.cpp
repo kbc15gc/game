@@ -57,12 +57,12 @@ bool EnemyState::Update() {
 }
 
 void EnemyState::Exit(EnemyCharacter::State next) {
+	_ExitSubClass(next);
+
 	if (_NowLocalState) {
 		// ローカルステートが設定されている。
 		_ChangeLocalState(EnemyCharacter::State::None);
 	}
-
-	_ExitSubClass(next);
 }
 
 void EnemyState::_ChangeLocalState(EnemyCharacter::State next) {

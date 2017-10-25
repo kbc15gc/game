@@ -41,10 +41,10 @@ void CCharacterController::Init(Vector3 off, int type, Collider* coll, float gra
 
 const Vector3& CCharacterController::Execute()
 {
-	// y成分は重力を加算。
-	m_moveSpeed.y += m_gravity;
-
 	float deltaTime = Time::DeltaTime();
+
+	// 重力による現在の速度を更新。
+	_nowGravitySpeed += (m_gravity * deltaTime);
 
 	Vector3 nowPosTmp; 
 	Vector3 nextPosTmp;
@@ -56,9 +56,10 @@ const Vector3& CCharacterController::Execute()
 		nextPosTmp.y = nowPosTmp.y = nowPosTmp.y - m_rigidBody->GetShape()->GetHalfSize().y;	// 位置情報をコリジョンの足元に合わせる。
 		//キャラクターの移動量と外的要因による移動量を加算。
 		Vector3 addPos;
-		addPos = m_moveSpeed + _outsideSpeed;
+		addPos = (m_moveSpeed + _outsideSpeed) * deltaTime;
+		// y成分は重力を加算。
+		addPos.y += _nowGravitySpeed;
 
-		addPos.Scale(deltaTime);
 		nextPosTmp += addPos;
 
 		originalXZDir = addPos;
@@ -210,6 +211,7 @@ const Vector3& CCharacterController::Execute()
 					m_moveSpeed.y = 0.0f;	// 地面に当たったので移動量を0にする。
 					m_isJump = false;
 					m_isOnGround = true;
+					_nowGravitySpeed = 0.0f;
 					nextPosTmp.y = callback.hitPos.y;	// 衝突点は足元なので、中心位置まで加算する。
 				}
 			}
