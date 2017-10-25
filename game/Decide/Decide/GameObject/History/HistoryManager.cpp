@@ -117,7 +117,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 		FOR(type,2)		
 		{
 			//ÉpÉXê∂ê¨
-			sprintf(path, "Asset/Data/GroupData/Group%c%s.csv", 'A' + group, ObjectType[type]);
+			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)location, 'A' + group, ObjectType[type]);
 			_CreateObject((int)location, path, type);
 			ZeroMemory(path, 128);
 		}

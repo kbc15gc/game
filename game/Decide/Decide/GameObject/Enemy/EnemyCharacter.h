@@ -440,7 +440,7 @@ public:
 	}
 
 	inline short GetDamageMotionRandNum()const {
-		return _damageMotionRandNum
+		return _damageMotionRandNum;
 	}
 
 protected:
