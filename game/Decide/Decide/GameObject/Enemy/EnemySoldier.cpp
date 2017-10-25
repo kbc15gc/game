@@ -109,39 +109,28 @@ void EnemySoldier::_CreateExtrudeCollision()
 	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// キャラクターコントローラの剛体をそのまま使用。
 }
 
-void EnemySoldier::_BuildAnimation()
+void EnemySoldier::_BuildAnimationSubClass(vector<double>& datas)
 {
-	vector<unique_ptr<AnimationData>> Datas;
-	for (int idx = 0; idx < _MyComponent.Animation->GetNumAnimationSet(); idx++)
-	{
-		// アニメーションセットの番号と再生時間をセットにしたデータを作成。
-		unique_ptr<AnimationData> data(new AnimationData);
-		data->No = idx;
-		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
-							// 配列に追加。
-		Datas.push_back(move(data));
-	}
-
+	
 	// アニメーションタイプにデータを関連づけ。
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(EnemySoldierAnim::Stand)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(EnemySoldierAnim::Stand));
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(EnemySoldierAnim::Walk)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(EnemySoldierAnim::Walk));
 		// 走行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(EnemySoldierAnim::Run)].get());
-		// 攻撃状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(EnemySoldierAnim::Attack01)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(EnemySoldierAnim::Run));
 		// 落下状態。
 		//落ちるモーションが無いので待機で代用。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(EnemySoldierAnim::Stand)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(EnemySoldierAnim::Stand));
 		// ダメージ状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(EnemySoldierAnim::Damage)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(EnemySoldierAnim::Damage));
 		// 死亡状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(EnemySoldierAnim::Death)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(EnemySoldierAnim::Death));
 	}
+
 }
 
 void EnemySoldier::_ConfigAnimationEvent()
