@@ -24,7 +24,7 @@ void PlayerStateIdol::Update()
 	}
 	//移動速度
 	Vector3 movespeed = Vector3::zero;
-	movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
+	//movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
 	//キーボードのJ　or　パッドのAボタンでジャンプ
 	if (KeyBoardInput->isPush(DIK_J) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{

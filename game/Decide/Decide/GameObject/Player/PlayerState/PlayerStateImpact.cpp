@@ -20,7 +20,7 @@ void PlayerStateImpact::Update()
 {
 	//ˆÚ“®‘¬“x
 	Vector3 movespeed = Vector3::zero;
-	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
+	//movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
 
 	if (_Player->_Anim->GetPlaying() != true)
 	{

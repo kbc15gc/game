@@ -74,7 +74,7 @@ void PlayerStateAttack::Leave()
 void PlayerStateAttack::Dir()
 {
 	//移動速度
-	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
+	Vector3 movespeed = Vector3::zero;
 
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
