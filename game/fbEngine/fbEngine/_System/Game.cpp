@@ -188,6 +188,15 @@ void Initialize()
 void Update() 
 {
 	Time::Update();
+
+	auto t = Time::DeltaTime();
+	if (t < 1.0f / 30.0f) {
+		//30fps‚ÉŠÔ‚É‡‚Á‚Ä‚¢‚é‚È‚ç–°‚éB
+		DWORD sleepTime = static_cast<DWORD>(max(0.0, (1.0 / 30.0)*1000.0 - t*1000.0));
+		Sleep(sleepTime);
+		Time::SetDeltaTime((1.0f / 30.0f)*1000);
+	}
+
 	INSTANCE(SoundEngine)->Update();
 	INSTANCE(InputManager)->Update();
 	INSTANCE(SceneManager)->UpdateScene();
