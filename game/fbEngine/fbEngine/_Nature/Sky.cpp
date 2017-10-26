@@ -40,6 +40,13 @@ void Sky::Awake()
 	_SunPlate->SetBillboard(true);
 	_SunPlate->SetActive(false);
 
+	_MoonPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
+	_MoonPlate->SetTexture(LOADTEXTURE("UI/circle128.png"));
+	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 10.0f);
+	_MoonPlate->SetSize(Vector2(30.0f, 30.0f));
+	_MoonPlate->SetBillboard(true);
+	_MoonPlate->SetActive(false);
+
 	//_SunAngle = D3DXToRadian(270.0f);
 }
 
@@ -51,7 +58,7 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 20.0f;
+		const float TMP = 10.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 
 		//100•b‚Åˆê“ú.
@@ -109,6 +116,10 @@ void Sky::Update()
 	sunModelPos.Scale(2000.0f);
 	sunModelPos.Add(camera->GetTarget());
 	_SunPlate->transform->SetLocalPosition(sunModelPos);
+	Vector3 moonModelPos = _SunDir * -1;
+	moonModelPos.Scale(2000.0f);
+	moonModelPos.Add(camera->GetTarget());
+	_MoonPlate->transform->SetLocalPosition(moonModelPos);
 
 	transform->UpdateTransform();
 }
