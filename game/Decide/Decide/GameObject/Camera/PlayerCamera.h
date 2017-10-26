@@ -10,7 +10,9 @@ class PlayerCamera : public GameCamera
 public:
 	//コンストラクタ。
 	PlayerCamera(const char* name) :
-		GameCamera(name)
+		GameCamera(name),
+		_Spring(2.0f),
+		_Damping(1.0f)
 	{
 	}
 	~PlayerCamera();
@@ -54,8 +56,8 @@ private:
 	//カメラを移動させる処理。
 	void _Move()override;
 
-	//バネ移動を計算。
-	Vector3 _CalcSpringDamp(Vector3 curr, Vector3 trgpos, Vector3 prevtrg, float delta, float spring, float damp, float springlen);
+	//バネの様に追跡。
+	void _SpringChaseMove(float time);
 
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
@@ -67,6 +69,8 @@ private:
 	SphereCollider* _Sphere;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
+	//カメラへのベクトル。
+	D3DXVECTOR3 _ToCamera;
 	//距離
 	float _Dist;
 	//当たり判定の半径
@@ -85,7 +89,11 @@ private:
 	bool _IsHitObject;
 
 	//カメラが最終的に到達する目標座標。
-	Vector3 _TargetPos;
-
-	D3DXVECTOR3 _ToCamera;
+	Vector3 _DestinationPos;
+	//カメラ移動の加速度。
+	Vector3 _Velocity;
+	//ダンピング定数。
+	float _Damping;
+	//バネ定数。
+	float _Spring;
 };
