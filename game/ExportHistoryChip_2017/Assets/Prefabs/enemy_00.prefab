@@ -119,3 +119,6 @@ MonoBehaviour:
   _LV: 5
   _DROPEXP: 10
   _MONEY: 100
+  _Item: ffffffffffffffffffffffffffffffffffffffff
+  _Armor: ffffffffffffffffffffffffffffffffffffffff
+  _Weapon: ffffffffffffffffffffffffffffffffffffffff

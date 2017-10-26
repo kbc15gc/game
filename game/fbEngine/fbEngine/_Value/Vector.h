@@ -611,8 +611,60 @@ public:
 		D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(ang.y), D3DXToRadian(ang.x), D3DXToRadian(ang.z));
 		(*this) = q;
 	}
+
+	// 引数で受け取ったベクトルをこのクォータニオンで回す。
+	const Vector3& RotationVector3(const Vector3& vec)const {
+
+		// 回転させるために行列を作成。
+		D3DXMATRIX rotMat;
+		D3DXMatrixIdentity(&rotMat);
+		// Z方向を回転させたいベクトルにする。
+		Vector3 work = vec;
+		work.Normalize();
+		rotMat.m[2][0] = work.x;
+		rotMat.m[2][1] = work.y;
+		rotMat.m[2][2] = work.z;
+
+		Vector3 vecX, vecY;
+		// 回転させたいベクトルの横方向を求める。
+		if (fabsf(work.Dot(Vector3::up)) == 1.0f) {
+			// 受け取ったベクトルが上を向いている。
+
+			// 上方向との外積を行っても直交するベクトルは求まらないので奥行方向と外積を取る。
+			vecX = work.Cross(Vector3::front);
+		}
+		else {
+			// ワールド座標の上方向と外積を行う。
+			vecX = work.Cross(Vector3::up);
+		}
+		rotMat.m[0][0] = vecX.x;
+		rotMat.m[0][1] = vecX.y;
+		rotMat.m[0][2] = vecX.z;
+
+		// 回転させたいベクトルの上方向を求める。
+		vecY = work.Cross(vecX);
+		rotMat.m[1][0] = vecY.x;
+		rotMat.m[1][1] = vecY.y;
+		rotMat.m[1][2] = vecY.z;
+
+		// このクォータニオンから行列を作成して回転させる。
+		D3DXMATRIX mat = Quaternion::GetRotationMatrix();
+		D3DXMatrixMultiply(&rotMat, &rotMat,&mat);
+
+		// 回転後の奥行ベクトルを取得。
+		Vector3 dir;
+		dir.x = rotMat.m[2][0];
+		dir.y = rotMat.m[2][1];
+		dir.z = rotMat.m[2][2];
+
+		dir.Normalize();
+
+		// 回転する際に向きベクトルにしたので、元のベクトルの大きさを掛ける。s
+		return dir * vec.Length();
+	}
+
 	//回転行列取得
-	const D3DXMATRIX GetRotationMatrix()
+	const D3DXMATRIX GetRotationMatrix()const
 	{
 		D3DXMATRIX rot;
 		D3DXMatrixIdentity(&rot);
@@ -640,7 +692,7 @@ public:
 		z = pw * qz + px * qy - py * qx + pz * qw;
 
 	}
-	void CopyFrom(D3DXQUATERNION& q)
+	void CopyFrom(D3DXQUATERNION& q)const
 	{
 		q.x = x;
 		q.y = y;

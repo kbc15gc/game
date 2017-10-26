@@ -18,20 +18,27 @@ public:
 
 	}
 	~BreathObject() {
+	}
+
+	void OnDestroy()override {
+		if (_isStart) {
+			BreathEnd();
+		}
 		ReleaseCollisionAll();
 		ReleaceParticleAll();
 	}
 
-	// 初期化。
-	virtual void Init(EnemyCharacter* enemy,const Vector3& emitPosLocal) {
-		_enemyObject = enemy;
+	// ブレス発射開始。
+	inline void BreathStart() {
+		_isStart = true;
+		_BreathStartSubClass();
 	}
 
-	// ブレス発射開始。
-	virtual inline void BreathStart() = 0;
-
 	// ブレス発射終了。
-	virtual inline void BreathEnd() = 0;
+	inline void BreathEnd() {
+		_isStart = false;
+		_BreathEndSubClass();
+	}
 
 	void ReleaseCollisionAll() {
 		for (auto attack : _attack) {
@@ -49,6 +56,21 @@ public:
 		}
 	}
 
+
+	inline bool GetIsStart()const {
+		return _isStart;
+	}
+
+protected:
+	// 初期化。
+	void Init(EnemyCharacter* enemy) {
+		_enemyObject = enemy;
+	}
+
+	virtual void _BreathStartSubClass() = 0;
+
+	virtual void _BreathEndSubClass() = 0;
+
 private:
 	// 衝突判定コリジョンの更新。
 	virtual void _UpdateCollision() {};
@@ -57,4 +79,5 @@ protected:
 	unique_ptr<vector<Particle*>> _particleList;
 	vector<AttackCollision*> _attack;
 	EnemyCharacter* _enemyObject = nullptr;
+	bool _isStart = false;
 };

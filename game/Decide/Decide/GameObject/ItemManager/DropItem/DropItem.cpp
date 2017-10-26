@@ -10,6 +10,7 @@
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "fbEngine/CharacterController.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
+#include "GameObject\ItemManager\ItemManager.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
@@ -65,21 +66,22 @@ void DropItem::Awake() {
 	//モデル設定。
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR);
+	_Model->SetModelEffect(ModelEffectE::ALPHA);
 
 	//キャラクターライトを設定。
-	_CharacterLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
-	_CharacterLight.SetDiffuseLightDirection(1, Vector3(0.0f, 1.0f, 0.0f));
-	_CharacterLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 1.0f));
-	_CharacterLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(1, Vector3(0.0f, 1.0f, 0.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
 
-	_CharacterLight.SetDiffuseLightColor(0, Vector4(0.1f, 0.1f, 0.1f, 5.0f));
-	_CharacterLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-	_CharacterLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-	_CharacterLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightColor(0, Vector4(0.1f, 0.1f, 0.1f, 5.0f));
+	_TreasureChestLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
-	_CharacterLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+	_TreasureChestLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 
-	_Model->SetCharacterLight(&_CharacterLight);
+	_Model->SetCharacterLight(&_TreasureChestLight);
 
 	//初期座標。
 	_DropPos = Vector3(0.0f, 0.0f, 0.0f);
@@ -117,20 +119,12 @@ void DropItem::Awake() {
 	_TextFontSize = 33.0f;
 }
 
-//ドロップアイテムに使うモデルを読み込みクローンを作成。
-void DropItem::Load() {
-	//スキンモデル作成。
-	SkinModelData* modeldata = new SkinModelData();
-
-	//モデルデータ作成(ファイルパスはテスト用)。
-	modeldata->CloneModelData(SkinModelManager::LoadModel("Chest.X"));
-}
-
 //ドロップアイテムを作成。
-void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
+void DropItem::Create(int id, int typeId, const Vector3& pos, int dropNum) {
 
+	_DropItemInfo = INSTANCE(ItemManager)->GetItemInfo(id, static_cast<Item::ItemCodeE>(typeId));
 	//アイテムの場合。
-	if (info->TypeID == Item::ItemCodeE::Item) {
+	if (_DropItemInfo->TypeID == Item::ItemCodeE::Item) {
 		//アイテムの場合は指定された数分落とす。
 		_DropNum = dropNum;
 	}
@@ -138,10 +132,8 @@ void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
 	//武具の場合。
 	{
 		//武具は一つしか落ちない。
-		_DropEquipment = HoldItemFactory::CreateItem(static_cast<Item::BaseInfo*>(info), true);
+		_DropEquipment = HoldItemFactory::CreateItem(_DropItemInfo, true);
 	}
-
-	SetInfo(info);
 
 	//落下場所を設定。
 	_DropPos = pos;
@@ -169,14 +161,14 @@ void DropItem::Update() {
 	
 	float deltaTime = Time::DeltaTime();
 
-	Vector3 moveSpeed=Vector3::zero;
+	Vector3 moveSpeed = Vector3::zero;
 	moveSpeed.y = _CCharacterController->GetMoveSpeed().y;
 
 	//出現時間に加算。
 	_TotalAppearTime += deltaTime;
 
 	//モデルを段々透明にする。
-	_ModelColor.a -= 0.8f*deltaTime;
+	_ModelColor.a -= deltaTime * 0.1f;
 	_Model->SetAllBlend(_ModelColor);
 	
 	//プレイヤーとの距離を計算。
@@ -279,11 +271,6 @@ void DropItem::_Release()
 	if (_RareDropSE) {
 		INSTANCE(GameObjectManager)->AddRemoveList(_RareDropSE);
 	}
-
-	_CCharacterController = nullptr;
-	_RareDropPE = nullptr;
-	_RareDropSE = nullptr;
-	_DropSE = nullptr;
 
 	if (this) {
 		INSTANCE(GameObjectManager)->AddRemoveList(this);

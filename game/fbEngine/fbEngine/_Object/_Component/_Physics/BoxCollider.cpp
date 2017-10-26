@@ -37,8 +37,11 @@ void BoxCollider::Create( const Vector3& size )
 }
 
 void BoxCollider::Resize(const Vector3& size) {
-	_Shape->setImplicitShapeDimensions(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
-	_halfSize = size * 0.5f;
+	SAFE_DELETE(_Shape);
+	_Shape = new btBoxShape(btVector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f));
+	_collision->GetCollisionObj()->setCollisionShape(_Shape);
+	btVector3 work = _Shape->getImplicitShapeDimensions();
+	_halfSize = Vector3(work.x(), work.y(), work.z());
 #ifdef _DEBUG
 	RecreateViewModel();
 #endif

@@ -3,6 +3,7 @@
 #include "LastBossMagicianState.h"
 #include "EnemyTranslationState.h"
 #include "EnemyWaitState.h"
+#include "GameObject\Enemy\LastBoss.h"
 
 LastBossMagicianState::LastBossMagicianState(EnemyCharacter* Object) : EnemyState(Object)
 {
@@ -22,7 +23,8 @@ void LastBossMagicianState::_EntrySubClass() {
 
 void LastBossMagicianState::_Start() {
 	// ‚Ì‚¯‚¼‚èÝ’èB
-	_EnemyObject->ConfigDamageReaction(true,30);
+	//_EnemyObject->ConfigDamageReaction(true,30);
+	_EnemyObject->ConfigDamageReaction(true, 1);
 }
 
 void LastBossMagicianState::_UpdateSubClass() {
@@ -41,6 +43,9 @@ void LastBossMagicianState::_UpdateSubClass() {
 }
 
 void LastBossMagicianState::_ExitSubClass(EnemyCharacter::State next) {
+	if (next == EnemyCharacter::State::Damage) {
+		static_cast<LastBoss*>(_EnemyObject)->SetSaveState(static_cast<LastBoss::LastBossState>(_EnemyObject->GetNowStateIndex()));
+	}
 }
 
 void LastBossMagicianState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
@@ -48,4 +53,6 @@ void LastBossMagicianState::_EndNowLocalState_CallBack(EnemyCharacter::State End
 	if (EndLocalStateType == EnemyCharacter::State::StartAttack) {
 		_ChangeLocalState(EnemyCharacter::State::StartAttack);
 	}
+
+	_EnemyObject->ConfigDamageReaction(true, 1);
 }

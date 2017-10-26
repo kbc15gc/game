@@ -18,6 +18,9 @@ namespace {
 		Vector3 position;	// 位置。
 		Quaternion rotation;	// 回転。
 		Vector3 scale;	// 拡縮。
+		int item[5];
+		int armor[5];
+		int weapon[5];
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -35,6 +38,9 @@ namespace {
 		{ "position",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,position),	sizeof(Vector3) },
 		{ "rotation",	Support::DataTypeE::QUATERNION, offsetof(struct EnemyInfo,rotation),	sizeof(Quaternion) },
 		{ "scale",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,scale),	sizeof(Vector3) },
+		{ "item",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
+		{ "armor",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
+		{ "weapon",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
 	};
 }
 

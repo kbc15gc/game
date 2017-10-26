@@ -156,7 +156,7 @@ private:
 	ID3DXAnimationController*				_AnimController;		//!<アニメーションコントローラ。
 	UINT									_NumAnimSet;				//!<アニメーションセットの数。
 	std::unique_ptr<ID3DXAnimationSet*[]>	_AnimationSets;			//!<アニメーションセットの配列。
-	std::unique_ptr<float[]>				_BlendRateTable;			//!<ブレンディングレートのテーブル。
+	vector<float>							_BlendRateTable;			//!<ブレンディングレートのテーブル。
 	UINT									_CurrentAnimationSetNo;	//!<現在再生中のアニメーショントラックの番号。
 	UINT									_CurrentTrackNo;			//!<現在のトラックの番号。
 	UINT									_NumMaxTracks;			//!<アニメーショントラックの最大数。
@@ -165,7 +165,7 @@ private:
 	float									_InterpolateEndTime;		//!<補間終了時間。
 	float									_InterpolateTimer;		//!<補間時間。
 
-	std::unique_ptr<double[]> _EndTime;	//各アニメーションの終了時間を格納した配列
+	vector<double> _EndTime;			//各アニメーションの終了時間を格納した配列
 	double _TimeRatio;					//正規化された時間の割合。
 	double _LocalAnimationTime;			//ローカルなアニメーションの経過時間(ややこしかったので自分で管理することにした)
 	double _CurrentFrame;				//アニメーションが再生されて現在何フレーム目か。

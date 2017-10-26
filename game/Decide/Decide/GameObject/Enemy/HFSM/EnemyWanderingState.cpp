@@ -60,12 +60,15 @@ void EnemyWanderingState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLo
 	if (EndLocalStateType == EnemyCharacter::State::Translation) {
 		// 移動ステート終了。
 
-		if (_NowLocalState) {
-			_isOutsideRange = static_cast<EnemyTranslationState*>(_NowLocalState)->GetIsOutsideRange();
-			_ChangeLocalState(EnemyCharacter::State::Wait);		// 待機ステートに移行。
-			// パラメータ設定。
-			static_cast<EnemyWaitState*>(_NowLocalState)->SetInterval(4.5f);
-		}
+		//if (_NowLocalState) {
+		// 現在のステートはすでに破棄された後なので、配列から取得する。
+
+		_isOutsideRange = static_cast<EnemyTranslationState*>(_EnemyObject->GetMyState()[static_cast<int>(EnemyCharacter::State::Translation)].get())->GetIsOutsideRange();
+		// 待機ステートに移行。
+		_ChangeLocalState(EnemyCharacter::State::Wait);
+		// パラメータ設定。
+		static_cast<EnemyWaitState*>(_NowLocalState)->SetInterval(4.5f);
+		//}
 	}
 	else if (EndLocalStateType == EnemyCharacter::State::Wait) {
 		// 待機ステート終了。

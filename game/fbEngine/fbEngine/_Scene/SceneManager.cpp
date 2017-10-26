@@ -137,14 +137,14 @@ void SceneManager::DrawScene()
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 
-	////ƒuƒ‹[ƒ€‚Ì•`‰æ.
-	//_Bloom.Render();
+	//ƒuƒ‹[ƒ€‚Ì•`‰æ.
+	_Bloom.Render();
 
-	////”íŽÊŠE[“x‚Ì•`‰æ.
-	//_DepthofField.Render();
-	//
-	////ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚Ì•`‰æ.
-	//_AntiAliasing.Render();
+	//”íŽÊŠE[“x‚Ì•`‰æ.
+	_DepthofField.Render();
+	
+	//ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚Ì•`‰æ.
+	_AntiAliasing.Render();
 
 	//ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ðŒ³‚É–ß‚·
 	INSTANCE(RenderTargetManager)->BeforeRT();

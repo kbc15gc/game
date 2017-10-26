@@ -38,15 +38,17 @@ void Collider::Debug(){
 #ifdef _DEBUG
 void Collider::RecreateViewModel() {
 	bool isEnable = _CollisionModel->GetSkinModel()->GetEnable();
-	CreateViewModel(_collision->GetCollisionObj()->getWorldTransform());
+	CreateViewModel();
 	_CollisionModel->GetSkinModel()->SetEnable(isEnable);	// 直前の描画状態を設定。
 }
 
-void Collider::CreateViewModel(const btTransform& collisionTr){
+void Collider::CreateViewModel(){
 
 //前に設定されていたアドレスを削除
 	if (_CollisionModel)
 		INSTANCE(GameObjectManager)->AddRemoveList(_CollisionModel);
+
+	_CollisionModel = nullptr;
 
 	// 形状に応じたモデルをロード。
 	ColliderModelLoad();
@@ -58,37 +60,40 @@ void Collider::CreateViewModel(const btTransform& collisionTr){
 		//半透明な赤に設定。
 		_CollisionModel->GetSkinModel()->SetAllBlend(Color(1.0f, 0.0f, 0.0f, 0.5f));
 		//あたり判定の大きさを調べる。
-		btVector3 min, max;
-		btTransform tr;
-		tr.setIdentity();
-		GetBody()->getAabb(tr, min, max);
-		Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
+
+		//btVector3 min, max;
+		//btTransform tr;
+		//tr.setIdentity();
+		//GetBody()->getAabb(tr, min, max);
+		//Vector3 size = Vector3(max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
+
+		Vector3 size = _halfSize * 2.0f;
+
+
 		//当たり判定のサイズを指定
-		_CollisionModel->transform->SetLocalScale(size);
+		//_CollisionModel->transform->SetLocalScale(size);
+		_CollisionModel->transform->SetScale(size);
+
 		//実際のコリジョンを親に設定(描画用モデルをコリジョンの座標系にする。)
 
 		// コリジョンのTransform情報生成。
-		_CollisionTr.reset(new Transform(nullptr,nullptr));
+		//_CollisionTr.reset(new Transform(nullptr,nullptr));
 		
-		UpdateTransform(collisionTr);
+		UpdateTransform();
 
-		//コリジョン描画用モデルの中心点とコリジョンの中心点の差分を設定。
-		_CollisionModel->transform->SetLocalPosition(_CollisionModelOffset);
+		////コリジョン描画用モデルの中心点とコリジョンの中心点の差分を設定。
+		//_CollisionModel->transform->SetLocalPosition(_CollisionModelOffset);
 	}
 }
 
 
-void Collider::UpdateTransform(const btTransform& collisionTr) {
+void Collider::UpdateTransform() {
 
-	if (_CollisionTr.get()) {
+	if (_CollisionModel) {
+		_CollisionModel->transform->SetParent(transform);
+
 		// 位置情報設定。
-		btVector3 pos = collisionTr.getOrigin();
-		_CollisionTr->SetPosition(pos.getX(), pos.getY(), pos.getZ());
-		// 回転情報設定。
-		btQuaternion rot = collisionTr.getRotation();
-		_CollisionTr->SetRotation(rot.getX(), rot.getY(), rot.getZ(), rot.getW());
-		// コリジョンのTransform情報を親に設定。
-		_CollisionModel->transform->SetParent(_CollisionTr.get());
+		_CollisionModel->transform->SetLocalPosition(_collision->GetOffset());
 	}
 }
 

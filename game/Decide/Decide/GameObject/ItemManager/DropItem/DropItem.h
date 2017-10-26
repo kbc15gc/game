@@ -25,12 +25,9 @@ public:
 
 	void Awake()override;
 
-	//ドロップアイテムに使うモデルを読み込みクローンを作成。
-	void Load();
-
 	//ドロップアイテムを作成。
-	//落とすアイテムのInfo、座標、落とす数(武具の場合は設定しても1つになる)。
-	void Create(Item::BaseInfo* info, const Vector3& pos, int dropNum = 1);
+	//落とすアイテムのIDとアイテムコード、座標、落とす数(武具の場合は設定しても1つになる)。
+	void Create(int id,int typeId, const Vector3& pos, int dropNum = 1);
 
 	//更新。
 	void Update()override;
@@ -90,7 +87,7 @@ private:
 	Color				  _ModelColor		    = Color::zero;  //モデルを透明にしていくために使う。
 	CCharacterController* _CCharacterController = nullptr;      //キャラクターコントローラー。															 
 	float				  _Gravity				= 0.0f;			//重力。
-	CharacterLight		  _CharacterLight;						//宝箱のライト。
+	CharacterLight		  _TreasureChestLight;					//宝箱のライト。
 	Vector3				  _TextPos				= Vector3::zero;//テキストを出す場所。
 	float				  _TextFontSize			= 0.0f;			//テキストのサイズ。
 };

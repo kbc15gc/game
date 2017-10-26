@@ -18,17 +18,21 @@ public:
 	// ブレスオブジェクト初期化。
 	// 引数：	ブレスを出すキャラクター。
 	//			ブレス発生位置(ローカル座標、親はキャラクターのTransform)。
-	void Init(EnemyCharacter* obj, const Vector3& emitPosLocal)override;
+	//			ブレスのスピード。
+	//			どの軸で回すか。
+	//			回転軸(キャラクターの正面から何度回すか)。
+	//			乗算カラー。
+	void Init(EnemyCharacter* obj, const Vector3& emitPosLocal,float power, const Vector3& axis,float deg, Color mul = Color::white);
 
 	void Awake()override;
 
 	void Update()override;
 
 	// ブレス発射開始。
-	void BreathStart();
+	void _BreathStartSubClass()override;
 
 	// ブレス発射終了。
-	inline void BreathEnd()override {
+	inline void _BreathEndSubClass()override {
 		_particleEmitter->SetEmitFlg(false);
 		_particleEmitter->AchievedCreateParticleEnd();
 		_particleEmitter->SetActive(false);
@@ -46,4 +50,8 @@ private:
 
 	ParticleEmitter* _particleEmitter = nullptr;
 	ParticleParameter _initParticleParam;
+	Vector3 _velocity;
+	float _rad;		// キャラクターの正面からどれくらい回したブレスか。
+	Vector3 _axis;	// どの軸を中心に回したか。
+	Color _mulColor = Color::white;
 };

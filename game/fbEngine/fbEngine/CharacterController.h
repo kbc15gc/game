@@ -73,6 +73,7 @@ public:
 	{
 		m_isJump = true;
 		m_isOnGround = false;
+		_nowGravitySpeed = 0.0f;
 	}
 	/*!
 	* @brief	ジャンプ中か判定
@@ -186,6 +187,7 @@ private:
 	Vector3					_halfSize;						// コライダーのサイズ(実際のサイズの半分)。
 	RigidBody*				m_rigidBody = nullptr;			//剛体。
 	float					m_gravity = -9.8f;				//重力。
+	float					_nowGravitySpeed;				//現在の重力による移動量。
 	int						m_attributeXZ;					// 衝突した際押し戻される属性(左右方向、設定した属性のコリジョンにキャラクターが押し戻される)。
 	int						m_attributeY;					// 衝突した際押し戻される属性(上下方向、設定した属性のコリジョンにキャラクターが押し戻される)。
 };
