@@ -45,16 +45,15 @@ void Time::_Update()
 	//時差取得
 	double delta = _CalcDeltaTime();
 	_DeltaTime = delta / 1000.0f;
-
+	//取得。
+	_PopFrame = _FrameList.front();
 	//一番古いデータを削除。
 	_FrameList.pop_front();
 	//新しいデータ追加。
 	_FrameList.push_back(delta);
 
 	//FPS算出.
-	double AveDef = (_SumTime + delta) / _SampleNum;
-	if (AveDef != 0)
-		_FPS = 1000.0 / AveDef;
+	_CalcFPS(delta);
 
 	// 共通加算部分の更新
 	_SumTime += delta - *_FrameList.begin();
@@ -83,6 +82,13 @@ double Time::_CalcDeltaTime()
 	//beforeを更新
 	lastTime = nowTime;
 	return delta;
+}
+
+void Time::_CalcFPS(const double& delta)
+{
+	double AveDef = (_SumTime + delta) / _SampleNum;
+	if (AveDef != 0)
+		_FPS = 1000.0 / AveDef;
 }
 
 const double Time::_GetDeltaTime()
