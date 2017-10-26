@@ -243,17 +243,13 @@ PSOutput PSMain(VS_OUTPUT In)
 	diff *= g_blendcolor;
 	color = diff;
 
-	float4 light = 0.0f;
-
-	//デフューズライトを計算。
-	light = DiffuseLight(normal);
-    light.xyz += CalcCharaLight(normal, (float3x3) g_rotationMatrix);
-
-	//スペキュラーライト
-    if (Spec)
+    //大気散乱.
+    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
     {
-        light.xyz += SpecLight(normal, In._World.xyz, In._UV);
+        color.xyz = In._RayColor + color * In._MieColor;
     }
+
+    float4 light = DiffuseLight(normal);
 
 	float3 cascadeColor = 0;
 
@@ -265,20 +261,13 @@ PSOutput PSMain(VS_OUTPUT In)
 		light.xyz *= min(1.0f, shadowPower);
 	}
 
-	//ライトをかける
-	color *= light;
-
-	//大気散乱.
-	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-	{
-		color.xyz = In._RayColor + color * In._MieColor;
-	}
     float3 charaLig = CalcCharaLight(normal, (float3x3) g_rotationMatrix) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
     if (Spec)
     {
+        light.xyz += SpecLight(normal, In._World.xyz, In._UV);
         charaLig.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
     }
-    color.xyz += diff.rgb * charaLig;
+    color.xyz += diff.rgb * charaLig * light.xyz;
     float3 ambient = g_ambientLight.rgb;
 	
     if (g_CharaLightParam.x)
@@ -457,10 +446,10 @@ PSOutput PSTerrain(VS_OUTPUT In)
 
 	color *= light;
 
-	//大気散乱.
-	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-	{
-		color.xyz = In._RayColor + color * In._MieColor;
+    //大気散乱.
+    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+    {
+        color.xyz = In._RayColor + color * In._MieColor;
     }
 
     float3 ambient = g_ambientLight.rgb;

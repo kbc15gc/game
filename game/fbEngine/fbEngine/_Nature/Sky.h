@@ -132,6 +132,7 @@ public:
 	{
 		SetActive(true);
 		_SunPlate->SetActive(true);
+		_MoonPlate->SetActive(true);
 	}
 
 	/**
@@ -177,6 +178,7 @@ private:
 	SkinModel* _SkyModel = nullptr;
 
 	Plate* _SunPlate = nullptr;
+	Plate* _MoonPlate = nullptr;
 
 	/** 大気散乱用パラメータ. */
 	AtmosphericScatteringParamS _AtomosphereParam;
