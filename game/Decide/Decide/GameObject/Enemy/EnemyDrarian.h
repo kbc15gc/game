@@ -14,6 +14,7 @@ private:
 	// ボス(歩行型ドラゴン)のアニメーション番号。
 	enum class AnimationDrarian {
 		//Wait = 0,
+		Attack,
 		Max
 	};
 public:
@@ -44,8 +45,9 @@ private:
 	void _ConfigCharacterController()override;
 
 	// 継承先でアニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
-	void _BuildAnimation()override;
+	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
+	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
+	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;

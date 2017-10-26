@@ -512,7 +512,8 @@ void Transform::SetLocalRotation(const Quaternion & q, bool update)
 		//親のクォータニオン取得
 		Quaternion prot = _Parent->GetRotation();
 		//ローカルと掛ける
-		_Rotation = _LocalRotation * prot;
+		//_Rotation = _LocalRotation * prot;
+		_Rotation = prot * _LocalRotation;
 	}
 	else
 	{

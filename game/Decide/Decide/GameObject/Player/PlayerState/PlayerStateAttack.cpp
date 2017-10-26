@@ -3,6 +3,13 @@
 #include "PlayerStateAttack.h"
 #include "fbEngine\_Object\_Component\_3D\Animation.h"
 #include "../Decide/Decide/AttackCollision.h"
+#include "GameObject\Enemy\EnemyCharacter.h"
+
+namespace
+{
+	//プレイヤーの周り。
+	float Circumference = 6.0f;
+}
 
 PlayerStateAttack::PlayerStateAttack(Player* player) :
 	PlayerState(player)
@@ -33,10 +40,25 @@ void PlayerStateAttack::Update()
 		)
 	{
 		//方向を変える。
-		Dir();
+		//Dir();
 		//コンボ！
 		_Player->_NextAttackAnimNo = (Player::AnimationNo)(_Player->_Anim->GetPlayAnimNo() + 1);
 	}
+
+	//近くのエネミーの方向を向く。
+	if (EnemyCharacter::nearEnemyInfo.length <= Circumference)
+	{
+		_Player->_Rotation->RotationToObject_XZ(*EnemyCharacter::nearEnemyInfo.object);
+	}
+
+	//移動速度
+	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
+	movespeed.Scale(0.7f);
+	//重力の影響を受けるため。
+	movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
+	//キャラクターコントローラー更新
+	_Player->_CharacterController->SetMoveSpeed(movespeed);
+	_Player->_CharacterController->Execute();
 }
 
 void PlayerStateAttack::Enter()
@@ -53,7 +75,6 @@ void PlayerStateAttack::Dir()
 {
 	//移動速度
 	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
-	movespeed.Scale(0.3f);
 
 	//ゲームパッドから取得した方向
 	Vector3 dir = Vector3::zero;
@@ -119,8 +140,4 @@ void PlayerStateAttack::Dir()
 		//回転
 		_Player->_Rotation->RotationToDirection_XZ(vec);
 	}
-
-	//キャラクターコントローラー更新
-	_Player->_CharacterController->SetMoveSpeed(movespeed);
-	_Player->_CharacterController->Execute();
 }

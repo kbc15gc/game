@@ -42,54 +42,217 @@ void AttackCollision::LateUpdate()
 
 void AttackCollision::DetectionCollision() {
 	// 衝突しているコリジョンをすべて取得する。
-	btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
+	vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> hit;
+	int attr = Collision_ID::ENEMY | Collision_ID::BOSS | Collision_ID::PLAYER;
+	fbPhysicsCallback::AllHitsContactResultCallback callback;
+	INSTANCE(PhysicsWorld)->AllHitsContactTest(_Gost,&hit,&callback,attr);
 
-	for (auto itr = _HitCollisions.begin(); itr != _HitCollisions.end();) {
-		bool isHit = false;	// 登録しているコリジョンが現在も衝突しているか。
-		for (int idx = 0; idx < collisions.size(); idx++) {
-			if ((*itr)->getUserPointer()
-				&& static_cast<Collision*>((*itr)->getUserPointer())->gameObject
-				&& collisions[idx]->getUserPointer()
-				&& static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject
-				&& static_cast<Collision*>((*itr)->getUserPointer())->gameObject == static_cast<Collision*>(collisions[idx]->getUserPointer())->gameObject) {
-			
-				// 既に登録されているコリジョンが衝突している。
-				isHit = true;
-
-				// 衝突している間呼び続けるコールバック処理。
-				_CallBackStay((*itr).get());
-				// コールバックを呼んだものは配列から除く。
-				collisions.remove(collisions[idx]);
-				break;
-			}
-			else if (collisions[idx]->getUserIndex() != Collision_ID::PLAYER && 
-				collisions[idx]->getUserIndex() != Collision_ID::ENEMY) {
-				// コールバックを呼ばないコリジョンだった。
-				collisions.remove(collisions[idx]);
-			}
-		}
-
-		if (!isHit) {
-			// 登録されていたコリジョンが衝突していなかった。
-			// 衝突を外れた時に呼び出すコールバック処理。
-			_CallBackExit((*itr).get());
-			//(*itr).reset();	// シェアードポインタの参照カウンタを明示的に下げる(必要？)。
-			itr = _HitCollisions.erase(itr);
-		}
-		else {
-			itr++;
-		}
+	{
+		//btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
+//		int max = static_cast<int>(_hitInfos.size());
+//		for (int num = 0; num < max; ) {
+//			// 登録されているオブジェクト分検索。
+//
+//bool isHit = false;	// 登録しているオブジェクトが現在も衝突しているか。
+//
+//if (_hitInfos[num]->coll->getUserPointer() == nullptr)
+//{
+//	// 登録されていたオブジェクトが削除された。
+//
+//	_hitInfos[num]->object = nullptr;
+//}
+//else {
+//
+//	// フラグ初期化。
+//	_hitInfos[num]->isCallStay = false;
+//
+//	for (int idx = 0; idx < collisions.size(); idx++) {
+//		// 新しく取得した衝突コリジョン分検索。
+//
+//		GameObject* obj = _CollisionObjectToGameObject(collisions[idx]);
+//		if (obj && _hitInfos[num]->object == obj) {
+//			// 登録されているオブジェクトが衝突していた。
+//
+//			if (!_hitInfos[num]->isCallStay) {
+//				// ステイコールバックがまだ呼ばれていない。
+//
+//				// 衝突している間呼び続けるコールバック処理。
+//				_CallBackStay(_hitInfos[num]->object);
+//				_hitInfos[num]->isCallStay = true;
+//			}
+//
+//			// 登録されているものは新しく取得した配列から除く。
+//			collisions.remove(collisions[idx]);
+//			isHit = true;
+//		}
+//		else if (collisions[idx]->getUserIndex() != Collision_ID::PLAYER &&
+//			collisions[idx]->getUserIndex() != Collision_ID::ENEMY
+//		&& collisions[idx]->getUserIndex() != Collision_ID::BOSS) {
+//			// 登録されていないがコールバックを呼ばないコリジョンだった。
+//
+//			collisions.remove(collisions[idx]);
+//		}
+//	}
+//}
+//
+//if (!isHit) {
+//	// 登録されていたオブジェクトが衝突していなかった。
+//
+//	if (_hitInfos[num]->object) {
+//		// 衝突を外れた時に呼び出すコールバック処理。
+//		_CallBackExit(_hitInfos[num]->object);
+//	}
+//
+//	_hitInfos.erase(_hitInfos.begin() + num);
+//
+//	// 要素数を減らす。
+//	max--;
+//}
+//else {
+//	// 次の要素に進む。
+//	num++;
+//}
+//		}
+//
+//
+//		vector<GameObject*> add;
+//		for (int idx = 0; idx < collisions.size(); idx++) {
+//			// 新しく衝突したオブジェクト。
+//
+//			GameObject* obj = _CollisionObjectToGameObject(collisions[idx]);
+//
+//			bool flg = true;
+//			for (auto& a : add) {
+//
+//				if (a == obj) {
+//					// 追加済みオブジェクトと同じものは無視。
+//					flg = false;
+//					break;
+//				}
+//			}
+//
+//			if (flg) {
+//				if (collisions[idx]->getUserPointer()) {
+//					// 衝突した瞬間に呼び出すコールバック処理。
+//					_CallBackEnter(collisions[idx]);
+//
+//					// 衝突リストに追加。
+//					unique_ptr<HitObjectInfo> info(new HitObjectInfo);
+//
+//					info->coll = static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj_shared();
+//
+//					info->object = obj;
+//					_hitInfos.push_back(move(info));
+//					add.push_back(obj);
+//				}
+//
+//			}
+//		}
+//
+//		collisions.clear();
+//		add.clear();
 	}
 
-	for (int idx = 0; idx < collisions.size(); idx++) {
+	{
+		//btAlignedObjectArray<btCollisionObject*> collisions = _Gost->GetPairCollisions();
+		int max = static_cast<int>(_hitInfos.size());
+		for (int num = 0; num < max; ) {
+			// 登録されているオブジェクト分検索。
 
-		if (!_CheckObject(collisions[idx])) {
-			// 衝突をした瞬間に呼び出すコールバック処理。
-			_CallBackEnter(collisions[idx]);
-			// 衝突リストに追加。
-			_HitCollisions.push_back(static_cast<Collision*>(collisions[idx]->getUserPointer())->GetCollisionObj_shared());
-			break;
+			bool isHit = false;	// 登録しているオブジェクトが現在も衝突しているか。
+
+			if (_hitInfos[num]->coll->getUserPointer() == nullptr)
+			{
+				// 登録されていたオブジェクトが削除された。
+
+				_hitInfos[num]->object = nullptr;
+			}
+			else {
+
+				// フラグ初期化。
+				_hitInfos[num]->isCallStay = false;
+
+				int max2 = static_cast<int>(hit.size());
+				for (int idx = 0; idx < max2; idx++) {
+					// 新しく取得した衝突コリジョン分検索。
+
+					GameObject* obj = _CollisionObjectToGameObject(hit[idx]->collision->GetCollisionObj());
+					if (obj && _hitInfos[num]->object == obj) {
+						// 登録されているオブジェクトが衝突していた。
+
+						if (!_hitInfos[num]->isCallStay) {
+							// ステイコールバックがまだ呼ばれていない。
+
+							// 衝突している間呼び続けるコールバック処理。
+							_CallBackStay(_hitInfos[num]->object);
+							_hitInfos[num]->isCallStay = true;
+						}
+
+						// 登録されているものは新しく取得した配列から除く。
+						hit.erase(hit.begin() + idx);
+						max2--;
+						isHit = true;
+					}
+				}
+			}
+
+			if (!isHit) {
+				// 登録されていたオブジェクトが衝突していなかった。
+
+				if (_hitInfos[num]->object) {
+					// 衝突を外れた時に呼び出すコールバック処理。
+					_CallBackExit(_hitInfos[num]->object);
+				}
+
+				_hitInfos.erase(_hitInfos.begin() + num);
+
+				// 要素数を減らす。
+				max--;
+			}
+			else {
+				// 次の要素に進む。
+				num++;
+			}
 		}
+
+
+		vector<GameObject*> add;
+		for (int idx = 0; idx < static_cast<int>(hit.size()); idx++) {
+			// 新しく衝突したオブジェクト。
+
+			GameObject* obj = _CollisionObjectToGameObject(hit[idx]->collision->GetCollisionObj());
+
+			bool flg = true;
+			for (auto& a : add) {
+
+				if (a == obj) {
+					// 追加済みオブジェクトと同じものは無視。
+					flg = false;
+					break;
+				}
+			}
+
+			if (flg) {
+				if (hit[idx]->collision->GetID()) {
+					// 衝突した瞬間に呼び出すコールバック処理。
+					_CallBackEnter(hit[idx]->collision->GetCollisionObj());
+
+					// 衝突リストに追加。
+					unique_ptr<HitObjectInfo> info(new HitObjectInfo);
+
+					info->coll = hit[idx]->collision->GetCollisionObj_shared();
+
+					info->object = obj;
+					_hitInfos.push_back(move(info));
+					add.push_back(obj);
+				}
+
+			}
+		}
+
+		hit.clear();
+		add.clear();
+
 	}
 }
 
@@ -121,20 +284,19 @@ void AttackCollision::_CallBackEnter(btCollisionObject* coll) {
 }
 
 // 衝突している間呼び続けるコールバック処理。
-void AttackCollision::_CallBackStay(btCollisionObject* coll) {
-	GameObject* obj = _CollisionObjectToGameObject(coll);
+void AttackCollision::_CallBackStay(GameObject* obj) {
 	if (obj) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS) {
+			if (obj->GetAttachCollision()->GetID() == Collision_ID::ENEMY || obj->GetAttachCollision()->GetID() == Collision_ID::BOSS) {
 				// 敵と衝突した。
 				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionStay(this);
 			}
 			break;
 		case CollisionMaster::Enemy:
 			// 雑魚敵が生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+			if (obj->GetAttachCollision()->GetID() == Collision_ID::PLAYER) {
 				// プレイヤーと衝突した。
 				static_cast<Player*>(obj)->HitAttackCollisionStay(this);
 			}
@@ -147,20 +309,19 @@ void AttackCollision::_CallBackStay(btCollisionObject* coll) {
 	}
 }
 
-void AttackCollision::_CallBackExit(btCollisionObject* coll) {
-	GameObject* obj = _CollisionObjectToGameObject(coll);
+void AttackCollision::_CallBackExit(GameObject* obj) {
 	if (obj) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS) {
+			if (obj->GetAttachCollision()->GetID() == Collision_ID::ENEMY || obj->GetAttachCollision()->GetID() == Collision_ID::BOSS) {
 				// 敵と衝突した。
 				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionExit(this);
 			}
 			break;
 		case CollisionMaster::Enemy:
 			// 雑魚敵が生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::PLAYER) {
+			if (obj->GetAttachCollision()->GetID() == Collision_ID::PLAYER) {
 				// プレイヤーと衝突した。
 				static_cast<Player*>(obj)->HitAttackCollisionExit(this);
 			}
@@ -171,21 +332,6 @@ void AttackCollision::_CallBackExit(btCollisionObject* coll) {
 			break;
 		}
 	}
-}
-
-bool AttackCollision::_CheckObject(btCollisionObject* coll1) {
-	GameObject* obj = _CollisionObjectToGameObject(coll1);
-	if (obj) {
-		for (auto coll : _HitCollisions) {
-			GameObject* obj2 = _CollisionObjectToGameObject(coll.get());
-			if (obj == obj2) {
-				// すでに衝突しているキャラクターだった。
-
-				return true;
-			}
-		}
-	}
-	return false;
 }
 
 void AttackCollision::Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {

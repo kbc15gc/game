@@ -23,6 +23,10 @@ public:
 	{
 		return GetInstance()->_GetDeltaTime();
 	}
+	static void SetDeltaTime(const double& delta)
+	{
+		GetInstance()->_SetDeltaTime(delta);
+	}
 	//FPS取得
 	static const float& GetFPS()
 	{
@@ -41,8 +45,22 @@ private:
 	void _Update();
 	//
 	double _CalcDeltaTime();
+	//
+	void _CalcFPS(const double& delta);
 	//デルタタイム取得
 	const double _GetDeltaTime();
+	void _SetDeltaTime(const double& delta)
+	{
+		_SumTime -= _FrameList.back();
+		//_SumTime += _PopFrame;
+
+		_DeltaTime = delta;
+		_FrameList.pop_back();
+		_FrameList.push_back(_DeltaTime);
+		_CalcFPS(_DeltaTime + _PopFrame);
+		// 共通加算部分の更新
+		_SumTime += delta;
+	}
 	//FPS取得
 	const float& _GetFPS();
 private:
@@ -58,8 +76,10 @@ private:
 
 	//前回のアップデートと今のアップデートとの時差を格納(ミリ秒単位)
 	double _DeltaTime;
-	//前回の時間格納
-	DWORD  lastTime;
+	//前回の時間。
+	DWORD lastTime;
+	//とりだされた時間を格納。
+	double  _PopFrame;
 
 	//移動平均をする際のサンプル数。
 	int _SampleNum = 20;

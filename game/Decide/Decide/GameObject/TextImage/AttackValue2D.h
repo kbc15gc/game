@@ -14,27 +14,24 @@ public:
 	void Update()override;
 	void LateUpdate()override;
 	//ダメージ量を出す２Dの初期化
+	//ダメージを出すオブジェクトのトランスフォーム
 	// 座標。
 	// ダメージ量。
 	// 表示する時間。
 	// ずらす量。
 	//カラー。
-	void Init(int damagevalue, bool critical, float lifetime = 1.0f, Vector3 offset = Vector3::zero, Color color = Color::red);
+	void Init(Transform* t,int damagevalue, bool critical, float lifetime = 1.0f, Vector3 offset = Vector3::zero, Color color = Color::red);
 private:
 	//攻撃量のテキスト
 	TextObject* _AttackText;
-	//クリティカルテキストテキスト
-	TextObject* _CriticalText;
 	//攻撃量の最大生存時間。
 	float _LifeTime;
 	//攻撃量の現在の時間。
 	float _Time;
-	//攻撃量テキストが作成されているか。
-	bool _CreatAttackValue;
-	//ポジション。
-	Vector3 _Pos;
 	//位置を基準点からの距離で表した値。
 	Vector3 _Offset;
-	//上昇値。
+	//上昇値
 	float _Up;
+	//オブジェクトのトランスフォーム
+	Transform* trans;
 };

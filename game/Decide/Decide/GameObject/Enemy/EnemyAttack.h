@@ -66,6 +66,8 @@ class EnemySingleAttack :public EnemyAttack {
 public:
 	EnemySingleAttack(EnemyCharacter* object);
 	void Entry()override;
+
+	// 戻り値：	攻撃が終了したか。
 	bool Update()override;
 
 	void Exit()override {};
@@ -87,23 +89,20 @@ public:
 	bool Update()override;
 
 	void Exit()override {
-		if (_isBreathStart) {
-			// ブレスが発射されていればブレスオブジェクトは自発的に消滅する。
-			BreathEnd();
-			_isBreathStart = false;
+		if (_breath) {
+			if (_breath->GetIsStart()) {
+				// ブレス発射中に攻撃がキャンセルされた。
+				BreathEnd();
+			}
 		}
 	};
 
-	// ブレス開始。
-	// テンプレート引数：	使用するブレス。
-	// 引数：	ブレスを発射するキャラクター。
-	//			ブレスの発生位置。
-	template<class T>
-	inline void BreathStart(EnemyCharacter* obj, const Vector3& emitPosLocal) {
-		_isBreathStart = true;
-		_breath = INSTANCE(GameObjectManager)->AddNew<T>("breath", 8);
+	// 一回の攻撃に使用するブレスオブジェクト追加。
+	// ブレス攻撃のたびに毎回1から追加する。
+	// 引数：	使用するブレスオブジェクト。
+	inline void BreathStart(BreathObject* obj) {
+		_breath = obj;
 		_breath->SetActive(true);
-		_breath->Init(obj, emitPosLocal);
 		_breath->BreathStart();
 	}
 
@@ -118,5 +117,4 @@ public:
 private:
 	GameObject* _player = nullptr;
 	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。
-	bool _isBreathStart = false;
 };

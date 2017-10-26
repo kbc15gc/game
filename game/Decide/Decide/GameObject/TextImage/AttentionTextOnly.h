@@ -46,13 +46,17 @@ private:
 private:
 	//テキストリスト。
 	vector<TextInfo*>	_TextList;
+
+	//テキストの移動量
+	float				_MoveSpeed = 0.001f;
+
 	//Vector3(1000.0f,250.0f,0.0f),33.0fアイテムの効果が無いテキストの丁度良い感じの設定。
 };
 
 namespace {
 	static Vector3 MoveTypeS[static_cast<int>(AttentionTextOnly::MoveType::Max)] = {
 		{0.0f,0.0f,0.0f},		//移動しない。
-		{ 0.0f,-3.0f,0.0f },	//上。　
-		{ 0.0f,3.0f,0.0f },		//下。
+		{ 0.0f,-1.0f,0.0f },	//上。　
+		{ 0.0f,1.0f,0.0f },		//下。
 	};
 }

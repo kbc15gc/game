@@ -39,8 +39,11 @@ void SphereCollider::Create( const float radius )
 }
 
 void SphereCollider::Resize(float radius) {
-	shape->setImplicitShapeDimensions(btVector3(radius, radius, radius));
-	_halfSize = Vector3(radius, radius, radius);
+	SAFE_DELETE(shape);
+	shape = new btSphereShape(radius);
+	_collision->GetCollisionObj()->setCollisionShape(shape);
+	btVector3 work = shape->getImplicitShapeDimensions();
+	_halfSize = Vector3(work.x(), work.y(), work.z());
 #ifdef _DEBUG
 	RecreateViewModel();
 #endif

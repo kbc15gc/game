@@ -37,8 +37,11 @@ void CCapsuleCollider::Create(float radius, float height)
 }
 
 void CCapsuleCollider::Resize(float radius, float height) {
-	shape->setImplicitShapeDimensions(btVector3(radius, height * 0.5f, radius));
-	_halfSize = Vector3(radius, height * 0.5f + radius, radius);
+	SAFE_DELETE(shape);
+	shape = new btCapsuleShape(radius, height);
+	_collision->GetCollisionObj()->setCollisionShape(shape);
+	btVector3 work = shape->getImplicitShapeDimensions();
+	_halfSize = Vector3(work.x(), work.y() + work.x(), work.z());
 #ifdef _DEBUG
 	RecreateViewModel();
 #endif

@@ -1,5 +1,6 @@
 #pragma once
 #include "EnemyCharacter.h"
+#include "GameObject\Enemy\LaserBreath.h"
 
 
 // 継承クラス。
@@ -13,9 +14,11 @@ public:
 private:
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
-		Move = 0,
+		Wait = 0,
 		SordAttack,
 		Magic,
+		Damage,
+		Move,
 		Max,
 	};
 
@@ -24,13 +27,21 @@ public:
 	~LastBoss();
 
 	void SordAttackEvent();
-	void MagicAttackStart();
-	void MagicAttackEnd();
+	void SordAttackEvent2();
+	void MagicAttackStart1();
+	void MagicAttackEnd1();
+	void MagicAttackStart2();
+	void MagicAttackEnd2();
+	void MagicAttackStart3();
+	void MagicAttackEnd3();
 
 #ifdef _DEBUG
 	void Debug()override;
 #endif // _DEBUG
 
+	inline void SetSaveState(LastBossState state) {
+		_saveState = state;
+	}
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -69,8 +80,9 @@ private:
 	void _BuildStateSubClass()override;
 
 	// アニメーション番号のテーブルを作成。
-	// ※添え字にはこのクラス定義したAnimationType列挙体を使用。
-	void _BuildAnimation()override;
+	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
+	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
+	void _BuildAnimationSubClass(vector<double>& datas)override;
 
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
@@ -81,8 +93,11 @@ private:
 	inline void _DropSubClass()override {
 	}
 
+
 private:
-	State _saveState;
+	LastBossState _saveState;
 	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
 	unique_ptr<EnemyBreathAttack> _magicAttack;
+
+	LaserBreath* _sordAttackLaser = nullptr;
 };

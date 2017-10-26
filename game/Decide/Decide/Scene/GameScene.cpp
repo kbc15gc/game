@@ -42,10 +42,13 @@
 
 #include "GameObject\TextImage\BackWindowAndAttentionText.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
+#include "GameObject\ItemManager\DropItem\DropItem.h"
+#include "GameObject\Enemy\EnemySoldier.h"
 
 ImageObject* g_depth;
 
 //#define _NKMT_
+//#define _NOBO_
 
 namespace
 {
@@ -66,7 +69,7 @@ void GameScene::Start()
 	GameLight* light = INSTANCE(GameObjectManager)->AddNew<GameLight>("GameLight", 8);
 
 	//プレイヤー生成
-	_Player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 1);
+	_Player = INSTANCE(GameObjectManager)->AddNew<Player>("Player", 2);
 
 
 	//プレイヤーカメラ生成
@@ -102,22 +105,31 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	// テスト。
-	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// テスト。
+	//// ラスボス作成。
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
+
+	//テスト。
+	//敵(兵士)作成。
+	EnemySoldier* soldier = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
 	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	vector<BarColor> cl;
+	cl.push_back(BarColor::Red);
+	vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	soldier->SetParamAll(cl, par);
 
 	FOR(i,2)
 	{
 		//歴史チップ
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 1);
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
 		chip->SetChipID((ChipID)i);
 	}
 
@@ -139,6 +151,7 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
+
 #ifdef _NKMT
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
 #endif // _NKMT
@@ -155,10 +168,17 @@ void GameScene::Start()
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
 
+	//死亡BGM
+	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
+	_DeadBGM->Init("Asset/Sound/dead.wav");
+	_DeadBGM->SetVolume(3.0f);
+
 	//再生用BGM
 	_GameBGM = _WorldBGM;
+	
+#ifndef _NOBO_
 	_GameBGM->Play(true);
-
+#endif // !_NOBO_
 	//シャドウマップ有効.
 	_isShadowMap = true;
 	//環境マップ有効.
@@ -201,27 +221,35 @@ void GameScene::Update()
 	
 	//BGM変更したい
 	{
-		//ボス
-		Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
-		float boss_len = boss_dir.Length();
-		//街
-		Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
-		float mati_len = mati_dir.Length();
-		//街
-		if (mati_len < MATI_RADIUS)
+		if (_Player->GetState() == Player::State::Death)
 		{
-			ChangeBGM(BGM::MATI1);
+			ChangeBGM(BGM::DEAD);
 		}
-		//ボス
-		if (boss_len < BOSS_RADIUS)
+		else
 		{
-			ChangeBGM(BGM::BOSS1);
+			//ボス
+			Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
+			float boss_len = boss_dir.Length();
+			//街
+			Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
+			float mati_len = mati_dir.Length();
+			//街
+			if (mati_len < MATI_RADIUS)
+			{
+				ChangeBGM(BGM::MATI1);
+			}
+			//ボス
+			if (boss_len < BOSS_RADIUS)
+			{
+				ChangeBGM(BGM::BOSS1);
+			}
+			//ワールド
+			if (boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
+			{
+				ChangeBGM(BGM::WORLD);
+			}
 		}
-		//ワールド
-		if(boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
-		{
-			ChangeBGM(BGM::WORLD);
-		}
+		
 	}
 
 }
@@ -242,6 +270,9 @@ void GameScene::ChangeBGM(BGM bgm)
 			break;
 		case GameScene::BGM::MATI1:
 			_GameBGM = _MatiBGM;
+			break;
+		case GameScene::BGM::DEAD:
+			_GameBGM = _DeadBGM;
 			break;
 		default:
 			break;

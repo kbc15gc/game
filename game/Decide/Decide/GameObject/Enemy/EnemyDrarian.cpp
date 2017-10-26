@@ -41,7 +41,7 @@ void EnemyDrarian::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(_AnimationData[static_cast<int>(EnemyCharacter::AnimationType::Attack1)].No, 0.2f);
+	_singleAttack->Init(static_cast<int>(AnimationDrarian::Attack), 0.2f);
 
 	// 攻撃処理に使用するパーティクル設定。
 	ParticleParameter param;
@@ -170,16 +170,7 @@ void EnemyDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
 }
 
-void EnemyDrarian::_BuildAnimation() {
-	vector<unique_ptr<AnimationData>> Datas;
-	for (int idx = 0; idx < _MyComponent.Animation->GetNumAnimationSet(); idx++) {
-		// アニメーションセットの番号と再生時間をセットにしたデータを作成。
-		unique_ptr<AnimationData> data(new AnimationData);
-		data->No = idx;
-		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
-							// 配列に追加。
-		Datas.push_back(move(data));
-	}
+void EnemyDrarian::_BuildAnimationSubClass(vector<double>& datas) {
 
 	// アニメーションタイプにデータを関連づけ。
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
@@ -193,12 +184,6 @@ void EnemyDrarian::_BuildAnimation() {
 		//_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationBossDrarian::Dash)].get());
 		//// 吠える。
 		//_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, *Datas[static_cast<int>(AnimationBossDrarian::Barking)].get());
-		//// 攻撃状態(噛みつき)。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationBossDrarian::Attack)].get());
-		//// 攻撃状態(しっぽ)。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Attack2, *Datas[static_cast<int>(AnimationBossDrarian::TailAttackRight)].get());
-		//// 攻撃状態(ブレス)。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Attack3, *Datas[static_cast<int>(AnimationBossDrarian::Breath)].get());
 		//// ダメージ反応。
 		//Datas[static_cast<int>(AnimationBossDrarian::Damage)]->Time = 8.0f / 30.0f;
 		//_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationBossDrarian::Damage)].get());
@@ -214,7 +199,7 @@ void EnemyDrarian::_ConfigAnimationEvent() {
 	// かみつき攻撃。
 	{
 		float eventFrame = 15;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemyCharacter::AnimationType::Attack1), eventFrame, static_cast<AnimationEvent>(&EnemyDrarian::AnimationEvent_Kamituki));
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&EnemyDrarian::AnimationEvent_Kamituki));
 	}
 }
 

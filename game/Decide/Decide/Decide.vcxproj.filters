@@ -319,6 +319,15 @@
     <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp">
       <Filter>GameObject\TextImage</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemyGolem.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LastBossTestScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -652,6 +661,15 @@
     </ClInclude>
     <ClInclude Include="GameObject\TextImage\LevelUpImage.h">
       <Filter>GameObject\TextImage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemyGolem.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LastBossTestScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\EnemySoldier.h">
+      <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

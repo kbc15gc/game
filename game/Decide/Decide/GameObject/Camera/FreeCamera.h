@@ -35,8 +35,10 @@ private:
 
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
-		//プレイヤーの更新を止める。
-		_Player->SetIsStopUpdate(true);
+		//プレイヤーの更新を止める。[
+		if (_Player) {
+			_Player->SetIsStopUpdate(true);
+		}
 	}
 
 	//フリーカメラの回転。

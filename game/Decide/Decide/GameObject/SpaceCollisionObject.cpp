@@ -77,7 +77,7 @@ void SpaceCollisionObject::RegistrationObject()
 
 void SpaceCollisionObject::AddObjectHitSpace(GameObject& object) {
 	Collision* coll = object.GetAttachCollision();
-	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), coll),_attribute) {
+	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), coll,_attribute)) {
 		// Õ“Ë‚µ‚Ä‚¢‚½‚Ì‚Å’Ç‰ÁB
 		_HitCollisions.push_back(coll->GetCollisionObj_shared());
 	}

@@ -24,11 +24,7 @@ void EnemySingleAttack::Entry() {
 };
 
 bool EnemySingleAttack::Update() {
-	if (!_isPlaying) {
-		// 攻撃モーション一度終了。
-		return true;
-	}
-	return false;
+	return !_isPlaying;
 }
 
 // EnemyBreathAttack。
@@ -41,9 +37,5 @@ void EnemyBreathAttack::Entry() {
 }
 
 bool EnemyBreathAttack::Update() {
-	if (!_isPlaying) {
-		// モーション再生終了。
-		return true;
-	}
-	return false;
+	return !_isPlaying;
 }

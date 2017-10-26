@@ -8,6 +8,7 @@
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
+#include "GameObject\Enemy\EnemyCharacter.h"
 
 namespace
 {
@@ -68,6 +69,7 @@ void Player::Awake()
 	_Anim = AddComponent<Animation>();
 	//カプセルコライダー
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
+
 	//キャラクターコントローラー
 	_CharacterController = AddComponent<CCharacterController>();
 	//キャラクターパラメーター
@@ -83,9 +85,10 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.3f;
+	_Radius = 0.2f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
+
 	//スキンモデル作成
 	SkinModelData* modeldata = new SkinModelData();
 	//モデルデータ作成
@@ -107,6 +110,7 @@ void Player::Awake()
 
 	//キャラクターコントローラー初期化
 	_CharacterController->Init(Vector3(0.0f,_Height * 0.5f + _Radius,0.0f), Collision_ID::PLAYER, coll, _Gravity);
+
 	// 以下衝突を取りたい属性(横方向)を指定。
 	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
@@ -251,16 +255,19 @@ void Player::Update()
 		//ステートアップデート
 		_CurrentState->Update();
 	}
+
 	if (_HPBar != nullptr)
 	{
 		//HPバーの更新
 		_HPBar->Update();
 	}
+
 	if (_MPBar != nullptr)
 	{
 		//MPバーの更新
 		_MPBar->Update();
 	}
+
 	if (_PlayerParam)
 	{	
 		//レベルアップするか。
@@ -427,8 +434,11 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		ChangeState(State::Impact);
+		if (_State != State::Stop)
+		{
+			ChangeState(State::Impact);
 
+		}		
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(static_cast<float>(damage));
@@ -444,7 +454,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			c = Color::blue;
 		}
-		attackvalue->Init(damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
+		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
 		attackvalue->transform->SetParent(transform);
 	}
 }
@@ -679,6 +689,10 @@ void Player::Speak()
 			//範囲内かどうか
 			if (npc->GetRadius() >= len)
 			{
+				if (_CharacterController == nullptr)
+				{
+					return;
+				}
 				//地面についていれば話しかけれる
 				if (_CharacterController->IsOnGround())
 				{
@@ -736,12 +750,12 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
 	}
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
 	}
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
@@ -771,19 +785,25 @@ void Player::_DebugPlayer()
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_5)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(2, Item::ItemCodeE::Weapon), transform->GetPosition(), 2);
+		item->Create(0,0, transform->GetPosition(), 2);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_6)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Armor), transform->GetPosition(), 2);
+		item->Create(0,1, transform->GetPosition(), 2);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(INSTANCE(ItemManager)->GetItemInfo(0, Item::ItemCodeE::Item), transform->GetPosition(), 2);
+		item->Create(0,2, transform->GetPosition(), 2);
+	}
+
+	//プレイヤー死亡
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_D))
+	{
+		_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP)))));
 	}
 }
 void Player::_DebugLevel(int lv)

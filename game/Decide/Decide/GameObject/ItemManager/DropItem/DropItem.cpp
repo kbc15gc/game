@@ -10,6 +10,7 @@
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "fbEngine/CharacterController.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
+#include "GameObject\ItemManager\ItemManager.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
@@ -65,21 +66,22 @@ void DropItem::Awake() {
 	//モデル設定。
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR);
+	_Model->SetModelEffect(ModelEffectE::ALPHA);
 
 	//キャラクターライトを設定。
-	_CharacterLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
-	_CharacterLight.SetDiffuseLightDirection(1, Vector3(0.0f, 1.0f, 0.0f));
-	_CharacterLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 1.0f));
-	_CharacterLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(1, Vector3(0.0f, 1.0f, 0.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
 
-	_CharacterLight.SetDiffuseLightColor(0, Vector4(0.1f, 0.1f, 0.1f, 5.0f));
-	_CharacterLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-	_CharacterLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-	_CharacterLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightColor(0, Vector4(0.1f, 0.1f, 0.1f, 5.0f));
+	_TreasureChestLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	_TreasureChestLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
-	_CharacterLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+	_TreasureChestLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 
-	_Model->SetCharacterLight(&_CharacterLight);
+	_Model->SetCharacterLight(&_TreasureChestLight);
 
 	//初期座標。
 	_DropPos = Vector3(0.0f, 0.0f, 0.0f);
@@ -109,13 +111,20 @@ void DropItem::Awake() {
 	_CCharacterController->AddAttributeY(Collision_ID::GROUND);	//地面コリジョンを追加。
 	
 	_CCharacterController->SetGravity(_Gravity);
+
+	//テキストを出す位置。
+	_TextPos = Vector3(600.0f, 260.0f, 0.0f);
+
+	//テキストサイズ。
+	_TextFontSize = 33.0f;
 }
 
 //ドロップアイテムを作成。
-void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
+void DropItem::Create(int id, int typeId, const Vector3& pos, int dropNum) {
 
+	_DropItemInfo = INSTANCE(ItemManager)->GetItemInfo(id, static_cast<Item::ItemCodeE>(typeId));
 	//アイテムの場合。
-	if (info->TypeID == Item::ItemCodeE::Item) {
+	if (_DropItemInfo->TypeID == Item::ItemCodeE::Item) {
 		//アイテムの場合は指定された数分落とす。
 		_DropNum = dropNum;
 	}
@@ -123,10 +132,8 @@ void DropItem::Create(Item::BaseInfo* info, const Vector3& pos, int dropNum) {
 	//武具の場合。
 	{
 		//武具は一つしか落ちない。
-		_DropEquipment = HoldItemFactory::CreateItem(static_cast<Item::BaseInfo*>(info), true);
+		_DropEquipment = HoldItemFactory::CreateItem(_DropItemInfo, true);
 	}
-
-	SetInfo(info);
 
 	//落下場所を設定。
 	_DropPos = pos;
@@ -154,14 +161,14 @@ void DropItem::Update() {
 	
 	float deltaTime = Time::DeltaTime();
 
-	Vector3 moveSpeed=Vector3::zero;
+	Vector3 moveSpeed = Vector3::zero;
 	moveSpeed.y = _CCharacterController->GetMoveSpeed().y;
 
 	//出現時間に加算。
 	_TotalAppearTime += deltaTime;
 
 	//モデルを段々透明にする。
-	_ModelColor.a -= 0.1f*deltaTime;
+	_ModelColor.a -= deltaTime * 0.1f;
 	_Model->SetAllBlend(_ModelColor);
 	
 	//プレイヤーとの距離を計算。
@@ -265,11 +272,6 @@ void DropItem::_Release()
 		INSTANCE(GameObjectManager)->AddRemoveList(_RareDropSE);
 	}
 
-	_CCharacterController = nullptr;
-	_RareDropPE = nullptr;
-	_RareDropSE = nullptr;
-	_DropSE = nullptr;
-
 	if (this) {
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
@@ -278,26 +280,27 @@ void DropItem::_Release()
 //flagを見て取得成功か、失敗の適した文字列を決める。
 void DropItem::_SelectText(bool flag)
 {
-	wchar_t Text[256];
-	char	Name[256];
+	wchar_t WText[256];
+	char	CText[256];
 
-	//アイテムの名前をコピー。
-	strcpy(Name,_DropItemInfo->Name);
+	
 	if (flag == true) {
+		//アイテムの名前をコピー。
+		strcpy(CText, _DropItemInfo->Name);
 		//取得成功の文字列選択。
-		strcat(Name, "を入手しました。");
+		strcat(CText, "を入手しました。");
 	}
 	else
 	{
 		//取得失敗の文字列選択。
-		strcat(Name, "を入手できませんでした。");
+		strcpy(CText, "アイテムを入手できませんでした。");
 	}
 
 	//chatrからwchra_tに変換。
-	mbstowcs(Text, Name, sizeof(Name));
+	mbstowcs(WText, CText, sizeof(CText));
 
 	//テキストに設定。
-	_SetText(Text, flag);
+	_SetText(WText, flag);
 }
 
 //AttentionTextに文字列を設定。
@@ -307,8 +310,8 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 		//AttentionText作成。
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
 			string,
-			Vector3(600.0f, 260.0f, 0.0f),
-			33.0f,
+			_TextPos,
+			_TextFontSize,
 			Color::red,
 			AttentionTextOnly::MoveType::Up
 		);
@@ -318,8 +321,8 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 		//AttentionText作成。
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
 			string,
-			Vector3(600.0f, 260.0f, 0.0f),
-			33.0f,
+			_TextPos,
+			_TextFontSize,
 			Color::white,
 			AttentionTextOnly::MoveType::Down
 		);

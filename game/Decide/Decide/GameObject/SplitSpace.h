@@ -1,14 +1,20 @@
 #pragma once
 
 #include "fbEngine\fbstdafx.h"
+#include "GameObject\Component\ObjectSpawn.h"
 
 class SpaceCollisionObject;
 
 // 空間を表すバウンディングボックスを生成するクラス。
 class SplitSpace :public GameObject{
 public:
-	SplitSpace(const char* name):GameObject(name) {};
-	~SplitSpace() {};
+	SplitSpace(const char* name):GameObject(name) {
+		Spawner::_splitSpace = this;
+	};
+	~SplitSpace() {
+		_ReleaseSpaceCollisions();
+		Spawner::_splitSpace = nullptr;
+	};
 
 	void Awake()override;
 	void Update()override;
@@ -58,6 +64,7 @@ private:
 	// プレイヤーと衝突した空間をもとにアクティブ空間を変更。
 	void ChangeActivateSpace(SpaceCollisionObject* Obj);
 
+	void _ReleaseSpaceCollisions();
 private:
 	Vector3 _unSplitSpaceSize;	// 分割前の空間サイズ。
 	Vector3 _splitSpaceSize;	// 分割後のボックス一つ当たりの空間サイズ。

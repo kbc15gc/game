@@ -11,6 +11,7 @@
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "GameObject\Enemy\EnemyAttack.h"
 #include "GameObject\Enemy\LastBossMagic.h"
+#include "GameObject\Enemy\LaserBreath.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 
@@ -31,15 +32,61 @@ void LastBoss::SordAttackEvent() {
 	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
 	attack->RemoveParent();
 
+	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,Color(5.0f,0.0f,0.0f,1.0f));
+	_sordAttackLaser->BreathStart();
+
+	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 4.0f), 10.0f, transform->GetRight(), -90.0f, Color(5.0f, 0.0f, 0.0f, 1.0f));
+	_sordAttackLaser->BreathStart();
+
+	_sordAttackLaser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	_sordAttackLaser->Init(this, Vector3(0.0f, -0.5f, 5.0f), 10.0f, transform->GetRight(), -90.0f, Color(5.0f, 0.0f, 0.0f, 1.0f));
+	_sordAttackLaser->BreathStart();
+
+
 	// 攻撃音再生。
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
-void LastBoss::MagicAttackStart() {
-	_magicAttack->BreathStart<LastBossMagic>(this,Vector3::zero);
+void LastBoss::SordAttackEvent2() {
+	_sordAttackLaser->BreathEnd();
 }
 
-void LastBoss::MagicAttackEnd() {
+void LastBoss::MagicAttackStart1() {
+	LastBossMagic* breath = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(20.0f));
+	breath->Init(this, Vector3(-0.5f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+
+	_magicAttack->BreathStart(breath);
+}
+
+void LastBoss::MagicAttackEnd1() {
+	_magicAttack->BreathEnd();
+}
+
+void LastBoss::MagicAttackStart2() {
+	LastBossMagic* breath = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(-20.0f));
+	breath->Init(this, Vector3(-0.5f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+
+	_magicAttack->BreathStart(breath);
+}
+
+void LastBoss::MagicAttackEnd2() {
+	_magicAttack->BreathEnd();
+}
+
+void LastBoss::MagicAttackStart3() {
+	LastBossMagic* breath = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	breath->Init(this, Vector3(-0.5f, 0.0f, 5.0f), (transform->GetForward() * 15.0f));
+
+	_magicAttack->BreathStart(breath);
+}
+
+void LastBoss::MagicAttackEnd3() {
 	_magicAttack->BreathEnd();
 }
 
@@ -68,19 +115,23 @@ void LastBoss::_StartSubClass() {
 	// 歩行速度設定。
 	_walkSpeed = 5.0f;
 
+	// 何回に一回くらい怯むか設定。
+	_damageMotionRandNum = 1;
+
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
 	_sordAttack.reset(new EnemySingleAttack(this));
 	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
+	//_sordAttack
 	_magicAttack.reset(new EnemyBreathAttack(this));
 	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	//_initState = static_cast<State>(LastBossState::LastBossMagician);
-	_initState = State::Speak;
+	_initState = static_cast<State>(LastBossState::LastBossMagician);
+	//_initState = State::Speak;
 	_ChangeState(_initState);
 }
 
@@ -169,6 +220,12 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 		// 魔術師ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossMagician));
 	}
+	else if (EndStateType == EnemyCharacter::State::Damage) {
+		// ダメージステート終了。
+
+		// 一瞬前のステートに移行。
+		_ChangeState(static_cast<EnemyCharacter::State>(_saveState));
+	}
 }
 
 void LastBoss::_ConfigCollision() {
@@ -220,37 +277,26 @@ void LastBoss::_BuildStateSubClass() {
 	_MyState.push_back(unique_ptr<LastBossDownState>(new LastBossDownState(this)));
 }
 
-void LastBoss::_BuildAnimation() {
-	vector<unique_ptr<AnimationData>> Datas;
-	for (int idx = 0; idx < _MyComponent.Animation->GetNumAnimationSet(); idx++) {
-		// アニメーションセットの番号と再生時間をセットにしたデータを作成。
-		unique_ptr<AnimationData> data(new AnimationData);
-		data->No = idx;
-		data->Time = -1.0f;	// すべて1秒以上のアニメーションなので、時間は設定しない。
-							// 配列に追加。
-		Datas.push_back(move(data));
-	}
+void LastBoss::_BuildAnimationSubClass(vector<double>& datas) {
 
 	// アニメーションタイプにデータを関連づけ。
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationLastBoss::Wait));
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
-		 //走行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationLastBoss::Move));
+		//走行状態。
 		 //※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, *Datas[static_cast<int>(AnimationLastBoss::Move)].get());
-		//// 攻撃状態。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Attack1, *Datas[static_cast<int>(AnimationProt::Attack)].get());
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationLastBoss::Move));
 	//	// 落下状態。
 	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
-	//	// ダメージ状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, *Datas[static_cast<int>(AnimationProt::Damage)].get());
-	//	// 死亡状態。
-	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Death, *Datas[static_cast<int>(AnimationProt::Death)].get());
+		// ダメージ状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationLastBoss::Damage));
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationLastBoss::Damage));
 	}
 }
 
@@ -262,14 +308,29 @@ void LastBoss::_ConfigAnimationEvent() {
 	{
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent));
+
+		eventFrame += 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
+
 	}
 
 	// 魔法攻撃。
 	{
-		eventFrame = 2.3f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart));
-		eventFrame = 2.4f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd));
+		eventFrame = 2.01f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart1));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd1));
+
+		eventFrame += 0.2f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart2));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd2));
+		
+		eventFrame += 0.2f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart3));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackEnd3));
+
 	}
 }
 

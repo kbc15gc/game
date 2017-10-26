@@ -9,38 +9,39 @@ void LastBossMagic::Awake() {
 	// 攻撃処理に使用するパーティクル設定。
 	_initParticleParam.Init();
 	_initParticleParam.texturePath = "MurasakiHonoo.png";
-	//_initParticleParam.alphaBlendMode = 0;
 	_initParticleParam.alphaBlendMode = 1;
 	_initParticleParam.addVelocityRandomMargih = Vector3(0.5f,0.5f,0.5f);
-	//_initParticleParam.brightness = 4.0f;
-	_initParticleParam.brightness = 0.7f;
+	_initParticleParam.brightness = 0.6f;
 	_initParticleParam.fadeTime = 0.2f;
 	_initParticleParam.gravity = 0.0f;
 	//_initParticleParam.initAlpha = 0.7f;
-	_initParticleParam.initAlpha = 0.7f;
+	_initParticleParam.initAlpha = 1.0f;
+
 	_initParticleParam.initPositionRandomMargin = Vector3(0.4f, 0.4f, 0.4f);
+	//_initParticleParam.initPositionRandomMargin = Vector3(0.8f, 0.8f, 0.4f);
 	_initParticleParam.initVelocity = Vector3::zero;
 	_initParticleParam.initVelocityVelocityRandomMargin = Vector3(0.02f, 0.02f, 0.02f);
 	_initParticleParam.intervalTime = 0.007f;
 	_initParticleParam.isBillboard = true;
 	_initParticleParam.isFade = true;
-	_initParticleParam.life =0.1f;
+	_initParticleParam.life =0.2f;
 	_initParticleParam.size = Vector2(0.5f, 0.5f);
-	//_initParticleParam.mulColor = Color(1.5f, 1.0f, 1.5f, 1.0f);
-	_initParticleParam.mulColor = Color(1.2f,1.0f,1.2f,1.0f);
+	//_initParticleParam.size = Vector2(1.0f, 1.0f);
+	_initParticleParam.mulColor = Color(1.3f,1.0f,1.3f,1.0f);
 	p->Init(_initParticleParam);
 	p->SetEmitFlg(false);
 
 	_particleEmitter = p;
 }
 
-void LastBossMagic::Init(EnemyCharacter* obj, const Vector3& emitPosLocal) {
-	BreathObject::Init(obj, emitPosLocal);
+void LastBossMagic::Init(EnemyCharacter* obj, const Vector3& emitPosLocal, const Vector3& speed) {
+	BreathObject::Init(obj);
 	_initEmitPos = emitPosLocal;
+	_speed = speed;
 }
 
 void LastBossMagic::Update() {
-	_particleEmitter->transform->SetPosition(_particleEmitter->transform->GetPosition() + (_direction * 5.0f * Time::DeltaTime()));
+	_particleEmitter->transform->SetPosition(_particleEmitter->transform->GetPosition() + (_speed * Time::DeltaTime()));
 
 	if (_timeCounter >= _interval) {
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
@@ -50,7 +51,7 @@ void LastBossMagic::Update() {
 	}
 }
 
-void LastBossMagic::BreathStart() {
+void LastBossMagic::_BreathStartSubClass() {
 	_particleEmitter->transform->SetParent(_enemyObject->transform);
 	_particleEmitter->transform->SetLocalPosition(_initEmitPos);
 	_particleEmitter->transform->SetParent(nullptr);
@@ -62,8 +63,8 @@ void LastBossMagic::BreathStart() {
 	_particleEmitter->SetEmitFlg(true);
 
 	//攻撃コリジョン作成。
-	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(0.0f, 0.0f, 0.0f), -1.0f, _particleEmitter->transform);
-	attack->RemoveParent();
+	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, -0.9f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.8f), -1.0f, _particleEmitter->transform,true);
+	//attack->RemoveParent();
 	_attack.push_back(attack);
 
 	_timeCounter = 0.0f;

@@ -1,15 +1,14 @@
 #pragma once
 #include "fbEngine\_Object\_Component\Component.h"
-#include "GameObject\SplitSpace.h"
+
+class SplitSpace;
+
 
 // オブジェクト発生装置。
 // 登録したGameObjectを一旦非アクティブにし、指定したタイミングでアクティブ化させる。
 class Spawner : public GameObject {
 public:
 	Spawner(char* name) : GameObject(name) {
-		if (_splitSpace == nullptr) {
-			_splitSpace = static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace"));
-		}
 	};
 	~Spawner() {};
 
@@ -47,7 +46,7 @@ private:
 	float _waitTime = 0.0f;	// 待ち時間。
 	float _timeCounter = 0.0f;	// カウンター。
 	bool _isRemoveComponent = false;	// このクラスのインスタンスを保持しているコンポーネントが削除されたか。
-private:
+public:
 	static SplitSpace* _splitSpace;	// 空間分割(復活したエネミーを登録するために保持)。
 };
 
