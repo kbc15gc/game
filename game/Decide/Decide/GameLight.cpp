@@ -16,7 +16,7 @@ void GameLight::Awake()
 	Dl[3]->SetEulerAngles(Vector3(90, 0, 0));	//‰º
 
 	Dl[0]->SetColor(Color(0.5f, 0.5f, 0.5f, 50.0f));	//‰œ
-	Dl[1]->SetColor(Color(0.1f, 0.1f, 0.1f, 5.0f));	//‰E
+	Dl[1]->SetColor(Color(0.5f, 0.5f, 0.5f, 50.0f));	//‰E
 	Dl[2]->SetColor(Color(0.1f, 0.1f, 0.1f, 5.0f));	//¶
 	Dl[3]->SetColor(Color(0.1f, 0.1f, 0.1f, 5.0f));	//‰º
 	FOR(i, num)
