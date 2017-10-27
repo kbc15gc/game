@@ -214,13 +214,17 @@ public class CSVExportFunction : Editor
             string quaternion = QuaternionToString(child.rotation);
             string sca = Vector3ToString(child.lossyScale);
 
-            string item = Convert.ToString(e._Item);
-            string armor = Convert.ToString(e._Armor);
-            string weapon = Convert.ToString(e._Weapon);
+            string[] item = new string[5];
+            string[] armor = new string[5];
+            string[] weapon = new string[5];
+            for (int i = 0; i < 5; i++)
+            {
+                item[i] = Convert.ToString(e._Item[i]);
+                armor[i] = Convert.ToString(e._Armor[i]);
+                weapon[i] = Convert.ToString(e._Weapon[i]);
+            }
 
-            //
-            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14},{15},{16},{17}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca, item, armor, weapon);
-
+            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14},{15}/{16}/{17}/{18}/{19},{20}/{21}/{22}/{23}/{24},{25}/{26}/{27}/{28}/{29}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca, item[0], item[1], item[2], item[3], item[4], armor[0], armor[1], armor[2], armor[3], armor[4], weapon[0], weapon[1], weapon[2], weapon[3], weapon[4]);
 
             //列書き出し
             sw.WriteLine(line);

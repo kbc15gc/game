@@ -162,7 +162,10 @@ public:
 	static const Vector3 axisZ;
 	static const Vector3 one;
 public:
-	operator D3DXVECTOR3() { return static_cast<D3DXVECTOR3>(*this); }
+	operator D3DXVECTOR3() 
+	{
+		return D3DXVECTOR3(x, y, z);
+	}
 	operator LPVOID() { return static_cast<LPVOID>(this); }
 	
 	Vector3() 

@@ -92,7 +92,7 @@ void EnemyManager::CreateEnemy() {
 			// ドロップ設定。
 			enemy->SetDropEXP(info->InfoData->exp);
 			enemy->SetDropMoney(info->InfoData->money);
-			enemy->SetItemType(info->InfoData->id);
+			enemy->SetItem(info->InfoData->item, info->InfoData->armor, info->InfoData->weapon);
 		}
 		else {
 			// 生成失敗。
@@ -153,6 +153,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetParamAll(Color,enemy->InfoData->param);
 			enemy->Object->SetDropEXP(enemy->InfoData->exp);
 			enemy->Object->SetDropMoney(enemy->InfoData->money);
+			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
 			return;
 		}
 	}

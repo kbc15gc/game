@@ -434,8 +434,11 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		ChangeState(State::Impact);
+		if (_State != State::Stop)
+		{
+			ChangeState(State::Impact);
 
+		}		
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(static_cast<float>(damage));

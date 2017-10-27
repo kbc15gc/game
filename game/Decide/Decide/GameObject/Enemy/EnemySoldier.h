@@ -60,14 +60,19 @@ private:
 	void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
+		//アイテムID（アイテム・防具・武器）。
 		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
 		{
-			//落とすアイテムかをチェック。
-			if (_Type[idx] != -1)
+			//どの配列のやつか。
+			for (int i = 0; i < 5; i++)
 			{
-				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-				//落とすアイテムのidとコードを指定。
-				item->Create(_Type[idx], idx, transform->GetPosition(), 2);
+				//落とすアイテムかをチェック。
+				if (_Type[idx][i] != -1)
+				{
+					DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+					//落とすアイテムのidとコードを指定。
+					item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
+				}
 			}
 		}
 	}

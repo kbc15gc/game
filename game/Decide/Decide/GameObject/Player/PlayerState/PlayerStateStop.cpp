@@ -20,7 +20,7 @@ void PlayerStateStop::Update()
 {
 	//ˆÚ“®‘¬“x
 	Vector3 movespeed = Vector3::zero;
-	movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
+	//movespeed.y = _Player->GetCharaCon().GetMoveSpeed().y;
 
 	_Player->GetCharaCon().SetMoveSpeed(movespeed);
 	_Player->GetCharaCon().Execute();

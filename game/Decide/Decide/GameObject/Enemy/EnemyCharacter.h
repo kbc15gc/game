@@ -357,10 +357,15 @@ public:
 	}
 
 	// 落とすアイテムの種類を設定。
-	inline void SetItemType(int* type) {
-		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
+
+	//@todo for debug
+	//マジックナンバーのため後で治してね。
+	inline void SetItem(int* item, int* armor, int* weapon) {
+		for (int idx = 0; idx < 5; idx++)
 		{
-			_Type[idx] = type[idx];
+			_Type[static_cast<int>(Item::ItemCodeE::Item)][idx] = item[idx];
+			_Type[static_cast<int>(Item::ItemCodeE::Armor)][idx] = armor[idx];
+			_Type[static_cast<int>(Item::ItemCodeE::Weapon)][idx] = weapon[idx];
 		}
 	}
 
@@ -605,7 +610,7 @@ protected:
 
 	EnemyAttack* _nowAttack = nullptr;
 
-	int _Type[static_cast<int>(Item::ItemCodeE::Max)];//落とすアイテムのID。
+	int _Type[static_cast<int>(Item::ItemCodeE::Max)][5];//落とすアイテムのID。
 
 private:
 	int _dropExp;	// 落とす経験値。

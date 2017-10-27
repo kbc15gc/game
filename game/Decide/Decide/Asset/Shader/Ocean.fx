@@ -159,17 +159,22 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 	//出力カラー.
 	float4 OutColor = defColor;
 
-	{
-		//ワールド空間での視線ベクトル.
-		float3 worldViewVec = In.WorldPos.xyz - g_cameraPos.xyz;
-		float3 vReflect = reflect(worldViewVec, normal);
-		//環境マップのカラー.
-		float4 EnvironmentColor = texCUBE(g_EnvironmentMapSampler, vReflect);
-		
-		float R = 0.5f;
-		OutColor.xyz = lerp(EnvironmentColor.xyz, defColor.xyz, R);
 
-	}
+    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+    {
+        OutColor.xyz = In._RayColor + OutColor * In._MieColor;
+    }
+
+    {
+		//ワールド空間での視線ベクトル.
+        float3 worldViewVec = In.WorldPos.xyz - g_cameraPos.xyz;
+        float3 vReflect = reflect(worldViewVec, normal);
+		//環境マップのカラー.
+        float4 EnvironmentColor = texCUBE(g_EnvironmentMapSampler, vReflect);
+		
+        float R = 0.5f;
+        OutColor.xyz = lerp(EnvironmentColor.xyz, defColor.xyz, R);
+    }
 
 	float4 LightColor = DiffuseLight(normal);
 
@@ -177,11 +182,6 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 	LightColor.xyz += SpecCalc(normal, In.WorldPos.xyz);
 
 	OutColor *= LightColor;
-
-    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-    {
-        OutColor.xyz = In._RayColor + OutColor * In._MieColor;
-    }
 
 	//環境光.
 	OutColor.xyz += g_ambientLight.xyz * defColor.xyz;
