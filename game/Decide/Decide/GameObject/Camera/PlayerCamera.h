@@ -11,8 +11,8 @@ public:
 	//コンストラクタ。
 	PlayerCamera(const char* name) :
 		GameCamera(name),
-		_Spring(2.0f),
-		_Damping(1.0f)
+		_Spring(20.0f),
+		_Damping(8.0f)
 	{
 	}
 	~PlayerCamera();
@@ -69,8 +69,6 @@ private:
 	SphereCollider* _Sphere;
 	//プレイヤーへ向かうベクトル
 	D3DXVECTOR3 _ToPlayerDir;
-	//カメラへのベクトル。
-	D3DXVECTOR3 _ToCamera;
 	//距離
 	float _Dist;
 	//当たり判定の半径
