@@ -356,6 +356,9 @@ public:
 	}
 
 	// 落とすアイテムの種類を設定。
+
+	//@todo for debug
+	//マジックナンバーのため後で治してね。
 	inline void SetItem(int* item, int* armor, int* weapon) {
 		for (int idx = 0; idx < 5; idx++)
 		{
