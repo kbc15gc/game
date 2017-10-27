@@ -252,10 +252,17 @@ void SkinModel::DrawMeshContainer(
 		float isCharaLight = 0;
 		if (_CharaLight)
 		{
-			_Effect->SetValue("g_CharaLight", _CharaLight, sizeof(CharacterLight));
+			CharacterLight cl = *_CharaLight;
+			for (int i = 0; i < cl.LIGHT_NUM; i++)
+			{
+				Vector4 dir4 = cl.GetDiffuseLightDirection(i);
+				Vector3 dir = Vector3(dir4.x, dir4.y, dir4.z);
+				dir.Transform(transform->GetRotateMatrix());
+				cl.SetDiffuseLightDirection(i, dir);
+			}
+			_Effect->SetValue("g_CharaLight", &cl, sizeof(CharacterLight));
 			isCharaLight = 1;
 		}
-
 		_Effect->SetVector("g_CharaLightParam", &D3DXVECTOR4(isCharaLight, 0, 0, 0));
 
 		//カメラのポジションセット(スペキュラライト用)

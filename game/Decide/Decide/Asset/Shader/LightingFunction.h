@@ -136,14 +136,14 @@ float4 DiffuseLight( float3 normal)
 /**
 * キャラクターライトを計算.
 */
-float4 CalcCharaLight(float3 normal, float3x3 rotMatrix)
+float3 CalcCharaLight(float3 normal)
 {
-	float4 color = 0.0f;
+	float3 color = 0.0f;
 	if (g_CharaLightParam.x)
 	{
 		for (int i = 0; i < g_CharaLight.LightCount; i++)
 		{
-			float3 dir = normalize(mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix));
+			float3 dir = g_CharaLight.DiffuseDir[i].xyz;
 			color.xyz += max(0.0f, -dot(normal, dir)) * g_CharaLight.DiffuseColor[i].xyz;
 		}
 	}
@@ -188,7 +188,7 @@ float3 SpecLight(float3 normal, float3 worldPos, float2 uv)
 /*!
 *@brief	スペキュラライトを計算。
 */
-float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv,float3x3 rotMatrix)
+float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv)
 {
 	float3 spec = 0.0f;
 	float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
@@ -196,7 +196,7 @@ float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv,float3x3 rot
 	for (int i = 0; i < g_CharaLight.LightCount; i++) {
 		//スペキュラ成分を計算する。
 		//反射ベクトルを計算。
-		float3 L = normalize(-mul(g_CharaLight.DiffuseDir[i].xyz, rotMatrix));
+		float3 L = -g_CharaLight.DiffuseDir[i].xyz;
 		spec += g_CharaLight.DiffuseColor[i] * pow(max(0.0f, dot(L, R)), 2) * g_CharaLight.DiffuseColor[i].w;	//スペキュラ強度。
 	}
 	//spec += g_ambientLight.xyz * pow(max(0.0f, dot(normal, R)), 2) * 10.0f;	//スペキュラ強度。
