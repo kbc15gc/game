@@ -211,7 +211,7 @@ const Vector3& CCharacterController::Execute()
 					m_moveSpeed.y = 0.0f;	// 地面に当たったので移動量を0にする。
 					m_isJump = false;
 					m_isOnGround = true;
-					_nowGravitySpeed = 0.0f;
+					_nowGravitySpeed = 0.0f;	// 地面に当たっているので重力によるスピードを無効にする。
 					nextPosTmp.y = callback.hitPos.y;	// 衝突点は足元なので、中心位置まで加算する。
 				}
 			}

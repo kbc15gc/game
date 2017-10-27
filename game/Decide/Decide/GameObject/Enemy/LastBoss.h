@@ -2,6 +2,7 @@
 #include "EnemyCharacter.h"
 #include "GameObject\Enemy\LaserBreath.h"
 
+class LastBossMagic;
 
 // 継承クラス。
 // ボスエネミー(ラスボス)。
@@ -29,11 +30,11 @@ public:
 	void SordAttackEvent();
 	void SordAttackEvent2();
 	void MagicAttackStart1();
-	void MagicAttackEnd1();
+	void MagicAttackShot1();
 	void MagicAttackStart2();
-	void MagicAttackEnd2();
+	void MagicAttackShot2();
 	void MagicAttackStart3();
-	void MagicAttackEnd3();
+	void MagicAttackShot3();
 
 #ifdef _DEBUG
 	void Debug()override;
@@ -99,5 +100,11 @@ private:
 	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
 	unique_ptr<EnemyBreathAttack> _magicAttack;
 
-	LaserBreath* _sordAttackLaser = nullptr;
+	LastBossMagic* _magicFire1 = nullptr;
+	LastBossMagic* _magicFire2 = nullptr;
+	LastBossMagic* _magicFire3 = nullptr;
+
+	LaserBreath* _sordAttackLaser0 = nullptr;
+	LaserBreath* _sordAttackLaser1 = nullptr;
+	LaserBreath* _sordAttackLaser2 = nullptr;
 };

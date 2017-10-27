@@ -10,44 +10,108 @@ void LastBossMagic::Awake() {
 	_initParticleParam.Init();
 	_initParticleParam.texturePath = "MurasakiHonoo.png";
 	_initParticleParam.alphaBlendMode = 1;
-	_initParticleParam.addVelocityRandomMargih = Vector3(0.5f,0.5f,0.5f);
-	_initParticleParam.brightness = 0.6f;
+	_initParticleParam.addVelocityRandomMargih = Vector3(0.4f,0.8f,0.4f);
+	_initParticleParam.brightness = 1.1f;
 	_initParticleParam.fadeTime = 0.2f;
 	_initParticleParam.gravity = 0.0f;
 	//_initParticleParam.initAlpha = 0.7f;
 	_initParticleParam.initAlpha = 1.0f;
 
-	_initParticleParam.initPositionRandomMargin = Vector3(0.4f, 0.4f, 0.4f);
+	_initParticleParam.initPositionRandomMargin = Vector3(0.3f, 0.3f, 0.4f);
 	//_initParticleParam.initPositionRandomMargin = Vector3(0.8f, 0.8f, 0.4f);
-	_initParticleParam.initVelocity = Vector3::zero;
-	_initParticleParam.initVelocityVelocityRandomMargin = Vector3(0.02f, 0.02f, 0.02f);
-	_initParticleParam.intervalTime = 0.007f;
+	_initParticleParam.initVelocity = /*Vector3::back*/Vector3::up * 3.0f;
+	_initParticleParam.initVelocityVelocityRandomMargin = Vector3(0.0f, 0.0f, 0.0f);
+	_initParticleParam.intervalTime = 0.008f;
 	_initParticleParam.isBillboard = true;
 	_initParticleParam.isFade = true;
-	_initParticleParam.life =0.2f;
+	_initParticleParam.life =0.1f;
 	_initParticleParam.size = Vector2(0.5f, 0.5f);
 	//_initParticleParam.size = Vector2(1.0f, 1.0f);
 	_initParticleParam.mulColor = Color(1.3f,1.0f,1.3f,1.0f);
+	_initParticleParam.isParent = true;
 	p->Init(_initParticleParam);
 	p->SetEmitFlg(false);
 
 	_particleEmitter = p;
 }
 
-void LastBossMagic::Init(EnemyCharacter* obj, const Vector3& emitPosLocal, const Vector3& speed) {
-	BreathObject::Init(obj);
+void LastBossMagic::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, const Vector3& speed) {
+	BreathObject::Create(obj);
 	_initEmitPos = emitPosLocal;
 	_speed = speed;
 }
 
 void LastBossMagic::Update() {
-	_particleEmitter->transform->SetPosition(_particleEmitter->transform->GetPosition() + (_speed * Time::DeltaTime()));
+	if (_isShot) {
+		if (_attack[0]->GetIsHit() && !_isBomb) {
+			// 何かに当たった。
+			
+			// 爆発させる。
+			_isShot = false;
+			_isBomb = true;
 
-	if (_timeCounter >= _interval) {
-		INSTANCE(GameObjectManager)->AddRemoveList(this);
+			INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
+			_attack.clear();
+
+			//// 真ん中に塊、周辺にかけらのエフェクト。
+			//// ※使えるかもしれないので置いておく。
+			//_initParticleParam.addVelocityRandomMargih = Vector3(2.0f, 2.0f, 2.0f);
+			//_initParticleParam.brightness = 0.55f;
+			//_initParticleParam.fadeTime = 0.5f;
+			//_initParticleParam.initPositionRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
+			//_initParticleParam.initVelocity = Vector3::zero;
+			//_initParticleParam.initVelocityVelocityRandomMargin = Vector3(3.0f, 3.0f, 3.0f);
+			//_initParticleParam.intervalTime = 0.008f;
+			//_initParticleParam.life = 0.2f;
+			//_initParticleParam.size = Vector2(0.5f, 0.5f);
+			//_initParticleParam.mulColor = Color(1.3f, 1.0f, 1.3f, 1.0f);
+
+			// 爆発エフェクト。
+			_initParticleParam.addVelocityRandomMargih = Vector3(2.0f, 2.0f, 2.0f);
+			_initParticleParam.brightness = 1.1f;
+			_initParticleParam.fadeTime = 0.5f;
+			_initParticleParam.initPositionRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
+			_initParticleParam.initVelocity = Vector3::zero;
+			_initParticleParam.initVelocityVelocityRandomMargin = Vector3(15.0f, 15.0f, 15.0f);
+			_initParticleParam.intervalTime = 0.001f;
+			_initParticleParam.life = 0.002f;
+			_initParticleParam.size = Vector2(1.0f, 1.0f);
+			_initParticleParam.mulColor = Color(1.3f, 1.0f, 1.3f, 1.0f);
+			_initParticleParam.isParent = false;
+
+			//攻撃コリジョン作成。
+			AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2, _particleEmitter->transform, true,false);
+			attack->RemoveParent();
+			_attack.push_back(attack);
+		}
+		else {
+			_margin -= _margin * 0.5f * Time::DeltaTime();
+			if (_margin <= 0.5f) {
+				_margin = 0.5f;
+			}
+
+			_initParticleParam.initVelocity = (Vector3::up * 3.0f * _margin) + (Vector3::back * 6.0f);
+
+			_particleEmitter->transform->SetPosition(_particleEmitter->transform->GetPosition() + (_speed * Time::DeltaTime()));
+		}
+
+		_particleEmitter->SetParam(_initParticleParam);
+	}
+	if (!_isBomb) {
+		if (_timeCounter >= _interval) {
+			INSTANCE(GameObjectManager)->AddRemoveList(this);
+		}
+		else {
+			_timeCounter += Time::DeltaTime();
+		}
 	}
 	else {
-		_timeCounter += Time::DeltaTime();
+		if (_attack[0]->IsDeath()) {
+			// コリジョンの寿命が尽きたので削除。
+
+
+			INSTANCE(GameObjectManager)->AddRemoveList(this);
+		}
 	}
 }
 
@@ -56,10 +120,15 @@ void LastBossMagic::_BreathStartSubClass() {
 	_particleEmitter->transform->SetLocalPosition(_initEmitPos);
 	_particleEmitter->transform->SetParent(nullptr);
 
-	// パーティクルの飛ぶ方向をエネミーの向きに再設定。
-	Vector3 initVelocity = _enemyObject->transform->GetForward();
-	initVelocity.Normalize();
-	_direction = initVelocity;
+	// パラメータのベロシティをエネミーの正面から見た方向に変換。
+	//Vector3 work = Vector3::zero;
+	//work += (_enemyObject->transform->GetRight() * _initParticleParam.initVelocity.x);
+	//work += (_enemyObject->transform->GetUp() * _initParticleParam.initVelocity.y);
+	//work += (_enemyObject->transform->GetForward() * _initParticleParam.initVelocity.z);
+
+	//_initParticleParam.initVelocity = work;
+
+	_particleEmitter->SetParam(_initParticleParam);
 	_particleEmitter->SetEmitFlg(true);
 
 	//攻撃コリジョン作成。

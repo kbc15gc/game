@@ -54,8 +54,6 @@ void PlayerStateAttack::Update()
 	//移動速度
 	Vector3 movespeed = _Player->_CharacterController->GetMoveSpeed();
 	movespeed.Scale(0.7f);
-	//重力の影響を受けるため。
-	movespeed.y = _Player->_CharacterController->GetMoveSpeed().y;
 	//キャラクターコントローラー更新
 	_Player->_CharacterController->SetMoveSpeed(movespeed);
 	_Player->_CharacterController->Execute();

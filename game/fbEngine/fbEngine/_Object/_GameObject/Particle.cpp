@@ -46,7 +46,7 @@ void Particle::Awake()
 	_IsDead = false;
 }
 
-void Particle::Update()
+void Particle::LateUpdate()
 {
 	float deltaTime = Time::DeltaTime();
 	Vector3 addGrafity = _Gravity;
@@ -101,6 +101,9 @@ void Particle::Update()
 	}break;
 	case eStateDead:
 		_IsDead = true;
+		if (_isAutoDelete) {
+			INSTANCE(GameObjectManager)->AddRemoveList(this);
+		}
 		break;
 	}
 }
