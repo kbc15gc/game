@@ -18,7 +18,7 @@ public:
 	// 引数：	ブレスを出すキャラクター。
 	//			ブレス発生位置(ローカル座標、親はキャラクターのTransform)。
 	//			ブレス速度(向きとスピードを持つ)。
-	void Init(EnemyCharacter* obj, const Vector3& emitPosLocal,const Vector3& speed);
+	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,const Vector3& speed);
 
 	void Awake()override;
 
@@ -31,6 +31,10 @@ public:
 	inline void _BreathEndSubClass()override {
 	}
 
+	inline void Shot() {
+		_isShot = true;
+	}
+
 private:
 
 	ParticleEmitter* _particleEmitter = nullptr;
@@ -40,4 +44,7 @@ private:
 	Vector3 _speed = Vector3::zero;
 	float _timeCounter;
 	float _interval = 3.0f;
+	bool _isShot = false;
+	bool _isBomb = false;
+	float _margin = 1.0f;
 };

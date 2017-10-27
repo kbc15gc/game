@@ -105,26 +105,28 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	//// テスト。
-	//// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	//// パラメーター設定。
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//enemy->SetParamAll(Color, param);
+	// テスト。
+	// ラスボス作成。
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
 
+	//@todo for debug
+	//消して
 	//テスト。
 	//敵(兵士)作成。
-	EnemySoldier* soldier = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
-	// パラメーター設定。
-	vector<BarColor> cl;
-	cl.push_back(BarColor::Red);
-	vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	soldier->SetParamAll(cl, par);
+	//EnemySoldier* soldier = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+	//// パラメーター設定。
+	//vector<BarColor> cl;
+	//cl.push_back(BarColor::Red);
+	//vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//soldier->SetParamAll(cl, par);
 
 	FOR(i,2)
 	{

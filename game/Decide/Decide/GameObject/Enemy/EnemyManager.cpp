@@ -153,6 +153,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetParamAll(Color,enemy->InfoData->param);
 			enemy->Object->SetDropEXP(enemy->InfoData->exp);
 			enemy->Object->SetDropMoney(enemy->InfoData->money);
+			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
 			return;
 		}
 	}

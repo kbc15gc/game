@@ -72,14 +72,10 @@ public:
 
 	// この関数を呼んでからAchievedCreateParticleEnd関数が呼ばれるまでに生成されたパーティクルへのポインタを取得し続ける関数。
 	// 引数：	生成したパーティクルを格納する配列へのポインタ。
-	inline void AchievedCreateParticleStart(vector<Particle*>* array) {
-		_achievedArray = array;
-	}
+	void AchievedCreateParticleStart(vector<Particle*>* array);
 
 	// 生成したパーティクルの取得終了。
-	inline void AchievedCreateParticleEnd() {
-		_achievedArray = nullptr;
-	}
+	void AchievedCreateParticleEnd();
 
 	void SetEmitFlg(bool b);
 

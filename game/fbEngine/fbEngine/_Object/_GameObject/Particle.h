@@ -16,7 +16,7 @@ public:
 	};
 	Particle(char* name) :GameObject(name) {}
 	void Awake()override;
-	void Update()override;
+	void LateUpdate()override;
 	void Render() override;
 
 	void Init(const ParticleParameter& param,const Vector3& emitPosition);
@@ -42,6 +42,9 @@ public:
 		return _Velocity;
 	}
 
+	inline void SetIsAutoDelete(bool flg) {
+		_isAutoDelete = flg;
+	}
 private:		
 	static Vertex* _Vertex;						//頂点
 
@@ -66,4 +69,6 @@ private:
 	float			_Brightness;				//輝度。ブルームが有効になっているとこれを強くすると光が溢れます。
 	int				_AlphaBlendMode;			//0半透明合成、1加算合成。
 	Color			_MulColor;					//乗算カラー。
+
+	bool _isAutoDelete = true;	// パーティクルが自発的に削除されるか。
 };

@@ -162,7 +162,10 @@ public:
 	static const Vector3 axisZ;
 	static const Vector3 one;
 public:
-	operator D3DXVECTOR3() { return static_cast<D3DXVECTOR3>(*this); }
+	operator D3DXVECTOR3() 
+	{
+		return D3DXVECTOR3(x, y, z);
+	}
 	operator LPVOID() { return static_cast<LPVOID>(this); }
 	
 	Vector3() 
@@ -612,8 +615,34 @@ public:
 		(*this) = q;
 	}
 
+	// ベクトル1からベクトル2までの回転クォータニオンを作成する。
+	void CreateVector3ToVector3(const Vector3& vec1, const Vector3& vec2) {
+		Vector3 work1 = vec1;
+		work1.Normalize();
+		Vector3 work2 = vec2;
+		work2.Normalize();
+		float rad = work1.Dot(work2);
+
+		Vector3 axis;
+		if (fabsf(rad) == 1.0f) {
+			// 二つのベクトルが同じ向きか真逆を向いている。
+
+			if (fabsf(work1.Dot(Vector3::up)) == 1.0f) {
+				axis = work1.Cross(Vector3::right);
+			}
+			else {
+				axis = work1.Cross(Vector3::up);
+			}
+		}
+		else {
+			axis = work1.Cross(work2);
+		}
+
+		SetRotation(axis, acosf(rad));
+	}
+
 	// 引数で受け取ったベクトルをこのクォータニオンで回す。
-	const Vector3& RotationVector3(const Vector3& vec)const {
+	Vector3 RotationVector3(const Vector3& vec)const {
 
 		// 回転させるために行列を作成。
 		D3DXMATRIX rotMat;
@@ -637,12 +666,14 @@ public:
 			// ワールド座標の上方向と外積を行う。
 			vecX = work.Cross(Vector3::up);
 		}
+
 		rotMat.m[0][0] = vecX.x;
 		rotMat.m[0][1] = vecX.y;
 		rotMat.m[0][2] = vecX.z;
 
 		// 回転させたいベクトルの上方向を求める。
 		vecY = work.Cross(vecX);
+
 		rotMat.m[1][0] = vecY.x;
 		rotMat.m[1][1] = vecY.y;
 		rotMat.m[1][2] = vecY.z;
@@ -658,9 +689,10 @@ public:
 		dir.z = rotMat.m[2][2];
 
 		dir.Normalize();
+		// 回転する際に向きベクトルにしたので、元のベクトルの大きさを掛ける。
+		dir = dir * vec.Length();
 
-		// 回転する際に向きベクトルにしたので、元のベクトルの大きさを掛ける。s
-		return dir * vec.Length();
+		return dir;
 	}
 
 	//回転行列取得
