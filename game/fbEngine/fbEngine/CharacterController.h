@@ -68,12 +68,13 @@ public:
 
 	/*!
 	* @brief	ジャンプさせる。
+	* `param	ジャンプ力(1秒あたりのスピード)。
 	*/
-	void Jump()
+	void Jump(const float power)
 	{
 		m_isJump = true;
 		m_isOnGround = false;
-		_nowGravitySpeed = 0.0f;
+		_nowGravitySpeed = power * Time::DeltaTime();
 	}
 	/*!
 	* @brief	ジャンプ中か判定
