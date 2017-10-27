@@ -16,6 +16,8 @@ public:
 	GameScene() {};
 	void Start()override;
 	void Update()override;
+private:
+	//ワールドのBGMを変更する。
 	void ChangeBGM(BGM);
 private:
 	//通常流れてる音楽。
