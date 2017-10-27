@@ -15,14 +15,14 @@ public:
 		INSTANCE(GameObjectManager)->AddRemoveList(_particleEmitter);
 	}
 
-	// ブレスオブジェクト初期化。
+	// ブレスオブジェクトを与えたパラメータで作成。
 	// 引数：	ブレスを出すキャラクター。
 	//			ブレス発生位置(ローカル座標、親はキャラクターのTransform)。
 	//			ブレスのスピード。
 	//			どの軸で回すか。
-	//			回転軸(キャラクターの正面から何度回すか)。
+	//			回転量(キャラクターの正面から何度回すか)。
 	//			乗算カラー。
-	void Init(EnemyCharacter* obj, const Vector3& emitPosLocal,float power, const Vector3& axis,float deg, Color mul = Color::white);
+	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,float power, const Vector3& axis,float deg,const char* fileName = "t1.png",const Vector2& size = Vector2(0.5f, 0.5f), const float brightness = 2.0f,Color mul = Color::white);
 
 	void Awake()override;
 
@@ -54,4 +54,5 @@ private:
 	float _rad;		// キャラクターの正面からどれくらい回したブレスか。
 	Vector3 _axis;	// どの軸を中心に回したか。
 	Color _mulColor = Color::white;
+	float _power;
 };

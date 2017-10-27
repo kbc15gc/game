@@ -63,7 +63,7 @@ public:
 
 protected:
 	// ‰Šú‰»B
-	void Init(EnemyCharacter* enemy) {
+	void Create(EnemyCharacter* enemy) {
 		_enemyObject = enemy;
 	}
 

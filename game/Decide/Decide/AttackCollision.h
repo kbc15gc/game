@@ -34,7 +34,8 @@ public:
 	//			コリジョン寿命(0.0fより小さい値で無限)。
 	//			コリジョン生成待ち時間(この関数が呼ばれてから何秒後にコリジョン生成するか)。
 	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
-	void Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f,float waitTime = 0.0f, Transform* Parent = nullptr);
+	//			寿命が過ぎたら内部で自動的に削除するか(falseにすると非アクティブになるだけで削除されない)。
+	void Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f,float waitTime = 0.0f, Transform* Parent = nullptr,bool isLifeOverDelete = true);
 
 	inline void SetParent(Transform* Parent) {
 		transform->SetParent(Parent);
@@ -55,6 +56,15 @@ public:
 
 	inline GostCollision* GetGostCollision()const {
 		return _Gost;
+	}
+
+	inline bool GetIsHit()const {
+		return _isHit;
+	}
+
+	// 生成されているかつ攻撃コリジョンの寿命が尽きている。
+	inline bool IsDeath()const {
+		return _isCreateCollision && !_isAlive;
 	}
 private:	
 	// 攻撃コリジョン生成関数。
@@ -92,4 +102,8 @@ private:
 	vector<unique_ptr<HitObjectInfo>> _hitInfos;	// 当たっているオブジェクト情報。
 	bool _isCreateCollision = false;	// コリジョンを生成したか。
 	unique_ptr<CharacterParameter::DamageInfo> _DamageInfo;
+
+	bool _isHit = false;	// 衝突する設定にしている何らかのオブジェクトに衝突した。
+	bool _isLifeOverDelete = true;	// 寿命を過ぎたら削除される。
+	bool _isAlive = false;	// 寿命を過ぎていないか。
 };

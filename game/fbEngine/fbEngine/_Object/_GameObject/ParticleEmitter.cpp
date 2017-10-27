@@ -22,7 +22,7 @@ void ParticleEmitter::Update()
 	if (_achievedArray) {
 		// パーティクル取得処理中。
 		// 取得中に削除されたパーティクルは除く。
-		for (auto itr = _achievedArray->begin();itr != _achievedArray->end();) {
+		for (auto itr = _achievedArray->begin(); itr != _achievedArray->end();) {
 			if ((*itr)->IsDead()) {
 				itr = _achievedArray->erase(itr);
 			}
@@ -30,26 +30,28 @@ void ParticleEmitter::Update()
 				itr++;
 			}
 		}
-	}
-	list<Particle*>::iterator p = _ParticleList.begin();
-	while (p != _ParticleList.end()) {
-		//死
-		if ((*p)->IsDead()) {
-			INSTANCE(GameObjectManager)->AddRemoveList(*p);
-			p = _ParticleList.erase(p);
-		}
-		//生
-		else {
-			p++;
+
+		// 取得処理中は自発削除させずにこちらで削除する。
+		list<Particle*>::iterator p = _ParticleList.begin();
+		while (p != _ParticleList.end()) {
+			//死
+			if ((*p)->IsDead()) {
+				INSTANCE(GameObjectManager)->AddRemoveList(*p);
+				p = _ParticleList.erase(p);
+			}
+			//生
+			else {
+				p++;
+			}
 		}
 	}
 }
 
 void ParticleEmitter::Render()
 {
-	for (auto p : _ParticleList) {
-		p->Render();
-	}
+	//for (auto p : _ParticleList) {
+	//	p->Render();
+	//}
 }
 
 
@@ -68,6 +70,23 @@ void ParticleEmitter::ResetParameterAlreadyCreated(const ParticleParameter& para
 	_Param = param;
 	for (auto particle : _ParticleList) {
 		particle->SetParam(param);
+	}
+}
+
+void ParticleEmitter::AchievedCreateParticleStart(vector<Particle*>* array) {
+	_achievedArray = array;
+	for (auto p : _ParticleList) {
+		// パーティクルの自発削除を禁止する。
+		p->SetIsAutoDelete(false);
+	}
+}
+
+// 生成したパーティクルの取得終了。
+void ParticleEmitter::AchievedCreateParticleEnd() {
+	_achievedArray = nullptr;
+	for (auto p : _ParticleList) {
+		// パーティクルの自発削除を許可する。
+		p->SetIsAutoDelete(true);
 	}
 }
 
@@ -100,7 +119,8 @@ void ParticleEmitter::ReleaseParticleAll() {
 		_achievedArray = nullptr;
 	}
 	for (auto particle : _ParticleList) {
-		INSTANCE(GameObjectManager)->AddRemoveList(particle);
+		// 自発的に削除させる。
+		particle->SetIsAutoDelete(true);
 	}
 	_ParticleList.clear();
 }
@@ -130,7 +150,12 @@ void ParticleEmitter::Emit()
 				_Timer = 0.0f;
 				_ParticleList.push_back(p);
 				if (_achievedArray) {
+					// 自発削除禁止。
+					p->SetIsAutoDelete(false);
 					_achievedArray->push_back(p);
+				}
+				else {
+					p->SetIsAutoDelete(true);
 				}
 			}
 		}

@@ -238,12 +238,13 @@ public:
 	//			魔法攻撃か(デフォルトはfalse)。
 	//			防御無視攻撃か(デフォルトはfalse)。
 	//			ダメージ率(攻撃の種類などによる攻撃力に対する割合、この値に0.01f掛けた値を攻撃力に乗算する、単位はパーセント)。
+	//			寿命が過ぎたら自動的に削除するか(falseにすると非アクティブになるだけで削除されない)。
 	// 戻り値:  生成した攻撃。
-	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& rot, const Vector3& scale, float life, Transform* parent = nullptr,bool isMagic = false,bool isThroughDamage = false,int percentage = 100) {
+	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& rot, const Vector3& scale, float life, Transform* parent = nullptr,bool isMagic = false,bool isThroughDamage = false,int percentage = 100, bool isLifeOverDelete = true) {
 		//攻撃コリジョン作成。
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(isMagic, isThroughDamage,nullptr, percentage)),localPos, rot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent);
+		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(isMagic, isThroughDamage,nullptr, percentage)),localPos, rot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent, isLifeOverDelete);
 		return attack;
 	}
 

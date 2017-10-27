@@ -114,6 +114,10 @@ public:
 		}
 	}
 
+	inline BreathObject* GetBreathObject() {
+		return _breath;
+	}
+
 private:
 	GameObject* _player = nullptr;
 	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。
