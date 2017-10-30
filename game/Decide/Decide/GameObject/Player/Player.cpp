@@ -186,7 +186,7 @@ void Player::Awake()
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
 	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 
-	_Model->SetCharacterLight(&_CharaLight);
+	//_Model->SetCharacterLight(&_CharaLight);
 
 	_CharaLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
 	_CharaLight.SetDiffuseLightDirection(1, Vector3(0.0f, 0.0f, 0.0f));

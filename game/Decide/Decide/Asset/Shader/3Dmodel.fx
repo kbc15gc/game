@@ -249,25 +249,26 @@ PSOutput PSMain(VS_OUTPUT In)
         color.xyz = In._RayColor + color * In._MieColor;
     }
 
-    float4 light = DiffuseLight(normal);
+    float4 light = 0.0f;
 
-	float3 cascadeColor = 0;
-
-	if (g_EffectFlg.x)
-	{
-		//影になっている.
-		float shadowPower = CalcShadow(In._World.xyz, cascadeColor);
-		shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
-		light.xyz *= min(1.0f, shadowPower);
-	}
-
-    float3 charaLig = CalcCharaLight(normal, (float3x3) g_rotationMatrix) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
+    light.xyz += DiffuseLight(normal);
+    light.xyz += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
+    
     if (Spec)
     {
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-        charaLig.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
+        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
     }
-    color.xyz += diff.rgb * charaLig * light.xyz;
+    
+    if (g_EffectFlg.x)
+    {
+		//影になっている.
+        float shadowPower = CalcShadow(In._World.xyz);
+        shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
+        light.xyz *= min(1.0f, shadowPower);
+    }
+
+    color.xyz += diff.rgb * light.xyz;
     float3 ambient = g_ambientLight.rgb;
 	
     if (g_CharaLightParam.x)
@@ -432,14 +433,12 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	float3 normal = normalize(In._Normal);
 	//ディフューズライト
 	float4 light = DiffuseLight(normal);
-    light.xyz += CalcCharaLight(normal, (float3x3) g_rotationMatrix);
-
-	float3 cascadeColor = 1;
+    light.xyz += CalcCharaLight(normal);
 
 	if (g_EffectFlg.x)
 	{
 		//影になっている.
-		float shadowPower = CalcShadow(In._World.xyz, cascadeColor);
+		float shadowPower = CalcShadow(In._World.xyz);
 		shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
 		light.xyz *= min(1.0f, shadowPower);
 	}
