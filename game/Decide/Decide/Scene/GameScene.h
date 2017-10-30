@@ -3,14 +3,22 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
 
+//オブジェクトの詳細
+struct SCollisionInfo {
+	Vector3 pos;
+	Quaternion angle;
+	Vector3 scale;
+};
+
 class GameScene : public Scene
 {
 public:
 	enum class BGM
 	{
-		WORLD = 0,
-		BOSS1,
+		BOSS1 = 0,
 		MATI1,
+		MATI2,
+		WORLD,
 		DEAD,
 	};
 	GameScene() {};
@@ -19,11 +27,16 @@ public:
 private:
 	//ワールドのBGMを変更する。
 	void ChangeBGM(BGM);
+	//箱のあたり判定
+	//場所変えなきゃ
+	// 境界箱（AABB）による当たり判定
+	bool IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2);
 private:
 	//通常流れてる音楽。
 	SoundSource* _WorldBGM;
 	SoundSource* _BossBGM;
 	SoundSource* _MatiBGM;
+	SoundSource* _Mati2BGM;
 	SoundSource* _GameBGM;
 	SoundSource* _DeadBGM;
 	BGM _BGM;

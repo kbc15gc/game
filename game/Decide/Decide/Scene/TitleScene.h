@@ -5,6 +5,13 @@
 class TitleScene : public Scene
 {
 public:
+
+	enum Select
+	{
+		Continue = 0,
+		NewGame,
+	};
+
 	TitleScene() {};
 	void Start()override;
 	void Update()override;
@@ -13,7 +20,13 @@ public:
 private:
 	SoundSource* _TitleBGM;
 	ImageObject* _Start;
+	ImageObject* _StartBar;
+	ImageObject* _SelectButton;
 	Color		_StartColor;
 	float		_StartAlpha;
 	SoundSource* _StartSE;
+
+	bool _AnyButton;
+
+	Select _Select;
 };
