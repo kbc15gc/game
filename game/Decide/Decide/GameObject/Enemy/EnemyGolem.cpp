@@ -176,4 +176,9 @@ void EnemyGolem::_EndNowStateCallback(State EndStateType) {
 		// 攻撃開始。
 		_ChangeState(State::StartAttack);
 	}
+	else if (EndStateType == State::Threat) {
+		//威嚇終了。
+		//攻撃開始。
+		_ChangeState(State::StartAttack);
+	}
 }

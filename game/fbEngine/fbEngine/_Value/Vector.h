@@ -353,6 +353,13 @@ public:
 		this->z = out.z;
 	}
 
+	void operator = (D3DXVECTOR4 in)
+	{
+		this->x = in.x;
+		this->y = in.y;
+		this->z = in.z;
+	}
+
 	void operator += (Vector3 in)
 	{
 		this->x += in.x;
@@ -367,6 +374,15 @@ public:
 	}
 
 	Vector3 operator + (Vector3 in) const
+	{
+		Vector3 out;
+		out.x = this->x + in.x;
+		out.y = this->y + in.y;
+		out.z = this->z + in.z;
+		return out;
+	}
+
+	Vector3 operator + (D3DXVECTOR4 in) const
 	{
 		Vector3 out;
 		out.x = this->x + in.x;
@@ -740,6 +756,10 @@ public:
 		Quaternion qminus = Quaternion(-(this->x), -(this->y), -(this->z), this->w);
 		//クォータニオンの長さの二乗
 		Quaternion qlength = (qminus*(*this));
+		if (qlength.x == 0.0f ||
+			qlength.y == 0.0f ||
+			qlength.z == 0.0f)
+			return;
 		//逆クォータニオン作成
 		*this = qminus / qlength;
 	}

@@ -62,7 +62,14 @@ void Particle::LateUpdate()
 	addPos.Scale(deltaTime);
 	_ApplyForce = Vector3::zero;
 
+	if (!_isParent) {
+		transform->SetParent(_parent);
+	}
 	transform->SetLocalPosition(transform->GetLocalPosition() + addPos);
+	if (!_isParent) {
+		transform->SetParent(nullptr);
+	}
+
 	transform->Update();
 	if (_IsBillboard) {
 		//ビルボード処理を行う。
@@ -97,10 +104,10 @@ void Particle::LateUpdate()
 		if (_Alpha <= 0.0f) {
 			_Alpha = 0.0f;
 			_State = eStateDead;	//死亡。
+			_IsDead = true;
 		}
 	}break;
 	case eStateDead:
-		_IsDead = true;
 		if (_isAutoDelete) {
 			INSTANCE(GameObjectManager)->AddRemoveList(this);
 		}
@@ -175,18 +182,33 @@ void Particle::Render()
 
 }
 
-void Particle::Init(const ParticleParameter & param,const Vector3 & emitPosition)
+void Particle::Init(const ParticleParameter & param,Transform* parent)
 {
-	transform->SetLocalPosition(emitPosition);
+	_parent = parent;
+	_Effect = EffectManager::LoadEffect("Particle.fx");
+	this->_Camera = INSTANCE(GameObjectManager)->mainCamera;
+
+	transform->SetParent(parent);
+	//if (!parent) {
+	//	// 親が無いのでワールド座標を設定。
+	//	transform->SetLocalPosition()
+	//}
+	//else {
+		// 親が既に初期座標を持っているのでローカル座標は0。
+		transform->SetLocalPosition(Vector3::zero);
+	//}
 	SetParam(param);
+
+	if (!param.isParent) {
+		transform->SetParent(nullptr);
+	}
+
 	_RotateZ = 3.1415 * 2.0f * (float)Random::RandDouble();
 }
 
 void Particle::SetParam(const ParticleParameter& param) {
 	_Texture = LOADTEXTURE((char*)param.texturePath);
-	_Effect = EffectManager::LoadEffect("Particle.fx");
-	this->_Camera = INSTANCE(GameObjectManager)->mainCamera;
-	transform->SetLocalScale(Vector3(param.size.x, param.size.y, 1.0f));
+	transform->SetScale(Vector3(param.size.x, param.size.y, 1.0f));
 	_Life = param.life;
 	_Velocity = param.initVelocity;
 	//初速度に乱数を加える。
@@ -209,4 +231,6 @@ void Particle::SetParam(const ParticleParameter& param) {
 	_Brightness = param.brightness;
 	_AlphaBlendMode = param.alphaBlendMode;
 	_MulColor = param.mulColor;
+
+	_isParent = param.isParent;
 }

@@ -58,6 +58,9 @@ public:
 		return _Gost;
 	}
 
+	inline void SetIsHit(bool flg) {
+		_isHit = flg;
+	}
 	inline bool GetIsHit()const {
 		return _isHit;
 	}

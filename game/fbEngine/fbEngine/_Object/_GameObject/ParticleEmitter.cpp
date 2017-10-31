@@ -30,19 +30,20 @@ void ParticleEmitter::Update()
 				itr++;
 			}
 		}
+	}
 
-		// 取得処理中は自発削除させずにこちらで削除する。
-		list<Particle*>::iterator p = _ParticleList.begin();
-		while (p != _ParticleList.end()) {
-			//死
-			if ((*p)->IsDead()) {
-				INSTANCE(GameObjectManager)->AddRemoveList(*p);
-				p = _ParticleList.erase(p);
-			}
-			//生
-			else {
-				p++;
-			}
+	list<Particle*>::iterator p = _ParticleList.begin();
+	while (p != _ParticleList.end()) {
+		//死
+		if ((*p)->IsDead()) {
+			// エミッターが生存しているうちは自発削除させずにこちらで削除する。
+
+			INSTANCE(GameObjectManager)->AddRemoveList(*p);
+			p = _ParticleList.erase(p);
+		}
+		//生
+		else {
+			p++;
 		}
 	}
 }
@@ -75,10 +76,6 @@ void ParticleEmitter::ResetParameterAlreadyCreated(const ParticleParameter& para
 
 void ParticleEmitter::AchievedCreateParticleStart(vector<Particle*>* array) {
 	_achievedArray = array;
-	for (auto p : _ParticleList) {
-		// パーティクルの自発削除を禁止する。
-		p->SetIsAutoDelete(false);
-	}
 }
 
 // 生成したパーティクルの取得終了。
@@ -119,8 +116,9 @@ void ParticleEmitter::ReleaseParticleAll() {
 		_achievedArray = nullptr;
 	}
 	for (auto particle : _ParticleList) {
-		// 自発的に削除させる。
+		// パーティクルの自発削除許可(フェードアウトなどの処理をエミッターを削除した場合も行いたいため)。
 		particle->SetIsAutoDelete(true);
+		particle->SetEmitterTransform(nullptr);
 	}
 	_ParticleList.clear();
 }
@@ -139,23 +137,15 @@ void ParticleEmitter::Emit()
 			for (int idx = 0; idx < num; idx++) {
 				//パーティクルを生成。
 				Particle* p = INSTANCE(GameObjectManager)->AddNew<Particle>("particle", 8);
-				if (_Param.isParent) {
-					// エミッターを親として設定。
-					p->transform->SetParent(transform);
-					p->Init(_Param, Vector3::zero);
-				}
-				else {
-					p->Init(_Param, transform->GetPosition());
-				}
+				p->Init(_Param, transform);
+
 				_Timer = 0.0f;
 				_ParticleList.push_back(p);
+				// パーティクルの自発削除を禁止する。
+				p->SetIsAutoDelete(false);
+
 				if (_achievedArray) {
-					// 自発削除禁止。
-					p->SetIsAutoDelete(false);
 					_achievedArray->push_back(p);
-				}
-				else {
-					p->SetIsAutoDelete(true);
 				}
 			}
 		}

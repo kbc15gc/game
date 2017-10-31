@@ -186,6 +186,7 @@
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
     <ClInclude Include="GameObject\Component\ParticleEffect.h" />
     <ClInclude Include="GameObject\Enemy\BossDrarian.h" />
+    <ClInclude Include="GameObject\Enemy\BossGhost.h" />
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttack.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="GameObject\Enemy\LastBoss.h" />
     <ClInclude Include="GameObject\Enemy\LastBossMagic.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
+    <ClInclude Include="GameObject\Enemy\SordShock.h" />
     <ClInclude Include="GameObject\GameManager.h" />
     <ClInclude Include="GameObject\Ground\Dungeon.h" />
     <ClInclude Include="GameObject\Ground\Ground.h" />
@@ -307,6 +309,7 @@
     <ClCompile Include="GameObject\Component\ParameterBar.cpp" />
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp" />
     <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
+    <ClCompile Include="GameObject\Enemy\BossGhost.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttack.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />
@@ -335,6 +338,7 @@
     <ClCompile Include="GameObject\Enemy\LastBoss.cpp" />
     <ClCompile Include="GameObject\Enemy\LastBossMagic.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\Enemy\SordShock.cpp" />
     <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\Ground\Dungeon.cpp" />
     <ClCompile Include="GameObject\Ground\Ground.cpp" />

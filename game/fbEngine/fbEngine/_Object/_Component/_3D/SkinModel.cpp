@@ -150,6 +150,12 @@ void SkinModel::Render()
 		//開始。
 		_ModelDate->EndInstancing();
 	}
+
+	if (!_Culling->IsCulling() && hoge)
+	{
+		INSTANCE(SceneManager)->hoge++;
+	}
+
 }
 
 /**
@@ -335,22 +341,22 @@ void SkinModel::DrawMeshContainer(
 	
 		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, _SkyBox ? FALSE : TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		/*(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);*/
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
-		if((_ModelEffect & ModelEffectE::ALPHA) > 0)
-		{
-			(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		}
-		else
-		{
-			(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-			(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-		}
+		//アルファブレンド.
+		//(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+		//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+		//if ((_ModelEffect & ModelEffectE::ALPHA) > 0)
+		//{
+		//	//アルファテストを行う.
+		//	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		//	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+		//	// 不透明にする値の設定
+		//	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, 0x66);
+		//}
 
 		_Effect->SetFloat("g_Alpha", _Alpha);
 
@@ -606,7 +612,7 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 	}
@@ -625,7 +631,14 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	}
 
 	//テクニック設定
-	_Effect->SetTechnique("Shadow");
+	if (!hoge)
+	{
+		_Effect->SetTechnique("Shadow");
+	}
+	else
+	{
+		_Effect->SetTechnique("ShadowTree");
+	}
 
 	//開始
 	_Effect->Begin(0, D3DXFX_DONOTSAVESTATE);
@@ -637,16 +650,16 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-	if ((_ModelEffect & ModelEffectE::ALPHA) > 0)
-	{
-		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	}
-	else
-	{
-		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-	}
+	//if ((_ModelEffect & ModelEffectE::ALPHA) > 0)
+	//{
+	//	//アルファテストを行う.
+	//	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	//	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	//	// 不透明にする値の設定
+	//	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, 0x66);
+	//}
+
+	_Effect->SetFloat("g_Alpha", _Alpha);
 
 	//アニメーションの有無で分岐
 	if (pMeshContainer->pSkinInfo != NULL)
@@ -714,10 +727,8 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	//終了
 	_Effect->EndPass();
 	_Effect->End();
-	
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 }
 

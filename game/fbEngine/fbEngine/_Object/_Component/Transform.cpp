@@ -27,7 +27,7 @@ Transform::~Transform()
 	if(_Parent)
 	{
 		//親の子から自分を外す
-		_Parent->RemoveChild(this);
+		SetParent(nullptr);
 	}
 	//子がいるなら
 	if(_Children.size() > 0)
@@ -36,8 +36,14 @@ Transform::~Transform()
 		vector<Transform*>::iterator it = _Children.begin();
 		while (it != _Children.end())
 		{
+			(*it)->_LocalPosition = (*it)->_Position;
+			(*it)->_LocalScale = (*it)->_Scale;
+			(*it)->_LocalAngle = (*it)->_Angle + (*it)->_Parent->_Angle;
+			(*it)->_LocalRotation = (*it)->_Rotation;
 			(*it)->_Parent = nullptr;
-			it++;
+			(*it)->UpdateTransform();
+
+			it = _Children.erase(it);
 		}
 	}
 }
@@ -318,21 +324,30 @@ void Transform::SetParent(Transform * parent)
 	if(_Parent)
 	{
 		// 元々親がいた。
-
 		if (parent == nullptr)
 		{
 			// 親が外された。
-
 			_LocalPosition = _Position;
 			_LocalScale = _Scale;
-			_LocalAngle = _Angle + _Parent->_Angle;
+			_LocalAngle = _Angle;// +_Parent->_Angle;
 			_LocalRotation = _Rotation;
 		}
 		// 親を外すので、現在の親の子供リストから自分を外す。
 		this->_Parent->RemoveChild(this);
 	}
+
+	//親に登録
+	this->_Parent = parent;
+
 	if (parent) {
 		// 親が設定された。
+		//新しい親から
+		//新しいローカルを計算する。
+		SetPosition(_Position);
+		SetAngle(_Angle);
+		SetScale(_Scale);
+		SetRotation(_Rotation);
+
 
 		// 親の子供に自分を追加。
 		parent->AddChild(this);
@@ -343,10 +358,10 @@ void Transform::SetParent(Transform * parent)
 				gameObject->SetDiscard(parent->gameObject->GetDiscard());
 			}
 		}
+
 	}
 
-	//親に登録
-	this->_Parent = parent;
+	
 
 	UpdateTransform();
 }

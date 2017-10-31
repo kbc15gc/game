@@ -16,7 +16,7 @@ struct ParticleParameter {
 		mulColor = Color::white;
 	}
 	const char* texturePath;						//!<テクスチャのファイルパス(Asset/Textureの中にあるもの(Asset/Textureよりも先のパスの指定のみでOK))。
-	Vector3		initVelocity;						//!<初速度。
+	Vector3		initVelocity;						//!<初速度(エミッターと親子関係を組んでいる場合はエミッターの座標系、そうでない場合はワールド座標)。
 	Vector2		size;								//パーティクルサイズ
 	float		life;								//!<寿命。単位は秒(0より小さい値で無限)。
 	float		intervalTime;						//!<発生時間。単位は秒。

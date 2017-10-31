@@ -238,6 +238,7 @@ void HistoryMenu::SelectLocationUpdate()
 
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
+		_NowLookPage = 0;
 		auto& pageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
 		{
