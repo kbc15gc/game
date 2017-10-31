@@ -106,9 +106,7 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 	//ダンジョン生成
-	//@todo for debug 
-	//いったん消します。
-	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 

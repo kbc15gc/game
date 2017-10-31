@@ -30,7 +30,7 @@ void Dungeon::Awake()
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
-	mesh->Create(model, StartPos);
+	mesh->Create(model);
 	rigid->Create(0, mesh, Collision_ID::GROUND);
 
 }
