@@ -9,12 +9,7 @@ class PlayerCamera : public GameCamera
 {
 public:
 	//コンストラクタ。
-	PlayerCamera(const char* name) :
-		GameCamera(name),
-		_Spring(20.0f),
-		_Damping(8.0f)
-	{
-	}
+	PlayerCamera(const char* name);
 	~PlayerCamera();
 
 	/**
@@ -41,6 +36,9 @@ private:
 	//通常時のカメラ挙動
 	void _StandardBehavior();
 
+	//プレイヤーの方向を向く。
+	void _LookAtPlayer();
+
 	//カメラをY軸に回転(横)。
 	void _RotateHorizon(float roty);
 
@@ -49,9 +47,6 @@ private:
 
 	//レイを飛ばして、カメラの移動先を確認。
 	Vector3 _ClosetRay();
-
-	//プレイヤーの方向を向く。
-	void _LookAtPlayer();
 
 	//カメラを移動させる処理。
 	void _Move()override;
@@ -65,26 +60,18 @@ private:
 		_Player->SetIsStopUpdate(false);
 	}
 private:
+	//歴史書オブジェクト。
+	HistoryBook* _HistoryBook = nullptr;
+	/** 移動可能フラグ. */
+	bool _IsMove = true;
+
+
 	//当たり判定をとるためのレイの形状
 	SphereCollider* _Sphere;
-	//プレイヤーへ向かうベクトル
-	D3DXVECTOR3 _ToPlayerDir;
 	//距離
 	float _Dist;
 	//当たり判定の半径
 	float _Radius;
-
-	//歴史書オブジェクト。
-	HistoryBook* _HistoryBook = nullptr;
-
-	/** 移動可能フラグ. */
-	bool _IsMove = true;
-
-	//前フレームのポジション。
-	Vector3 _PrevPosition = Vector3::zero;
-
-	//カメラがオブジェクトと衝突しているか？
-	bool _IsHitObject;
 
 	//カメラが最終的に到達する目標座標。
 	Vector3 _DestinationPos;
@@ -94,4 +81,7 @@ private:
 	float _Damping;
 	//バネ定数。
 	float _Spring;
+
+	//ターゲットからカメラへの向きベクトル。
+	Vector3 _ToCameraDir;
 };

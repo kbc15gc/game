@@ -318,14 +318,12 @@ void Transform::SetParent(Transform * parent)
 	if(_Parent)
 	{
 		// 元々親がいた。
-
 		if (parent == nullptr)
 		{
 			// 親が外された。
-
 			_LocalPosition = _Position;
 			_LocalScale = _Scale;
-			_LocalAngle = _Angle + _Parent->_Angle;
+			_LocalAngle = _Angle;// +_Parent->_Angle;
 			_LocalRotation = _Rotation;
 		}
 		// 親を外すので、現在の親の子供リストから自分を外す。
@@ -343,6 +341,7 @@ void Transform::SetParent(Transform * parent)
 				gameObject->SetDiscard(parent->gameObject->GetDiscard());
 			}
 		}
+
 	}
 
 	//親に登録
