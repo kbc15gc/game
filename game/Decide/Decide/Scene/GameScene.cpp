@@ -58,6 +58,14 @@ namespace
 	//ŠX
 	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
+	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
+
+	SCollisionInfo soundcollisition[]
+	{
+		#include "Asset\Collisition\ExportSoundCollisition.h";
+	};
+
+	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
 }
 
 
@@ -98,7 +106,9 @@ void GameScene::Start()
 	//’n–Ê¶¬
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo ‘‚Ì•`‰æƒeƒXƒg‚Ì‚½‚ß‚É•`‰æ—Dæ‚ð1‚©‚ç0‚É•ÏX‚µ‚Ä‚¢‚éB
 	//ƒ_ƒ“ƒWƒ‡ƒ“¶¬
-	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	//@todo for debug 
+	//‚¢‚Á‚½‚ñÁ‚µ‚Ü‚·B
+	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//ŠC¶¬.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
@@ -170,6 +180,10 @@ void GameScene::Start()
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
 
+	//ŠX2BGM
+	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
+	_Mati2BGM->Init("Asset/Sound/mati2.wav");
+
 	//Ž€–SBGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
 	_DeadBGM->Init("Asset/Sound/dead.wav");
@@ -229,26 +243,14 @@ void GameScene::Update()
 		}
 		else
 		{
-			//ƒ{ƒX
-			Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
-			float boss_len = boss_dir.Length();
-			//ŠX
-			Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
-			float mati_len = mati_dir.Length();
-			//ŠX
-			if (mati_len < MATI_RADIUS)
+			//ŠeêŠ‚ÌƒRƒŠƒWƒ‡ƒ“‚É“–‚½‚Á‚Ä‚¢‚é‚©B
+			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
-				ChangeBGM(BGM::MATI1);
-			}
-			//ƒ{ƒX
-			if (boss_len < BOSS_RADIUS)
-			{
-				ChangeBGM(BGM::BOSS1);
-			}
-			//ƒ[ƒ‹ƒh
-			if (boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
-			{
-				ChangeBGM(BGM::WORLD);
+				if (IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
+				{
+					ChangeBGM(static_cast<BGM>(i));
+					break;
+				}
 			}
 		}
 		
@@ -273,6 +275,9 @@ void GameScene::ChangeBGM(BGM bgm)
 		case GameScene::BGM::MATI1:
 			_GameBGM = _MatiBGM;
 			break;
+		case GameScene::BGM::MATI2:
+			_GameBGM = _Mati2BGM;
+			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;
 			break;
@@ -283,3 +288,15 @@ void GameScene::ChangeBGM(BGM bgm)
 
 	}
 }
+
+
+bool GameScene::IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2)
+{
+	if (vMin1.x < vMax2.x && vMax1.x > vMin2.x
+		&& vMin1.y < vMax2.y && vMax1.y > vMin2.y
+		&& vMin1.z < vMax2.z && vMax1.z > vMin2.z)
+	{
+		return true;
+	}
+	return false;
+};
