@@ -33,6 +33,8 @@ void EnemyGolem::_StartSubClass() {
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, true);
+
 	// 攻撃処理を定義。
 	_SingleAttack.reset(new EnemySingleAttack(this));
 	_SingleAttack->Init(1.5f, static_cast<int>(EnemyGolemAnim::Attack01), 0.2f);
@@ -172,6 +174,11 @@ void EnemyGolem::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::Damage) {
 		// 攻撃を受けた。
 		// 攻撃開始。
+		_ChangeState(State::StartAttack);
+	}
+	else if (EndStateType == State::Threat) {
+		//威嚇終了。
+		//攻撃開始。
 		_ChangeState(State::StartAttack);
 	}
 }

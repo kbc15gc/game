@@ -24,6 +24,10 @@ public:
 	void SetBlendMode(fbEngine::BlendModeE mode);
 	void SetTexture(TEXTURE* t);
 	void SetSize(const Vector2& size);
+	Vector2& GetSize()
+	{
+		return _Size;
+	}
 	void SetPivot(const Vector2& v2);
 	void SetPivot(float x, float y);
 	void SetUV(const Vector4& uv);
