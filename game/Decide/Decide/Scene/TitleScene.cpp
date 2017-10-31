@@ -59,22 +59,22 @@ void TitleScene::Start()
 
 void TitleScene::Update()
 {
-	////スタートボタンの押下確認
-	//bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y);
-	////エンターキー
-	//if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
-	//{
-	//	////ゲームシーンへ移行
-	//	INSTANCE(SceneManager)->ChangeScene("GameScene",true);
-	//
-	//	// テスト。
-	//	//INSTANCE(SceneManager)->ChangeScene("LastBossTestScene", true);
-
-	//	_StartSE->Play(false);
-	//	return;
-	//}
-
+	//スタートボタンの押下確認
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y);
+	//エンターキー
+	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
+	{
+		////ゲームシーンへ移行
+		INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+	
+		// テスト。
+		//INSTANCE(SceneManager)->ChangeScene("LastBossTestScene", true);
+
+		_StartSE->Play(false);
+		return;
+	}
+
+	//bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y);
 
 	//プレスエニイボタンの処理
 	if (!_AnyButton && flag)

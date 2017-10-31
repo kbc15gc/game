@@ -238,7 +238,6 @@ PSOutput PSMain(VS_OUTPUT In)
 	PSOutput Out = (PSOutput)0;
 
 	Out.Color = color;
-    //clip(diff.a - g_Alpha); //@todo アルファテストの閾値を定数レジスタで送りたいなぁ > 平松君
 	Out.Color.w = diff.a;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
@@ -497,20 +496,29 @@ technique TerrainRender
 //////////////////////////////////////////////////////////////
 //影描画用
 
-struct VS_ShadowOUT {
-	float4	_Pos	: POSITION;
-	float4	_Shadow	: TEXCOORD;
+struct VS_ShadowIN
+{
+    float4 _Pos : POSITION;
+    float2 _UV : TEXCOORD0;
 };
 
-VS_ShadowOUT VSShadow(float4 Pos : POSITION)
+struct VS_ShadowOUT {
+	float4	_Pos	: POSITION;
+	float4	_Shadow	: TEXCOORD0;
+    float2 _UV : TEXCOORD1;
+};
+
+VS_ShadowOUT VSShadow(VS_ShadowIN In)
 {
 	VS_ShadowOUT Out = (VS_ShadowOUT)0;
 
-	float4 pos = Pos;
+    float4 pos = In._Pos;
 	pos = mul(pos, g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
 	pos = mul(pos, g_viewMatrix);		//ワールド空間からビュー空間に変換。
 	pos = mul(pos, g_projectionMatrix);	//ビュー空間から射影空間に変換。
 	Out._Shadow = Out._Pos = pos;
+
+    Out._UV = In._UV;
 
 	return Out;
 }
@@ -524,7 +532,7 @@ float4 PSShadow(VS_ShadowOUT In) : COLOR	//レンダーターゲット0に出力
 	float dx = ddx(z);
 	float dy = ddy(z);
 
-	return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, 1.0f);
+    return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, tex2D(g_TextureSampler, In._UV).a);
 }
 
 technique Shadow

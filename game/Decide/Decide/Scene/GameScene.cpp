@@ -119,12 +119,12 @@ void GameScene::Start()
 	// ラスボス作成。
 	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
-	vector<BarColor> Color;
+	/*vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);*/
 	//enemy->SetParamAll(Color, param);
 
 	//@todo for debug
