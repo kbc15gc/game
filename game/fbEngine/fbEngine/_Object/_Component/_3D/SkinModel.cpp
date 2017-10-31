@@ -205,9 +205,13 @@ void SkinModel::DrawMeshContainer(
 	{
 		//エフェクト読み込み
 		if (pMeshContainer->pSkinInfo != NULL)
+		{
 			_Effect = EffectManager::LoadEffect("AnimationModel.fx");
+		}
 		else
+		{
 			_Effect = EffectManager::LoadEffect("3Dmodel.fx");
+		}
 
 		//テクニックをセット
 		if(terain)
@@ -220,8 +224,14 @@ void SkinModel::DrawMeshContainer(
 			{
 				_Effect->SetTechnique("InstancingRender");
 			}
+			else if (_SkyBox)
+			{
+				_Effect->SetTechnique("SkySphereRender");
+			}
 			else
+			{
 				_Effect->SetTechnique("NormalRender");
+			}
 		}
 
 		//開始（必ず終了すること）
