@@ -12,6 +12,7 @@
 #include "GameObject\Enemy\EnemyAttack.h"
 #include "GameObject\Enemy\LastBossMagic.h"
 #include "GameObject\Enemy\LaserBreath.h"
+#include "GameObject\Enemy\SordShock.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 
@@ -32,17 +33,23 @@ void LastBoss::SordAttackEvent() {
 	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
 	attack->RemoveParent();
 
-	_sordAttackLaser0 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser0->Create(this, Vector3(0.0f, -1.0f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,"t1.png",Vector2(0.5f, 0.5f),2.0f,Color(1.5f,0.5f,1.5f,1.0f));
-	_sordAttackLaser0->BreathStart();
+	_sordAttackShot0 = INSTANCE(GameObjectManager)->AddNew<SordShock>("sordShock", 8);
+	_sordAttackShot0->Create(this, Vector3(0.0f, -1.0f, 2.0f),transform->GetForward() * 5.0f,15.0f);
+	_sordAttackShot0->BreathStart();
+	_sordAttackShot0->BreathEnd();
 
-	_sordAttackLaser1 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser1->Create(this, Vector3(0.0f, -1.0f, 4.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f),1.2f ,Color(1.5f, 1.0f, 0.0f, 1.0f));
-	_sordAttackLaser1->BreathStart();
 
-	_sordAttackLaser2 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser2->Create(this, Vector3(0.0f, -1.0f, 5.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f), 1.2f,Color(1.5f, 1.0f, 0.0f, 1.0f));
-	_sordAttackLaser2->BreathStart();
+	//_sordAttackLaser0 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	//_sordAttackLaser0->Create(this, Vector3(0.0f, -1.0f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,"t1.png",Vector2(0.5f, 0.5f),2.0f,Color(1.5f,0.5f,1.5f,1.0f));
+	//_sordAttackLaser0->BreathStart();
+
+	//_sordAttackLaser1 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	//_sordAttackLaser1->Create(this, Vector3(0.0f, -1.0f, 4.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f),1.2f ,Color(1.5f, 1.0f, 0.0f, 1.0f));
+	//_sordAttackLaser1->BreathStart();
+
+	//_sordAttackLaser2 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	//_sordAttackLaser2->Create(this, Vector3(0.0f, -1.0f, 5.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f), 1.2f,Color(1.5f, 1.0f, 0.0f, 1.0f));
+	//_sordAttackLaser2->BreathStart();
 
 
 	// 攻撃音再生。
@@ -50,16 +57,16 @@ void LastBoss::SordAttackEvent() {
 }
 
 void LastBoss::SordAttackEvent2() {
-	_sordAttackLaser0->BreathEnd();
-	_sordAttackLaser1->BreathEnd();
-	_sordAttackLaser2->BreathEnd();
+	//_sordAttackLaser0->BreathEnd();
+	//_sordAttackLaser1->BreathEnd();
+	//_sordAttackLaser2->BreathEnd();
 }
 
 void LastBoss::MagicAttackStart1() {
 	_magicFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(20.0f));
-	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 4.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
 
 	_magicAttack->BreathStart(_magicFire1);
 }
@@ -73,7 +80,7 @@ void LastBoss::MagicAttackStart2() {
 	_magicFire2 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-20.0f));
-	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 4.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
 
 	_magicAttack->BreathStart(_magicFire2);
 }
@@ -85,7 +92,7 @@ void LastBoss::MagicAttackShot2() {
 
 void LastBoss::MagicAttackStart3() {
 	_magicFire3 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
-	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 5.0f), (transform->GetForward() * 15.0f));
+	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 4.0f), (transform->GetForward() * 15.0f));
 
 	_magicAttack->BreathStart(_magicFire3);
 	_magicAttack->BreathEnd();
@@ -94,6 +101,31 @@ void LastBoss::MagicAttackStart3() {
 void LastBoss::MagicAttackShot3() {
 	_magicFire3->Shot();
 	_magicAttack->BreathEnd();
+}
+
+void LastBoss::BuffDebuffEvent() {
+	int rnd = rand() % 2;
+
+	int value[CharacterParameter::Param::MAX];
+	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
+		value[idx] = 0;
+	}
+
+	if (rnd == 0) {
+		// 自身にバフ。
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
+		BuffAndDebuff(value, 20.0f);
+	}
+	else {
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = -50;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = -20;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = -20;
+		PlayerBuffAndDebuff(value, 20.0f);
+	}
 }
 
 void LastBoss::_AwakeSubClass() {
@@ -133,6 +165,10 @@ void LastBoss::_StartSubClass() {
 	//_sordAttack
 	_magicAttack.reset(new EnemyBreathAttack(this));
 	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
+	_buffAttack.reset(new EnemySingleAttack(this));
+	_buffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
+	_debuffAttack.reset(new EnemySingleAttack(this));
+	_debuffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -190,13 +226,19 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 		//else if(rnd == 2){
 		//	// バフ。
 
-		//	attack = _tailAttack.get();
+		//	attack = _buffAttack.get();
 		//}
 		//else {
 		//	// 鎌攻撃。
 
 		//	attack = 
 		//}
+	}
+	else if (_NowStateIdx == static_cast<State>(LastBossState::LastBossThrone)) {
+		// 玉座ステート。
+		// デバフしかしない。
+
+		return _debuffAttack.get();
 	}
 
 	return attack;
@@ -335,8 +377,21 @@ void LastBoss::_ConfigAnimationEvent() {
 
 		eventFrame = 2.01f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot1));
+		eventFrame += 0.05f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot2));
+		eventFrame += 0.05f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot3));
+	}
+
+	// バフ。
+	{
+		//eventFrame = 1.0f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::BuffEvent));
+	}
+
+	// デバフ。
+	{
+
 	}
 }
 

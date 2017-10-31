@@ -340,6 +340,11 @@ void EnemyCharacter::_BuildAnimation() {
 */
 bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 {
+	//戻り値.
+	bool returnValue = false;
+
+	returnValue = BuffAndDebuff(info->effectValue,info->time);
+
 //	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 //		if (_MyComponent.Parameter)
 //		{
@@ -359,11 +364,52 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 //
 //	return true;
 
-//戻り値.
-	bool returnValue = false;
+//	//戻り値.
+//	bool returnValue = false;
+//
+//	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+//		int value = info->effectValue[idx];
+//		if (value > 0) {
+//			// バフ。
+//			if (_MyComponent.ParticleEffect) {
+//				_MyComponent.ParticleEffect->BuffEffect();
+//			}
+//#ifdef  _DEBUG
+//			else {
+//				// エフェクトコンポーネントないよ。
+//				abort();
+//			}
+//#endif //  _DEBUG
+//
+//			_MyComponent.Parameter->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+//			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
+//			_MyComponent.BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
+//			returnValue = true;
+//		}
+//		else if (value < 0) {
+//			// デバフ(デメリット)。
+//			if (_MyComponent.ParticleEffect) {
+//				_MyComponent.ParticleEffect->DeBuffEffect();
+//			}
+//#ifdef  _DEBUG
+//			else {
+//				// エフェクトコンポーネントないよ。
+//				abort();
+//			}
+//#endif //  _DEBUG
+//			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+//			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
+//			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
+//			returnValue = true;
+//		}
+//	}
+	return returnValue;
+}
+
+bool EnemyCharacter::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
 
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
-		int value = info->effectValue[idx];
+		int value = effectValue[idx];
 		if (value > 0) {
 			// バフ。
 			if (_MyComponent.ParticleEffect) {
@@ -376,10 +422,10 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 			}
 #endif //  _DEBUG
 
-			_MyComponent.Parameter->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+			_MyComponent.Parameter->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), time);
 			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
 			_MyComponent.BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
-			returnValue = true;
+			return true;
 		}
 		else if (value < 0) {
 			// デバフ(デメリット)。
@@ -392,13 +438,13 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 				abort();
 			}
 #endif //  _DEBUG
-			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), time);
 			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
 			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
-			returnValue = true;
+			return true;
 		}
 	}
-	return returnValue;
+	return false;
 }
 
 void EnemyCharacter::_ChangeState(State next) {
