@@ -350,7 +350,7 @@ void ItemWindow::Input()
 				if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
 				{
 					//•\Ž¦ˆÊ’u‚ðˆêŒÂ‚³‚°‚é.
-					_StartLoadCount--;
+					_StartLoadCount = max(0, _StartLoadCount - 1);
 				}
 				else if (_NowSelectItem >= itemCount)
 				{

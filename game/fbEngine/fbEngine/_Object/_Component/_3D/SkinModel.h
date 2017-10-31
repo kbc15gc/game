@@ -151,6 +151,11 @@ public:
 		_CharaLight = cLight;
 	}
 
+	void SetTree()
+	{
+		hoge = true;
+	}
+
 private:
 	//子とか兄弟も一括で描画するための再帰関数
 	void DrawFrame(LPD3DXFRAME pFrame);
@@ -199,4 +204,6 @@ private:
 
 	/** アルファの閾値. */
 	float _Alpha = 0.0f;
+
+	bool hoge = false;
 };

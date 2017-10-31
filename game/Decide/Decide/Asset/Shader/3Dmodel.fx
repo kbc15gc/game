@@ -120,12 +120,12 @@ VS_OUTPUT VSMain(VS_INPUT In)
 
 	Out._Color = In._Color;
 	Out._UV = In._UV;
-    Out._Normal = normalize(mul(In._Normal, (float3x4) g_rotationMatrix)); //法線を回す。
-    Out._Tangent = normalize(mul(In._Tangent, (float3x4) g_rotationMatrix)); //法線を回す。
+    Out._Normal = normalize(mul(In._Normal, g_worldMatrix)); //法線を回す。
+    Out._Tangent = normalize(mul(In._Tangent, g_worldMatrix)); //法線を回す。
 	
 	//大気散乱.
 	CalcMieAndRayleighColors(Out._MieColor, Out._RayColor, Out._PosToCameraDir, Out._World.xyz);
-
+    
 	return Out;
 }
 
@@ -180,24 +180,24 @@ struct PSOutput
  */
 PSOutput PSMain(VS_OUTPUT In)
 {
-	float4 color = 0.0f;	//最終的に出力するカラー
-	float4 diff = 0.0f;	//メッシュのマテリアル
+    float4 color = 0.0f; //最終的に出力するカラー
+    float4 diff = 0.0f; //メッシュのマテリアル
+
+	//カラー
+    if (Texflg)
+    {
+        diff = tex2D(g_TextureSampler, In._UV) * g_Textureblendcolor;
+    }
+    else
+    {
+        diff = g_diffuseMaterial;
+    }
 
     //法線計算.
     float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
 
-	//カラー
-	if (Texflg)
-	{
-		diff = tex2D(g_TextureSampler, In._UV) * g_Textureblendcolor;
-	}
-	else
-	{
-		diff = g_diffuseMaterial;
-	}
-
-	diff *= g_blendcolor;
-	color = diff;
+    diff *= g_blendcolor;
+    color = diff;
 
     //大気散乱.
     if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
@@ -218,7 +218,7 @@ PSOutput PSMain(VS_OUTPUT In)
     
     if (g_EffectFlg.x)
     {
-		//影になっている.
+		    //影になっている.
         float shadowPower = CalcShadow(In._World.xyz);
         shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
         light.xyz *= min(1.0f, shadowPower);
@@ -232,17 +232,19 @@ PSOutput PSMain(VS_OUTPUT In)
         ambient += g_CharaLight.Ambient.rgb;
     }
 
-    //アンビエントライトを加算。
+        //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
 
-	PSOutput Out = (PSOutput)0;
+    clip(diff.a - g_Alpha);
 
-	Out.Color = color;
-	Out.Color.w = diff.a;
-	float3 depth = In._World.w;
-	Out.Depth = float4(depth, 1.0f);
+    PSOutput Out = (PSOutput) 0;
 
-	return Out;
+    Out.Color = color;
+    Out.Color.w = diff.a;
+    float3 depth = In._World.w;
+    Out.Depth = float4(depth, diff.a);
+
+    return Out;
 }
 
 //普通に描画する用
@@ -268,25 +270,25 @@ PSOutput PSSkySphere(VS_OUTPUT In)
 {
     
     //法線計算.
-    float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
+    //float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
 
     //反転しているので-1をかけて法線をもどす
-    float4 diffColor = texCUBE(g_cubeSampler, normal * -1.0f);
+    float4 diffColor = texCUBE(g_cubeSampler, In._Normal * -1.0f);
 
     float3 mono = float3(0.29900f, 0.58700f, 0.11400f);
 
     //白黒にする.
     float Y = dot(mono, diffColor.xyz);
 
-			//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
+	//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
     float cloudRate = pow(Y, 3.0f);
 
-            //星空の白い要素を抜き出す.
-    float starRate = pow(dot(mono, texCUBE(g_NightSampler, normal * -1.0f).xyz), 3.0f);
+    //星空の白い要素を抜き出す.
+    float starRate = pow(dot(mono, texCUBE(g_NightSampler, In._Normal * -1.0f).xyz), 3.0f);
 
     float nightRate = max(0.0f, dot(float3(0.0f, -1.0f, 0.0f), g_atmosParam.v3LightDirection));
 
-			//雲の色.
+	//雲の色.
     float3 eyeToPos = normalize(In._World.xyz - g_cameraPos.xyz);
     float t = saturate(dot(eyeToPos, g_cameraDir));
     float cloudColor = lerp(0.1f, 1.0f, pow(1.0f - nightRate, 3.0f));
@@ -302,7 +304,7 @@ PSOutput PSSkySphere(VS_OUTPUT In)
 
     PSOutput Out = (PSOutput) 0;
 
-    Out.Color = float4(OutColor, 1.0f);
+    Out.Color = float4(OutColor.xyz, 1.0f);
     float3 depth = In._World.w;
     Out.Depth = float4(depth, 1.0f);
 
@@ -443,20 +445,20 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	//diffuseColor += tex2D(g_terrainTexSampler[3], uv) * weights.w;
 	float4 color = diffuseColor;
 
-	float3 normal = normalize(In._Normal);
+    float3 normal = normalize(In._Normal);
 	//ディフューズライト
-	float4 light = DiffuseLight(normal);
+    float4 light = DiffuseLight(normal);
     light.xyz += CalcCharaLight(normal);
 
-	if (g_EffectFlg.x)
-	{
+    if (g_EffectFlg.x)
+    {
 		//影になっている.
-		float shadowPower = CalcShadow(In._World.xyz);
+        float shadowPower = CalcShadow(In._World.xyz);
         //shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
-    	light.xyz *= min(1.0f, shadowPower);
-	}
+        light.xyz *= min(1.0f, shadowPower);
+    }
 
-	color *= light;
+    color *= light;
 
     //大気散乱.
     if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
@@ -505,23 +507,43 @@ struct VS_ShadowIN
 struct VS_ShadowOUT {
 	float4	_Pos	: POSITION;
 	float4	_Shadow	: TEXCOORD0;
+};
+
+struct VS_ShadowTreeOUT
+{
+    float4 _Pos : POSITION;
+    float4 _Shadow : TEXCOORD0;
     float2 _UV : TEXCOORD1;
 };
 
-VS_ShadowOUT VSShadow(VS_ShadowIN In)
+VS_ShadowOUT VSShadow(float4 _Pos : POSITION)
 {
 	VS_ShadowOUT Out = (VS_ShadowOUT)0;
 
-    float4 pos = In._Pos;
+    float4 pos = _Pos;
 	pos = mul(pos, g_worldMatrix);		//モデルのローカル空間からワールド空間に変換。
 	pos = mul(pos, g_viewMatrix);		//ワールド空間からビュー空間に変換。
 	pos = mul(pos, g_projectionMatrix);	//ビュー空間から射影空間に変換。
 	Out._Shadow = Out._Pos = pos;
 
-    Out._UV = In._UV;
-
 	return Out;
 }
+
+VS_ShadowTreeOUT VSTreeShadow(VS_ShadowIN In)
+{
+    VS_ShadowTreeOUT Out = (VS_ShadowTreeOUT) 0;
+
+    float4 pos = In._Pos;
+    pos = mul(pos, g_worldMatrix); //モデルのローカル空間からワールド空間に変換。
+    pos = mul(pos, g_viewMatrix); //ワールド空間からビュー空間に変換。
+    pos = mul(pos, g_projectionMatrix); //ビュー空間から射影空間に変換。
+    Out._Shadow = Out._Pos = pos;
+
+    Out._UV = In._UV;
+
+    return Out;
+}
+
 
 float4 PSShadow(VS_ShadowOUT In) : COLOR	//レンダーターゲット0に出力
 {
@@ -532,7 +554,21 @@ float4 PSShadow(VS_ShadowOUT In) : COLOR	//レンダーターゲット0に出力
 	float dx = ddx(z);
 	float dy = ddy(z);
 
-    return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, tex2D(g_TextureSampler, In._UV).a);
+    return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, 1.0f);
+}
+
+float4 PSTreeShadow(VS_ShadowTreeOUT In) : COLOR //レンダーターゲット0に出力
+{
+	//深度は射影変換済みの頂点の Z / W で算出できる
+	//深度
+    float z = In._Shadow.z / In._Shadow.w;
+
+    float dx = ddx(z);
+    float dy = ddy(z);
+
+    clip(tex2D(g_TextureSampler, In._UV).a - g_Alpha);
+
+    return float4(z, z * z + 0.25f * (dx * dx + dy * dy), 0.0f, 1.0f);
 }
 
 technique Shadow
@@ -542,4 +578,13 @@ technique Shadow
 		VertexShader = compile vs_3_0 VSShadow();
 		PixelShader = compile ps_3_0 PSShadow();
 	}
+}
+
+technique ShadowTree
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VSTreeShadow();
+        PixelShader = compile ps_3_0 PSTreeShadow();
+    }
 }

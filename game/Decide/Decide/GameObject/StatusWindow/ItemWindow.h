@@ -118,6 +118,7 @@ public:
 		if (_Dialog)
 			_Dialog->SetActive(false, true);
 	}
+
 private:
 
 	/**
