@@ -91,12 +91,12 @@ void TitleScene::Update()
 	if (_AnyButton)
 	{
 		
-		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU))
+		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU) || KeyBoardInput->isPush(DIK_UP))
 		{
 			_Select = Select::Continue;
 			_StartBar->transform->SetPosition(455, 400, 0);
 		}
-		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD))
+		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD) || KeyBoardInput->isPush(DIK_DOWN))
 		{
 			_Select = Select::NewGame;
 			_StartBar->transform->SetPosition(455, 470, 0);
