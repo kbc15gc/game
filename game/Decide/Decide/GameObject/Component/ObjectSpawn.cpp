@@ -47,7 +47,7 @@ bool Spawner::_ClosedUpdate() {
 	if (_spawnObject) {
 		if (_timeCounter >= _waitTime) {
 			// 指定した時間が経過した。
-			_spawnObject->SetActive(true);	// アクティブ化する。
+ 			_spawnObject->SetActive(true);	// アクティブ化する。
 
 			// 発生させたので自分を削除する。
 			INSTANCE(GameObjectManager)->AddRemoveList(this);

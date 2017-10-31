@@ -128,7 +128,14 @@ void Player::Awake()
 	/*
 	*	セーブデータがあれば、ここにレベルを入れる。
 	*/
-	_PlayerParam->ParamReset(_ParamTable[0]);
+
+	//int lv = 0;
+
+	// テスト。
+	int lv = 30;
+
+
+	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
 	// HPのバーを表示。
 	{
@@ -516,8 +523,55 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 		returnValue = true;
 	}
 
+	returnValue = BuffAndDebuff(info->effectValue,info->time);
+//	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+//		int value = info->effectValue[idx];
+//		if (value > 0) {
+//			// バフ。
+//			if (_ParticleEffect) {
+//				_ParticleEffect->BuffEffect();
+//			}
+//#ifdef  _DEBUG
+//			else {
+//				// エフェクトコンポーネントないよ。
+//				abort();
+//			}
+//#endif //  _DEBUG
+//
+//			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+//			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
+//			_BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
+//
+//			_StatusUpSound->Play(false);
+//
+//			returnValue = true;
+//		}
+//		else if (value < 0) {
+//			// デバフ(デメリット)。
+//			if (_ParticleEffect) {
+//				_ParticleEffect->DeBuffEffect();
+//			}
+//#ifdef  _DEBUG
+//			else {
+//				// エフェクトコンポーネントないよ。
+//				abort();
+//			}
+//#endif //  _DEBUG
+//			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+//			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
+//			_BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
+//
+//			_StatusDownSound->Play(false);
+//
+//			returnValue = true;
+//		}
+//	}
+	return returnValue;
+}
+
+bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
-		int value = info->effectValue[idx];
+		int value = effectValue[idx];
 		if (value > 0) {
 			// バフ。
 			if (_ParticleEffect) {
@@ -530,13 +584,13 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 			}
 #endif //  _DEBUG
 
-			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), info->time);
+			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 
 			_StatusUpSound->Play(false);
 
-			returnValue = true;
+			return  true;
 		}
 		else if (value < 0) {
 			// デバフ(デメリット)。
@@ -549,16 +603,16 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 				abort();
 			}
 #endif //  _DEBUG
-			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), info->time);
+			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 
 			_StatusDownSound->Play(false);
 
-			returnValue = true;
+			return true;
 		}
 	}
-	return returnValue;
+	return false;
 }
 
 /**
@@ -826,7 +880,6 @@ void Player::SetEquipment(HoldItemBase* equi) {
 
 	//防具。
 	if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
-
 		//装備している防具と装備しようとしている防具が同じなら外す。
 		if (static_cast<HoldArmor*>(equi) == _Equipment->armor) {
 			_Equipment->armor->SetIsEquipFalse();
@@ -839,8 +892,6 @@ void Player::SetEquipment(HoldItemBase* equi) {
 			_Equipment->armor->SetIsEquipFalse();
 			_Equipment->armor = nullptr;
 		}
-
-
 		//防具。
 		_Equipment->armor = static_cast<HoldArmor*>(equi);
 		//装備フラグをtrueにする。

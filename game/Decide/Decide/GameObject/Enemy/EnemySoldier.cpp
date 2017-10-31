@@ -124,7 +124,7 @@ void EnemySoldier::_BuildAnimationSubClass(vector<double>& datas)
 		// 歩行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(EnemySoldierAnim::Walk));
 		// 走行状態。
-		//datas[static_cast<int>(EnemyCharacter::AnimationType::Dash)] = 0.1f;
+		datas[static_cast<int>(EnemySoldierAnim::Run)] = 0.5f;
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(EnemySoldierAnim::Run));
 		// 落下状態。
 		//落ちるモーションが無いので待機で代用。
@@ -172,6 +172,11 @@ void EnemySoldier::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::Damage) {
 		// 攻撃を受けた。
 		// 攻撃開始。
+		_ChangeState(State::StartAttack);
+	}
+	else if (EndStateType == State::Threat) {
+		//威嚇終了。
+		//攻撃開始。
 		_ChangeState(State::StartAttack);
 	}
 }

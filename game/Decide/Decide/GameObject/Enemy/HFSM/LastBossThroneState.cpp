@@ -3,7 +3,7 @@
 #include "LastBossThroneState.h"
 #include "EnemyTranslationState.h"
 #include "EnemyWaitState.h"
-#include "GameObject\Enemy\BossDrarian.h"
+#include "GameObject\Enemy\BossGhost.h"
 
 const int LastBossThroneState::_entourageNum = 2;
 
@@ -22,7 +22,7 @@ void LastBossThroneState::_EntrySubClass() {
 	// ë§ãﬂè¢ä´ÅB
 	float dir = 1.0f;
 	for (int idx = 0; idx < _entourageNum; idx++) {
-		_entourageEnemys.push_back(INSTANCE(GameObjectManager)->AddNew<BossDrarian>("_entourageEnemy", 1));
+		_entourageEnemys.push_back(INSTANCE(GameObjectManager)->AddNew<BossGhost>("_entourageEnemy", 1));
 		vector<BarColor> color;
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);

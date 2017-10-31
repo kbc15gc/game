@@ -19,7 +19,7 @@ public:
 	void LateUpdate()override;
 	void Render() override;
 
-	void Init(const ParticleParameter& param,const Vector3& emitPosition);
+	void Init(const ParticleParameter& param,Transform* parent);
 	/*!
 	*@brief	パーティクルに力を加える。
 	*@param[in]	_ApplyForce		乱数生成に使用する乱数生成機。
@@ -45,6 +45,10 @@ public:
 	inline void SetIsAutoDelete(bool flg) {
 		_isAutoDelete = flg;
 	}
+
+	inline void SetEmitterTransform(Transform* parent) {
+		_parent = parent;
+	}
 private:		
 	static Vertex* _Vertex;						//頂点
 
@@ -69,6 +73,10 @@ private:
 	float			_Brightness;				//輝度。ブルームが有効になっているとこれを強くすると光が溢れます。
 	int				_AlphaBlendMode;			//0半透明合成、1加算合成。
 	Color			_MulColor;					//乗算カラー。
+
+	bool _isParent;	// エミッターと親子関係を組むか。
+
+	Transform* _parent = nullptr;	// エミッターのTransform(親子関係を組む組まないにかかわらず、エミッターの座標系での向きなどを使ってパーティクルの位置を更新するので必要)。
 
 	bool _isAutoDelete = true;	// パーティクルが自発的に削除されるか。
 };

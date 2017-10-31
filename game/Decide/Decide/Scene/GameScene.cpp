@@ -44,6 +44,7 @@
 #include "GameObject\TextImage\AttentionTextOnly.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemySoldier.h"
+#include "GameObject\Enemy\BossDrarian.h"
 
 ImageObject* g_depth;
 
@@ -117,26 +118,27 @@ void GameScene::Start()
 
 	// テスト。
 	// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
-	/*vector<BarColor> Color;
+	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);*/
-	//enemy->SetParamAll(Color, param);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
 
 	//@todo for debug
 	//消して
-	//テスト。
-	//敵(兵士)作成。
-	//EnemySoldier* soldier = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+	//
+	//BossDrarian* soldier = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("BossDrarian", 1);
 	//// パラメーター設定。
 	//vector<BarColor> cl;
 	//cl.push_back(BarColor::Red);
 	//vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
 	//soldier->SetParamAll(cl, par);
+	//Vector3 p = _Player->transform->GetPosition();
+	//soldier->transform->SetPosition(p);
 
 	FOR(i,2)
 	{

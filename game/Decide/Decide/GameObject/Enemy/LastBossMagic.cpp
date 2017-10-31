@@ -72,10 +72,10 @@ void LastBossMagic::Update() {
 			_initParticleParam.fadeTime = 0.5f;
 			_initParticleParam.initPositionRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
 			_initParticleParam.initVelocity = Vector3::zero;
-			_initParticleParam.initVelocityVelocityRandomMargin = Vector3(15.0f, 15.0f, 15.0f);
-			_initParticleParam.intervalTime = 0.001f;
+			_initParticleParam.initVelocityVelocityRandomMargin = Vector3(6.0f, 6.0f, 6.0f);
+			_initParticleParam.intervalTime = 0.005f;
 			_initParticleParam.life = 0.002f;
-			_initParticleParam.size = Vector2(1.0f, 1.0f);
+			_initParticleParam.size = Vector2(2.0f, 2.0f);
 			_initParticleParam.mulColor = Color(1.3f, 1.0f, 1.3f, 1.0f);
 			_initParticleParam.isParent = false;
 
