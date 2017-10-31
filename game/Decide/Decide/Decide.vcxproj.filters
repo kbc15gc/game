@@ -328,6 +328,9 @@
     <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Ground\RockCave.cpp">
+      <Filter>GameObject\Ground</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -670,6 +673,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\EnemySoldier.h">
       <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Ground\RockCave.h">
+      <Filter>GameObject\Ground</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -269,7 +269,7 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
-
+private:
 	//アニメーションイベント
 	void AnimationEventControl();
 	//攻撃1
