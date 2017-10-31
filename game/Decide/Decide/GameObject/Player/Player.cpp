@@ -193,7 +193,7 @@ void Player::Awake()
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
 	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 
-	_Model->SetCharacterLight(&_CharaLight);
+	//_Model->SetCharacterLight(&_CharaLight);
 
 	_CharaLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
 	_CharaLight.SetDiffuseLightDirection(1, Vector3(0.0f, 0.0f, 0.0f));
@@ -614,16 +614,17 @@ void Player::_Damage()
 	}
 
 	//海に入るとダメージを食らう。
-	static float time = 0.0f;
-	time += Time::DeltaTime();
 	//海の中の場合。
 	//HPが0以上なら。
 	//デバッグ時でない。
-	//2秒間隔で。
+	//1秒間隔で。
 
 	if (transform->GetLocalPosition().y < 48.5f && _PlayerParam->GetParam(CharacterParameter::HP) > 0 && _Debug == false)
 	{
-		if (fmod(time, 2.0f) >= 1.0f)
+		static float time = 0.0f;
+		time += Time::DeltaTime();
+		//if (fmod(time, 1.0f) >= 1.0f)
+		if(time >= 0.5f)
 		{
 			//最大HPの1割ずつ減る。
 			_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(static_cast<int>(_PlayerParam->GetMaxHP() * 0.1f)))));

@@ -208,17 +208,22 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 }
 
 //所持数を減らす。
-bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
+bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 	int work = num;
 	bool isDeleteList = false;
 
+	//装備しているなら減らさない。
+	if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
+		return isDeleteList;
+	}
+
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[static_cast<int>(item->TypeID)].begin(); work > 0 && itr != _InventoryItemList[static_cast<int>(item->TypeID)].end();)
+	for (auto itr = _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].begin(); work > 0 && itr != _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].end();)
 	{
 		//IDの一致。
-		if ((*itr) != nullptr&&item->ID == (*itr)->GetInfo()->ID)
+		if ((*itr) != nullptr&&item==(*itr)/*item->ID == (*itr)->GetInfo()->ID*/)
 		{
-			switch (item->TypeID) {
+			switch (item->GetInfo()->TypeID) {
 			case Item::ItemCodeE::Item:
 				//引数分所持品の数を更新。
 				work = static_cast<ConsumptionItem*>(*itr)->SubHoldNum(work);
@@ -248,10 +253,10 @@ bool Inventory::SubHoldNum(Item::BaseInfo* item, int num) {
 		}
 	}
 
-	_HoldNumList[static_cast<int>(item->TypeID)][item->ID] -= (num - work);	// 新しく追加した数だけ所持数合計に加算。
+	_HoldNumList[static_cast<int>(item->GetInfo()->TypeID)][item->GetInfo()->ID] -= (num - work);	// 新しく追加した数だけ所持数合計に加算。
 
 	//所持品の所持数書き出し。
-	_OutData(item->TypeID);
+	_OutData(item->GetInfo()->TypeID);
 
 	return isDeleteList;
 }

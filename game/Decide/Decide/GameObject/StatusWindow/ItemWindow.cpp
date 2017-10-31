@@ -309,7 +309,7 @@ void ItemWindow::Input()
 					break;
 				case Dialog::Dump:
 					//ŽÌ‚Ä‚é.
-					INSTANCE(Inventory)->SubHoldNum(_Item2DList[_NowSelectItem]->GetItemData()->GetInfo(), 1);
+					INSTANCE(Inventory)->SubHoldNum(_Item2DList[_NowSelectItem]->GetItemData(), 1);
 					isPack = true;
 					break;
 				case Dialog::UseItem:
@@ -320,7 +320,7 @@ void ItemWindow::Input()
 					if (item->UseItem() == false) {
 						
 					}
-					INSTANCE(Inventory)->SubHoldNum(item->GetInfo(), 1);
+					INSTANCE(Inventory)->SubHoldNum(item, 1);
 					isPack = true;
 					break;
 				}
