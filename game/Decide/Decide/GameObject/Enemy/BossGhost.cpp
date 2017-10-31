@@ -20,7 +20,7 @@ BossGhost::~BossGhost()
 
 void BossGhost::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
-	SetFileName("DRARIAN.X");
+	SetFileName("Ghost_Taiki.X");
 }
 
 void BossGhost::_StartSubClass() {

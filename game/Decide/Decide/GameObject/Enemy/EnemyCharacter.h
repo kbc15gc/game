@@ -451,7 +451,7 @@ public:
 	// 引数：	効果値(パーセント、マイナスでデバフ)。
 	//			効果時間。
 	inline bool PlayerBuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
-		_Player->BuffAndDebuff(effectValue, time);
+		return _Player->BuffAndDebuff(effectValue, time);
 	}
 
 	/**
