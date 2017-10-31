@@ -693,8 +693,16 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 		//モデル描画
 		for (DWORD i = 0; i < pMeshContainer->NumMaterials; i++)
 		{
+			
 			Material* material = pMeshContainer->material[i];
-			_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+			if (material)
+			{
+				_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+			}
+			else
+			{
+				_Effect->SetTexture("g_Texture", nullptr);
+			}
 
 			//この関数を呼び出すことで、データの転送が確定する。
 			_Effect->CommitChanges();
