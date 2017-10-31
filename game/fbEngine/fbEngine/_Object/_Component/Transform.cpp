@@ -331,6 +331,13 @@ void Transform::SetParent(Transform * parent)
 	}
 	if (parent) {
 		// 親が設定された。
+		//新しい親から
+		//新しいローカルを計算する。
+		SetPosition(_Position);
+		SetAngle(_Angle);
+		SetScale(_Scale);
+		SetRotation(_Rotation);
+
 
 		// 親の子供に自分を追加。
 		parent->AddChild(this);

@@ -20,9 +20,10 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_ParmWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ParmWindow", _TradeWindow->GetPriorty());
 	_ParmWindow->SetTexture(LOADTEXTURE("window.png"));
 	_ParmWindow->SetSize(Vector2(256, 400));
-	_ParmWindow->transform->SetLocalPosition(Vector3(600, 0, 0));
+
 	_ParmWindow->SetPivot(Vector2(0.5f, 0.0f));
 	_ParmWindow->transform->SetParent(_TradeWindow->transform);
+	_ParmWindow->transform->SetLocalPosition(Vector3(600, 0, 0));
 
 	//インスタンス化。
 	_ParmText = INSTANCE(GameObjectManager)->AddNew<TextObject>("Parmtext", _ParmWindow->GetPriorty());
