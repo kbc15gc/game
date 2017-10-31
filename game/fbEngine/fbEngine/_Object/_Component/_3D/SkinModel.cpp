@@ -205,9 +205,13 @@ void SkinModel::DrawMeshContainer(
 	{
 		//エフェクト読み込み
 		if (pMeshContainer->pSkinInfo != NULL)
+		{
 			_Effect = EffectManager::LoadEffect("AnimationModel.fx");
+		}
 		else
+		{
 			_Effect = EffectManager::LoadEffect("3Dmodel.fx");
+		}
 
 		//テクニックをセット
 		if(terain)
@@ -220,8 +224,14 @@ void SkinModel::DrawMeshContainer(
 			{
 				_Effect->SetTechnique("InstancingRender");
 			}
+			else if (_SkyBox)
+			{
+				_Effect->SetTechnique("SkySphereRender");
+			}
 			else
+			{
 				_Effect->SetTechnique("NormalRender");
+			}
 		}
 
 		//開始（必ず終了すること）
@@ -606,9 +616,14 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 {
 	//エフェクト読み込み
 	if (pMeshContainer->pSkinInfo != NULL)
+	{
 		_Effect = EffectManager::LoadEffect("AnimationModel.fx");
+	}
 	else
+	{
 		_Effect = EffectManager::LoadEffect("3Dmodel.fx");
+	}
+
 	//テクニック設定
 	_Effect->SetTechnique("Shadow");
 
@@ -619,6 +634,19 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	//影カメラのビュープロジェクション行列を送る
 	_Effect->SetMatrix("g_viewMatrix", INSTANCE(SceneManager)->GetShadowMap()->GetLVMatrix());
 	_Effect->SetMatrix("g_projectionMatrix", INSTANCE(SceneManager)->GetShadowMap()->GetLPMatrix());
+
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+	if ((_ModelEffect & ModelEffectE::ALPHA) > 0)
+	{
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	}
+	else
+	{
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	}
 
 	//アニメーションの有無で分岐
 	if (pMeshContainer->pSkinInfo != NULL)
@@ -665,6 +693,17 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 		//モデル描画
 		for (DWORD i = 0; i < pMeshContainer->NumMaterials; i++)
 		{
+			
+			Material* material = pMeshContainer->material[i];
+			if (material)
+			{
+				_Effect->SetTexture("g_Texture", material->GetTexture(Material::TextureHandleE::DiffuseMap));
+			}
+			else
+			{
+				_Effect->SetTexture("g_Texture", nullptr);
+			}
+
 			//この関数を呼び出すことで、データの転送が確定する。
 			_Effect->CommitChanges();
 			//メッシュ描画
@@ -675,6 +714,11 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	//終了
 	_Effect->EndPass();
 	_Effect->End();
+	
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+
 }
 
 void CopyWorldMatrixToVertexBuffer(IDirect3DVertexBuffer9* buffer, vector<D3DXMATRIX*> stack)

@@ -186,7 +186,7 @@ PSOutput PSMain( VS_OUTPUT In )
     {
 		//‰e‚É‚È‚Á‚Ä‚¢‚é.
         float shadowPower = CalcShadow(In._World.xyz);
-        shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
+        shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
         light.xyz *= min(1.0f, shadowPower);
     }
 
