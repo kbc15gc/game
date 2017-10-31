@@ -198,6 +198,12 @@ void Animation::_EndAnimation(const float endtime)
 	}
 	else
 	{
+		for (auto& call : _callback) {
+			// 関数ポインタに設定された関数を実行。
+
+			(call->object->*(call->callback))(_CurrentTrackNo);
+		}
+
 		//アニメーション時間をリセット
 		SetLocalAnimationTime(_CurrentTrackNo, _LocalAnimationTime - endtime);
 	}

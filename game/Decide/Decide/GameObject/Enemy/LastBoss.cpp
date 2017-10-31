@@ -103,30 +103,29 @@ void LastBoss::MagicAttackShot3() {
 	_magicAttack->BreathEnd();
 }
 
-void LastBoss::DebuffEvent() {
-	int value[CharacterParameter::Param::MAX];
-	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
-		value[idx] = 0;
-	}
-	value[static_cast<int>(CharacterParameter::Param::ATK)] = -50;
-	value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
-	value[static_cast<int>(CharacterParameter::Param::DEF)] = -20;
-	value[static_cast<int>(CharacterParameter::Param::MDE)] = -20;
-	PlayerBuffAndDebuff(value, 20.0f);
-}
+void LastBoss::BuffDebuffEvent() {
+	int rnd = rand() % 2;
 
-void LastBoss::BuffEvent()
-{
-	// 自身にバフ。
 	int value[CharacterParameter::Param::MAX];
 	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
 		value[idx] = 0;
 	}
-	value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
-	value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
-	value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
-	value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
-	BuffAndDebuff(value, 20.0f);
+
+	if (rnd == 0) {
+		// 自身にバフ。
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
+		BuffAndDebuff(value, 20.0f);
+	}
+	else {
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = -50;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = -20;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = -20;
+		PlayerBuffAndDebuff(value, 20.0f);
+	}
 }
 
 void LastBoss::_AwakeSubClass() {

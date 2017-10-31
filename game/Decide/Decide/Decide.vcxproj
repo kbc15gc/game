@@ -186,6 +186,7 @@
     <ClInclude Include="GameObject\Component\ParameterBar.h" />
     <ClInclude Include="GameObject\Component\ParticleEffect.h" />
     <ClInclude Include="GameObject\Enemy\BossDrarian.h" />
+    <ClInclude Include="GameObject\Enemy\BossGhost.h" />
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttack.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="GameObject\Component\ParameterBar.cpp" />
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp" />
     <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
+    <ClCompile Include="GameObject\Enemy\BossGhost.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttack.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />

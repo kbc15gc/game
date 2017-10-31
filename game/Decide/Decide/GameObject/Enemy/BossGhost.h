@@ -1,50 +1,27 @@
 #pragma once
 #include "EnemyCharacter.h"
+#include "fbEngine\_Object\_GameObject\ParticleEmitter.h"
 #include "GameObject\Enemy\LaserBreath.h"
-
-class LastBossMagic;
-class SordShock;
+#include "GameObject\History\Chip.h"
 
 // 継承クラス。
-// ボスエネミー(ラスボス)。
-class LastBoss :
+// ボスエネミー(側近ゴースト)。
+class BossGhost :
 	public EnemyCharacter
 {
-public:
-	enum class LastBossState { LastBossThrone = static_cast<int>(State::Death) + 1, LastBossMagician, LastBossHistory, LastBossDown };
-
 private:
-	// エネミー(ラスボス)のアニメーション番号。
-	enum class AnimationLastBoss {
+	// ボス(歩行型ドラゴン)のアニメーション番号。
+	enum class AnimationBossGhost {
 		Wait = 0,
-		SordAttack,
-		Magic,
-		Damage,
-		Move,
-		Max,
+		Max
 	};
-
 public:
-	LastBoss(const char* name);
-	~LastBoss();
+	BossGhost(const char* name);
+	~BossGhost();
 
-	void SordAttackEvent();
-	void SordAttackEvent2();
-	void MagicAttackStart1();
-	void MagicAttackShot1();
-	void MagicAttackStart2();
-	void MagicAttackShot2();
-	void MagicAttackStart3();
-	void MagicAttackShot3();
-	void BuffDebuffEvent();
+	// アニメーションイベント関連。
 
-#ifdef _DEBUG
-	void Debug()override;
-#endif // _DEBUG
 
-	inline void SetSaveState(LastBossState state) {
-		_saveState = state;
-	}
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -79,10 +56,7 @@ private:
 		_MyComponent.CharacterExtrude->AddAttribute(Collision_ID::ENEMY);
 	}
 
-	// 絶対に他のクラスでも使わないステートはこっちに登録。
-	void _BuildStateSubClass()override;
-
-	// アニメーション番号のテーブルを作成。
+	// 継承先でアニメーション番号のテーブルを作成。
 	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
 	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
 	void _BuildAnimationSubClass(vector<double>& datas)override;
@@ -94,21 +68,24 @@ private:
 	void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
+		chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
+		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				//落とすアイテムかをチェック。
+				if (_Type[idx][i] != -1)
+				{
+					DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+					//落とすアイテムのidとコードを指定。
+					item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
+				}
+			}
+		}
 	}
 
-
 private:
-	LastBossState _saveState;
-	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
-	unique_ptr<EnemySingleAttack> _buffAttack;
-	unique_ptr<EnemySingleAttack> _debuffAttack;
-	unique_ptr<EnemyBreathAttack> _magicAttack;
-
-	LastBossMagic* _magicFire1 = nullptr;
-	LastBossMagic* _magicFire2 = nullptr;
-	LastBossMagic* _magicFire3 = nullptr;
-
-	SordShock* _sordAttackShot0 = nullptr;
-	SordShock* _sordAttackShot1 = nullptr;
-	SordShock* _sordAttackShot2 = nullptr;
+	State _saveState;
+	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
 };
