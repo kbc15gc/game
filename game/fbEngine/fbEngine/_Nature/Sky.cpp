@@ -41,9 +41,10 @@ void Sky::Awake()
 	_SunPlate->SetActive(false);
 
 	_MoonPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
-	_MoonPlate->SetTexture(LOADTEXTURE("UI/circle128.png"));
-	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 6.0f);
-	_MoonPlate->SetSize(Vector2(30.0f, 30.0f));
+	_MoonPlate->SetTexture(LOADTEXTURE("moon0015.png"));
+	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 1.0f);
+	Vector2 size = _MoonPlate->GetComponent<PlatePrimitive>()->GetSize();
+	_MoonPlate->SetSize(size * 0.5f);
 	_MoonPlate->SetBillboard(true);
 	_MoonPlate->SetActive(false);
 
@@ -88,14 +89,9 @@ void Sky::Update()
 			limLightDir.Scale(-1.0f);
 			limLightDir.Normalize();
 
-			if (_SunDir.Dot(Vector3::up) <= 0.0f)
-			{
-				light->GetLight()[1]->SetDirection(limLightDir * -1);
-			}
-			else
-			{
-				light->GetLight()[1]->SetDirection(Vector3::zero);
-			}
+			light->GetLight()[1]->SetDirection(limLightDir * -1);
+			float MoonColor = max(0.0f, _SunDir.Dot(Vector3::up) * -1) * 0.5f;
+			light->GetLight()[1]->SetColor(Color(MoonColor, MoonColor, MoonColor, 10.0f));
 
 			//•½sŒõŒ¹‚Ì0”Ô–Ú‚ðXV.
 			light->GetLight()[0]->SetDirection(limLightDir);
@@ -112,14 +108,26 @@ void Sky::Update()
 	}
 
 	transform->SetLocalPosition(camera->GetTarget());
+
+	float angle = _SunDir.Dot(Vector3::up);
+	if (angle > 0.0f)
+	{
+		_ShadowLightPosition = _SunDir;
+	}
+	else
+	{
+		_ShadowLightPosition = _SunDir * -1;
+	}
+
 	Vector3 sunModelPos = _SunDir;
 	sunModelPos.Scale(2000.0f);
 	sunModelPos.Add(camera->GetTarget());
 	_SunPlate->transform->SetLocalPosition(sunModelPos);
-	Vector3 moonModelPos = _SunDir * -1;
-	moonModelPos.Scale(2000.0f);
-	moonModelPos.Add(camera->GetTarget());
-	_MoonPlate->transform->SetLocalPosition(moonModelPos);
+
+	Vector3 MoonPos = _SunDir * -1;
+	MoonPos.Scale(2000.0f);
+	MoonPos.Add(camera->GetTarget());
+	_MoonPlate->transform->SetLocalPosition(MoonPos);
 
 	transform->UpdateTransform();
 }
