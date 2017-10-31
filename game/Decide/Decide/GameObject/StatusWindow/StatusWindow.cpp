@@ -25,6 +25,7 @@ void StatusWindow::Awake()
 	backWindow->SetTexture(LOADTEXTURE("UI/Panel 5.png"));
 	backWindow->SetSize(backWindow->GetSize() * 1.3f);
 	backWindow->transform->SetParent(transform);
+	backWindow->transform->SetLocalPosition(Vector3::zero);
 
 	//ƒAƒCƒeƒ€ˆê——‚Ì”wŒi.
 	ImageObject* itemWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("StatusWindow", WindowBackPriorty + 1);
@@ -38,6 +39,7 @@ void StatusWindow::Awake()
 	{
 		ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", WindowBackPriorty + 3);
 		iw->transform->SetParent(transform);
+		iw->transform->SetLocalPosition(Vector3::zero);
 		iw->SetActive(false, true);
 		_ItemWindowList.push_back(iw);
 	}
