@@ -825,7 +825,6 @@ void Player::SetEquipment(HoldItemBase* equi) {
 
 	//防具。
 	if (equi->GetInfo()->TypeID == Item::ItemCodeE::Armor) {
-
 		//装備している防具と装備しようとしている防具が同じなら外す。
 		if (static_cast<HoldArmor*>(equi) == _Equipment->armor) {
 			_Equipment->armor->SetIsEquipFalse();
@@ -838,8 +837,6 @@ void Player::SetEquipment(HoldItemBase* equi) {
 			_Equipment->armor->SetIsEquipFalse();
 			_Equipment->armor = nullptr;
 		}
-
-
 		//防具。
 		_Equipment->armor = static_cast<HoldArmor*>(equi);
 		//装備フラグをtrueにする。

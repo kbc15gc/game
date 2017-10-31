@@ -193,7 +193,7 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 		else
 		{
 			//•‹ï‚ğÌ‚Ä‚æ‚¤‚Æ‚µ‚Ä‚¢‚éB
-			if (item->GetInfo()->TypeID==Item::ItemCodeE::Armor|| item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
+			if (item->GetInfo()->TypeID==Item::ItemCodeE::Armor || item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
 				//‘•”õ‚µ‚Ä‚¢‚é•‹ï‚ğÌ‚Ä‚æ‚¤‚Æ‚µ‚Ä‚¢‚éB
 				if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
 					return;

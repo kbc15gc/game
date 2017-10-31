@@ -3,7 +3,7 @@
 class EnemySoldier :public EnemyCharacter
 {
 private:
-	//ゴーレムのアニメーション番号
+	//ソルジャーのアニメーション番号
 	enum class EnemySoldierAnim
 	{
 
