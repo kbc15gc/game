@@ -128,7 +128,14 @@ void Player::Awake()
 	/*
 	*	セーブデータがあれば、ここにレベルを入れる。
 	*/
-	_PlayerParam->ParamReset(_ParamTable[0]);
+
+	//int lv = 0;
+
+	// テスト。
+	int lv = 30;
+
+
+	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
 	// HPのバーを表示。
 	{

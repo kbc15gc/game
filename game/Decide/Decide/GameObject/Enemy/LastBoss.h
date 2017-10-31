@@ -3,6 +3,7 @@
 #include "GameObject\Enemy\LaserBreath.h"
 
 class LastBossMagic;
+class SordShock;
 
 // 継承クラス。
 // ボスエネミー(ラスボス)。
@@ -104,7 +105,7 @@ private:
 	LastBossMagic* _magicFire2 = nullptr;
 	LastBossMagic* _magicFire3 = nullptr;
 
-	LaserBreath* _sordAttackLaser0 = nullptr;
-	LaserBreath* _sordAttackLaser1 = nullptr;
-	LaserBreath* _sordAttackLaser2 = nullptr;
+	SordShock* _sordAttackShot0 = nullptr;
+	SordShock* _sordAttackShot1 = nullptr;
+	SordShock* _sordAttackShot2 = nullptr;
 };

@@ -27,7 +27,7 @@ Transform::~Transform()
 	if(_Parent)
 	{
 		//親の子から自分を外す
-		_Parent->RemoveChild(this);
+		SetParent(nullptr);
 	}
 	//子がいるなら
 	if(_Children.size() > 0)
@@ -36,8 +36,14 @@ Transform::~Transform()
 		vector<Transform*>::iterator it = _Children.begin();
 		while (it != _Children.end())
 		{
+			(*it)->_LocalPosition = (*it)->_Position;
+			(*it)->_LocalScale = (*it)->_Scale;
+			(*it)->_LocalAngle = (*it)->_Angle + (*it)->_Parent->_Angle;
+			(*it)->_LocalRotation = (*it)->_Rotation;
 			(*it)->_Parent = nullptr;
-			it++;
+			(*it)->UpdateTransform();
+
+			it = _Children.erase(it);
 		}
 	}
 }

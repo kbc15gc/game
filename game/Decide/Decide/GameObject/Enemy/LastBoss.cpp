@@ -12,6 +12,7 @@
 #include "GameObject\Enemy\EnemyAttack.h"
 #include "GameObject\Enemy\LastBossMagic.h"
 #include "GameObject\Enemy\LaserBreath.h"
+#include "GameObject\Enemy\SordShock.h"
 
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 
@@ -32,17 +33,23 @@ void LastBoss::SordAttackEvent() {
 	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
 	attack->RemoveParent();
 
-	_sordAttackLaser0 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser0->Create(this, Vector3(0.0f, -1.0f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,"t1.png",Vector2(0.5f, 0.5f),2.0f,Color(1.5f,0.5f,1.5f,1.0f));
-	_sordAttackLaser0->BreathStart();
+	_sordAttackShot0 = INSTANCE(GameObjectManager)->AddNew<SordShock>("sordShock", 8);
+	_sordAttackShot0->Create(this, Vector3(0.0f, -1.0f, 2.0f),transform->GetForward() * 5.0f,15.0f);
+	_sordAttackShot0->BreathStart();
+	_sordAttackShot0->BreathEnd();
 
-	_sordAttackLaser1 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser1->Create(this, Vector3(0.0f, -1.0f, 4.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f),1.2f ,Color(1.5f, 1.0f, 0.0f, 1.0f));
-	_sordAttackLaser1->BreathStart();
 
-	_sordAttackLaser2 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	_sordAttackLaser2->Create(this, Vector3(0.0f, -1.0f, 5.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f), 1.2f,Color(1.5f, 1.0f, 0.0f, 1.0f));
-	_sordAttackLaser2->BreathStart();
+	//_sordAttackLaser0 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	//_sordAttackLaser0->Create(this, Vector3(0.0f, -1.0f, 3.0f), 10.0f, transform->GetRight() ,-90.0f,"t1.png",Vector2(0.5f, 0.5f),2.0f,Color(1.5f,0.5f,1.5f,1.0f));
+	//_sordAttackLaser0->BreathStart();
+
+	//_sordAttackLaser1 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	//_sordAttackLaser1->Create(this, Vector3(0.0f, -1.0f, 4.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f),1.2f ,Color(1.5f, 1.0f, 0.0f, 1.0f));
+	//_sordAttackLaser1->BreathStart();
+
+	//_sordAttackLaser2 = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
+	//_sordAttackLaser2->Create(this, Vector3(0.0f, -1.0f, 5.0f), 10.0f, transform->GetRight(), -90.0f, "MurasakiHonoo.png", Vector2(0.5f, 0.5f), 1.2f,Color(1.5f, 1.0f, 0.0f, 1.0f));
+	//_sordAttackLaser2->BreathStart();
 
 
 	// 攻撃音再生。
@@ -50,16 +57,16 @@ void LastBoss::SordAttackEvent() {
 }
 
 void LastBoss::SordAttackEvent2() {
-	_sordAttackLaser0->BreathEnd();
-	_sordAttackLaser1->BreathEnd();
-	_sordAttackLaser2->BreathEnd();
+	//_sordAttackLaser0->BreathEnd();
+	//_sordAttackLaser1->BreathEnd();
+	//_sordAttackLaser2->BreathEnd();
 }
 
 void LastBoss::MagicAttackStart1() {
 	_magicFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(20.0f));
-	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 4.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
 
 	_magicAttack->BreathStart(_magicFire1);
 }
@@ -73,7 +80,7 @@ void LastBoss::MagicAttackStart2() {
 	_magicFire2 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-20.0f));
-	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 5.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 4.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
 
 	_magicAttack->BreathStart(_magicFire2);
 }
@@ -85,7 +92,7 @@ void LastBoss::MagicAttackShot2() {
 
 void LastBoss::MagicAttackStart3() {
 	_magicFire3 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
-	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 5.0f), (transform->GetForward() * 15.0f));
+	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 4.0f), (transform->GetForward() * 15.0f));
 
 	_magicAttack->BreathStart(_magicFire3);
 	_magicAttack->BreathEnd();
@@ -174,19 +181,19 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 		// 魔術師ステート。
 		// 確率で攻撃と魔王へのバフを行う。
 
-		rnd = rand() % 2;
-		//rnd = rand() % 4;
+		//rnd = rand() % 2;
+		////rnd = rand() % 4;
 
-		if (rnd == 0) {
+		//if (rnd == 0) {
 			// 剣攻撃。
 
-			attack = _sordAttack.get();
-		}
-		else if (rnd == 1) {
+			//attack = _sordAttack.get();
+		//}
+		//else if (rnd == 1) {
 			// 魔法攻撃。
 
 			attack = _magicAttack.get();
-		}
+		//}
 		//else if(rnd == 2){
 		//	// バフ。
 
@@ -335,7 +342,9 @@ void LastBoss::_ConfigAnimationEvent() {
 
 		eventFrame = 2.01f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot1));
+		eventFrame += 0.05f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot2));
+		eventFrame += 0.05f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot3));
 	}
 }

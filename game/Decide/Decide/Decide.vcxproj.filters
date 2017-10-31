@@ -328,6 +328,9 @@
     <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\SordShock.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -669,6 +672,9 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\EnemySoldier.h">
+      <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\SordShock.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

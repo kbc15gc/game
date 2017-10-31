@@ -215,6 +215,7 @@
     <ClInclude Include="GameObject\Enemy\LastBoss.h" />
     <ClInclude Include="GameObject\Enemy\LastBossMagic.h" />
     <ClInclude Include="GameObject\Enemy\SearchViewAngle.h" />
+    <ClInclude Include="GameObject\Enemy\SordShock.h" />
     <ClInclude Include="GameObject\GameManager.h" />
     <ClInclude Include="GameObject\Ground\Dungeon.h" />
     <ClInclude Include="GameObject\Ground\Ground.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="GameObject\Enemy\LastBoss.cpp" />
     <ClCompile Include="GameObject\Enemy\LastBossMagic.cpp" />
     <ClCompile Include="GameObject\Enemy\SearchViewAngle.cpp" />
+    <ClCompile Include="GameObject\Enemy\SordShock.cpp" />
     <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\Ground\Dungeon.cpp" />
     <ClCompile Include="GameObject\Ground\Ground.cpp" />

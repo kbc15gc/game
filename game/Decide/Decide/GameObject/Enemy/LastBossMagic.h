@@ -33,6 +33,7 @@ public:
 
 	inline void Shot() {
 		_isShot = true;
+		_attack[0]->SetIsHit(false);
 	}
 
 private:
