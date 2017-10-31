@@ -36,6 +36,8 @@ public:
 	void MagicAttackShot2();
 	void MagicAttackStart3();
 	void MagicAttackShot3();
+	void DebuffEvent();
+	void BuffEvent();
 
 #ifdef _DEBUG
 	void Debug()override;
@@ -99,6 +101,8 @@ private:
 private:
 	LastBossState _saveState;
 	unique_ptr<EnemySingleAttack> _sordAttack;	// ’PUŒ‚ˆ—B
+	unique_ptr<EnemySingleAttack> _buffAttack;
+	unique_ptr<EnemySingleAttack> _debuffAttack;
 	unique_ptr<EnemyBreathAttack> _magicAttack;
 
 	LastBossMagic* _magicFire1 = nullptr;

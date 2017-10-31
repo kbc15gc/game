@@ -444,6 +444,16 @@ public:
 	*/
 	bool ItemEffect(Item::ItemInfo* info);
 
+	// バフとデバフを掛ける。
+	bool BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time);
+
+	// プレイヤーにデバフを与える。
+	// 引数：	効果値(パーセント、マイナスでデバフ)。
+	//			効果時間。
+	inline bool PlayerBuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
+		_Player->BuffAndDebuff(effectValue, time);
+	}
+
 	/**
 	* エフェクト用更新.
 	*/

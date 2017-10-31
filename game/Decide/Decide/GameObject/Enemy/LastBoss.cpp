@@ -103,6 +103,32 @@ void LastBoss::MagicAttackShot3() {
 	_magicAttack->BreathEnd();
 }
 
+void LastBoss::DebuffEvent() {
+	int value[CharacterParameter::Param::MAX];
+	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
+		value[idx] = 0;
+	}
+	value[static_cast<int>(CharacterParameter::Param::ATK)] = -50;
+	value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
+	value[static_cast<int>(CharacterParameter::Param::DEF)] = -20;
+	value[static_cast<int>(CharacterParameter::Param::MDE)] = -20;
+	PlayerBuffAndDebuff(value, 20.0f);
+}
+
+void LastBoss::BuffEvent()
+{
+	// 自身にバフ。
+	int value[CharacterParameter::Param::MAX];
+	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
+		value[idx] = 0;
+	}
+	value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
+	BuffAndDebuff(value, 20.0f);
+}
+
 void LastBoss::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("LastBoss.X");
@@ -140,6 +166,10 @@ void LastBoss::_StartSubClass() {
 	//_sordAttack
 	_magicAttack.reset(new EnemyBreathAttack(this));
 	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
+	_buffAttack.reset(new EnemySingleAttack(this));
+	_buffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
+	_debuffAttack.reset(new EnemySingleAttack(this));
+	_debuffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -181,29 +211,35 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 		// 魔術師ステート。
 		// 確率で攻撃と魔王へのバフを行う。
 
-		//rnd = rand() % 2;
-		////rnd = rand() % 4;
+		rnd = rand() % 2;
+		//rnd = rand() % 4;
 
-		//if (rnd == 0) {
+		if (rnd == 0) {
 			// 剣攻撃。
 
-			//attack = _sordAttack.get();
-		//}
-		//else if (rnd == 1) {
+			attack = _sordAttack.get();
+		}
+		else if (rnd == 1) {
 			// 魔法攻撃。
 
 			attack = _magicAttack.get();
-		//}
+		}
 		//else if(rnd == 2){
 		//	// バフ。
 
-		//	attack = _tailAttack.get();
+		//	attack = _buffAttack.get();
 		//}
 		//else {
 		//	// 鎌攻撃。
 
 		//	attack = 
 		//}
+	}
+	else if (_NowStateIdx == static_cast<State>(LastBossState::LastBossThrone)) {
+		// 玉座ステート。
+		// デバフしかしない。
+
+		return _debuffAttack.get();
 	}
 
 	return attack;
@@ -346,6 +382,17 @@ void LastBoss::_ConfigAnimationEvent() {
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot2));
 		eventFrame += 0.05f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot3));
+	}
+
+	// バフ。
+	{
+		//eventFrame = 1.0f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::BuffEvent));
+	}
+
+	// デバフ。
+	{
+
 	}
 }
 
