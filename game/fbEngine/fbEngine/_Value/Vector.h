@@ -756,6 +756,10 @@ public:
 		Quaternion qminus = Quaternion(-(this->x), -(this->y), -(this->z), this->w);
 		//クォータニオンの長さの二乗
 		Quaternion qlength = (qminus*(*this));
+		if (qlength.x == 0.0f ||
+			qlength.y == 0.0f ||
+			qlength.z == 0.0f)
+			return;
 		//逆クォータニオン作成
 		*this = qminus / qlength;
 	}

@@ -329,6 +329,10 @@ void Transform::SetParent(Transform * parent)
 		// 親を外すので、現在の親の子供リストから自分を外す。
 		this->_Parent->RemoveChild(this);
 	}
+
+	//親に登録
+	this->_Parent = parent;
+
 	if (parent) {
 		// 親が設定された。
 		//新しい親から
@@ -351,8 +355,7 @@ void Transform::SetParent(Transform * parent)
 
 	}
 
-	//親に登録
-	this->_Parent = parent;
+	
 
 	UpdateTransform();
 }
