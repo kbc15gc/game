@@ -44,6 +44,7 @@
 #include "GameObject\TextImage\AttentionTextOnly.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemySoldier.h"
+#include "GameObject\Enemy\BossDrarian.h"
 
 ImageObject* g_depth;
 
@@ -129,14 +130,15 @@ void GameScene::Start()
 
 	//@todo for debug
 	//消して
-	//テスト。
-	//敵(兵士)作成。
-	//EnemySoldier* soldier = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+	//
+	//BossDrarian* soldier = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("BossDrarian", 1);
 	//// パラメーター設定。
 	//vector<BarColor> cl;
 	//cl.push_back(BarColor::Red);
 	//vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
 	//soldier->SetParamAll(cl, par);
+	//Vector3 p = _Player->transform->GetPosition();
+	//soldier->transform->SetPosition(p);
 
 	FOR(i,2)
 	{
