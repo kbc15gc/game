@@ -74,7 +74,8 @@ void TitleScene::Update()
 	//	return;
 	//}
 
-	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y);
+	//ゲームコントローラーのボタンが押されたか。
+	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y) || KeyBoardInput->isPush(DIK_RETURN);
 
 	//プレスエニイボタンの処理
 	if (!_AnyButton && flag)
@@ -91,12 +92,12 @@ void TitleScene::Update()
 	if (_AnyButton)
 	{
 		
-		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU))
+		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU) || KeyBoardInput->isPush(DIK_UP))
 		{
 			_Select = Select::Continue;
 			_StartBar->transform->SetPosition(455, 400, 0);
 		}
-		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD))
+		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD) || KeyBoardInput->isPush(DIK_DOWN))
 		{
 			_Select = Select::NewGame;
 			_StartBar->transform->SetPosition(455, 470, 0);
