@@ -143,6 +143,11 @@ public:
 		return _SunPosition;
 	}
 
+	const Vector3& GetShadowLightPosition()
+	{
+		return _ShadowLightPosition;
+	}
+
 	/**
 	* “ú’†‚ÌŠÂ‹«Œõ‚ğİ’è.
 	*/
@@ -194,6 +199,8 @@ private:
 	Vector3 _DayAmbientLight = Vector3(0.3f, 0.3f, 0.3f);
 	/** –éŠÔ‚ÌŠÂ‹«Œõ. */
 	Vector3 _NightAmbientLight = Vector3(0.1f, 0.1f, 0.1f);
+
+	Vector3 _ShadowLightPosition;
 
 	LPDIRECT3DCUBETEXTURE9 _NightTexture = nullptr;
 };

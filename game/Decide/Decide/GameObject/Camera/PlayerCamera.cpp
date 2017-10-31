@@ -97,9 +97,6 @@ Vector3 PlayerCamera::_GetPlayerPos()
 */
 void PlayerCamera::_StandardBehavior()
 {
-	auto toC = transform->GetPosition() - _GetPlayerPos();
-	_ToCamera = D3DXVECTOR3(toC.x, toC.y, toC.z);
-
 	//‰E‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
@@ -148,7 +145,6 @@ void PlayerCamera::_RotateHorizon(float roty)
 	_ToPlayerDir.y = v.y;
 	_ToPlayerDir.z = v.z;
 
-	D3DXVec3Transform(&v, &_ToCamera, &rot);
 	transform->SetPosition(_GetPlayerPos() + Vector3(v.x, v.y, v.z));
 }
 
@@ -176,6 +172,7 @@ void PlayerCamera::_RotateVertical(float rotx)
 	//³‹K‰»‚·‚éB
 	D3DXVECTOR3 toPosDir;
 	D3DXVec3Normalize(&toPosDir, &_ToPlayerDir);
+
 	bool notlimit = true;
 	//ƒJƒƒ‰‚Ìã‰º‚ÌãŒÀ
 	if (toPosDir.y < -0.5f)
@@ -191,7 +188,6 @@ void PlayerCamera::_RotateVertical(float rotx)
 
 	if (notlimit)
 	{
-		D3DXVec3Transform(&v, &_ToCamera, &rot);
 		transform->SetPosition(_GetPlayerPos() + Vector3(v.x, v.y, v.z));
 	}
 }

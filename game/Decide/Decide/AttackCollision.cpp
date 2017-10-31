@@ -20,8 +20,15 @@ void AttackCollision::Update()
 		{
 			// 寿命が無限でないかつ寿命を過ぎた。
 
-			// 削除。
-			INSTANCE(GameObjectManager)->AddRemoveList(this);
+			if (_isLifeOverDelete) {
+				// 削除。
+				INSTANCE(GameObjectManager)->AddRemoveList(this);
+				_isAlive = false;
+			}
+			else {
+				this->SetActive(false);
+				_isAlive = false;
+			}
 		}
 		else {
 			// 寿命がまだある。
@@ -43,7 +50,7 @@ void AttackCollision::LateUpdate()
 void AttackCollision::DetectionCollision() {
 	// 衝突しているコリジョンをすべて取得する。
 	vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> hit;
-	int attr = Collision_ID::ENEMY | Collision_ID::BOSS | Collision_ID::PLAYER;
+	int attr = Collision_ID::ENEMY | Collision_ID::BOSS | Collision_ID::PLAYER | Collision_ID::GROUND | Collision_ID::BUILDING;
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	INSTANCE(PhysicsWorld)->AllHitsContactTest(_Gost,&hit,&callback,attr);
 
@@ -220,6 +227,10 @@ void AttackCollision::DetectionCollision() {
 		for (int idx = 0; idx < static_cast<int>(hit.size()); idx++) {
 			// 新しく衝突したオブジェクト。
 
+			if (!_isHit) {
+				_isHit = true;
+			}
+
 			GameObject* obj = _CollisionObjectToGameObject(hit[idx]->collision->GetCollisionObj());
 
 			bool flg = true;
@@ -334,14 +345,14 @@ void AttackCollision::_CallBackExit(GameObject* obj) {
 	}
 }
 
-void AttackCollision::Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent) {
+void AttackCollision::Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, float waitTime, Transform* Parent, bool isLifeOverDelete) {
 
 	_DamageInfo = move(info);
 
 	_lifeTime = lifeTime;	// 寿命を保存。
 	_master = master;		// コリジョンの生成者を保存。
 	_waitTime = waitTime;	// 生成待ち時間保存。
-
+	_isLifeOverDelete = isLifeOverDelete;
 	static_cast<BoxCollider*>(_Colider)->Create(size);		// コライダー生成(※とりあえず暫定的にボックス固定)。
 
 	// コリジョンに設定するTransform情報設定。
@@ -358,6 +369,8 @@ void AttackCollision::Create(unique_ptr<CharacterParameter::DamageInfo> info, co
 void AttackCollision::CreateCollision() {
 	if (_time >= _waitTime) {
 		// 待ち時間をカウントし終えた。
+
+		_isAlive = true;
 		transform->UpdateTransform();
 		_Gost->Create(_Colider, Collision_ID::ATTACK);	// ゴーストコリジョン生成。
 		_isCreateCollision = true;

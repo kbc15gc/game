@@ -29,23 +29,19 @@ void LaserBreath::Awake() {
 	_particleEmitter = p;
 }
 
-void LaserBreath::Init(EnemyCharacter* obj, const Vector3& emitPosLocal, float power, const Vector3& axis, float deg, Color mul){
-	BreathObject::Init(obj);
+void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float power, const Vector3& axis, float deg, const char* fileName, const Vector2& size, const float brightness, Color mul){
+	BreathObject::Create(obj);
 	_particleEmitter->transform->SetParent(_enemyObject->transform);
 	_particleEmitter->transform->SetLocalPosition(emitPosLocal);
 	_rad = D3DXToRadian(deg);
 	_axis = axis;
 	_mulColor = mul;
+	_power = power;
 
-
-	Quaternion rot;
-	rot = Quaternion::Identity;
-	rot.SetRotation(_axis, _rad);
-
-	Vector3 dir = rot.RotationVector3(obj->transform->GetForward());
-	dir.Normalize();
-
-	_velocity = dir * power;
+	_initParticleParam.texturePath = fileName;
+	_initParticleParam.size = size;
+	_initParticleParam.mulColor = mul;
+	_initParticleParam.brightness = brightness;
 }
 
 void LaserBreath::Update() {
@@ -67,26 +63,32 @@ void LaserBreath::Update() {
 }
 
 void LaserBreath::_BreathStartSubClass(){
+	Quaternion rot;
+	rot = Quaternion::Identity;
+	rot.SetRotation(_axis, _rad);
+
+	Vector3 dir = rot.RotationVector3(_enemyObject->transform->GetForward());
+	dir.Normalize();
+
+	_velocity = dir * _power;
+
 	// パーティクルの飛ぶ方向を設定。
 	_initParticleParam.initVelocity = _velocity;
-	_particleEmitter->SetParam(_initParticleParam);
 
 	// パーティクルの乗算カラーを設定。
 	_initParticleParam.mulColor = _mulColor;
+
+	_particleEmitter->SetParam(_initParticleParam);
 
 	// 作成したパーティクルを収集。
 	_particleList.reset(new vector<Particle*>);
 	_particleEmitter->AchievedCreateParticleStart(_particleList.get());
 	_particleEmitter->SetEmitFlg(true);
+	_particleEmitter->transform->SetParent(nullptr);
 
 	//攻撃コリジョン作成。
-	Quaternion rot;
-	rot = Quaternion::Identity;
-	rot.SetRotation(_axis, _rad);
-
 	AttackCollision* attack = _enemyObject->CreateAttack(Vector3::zero, rot, Vector3::zero, -1.0f, _particleEmitter->transform/*_enemyObject->transform*/);
 	attack->RemoveParent();
-	//attack->transform->SetRotation(rot);
 	_attack.push_back(attack);
 }
 

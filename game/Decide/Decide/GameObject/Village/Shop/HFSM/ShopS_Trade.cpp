@@ -464,20 +464,41 @@ void ShopS_Trade::BuyItem()
 
 void ShopS_Trade::SellItem()
 {
-	//アイテムの値段分お金を貰う。
-	_Shop->Pay(-_SumValue);
-	_Shop->SetDescriptionText("まいどあり。");
-
 	bool erase = false;
 	int offset = 0;
 	for (int idx : _IndexList)
 	{
-		//インベントリから排除。
-		if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx-offset]->GetInfo(), _TradeNum[idx-offset]))
-		{
-			erase = true;
-			offset++;
+
+		//暫定処理、良い処理が思いついたら変更して。
+		if ((*_DisplayList)[idx - offset]->GetInfo()->TypeID==Item::ItemCodeE::Item) {
+			//インベントリから排除。
+			if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx - offset], _TradeNum[idx - offset])==true)
+			{
+				erase = true;
+				offset++;
+			}
+			//アイテムの値段分お金を貰う。
+			_Shop->Pay(-_SumValue);
+			_Shop->SetDescriptionText("まいどあり。");
 		}
+		else
+		{
+			//インベントリから排除。
+			if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx - offset], _TradeNum[idx - offset]) == true)
+			{
+				//アイテムの値段分お金を貰う。
+				_Shop->Pay(-_SumValue);
+				_Shop->SetDescriptionText("まいどあり。");
+				erase = true;
+				offset++;
+			}
+			else
+			{
+				//装備している武具を売ろうとした。
+				_Shop->SetDescriptionText("装備品を外してください。");
+			}
+		}
+
 	}
 	if(erase)
 		//削除されていたならリスト更新。

@@ -59,6 +59,14 @@ namespace
 	//街
 	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
+	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
+
+	SCollisionInfo soundcollisition[]
+	{
+		#include "Asset\Collisition\ExportSoundCollisition.h";
+	};
+
+	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
 }
 
 
@@ -99,23 +107,25 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 	//ダンジョン生成
-	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	//@todo for debug 
+	//いったん消します。
+	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	//// テスト。
-	//// ラスボス作成。
+	// テスト。
+	// ラスボス作成。
 	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	//// パラメーター設定。
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	// パラメーター設定。
+	/*vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);*/
 	//enemy->SetParamAll(Color, param);
 
 	//@todo for debug
@@ -171,6 +181,10 @@ void GameScene::Start()
 	//街BGM
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
+
+	//街2BGM
+	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
+	_Mati2BGM->Init("Asset/Sound/mati2.wav");
 
 	//死亡BGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -231,26 +245,14 @@ void GameScene::Update()
 		}
 		else
 		{
-			//ボス
-			Vector3 boss_dir = BOSS_POS - _Player->transform->GetPosition();
-			float boss_len = boss_dir.Length();
-			//街
-			Vector3 mati_dir = MATI_POS - _Player->transform->GetPosition();
-			float mati_len = mati_dir.Length();
-			//街
-			if (mati_len < MATI_RADIUS)
+			//各場所のコリジョンに当たっているか。
+			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
-				ChangeBGM(BGM::MATI1);
-			}
-			//ボス
-			if (boss_len < BOSS_RADIUS)
-			{
-				ChangeBGM(BGM::BOSS1);
-			}
-			//ワールド
-			if (boss_len > BOSS_RADIUS && mati_len > MATI_RADIUS)
-			{
-				ChangeBGM(BGM::WORLD);
+				if (IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
+				{
+					ChangeBGM(static_cast<BGM>(i));
+					break;
+				}
 			}
 		}
 		
@@ -275,6 +277,9 @@ void GameScene::ChangeBGM(BGM bgm)
 		case GameScene::BGM::MATI1:
 			_GameBGM = _MatiBGM;
 			break;
+		case GameScene::BGM::MATI2:
+			_GameBGM = _Mati2BGM;
+			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;
 			break;
@@ -285,3 +290,15 @@ void GameScene::ChangeBGM(BGM bgm)
 
 	}
 }
+
+
+bool GameScene::IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2)
+{
+	if (vMin1.x < vMax2.x && vMax1.x > vMin2.x
+		&& vMin1.y < vMax2.y && vMax1.y > vMin2.y
+		&& vMin1.z < vMax2.z && vMax1.z > vMin2.z)
+	{
+		return true;
+	}
+	return false;
+};

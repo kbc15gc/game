@@ -27,6 +27,7 @@ float4  g_blendcolor;//混ぜる色
 float2 g_TexelSize;				//テクセルサイズ(深度バッファの)
 
 float4  g_Textureblendcolor;	//テクスチャに混ぜる色
+
 texture g_diffuseTexture;		//ディフューズテクスチャ。
 sampler g_diffuseTextureSampler = 
 sampler_state
@@ -172,24 +173,25 @@ PSOutput PSMain( VS_OUTPUT In )
 
     float4 light = DiffuseLight(normal);
 
-	float3 cascadeColor = 0;
+    light.xyz += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
 
-	//影
-	if (ReceiveShadow)
-	{
-		//影になっている.
-		float shadowPower = CalcShadow(In._World.xyz, cascadeColor);
-		shadowPower += (1.0f - max(0.0f, dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
-		light.xyz *= min(1.0f, shadowPower);
-	}
-
-	float3 charaLig = CalcCharaLight(normal, (float3x3) g_rotationMatrix) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
 	if(Spec)
 	{
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-		charaLig.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV, (float3x3) g_rotationMatrix);
-	}
-    color.xyz += diff.rgb * charaLig * light.xyz;
+        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
+    }
+
+    //影
+    if (ReceiveShadow)
+    {
+		//影になっている.
+        float shadowPower = CalcShadow(In._World.xyz);
+        shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
+        light.xyz *= min(1.0f, shadowPower);
+    }
+
+
+    color.xyz += diff.rgb * light.xyz;
     float3 ambient = g_ambientLight.rgb;
 	
     if (g_CharaLightParam.x)
@@ -202,7 +204,7 @@ PSOutput PSMain( VS_OUTPUT In )
 
 	PSOutput Out = (PSOutput)0;
 
-    Out.Color = color;
+    Out.Color.xyz = color.xyz;
     Out.Color.w = diff.a;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);

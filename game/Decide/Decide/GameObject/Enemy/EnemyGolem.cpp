@@ -33,6 +33,8 @@ void EnemyGolem::_StartSubClass() {
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, true);
+
 	// 攻撃処理を定義。
 	_SingleAttack.reset(new EnemySingleAttack(this));
 	_SingleAttack->Init(1.5f, static_cast<int>(EnemyGolemAnim::Attack01), 0.2f);

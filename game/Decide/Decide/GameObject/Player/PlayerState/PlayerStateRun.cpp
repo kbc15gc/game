@@ -78,7 +78,7 @@ void PlayerStateRun::Move()
 			//ジャンプパワーを設定
 			movespeed.y = _JumpSpeed;
 			//キャラクターコントローラーをジャンプに
-			_Player->_CharacterController->Jump();
+			_Player->_CharacterController->Jump(_JumpSpeed);
 		}
 	}
 
