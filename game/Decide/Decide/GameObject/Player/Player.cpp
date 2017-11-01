@@ -80,8 +80,6 @@ void Player::Awake()
 	_HPBar = AddComponent<ParameterBar>();
 	// MPバー。
 	_MPBar = AddComponent<ParameterBar>();
-	//アニメーションイベント。
-	//_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
@@ -132,8 +130,8 @@ void Player::Awake()
 	//int lv = 0;
 
 	// テスト。
-	int lv = 30;
-
+	//int lv = 30;
+	int lv = 1;
 
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
@@ -231,8 +229,8 @@ void Player::Start()
 	{
 		_Anim->SetAnimationEndTime(i, _AnimationEndTime[i]);
 	}
-	//初期アニメーションとしてアイドルを再生
-	PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+	//初期アニメーション
+	PlayAnimation(AnimationNo::AnimationWalk, 0.2f);
 	//初期ステート設定
 	ChangeState(State::Idol);
 	//ポジション
@@ -945,6 +943,9 @@ void Player::Re_SetEquipment() {
 
 void Player::AnimationEventControl()
 {
+	/*******************/
+	/*		攻撃	   */
+	/*******************/
 	//攻撃1
 	{
 		float eventframe = 0.5f;

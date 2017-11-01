@@ -1,92 +1,45 @@
 fileFormatVersion: 2
-guid: c1b7f12841acd3f4fa378097fdea6156
-timeCreated: 1498031382
+guid: 5ede12c9c3c895746bcb77dd170a8dbf
+timeCreated: 1509499522
 licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 22
   fileIDToRecycleName:
-    100000: bone65
-    100002: bone65_end
-    100004: bone66
-    100006: bone66_end
-    100008: Chest
-    100010: Chest_branch
-    100012: Head
-    100014: Head_end
-    100016: Hips
-    100018: LeftFoot
-    100020: LeftFoot_end
-    100022: LeftLowerArm
-    100024: LeftLowerLeg
-    100026: LeftShoulder
-    100028: LeftUpperArm
-    100030: LeftUpperLeg
-    100032: Neck
-    100034: obj1
-    100036: obj2
-    100038: RightFoot
-    100040: RightFoot_end
-    100042: RightLowerArm
-    100044: RightLowerLeg
-    100046: RightShoulder
-    100048: RightUpperArm
-    100050: RightUpperLeg
-    100052: Spine
-    100054: //RootNode
-    400000: bone65
-    400002: bone65_end
-    400004: bone66
-    400006: bone66_end
-    400008: Chest
-    400010: Chest_branch
-    400012: Head
-    400014: Head_end
-    400016: Hips
-    400018: LeftFoot
-    400020: LeftFoot_end
-    400022: LeftLowerArm
-    400024: LeftLowerLeg
-    400026: LeftShoulder
-    400028: LeftUpperArm
-    400030: LeftUpperLeg
-    400032: Neck
-    400034: obj1
-    400036: obj2
-    400038: RightFoot
-    400040: RightFoot_end
-    400042: RightLowerArm
-    400044: RightLowerLeg
-    400046: RightShoulder
-    400048: RightUpperArm
-    400050: RightUpperLeg
-    400052: Spine
-    400054: //RootNode
+    100000: //RootNode
+    400000: //RootNode
+    2100000: mat1
+    2100002: mat2
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: obj1
-    4300002: obj2
     7400000: Take 001
     9500000: //RootNode
-    13700000: obj1
-    13700002: obj2
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -94,7 +47,10 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 1
     importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -110,6 +66,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

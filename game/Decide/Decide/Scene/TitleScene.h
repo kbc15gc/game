@@ -21,7 +21,8 @@ private:
 	SoundSource* _TitleBGM;
 	ImageObject* _Start;
 	ImageObject* _StartBar;
-	ImageObject* _SelectButton;
+	ImageObject* _NewGame;
+	ImageObject* _Continue;
 	Color		_StartColor;
 	float		_StartAlpha;
 	SoundSource* _StartSE;

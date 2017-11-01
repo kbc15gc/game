@@ -220,6 +220,7 @@
     <ClInclude Include="GameObject\GameManager.h" />
     <ClInclude Include="GameObject\Ground\Dungeon.h" />
     <ClInclude Include="GameObject\Ground\Ground.h" />
+    <ClInclude Include="GameObject\Ground\RockCave.h" />
     <ClInclude Include="GameObject\History\Chip.h" />
     <ClInclude Include="GameObject\History\Effect\MysteryLight.h" />
     <ClInclude Include="GameObject\History\HistoryBook\HFSM\HistoryBookState.h" />
@@ -341,6 +342,7 @@
     <ClCompile Include="GameObject\GameManager.cpp" />
     <ClCompile Include="GameObject\Ground\Dungeon.cpp" />
     <ClCompile Include="GameObject\Ground\Ground.cpp" />
+    <ClCompile Include="GameObject\Ground\RockCave.cpp" />
     <ClCompile Include="GameObject\History\Chip.cpp" />
     <ClCompile Include="GameObject\History\Effect\MysteryLight.cpp" />
     <ClCompile Include="GameObject\History\HistoryBook\HFSM\HistoryBookStateClose.cpp" />

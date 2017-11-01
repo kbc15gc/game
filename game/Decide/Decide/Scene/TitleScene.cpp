@@ -32,11 +32,17 @@ void TitleScene::Start()
 	_StartBar->transform->SetPosition(455,440,0);
 
 	//セレクトボタン
-	_SelectButton = INSTANCE(GameObjectManager)->AddNew<ImageObject>("SELECTBUTTON", 0);
-	_SelectButton->SetTexture(LOADTEXTURE("SELECTBUTTON.png"));
-	_SelectButton->SetPivot(0.0f, 0.0f);
-	_SelectButton->SetSize({ WindowW, WindowH });
-	_SelectButton->SetActive(false);
+	//ニューゲーム
+	_NewGame = INSTANCE(GameObjectManager)->AddNew<ImageObject>("NEWGAME", 0);
+	_NewGame->SetTexture(LOADTEXTURE("NEWGAME.png"));
+	_NewGame->SetPivot(0.0f, 0.0f);
+	_NewGame->SetActive(false);
+
+	//コンティニュー
+	_Continue = INSTANCE(GameObjectManager)->AddNew<ImageObject>("CONTINUE", 0);
+	_Continue->SetTexture(LOADTEXTURE("CONTINUE.png"));
+	_Continue->SetPivot(0.0f, 0.0f);
+	_Continue->SetActive(false);
 
 	//ボタン音
 	_StartSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
@@ -59,29 +65,30 @@ void TitleScene::Start()
 
 void TitleScene::Update()
 {
-	//スタートボタンの押下確認
-	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y);
-	//エンターキー
-	if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
-	{
-		////ゲームシーンへ移行
-		INSTANCE(SceneManager)->ChangeScene("GameScene",true);
-	
-		// テスト。
-		//INSTANCE(SceneManager)->ChangeScene("LastBossTestScene", true);
-
-		_StartSE->Play(false);
-		return;
-	}
-
+	////スタートボタンの押下確認
 	//bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y);
+	////エンターキー
+	//if ((flag || KeyBoardInput->isPush(DIK_RETURN)))
+	//{
+	//	////ゲームシーンへ移行
+	//	INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+	//
+	//	// テスト。
+	//	//INSTANCE(SceneManager)->ChangeScene("LastBossTestScene", true);
+
+	//	_StartSE->Play(false);
+	//	return;
+	//}
+
+	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y) || KeyBoardInput->isPush(DIK_RETURN);
 
 	//プレスエニイボタンの処理
 	if (!_AnyButton && flag)
 	{
 		_Start->SetActive(false);
-		_SelectButton->SetActive(true);
-		_StartBar->transform->SetPosition(455, 400, 0);
+		_NewGame->SetActive(true);
+		_Continue->SetActive(true);
+		_StartBar->transform->SetPosition(455, 405, 0);
 		_AnyButton = true;
 		_StartSE->Play(false);
 		flag = false;
@@ -94,12 +101,12 @@ void TitleScene::Update()
 		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU) || KeyBoardInput->isPush(DIK_UP))
 		{
 			_Select = Select::Continue;
-			_StartBar->transform->SetPosition(455, 400, 0);
+			_StartBar->transform->SetPosition(455, 405, 0);
 		}
 		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD) || KeyBoardInput->isPush(DIK_DOWN))
 		{
 			_Select = Select::NewGame;
-			_StartBar->transform->SetPosition(455, 470, 0);
+			_StartBar->transform->SetPosition(455, 475, 0);
 		}
 
 		//スタート
@@ -118,7 +125,6 @@ void TitleScene::Update()
 void TitleScene::Alpha()
 {
 	_StartColor.a -= _StartAlpha;
-	//_Start->SetBlendColor(_StartColor);
 	_StartBar->SetBlendColor(_StartColor);
 	if (_StartColor.a <= 0.2f || _StartColor.a >= 0.5f)
 	{

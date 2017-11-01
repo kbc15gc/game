@@ -10,6 +10,7 @@
 
 #include "GameObject\Ground\Ground.h"
 #include"GameObject\Ground\Dungeon.h"
+#include"GameObject\Ground\RockCave.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
 
 
@@ -63,7 +64,7 @@ namespace
 
 	SCollisionInfo soundcollisition[]
 	{
-		#include "Asset\Collisition\ExportSoundCollisition.h";
+		#include "Asset\Collisition\ExportSoundCollisition.h"
 	};
 
 	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
@@ -107,9 +108,9 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 	//ダンジョン生成
-	//@todo for debug 
-	//いったん消します。
 	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	//洞窟生成
+	//INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
@@ -119,6 +120,7 @@ void GameScene::Start()
 	// テスト。
 	// ラスボス作成。
 	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+
 	//// パラメーター設定。
 	//vector<BarColor> Color;
 	//Color.push_back(BarColor::Blue);
@@ -132,13 +134,15 @@ void GameScene::Start()
 	//消して
 	//
 	//BossDrarian* soldier = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("BossDrarian", 1);
+	
 	//// パラメーター設定。
-	//vector<BarColor> cl;
-	//cl.push_back(BarColor::Red);
-	//vector<int> par = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//soldier->SetParamAll(cl, par);
-	//Vector3 p = _Player->transform->GetPosition();
-	//soldier->transform->SetPosition(p);
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 
 	FOR(i,2)
 	{
