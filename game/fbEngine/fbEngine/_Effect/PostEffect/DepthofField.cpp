@@ -45,20 +45,22 @@ void DepthofField::Create()
 			_Vertex->CreateDeclaration();
 		}
 
-		//16bitÅB
-		_DepthRT.Create(g_WindowSize, D3DFMT_R16F);
+		Vector2 size = g_FrameSize;
 
-		_BlurForward.Create(g_WindowSize.x, g_WindowSize.y, D3DFMT_A16B16G16R16F);
+		//16bitÅB
+		_DepthRT.Create(size, D3DFMT_R16F);
+
+		_BlurForward.Create(size.x, size.y, D3DFMT_A16B16G16R16F);
 		_BlurForward.SetBlurPower(20.0f);
 		_BlurForward.SetUseWeights(GaussianBlur::Weight_8);
 
-		_BlurBack.Create(g_WindowSize.x, g_WindowSize.y, D3DFMT_A16B16G16R16F);
+		_BlurBack.Create(size.x, size.y, D3DFMT_A16B16G16R16F);
 		_BlurBack.SetBlurPower(2.0f);
 		_BlurBack.SetUseWeights(GaussianBlur::Weight_8);
 
 		_Effect = EffectManager::LoadEffect("DepthofField.fx");
 
-		_CombineRenderTarget.Create(g_WindowSize, D3DFMT_A16B16G16R16F);
+		_CombineRenderTarget.Create(size, D3DFMT_A16B16G16R16F);
 	}
 }
 

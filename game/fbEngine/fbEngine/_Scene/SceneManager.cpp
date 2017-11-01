@@ -23,7 +23,7 @@ SceneManager::SceneManager():
 		_MainRT[count] = new RenderTarget();
 		//大きさ二倍で作って高画質に
 		//浮動小数点バッファで作成
-		_MainRT[count]->Create(g_WindowSize, D3DFMT_A16B16G16R16F);
+		_MainRT[count]->Create(g_FrameSize, D3DFMT_A16B16G16R16F);
 		//掛ける倍率は0.5ｆ
 		_MainRT[count]->texture->Size = _MainRT[count]->texture->Size;
 	}
@@ -34,7 +34,7 @@ SceneManager::SceneManager():
 #ifdef RELEASE_LOW
 	_AntiAliasing.SetEnable(false);
 	_DepthofField.SetEnable(false);
-	_Bloom.SetEnable(false);
+	_Bloom.SetEnable(true);
 #else
 	_AntiAliasing.SetEnable(true);
 	_DepthofField.SetEnable(true);
@@ -153,6 +153,7 @@ void SceneManager::DrawScene()
 
 	//オフスクリーンのやつ描画
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
+	_Sprite->SetSize(g_WindowSize);
 	_Sprite->ImageRender();
 	
 	INSTANCE(GameObjectManager)->PostRenderObject();

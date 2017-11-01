@@ -112,4 +112,5 @@ static const float FontSize = 512.0f;
 #include "_Scene\SceneManager.h"
 
 extern HWND g_MainWindow;	//ウィンドウハンドル
-extern Vector2 g_WindowSize;
+extern Vector2 g_WindowSize; 
+extern Vector2 g_FrameSize;
