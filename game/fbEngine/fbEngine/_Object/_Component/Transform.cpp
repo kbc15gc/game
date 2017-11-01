@@ -336,8 +336,14 @@ void Transform::SetParent(Transform * parent)
 		this->_Parent->RemoveChild(this);
 	}
 
+	// 作業用。
+	Transform* oldParent = this->_Parent;
 
-	if (parent && this->_Parent != parent) {
+	//親に登録。
+	// ※下記の処理で更新後の親を登録している必要があるのでここで登録。
+	this->_Parent = parent;
+
+	if (parent && oldParent != parent) {
 		// 親が設定された。
 		//新しい親から
 		//新しいローカルを計算する。
@@ -357,10 +363,6 @@ void Transform::SetParent(Transform * parent)
 			}
 		}
 	}
-
-	//親に登録
-	this->_Parent = parent;
-	
 
 	UpdateTransform();
 }

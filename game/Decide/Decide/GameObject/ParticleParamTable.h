@@ -9,7 +9,7 @@ namespace ParticleParamTable {
 		// 紫の狐火エフェクト。
 		{
 			"MurasakiHonoo.png",	// テクスチャ名。
-			Vector3::up * 3.0f,			// 初速度。
+			Vector3(0.0f,3.0f,0.0f),			// 初速度。
 			Vector2(0.5f, 0.5f),	// テクスチャサイズ。
 			0.1f,					// 寿命。
 			0.008f,					// 生成待ち時間。
@@ -73,7 +73,7 @@ namespace ParticleParamTable {
 		// 紫の衝撃波。
 		{
 			"MurasakiHonoo.png",	// テクスチャ名。
-			Vector3::up * 4.5f + Vector3::back * 3.0f,	// 初速度。
+			Vector3(0.0f,4.5f,0.0f) + Vector3(0.0f,0.0f,-3.0f),	// 初速度。
 			Vector2(0.5f, 0.5f),	// テクスチャサイズ。
 			0.1f,					// 寿命。
 			0.004f,					// 生成待ち時間。
@@ -94,7 +94,7 @@ namespace ParticleParamTable {
 		// 紫のちろちろ(初期位置のランダム幅はコピー先でいい感じにしていいよ)。
 		{
 			"MurasakiHonoo.png",	// テクスチャ名。
-			Vector3::up * 0.5f,	// 初速度。
+			Vector3(0.0f,0.5f,0.0f),	// 初速度。
 			Vector2(0.5f, 0.5f),	// テクスチャサイズ。
 			0.2f,					// 寿命。
 			0.008f,					// 生成待ち時間。
@@ -115,12 +115,12 @@ namespace ParticleParamTable {
 		// 紫の光の塔(ちろちろ)。
 		{
 			"MurasakiHonoo.png",	// テクスチャ名。
-			Vector3::up * 3.0f,	// 初速度。
+			Vector3(0.0f,3.0f,0.0f),	// 初速度。
 			Vector2(0.5f, 0.5f),	// テクスチャサイズ。
 			5.0f,					// 寿命。
 			0.05f,					// 生成待ち時間。
-			Vector3(0.25f, 0.0f, 0.5f),	// 初期位置のランダム幅。
-			Vector3::up * 2.0f,	// 初速度のランダム幅。
+			Vector3(0.4f, 0.0f, 0.4f),	// 初期位置のランダム幅。
+			Vector3(0.0f,2.0f,0.0f),	// 初速度のランダム幅。
 			Vector3::zero,	// 速度の積分時のランダム幅。
 			0.0f,						// 重力。
 			true,					// フェードアウトするか。

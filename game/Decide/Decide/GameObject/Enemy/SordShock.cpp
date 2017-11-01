@@ -36,7 +36,7 @@ void SordShock::Update() {
 	if(_isShot){
 		// 衝撃波を進める。
 		_shockParticleEmitter->transform->SetPosition(_shockParticleEmitter->transform->GetPosition() + _speed * Time::DeltaTime());
-		Vector3 work = Vector3(_shockParticleEmitter->transform->GetPosition() - _emitPos);	// 初期位置から現在の衝撃波の位置までのベクトル。
+		Vector3 work = _shockParticleEmitter->transform->GetPosition() - _emitPos;	// 初期位置から現在の衝撃波の位置までのベクトル。
 
 		// ちろちろの長さを変更。
 		_initTirotiroParticleParam.initPositionRandomMargin.z = work.Length() * 0.5f;
@@ -80,7 +80,7 @@ void SordShock::Update() {
 			_attack[0] = _enemyObject->CreateAttack(Vector3(0.0f, 2.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 4.0f, 1.0f), -1.0f, _shockParticleEmitter->transform, false, true, AttackCollision::ReactionType::NotAction);
 		}
 
-		if (_timeCounter >= (_interval + 5.0f)) {
+		if (_timeCounter >= (_interval + 10.0f)) {
 			// 光の柱を消したいタイミングで削除。
 			INSTANCE(GameObjectManager)->AddRemoveList(this);
 		}
@@ -103,7 +103,7 @@ void SordShock::_BreathStartSubClass() {
 	_emitPos = _shockParticleEmitter->transform->GetPosition();
 
 	_tirotiroEmitter->transform->SetParent(_shockParticleEmitter->transform);
-	_tirotiroEmitter->transform->SetLocalPosition(Vector3::zero);
+	_tirotiroEmitter->transform->SetLocalPosition(Vector3(0.0f,-0.5f,0.0f));
 	_tirotiroEmitter->transform->SetLocalRotation(Quaternion::Identity);
 
 	_shockParticleEmitter->SetEmitFlg(true);
@@ -114,7 +114,7 @@ void SordShock::_BreathStartSubClass() {
 	_attack.push_back(attack);
 
 	//ちろちろの攻撃コリジョン作成。
-	attack = _enemyObject->CreateAttack(Vector3(0.0f, -0.5f, 0.0f), Quaternion::Identity, Vector3(0.5f, 0.5f, 0.0f), -1.0f, _tirotiroEmitter->transform,false,true,AttackCollision::ReactionType::NotAction);
+	attack = _enemyObject->CreateAttack(Vector3::zero, Quaternion::Identity, Vector3(0.5f, 0.5f, 0.0f), -1.0f, _tirotiroEmitter->transform,false,true,AttackCollision::ReactionType::NotAction);
 	_attack.push_back(attack);
 
 	_isShot = true;

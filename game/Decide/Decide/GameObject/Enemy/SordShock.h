@@ -56,5 +56,5 @@ private:
 
 	// ‚¿‚ë‚¿‚ë‚ªc‚éŠÔB
 	float _timeCounter;
-	float _interval = 10.0f;
+	float _interval = 15.0f;
 };
