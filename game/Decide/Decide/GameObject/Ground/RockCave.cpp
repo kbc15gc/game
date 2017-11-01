@@ -12,7 +12,7 @@ RockCave::RockCave(const char * name) :
 
 void RockCave::Awake()
 {
-	Vector3 StartPos = { 297.408051f ,50.0f ,634.428467f };
+	Vector3 StartPos = { 292.0f ,57.5f ,634.0f };
 	transform->SetLocalPosition(StartPos);
 	transform->SetLocalScale(Vector3::one);
 

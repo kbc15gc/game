@@ -130,8 +130,8 @@ void Player::Awake()
 	//int lv = 0;
 
 	// テスト。
-	int lv = 30;
-
+	//int lv = 30;
+	int lv = 1;
 
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
