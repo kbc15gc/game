@@ -108,9 +108,9 @@ void GameScene::Start()
 	//’n–Ê¶¬
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo ‘‚Ì•`‰æƒeƒXƒg‚Ì‚½‚ß‚É•`‰æ—Dæ‚ð1‚©‚ç0‚É•ÏX‚µ‚Ä‚¢‚éB
 	//ƒ_ƒ“ƒWƒ‡ƒ“¶¬
-	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//“´ŒA¶¬
-	//INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
+	INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
 	//ŠC¶¬.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
