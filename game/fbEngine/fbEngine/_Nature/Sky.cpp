@@ -42,7 +42,7 @@ void Sky::Awake()
 
 	_MoonPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
 	_MoonPlate->SetTexture(LOADTEXTURE("moon0015.png"));
-	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 1.0f);
+	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 1.3f);
 	Vector2 size = _MoonPlate->GetComponent<PlatePrimitive>()->GetSize();
 	_MoonPlate->SetSize(size * 0.5f);
 	_MoonPlate->SetBillboard(true);

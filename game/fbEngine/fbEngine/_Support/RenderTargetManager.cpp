@@ -11,7 +11,7 @@ RenderTarget::RenderTarget()
 void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt, _D3DFORMAT depthfmt)
 {
 	//前のテクスチャがあるなら
-	if(texture->pTexture)
+	if (texture->pTexture)
 	{
 		//削除
 		SAFE_DELETE(texture->pTexture);
@@ -25,6 +25,8 @@ void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt, _D3DFORMAT depthfmt
 		D3DPOOL_DEFAULT,
 		&texture->pTexture,
 		NULL);
+
+	FB_ASSERT(SUCCEEDED(hr), "テクスチャつくれねぇってばよ");
 
 	//画像サイズを画面サイズに
 	texture->Size = size;
@@ -44,6 +46,8 @@ void RenderTarget::Create(Vector2 size, _D3DFORMAT colorfmt, _D3DFORMAT depthfmt
 		TRUE,
 		&depth,
 		NULL);
+
+	FB_ASSERT(SUCCEEDED(hr), "深度バッファつくれねぇってばよ");
 }
 
 RenderTargetManager::RenderTargetManager()

@@ -4,7 +4,10 @@
 CGraphicsDevice g_graphicsDevice;
 HINSTANCE hInst;                                // 現在のインターフェイス
 HWND g_MainWindow;
+/** スクリーンサイズ. */
 Vector2 g_WindowSize;
+/** 内部解像度. */
+Vector2 g_FrameSize;
 
 //コールバック関数
 //LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);

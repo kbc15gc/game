@@ -61,6 +61,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//ゲームウィンドウの大きさ調整
 
 	g_WindowSize = Vector2(WindowW,WindowH);
+	g_FrameSize = g_WindowSize * 0.5f;
+
 	SetWindowPos(g_MainWindow, HWND_TOP, 0, 0, WindowW + Diff.x, WindowH + Diff.y, (SWP_NOZORDER));
 
     // アプリケーションの初期化を実行します:
