@@ -48,7 +48,7 @@ public:
 			if (name == typeid(*s).name())
 			{
 				//シーン切り替え
-				return ChangeScene(idx,fade);
+				return ChangeScene(idx, fade);
 			}
 			idx++;
 		}
@@ -140,4 +140,7 @@ private:
 	Sky* _Sky = nullptr;
 	//次のシーン
 	int _NextScene;
+
+public:
+	int hoge;
 };

@@ -11,7 +11,8 @@ void ContinentObject::Awake()
 	_Model = AddComponent<SkinModel>();
 	_Anim = AddComponent<Animation>();
 
-	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,false);
+	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT, false);
+
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
 
 	_Model->SetAlpha(true, 0.9f);
@@ -35,7 +36,13 @@ void ContinentObject::LoadModel(const char * filename)
 	_Model->SetModelData(data);
 	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
 
+	if (string(filename) == "tree.X")
+	{
+		_Model->SetTree();
+	}
+
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
 
 	////ìñÇΩÇËîªíËí«â¡ÅB
 	//RigidBody* rigid = AddComponent<RigidBody>();
