@@ -450,28 +450,28 @@ PSOutput PSTerrain(VS_OUTPUT In)
     float4 light = DiffuseLight(normal);
     light.xyz += CalcCharaLight(normal);
 
-    if (g_EffectFlg.x)
-    {
+    //if (g_EffectFlg.x)
+    //{
 		//影になっている.
         float shadowPower = CalcShadow(In._World.xyz);
         //shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
         light.xyz *= min(1.0f, shadowPower);
-    }
+    //}
 
     color *= light;
 
     //大気散乱.
-    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-    {
+    //if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+    //{
         color.xyz = In._RayColor + color * In._MieColor;
-    }
+    //}
 
     float3 ambient = g_ambientLight.rgb;
 	
-    if (g_CharaLightParam.x)
-    {
+    //if (g_CharaLightParam.x)
+    //{
         ambient += g_CharaLight.Ambient.rgb;
-    }
+    //}
 
     //アンビエントライトを加算。
     color.rgb += diffuseColor.rgb * ambient;

@@ -252,6 +252,7 @@
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
+    <ClInclude Include="GameObject\ParticleParamTable.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />

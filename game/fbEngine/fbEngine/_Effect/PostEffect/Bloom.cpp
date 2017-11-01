@@ -40,13 +40,15 @@ void Bloom::Create()
 			_Vertex->CreateDeclaration();
 		}
 
+		Vector2 size = g_FrameSize;
+
 		//内部解像度のサイズを計算
-		int w = g_WindowSize.x;
-		int h = g_WindowSize.y;
+		int w = size.x;
+		int h = size.y;
 
 		//輝度レンダリングターゲットの作成
 		_LuminanceRT = new RenderTarget();
-		_LuminanceRT->Create(g_WindowSize, D3DFMT_A16B16G16R16F);
+		_LuminanceRT->Create(size, D3DFMT_A16B16G16R16F);
 
 		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++)
 		{

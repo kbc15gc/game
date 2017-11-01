@@ -7,6 +7,8 @@ class AttackCollision : public GameObject
 public:
 	enum class CollisionMaster{Player = 0,Enemy, Other};	// 誰がコリジョンを発生させたか。
 
+	enum class ReactionType{ NotAction = 0,Leans, Blown};	// この攻撃で怯まないか怯むか吹っ飛ぶか。
+
 	struct HitObjectInfo {
 		GameObject* object = nullptr;		// 衝突したオブジェクト。
 		shared_ptr<btCollisionObject> coll;
@@ -32,10 +34,14 @@ public:
 	//			サイズ。
 	//			誰がコリジョンを生成したか。
 	//			コリジョン寿命(0.0fより小さい値で無限)。
-	//			コリジョン生成待ち時間(この関数が呼ばれてから何秒後にコリジョン生成するか)。
+	//			命中時のキャラの反応の種類。
 	//			親にしたいTransform情報(動く床などの上でコリジョンが発生した場合に使用)。
 	//			寿命が過ぎたら内部で自動的に削除するか(falseにすると非アクティブになるだけで削除されない)。
-	void Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master = CollisionMaster::Other, float lifeTime = -1.0f,float waitTime = 0.0f, Transform* Parent = nullptr,bool isLifeOverDelete = true);
+	void Create(unique_ptr<CharacterParameter::DamageInfo> info, const Vector3& pos, const Quaternion& rotation, const Vector3& size, CollisionMaster master, float lifeTime, ReactionType reactionType, Transform* Parent = nullptr,bool isLifeOverDelete = true);
+
+	void ReSize(const Vector3 size) {
+		_Colider->Resize(size);
+	}
 
 	inline void SetParent(Transform* Parent) {
 		transform->SetParent(Parent);
@@ -67,7 +73,12 @@ public:
 
 	// 生成されているかつ攻撃コリジョンの寿命が尽きている。
 	inline bool IsDeath()const {
-		return _isCreateCollision && !_isAlive;
+		return !_isAlive;
+	}
+
+	// 攻撃命中時のリアクションの種類を取得。
+	inline ReactionType GetReactionType()const {
+		return _reactionType;
 	}
 private:	
 	// 攻撃コリジョン生成関数。
@@ -96,17 +107,16 @@ private:
 	}
 
 private:
-	Collider* _Colider = nullptr;	// コリジョン形状。
+	BoxCollider* _Colider = nullptr;	// コリジョン形状。
 	GostCollision* _Gost = nullptr;	// ゴースト。
 	float _time;				//作業用カウンター。
-	float _waitTime = 0.0f;		// コリジョン生成待ち時間。
 	float _lifeTime = -1.0f;		// コリジョン寿命(0.0fより小さい値で無限)。
 	CollisionMaster _master;	// 誰が発生させたコリジョンか。
 	vector<unique_ptr<HitObjectInfo>> _hitInfos;	// 当たっているオブジェクト情報。
-	bool _isCreateCollision = false;	// コリジョンを生成したか。
 	unique_ptr<CharacterParameter::DamageInfo> _DamageInfo;
 
 	bool _isHit = false;	// 衝突する設定にしている何らかのオブジェクトに衝突した。
 	bool _isLifeOverDelete = true;	// 寿命を過ぎたら削除される。
 	bool _isAlive = false;	// 寿命を過ぎていないか。
+	ReactionType _reactionType;	// 攻撃命中時のキャラのリアクションの種類。
 };
