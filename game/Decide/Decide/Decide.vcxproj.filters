@@ -683,6 +683,9 @@
     <ClInclude Include="GameObject\Enemy\BossGhost.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\ParticleParamTable.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

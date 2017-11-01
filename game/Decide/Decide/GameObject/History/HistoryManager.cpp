@@ -46,12 +46,12 @@ void HistoryManager::Start()
 
 	//共通オブジェクト生成。
 	char path[128];
-	FOR(type, 2)
-	{
-		//パス生成
-		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		_CreateObject((int)LocationCodeE::Common, path, type);
-	}
+	//FOR(type, 2)
+	//{
+	//	//パス生成
+	//	sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
+	//	_CreateObject((int)LocationCodeE::Common, path, type);
+	//}
 
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())

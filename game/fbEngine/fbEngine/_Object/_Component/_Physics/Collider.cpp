@@ -90,10 +90,11 @@ void Collider::CreateViewModel(){
 void Collider::UpdateTransform() {
 
 	if (_CollisionModel) {
-		//_CollisionModel->transform->SetParent(transform);
+		_CollisionModel->transform->SetParent(transform);
 
 		// ˆÊ’uî•ñÝ’èB
 		_CollisionModel->transform->SetLocalPosition(_collision->GetOffset());
+		_CollisionModel->transform->SetLocalRotation(Quaternion::Identity);
 	}
 }
 

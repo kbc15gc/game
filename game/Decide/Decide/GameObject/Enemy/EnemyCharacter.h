@@ -227,7 +227,7 @@ public:
 
 	// エネミーにダメージを与える処理。
 	// 引数：	ダメージ情報。
-	void GiveDamage(const CharacterParameter::DamageInfo& info);
+	void GiveDamage(const CharacterParameter::DamageInfo& info,AttackCollision::ReactionType reaction);
 
 	// 攻撃生成関数。
 	// 引数：	位置(ローカル座標)。
@@ -240,11 +240,11 @@ public:
 	//			ダメージ率(攻撃の種類などによる攻撃力に対する割合、この値に0.01f掛けた値を攻撃力に乗算する、単位はパーセント)。
 	//			寿命が過ぎたら自動的に削除するか(falseにすると非アクティブになるだけで削除されない)。
 	// 戻り値:  生成した攻撃。
-	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& rot, const Vector3& scale, float life, Transform* parent = nullptr,bool isMagic = false,bool isThroughDamage = false,int percentage = 100, bool isLifeOverDelete = true) {
+	inline AttackCollision* CreateAttack(const Vector3& localPos, const Quaternion& rot, const Vector3& scale, float life, Transform* parent = nullptr,bool isMagic = false,bool isThroughDamage = false, AttackCollision::ReactionType reaction = AttackCollision::ReactionType::Leans, int percentage = 100, bool isLifeOverDelete = true) {
 		//攻撃コリジョン作成。
 		unsigned int priorty = 1;
 		AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(isMagic, isThroughDamage,nullptr, percentage)),localPos, rot, scale, AttackCollision::CollisionMaster::Enemy, life, 0.0f, parent, isLifeOverDelete);
+		attack->Create(move(_MyComponent.Parameter->GiveDamageMass(isMagic, isThroughDamage,nullptr, percentage)),localPos, rot, scale, AttackCollision::CollisionMaster::Enemy, life, reaction, parent, isLifeOverDelete);
 		return attack;
 	}
 

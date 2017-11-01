@@ -336,10 +336,8 @@ void Transform::SetParent(Transform * parent)
 		this->_Parent->RemoveChild(this);
 	}
 
-	//e‚É“o˜^
-	this->_Parent = parent;
 
-	if (parent) {
+	if (parent && this->_Parent != parent) {
 		// e‚ªİ’è‚³‚ê‚½B
 		//V‚µ‚¢e‚©‚ç
 		//V‚µ‚¢ƒ[ƒJƒ‹‚ğŒvZ‚·‚éB
@@ -358,9 +356,10 @@ void Transform::SetParent(Transform * parent)
 				gameObject->SetDiscard(parent->gameObject->GetDiscard());
 			}
 		}
-
 	}
 
+	//e‚É“o˜^
+	this->_Parent = parent;
 	
 
 	UpdateTransform();
