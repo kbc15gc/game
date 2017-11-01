@@ -175,8 +175,8 @@ PSOutput PSMain( VS_OUTPUT In )
 
     light.xyz += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
 
-	if(Spec)
-	{
+    if (Spec)
+    {
         light.xyz += SpecLight(normal, In._World.xyz, In._UV);
         light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
     }

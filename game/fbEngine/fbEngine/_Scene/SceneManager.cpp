@@ -133,6 +133,8 @@ void SceneManager::DrawScene()
 		1.0f,
 		0);
 
+	hoge = 0;
+
 	INSTANCE(GameObjectManager)->RenderObject();
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);

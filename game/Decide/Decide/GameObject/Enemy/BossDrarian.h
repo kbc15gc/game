@@ -90,7 +90,7 @@ private:
 
 	inline void _DropSubClass()override {
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
-		chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f,-1.5f,0.0f));
+		chip->SetDropChipID(ChipID::Stone, transform->GetPosition() + Vector3(0.0f,-1.5f,0.0f));
 		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
 		{
 			for (int i = 0; i < 5; i++)
