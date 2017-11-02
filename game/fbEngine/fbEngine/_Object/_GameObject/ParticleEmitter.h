@@ -14,6 +14,7 @@ struct ParticleParameter {
 		brightness = 1.0f;
 		isBillboard = true;
 		mulColor = Color::white;
+		isParent = false;
 	}
 	const char* texturePath;						//!<テクスチャのファイルパス(Asset/Textureの中にあるもの(Asset/Textureよりも先のパスの指定のみでOK))。
 	Vector3		initVelocity;						//!<初速度(エミッターと親子関係を組んでいる場合はエミッターの座標系、そうでない場合はワールド座標)。
@@ -31,7 +32,7 @@ struct ParticleParameter {
 	float		brightness;							//!<輝度。ブルームが有効になっているとこれを強くすると光が溢れます。
 	int			alphaBlendMode;						//!<0半透明合成、1加算合成。
 	Color		mulColor;							//!<乗算カラー。
-	bool		isParent = false;					//!<エミッターと親子関係を組むか。
+	bool		isParent;					//!<エミッターと親子関係を組むか。
 };
 
 

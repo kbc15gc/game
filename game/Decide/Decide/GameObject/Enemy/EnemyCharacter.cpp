@@ -495,12 +495,12 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 	{
 		if (_MyComponent.Parameter->GetParam(CharacterParameter::HP) > 0)
 		{
-			GiveDamage(*hitCollision->GetDamageInfo());
+			GiveDamage(*hitCollision->GetDamageInfo(),hitCollision->GetReactionType());
 		}
 	}
 }
 
-void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
+void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, AttackCollision::ReactionType reaction) {
 	int _damage;
 	if ((_NowState && _NowState->IsPossibleDamage()) || _NowState == nullptr) {
 		// ダメージを与えられるステートだった。
@@ -524,23 +524,29 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info) {
 		attackvalue->Init(transform, _damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
 
 		if (_isDamageMotion) {
-			// のけぞるか。
+			// ダメージ時にモーションを再生するか。
 
-			if (_isDamageMotionRandom) {
-				// のけぞりモーションの再生をランダムにする。
+			if (reaction != AttackCollision::ReactionType::NotAction) {
+				// 無反応の攻撃ではなかった。
 
-				if (rand() % _damageMotionProbability == 0) {
-					// のけぞり。
+				// エネミーはひるみモーションしかないのでとりあえずひるませる。
+
+				if (_isDamageMotionRandom) {
+					// のけぞりモーションの再生をランダムにする。
+
+					if (rand() % _damageMotionProbability == 0) {
+						// のけぞり。
+
+						// ダメージ反応ステートに移行可能。
+						_ChangeState(State::Damage);
+					}
+				}
+				else {
+					// 確定でのけぞりモーションを再生する。
 
 					// ダメージ反応ステートに移行可能。
 					_ChangeState(State::Damage);
 				}
-			}
-			else {
-				// 確定でのけぞりモーションを再生する。
-
-				// ダメージ反応ステートに移行可能。
-				_ChangeState(State::Damage);
 			}
 		}
 	}

@@ -30,11 +30,11 @@ void LastBoss::SordAttackEvent() {
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, 0.0f, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
 	attack->RemoveParent();
 
 	_sordAttackShot0 = INSTANCE(GameObjectManager)->AddNew<SordShock>("sordShock", 8);
-	_sordAttackShot0->Create(this, Vector3(0.0f, -1.0f, 2.0f),transform->GetForward() * 5.0f,15.0f);
+	_sordAttackShot0->Create(this, Vector3(0.0f, -1.0f, 2.0f),transform->GetForward() * 25.0f,15.0f);
 	_sordAttackShot0->BreathStart();
 	_sordAttackShot0->BreathEnd();
 
@@ -66,7 +66,7 @@ void LastBoss::MagicAttackStart1() {
 	_magicFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(20.0f));
-	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 4.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 4.0f), rot,20.0f);
 
 	_magicAttack->BreathStart(_magicFire1);
 }
@@ -80,7 +80,7 @@ void LastBoss::MagicAttackStart2() {
 	_magicFire2 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-20.0f));
-	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 4.0f), rot.RotationVector3(transform->GetForward() * 15.0f));
+	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 4.0f), rot,20.0f);
 
 	_magicAttack->BreathStart(_magicFire2);
 }
@@ -92,7 +92,7 @@ void LastBoss::MagicAttackShot2() {
 
 void LastBoss::MagicAttackStart3() {
 	_magicFire3 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
-	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 4.0f), (transform->GetForward() * 15.0f));
+	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity,20.0f);
 
 	_magicAttack->BreathStart(_magicFire3);
 	_magicAttack->BreathEnd();
@@ -211,7 +211,7 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 		// 確率で攻撃と魔王へのバフを行う。
 
 		rnd = rand() % 2;
-		//rnd = rand() % 4;
+		////rnd = rand() % 4;
 
 		if (rnd == 0) {
 			// 剣攻撃。
@@ -377,9 +377,9 @@ void LastBoss::_ConfigAnimationEvent() {
 
 		eventFrame = 2.01f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot1));
-		eventFrame += 0.05f;
+		eventFrame += 0.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot2));
-		eventFrame += 0.05f;
+		eventFrame += 0.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot3));
 	}
 

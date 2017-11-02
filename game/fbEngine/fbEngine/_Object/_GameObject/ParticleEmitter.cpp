@@ -69,8 +69,10 @@ void ParticleEmitter::ApplyForce(Vector3& applyForce)
 
 void ParticleEmitter::ResetParameterAlreadyCreated(const ParticleParameter& param) {
 	_Param = param;
-	for (auto particle : _ParticleList) {
-		particle->SetParam(param);
+	if (static_cast<int>(_ParticleList.size()) > 0) {
+		for (auto particle : _ParticleList) {
+			particle->SetParam(param);
+		}
 	}
 }
 

@@ -12,8 +12,12 @@ public:
 
 	}
 	~SordShock() {
-		INSTANCE(GameObjectManager)->AddRemoveList(_tirotiroEmitter);
-		INSTANCE(GameObjectManager)->AddRemoveList(_shockParticleEmitter);
+		if (_tirotiroEmitter) {
+			INSTANCE(GameObjectManager)->AddRemoveList(_tirotiroEmitter);
+		}
+		if (_shockParticleEmitter) {
+			INSTANCE(GameObjectManager)->AddRemoveList(_shockParticleEmitter);
+		}
 	}
 
 	// ブレスオブジェクト初期化。
@@ -46,8 +50,11 @@ private:
 	ParticleEmitter* _tirotiroEmitter = nullptr;
 	ParticleParameter _initTirotiroParticleParam;
 
+	bool _isShot = false;
+	bool _isBomb = false;
+	bool _isAutoRange = false;
 
 	// ちろちろが残る時間。
 	float _timeCounter;
-	float _interval = 10.0f;
+	float _interval = 15.0f;
 };

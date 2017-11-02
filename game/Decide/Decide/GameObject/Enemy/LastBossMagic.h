@@ -17,8 +17,9 @@ public:
 	// ブレスオブジェクト初期化。
 	// 引数：	ブレスを出すキャラクター。
 	//			ブレス発生位置(ローカル座標、親はキャラクターのTransform)。
-	//			ブレス速度(向きとスピードを持つ)。
-	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,const Vector3& speed);
+	//			ブレスをキャラクターの正面から回転させるクォータニオン。
+	//			ブレス速度。
+	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,const Quaternion& rot,const float speed);
 
 	void Awake()override;
 
@@ -42,10 +43,11 @@ private:
 	ParticleParameter _initParticleParam;
 	Vector3 _initEmitPos = Vector3::zero;
 	Vector3 _direction = Vector3::zero;
-	Vector3 _speed = Vector3::zero;
+	float _speed = 0.0f;
 	float _timeCounter;
 	float _interval = 3.0f;
 	bool _isShot = false;
 	bool _isBomb = false;
 	float _margin = 1.0f;
+	Quaternion _rotation;
 };
