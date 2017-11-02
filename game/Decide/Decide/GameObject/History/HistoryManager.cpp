@@ -44,6 +44,16 @@ void HistoryManager::Start()
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
+//木が邪魔な場合これを使ってください。
+#define NPCONLY
+
+#ifdef NPCONLY
+	//共通オブジェクト生成。
+	char path[128];
+		//パス生成
+	sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[1]);
+	_CreateObject((int)LocationCodeE::Common, path, 1);
+#else // NPCONLY
 	//共通オブジェクト生成。
 	char path[128];
 	FOR(type, 2)
@@ -52,6 +62,9 @@ void HistoryManager::Start()
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
 		_CreateObject((int)LocationCodeE::Common, path, type);
 	}
+
+#endif
+	
 
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())

@@ -108,15 +108,16 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 	//ダンジョン生成
-	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
-	//INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
+	INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
 	//海生成.
 	INSTANCE(GameObjectManager)->AddNew<Ocean>("Ocean", 7);
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
+	//@todo for debug
 	// テスト。
 	// ラスボス作成。
 	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);

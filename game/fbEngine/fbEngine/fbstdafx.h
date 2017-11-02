@@ -7,7 +7,7 @@
 
 #include "targetver.h"
 
-#define RELEASE_LOW
+//#define RELEASE_LOW
 
 #define WIN32_LEAN_AND_MEAN             // Windows ヘッダーから使用されていない部分を除外します。
 // Windows ヘッダー ファイル:
@@ -47,6 +47,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 #include <dinput.h>
+//たぶん時間のやつ
+#pragma comment(lib, "winmm.lib ")
 
 //std
 using namespace std;
