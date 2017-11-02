@@ -193,6 +193,7 @@
     <ClInclude Include="_Support\PIXPerfTag.h" />
     <ClInclude Include="_Support\Random.h" />
     <ClInclude Include="_Support\RenderTargetManager.h" />
+    <ClInclude Include="_Support\StopWatch.h" />
     <ClInclude Include="_Support\Support.h" />
     <ClInclude Include="_Support\Time.h" />
     <ClInclude Include="_System\Game.h" />

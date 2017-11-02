@@ -1,5 +1,4 @@
 #pragma once
-#pragma comment(lib, "winmm.lib ")
 #include <time.h>
 #include <mmsystem.h>
 
