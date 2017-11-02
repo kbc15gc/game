@@ -49,7 +49,7 @@ static const string ChipFileName[(int)ChipID::ChipNum] =
 	"StonePage.png",
 	"HuntPage.png",
 	"AgriculturePage.png",
-	"CopperPage",
+	"CopperPage.png",
 	"IronPage.png",
 	"OilPage.png",
 	"MedicinePage.png",

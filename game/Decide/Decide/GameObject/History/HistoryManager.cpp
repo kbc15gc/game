@@ -10,7 +10,7 @@ namespace
 }
 
 //木が邪魔な場合これを使ってください。
-#define NPCONLY
+//#define NPCONLY
 
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -64,7 +64,6 @@ void HistoryManager::Start()
 
 #endif
 	
-
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
