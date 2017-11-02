@@ -5,6 +5,7 @@
 
 //オブジェクトの詳細
 struct SCollisionInfo {
+	const char* name;
 	Vector3 pos;
 	Quaternion angle;
 	Vector3 scale;

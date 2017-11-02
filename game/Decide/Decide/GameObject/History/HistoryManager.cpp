@@ -65,7 +65,6 @@ void HistoryManager::Start()
 
 #endif
 	
-
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
