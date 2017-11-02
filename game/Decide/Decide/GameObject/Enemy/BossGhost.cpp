@@ -20,7 +20,7 @@ BossGhost::~BossGhost()
 
 void BossGhost::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
-	SetFileName("Ghost_Taiki.X");
+	SetFileName("Ghost.X");
 }
 
 void BossGhost::_StartSubClass() {
@@ -47,7 +47,7 @@ void BossGhost::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(6.5f, static_cast<int>(AnimationBossGhost::Wait), 0.2f);
+	_singleAttack->Init(0.0f, static_cast<int>(AnimationBossGhost::Wait), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -196,12 +196,12 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
-		//// 待機状態。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossDrarian::Wait));
-		//// 歩行状態。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossDrarian::Walk));
-		//// 走行状態。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossDrarian::Dash));
+		// 待機状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossGhost::Wait));
+		// 歩行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossGhost::Walk));
+		// 走行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossGhost::Walk));
 		//// 吠える。
 		//_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, static_cast<unsigned int>(AnimationBossDrarian::Barking));
 		//// ダメージ反応。

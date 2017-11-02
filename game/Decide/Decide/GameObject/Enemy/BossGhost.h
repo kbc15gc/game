@@ -13,6 +13,7 @@ private:
 	// ボス(歩行型ドラゴン)のアニメーション番号。
 	enum class AnimationBossGhost {
 		Wait = 0,
+		Walk,
 		Max
 	};
 public:

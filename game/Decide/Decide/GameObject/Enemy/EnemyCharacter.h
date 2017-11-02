@@ -145,27 +145,31 @@ public:
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
-	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime) {
-		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime,-1);
+	//			どのイベントリストを再生するか(デフォルトは0)。
+	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime,int eventNo = 0) {
+		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime,-1, eventNo);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
 	//			ループ回数(デフォルトは1)。
-	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1) {
-		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime, loopCount);
+	//			どのイベントリストを再生するか(デフォルトは0)。
+	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1, int eventNo = 0) {
+		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime, loopCount, eventNo);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
 	// 引数：	アニメーションタイプ(モデルごとのアニメーション番号、-1で再生しない)。
 	//			補間時間。
 	//			ループ回数(-1で無限ループ)。
-	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1) {
+	//			どのイベントリストを再生するか(デフォルトは0)。
+	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1, int eventNo = 0) {
 		if (animationNum == -1) {
 			// アニメーションを再生しない。
 			return;
 		}
+		_MyComponent.AnimationEventPlayer->ConfigPlayEventList(animationNum, eventNo);
 		_MyComponent.Animation->PlayAnimation(animationNum, interpolateTime, loopCount);
 	}
 

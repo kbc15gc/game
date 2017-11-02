@@ -6,11 +6,12 @@
 
 // EnemyAttackÅB
 
-void EnemyAttack::Init(float attackRange, int animType, float interpolate, int animLoopNum) {
+void EnemyAttack::Init(float attackRange, int animType, float interpolate, int animLoopNum,int playEventNo) {
 	_AttackRange = attackRange;
 	_animType = animType;
 	_interpolate = interpolate;
 	_animLoopNum = animLoopNum;
+	_playEventNo = playEventNo;
 }
 
 

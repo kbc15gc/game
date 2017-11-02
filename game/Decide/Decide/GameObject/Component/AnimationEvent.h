@@ -35,23 +35,28 @@ public:
 	// 引数：	このコンポーネントがアタッチされているゲームオブジェクトのアニメーション数。
 	void Init(int animationNum);
 
-	// 指定したフレームにアニメーションイベントを設定する関数。
+	// どのイベントリストを再生するか設定する関数。
+	// 引数：	アニメーション番号。
+	//			再生したいイベントリストの番号。
+	void ConfigPlayEventList(int animationNo,int eventListNo) {
+		if (eventListNo < 0) {
+			// 0より小さい値を設定すんな。
+			abort();
+		}
+		_nowPlayEventList[animationNo] = eventListNo;
+	}
+
+	// アニメーションイベントを登録する関数。
 	// 引数：	イベントを設定するアニメーション番号。
 	//			イベントを設定する時間(秒)。
 	//			アニメーションイベント(関数ポインタvoid(*AnimationEvent)(void))。
-	// ※生成されるコリジョン形状はボックスです。
-	void AddAnimationEvent(int animationNo, const float eventTime, AnimationEvent Event) {
-		EventData* work = nullptr;
-		work = new EventData;
-		work->playTime = eventTime;
-		work->Event = Event;
-		work->isPlay = false;
-		_animationEvents[animationNo].push_back(work);
-	}
+	//			イベントリスト番号(同じモーションを使用するが再生するアニメーションイベントは切り替えたいときに使用、デフォルトは0)。
+	void AddAnimationEvent(int animationNo, const float eventTime, AnimationEvent Event, int eventListNo = 0);
 
 	void StartAnimation(int animationNo);
 
 private:
-	vector<vector<EventData*>> _animationEvents;
+	vector<vector<vector<EventData*>>> _animationEvents;
+	vector<int> _nowPlayEventList;	// どのイベントリストを再生するか(要素数はアニメーションの数)。
 	bool _isSetCallBack = false;
 };

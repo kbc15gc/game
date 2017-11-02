@@ -22,7 +22,7 @@ void EnemyAttackState::_Start() {
 		_attack->Entry();	// 初期化。
 		if (_attack->GetAnimationType() >= 0) {
 			// 再生するアニメーション番号が設定されている。
-			_EnemyObject->PlayAnimation_OriginIndex(_attack->GetAnimationType(), _attack->GetInterpolate(), _attack->GetAnimationLoopNum());
+			_EnemyObject->PlayAnimation_OriginIndex(_attack->GetAnimationType(), _attack->GetInterpolate(), _attack->GetAnimationLoopNum(),_attack->GetPlayEventNo());
 		}
 	}
 	else {
