@@ -29,16 +29,16 @@ void EnemyManager::Start() {
 }
 
 void EnemyManager::LoadEnemyOrigin() {
-	vector<unique_ptr<EnemyInfo>> infoDatas;
+	vector<unique_ptr<LoadEnemyInfo::EnemyInfo>> infoDatas;
 
 	//CSVからエネミー情報読み取り。
-	Support::LoadCSVData<EnemyInfo>("Asset/Data/EnemyData/CommonGroupEnemy.csv", EnemyInfoDecl, ARRAY_SIZE(EnemyInfoDecl), infoDatas);
+	Support::LoadCSVData<LoadEnemyInfo::EnemyInfo>("Asset/Data/EnemyData/CommonGroupEnemy.csv", LoadEnemyInfo::EnemyInfoDecl, ARRAY_SIZE(LoadEnemyInfo::EnemyInfoDecl), infoDatas);
 
 	for (int idx = 0; idx < static_cast<int>(infoDatas.size()); idx++) {
 		// 読み取ったデータを管理用構造体で登録。
 		ManagingData* data(new ManagingData());
 		data->Object = nullptr;
-		data->InfoData = move(const_cast<unique_ptr<EnemyInfo>&>(infoDatas[idx]));
+		data->InfoData = move(const_cast<unique_ptr<LoadEnemyInfo::EnemyInfo>&>(infoDatas[idx]));
 		
 		// 生成した管理用構造体をリストに追加。
 		_enemys.push_back(data);

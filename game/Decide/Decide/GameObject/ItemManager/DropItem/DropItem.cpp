@@ -162,7 +162,6 @@ void DropItem::Update() {
 	float deltaTime = Time::DeltaTime();
 
 	Vector3 moveSpeed = Vector3::zero;
-	moveSpeed.y = _CCharacterController->GetMoveSpeed().y;
 
 	//oŒ»ŠÔ‚É‰ÁZB
 	_TotalAppearTime += deltaTime;

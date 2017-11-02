@@ -9,8 +9,6 @@ namespace
 	const char* ObjectType[2] = { "Obj","NPC" };
 }
 
-//木が邪魔な場合これを使ってください。
-//#define NPCONLY
 
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -45,6 +43,9 @@ void HistoryManager::Start()
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
+
+//木が邪魔な場合これを使ってください。
+#define NPCONLY
 
 #ifdef NPCONLY
 	//共通オブジェクト生成。

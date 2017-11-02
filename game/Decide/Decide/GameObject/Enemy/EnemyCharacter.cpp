@@ -37,6 +37,8 @@ EnemyCharacter::~EnemyCharacter()
 
 
 void EnemyCharacter::Awake() {
+	_Type = vector<vector<int>>(static_cast<int>(Item::ItemCodeE::Max), vector<int>(LoadEnemyInfo::dropMax, -1));
+
 	// このクラスで使用するコンポーネントを追加。
 	// ※下記の関数を継承先のクラスで上書きしている場合はそちらが呼ばれる。
 	_BuildMyComponents();
@@ -334,6 +336,24 @@ void EnemyCharacter::_BuildAnimation() {
 		_MyComponent.Animation->SetAnimationEndTime(static_cast<UINT>(idx), Datas[idx]);
 	}
 };
+
+void EnemyCharacter::Drop() {
+	_DropSubClass();
+	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
+	{
+		for (int i = 0; i < LoadEnemyInfo::dropMax; i++)
+		{
+			//落とすアイテムかをチェック。
+			if (_Type[idx][i] != -1)
+			{
+				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+				//落とすアイテムのidとコードを指定。
+				item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
+			}
+		}
+	}
+	_Player->TakeDrop(GetDropEXP(), GetDropMoney());
+}
 
 /**
 * アイテム効果.
