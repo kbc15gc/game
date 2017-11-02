@@ -52,11 +52,11 @@
     <Filter Include="Nature">
       <UniqueIdentifier>{37cce69d-c542-48e5-9b75-b797d9182095}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\Support">
-      <UniqueIdentifier>{f58ec9e8-9358-45f6-aeaf-76135b8851b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Cullimg">
       <UniqueIdentifier>{1aa789f7-0128-47b5-8acc-ee2145b486a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support">
+      <UniqueIdentifier>{f58ec9e8-9358-45f6-aeaf-76135b8851b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,16 +100,16 @@
       <Filter>Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Support\Random.cpp">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="_Support\RenderTargetManager.cpp">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="_Support\Support.cpp">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="_Support\Time.cpp">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="_System\Game.cpp">
       <Filter>System</Filter>
@@ -345,22 +345,22 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Support\Assert.h">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="_Support\PIXPerfTag.h">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="_Support\Random.h">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="_Support\RenderTargetManager.h">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="_Support\Support.h">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="_Support\Time.h">
-      <Filter>Resource\Support</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="_System\Game.h">
       <Filter>System</Filter>
@@ -559,6 +559,9 @@
     </ClInclude>
     <ClInclude Include="_Value\AABB2D.h">
       <Filter>Value</Filter>
+    </ClInclude>
+    <ClInclude Include="_Support\StopWatch.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

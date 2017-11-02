@@ -47,6 +47,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 #include <dinput.h>
+//‚½‚Ô‚ñŠÔ‚Ì‚â‚Â
+#pragma comment(lib, "winmm.lib ")
 
 //std
 using namespace std;
