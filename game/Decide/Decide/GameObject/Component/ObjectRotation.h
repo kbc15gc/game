@@ -13,7 +13,7 @@ public:
 public:
 	// オブジェクトの方向を向く関数(Y軸無視)。
 	// 引数：	見たいオブジェクト。
-	void RotationToObject_XZ(const GameObject& Object);
+	void RotationToObject_XZ(const GameObject* Object);
 	// 指定した方向を向く関数(Y軸無視)。
 	// 引数：	向きベクトル。
 	void RotationToDirection_XZ(const Vector3& Dir);

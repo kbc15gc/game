@@ -16,7 +16,7 @@ void LaserBreath::Awake() {
 	_initParticleParam.gravity = 0.0f;
 	_initParticleParam.initAlpha = 1.0f;
 	_initParticleParam.initPositionRandomMargin = Vector3::zero;
-	_initParticleParam.initVelocity = Vector3::front * 10.0f;
+	_initParticleParam.initVelocity = Vector3::front;
 	_initParticleParam.initVelocityVelocityRandomMargin = Vector3::zero;
 	_initParticleParam.intervalTime = 0.01f;
 	_initParticleParam.isBillboard = true;
@@ -33,6 +33,7 @@ void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float
 	BreathObject::Create(obj);
 	_particleEmitter->transform->SetParent(_enemyObject->transform);
 	_particleEmitter->transform->SetLocalPosition(emitPosLocal);
+	_particleEmitter->transform->SetLocalRotation(Quaternion::Identity);
 	_rad = D3DXToRadian(deg);
 	_axis = axis;
 	_mulColor = mul;
@@ -67,13 +68,14 @@ void LaserBreath::_BreathStartSubClass(){
 	rot = Quaternion::Identity;
 	rot.SetRotation(_axis, _rad);
 
-	Vector3 dir = rot.RotationVector3(_enemyObject->transform->GetForward());
+	Vector3 dir = rot.RotationVector3(_initParticleParam.initVelocity);
 	dir.Normalize();
 
-	_velocity = dir * _power;
+	//// キャラクターの正面からの回転量を算出。
+	//rot.CreateVector3ToVector3(transform->GetForward(), dir);
 
 	// パーティクルの飛ぶ方向を設定。
-	_initParticleParam.initVelocity = _velocity;
+	_initParticleParam.initVelocity = dir * _power;
 
 	// パーティクルの乗算カラーを設定。
 	_initParticleParam.mulColor = _mulColor;
@@ -83,11 +85,15 @@ void LaserBreath::_BreathStartSubClass(){
 	// 作成したパーティクルを収集。
 	_particleList.reset(new vector<Particle*>);
 	_particleEmitter->AchievedCreateParticleStart(_particleList.get());
+	_particleEmitter->transform->SetLocalRotation(rot);	// 正面からの回転量を反映した向きに変更。
+	// ワールド座標系でのブレスの飛ぶ方向を算出。
+	_velocity = rot.RotationVector3(_particleEmitter->transform->GetForward()) * _power;
+
 	_particleEmitter->SetEmitFlg(true);
 	_particleEmitter->transform->SetParent(nullptr);
 
 	//攻撃コリジョン作成。
-	AttackCollision* attack = _enemyObject->CreateAttack(Vector3::zero, rot, Vector3::zero, -1.0f, _particleEmitter->transform/*_enemyObject->transform*/);
+	AttackCollision* attack = _enemyObject->CreateAttack(Vector3::zero, Quaternion::Identity, Vector3::zero, -1.0f, _particleEmitter->transform/*_enemyObject->transform*/);
 	attack->RemoveParent();
 	_attack.push_back(attack);
 }
@@ -128,11 +134,11 @@ void LaserBreath::_UpdateCollision() {
 					// 位置設定。
 					Gost->transform->SetPosition(breathEndPos);
 					// 位置をサイズの半分だけずらすことでコリジョンの中心を指定する。
-					Vector3 pos = Gost->transform->GetLocalPosition();
+					Vector3 pos = Gost->transform->GetPosition();
 					Vector3 dir = _velocity;
 					dir.Normalize();
 					pos -= dir * (sizeZ * 0.5f);
-					Gost->transform->SetLocalPosition(pos);
+					Gost->transform->SetPosition(pos);
 				}
 
 				if (start->transform->GetLocalScale().y <= 0.0f) {

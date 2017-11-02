@@ -6,7 +6,9 @@
 
 class SplitSpace;
 
-namespace {
+namespace LoadEnemyInfo{
+
+	const int dropMax = 5;
 
 	// CSVから読み込むエネミーのデータ形式。
 	struct EnemyInfo : Noncopyable {
@@ -18,9 +20,9 @@ namespace {
 		Vector3 position;	// 位置。
 		Quaternion rotation;	// 回転。
 		Vector3 scale;	// 拡縮。
-		int item[5];
-		int armor[5];
-		int weapon[5];
+		int item[dropMax];
+		int armor[dropMax];
+		int weapon[dropMax];
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -54,7 +56,7 @@ private:
 		//	InfoData = move(info);	// ユニークポインタの所有権を譲渡。
 		//}
 		EnemyCharacter* Object = nullptr;	// InfoDataをもとに生成されたオブジェクトデータ。
-		unique_ptr<EnemyInfo> InfoData;	// CSVファイルから読み込んだ設定データ。
+		unique_ptr<LoadEnemyInfo::EnemyInfo> InfoData;	// CSVファイルから読み込んだ設定データ。
 	};
 private:
 	EnemyManager();

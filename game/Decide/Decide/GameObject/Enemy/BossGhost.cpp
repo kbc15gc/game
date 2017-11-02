@@ -40,14 +40,15 @@ void BossGhost::_StartSubClass() {
 	_discoveryRange = 30.0f;
 
 	// 何回に一回くらい怯むか設定。
-	_damageMotionRandNum = 30;
+	_damageMotionRandNum = 1;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
+	_MyComponent.Model->SetModelEffect(ModelEffectE::ALPHA);
 
 	// 攻撃処理を定義。
-	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(0.0f, static_cast<int>(AnimationBossGhost::Wait), 0.2f);
+	_comboAttack.reset(new GhostComboAttack(this));
+	_comboAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -57,15 +58,15 @@ void BossGhost::_StartSubClass() {
 
 void BossGhost::_UpdateSubClass() {
 
-	if (!(_MyComponent.CharacterController->IsOnGround())) {
-		// エネミーが地面から離れている。
-		if (_NowStateIdx != State::Fall) {
-			// 現在のステートタイプを保存。
-			_saveState = _NowStateIdx;
-			// 落下ステートに切り替え。
-			_ChangeState(State::Fall);
-		}
-	}
+	//if (!(_MyComponent.CharacterController->IsOnGround())) {
+	//	// エネミーが地面から離れている。
+	//	if (_NowStateIdx != State::Fall) {
+	//		// 現在のステートタイプを保存。
+	//		_saveState = _NowStateIdx;
+	//		// 落下ステートに切り替え。
+	//		_ChangeState(State::Fall);
+	//	}
+	//}
 }
 
 void BossGhost::_LateUpdateSubClass()
@@ -80,7 +81,7 @@ EnemyAttack* BossGhost::_AttackSelectSubClass() {
 	// ※とりあえず暫定処理。
 	//int rnd = rand() % 3;
 	//if (rnd == 0) {
-		return _singleAttack.get();
+		return _comboAttack.get();
 	//}
 }
 
@@ -95,12 +96,6 @@ void BossGhost::_EndNowStateCallback(State EndStateType) {
 		// もう一度攻撃開始。
 		_ChangeState(State::StartAttack);
 	}
-	else if (EndStateType == State::Fall) {
-		// 落下ステート終了。
-
-		// 直前のステートに切り替え。
-		_ChangeState(_saveState);
-	}
 	else if (EndStateType == State::Damage) {
 		// 攻撃を受けた。
 		// 攻撃開始。
@@ -114,58 +109,23 @@ void BossGhost::_EndNowStateCallback(State EndStateType) {
 }
 
 void BossGhost::_ConfigCollision() {
-	// 攻撃判定用のコリジョン。
-	{
-		// 足元。
-		{
-			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
-
-			RigidBodyInfo info;
-			info.coll = AddComponent<BoxCollider>();
-			static_cast<BoxCollider*>(info.coll)->Create(Vector3(3.0f, 3.0f, 1.0f));
-			info.id = Collision_ID::BOSS;
-			info.mass = 0.0f;
-			info.physicsType = Collision::PhysicsType::Kinematick;
-			info.offset = Vector3(0.0f, 0.0f, 2.0f);
-			info.rotation = Quaternion::Identity;
-			coll->Create(info, true);
-
-			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
-		}
-		// 胴体。
-		{
-			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
-
-			RigidBodyInfo info;
-			info.coll = AddComponent<CCapsuleColliderZ>();
-			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 8.1f);
-			info.id = Collision_ID::BOSS;
-			info.mass = 0.0f;
-			info.physicsType = Collision::PhysicsType::Kinematick;
-			info.offset = Vector3(0.0f, 1.0f, 0.0f);
-			info.rotation = Quaternion::Identity;
-			coll->Create(info, true);
-
-			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
-		}
-	}
-
 	// キャラクターコントローラ用。
 	{
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
-		_collisionInfo.radius = 1.8f;
-		_collisionInfo.height = 6.0f;
-		_collisionInfo.offset = Vector3(0.0f, 0.125f, 0.0f);
-		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;
+		_collisionInfo.radius = 0.3f;
+		_collisionInfo.height = 0.5f;
+		_collisionInfo.offset = Vector3(0.0f, 0.0f, 0.0f);
+		_collisionInfo.id = Collision_ID::BOSS;
 
 		// 重力設定。
-		_Gravity = -9.8f;
+		_Gravity = 0.0f;
 
 		// コンポーネントにカプセルコライダーZを追加。
-		_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
+		_MyComponent.Collider = AddComponent</*CCapsuleCollider*/BoxCollider>();
 		// カプセルコライダーを作成。
-		static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+		//static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+		static_cast<BoxCollider*>(_MyComponent.Collider)->Create(Vector3(0.6f, 0.8f,0.6f));
 	}
 }
 
@@ -188,6 +148,7 @@ void BossGhost::_ConfigCharacterController() {
 }
 
 void BossGhost::_CreateExtrudeCollision() {
+	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// 押し出しようコリジョンに追加しておく。
 }
 
 void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
@@ -202,17 +163,14 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossGhost::Walk));
 		// 走行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossGhost::Walk));
-		//// 吠える。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, static_cast<unsigned int>(AnimationBossDrarian::Barking));
-		//// ダメージ反応。
-		//datas[static_cast<int>(AnimationBossDrarian::Damage)] = 8.0f / 30.0f;
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationBossDrarian::Damage));
-		////// 落下状態。
-		////// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
-		////_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
-		//// 死亡状態。
-		//_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationBossDrarian::Death));
+		// ダメージ反応。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationBossGhost::Damage));
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationBossGhost::Death));
 	}
+
+	datas[static_cast<int>(AnimationBossGhost::Damage)] = 10.0f / 30.0f;
+	datas[static_cast<int>(AnimationBossGhost::Attack)] = 20.0f / 30.0f;
 }
 
 void BossGhost::_ConfigAnimationEvent() {

@@ -23,6 +23,7 @@ class BuffDebuffICon;
 class EnemyAttack;
 class EnemySingleAttack;
 class EnemyBreathAttack;
+class GhostComboAttack;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -118,7 +119,7 @@ public:
 
 	// エネミーを指定したオブジェクトに向かせる処理(補間なし)。
 	// 引数：	見たいオブジェクト。
-	inline void LookAtObject(const GameObject& Object) {
+	inline void LookAtObject(const GameObject* Object) {
 		_MyComponent.RotationAction->RotationToObject_XZ(Object);
 	}
 
@@ -438,10 +439,7 @@ public:
 
 
 	// 死亡時のドロップ処理。
-	inline void Drop() {
-		_DropSubClass();
-		_Player->TakeDrop(GetDropEXP(), GetDropMoney());
-	}
+	void Drop();
 
 	/**
 	* アイテム効果.
@@ -473,6 +471,16 @@ public:
 
 	inline int GetNowPlayAnimation()const {
 		return _MyComponent.Animation->GetPlayAnimNo();
+	}
+
+	inline void SetAlpha(float a) {
+		Color c = _MyComponent.Model->GetAllBlend();
+		c.a = a;
+		_MyComponent.Model->SetAllBlend(c);
+	}
+
+	inline float GetAlpha()const {
+		return _MyComponent.Model->GetAllBlend().a;
 	}
 
 protected:
@@ -624,7 +632,7 @@ protected:
 
 	EnemyAttack* _nowAttack = nullptr;
 
-	int _Type[static_cast<int>(Item::ItemCodeE::Max)][5];//落とすアイテムのID。
+	vector<vector<int>> _Type;//落とすアイテムのID。
 
 private:
 	int _dropExp;	// 落とす経験値。

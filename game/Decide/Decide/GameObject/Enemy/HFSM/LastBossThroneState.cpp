@@ -32,6 +32,10 @@ void LastBossThroneState::_EntrySubClass() {
 		for (int i = CharacterParameter::Param::ATK; i < CharacterParameter::Param::MAX;i++) {
 			param[i] = _EnemyObject->GetPigmentParam(static_cast<CharacterParameter::Param>(i)) / 4;
 		}
+
+		// テスト。
+		//param[static_cast<int>(CharacterParameter::Param::HP)] = 10;
+
 		_entourageEnemys[idx]->SetParamAll(color, param);
 		_entourageEnemys[idx]->transform->SetPosition(_EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir));
 		dir *= -1.0f;

@@ -26,7 +26,7 @@ public:
 	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	//			使用するアニメーションイベント番号(指定した番号のイベントリストに登録されたイベントが呼び出される、デフォルトは0)。
 	void Init(float attackRange, int animType = -1, float interpolate = 0.0f, int animLoopNum = 1, int playEventNo = 0);
-	virtual void Entry() = 0;	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
+	virtual void Entry();	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
 	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
 	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
 
@@ -126,4 +126,29 @@ public:
 private:
 	GameObject* _player = nullptr;
 	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。
+};
+
+class GhostComboAttack:public EnemyAttack{
+private:
+	enum WarpState{Through, Materialization};
+public:
+	GhostComboAttack(EnemyCharacter* object) :EnemyAttack(object) {
+		_player = INSTANCE(GameObjectManager)->FindObject("Player");
+		_oneCombo.reset(new EnemySingleAttack(object));
+	}
+	~GhostComboAttack() {};
+
+	void Entry()override;
+
+	bool Update()override;
+
+	void Exit()override {}
+
+private:
+	GameObject* _player = nullptr;
+	unique_ptr<EnemySingleAttack> _oneCombo;
+	int _attackNum = 4;
+	int _comboCount;
+	bool _isWarp = true;	// ワープ処理中。
+	WarpState _nowWarpState;
 };
