@@ -149,6 +149,5 @@ private:
 	unique_ptr<EnemySingleAttack> _oneCombo;
 	int _attackNum = 4;
 	int _comboCount;
-	bool _isWarp = true;	// ƒ[ƒvˆ—’†B
 	WarpState _nowWarpState;
 };

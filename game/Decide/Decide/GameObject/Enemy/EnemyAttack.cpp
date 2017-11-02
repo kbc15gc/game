@@ -55,70 +55,57 @@ void GhostComboAttack::Entry() {
 	_oneCombo->Init(0.0f, _animType, _interpolate, 1, _playEventNo);
 	_comboCount = 0;
 	_nowWarpState = WarpState::Through;
-	_isWarp = true;
 }
 
 bool GhostComboAttack::Update() {
-	if (_isWarp) {
-		// ワープ処理中。
 
-		float alpha = _enemyObject->GetAlpha();
+	float alpha = _enemyObject->GetAlpha();
 
-		if (_nowWarpState == WarpState::Through) {
-			// 透過処理中。
+	if (_nowWarpState == WarpState::Through) {
+		// 透過処理中。
 
-			alpha -= 3.0f * Time::DeltaTime();
-			if (alpha <= 0.0f) {
-				// 完全に透明になった。
+		alpha -= 3.0f * Time::DeltaTime();
+		if (alpha <= 0.0f) {
+			// 完全に透明になった。
 
-				_nowWarpState = WarpState::Materialization;		// 消えたので次は実体化。
-				Transform* parent = _enemyObject->transform->GetParent();	// 現在のエネミーの親を保存。
+			_nowWarpState = WarpState::Materialization;		// 消えたので次は実体化。
+			Transform* parent = _enemyObject->transform->GetParent();	// 現在のエネミーの親を保存。
 
-				// プレイヤーの近くに移動。
-				_enemyObject->transform->SetParent(_player->transform);
-				_enemyObject->transform->SetLocalPosition(Vector3(0.0f,1.0f,0.5f));
-				_enemyObject->transform->SetParent(parent);
+			// プレイヤーの近くに移動。
+			_enemyObject->transform->SetParent(_player->transform);
+			_enemyObject->transform->SetLocalPosition(Vector3(0.0f, 1.0f, 0.5f));
+			_enemyObject->transform->SetParent(parent);
 
-				//// プレイヤーのほうに向く。
-				//_enemyObject->LookAtObject(_player);
-				alpha = 0.0f;
-			}
-		}
-		else {
-			// 実体化処理中。
-
-			alpha += 3.0f * Time::DeltaTime();
-			if (alpha >= 1.0f) {
-				// 完全に実体化した。
-
-				alpha = 1.0f;
-				_isWarp = false;	// ワープ処理終了。
-				//_oneCombo->Entry();	// 攻撃開始。
-			}
-			// テスト。
 			_oneCombo->Entry();	// 攻撃開始。
 
-			// プレイヤーのほうに向く。
-			//_enemyObject->LookAtObject(_player);
+			alpha = 0.0f;
 		}
-
-		_enemyObject->SetAlpha(alpha);
 	}
-	else if (_oneCombo->Update()) {
-		// 攻撃一回終了。
+	else {
+		// 実体化処理中。
 
-		_comboCount++;
+		alpha += 3.0f * Time::DeltaTime();
+		if (alpha >= 1.0f) {
+			// 完全に実体化した。
 
-		if (_comboCount >= _attackNum) {
-			// 攻撃回数が指定回数に達した。
-
-			return true;
+			alpha = 1.0f;
 		}
-		else {
+
+		if (_oneCombo->Update()) {
+			// 攻撃一回終了。
+
+			_comboCount++;
+
+			if (_comboCount >= _attackNum) {
+				// 攻撃回数が指定回数に達した。
+
+				return true;
+			}
 			_nowWarpState = WarpState::Through;		// また消える。
-			_isWarp = true;
 		}
 	}
+
+	_enemyObject->SetAlpha(alpha);
 
 	return false;
 }
