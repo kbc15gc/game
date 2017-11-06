@@ -5,7 +5,10 @@
 #include "EnemyWaitState.h"
 #include "GameObject\Enemy\BossGhost.h"
 
-const int LastBossThroneState::_entourageNum = 2;
+//const int LastBossThroneState::_entourageNum = 2;
+
+// テスト。
+const int LastBossThroneState::_entourageNum = 1;
 
 LastBossThroneState::LastBossThroneState(EnemyCharacter* Object) : EnemyState(Object)
 {

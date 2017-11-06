@@ -18,6 +18,15 @@ BossGhost::~BossGhost()
 {
 }
 
+void BossGhost::CreateCollision() {
+	//攻撃コリジョン作成。
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.0f), 0.25f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+}
+
 void BossGhost::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("Ghost.X");
@@ -125,7 +134,7 @@ void BossGhost::_ConfigCollision() {
 		_MyComponent.Collider = AddComponent</*CCapsuleCollider*/BoxCollider>();
 		// カプセルコライダーを作成。
 		//static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
-		static_cast<BoxCollider*>(_MyComponent.Collider)->Create(Vector3(0.6f, 0.8f,0.6f));
+		static_cast<BoxCollider*>(_MyComponent.Collider)->Create(Vector3(0.6f, 1.7f,0.6f));
 	}
 }
 
@@ -174,6 +183,13 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 }
 
 void BossGhost::_ConfigAnimationEvent() {
+	float eventFrame = 0.1f;
+	
+	// コンボ攻撃。
+	{
+		eventFrame = 0.6f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::CreateCollision));
+	}
 }
 
 void BossGhost::_BuildSoundTable() {

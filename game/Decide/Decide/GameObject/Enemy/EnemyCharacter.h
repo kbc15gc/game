@@ -634,6 +634,8 @@ protected:
 
 	vector<vector<int>> _Type;//落とすアイテムのID。
 
+	Player* _Player = nullptr;			//プレイヤー
+
 private:
 	int _dropExp;	// 落とす経験値。
 	int _dropMoney; // 落とす金額。
@@ -642,7 +644,6 @@ private:
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
 
-	Player* _Player = nullptr;			//プレイヤー
 
 public:
 	static NearEnemyInfo nearEnemyInfo;

@@ -25,8 +25,7 @@ public:
 	~BossGhost();
 
 	// アニメーションイベント関連。
-
-
+	void CreateCollision();
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
