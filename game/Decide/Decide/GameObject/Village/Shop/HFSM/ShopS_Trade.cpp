@@ -297,14 +297,26 @@ void ShopS_Trade::_UpdateText()
 		_MenuListHeight = max(_MenuListHeight, _MenuTexts[i]->GetLength().y);
 
 		char info[256];
-		if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
+
+		if (_SaveState == Shop::ShopStateE::Buy)
 		{
-			sprintf(info, "%2d   %2d %4d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
+			auto Info = item->GetInfo();
+			//持っている個数　交換個数　値段。
+			sprintf(info, "%2d   %2d %4d$", Inventory::Instance()->GetHoldNum(Info->TypeID, Info->ID), _TradeNum[i], Info->Value);
 		}
-		else
+		else if (_SaveState == Shop::ShopStateE::Sell)
 		{
-			sprintf(info, "%2d %4d$", _TradeNum[i], item->GetInfo()->Value);
+			if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
+			{
+				//持っている個数　交換個数　値段。
+				sprintf(info, "%2d   %2d %4d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
+			}
+			else
+			{
+				sprintf(info, "%2d %4d$", _TradeNum[i], item->GetInfo()->Value);
+			}
 		}
+		
 		_MoneyTexts[i]->SetText(info);
 	}
 

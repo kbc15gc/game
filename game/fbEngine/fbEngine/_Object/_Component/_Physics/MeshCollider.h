@@ -17,7 +17,7 @@ public:
 	 * @brief	CSkinModelDataからメッシュコライダーを生成。
 	 *@param[in]	model		スキンモデル。
 	 */
-	void Create(SkinModel* model, Vector3 offset = Vector3::zero);
+	void Create(SkinModel* model);
 
 private:
 #ifdef _DEBUG
