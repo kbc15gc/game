@@ -106,7 +106,18 @@ public:
 	/**
 	* 更新.
 	*/
-	void Update()override;
+	void LateUpdate()override;
+
+	///**
+	//* アクティブ.
+	//*/
+	//void OnEnable()override
+	//{
+	//	if (INSTANCE(Inventory)->GetInventoryListSize() > 0)
+	//	{
+	//		Update();
+	//	}
+	//}
 
 	/**
 	* 非アクティブ.

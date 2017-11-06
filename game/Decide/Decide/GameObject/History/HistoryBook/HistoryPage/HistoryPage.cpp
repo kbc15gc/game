@@ -44,7 +44,7 @@ void HistoryPage::Awake()
 /**
 * ‰Šú‰».
 */
-void HistoryPage::Start(ChipID chipID, LocationCodeE code)
+void HistoryPage::Start(ChipID chipID, LocationCodeE code, Vector3& pos)
 {
 	SkinModel* model = _HistoryBook->GetComponent<SkinModel>();
 	LPD3DXFRAME frame = model->GetFrameRoot();
@@ -55,12 +55,11 @@ void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 	D3DXFRAME_DERIVED* pageDerived = (D3DXFRAME_DERIVED*)D3DXFrameFind(pageFrame, "bone2");
 	pageDerived->RotationMatrix = &_RotationMatrix;
 
-	transform->UpdateWolrdMatrix();
-
 	_ChipID = chipID;
 	_NowLocatuion = code;
 
-
+	_InitPos = pos;
+	ChangeState(StateCodeE::PutIn);
 }
 
 /**
