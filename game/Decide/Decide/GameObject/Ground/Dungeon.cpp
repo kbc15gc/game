@@ -31,7 +31,7 @@ void Dungeon::Awake()
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
 	mesh->Create(model);
-	rigid->Create(0, mesh, Collision_ID::GROUND);
+	rigid->Create(0, mesh, Collision_ID::GROUND, transform->GetPosition());
 
 }
 

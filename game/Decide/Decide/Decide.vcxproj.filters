@@ -262,9 +262,6 @@
     <ClCompile Include="_Debug\TestObject.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Ground\Dungeon.cpp">
-      <Filter>GameObject\Ground</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp">
       <Filter>GameObject\Enemy\HFSN</Filter>
     </ClCompile>
@@ -334,8 +331,17 @@
     <ClCompile Include="GameObject\Enemy\BossGhost.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Ground\Dungeon.cpp">
+      <Filter>GameObject\MeshObject</Filter>
+    </ClCompile>
     <ClCompile Include="GameObject\Ground\RockCave.cpp">
-      <Filter>GameObject\Ground</Filter>
+      <Filter>GameObject\MeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\MeshObject\MeshObjectChip.cpp">
+      <Filter>GameObject\MeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp">
+      <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -611,9 +617,6 @@
     <ClInclude Include="_Debug\TestObject.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Ground\Dungeon.h">
-      <Filter>GameObject\Ground</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h">
       <Filter>GameObject\Enemy\HFSN</Filter>
     </ClInclude>
@@ -686,11 +689,20 @@
     <ClInclude Include="GameObject\Enemy\BossGhost.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Ground\RockCave.h">
-      <Filter>GameObject\Ground</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\ParticleParamTable.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Ground\Dungeon.h">
+      <Filter>GameObject\MeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Ground\RockCave.h">
+      <Filter>GameObject\MeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\MeshObject\MeshObjectChip.h">
+      <Filter>GameObject\MeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h">
+      <Filter>GameObject\MeshObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -781,6 +793,9 @@
     </Filter>
     <Filter Include="GameObject\TextImage">
       <UniqueIdentifier>{f5cad695-1d77-483f-9ced-c1ff8fefec4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\MeshObject">
+      <UniqueIdentifier>{32d160e8-e00b-4c52-84c1-416148838477}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

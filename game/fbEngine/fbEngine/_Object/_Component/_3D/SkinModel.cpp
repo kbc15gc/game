@@ -29,7 +29,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_ModelDate(nullptr),
 	_Camera(nullptr),
 	_Light(nullptr),
-	_TextureBlend(Color::white),
+	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
 	_SkyBox(false),
@@ -107,10 +107,11 @@ void SkinModel::LateUpdate()
 		D3DXMATRIX wolrd;
 		D3DXMatrixIdentity(&wolrd);
 		wolrd = transform->GetWorldMatrix();
-		if (strcmp(this->gameObject->GetName(), "Dungeon") == 0)
-			int a = 0;
-		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
+
+		if (strcmp(gameObject->GetName(), "Bridge.X") == 0)
+			int a = 0;
+
 
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{

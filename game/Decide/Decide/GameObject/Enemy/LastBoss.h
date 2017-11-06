@@ -28,6 +28,7 @@ public:
 	LastBoss(const char* name);
 	~LastBoss();
 
+
 	void SordAttackEvent();
 	void SordAttackEvent2();
 	void MagicAttackStart1();

@@ -44,15 +44,27 @@ void HistoryManager::Start()
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
+//木が邪魔な場合これを使ってください。
+//#define NPCONLY
+
+#ifdef NPCONLY
 	//共通オブジェクト生成。
 	char path[128];
-	//FOR(type, 2)
-	//{
-	//	//パス生成
-	//	sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-	//	_CreateObject((int)LocationCodeE::Common, path, type);
-	//}
+		//パス生成
+	sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[1]);
+	_CreateObject((int)LocationCodeE::Common, path, 1);
+#else // NPCONLY
+	//共通オブジェクト生成。
+	char path[128];
+	FOR(type, 2)
+	{
+		//パス生成
+		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
+		_CreateObject((int)LocationCodeE::Common, path, type);
+	}
 
+#endif
+	
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
@@ -204,6 +216,8 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
+		if (strcmp(objInfo[i]->filename, "Bridge.X") == 0)
+			int a = 0;
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
@@ -251,9 +265,10 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
 								  /*q.SetEuler(Vector3(0.0f, -90.0f, 0.0f));*/
 								  //q.SetEuler(Vector3(0.0f, 180.0f, 0.0f));
-					q.SetRotation(Vector3::up, PI);
+					q.SetRotation(Vector3::up, PI / 2);
 					q.Multiply(info->ang);
 					Rinfo.rotation = q;
+					//Rinfo.rotation = info->ang;
 					coll->Create(Rinfo, true);
 				}
 				else

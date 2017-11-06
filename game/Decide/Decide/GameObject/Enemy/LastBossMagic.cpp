@@ -88,7 +88,7 @@ void LastBossMagic::_BreathStartSubClass() {
 	_particleEmitter->SetEmitFlg(true);
 
 	//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
-	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, -0.9f), Quaternion::Identity, Vector3(1.0f, 1.0f, 1.8f), -1.0f, _particleEmitter->transform,true);
+	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 1.5f, 1.0f), -1.0f, _particleEmitter->transform,true);
 	_attack.push_back(attack);
 
 	_timeCounter = 0.0f;
