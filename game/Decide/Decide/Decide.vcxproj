@@ -261,6 +261,8 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
+    <ClInclude Include="GameObject\MeshObject\MeshObjectChip.h" />
+    <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h" />
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\ParticleParamTable.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
@@ -382,6 +384,8 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
     <ClCompile Include="GameObject\Log\Log.cpp" />
+    <ClCompile Include="GameObject\MeshObject\MeshObjectChip.cpp" />
+    <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp" />
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />

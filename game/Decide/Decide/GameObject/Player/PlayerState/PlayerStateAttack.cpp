@@ -48,7 +48,7 @@ void PlayerStateAttack::Update()
 	//近くのエネミーの方向を向く。
 	if (EnemyCharacter::nearEnemyInfo.length <= Circumference)
 	{
-		_Player->_Rotation->RotationToObject_XZ(*EnemyCharacter::nearEnemyInfo.object);
+		_Player->_Rotation->RotationToObject_XZ(EnemyCharacter::nearEnemyInfo.object);
 	}
 
 	//移動速度

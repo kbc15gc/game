@@ -168,7 +168,7 @@ PSOutput PSMain( VS_OUTPUT In )
     //ëÂãCéUóê.
     if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
     {
-        color.xyz = In._RayColor + color * In._MieColor;
+        color.xyz = In._RayColor + color.xyz * In._MieColor;
     }
 
     float4 light = DiffuseLight(normal);

@@ -9,6 +9,9 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
+
+#include "GameObject\MeshObject\MeshObjectChipManager.h"
+
 #include"GameObject\Ground\Dungeon.h"
 #include"GameObject\Ground\RockCave.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
@@ -107,6 +110,9 @@ void GameScene::Start()
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
+
+	//メッシュコライダーオブジェクトを生成
+	INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
@@ -117,6 +123,7 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
+	//@todo for debug
 	// テスト。
 	// ラスボス作成。
 	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
@@ -129,11 +136,32 @@ void GameScene::Start()
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
 	enemy->SetParamAll(Color, param);
 
-	FOR(i,2)
+	//FOR(i,2)
+	//{
+	//	//歴史チップ
+	//	Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+	//	chip->SetChipID((ChipID)i);
+	//}
+	//必要なチップを設置する。
 	{
-		//歴史チップ
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-		chip->SetChipID((ChipID)i);
+		chip->SetChipID(ChipID::Fire);
+	}
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+		chip->SetChipID(ChipID::Tree);
+	}
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+		chip->SetChipID(ChipID::Hunt);
+	}
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+		chip->SetChipID(ChipID::Agriculture);
+	}
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+		chip->SetChipID(ChipID::Copper);
 	}
 
 	//メニュー

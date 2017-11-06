@@ -40,7 +40,7 @@ void EnemyChaceState::_UpdateSubClass() {
 
 			// 追跡処理。
 			// エネミーをプレイヤーに向ける。
-			_EnemyObject->LookAtObject(*_Player);
+			_EnemyObject->LookAtObject(_Player);
 
 			Vector3 EnemyToPlayer = _Player->transform->GetPosition() - _EnemyObject->transform->GetPosition();
 			if (EnemyToPlayer.Length() <= _EnemyObject->GetNowSelectAttackRange()) {

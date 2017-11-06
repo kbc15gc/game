@@ -1,8 +1,8 @@
 #include"stdafx.h"
 #include "ObjectRotation.h"
 
-void ObjectRotation::RotationToObject_XZ(const GameObject& Object) {
-	Vector3 MyToObject = Object.transform->GetPosition() - gameObject->transform->GetPosition();
+void ObjectRotation::RotationToObject_XZ(const GameObject* Object) {
+	Vector3 MyToObject = Object->transform->GetPosition() - gameObject->transform->GetPosition();
 	MyToObject.Normalize();
 
 	// Œü‚©‚¹‚½‚¢Œü‚«‚ÌX‚ÆZ‚©‚ç‰ñ“]Šp“x‚ð‹‚ß‚éB
