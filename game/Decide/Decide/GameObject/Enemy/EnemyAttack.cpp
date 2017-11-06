@@ -105,7 +105,7 @@ bool GhostComboAttack::Update() {
 
 			moveDir.y = 0.0f;
 
-			float speed = 11.0f;
+			float speed = _player->GetSpeed();
 
 			if (moveDir.Length() > _oneCombo->GetAttackRange()) {
 				// UŒ‚”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚È‚¢B
