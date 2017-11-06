@@ -60,7 +60,7 @@ void PlayerStateRun::Enter()
 
 void PlayerStateRun::Leave()
 {
-
+	_Player->_NowSpeed = 0.0f;
 }
 
 void PlayerStateRun::Move()
@@ -134,12 +134,14 @@ void PlayerStateRun::Move()
 		if (VPadInput->IsPress(fbEngine::VPad::ButtonRB1))
 		{
 			//ダッシュスピードを適用
-			dir = dir * _DashSpeed;
+			_Player->_NowSpeed = _Speed * _DashSpeed;
+			dir = dir * _Player->_NowSpeed;
 		}
 		else
 		{
 			//通常のスピード
-			dir = dir * _Speed;
+			_Player->_NowSpeed = _Speed;
+			dir = dir * _Player->_NowSpeed;
 		}
 		//カメラからみた方向に射影。
 		movespeed = movespeed + cameraX * dir.x;
