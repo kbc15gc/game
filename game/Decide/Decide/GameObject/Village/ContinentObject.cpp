@@ -30,7 +30,7 @@ void ContinentObject::Start() {
 
 void ContinentObject::LoadModel(const char * filename)
 {
-	SkinModelData* data= new SkinModelData();
+	SkinModelData* data = new SkinModelData();
 	data->CloneModelData(SkinModelManager::LoadModel(filename), _Anim);
 	//data->SetInstancing(true);
 	_Model->SetModelData(data);
@@ -43,7 +43,6 @@ void ContinentObject::LoadModel(const char * filename)
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
-
 	////“–‚½‚è”»’è’Ç‰ÁB
 	//RigidBody* rigid = AddComponent<RigidBody>();
 	//MeshCollider* mesh = AddComponent<MeshCollider>();
@@ -55,5 +54,7 @@ void ContinentObject::LoadModel(const char * filename)
 	//info.coll = mesh;
 	//info.id = Collision_ID::BUILDING;
 	//info.rotation = transform->GetRotation();
-	//rigid->Create(info,false);
+	//rigid->Create(info, false);
+
+
 }

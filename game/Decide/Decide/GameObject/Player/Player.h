@@ -270,6 +270,12 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
+
+	//プレイヤーの速度ゲット
+	float GetSpeed()
+	{
+		return _NowSpeed;
+	}
 private:
 	//アニメーションイベント
 	void AnimationEventControl();
@@ -309,6 +315,10 @@ private:
 	friend class PlayerStateRun;
 	friend class PlayerStateImpact;
 
+	//プレイヤーの速度。
+	//現在のスピード（ランかダッシュかによって変わる）
+	float _NowSpeed;
+	
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
 	SkinModel* _Model = nullptr;

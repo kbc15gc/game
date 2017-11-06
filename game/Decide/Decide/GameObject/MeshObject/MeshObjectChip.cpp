@@ -26,8 +26,8 @@ void MeshObjectChip::Init(const char* name, const Vector3& pos, const Vector3& s
 {
 	
 	transform->SetLocalPosition(pos);
-	//transform->SetLocalScale(sca);
-	//transform->SetLocalRotation(q);
+	transform->SetLocalScale(sca);
+	transform->SetLocalRotation(q);
 
 	//スキンモデル作成
 	SkinModel* model = AddComponent<SkinModel>();
@@ -40,9 +40,16 @@ void MeshObjectChip::Init(const char* name, const Vector3& pos, const Vector3& s
 	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
+	//当たり判定追加。
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
+	//メッシュコライダー生成。
 	mesh->Create(model);
-	rigid->Create(0, mesh, Collision_ID::GROUND);
+	RigidBodyInfo info;
+	info.mass = 0.0f;
+	info.coll = mesh;
+	info.id = Collision_ID::BUILDING;
+	info.rotation = transform->GetRotation();
+	rigid->Create(info, false);
 }

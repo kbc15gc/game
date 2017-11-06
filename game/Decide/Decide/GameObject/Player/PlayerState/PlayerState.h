@@ -21,6 +21,6 @@ public:
 protected:
 	Player* _Player = nullptr;
 	const float _Speed = 8.0f;
-	const float _DashSpeed = 12.0f;
+	const float _DashSpeed = 1.5f;
 	const float _JumpSpeed = 10.0f;
 };

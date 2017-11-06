@@ -3,13 +3,17 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
 
-//オブジェクトの詳細
-struct SCollisionInfo {
-	const char* name;
-	Vector3 pos;
-	Quaternion angle;
-	Vector3 scale;
-};
+namespace 
+{
+	//オブジェクトの詳細
+	struct SCollisionInfo {
+		const char* name;
+		Vector3 pos;
+		Quaternion angle;
+		Vector3 scale;
+	};
+}
+
 
 class GameScene : public Scene
 {
