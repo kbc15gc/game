@@ -223,14 +223,14 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
-			
+
 			obj->transform->SetRotation(objInfo[i]->ang);
 			//第3の村だけ
-			if(location == (int)LocationCodeE::Prosperity)
+			if (location == (int)LocationCodeE::Prosperity)
 			{
 				//X軸に180ど回転させる。
 				Quaternion q = Quaternion::Identity;
-				q.SetRotation(Vector3::axisX , PI);
+				q.SetRotation(Vector3::axisX, PI);
 				q.Multiply(objInfo[i]->ang);
 				obj->transform->SetRotation(q);
 
@@ -238,7 +238,7 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 
 			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
-			obj->LoadModel(objInfo[i]->filename);
+			obj->LoadModel(objInfo[i]->filename, objInfo[i]->coll);
 
 			//管理用の配列に追加。
 			_GameObjectList[location].push_back(obj);
@@ -255,31 +255,36 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					break;
 				}
 
-				//名前チェック
-				if (strcmp(info->filename, "coll") == 0)
+				//コリジョンを自分で作成している場合は作成する。
+				if (objInfo[i]->coll)
 				{
-					//コリジョンを生成してゲームオブジェクトにアタッチ。
-					//BoxCollider* box = obj->AddComponent<BoxCollider>();
-					//RigidBody* coll = obj->AddComponent<RigidBody>();
+					//名前チェック
+					if (strcmp(info->filename, "coll") == 0)
+					{
+						//コリジョンを生成してゲームオブジェクトにアタッチ。
+						BoxCollider* box = obj->AddComponent<BoxCollider>();
+						RigidBody* coll = obj->AddComponent<RigidBody>();
 
-					//box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
-					//RigidBodyInfo Rinfo;
-					//Rinfo.physicsType = Collision::PhysicsType::Static;
-					//Rinfo.mass = 0.0f;
-					//Rinfo.coll = box;
-					////カメラと当たらないコリジョンかどうか？
-					//Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
-					//Rinfo.offset = info->pos;
-					//Quaternion q;
-					//q.Multiply(info->ang);
-					//Rinfo.rotation = q;
-					//coll->Create(Rinfo, true);
-				}
-				else
-				{
-					break;
+						box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
+						RigidBodyInfo Rinfo;
+						Rinfo.physicsType = Collision::PhysicsType::Static;
+						Rinfo.mass = 0.0f;
+						Rinfo.coll = box;
+						//カメラと当たらないコリジョンかどうか？
+						Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+						Rinfo.offset = info->pos;
+						Quaternion q;
+						q.Multiply(info->ang);
+						Rinfo.rotation = q;
+						coll->Create(Rinfo, true);
+					}
+					else
+					{
+						break;
+					}
 				}
 			}
+
 		}
 	}
 
@@ -297,7 +302,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 	{
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-		npc->LoadModel(npcInfo[i]->filename);
+		npc->LoadModel(npcInfo[i]->filename,false);
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
 		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);

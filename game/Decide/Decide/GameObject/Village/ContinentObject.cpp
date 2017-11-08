@@ -28,7 +28,7 @@ void ContinentObject::Start() {
 	}
 }
 
-void ContinentObject::LoadModel(const char * filename)
+void ContinentObject::LoadModel(const char * filename, bool coll)
 {
 	SkinModelData* data = new SkinModelData();
 	data->CloneModelData(SkinModelManager::LoadModel(filename), _Anim);
@@ -40,29 +40,26 @@ void ContinentObject::LoadModel(const char * filename)
 	if (string(filename) == "tree.X")
 	{
 		_Model->SetTree();
-		return;
 	}
-
-	if (string(filename) == "kusa.X")
+	if (!coll)
 	{
-		return;
+		//当たり判定追加。
+		RigidBody* rigid = AddComponent<RigidBody>();
+		MeshCollider* mesh = AddComponent<MeshCollider>();
+
+		//メッシュコライダー生成。
+		mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
+		//MeshColliderManager::CloneMeshCollider(filename);
+		//mesh->Create(_Model);
+		auto sca = transform->GetLocalScale();
+		mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
+		RigidBodyInfo info;
+		info.mass = 0.0f;
+		info.coll = mesh;
+		//info.offset = _Model->GetModelData()->GetCenterPos();
+		info.id = Collision_ID::BUILDING;
+		info.rotation = transform->GetRotation();
+		rigid->Create(info, false);
 	}
-
-	//当たり判定追加。
-	RigidBody* rigid = AddComponent<RigidBody>();
-	MeshCollider* mesh = AddComponent<MeshCollider>();
-
-	//メッシュコライダー生成。
-	mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
-	//MeshColliderManager::CloneMeshCollider(filename);
-	//mesh->Create(_Model);
-	auto sca = transform->GetLocalScale();
-	mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
-	RigidBodyInfo info;
-	info.mass = 0.0f;
-	info.coll = mesh;
-	//info.offset = _Model->GetModelData()->GetCenterPos();
-	info.id = Collision_ID::BUILDING;
-	info.rotation = transform->GetRotation();
-	rigid->Create(info, false);
+	
 }

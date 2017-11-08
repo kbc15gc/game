@@ -5,4 +5,5 @@ using UnityEngine;
 public class ExportCollision : MonoBehaviour {
     [SerializeField, TooltipAttribute("カメラと当たるかどうか？")]
     public bool HitCamera = true;
+    public bool Coll = false;
 }

@@ -68,7 +68,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("name,pos,ang,sca");
+        sw.WriteLine("name,pos,ang,sca,coll");
         //1つのオブジェクトを取り出して書き出す。
         for (int idx = 0; idx < objects.childCount; idx++) 
         {
@@ -84,8 +84,11 @@ public class CSVExportFunction : Editor
             //スケール
             string sca = Vector3ToString(child.lossyScale);
 
+            ExportCollision c = child.gameObject.GetComponent<ExportCollision>();
+            string collisiton = (Convert.ToInt32(c.Coll)).ToString();
+
             string line;
-            line = string.Format("{0},{1},{2},{3},{4}", filename, pos, ang, sca, "0");
+            line = string.Format("{0},{1},{2},{3},{4},{5}", filename, pos, ang, sca, "0", collisiton);
             //1列書き出し。
             sw.WriteLine(line);
 
@@ -93,7 +96,7 @@ public class CSVExportFunction : Editor
             foreach (Transform coll in child.GetComponentsInChildren<Transform>())
             {
                 if (coll.name == child.name)
-                    continue;
+                    continue; 
                 ExportCollision(coll, sw);
             }
         }
@@ -166,8 +169,9 @@ public class CSVExportFunction : Editor
         string sca = Vector3ToString(coll.lossyScale);
         ExportCollision c = coll.gameObject.GetComponent<ExportCollision>();
         string hitcamera = (Convert.ToInt32(c.HitCamera)).ToString();
+        string collisiton = (Convert.ToInt32(c.Coll)).ToString();
         string line;
-        line = string.Format("{0},{1},{2},{3},{4}", filename, pos, ang, sca, hitcamera);
+        line = string.Format("{0},{1},{2},{3},{4},{5}", filename, pos, ang, sca, hitcamera, collisiton);
         sw.WriteLine(line);
     }
 
