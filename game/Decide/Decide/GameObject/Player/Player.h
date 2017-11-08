@@ -257,6 +257,10 @@ public:
 		return _BuffDebuffICon;
 	}
 
+	// プレイヤーのモデルの原点は足元なので中心座標が欲しいときはこちら。
+	inline const Vector3& GetOffsetPos()const {
+		return _CharacterController->GetRigidBody()->GetOffsetPos();
+	}
 
 	/**
 	* アイテムが使用された.

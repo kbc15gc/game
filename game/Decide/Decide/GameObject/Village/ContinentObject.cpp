@@ -40,6 +40,12 @@ void ContinentObject::LoadModel(const char * filename)
 	if (string(filename) == "tree.X")
 	{
 		_Model->SetTree();
+		return;
+	}
+
+	if (string(filename) == "kusa.X")
+	{
+		return;
 	}
 
 	//“–‚½‚è”»’è’Ç‰ÁB

@@ -1,6 +1,8 @@
 #pragma once
 #include "EnemyState.h"
 
+class BossGhost;
+
 // ラスボス玉座(側近召喚、プレイヤーにデバフ、魔王無敵状態)ステート。
 class LastBossThroneState : public EnemyState {
 public:
@@ -22,5 +24,5 @@ private:
 	float _timeCounter;
 
 	static const int _entourageNum;	// 側近の数。
-	vector<EnemyCharacter*> _entourageEnemys;	// 側近。
+	vector<BossGhost*> _entourageEnemys;	// 側近。
 };

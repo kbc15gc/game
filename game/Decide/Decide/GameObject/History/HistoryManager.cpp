@@ -228,7 +228,19 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
+			
 			obj->transform->SetRotation(objInfo[i]->ang);
+			//‘æ3‚Ì‘º‚¾‚¯
+			if(location == (int)LocationCodeE::Prosperity)
+			{
+				//XŽ²‚É180‚Ç‰ñ“]‚³‚¹‚éB
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX , PI);
+				q.Multiply(objInfo[i]->ang);
+				obj->transform->SetRotation(q);
+
+			}
+
 			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			obj->LoadModel(objInfo[i]->filename);

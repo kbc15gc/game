@@ -41,8 +41,8 @@ void MeshCollider::Create(SkinModelData * model)
 	//model->UpdateBoneMatrix(iden);
 
 	stridingMeshInterface = new btTriangleIndexVertexArray;
-	//番兵設定
-	Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	////番兵設定
+	//Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
 	auto& frames = model->GetFrameList();
 	//
@@ -76,14 +76,14 @@ void MeshCollider::Create(SkinModelData * model)
 					//行列変換。
 					posTmp.Transform(pFrame->CombinedTransformationMatrix);
 
-					//最小。
-					Min.x = min(Min.x, posTmp.x);
-					Min.y = min(Min.y, posTmp.y);
-					Min.z = min(Min.z, posTmp.z);
-					//最大。
-					Max.x = max(Max.x, posTmp.x);
-					Max.y = max(Max.y, posTmp.y);
-					Max.z = max(Max.z, posTmp.z);
+					////最小。
+					//Min.x = min(Min.x, posTmp.x);
+					//Min.y = min(Min.y, posTmp.y);
+					//Min.z = min(Min.z, posTmp.z);
+					////最大。
+					//Max.x = max(Max.x, posTmp.x);
+					//Max.y = max(Max.y, posTmp.y);
+					//Max.z = max(Max.z, posTmp.z);
 
 					vertexBuffer->push_back(posTmp);
 					char* p = (char*)pos;
