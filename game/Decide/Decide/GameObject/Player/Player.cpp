@@ -79,7 +79,7 @@ void Player::Awake()
 	// HPバー。
 	_HPBar = AddComponent<ParameterBar>();
 	// MPバー。
-	_MPBar = AddComponent<ParameterBar>();
+	//_MPBar = AddComponent<ParameterBar>();
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
@@ -143,9 +143,9 @@ void Player::Awake()
 	}
 	// MPのバーを表示。
 	{
-		vector<BarColor> Colors;
-		Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
-		_MPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxMP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
+		//vector<BarColor> Colors;
+		//Colors.push_back(BarColor::Blue); //175.0f, 21.9f, 0.0f
+		//_MPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxMP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), true, true, _HPBar->GetTransform(), Vector3(0.0f, 40.0f, 0.0f), Vector2(1.0f, 1.0f));
 	}
 	//ダメージSE初期化
 	_DamageSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSound", 0);
@@ -254,6 +254,43 @@ void Player::Start()
 
 void Player::Update()
 {
+
+	//@todo for debug
+#define CHIP
+#ifdef CHIP
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
+	}
+#endif // 
+
+
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
@@ -267,11 +304,11 @@ void Player::Update()
 		_HPBar->Update();
 	}
 
-	if (_MPBar != nullptr)
-	{
-		//MPバーの更新
-		_MPBar->Update();
-	}
+	//if (_MPBar != nullptr)
+	//{
+	//	//MPバーの更新
+	//	_MPBar->Update();
+	//}
 
 	if (_PlayerParam)
 	{	
@@ -473,7 +510,7 @@ void Player::Releace()
 	_PlayerParam = nullptr;
 	_CurrentState = nullptr;
 	_HPBar = nullptr;
-	_MPBar = nullptr;
+	//_MPBar = nullptr;
 	for (auto &p : _AttackBoiceSound)
 	{
 		p = nullptr;
@@ -512,9 +549,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 		{
 			_ParticleEffect->HeelMpEffect();
 		}
-		if (_MPBar) {
+		/*if (_MPBar) {
 			_MPBar->SetValue(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::Param::MP)));
-		}
+		}*/
 		
 		_HeelSound->Play(false);
 		
@@ -706,7 +743,7 @@ void Player::_LevelUP()
 	//HPが上がったのでHPバーのHP設定しなおす。
 	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
+	//_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 	//レベルアップ時のイメージ表示。
 	_LevelUpImage->Init();
 	//レベルアップ時の音再生。
@@ -751,7 +788,7 @@ void Player::Speak()
 				{
 					//会話のためHPバーなどを消す。
 					_HPBar->RenderDisable();
-					_MPBar->RenderDisable();
+					//_MPBar->RenderDisable();
 					//話すフラグセット
 					npc->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
@@ -768,10 +805,10 @@ void Player::Speak()
 				//話し終わると
 				if (_NoJump)
 				{
-					if (_HPBar && _MPBar)
+					if (_HPBar/* && _MPBar*/)
 					{
 						_HPBar->RenderEnable();
-						_MPBar->RenderEnable();
+						//_MPBar->RenderEnable();
 						_NoJump = false;
 					}
 				}
@@ -810,6 +847,23 @@ void Player::_DebugPlayer()
 		//所持リストに追加.
 		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
 	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
+	}
+
+
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
@@ -866,7 +920,7 @@ void Player::_DebugLevel(int lv)
 	//HPが上がったのでHPバーのHP設定しなおす。
 	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
-	_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
+	//_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 }
 #endif // _DEBUG
 

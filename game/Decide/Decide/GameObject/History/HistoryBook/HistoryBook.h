@@ -155,8 +155,11 @@ public:
 	{
 		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",2);
 		page->SetHistoryBook(this);
-		page->Start(chipID, code);
 		_HistoryPageList[(int)code].push_back(page);
+
+		Vector3 pos = _CalcPagePosition(page);
+		page->Start(chipID, code, pos);
+
 		return page;
 	}
 
@@ -231,6 +234,36 @@ private:
 	* 歴史書を開いている判定フラグを変更.
 	*/
 	void _ChangeIsLookAtHistoryFlag();
+
+	/**
+	* ページの座標を計算する.
+	*/
+	Vector3& _CalcPagePosition(HistoryPage* page)
+	{
+		vector<HistoryPage*> pageList;
+		for (auto& loc : _HistoryPageList)
+		{
+			for (auto& itPage : loc)
+			{
+				pageList.push_back(itPage);
+			}
+		}
+
+		int size = pageList.size();
+		for (int i = 0; i < size; i++)
+		{
+			if (page == pageList[i])
+			{
+				//位置.
+				int pos = i - size / 2;
+				Vector3 posVec = Vector3(-0.01f * pos, 0.0f, 0.2f - 0.01f * i);
+				return posVec;
+			}
+		}
+		
+		FB_ASSERT(false, "ページ登録されてねぇぞ.");
+	}
+
 
 private:
 

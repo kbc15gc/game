@@ -134,6 +134,33 @@ float4 DiffuseLight( float3 normal)
 }
 
 /**
+* 月明りの計算.
+*/
+float3 CalcMoonLight(float3 normal, float3 worldPos, float2 uv)
+{
+	float3 color = 0.0f;
+	color += max(0.0f, -dot(normal, g_diffuseLightDirection[1])) * g_diffuseLightColor[1];
+
+	if (g_MapFlg.y)
+	{
+		float3 spec = 0.0f;
+		float specPow = tex2D(g_speculerMapSampler, uv);
+
+		float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
+		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
+
+		//スペキュラ成分を計算する。
+		//反射ベクトルを計算。
+		float3 L = -g_diffuseLightDirection[1].xyz;
+		spec += g_diffuseLightColor[1] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[1].w;	//スペキュラ強度。
+
+		color += spec * specPow;
+	}
+
+	return color;
+}
+
+/**
 * キャラクターライトを計算.
 */
 float3 CalcCharaLight(float3 normal)
