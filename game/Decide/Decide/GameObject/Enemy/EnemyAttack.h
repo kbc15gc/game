@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fbEngine\_Object\_GameObject\GameObject.h"
+#include "GameObject\Player\Player.h"
 #include "GameObject\Enemy\BreathObject.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
@@ -133,7 +133,7 @@ private:
 	enum WarpState{Through, Materialization};
 public:
 	GhostComboAttack(EnemyCharacter* object) :EnemyAttack(object) {
-		_player = INSTANCE(GameObjectManager)->FindObject("Player");
+		_player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
 		_oneCombo.reset(new EnemySingleAttack(object));
 	}
 	~GhostComboAttack() {};
@@ -145,10 +145,14 @@ public:
 	void Exit()override {}
 
 private:
-	GameObject* _player = nullptr;
+	Player* _player = nullptr;
 	unique_ptr<EnemySingleAttack> _oneCombo;
 	int _attackNum = 4;
 	int _comboCount;
-	bool _isWarp = true;	// ƒ[ƒvˆ—’†B
 	WarpState _nowWarpState;
+
+	//const float _chaceTime = 0.4f;
+	const float _chaceTime = 0.45f;
+
+	float _counter = 0.0f;
 };

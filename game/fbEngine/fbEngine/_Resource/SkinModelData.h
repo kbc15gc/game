@@ -70,6 +70,8 @@ public:
 	{
 		return _AABB;
 	}
+	//モデルの中心座標。
+	const Vector3& GetCenterPos() { return _Center; }
 	
 	//モデルデータをロード。
 	//[in]	filePath	ファイルパス。

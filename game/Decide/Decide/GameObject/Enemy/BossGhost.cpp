@@ -7,6 +7,7 @@
 #include "fbEngine\_Object\_GameObject\Particle.h"
 #include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
 #include "GameObject\Enemy\EnemyAttack.h"
+#include "GameObject\Enemy\HFSM\GhostPairAttackState.h"
 
 BossGhost::BossGhost(const char* name) : EnemyCharacter(name)
 {
@@ -18,6 +19,15 @@ BossGhost::~BossGhost()
 {
 }
 
+void BossGhost::CreateCollision() {
+	//攻撃コリジョン作成。
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+}
+
 void BossGhost::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("Ghost.X");
@@ -26,7 +36,7 @@ void BossGhost::_AwakeSubClass() {
 void BossGhost::_StartSubClass() {
 
 	// 視野角生成。
-	_ViewAngle = 100.0f;
+	_ViewAngle = 160.0f;
 	_ViewRange = 30.0f;
 
 	// 歩行速度設定。
@@ -49,10 +59,12 @@ void BossGhost::_StartSubClass() {
 	// 攻撃処理を定義。
 	_comboAttack.reset(new GhostComboAttack(this));
 	_comboAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+	_breathAttack.reset(new EnemyBreathAttack(this));
+	_breathAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_initState = State::Wandering;
+	_initState = State::StartAttack;
 	_ChangeState(_initState);
 }
 
@@ -86,24 +98,27 @@ EnemyAttack* BossGhost::_AttackSelectSubClass() {
 }
 
 void BossGhost::_EndNowStateCallback(State EndStateType) {
-	if (EndStateType == State::Wandering) {
-		// 徘徊ステート終了。
-		_ChangeState(State::Wandering);
-	}
-	else if (EndStateType == State::StartAttack) {
-		// 一度攻撃が終了した。
 
-		// もう一度攻撃開始。
+	// とりあえず連続で共同攻撃しないようにする。
+	if (EndStateType == static_cast<EnemyCharacter::State>(BossGhostState::BossGhostPairAttack)) {
 		_ChangeState(State::StartAttack);
+	}
+	else if (_isCommand) {
+		// ラスボスから命令を受けた。
+
+		// 共同攻撃開始。
+		_ChangeState(static_cast<EnemyCharacter::State>(BossGhostState::BossGhostPairAttack));
+		_isCommand = false;
 	}
 	else if (EndStateType == State::Damage) {
 		// 攻撃を受けた。
 		// 攻撃開始。
 		_ChangeState(State::StartAttack);
 	}
-	else if (EndStateType == State::Threat) {
-		// 威嚇終了。
-		// 攻撃開始。
+	else if (EndStateType == State::StartAttack) {
+		// 一度攻撃が終了した。
+
+		// もう一度攻撃開始。
 		_ChangeState(State::StartAttack);
 	}
 }
@@ -125,7 +140,7 @@ void BossGhost::_ConfigCollision() {
 		_MyComponent.Collider = AddComponent</*CCapsuleCollider*/BoxCollider>();
 		// カプセルコライダーを作成。
 		//static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
-		static_cast<BoxCollider*>(_MyComponent.Collider)->Create(Vector3(0.6f, 0.8f,0.6f));
+		static_cast<BoxCollider*>(_MyComponent.Collider)->Create(Vector3(0.6f, 1.7f,0.6f));
 	}
 }
 
@@ -151,6 +166,12 @@ void BossGhost::_CreateExtrudeCollision() {
 	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// 押し出しようコリジョンに追加しておく。
 }
 
+void BossGhost::_BuildStateSubClass() {
+	// ゴースト共同攻撃ステート追加。
+	_MyState.push_back(unique_ptr<GhostPairAttackState>(new GhostPairAttackState(this)));
+}
+
+
 void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 
 	// アニメーションタイプにデータを関連づけ。
@@ -174,6 +195,13 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 }
 
 void BossGhost::_ConfigAnimationEvent() {
+	float eventFrame = 0.1f;
+	
+	// コンボ攻撃。
+	{
+		eventFrame = 0.5f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::CreateCollision));
+	}
 }
 
 void BossGhost::_BuildSoundTable() {

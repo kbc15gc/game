@@ -54,7 +54,7 @@ public:
 		return _CollisionObject;
 	}
 	//オフセットした先のポジション取得
-	inline const Vector3 GetOffsetPos()
+	inline const Vector3& GetOffsetPos()
 	{
 		_UpdateOffsetPos();
 		return _OffsetPos;

@@ -15,7 +15,6 @@
 */
 void HistoryMenu::Start()
 {
-
 	_LocationNameRender = INSTANCE(GameObjectManager)->AddNew<TextObject>("LocationNameRender", _Priority);
 	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::ＭＳ_明朝));
 
@@ -39,6 +38,8 @@ void HistoryMenu::Start()
 	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
 	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
+
+	LoadChip();
 }
 
 /**
@@ -84,7 +85,7 @@ void HistoryMenu::Update()
 /**
 * チップを追加.
 */
-void HistoryMenu::AddChip(ChipID chipID)
+void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 {
 	Chip2D* chip2D = INSTANCE(GameObjectManager)->AddNew<Chip2D>("Chip2D", 9);
 	chip2D->Start(chipID);
@@ -103,6 +104,10 @@ void HistoryMenu::AddChip(ChipID chipID)
 		chip2D->SetSize(Chip2D::SizeCodeE::NoSelect);
 	}
 
+	if (isSave)
+	{
+		SaveChip();
+	}
 }
 
 /**
@@ -413,6 +418,8 @@ void HistoryMenu::SelectChipUpdate()
 			it += _NowSelectChip;
 			INSTANCE(GameObjectManager)->AddRemoveList(*it);
 			_Chip2DList.erase(it);
+
+			SaveChip();
 
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
 			_NowSelectChip = max(0, _NowSelectChip);

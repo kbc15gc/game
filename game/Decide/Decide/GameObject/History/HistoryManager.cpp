@@ -45,7 +45,7 @@ void HistoryManager::Start()
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
 //木が邪魔な場合これを使ってください。
-//#define NPCONLY
+#define NPCONLY
 
 #ifdef NPCONLY
 	//共通オブジェクト生成。
@@ -216,8 +216,6 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
-		if (strcmp(objInfo[i]->filename, "Bridge.X") == 0)
-			int a = 0;
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
@@ -261,27 +259,21 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 				if (strcmp(info->filename, "coll") == 0)
 				{
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
-					BoxCollider* box = obj->AddComponent<BoxCollider>();
-					RigidBody* coll = obj->AddComponent<RigidBody>();
+					//BoxCollider* box = obj->AddComponent<BoxCollider>();
+					//RigidBody* coll = obj->AddComponent<RigidBody>();
 
-					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
-					RigidBodyInfo Rinfo;
-					Rinfo.physicsType = Collision::PhysicsType::Static;
-					Rinfo.mass = 0.0f;
-					Rinfo.coll = box;
-					//カメラと当たらないコリジョンかどうか？
-					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
-					//Rinfo.id = Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA;
-					Rinfo.offset = info->pos;
-					/*Quaternion q; /*q.SetEuler(info->ang);*/
-					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
-								  /*q.SetEuler(Vector3(0.0f, -90.0f, 0.0f));*/
-								  //q.SetEuler(Vector3(0.0f, 180.0f, 0.0f));
-					q.SetRotation(Vector3::up, PI / 2);
-					q.Multiply(info->ang);
-					Rinfo.rotation = q;
-					//Rinfo.rotation = info->ang;
-					coll->Create(Rinfo, true);
+					//box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
+					//RigidBodyInfo Rinfo;
+					//Rinfo.physicsType = Collision::PhysicsType::Static;
+					//Rinfo.mass = 0.0f;
+					//Rinfo.coll = box;
+					////カメラと当たらないコリジョンかどうか？
+					//Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+					//Rinfo.offset = info->pos;
+					//Quaternion q;
+					//q.Multiply(info->ang);
+					//Rinfo.rotation = q;
+					//coll->Create(Rinfo, true);
 				}
 				else
 				{
