@@ -29,7 +29,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_ModelDate(nullptr),
 	_Camera(nullptr),
 	_Light(nullptr),
-	_TextureBlend(Color::white),
+	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
 	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
 	_SkyBox(false),
@@ -107,9 +107,6 @@ void SkinModel::LateUpdate()
 		D3DXMATRIX wolrd;
 		D3DXMatrixIdentity(&wolrd);
 		wolrd = transform->GetWorldMatrix();
-		if (strcmp(this->gameObject->GetName(), "Dungeon") == 0)
-			int a = 0;
-		
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
@@ -344,10 +341,10 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
 		//アルファブレンド.
-		//(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-		//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		//if ((_ModelEffect & ModelEffectE::ALPHA) > 0)
 		//{

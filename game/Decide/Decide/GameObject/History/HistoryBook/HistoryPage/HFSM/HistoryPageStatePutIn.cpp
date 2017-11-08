@@ -15,7 +15,8 @@ void HistoryPageStatePutIn::Entry()
 
 	_MoveSpeed = 2.0f;
 
-	_MovePosition = Vector3(0.0f, 0.0f, 0.2f);
+	_MovePosition = _HistoryPage->GetInitPos();
+	_InitialPosition = _MovePosition + Vector3(0, 0, 1);
 }
 
 /**

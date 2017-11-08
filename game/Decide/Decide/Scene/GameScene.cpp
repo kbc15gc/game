@@ -9,6 +9,9 @@
 #include "GameObject\Camera\GameCamera.h"
 
 #include "GameObject\Ground\Ground.h"
+
+#include "GameObject\MeshObject\MeshObjectChipManager.h"
+
 #include"GameObject\Ground\Dungeon.h"
 #include"GameObject\Ground\RockCave.h"
 #include"GameObject\Nature\Ocean\Ocean.h"
@@ -109,6 +112,9 @@ void GameScene::Start()
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
+
+	//メッシュコライダーオブジェクトを生成
+	INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
@@ -139,13 +145,6 @@ void GameScene::Start()
 	//Color.push_back(BarColor::Red);
 	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
 	//enemy->SetParamAll(Color, param);
-
-	FOR(i,2)
-	{
-		//歴史チップ
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-		chip->SetChipID((ChipID)i);
-	}
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -205,6 +204,15 @@ void GameScene::Start()
 	INSTANCE(SceneManager)->GetSky()->SetEnable();
 
 
+	//FOR(i,2)
+	//{
+	//	//歴史チップ
+	//	Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+	//	chip->SetChipID((ChipID)i);
+	//}
+	//チップを作成
+	_NewChip();
+
 	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	g_depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(0));
 	g_depth->SetPivot(Vector2(0, 0));
@@ -214,6 +222,10 @@ void GameScene::Start()
 
 void GameScene::Update()
 {
+	//@todo for debug
+	//デバッグ機能だと思うのでデバッグ専用にしときます。
+	//必要な場合は変えてください。
+#ifdef _DEBUG
 	//スタートボタンの押下確認
 	bool back = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
 	bool start = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
@@ -226,6 +238,7 @@ void GameScene::Update()
 		return;
 	}
 
+
 	Collision *coll;
 	if(coll = INSTANCE(GameObjectManager)->mainCamera->GetClickCollision(1000.0f, (int)fbCollisionAttributeE::CHARACTER))
 	{
@@ -236,21 +249,23 @@ void GameScene::Update()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)) {
 		INSTANCE(Inventory)->ArrangementInventory();
 	}
-	
+#endif
+
 	//BGM変更したい
+	//場所によってBGM変更
 	{
 		if (_Player->GetState() == Player::State::Death)
 		{
-			ChangeBGM(BGM::DEAD);
+			_ChangeBGM(BGM::DEAD);
 		}
 		else
 		{
 			//各場所のコリジョンに当たっているか。
 			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
-				if (IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
+				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
-					ChangeBGM(static_cast<BGM>(i));
+					_ChangeBGM(static_cast<BGM>(i));
 					break;
 				}
 			}
@@ -260,7 +275,55 @@ void GameScene::Update()
 
 }
 
-void GameScene::ChangeBGM(BGM bgm)
+void GameScene::_NewChip()
+{
+	//必要なチップを設置する。
+	//所持されていないチップを作成する。
+	{
+		//火
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Fire))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+			chip->SetChipID(ChipID::Fire);
+		}
+	}
+	{
+		//木
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Tree))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+			chip->SetChipID(ChipID::Tree);
+		}
+	}
+	{
+		//狩
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+			chip->SetChipID(ChipID::Hunt);
+		}
+	}
+	{
+		//農
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Agriculture))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+			chip->SetChipID(ChipID::Agriculture);
+		}
+	}
+	{
+		//銅
+		//@todo for Delete
+		//第2のボスが落とすので、削除予定
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Copper))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
+			chip->SetChipID(ChipID::Copper);
+		}
+	}
+}
+
+void GameScene::_ChangeBGM(BGM bgm)
 {
 	if (_BGM != bgm)
 	{
@@ -292,7 +355,7 @@ void GameScene::ChangeBGM(BGM bgm)
 }
 
 
-bool GameScene::IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2)
+bool GameScene::_IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2)
 {
 	if (vMin1.x < vMax2.x && vMax1.x > vMin2.x
 		&& vMin1.y < vMax2.y && vMax1.y > vMin2.y

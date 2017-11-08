@@ -6,8 +6,11 @@
 
 AnimationEventPlayer::~AnimationEventPlayer() {
 	for (auto& work : _animationEvents) {
-		for (auto Event : work) {
-			SAFE_DELETE(Event);
+		for (auto& work2 : work) {
+			for (auto Event : work2) {
+				SAFE_DELETE(Event);
+			}
+			work2.clear();
 		}
 		work.clear();
 	}
@@ -17,7 +20,8 @@ AnimationEventPlayer::~AnimationEventPlayer() {
 void AnimationEventPlayer::Init(int animationNum)
 {
 	// アニメーションの数だけ配列追加。
-	_animationEvents = vector<vector<EventData*>>(animationNum);
+	_animationEvents = vector<vector<vector<EventData*>>>(animationNum);
+	_nowPlayEventList = vector<int>(animationNum,0);
 }
 
 void AnimationEventPlayer::Update() {
@@ -38,17 +42,18 @@ void AnimationEventPlayer::Update() {
 		//現在再生中のアニメーション番号取得。
 		int nowAnim = work->GetPlayAnimNo();
 
+		if (_animationEvents[nowAnim].size() > 0) {
+			for (auto eventData : _animationEvents[nowAnim][_nowPlayEventList[nowAnim]]) {
+				//時間が一致した時イベント呼び出し。
+				if (work->GetLocalAnimationTime() >= eventData->playTime)
+				{
+					if (!eventData->isPlay) {
+						// イベントがまだ実行されてない。
 
-		for (auto eventData : _animationEvents[nowAnim]) {
-			//時間が一致した時イベント呼び出し。
-			if (work->GetLocalAnimationTime() >= eventData->playTime)
-			{
-				if (!eventData->isPlay) {
-					// イベントがまだ実行されてない。
-
-					// 関数ポインタに設定された関数を実行。
-					(gameObject->*(eventData->Event))();
-					eventData->isPlay = true;
+						// 関数ポインタに設定された関数を実行。
+						(gameObject->*(eventData->Event))();
+						eventData->isPlay = true;
+					}
 				}
 			}
 		}
@@ -59,8 +64,24 @@ void AnimationEventPlayer::Update() {
 	}
 }
 
+void AnimationEventPlayer::AddAnimationEvent(int animationNo, const float eventTime, AnimationEvent Event, int eventListNo) {
+	EventData* work = nullptr;
+	work = new EventData;
+	work->playTime = eventTime;
+	work->Event = Event;
+	work->isPlay = false;
+
+	if (static_cast<int>(_animationEvents[animationNo].size()) <= eventListNo) {
+		// 配列の容量が足りないので拡張。
+		_animationEvents[animationNo].resize(eventListNo + 1);
+	}
+	_animationEvents[animationNo][eventListNo].push_back(work);
+}
+
 void AnimationEventPlayer::StartAnimation(int animationNo) {
-	for (auto eventData : _animationEvents[animationNo]) {
-		eventData->isPlay = false;
+	if (_animationEvents[animationNo].size() > 0) {
+		for (auto eventData : _animationEvents[animationNo][_nowPlayEventList[animationNo]]) {
+			eventData->isPlay = false;
+		}
 	}
 }

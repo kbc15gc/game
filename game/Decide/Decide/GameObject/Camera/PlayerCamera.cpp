@@ -102,9 +102,6 @@ Vector3 PlayerCamera::_GetPlayerPos()
 */
 void PlayerCamera::_StandardBehavior()
 {
-	//プレイヤーを見る。
-	_LookAtPlayer();
-
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
@@ -129,15 +126,19 @@ void PlayerCamera::_StandardBehavior()
 	//移動先ポジションを取得。
 	_DestinationPos = _ClosetRay();
 
+	//プレイヤーを見る。
+	_LookAtPlayer();
+
 	//カメラを移動させる。
-	_Move();
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, 50.0f, 12.0f, Time::DeltaTime()));
 }
 
 void PlayerCamera::_LookAtPlayer()
 {
 	auto trg = _GetPlayerPos();
-	_Camera->SetTarget(trg);
-	transform->LockAt(trg);
+	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, 80.0f, 12.0f, Time::DeltaTime());
+	_Camera->SetTarget(next);
+	transform->LockAt(next);
 }
 
 void PlayerCamera::_RotateHorizon(float roty)
@@ -230,23 +231,18 @@ Vector3 PlayerCamera::_ClosetRay()
 
 void PlayerCamera::_Move()
 {
-	//バネカメラ
-	_SpringChaseMove(Time::DeltaTime());
+	
 }
 
-void PlayerCamera::_SpringChaseMove(float time)
+Vector3 PlayerCamera::_SpringChaseMove(const Vector3& now, const Vector3& target, const float& spring, const float& damping, const float& time)
 {
-	auto& CameraPos = transform->GetPosition();
-	auto& TargetPos = _Camera->GetTarget();
-	//目標に対するカメラの現在の位置を基に理想方位角を更新。
-	//auto ang = atan2f(pos.y - trg.y, pos.x - trg.x);
 	//ワールド行列でのカメラの理想位置。
-	auto vIdealPos = _DestinationPos;
+	//auto vIdealPos = _DestinationPos;
 
 	//この理想位置へのバネによる加速度を計算。
-	auto vDisplace = CameraPos - vIdealPos;
-	auto vSpringAccel = (-_Spring * vDisplace) - (_Damping * _Velocity);
+	auto vDisplace = now - target;
+	auto vSpringAccel = (-spring * vDisplace) - (damping * _Velocity);
 	//オイラー積分を使ってカメラの速度と位置を更新。
 	_Velocity += vSpringAccel * time * CAMERA_SPEED;
-	transform->SetPosition(CameraPos + (_Velocity * time));
+	return now + (_Velocity * time);
 }

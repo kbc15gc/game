@@ -23,6 +23,7 @@ class BuffDebuffICon;
 class EnemyAttack;
 class EnemySingleAttack;
 class EnemyBreathAttack;
+class GhostComboAttack;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -118,7 +119,7 @@ public:
 
 	// エネミーを指定したオブジェクトに向かせる処理(補間なし)。
 	// 引数：	見たいオブジェクト。
-	inline void LookAtObject(const GameObject& Object) {
+	inline void LookAtObject(const GameObject* Object) {
 		_MyComponent.RotationAction->RotationToObject_XZ(Object);
 	}
 
@@ -145,27 +146,32 @@ public:
 	// エネミーのアニメーション再生関数(ループ)。
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
-	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime) {
-		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime,-1);
+	//			どのイベントリストを再生するか(デフォルトは0)。
+	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime,int eventNo = 0) {
+		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime,-1, eventNo);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
 	//			ループ回数(デフォルトは1)。
-	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1) {
-		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime, loopCount);
+	//			どのイベントリストを再生するか(デフォルトは0)。
+	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1, int eventNo = 0) {
+		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime, loopCount, eventNo);
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
 	// 引数：	アニメーションタイプ(モデルごとのアニメーション番号、-1で再生しない)。
 	//			補間時間。
 	//			ループ回数(-1で無限ループ)。
-	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1) {
+	//			どのイベントリストを再生するか(デフォルトは0)。
+	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1, int eventNo = 0) {
 		if (animationNum == -1) {
 			// アニメーションを再生しない。
 			return;
 		}
+		_MyComponent.Animation->SetAnimeSpeed(_animationSpeed);
+		_MyComponent.AnimationEventPlayer->ConfigPlayEventList(animationNum, eventNo);
 		_MyComponent.Animation->PlayAnimation(animationNum, interpolateTime, loopCount);
 	}
 
@@ -434,10 +440,7 @@ public:
 
 
 	// 死亡時のドロップ処理。
-	inline void Drop() {
-		_DropSubClass();
-		_Player->TakeDrop(GetDropEXP(), GetDropMoney());
-	}
+	void Drop();
 
 	/**
 	* アイテム効果.
@@ -471,6 +474,22 @@ public:
 		return _MyComponent.Animation->GetPlayAnimNo();
 	}
 
+	inline void SetAlpha(float a) {
+		Color c = _MyComponent.Model->GetAllBlend();
+		c.a = a;
+		_MyComponent.Model->SetAllBlend(c);
+	}
+
+	inline float GetAlpha()const {
+		return _MyComponent.Model->GetAllBlend().a;
+	}
+
+	// アニメーションの再生速度設定。
+	// 引数：	設定するスピード(1より大きい数字を設定すると再生速度が速くなり、小さい値で遅くなる)。
+	// ※この関数が呼ばれて以降のアニメーション再生すべてに影響する。
+	inline float setAnimationSpeed(float speed) {
+		_animationSpeed = speed;
+	}
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。
@@ -478,7 +497,7 @@ protected:
 
 	// アニメーションテーブル作成関数。
 	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
-	// 受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
+	// ※受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
 	// ※純粋仮想関数。
 	virtual void _BuildAnimationSubClass(vector<double>& datas) = 0;
 
@@ -592,6 +611,7 @@ protected:
 	CollisionInfo _collisionInfo;
 
 	int _AnimationNo[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
+	float _animationSpeed = 1.0f;	// アニメーションの再生速度(デフォルトは1.0)。
 	SoundData _SoundData[static_cast<int>(SoundIndex::Max)];
 
 	State _NowStateIdx;		// 現在のステートの添え字。
@@ -620,7 +640,9 @@ protected:
 
 	EnemyAttack* _nowAttack = nullptr;
 
-	int _Type[static_cast<int>(Item::ItemCodeE::Max)][5];//落とすアイテムのID。
+	vector<vector<int>> _Type;//落とすアイテムのID。
+
+	Player* _Player = nullptr;			//プレイヤー
 
 private:
 	int _dropExp;	// 落とす経験値。
@@ -630,7 +652,6 @@ private:
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
 
-	Player* _Player = nullptr;			//プレイヤー
 
 public:
 	static NearEnemyInfo nearEnemyInfo;

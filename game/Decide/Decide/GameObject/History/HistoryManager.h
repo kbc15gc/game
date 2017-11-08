@@ -75,7 +75,6 @@ public:
 	*/
 	void AddPossessionChip(ChipID chipID)
 	{
-		_PossessionChipList.push_back(chipID);
 		_HistoryMenu->AddChip(chipID);
 	}
 
@@ -86,6 +85,21 @@ public:
 	vector<vector<NPC*>> GetNPCList()
 	{
 		return _NPCList;
+	}
+
+	/**
+	* 引数のチップが差し込まれているか判定.
+	* 菅さんこれこれ、これだよ、これ。
+	* trueが返ってきたらどちらかに存在してるよ.
+	*/
+	//HistoryBookが作成された後に使ってください。
+	bool IsSetChip(ChipID id)
+	{
+		if (_HistoryBook->IsSetChip(id) || _HistoryMenu->IsSetChip(id))
+		{
+			return true;
+		}
+		return false;
 	}
 
 private:
@@ -154,9 +168,6 @@ private:
 
 	/** 歴史書クラスのポインタ. */
 	HistoryBook* _HistoryBook = nullptr;
-
-	/** 所持しているチップのID. */
-	vector<ChipID> _PossessionChipList;
 
 	MysteryLight* _MysteryLight = nullptr;
 	vector<int> _NowGroupIDList;

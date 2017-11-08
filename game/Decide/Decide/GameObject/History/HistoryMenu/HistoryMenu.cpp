@@ -15,7 +15,6 @@
 */
 void HistoryMenu::Start()
 {
-
 	_LocationNameRender = INSTANCE(GameObjectManager)->AddNew<TextObject>("LocationNameRender", _Priority);
 	_LocationNameRender->Initialize(L"", 80.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::ＭＳ_明朝));
 
@@ -39,6 +38,8 @@ void HistoryMenu::Start()
 	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
 	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
+
+	LoadChip();
 }
 
 /**
@@ -78,12 +79,13 @@ void HistoryMenu::Update()
 			LocalTime = 0.0f;
 		}
 	}
+
 }
 
 /**
 * チップを追加.
 */
-void HistoryMenu::AddChip(ChipID chipID)
+void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 {
 	Chip2D* chip2D = INSTANCE(GameObjectManager)->AddNew<Chip2D>("Chip2D", 9);
 	chip2D->Start(chipID);
@@ -102,6 +104,10 @@ void HistoryMenu::AddChip(ChipID chipID)
 		chip2D->SetSize(Chip2D::SizeCodeE::NoSelect);
 	}
 
+	if (isSave)
+	{
+		SaveChip();
+	}
 }
 
 /**
@@ -184,8 +190,6 @@ void HistoryMenu::EnableUpdate()
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	ChipMove();
-
-	PageMove();
 }
 
 /**
@@ -239,11 +243,11 @@ void HistoryMenu::SelectLocationUpdate()
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
 		_NowLookPage = 0;
-		auto& pageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
+		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
 		{
 			//現在の場所が前回より大きい数値.
-			for (auto it : pageList)
+			for (auto it : befPageList)
 			{
 				it->SetRotAngle(90.0f);
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
@@ -251,13 +255,13 @@ void HistoryMenu::SelectLocationUpdate()
 		}
 		else if (beforeSelectLocation > _NowSelectLocation)
 		{
-			for (auto it : pageList)
+			for (auto it : befPageList)
 			{
 				it->SetRotAngle(-90.0f);
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
-			pageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
-			for (auto it : pageList)
+			auto& nowPageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
+			for (auto it : nowPageList)
 			{
 				it->SetRotAngle(-90.0f);
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
@@ -346,6 +350,8 @@ void HistoryMenu::SelectPageUpdate()
 
 				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
 
+				PageMove();
+
 				_IsOperation = false;
 				_HistoryBook->SetIsOperation(_IsOperation);
 			}
@@ -412,6 +418,8 @@ void HistoryMenu::SelectChipUpdate()
 			it += _NowSelectChip;
 			INSTANCE(GameObjectManager)->AddRemoveList(*it);
 			_Chip2DList.erase(it);
+
+			SaveChip();
 
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
 			_NowSelectChip = max(0, _NowSelectChip);

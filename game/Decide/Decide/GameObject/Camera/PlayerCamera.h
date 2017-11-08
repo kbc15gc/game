@@ -52,7 +52,7 @@ private:
 	void _Move()override;
 
 	//バネの様に追跡。
-	void _SpringChaseMove(float time);
+	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, const float& spring, const float& damping, const float& time);
 
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {

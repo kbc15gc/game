@@ -60,7 +60,22 @@ public:
 	/**
 	* チップを追加.
 	*/
-	void AddChip(ChipID chipID);
+	void AddChip(ChipID chipID, bool isSave = true);
+
+	/**
+	* 引数のチップが差し込まれているか判定.
+	*/
+	bool IsSetChip(ChipID id)
+	{
+		for (auto it : _Chip2DList)
+		{
+			if (it->GetChipID() == id)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 private:
 
@@ -93,6 +108,32 @@ private:
 	* ページの座標移動.
 	*/
 	void PageMove();
+
+	void SaveChip()
+	{
+		picojson::array chipList;
+		for (auto it : _Chip2DList)
+		{
+			chipList.push_back((picojson::value)(double)it->GetChipID());
+		}
+		JsonData ChipData;
+		ChipData.SetDataObject("ChipID", chipList);
+		ChipData.Save("HaveChip");
+	}
+
+	void LoadChip()
+	{
+		JsonData ChipData;
+		if (ChipData.Load("HaveChip"))
+		{
+			picojson::array chipList = ChipData.GetDataArray("ChipID");
+
+			for (auto it : chipList)
+			{
+				AddChip((ChipID)(int)it.get<double>(), false);
+			}
+		}
+	}
 
 private:
 

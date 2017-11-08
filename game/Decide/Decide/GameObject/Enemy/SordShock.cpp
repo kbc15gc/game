@@ -44,7 +44,8 @@ void SordShock::Update() {
 
 		_tirotiroEmitter->SetParam(_initTirotiroParticleParam);
 		// 長さを変更したので位置をずらす。
-		_tirotiroEmitter->transform->SetLocalPosition(0.0f,0.0f,(work.Length() * 0.5f) * -1.0f);
+		Vector3 lpos = _tirotiroEmitter->transform->GetLocalPosition();
+		_tirotiroEmitter->transform->SetLocalPosition(lpos.x, lpos.y,(work.Length() * 0.5f) * -1.0f);
 
 		if (work.Length() >= _range) {
 			// 衝撃波が飛距離まで飛んだ。
@@ -114,7 +115,7 @@ void SordShock::_BreathStartSubClass() {
 	_attack.push_back(attack);
 
 	//ちろちろの攻撃コリジョン作成。
-	attack = _enemyObject->CreateAttack(Vector3::zero, Quaternion::Identity, Vector3(0.5f, 0.5f, 0.0f), -1.0f, _tirotiroEmitter->transform,false,true,AttackCollision::ReactionType::NotAction);
+	attack = _enemyObject->CreateAttack(Vector3(0.0f,0.0f,0.0f), Quaternion::Identity, Vector3(0.5f, 0.5f, 0.0f), -1.0f, _tirotiroEmitter->transform,false,true,AttackCollision::ReactionType::NotAction);
 	_attack.push_back(attack);
 
 	_isShot = true;

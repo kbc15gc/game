@@ -248,15 +248,19 @@ public:
 	}
 
 	//プレイヤーのMpBarを取得。
-	inline ParameterBar* GetPlayerMpBar() {
+	/*inline ParameterBar* GetPlayerMpBar() {
 		return _MPBar;
-	}
+	}*/
 
 	//バフデバフアイコンを取得。
 	inline BuffDebuffICon* GetBuffDebuffICon() {
 		return _BuffDebuffICon;
 	}
 
+	// プレイヤーのモデルの原点は足元なので中心座標が欲しいときはこちら。
+	inline const Vector3& GetOffsetPos()const {
+		return _CharacterController->GetRigidBody()->GetOffsetPos();
+	}
 
 	/**
 	* アイテムが使用された.
@@ -270,6 +274,12 @@ public:
 	* エフェクト用更新.
 	*/
 	void EffectUpdate();
+
+	//プレイヤーの速度ゲット
+	float GetSpeed()
+	{
+		return _NowSpeed;
+	}
 private:
 	//アニメーションイベント
 	void AnimationEventControl();
@@ -309,6 +319,10 @@ private:
 	friend class PlayerStateRun;
 	friend class PlayerStateImpact;
 
+	//プレイヤーの速度。
+	//現在のスピード（ランかダッシュかによって変わる）
+	float _NowSpeed;
+	
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
 	SkinModel* _Model = nullptr;
@@ -357,7 +371,7 @@ private:
 	// HPバー。
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
-	ParameterBar* _MPBar = nullptr;
+	//ParameterBar* _MPBar = nullptr;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;

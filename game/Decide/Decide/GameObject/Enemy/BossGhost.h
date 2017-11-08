@@ -9,10 +9,18 @@
 class BossGhost :
 	public EnemyCharacter
 {
+public:
+	enum class BossGhostState { BossGhostPairAttack = static_cast<int>(State::Death) + 1};
+
 private:
 	// ボス(歩行型ドラゴン)のアニメーション番号。
 	enum class AnimationBossGhost {
 		Wait = 0,
+		Walk,
+		Attack,
+		Dance,
+		Damage,
+		Death,
 		Max
 	};
 public:
@@ -20,8 +28,11 @@ public:
 	~BossGhost();
 
 	// アニメーションイベント関連。
+	void CreateCollision();
 
-
+	inline void SetIsCommand(bool flg) {
+		_isCommand = flg;
+	}
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -47,6 +58,8 @@ private:
 	// コリジョン属性や形状などを設定し、作成する。
 	void _CreateExtrudeCollision()override;
 
+	void _BuildStateSubClass();
+
 	// キャラクターコントローラ押し出しコンポーネントのパラメーターを設定する関数。
 	// 衝突するコリジョン属性や重力の値などをここで設定する。
 	// ※処理自体は継承先に委譲。
@@ -70,22 +83,11 @@ private:
 	inline void _DropSubClass()override {
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 		chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
-		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				//落とすアイテムかをチェック。
-				if (_Type[idx][i] != -1)
-				{
-					DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-					//落とすアイテムのidとコードを指定。
-					item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
-				}
-			}
-		}
 	}
 
 private:
 	State _saveState;
-	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
+	unique_ptr<GhostComboAttack> _comboAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
+	unique_ptr<EnemyBreathAttack> _breathAttack;
+	bool _isCommand = false;
 };

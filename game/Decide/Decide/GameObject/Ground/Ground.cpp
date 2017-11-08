@@ -36,7 +36,7 @@ void Ground::Awake()
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
-	mesh->Create(model);
+	mesh->Copy(*MeshColliderManager::CloneMeshCollider("Ground.X"));
 	rigid->Create(0, mesh, Collision_ID::GROUND);
 	transform->SetLocalPosition(Vector3::zero);
 	transform->SetLocalScale(Vector3::one);

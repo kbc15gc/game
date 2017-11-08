@@ -9,8 +9,6 @@ namespace
 	const char* ObjectType[2] = { "Obj","NPC" };
 }
 
-//木が邪魔な場合これを使ってください。
-#define NPCONLY
 
 /** インスタンス. */
 HistoryManager* HistoryManager::_Instance = nullptr;
@@ -46,6 +44,9 @@ void HistoryManager::Start()
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
+//木が邪魔な場合これを使ってください。
+//#define NPCONLY
+
 #ifdef NPCONLY
 	//共通オブジェクト生成。
 	char path[128];
@@ -64,7 +65,6 @@ void HistoryManager::Start()
 
 #endif
 	
-
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
@@ -120,7 +120,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 
 		if (_NowGroupIDList[(int)location] != group)
 		{
-			//_MysteryLight->SetActive(true, true);
+			_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
 		}
 
@@ -216,6 +216,11 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
+		if (strcmp(objInfo[i]->filename, "kusa.X") == 0)
+		{
+			int a = 0;
+		}
+
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
@@ -223,7 +228,19 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
+			
 			obj->transform->SetRotation(objInfo[i]->ang);
+			//第3の村だけ
+			if(location == (int)LocationCodeE::Prosperity)
+			{
+				//X軸に180ど回転させる。
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX , PI);
+				q.Multiply(objInfo[i]->ang);
+				obj->transform->SetRotation(q);
+
+			}
+
 			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			obj->LoadModel(objInfo[i]->filename);
@@ -247,26 +264,21 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 				if (strcmp(info->filename, "coll") == 0)
 				{
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
-					BoxCollider* box = obj->AddComponent<BoxCollider>();
-					RigidBody* coll = obj->AddComponent<RigidBody>();
+					//BoxCollider* box = obj->AddComponent<BoxCollider>();
+					//RigidBody* coll = obj->AddComponent<RigidBody>();
 
-					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
-					RigidBodyInfo Rinfo;
-					Rinfo.physicsType = Collision::PhysicsType::Static;
-					Rinfo.mass = 0.0f;
-					Rinfo.coll = box;
-					//カメラと当たらないコリジョンかどうか？
-					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
-					//Rinfo.id = Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA;
-					Rinfo.offset = info->pos;
-					/*Quaternion q; /*q.SetEuler(info->ang);*/
-					Quaternion q; /*q.SetRotation(Vector3::up, 180.0f);*/
-								  /*q.SetEuler(Vector3(0.0f, -90.0f, 0.0f));*/
-								  //q.SetEuler(Vector3(0.0f, 180.0f, 0.0f));
-					q.SetRotation(Vector3::up, PI);
-					q.Multiply(info->ang);
-					Rinfo.rotation = q;
-					coll->Create(Rinfo, true);
+					//box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
+					//RigidBodyInfo Rinfo;
+					//Rinfo.physicsType = Collision::PhysicsType::Static;
+					//Rinfo.mass = 0.0f;
+					//Rinfo.coll = box;
+					////カメラと当たらないコリジョンかどうか？
+					//Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+					//Rinfo.offset = info->pos;
+					//Quaternion q;
+					//q.Multiply(info->ang);
+					//Rinfo.rotation = q;
+					//coll->Create(Rinfo, true);
 				}
 				else
 				{
@@ -290,13 +302,15 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 	{
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-		npc->LoadModel(npcInfo[i]->filename);
-		auto model = npc->GetComponent<SkinModel>();
-		model->GetModelData()->SetInstancing(false);
+		
 		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
 		npc->transform->SetLocalPosition(npcInfo[i]->pos);
 		npc->transform->SetRotation(npcInfo[i]->ang);
 		npc->transform->SetLocalScale(npcInfo[i]->sca);
+
+		npc->LoadModel(npcInfo[i]->filename);
+		auto model = npc->GetComponent<SkinModel>();
+		model->GetModelData()->SetInstancing(false);
 
 		//管理用の配列に追加。
 		_NPCList[location].push_back(npc);

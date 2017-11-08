@@ -3,12 +3,17 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
 
-//オブジェクトの詳細
-struct SCollisionInfo {
-	Vector3 pos;
-	Quaternion angle;
-	Vector3 scale;
-};
+namespace 
+{
+	//オブジェクトの詳細
+	struct SCollisionInfo {
+		const char* name;
+		Vector3 pos;
+		Quaternion angle;
+		Vector3 scale;
+	};
+}
+
 
 class GameScene : public Scene
 {
@@ -25,12 +30,14 @@ public:
 	void Start()override;
 	void Update()override;
 private:
+	//チップを作成する
+	void _NewChip();
 	//ワールドのBGMを変更する。
-	void ChangeBGM(BGM);
+	void _ChangeBGM(BGM);
 	//箱のあたり判定
 	//場所変えなきゃ
 	// 境界箱（AABB）による当たり判定
-	bool IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2);
+	bool _IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2);
 private:
 	//通常流れてる音楽。
 	SoundSource* _WorldBGM;

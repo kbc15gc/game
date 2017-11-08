@@ -89,17 +89,22 @@ public:
 		_SkyBox = f;
 		SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncSkyFromAtomosphere);
 	}
-	void SetTextureBlend(const Color& c)
-	{
-		_TextureBlend = c;
-	}
+	//void SetTextureBlend(const Color& c)
+	//{
+	//	_TextureBlend = c;
+	//}
+
+	// モデルに乗算するカラー情報を設定。
 	void SetAllBlend(const Color& c)
 	{
 		_AllBlend = c;
 	}
+	inline const Color& GetAllBlend()const {
+		return _AllBlend;
+	}
 
 	/**
-	* アルファのしきい値を設定.
+	* アルファのしきい値を設定(モデルの不透明度ではない点に注意).
 	*/
 	void SetAlpha(bool flag,float a = 0.0f)
 	{
@@ -178,7 +183,7 @@ private:
 	//ライト。
 	Light* _Light;
 	//ブレンドする色
-	Color _TextureBlend, _AllBlend;
+	Color /*_TextureBlend,*/ _AllBlend;	// モデルの最終的なピクセルカラーに乗算する値(透明にする場合はこの値のアルファ成分を0にする)。
 
 	/** キャラクターライト. */
 	CharacterLight* _CharaLight = nullptr;

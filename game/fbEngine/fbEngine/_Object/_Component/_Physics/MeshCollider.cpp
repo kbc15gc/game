@@ -14,26 +14,37 @@ MeshCollider::MeshCollider(GameObject* g, Transform* t) :
 
 MeshCollider::~MeshCollider()
 {
-	for (auto& vb : vertexBufferArray) {
+	/*for (auto& vb : vertexBufferArray) {
 		delete vb;
 	}
 	for (auto& ib : indexBufferArray) {
 		delete ib;
 	}
-	delete stridingMeshInterface;
+	SAFE_DELETE(stridingMeshInterface);*/
 }
 
 /*!
  * @brief	CSkinModelからメッシュコライダーを生成。
  *@param[in]	model		スキンモデル。
  */
-void MeshCollider::Create(SkinModel* model, Vector3 offset)
+void MeshCollider::Create(SkinModel* model)
 {
-	stridingMeshInterface = new btTriangleIndexVertexArray;
-	//番兵設定
-	Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	Create(model->GetModelData());
+}
 
-	auto& frames = model->GetModelData()->GetFrameList();
+void MeshCollider::Create(SkinModelData * model)
+{
+	//初期化された行列。
+	D3DXMATRIX iden;
+	D3DXMatrixIdentity(&iden);
+	//移動量0の行列で計算して作った。
+	//model->UpdateBoneMatrix(iden);
+
+	stridingMeshInterface = new btTriangleIndexVertexArray;
+	////番兵設定
+	//Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+	auto& frames = model->GetFrameList();
 	//
 	for (auto& frame : frames)
 	{
@@ -64,16 +75,15 @@ void MeshCollider::Create(SkinModel* model, Vector3 offset)
 					Vector3 posTmp = *pos;
 					//行列変換。
 					posTmp.Transform(pFrame->CombinedTransformationMatrix);
-					posTmp += offset;
 
-					//最小。
-					Min.x = min(Min.x, posTmp.x);
-					Min.y = min(Min.y, posTmp.y);
-					Min.z = min(Min.z, posTmp.z);
-					//最大。
-					Max.x = max(Max.x, posTmp.x);
-					Max.y = max(Max.y, posTmp.y);
-					Max.z = max(Max.z, posTmp.z);
+					////最小。
+					//Min.x = min(Min.x, posTmp.x);
+					//Min.y = min(Min.y, posTmp.y);
+					//Min.z = min(Min.z, posTmp.z);
+					////最大。
+					//Max.x = max(Max.x, posTmp.x);
+					//Max.y = max(Max.y, posTmp.y);
+					//Max.z = max(Max.z, posTmp.z);
 
 					vertexBuffer->push_back(posTmp);
 					char* p = (char*)pos;
@@ -137,5 +147,5 @@ void MeshCollider::Create(SkinModel* model, Vector3 offset)
 			container = (D3DXMESHCONTAINER_DERIVED*)container->pNextMeshContainer;
 		}
 	}
-	meshShape = new btBvhTriangleMeshShape(stridingMeshInterface, true);	
+	meshShape = new btBvhTriangleMeshShape(stridingMeshInterface, true);
 }

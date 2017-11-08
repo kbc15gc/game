@@ -219,6 +219,7 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\LastBossDownState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\LastBossMagicianState.h" />
@@ -262,6 +263,8 @@
     <ClInclude Include="GameObject\ItemManager\HoldItem\HoldWeapon.h" />
     <ClInclude Include="GameObject\ItemManager\ItemManager.h" />
     <ClInclude Include="GameObject\Log\Log.h" />
+    <ClInclude Include="GameObject\MeshObject\MeshObjectChip.h" />
+    <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h" />
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\ParticleParamTable.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
@@ -343,6 +346,7 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\LastBossDownState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\LastBossMagicianState.cpp" />
@@ -384,6 +388,8 @@
     <ClCompile Include="GameObject\ItemManager\HoldItem\HoldWeapon.cpp" />
     <ClCompile Include="GameObject\ItemManager\ItemManager.cpp" />
     <ClCompile Include="GameObject\Log\Log.cpp" />
+    <ClCompile Include="GameObject\MeshObject\MeshObjectChip.cpp" />
+    <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp" />
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
