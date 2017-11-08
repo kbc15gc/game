@@ -93,6 +93,7 @@ public:
 	* 菅さんこれこれ、これだよ、これ。
 	* trueが返ってきたらどちらかに存在してるよ.
 	*/
+	//HistoryBookが作成された後に使ってください。
 	bool IsSetChip(ChipID id)
 	{
 		if (_HistoryBook->IsSetChip(id) || _HistoryMenu->IsSetChip(id))
