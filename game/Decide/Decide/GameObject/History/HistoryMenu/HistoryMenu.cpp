@@ -78,6 +78,7 @@ void HistoryMenu::Update()
 			LocalTime = 0.0f;
 		}
 	}
+
 }
 
 /**

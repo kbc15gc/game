@@ -62,6 +62,21 @@ public:
 	*/
 	void AddChip(ChipID chipID);
 
+	/**
+	* ˆø”‚Ìƒ`ƒbƒv‚ª·‚µ‚Ü‚ê‚Ä‚¢‚é‚©”»’è.
+	*/
+	bool IsSetChip(ChipID id)
+	{
+		for (auto it : _Chip2DList)
+		{
+			if (it->GetChipID() == id)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 private:
 
 	/**

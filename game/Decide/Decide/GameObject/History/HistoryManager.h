@@ -88,6 +88,20 @@ public:
 		return _NPCList;
 	}
 
+	/**
+	* 引数のチップが差し込まれているか判定.
+	* 菅さんこれこれ、これだよ、これ。
+	* trueが返ってきたらどちらかに存在してるよ.
+	*/
+	bool IsSetChip(ChipID id)
+	{
+		if (_HistoryBook->IsSetChip(id) || _HistoryMenu->IsSetChip(id))
+		{
+			return true;
+		}
+		return false;
+	}
+
 private:
 	
 	/**
