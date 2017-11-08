@@ -36,6 +36,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="_Culling\ObjectFrustumCulling.cpp" />
+    <ClCompile Include="_Data\Json\nkJsonData.cpp" />
     <ClCompile Include="_Effect\Blur.cpp" />
     <ClCompile Include="_Effect\EffectManager.cpp" />
     <ClCompile Include="_Effect\GaussianBlur.cpp" />
@@ -118,6 +119,8 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="_Culling\IObjectCulling.h" />
     <ClInclude Include="_Culling\ObjectFrustumCulling.h" />
+    <ClInclude Include="_Data\Json\nkJsonData.h" />
+    <ClInclude Include="_Data\Json\picojson.h" />
     <ClInclude Include="_Effect\Blur.h" />
     <ClInclude Include="_Effect\Effect.h" />
     <ClInclude Include="_Effect\EffectManager.h" />

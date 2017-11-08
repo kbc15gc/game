@@ -75,7 +75,6 @@ public:
 	*/
 	void AddPossessionChip(ChipID chipID)
 	{
-		_PossessionChipList.push_back(chipID);
 		_HistoryMenu->AddChip(chipID);
 	}
 
@@ -168,9 +167,6 @@ private:
 
 	/** 歴史書クラスのポインタ. */
 	HistoryBook* _HistoryBook = nullptr;
-
-	/** 所持しているチップのID. */
-	vector<ChipID> _PossessionChipList;
 
 	MysteryLight* _MysteryLight = nullptr;
 	vector<int> _NowGroupIDList;
