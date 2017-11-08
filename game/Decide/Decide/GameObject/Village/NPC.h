@@ -62,6 +62,12 @@ public:
 		return _Radius;
 	}
 
+	//‚«o‚µ‚Ì‚‚³‚ğİ’è
+	void SetHeight(float height)
+	{
+		_Height = height;
+	}
+
 protected:
 	//˜b‚·
 	void _Speak();
