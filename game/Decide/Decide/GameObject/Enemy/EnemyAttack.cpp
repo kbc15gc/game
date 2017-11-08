@@ -115,6 +115,7 @@ bool GhostComboAttack::Update() {
 			if (work.Length() > 0.0001f) {
 				// –Ú“IˆÊ’u‚É‚¢‚È‚¢B
 				work.Normalize();
+				speed = 10.0f;
 				_enemyObject->AddMoveSpeed(work * speed);
 			}
 

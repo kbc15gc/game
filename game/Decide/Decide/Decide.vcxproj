@@ -218,6 +218,7 @@
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyTranslationState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWaitState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyWanderingState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\LastBossDownState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\LastBossMagicianState.h" />
@@ -343,6 +344,7 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyTranslationState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWaitState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyWanderingState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\LastBossDownState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\LastBossHistoryTamperingState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\LastBossMagicianState.cpp" />

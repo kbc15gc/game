@@ -152,7 +152,7 @@ private:
 	WarpState _nowWarpState;
 
 	//const float _chaceTime = 0.4f;
-	const float _chaceTime = 0.5f;
+	const float _chaceTime = 0.45f;
 
 	float _counter = 0.0f;
 };
