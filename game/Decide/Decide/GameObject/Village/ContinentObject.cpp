@@ -35,26 +35,28 @@ void ContinentObject::LoadModel(const char * filename)
 	//data->SetInstancing(true);
 	_Model->SetModelData(data);
 	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
+	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 	if (string(filename) == "tree.X")
 	{
 		_Model->SetTree();
 	}
 
-	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+	//当たり判定追加。
+	RigidBody* rigid = AddComponent<RigidBody>();
+	MeshCollider* mesh = AddComponent<MeshCollider>();
 
-	////当たり判定追加。
-	//RigidBody* rigid = AddComponent<RigidBody>();
-	//MeshCollider* mesh = AddComponent<MeshCollider>();
-
-	////メッシュコライダー生成。
+	//メッシュコライダー生成。
+	mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
+	//MeshColliderManager::CloneMeshCollider(filename);
 	//mesh->Create(_Model);
-	//RigidBodyInfo info;
-	//info.mass = 0.0f;
-	//info.coll = mesh;
-	//info.id = Collision_ID::BUILDING;
-	//info.rotation = transform->GetRotation();
-	//rigid->Create(info, false);
-
-
+	auto sca = transform->GetLocalScale();
+	mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
+	RigidBodyInfo info;
+	info.mass = 0.0f;
+	info.coll = mesh;
+	//info.offset = _Model->GetModelData()->GetCenterPos();
+	info.id = Collision_ID::BUILDING;
+	info.rotation = transform->GetRotation();
+	rigid->Create(info, false);
 }

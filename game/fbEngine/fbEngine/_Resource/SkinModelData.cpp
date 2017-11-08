@@ -841,8 +841,6 @@ bool SkinModelData::LoadModelData(const char* filePath)
 	
 	if (_FrameRoot)
 	{
-		//
-		UpdateFrameMatrices(_FrameRoot);
 		//骨に行列をセットする
 		SetupBoneMatrixPointers(_FrameRoot, _FrameRoot);
 
@@ -1046,6 +1044,12 @@ LPD3DXMESH SkinModelData::GetOrgMeshFirst() const
 
 void SkinModelData::Measurement()
 {
+	//初期化された行列。
+	D3DXMATRIX iden;
+	D3DXMatrixIdentity(&iden);
+	//移動量0の行列で計算して作った。
+	UpdateBoneMatrix(iden);
+
 	//番兵設定
 	Vector3 Min(FLT_MAX, FLT_MAX, FLT_MAX), Max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 	//

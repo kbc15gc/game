@@ -57,7 +57,7 @@ public:
 	/**
 	* 初期化.
 	*/
-	void Start(ChipID chipID, LocationCodeE code);
+	void Start(ChipID chipID, LocationCodeE code,Vector3& pos);
 
 	/**
 	* 更新.
@@ -127,6 +127,11 @@ public:
 		return _ChipID;
 	}
 
+	Vector3& GetInitPos()
+	{
+		return _InitPos;
+	}
+
 private:
 
 	/**
@@ -150,6 +155,9 @@ private:
 	float _RotAngle = 0.0f;
 	/** 回転行列. */
 	D3DXMATRIX _RotationMatrix;
+
+	/** 初期座標. */
+	Vector3 _InitPos;
 
 	/** 状態リスト. */
 	vector<HistoryPageStatePtr> _StateList;

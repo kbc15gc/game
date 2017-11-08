@@ -9,6 +9,9 @@ public:
 	 * @brief	コンストラクタ。
 	 */
 	MeshCollider(GameObject* g, Transform* t);
+	
+	//マップに登録する用の特殊なメッシュコライダー。
+	MeshCollider():Collider(nullptr,nullptr) {};
 	/*!
 	 * @brief	デストラクタ。
 	 */
@@ -17,7 +20,15 @@ public:
 	 * @brief	CSkinModelDataからメッシュコライダーを生成。
 	 *@param[in]	model		スキンモデル。
 	 */
-	void Create(SkinModel* model, Vector3 offset = Vector3::zero);
+	void Create(SkinModel* model);
+	void Create(SkinModelData* model);
+
+	//メッシュの形状をコピーする。
+	void Copy(const MeshCollider& mesh)
+	{
+		this->stridingMeshInterface = mesh.stridingMeshInterface;
+		meshShape = new btBvhTriangleMeshShape(stridingMeshInterface, true);
+	}
 
 private:
 #ifdef _DEBUG

@@ -88,15 +88,15 @@ Dialog::DialogCommand Dialog::InputUpdate()
 {
 	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 	{
-		Cursor::CursorIndex index = _Cursor->PrevMove(1);
-		_NowSelect = index.rangeIndex;
+		_NowSelect = _Cursor->PrevMove(1).rangeIndex;
 		_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
+		_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 	}
 	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 	{
-		Cursor::CursorIndex index = _Cursor->NextMove(1);
-		_NowSelect = index.rangeIndex;
+		_NowSelect = _Cursor->NextMove(1).rangeIndex;
 		_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
+		_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 	}
 
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
@@ -176,7 +176,9 @@ void Dialog::Enable(Item2D * item)
 			_Cursor->SetMax(1);
 			_BackWindow->SetSize(Vector2(200.0f, 70.0f));
 			_NowSelect = 0;
+			_Cursor->SetRamgeIndex(_NowSelect);
 			_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
+			_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 		}
 		else
 		{
@@ -185,7 +187,9 @@ void Dialog::Enable(Item2D * item)
 			_Cursor->SetMax(2);
 			_BackWindow->SetSize(Vector2(200.0f, 100.0f));
 			_NowSelect = 0;
+			_Cursor->SetRamgeIndex(_NowSelect);
 			_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
+			_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 		}
 	}
 }

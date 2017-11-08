@@ -40,7 +40,7 @@ bool EventManager::Execute(Event::EventID id, int idx)
 	{
 		//Ž~‚ß‚éB
 		GetPlayer()->GetPlayerHpBar()->RenderDisable();
-		GetPlayer()->GetPlayerMpBar()->RenderDisable();
+		//GetPlayer()->GetPlayerMpBar()->RenderDisable();
 		GetPlayer()->PlayerStopEnable();
 
 		GetCamera()->SetIsMove(false);
@@ -69,7 +69,7 @@ void EventManager::NotifyEndEvent()
 	if (_ActiveEvent != Event::EventID::None)
 	{
 		GetPlayer()->GetPlayerHpBar()->RenderEnable();
-		GetPlayer()->GetPlayerMpBar()->RenderEnable();
+		//GetPlayer()->GetPlayerMpBar()->RenderEnable();
 		GetPlayer()->PlayerStopDisable();
 		GetCamera()->SetIsMove(true);
 		_ActiveEvent = Event::EventID::None;

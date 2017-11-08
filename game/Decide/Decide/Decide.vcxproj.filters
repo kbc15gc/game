@@ -236,9 +236,6 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Player\Player.cpp">
-      <Filter>GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -343,8 +340,8 @@
     <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp">
       <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp">
-      <Filter>GameObject\Enemy\HFSN</Filter>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -706,9 +703,6 @@
     </ClInclude>
     <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h">
       <Filter>GameObject\MeshObject</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h">
-      <Filter>GameObject\Enemy\HFSN</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

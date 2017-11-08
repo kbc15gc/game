@@ -288,6 +288,7 @@
     <ClCompile Include="_Value\AABB2D.cpp">
       <Filter>Value</Filter>
     </ClCompile>
+    <ClCompile Include="MeshColliderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -562,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="_Support\StopWatch.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshColliderManager.h">
+      <Filter>Object\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

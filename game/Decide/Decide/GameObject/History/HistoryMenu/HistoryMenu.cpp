@@ -78,6 +78,7 @@ void HistoryMenu::Update()
 			LocalTime = 0.0f;
 		}
 	}
+
 }
 
 /**
@@ -184,8 +185,6 @@ void HistoryMenu::EnableUpdate()
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	ChipMove();
-
-	PageMove();
 }
 
 /**
@@ -239,11 +238,11 @@ void HistoryMenu::SelectLocationUpdate()
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
 		_NowLookPage = 0;
-		auto& pageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
+		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
 		{
 			//現在の場所が前回より大きい数値.
-			for (auto it : pageList)
+			for (auto it : befPageList)
 			{
 				it->SetRotAngle(90.0f);
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
@@ -251,13 +250,13 @@ void HistoryMenu::SelectLocationUpdate()
 		}
 		else if (beforeSelectLocation > _NowSelectLocation)
 		{
-			for (auto it : pageList)
+			for (auto it : befPageList)
 			{
 				it->SetRotAngle(-90.0f);
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
-			pageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
-			for (auto it : pageList)
+			auto& nowPageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
+			for (auto it : nowPageList)
 			{
 				it->SetRotAngle(-90.0f);
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
@@ -345,6 +344,8 @@ void HistoryMenu::SelectPageUpdate()
 				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
 
 				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
+
+				PageMove();
 
 				_IsOperation = false;
 				_HistoryBook->SetIsOperation(_IsOperation);

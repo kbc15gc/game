@@ -248,9 +248,9 @@ public:
 	}
 
 	//プレイヤーのMpBarを取得。
-	inline ParameterBar* GetPlayerMpBar() {
+	/*inline ParameterBar* GetPlayerMpBar() {
 		return _MPBar;
-	}
+	}*/
 
 	//バフデバフアイコンを取得。
 	inline BuffDebuffICon* GetBuffDebuffICon() {
@@ -371,7 +371,7 @@ private:
 	// HPバー。
 	ParameterBar* _HPBar = nullptr;
 	// MPバー。
-	ParameterBar* _MPBar = nullptr;
+	//ParameterBar* _MPBar = nullptr;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;

@@ -78,6 +78,16 @@ void Sky::Update()
 		_SunDir.Normalize();
 		_SunPosition.Scale(1000000.0f);
 
+		float angle = _SunDir.Dot(Vector3::up);
+		if (angle > 0.0f)
+		{
+			_ShadowLightPosition = _SunDir;
+		}
+		else
+		{
+			_ShadowLightPosition = _SunDir * -1;
+		}
+
 		//大気散乱用パラメータを更新.
 		_AtomosphereParam.Update(camera->GetPosition(), _SunPosition);
 
@@ -109,15 +119,7 @@ void Sky::Update()
 
 	transform->SetLocalPosition(camera->GetTarget());
 
-	float angle = _SunDir.Dot(Vector3::up);
-	if (angle > 0.0f)
-	{
-		_ShadowLightPosition = _SunDir;
-	}
-	else
-	{
-		_ShadowLightPosition = _SunDir * -1;
-	}
+
 
 	Vector3 sunModelPos = _SunDir;
 	sunModelPos.Scale(2000.0f);

@@ -147,7 +147,6 @@ struct PSOutput
  */
 PSOutput PSMain( VS_OUTPUT In )
 {
-	float4 color = (float4)0;	//最終的に出力するカラー
 	float4 diff = (float4)0;	//メッシュのマテリアル
     
     float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
@@ -163,14 +162,8 @@ PSOutput PSMain( VS_OUTPUT In )
 	}
 	diff *= g_blendcolor;
 	
-	color = diff;
-
-    //大気散乱.
-    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-    {
-        color.xyz = In._RayColor + color.xyz * In._MieColor;
-    }
-
+    float4 color = diff; //最終的に出力するカラー
+	
     float4 light = DiffuseLight(normal);
 
     light.xyz += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
@@ -181,17 +174,27 @@ PSOutput PSMain( VS_OUTPUT In )
         light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
     }
 
+    float shadowPower = 1.0f;
     //影
     if (ReceiveShadow)
     {
 		//影になっている.
-        float shadowPower = CalcShadow(In._World.xyz);
+        shadowPower = CalcShadow(In._World.xyz);
         shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
         light.xyz *= min(1.0f, shadowPower);
     }
 
+    color.xyz *= light.xyz;
 
-    color.xyz += diff.rgb * light.xyz;
+    //大気散乱.
+    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+    {
+        color.xyz = In._RayColor + color.xyz * In._MieColor;
+    }
+
+    color.xyz += diff.xyz * CalcMoonLight(normal, (float3) In._World, In._UV) * shadowPower;
+
+
     float3 ambient = g_ambientLight.rgb;
 	
     if (g_CharaLightParam.x)
