@@ -302,13 +302,15 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 	{
 		//¶¬
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-		npc->LoadModel(npcInfo[i]->filename);
-		auto model = npc->GetComponent<SkinModel>();
-		model->GetModelData()->SetInstancing(false);
+		
 		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
 		npc->transform->SetLocalPosition(npcInfo[i]->pos);
 		npc->transform->SetRotation(npcInfo[i]->ang);
 		npc->transform->SetLocalScale(npcInfo[i]->sca);
+
+		npc->LoadModel(npcInfo[i]->filename);
+		auto model = npc->GetComponent<SkinModel>();
+		model->GetModelData()->SetInstancing(false);
 
 		//ŠÇ——p‚Ì”z—ñ‚É’Ç‰ÁB
 		_NPCList[location].push_back(npc);
