@@ -223,6 +223,24 @@ public:
 		INSTANCE(EventManager)->NotifyEndEvent();
 	}
 
+	/**
+	* ˆø”‚Ìƒ`ƒbƒv‚ª·‚µ‚Ü‚ê‚Ä‚¢‚é‚©”»’è.
+	*/
+	bool IsSetChip(ChipID id)
+	{
+		for (auto& itLoc : _HistoryPageList)
+		{
+			for (auto itPage : itLoc)
+			{
+				if (itPage->GetChipID() == id)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 private:
 
 	/**
