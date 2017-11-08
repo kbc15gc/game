@@ -109,10 +109,6 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 
-		if (strcmp(gameObject->GetName(), "Bridge.X") == 0)
-			int a = 0;
-
-
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{
 			_ModelDate->UpdateAABB();

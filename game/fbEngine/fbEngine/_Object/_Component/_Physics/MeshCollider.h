@@ -9,6 +9,9 @@ public:
 	 * @brief	コンストラクタ。
 	 */
 	MeshCollider(GameObject* g, Transform* t);
+	
+	//マップに登録する用の特殊なメッシュコライダー。
+	MeshCollider():Collider(nullptr,nullptr) {};
 	/*!
 	 * @brief	デストラクタ。
 	 */
@@ -18,6 +21,14 @@ public:
 	 *@param[in]	model		スキンモデル。
 	 */
 	void Create(SkinModel* model);
+	void Create(SkinModelData* model);
+
+	//メッシュの形状をコピーする。
+	void Copy(const MeshCollider& mesh)
+	{
+		this->meshShape = mesh.meshShape;
+		this->stridingMeshInterface = mesh.stridingMeshInterface;
+	}
 
 private:
 #ifdef _DEBUG
