@@ -260,7 +260,8 @@ public class CSVExportFunction : Editor
         float x = val.x;
         float y = val.y;
         float z = val.z;
-        return String.Format("{0}/{1}/{2}/{3}", x.ToString("f2"), y.ToString("f2"), z.ToString("f2"), 1.0f);
+        return String.Format("{0}/{1}/{2}/{3}", x.ToString("f6"), y.ToString("f6"), z.ToString("f6"), 1.0f);
+        //return String.Format("{0}/{1}/{2}/{3}", val.x, val.y, val.z, val.w);
     }
 
     static public void WriteVector3(StreamWriter sw,Vector3 val,bool comma = true)

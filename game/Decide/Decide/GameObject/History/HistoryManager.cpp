@@ -261,38 +261,35 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 				}
 
 				//コリジョンを自分で作成している場合は作成する。
-				if (objInfo[i]->coll)
+				//名前チェック
+				if (strcmp(info->filename, "coll") == 0 && objInfo[i]->coll)
 				{
-					//名前チェック
-					if (strcmp(info->filename, "coll") == 0)
-					{
-						//コリジョンを生成してゲームオブジェクトにアタッチ。
-						BoxCollider* box = obj->AddComponent<BoxCollider>();
-						RigidBody* coll = obj->AddComponent<RigidBody>();
+					//コリジョンを生成してゲームオブジェクトにアタッチ。
+					BoxCollider* box = obj->AddComponent<BoxCollider>();
+					RigidBody* coll = obj->AddComponent<RigidBody>();
 
-						box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
-						RigidBodyInfo Rinfo;
-						Rinfo.physicsType = Collision::PhysicsType::Static;
-						Rinfo.mass = 0.0f;
-						Rinfo.coll = box;
-						//カメラと当たらないコリジョンかどうか？
-						Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
-						Rinfo.offset = info->pos;
-						Quaternion q;
-						q.Multiply(info->ang);
-						Rinfo.rotation = q;
-						coll->Create(Rinfo, true);
-					}
-					else
-					{
-						break;
-					}
+					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
+					RigidBodyInfo Rinfo;
+					Rinfo.physicsType = Collision::PhysicsType::Static;
+					Rinfo.mass = 0.0f;
+					Rinfo.coll = box;
+					//カメラと当たらないコリジョンかどうか？
+					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+					Rinfo.offset = info->pos;
+					Quaternion q;
+					q.SetRotation(Vector3::up, PI / 2);
+					q.Multiply(info->ang);
+					Rinfo.rotation = q;
+					coll->Create(Rinfo, true);
+				}
+				else
+				{
+					break;
 				}
 			}
-
 		}
-	}
 
+	}
 	objInfo.clear();
 }
 
@@ -308,14 +305,14 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
 
-		npc->LoadModel(npcInfo[i]->filename,false);
-		auto model = npc->GetComponent<SkinModel>();
-		model->GetModelData()->SetInstancing(false);
-
 		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
 		npc->transform->SetLocalPosition(npcInfo[i]->pos);
 		npc->transform->SetRotation(npcInfo[i]->ang);
 		npc->transform->SetLocalScale(npcInfo[i]->sca);
+
+		npc->LoadModel(npcInfo[i]->filename,false);
+		auto model = npc->GetComponent<SkinModel>();
+		model->GetModelData()->SetInstancing(false);
 
 		//管理用の配列に追加。
 		_NPCList[location].push_back(npc);
