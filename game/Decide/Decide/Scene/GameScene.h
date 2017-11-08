@@ -30,12 +30,14 @@ public:
 	void Start()override;
 	void Update()override;
 private:
+	//チップを作成する
+	void _NewChip();
 	//ワールドのBGMを変更する。
-	void ChangeBGM(BGM);
+	void _ChangeBGM(BGM);
 	//箱のあたり判定
 	//場所変えなきゃ
 	// 境界箱（AABB）による当たり判定
-	bool IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2);
+	bool _IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2);
 private:
 	//通常流れてる音楽。
 	SoundSource* _WorldBGM;

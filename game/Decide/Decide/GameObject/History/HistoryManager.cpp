@@ -45,7 +45,7 @@ void HistoryManager::Start()
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
 //木が邪魔な場合これを使ってください。
-#define NPCONLY
+//#define NPCONLY
 
 #ifdef NPCONLY
 	//共通オブジェクト生成。
@@ -216,6 +216,11 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
+		if (strcmp(objInfo[i]->filename, "kusa.X") == 0)
+		{
+			int a = 0;
+		}
+
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
@@ -223,7 +228,19 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
+			
 			obj->transform->SetRotation(objInfo[i]->ang);
+			//第3の村だけ
+			if(location == (int)LocationCodeE::Prosperity)
+			{
+				//X軸に180ど回転させる。
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX , PI);
+				q.Multiply(objInfo[i]->ang);
+				obj->transform->SetRotation(q);
+
+			}
+
 			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			obj->LoadModel(objInfo[i]->filename);
@@ -285,13 +302,15 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 	{
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-		npc->LoadModel(npcInfo[i]->filename);
-		auto model = npc->GetComponent<SkinModel>();
-		model->GetModelData()->SetInstancing(false);
+		
 		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
 		npc->transform->SetLocalPosition(npcInfo[i]->pos);
 		npc->transform->SetRotation(npcInfo[i]->ang);
 		npc->transform->SetLocalScale(npcInfo[i]->sca);
+
+		npc->LoadModel(npcInfo[i]->filename);
+		auto model = npc->GetComponent<SkinModel>();
+		model->GetModelData()->SetInstancing(false);
 
 		//管理用の配列に追加。
 		_NPCList[location].push_back(npc);
