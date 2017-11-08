@@ -5,43 +5,37 @@
 #include "GameObject\History\Chip.h"
 
 // 継承クラス。
-// ボスエネミー(歩行型ドラゴン)。
-class BossDrarian :
+// ボスエネミー(中ボスゴーレム)。
+class BossGolem :
 	public EnemyCharacter
 {
 private:
-	// ボス(歩行型ドラゴン)のアニメーション番号。
-	enum class AnimationBossDrarian {
-		Wait = 0,
-		Walk,
-		Dash,
-		Attack,
-		Barking,
-		TailAttackRight,
-		Breath,
+	// ボス(中ボスゴーレム)のアニメーション番号。
+	enum class AnimationBossGolem
+	{
+		Idle = 0,
+		IdleAction,
+		SleepS,
+		SleepL,
+		SleepE,
 		Damage,
-		Death,
-		Max
+		Hit,
+		Die,
+		Walk,
+		Hit2,
+		Rage,
+		Jump,
+		Fly,
+		Land
 	};
+
 public:
-	BossDrarian(const char* name);
-	~BossDrarian();
+	BossGolem(const char* name);
+	~BossGolem();
 
 	// アニメーションイベント関連。
-	void AnimationEvent_Kamituki();
-	void CreateAttackCollision_TailAttackSub1();	// 足の動きで弱ダメージ。
-	void CreateAttackCollision_TailAttackSub2();	// 足の動きで弱ダメージ。
-	void CreateAttackCollision_TailAttackSub3();	// 足の動きで弱ダメージ。
-	void CreateAttackCollision_TailAttackSub4();	// 足の動きで弱ダメージ。
-	void CreateAttackCollision_TailAttack1();
-	void CreateAttackCollision_TailAttack2();
-	void CreateAttackCollision_TailAttack3();
-	void CreateAttackCollision_TailAttack4();
-	void AnimationEvent_BreathStart();
-	void AnimationEvent_BreathEnd();
-	void CreateAttackCollision_BreathAttackSub1();	// 足の動きで弱ダメージ。
-	void CreateAttackCollision_BreathAttackSub2();	// 足の動きで弱ダメージ。
-
+	void AnimationEvent_Kobushi();
+	void AnimationEvent_Zutuki();
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -87,26 +81,12 @@ private:
 	void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
-		chip->SetDropChipID(ChipID::Stone, transform->GetPosition() + Vector3(0.0f,-1.5f,0.0f));
-		for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				//落とすアイテムかをチェック。
-				if (_Type[idx][i] != -1)
-				{
-					DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-					//落とすアイテムのidとコードを指定。
-					item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
-				}
-			}
-		}
+		
 	}
 
 private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
-	unique_ptr<EnemySingleAttack> _tailAttack;
-	unique_ptr<EnemyBreathAttack> _breathAttack;
+	unique_ptr<EnemySingleAttack> _singleAttackSecondPattern;
+	
 };

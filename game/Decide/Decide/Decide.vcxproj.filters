@@ -337,6 +337,9 @@
     <ClCompile Include="GameObject\Ground\RockCave.cpp">
       <Filter>GameObject\Ground</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\BossGolem.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -691,6 +694,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\ParticleParamTable.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BossGolem.h">
+      <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
