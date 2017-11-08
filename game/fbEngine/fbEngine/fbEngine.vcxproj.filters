@@ -58,12 +58,6 @@
     <Filter Include="Support">
       <UniqueIdentifier>{f58ec9e8-9358-45f6-aeaf-76135b8851b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{8b143e70-5dda-4f32-a2b1-361c23596788}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Json">
-      <UniqueIdentifier>{eba4f831-5dcd-4edd-8991-5203506fe6ae}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -294,9 +288,7 @@
     <ClCompile Include="_Value\AABB2D.cpp">
       <Filter>Value</Filter>
     </ClCompile>
-    <ClCompile Include="_Data\Json\nkJsonData.cpp">
-      <Filter>Data\Json</Filter>
-    </ClCompile>
+    <ClCompile Include="MeshColliderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -572,11 +564,8 @@
     <ClInclude Include="_Support\StopWatch.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="_Data\Json\nkJsonData.h">
-      <Filter>Data\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="_Data\Json\picojson.h">
-      <Filter>Data\Json</Filter>
+    <ClInclude Include="MeshColliderManager.h">
+      <Filter>Object\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

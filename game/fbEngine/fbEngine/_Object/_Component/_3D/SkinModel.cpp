@@ -109,10 +109,6 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 
-		if (strcmp(gameObject->GetName(), "Bridge.X") == 0)
-			int a = 0;
-
-
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{
 			_ModelDate->UpdateAABB();
@@ -345,10 +341,10 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
 		//アルファブレンド.
-		//(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-		//(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		//(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		//if ((_ModelEffect & ModelEffectE::ALPHA) > 0)
 		//{

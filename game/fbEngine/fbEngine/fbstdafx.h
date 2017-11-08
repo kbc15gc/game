@@ -92,6 +92,7 @@ static const float FontSize = 512.0f;
 #include "_Object\_Component\_3D\Animation.h"
 #include "_Resource\SkinModelData.h"
 #include "_Resource\SkinModelManager.h"
+#include "MeshColliderManager.h"
 
 //Object
 #include "_Support\RenderTargetManager.h"
