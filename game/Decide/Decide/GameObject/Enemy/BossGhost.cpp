@@ -60,6 +60,7 @@ void BossGhost::_StartSubClass() {
 	_comboAttack.reset(new GhostComboAttack(this));
 	_comboAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
 	_breathAttack.reset(new EnemyBreathAttack(this));
+	_breathAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
