@@ -254,6 +254,43 @@ void Player::Start()
 
 void Player::Update()
 {
+
+	//@todo for debug
+#define CHIP
+#ifdef CHIP
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
+	}
+#endif // 
+
+
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
@@ -810,6 +847,23 @@ void Player::_DebugPlayer()
 		//所持リストに追加.
 		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
 	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
+	}
+
+
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
