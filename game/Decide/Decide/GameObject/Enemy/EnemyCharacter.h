@@ -487,8 +487,12 @@ public:
 	// アニメーションの再生速度設定。
 	// 引数：	設定するスピード(1より大きい数字を設定すると再生速度が速くなり、小さい値で遅くなる)。
 	// ※この関数が呼ばれて以降のアニメーション再生すべてに影響する。
-	inline float setAnimationSpeed(float speed) {
+	inline void SetAnimationSpeed(float speed) {
 		_animationSpeed = speed;
+	}
+
+	inline float GetAnimationSpeed()const {
+		return _animationSpeed;
 	}
 protected:
 	// ステート切り替え関数。

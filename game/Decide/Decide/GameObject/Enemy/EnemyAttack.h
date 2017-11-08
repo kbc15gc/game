@@ -23,9 +23,10 @@ public:
 	// 引数：	攻撃可能範囲。
 	//			再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
 	//			アニメーション補間時間(初期値は0)。
+	//			アニメーション再生速度(1.0より大きい値で再生速度が速くなり、小さい値で遅くなる、デフォルトは1.0)。
 	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	//			使用するアニメーションイベント番号(指定した番号のイベントリストに登録されたイベントが呼び出される、デフォルトは0)。
-	void Init(float attackRange, int animType = -1, float interpolate = 0.0f, int animLoopNum = 1, int playEventNo = 0);
+	void Init(float attackRange, int animType = -1, float interpolate = 0.0f,float playSpeed = 1.0f, int animLoopNum = 1, int playEventNo = 0);
 	virtual void Entry();	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
 	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
 	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
@@ -59,6 +60,7 @@ public:
 protected:
 	int _animType = -1;	// 再生するアニメーションの種類(初期値は再生しない,モデルごとのアニメーション番号で、テーブルの番号ではない)。
 	float _interpolate = 0.0f;	// アニメーション補間時間(初期値は0)。
+	float _playSpeed = 1.0f;
 	int _animLoopNum = 1;	// アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	int _playEventNo = 0;	// 使用するアニメーションイベント番号。
 	bool _isPlaying = false;	// アニメーション再生中かのフラグ(更新処理時に攻撃ステートから設定される)。
@@ -142,7 +144,9 @@ public:
 
 	bool Update()override;
 
-	void Exit()override {}
+	void Exit()override {
+		_enemyObject->SetAlpha(1.0f);
+	}
 
 private:
 	Player* _player = nullptr;
@@ -155,4 +159,6 @@ private:
 	const float _chaceTime = 0.45f;
 
 	float _counter = 0.0f;
+	bool _isWarpEnd = false;	// 実体化完了か。
+	bool _isAttackEnd = false;
 };
