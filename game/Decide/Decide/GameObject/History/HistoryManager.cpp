@@ -216,6 +216,11 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
+		if (strcmp(objInfo[i]->filename, "kusa.X") == 0)
+		{
+			int a = 0;
+		}
+
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{

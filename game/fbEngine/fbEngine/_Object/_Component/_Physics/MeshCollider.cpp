@@ -14,13 +14,13 @@ MeshCollider::MeshCollider(GameObject* g, Transform* t) :
 
 MeshCollider::~MeshCollider()
 {
-	for (auto& vb : vertexBufferArray) {
+	/*for (auto& vb : vertexBufferArray) {
 		delete vb;
 	}
 	for (auto& ib : indexBufferArray) {
 		delete ib;
 	}
-	SAFE_DELETE(stridingMeshInterface);
+	SAFE_DELETE(stridingMeshInterface);*/
 }
 
 /*!
