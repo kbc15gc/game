@@ -114,6 +114,10 @@ static const float FontSize = 512.0f;
 //Scene
 #include "_Scene\SceneManager.h"
 
+//json
+#include"_Data\Json\picojson.h"
+#include"_Data\Json\nkJsonData.h"
+
 extern HWND g_MainWindow;	//ウィンドウハンドル
 extern Vector2 g_WindowSize; 
 extern Vector2 g_FrameSize;

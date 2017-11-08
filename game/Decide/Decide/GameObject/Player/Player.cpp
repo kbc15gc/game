@@ -233,8 +233,22 @@ void Player::Start()
 	PlayAnimation(AnimationNo::AnimationWalk, 0.2f);
 	//初期ステート設定
 	ChangeState(State::Idol);
-	//ポジション
+
+	//@todo for debug
+#define Start1
+//#define Start2
+//#define Start3
+#ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+#elif defined(Start2)
+	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+#elif defined(Start3)
+	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
+	//250.71/67.2/-31.7
+#endif // Start1
+
+	//ポジション
+	
 	transform->SetLocalPosition(_StartPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;

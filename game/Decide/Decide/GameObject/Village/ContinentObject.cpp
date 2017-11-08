@@ -28,7 +28,7 @@ void ContinentObject::Start() {
 	}
 }
 
-void ContinentObject::LoadModel(const char * filename)
+void ContinentObject::LoadModel(const char * filename, bool coll)
 {
 	SkinModelData* data = new SkinModelData();
 	data->CloneModelData(SkinModelManager::LoadModel(filename), _Anim);
@@ -41,15 +41,15 @@ void ContinentObject::LoadModel(const char * filename)
 	{
 		_Model->SetTree();
 	}
-
-	//当たり判定追加。
+	if (!coll)
+	{
+		//当たり判定追加。
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
+	mesh->GetBody();
 
 	//メッシュコライダー生成。
 	mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
-	//MeshColliderManager::CloneMeshCollider(filename);
-	//mesh->Create(_Model);
 	auto sca = transform->GetLocalScale();
 	mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
 	RigidBodyInfo info;
@@ -59,4 +59,6 @@ void ContinentObject::LoadModel(const char * filename)
 	info.id = Collision_ID::BUILDING;
 	info.rotation = transform->GetRotation();
 	rigid->Create(info, false);
+	}
+
 }

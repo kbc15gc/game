@@ -42,8 +42,6 @@ public:
 	void CreateAttackCollision_BreathAttackSub1();	// 足の動きで弱ダメージ。
 	void CreateAttackCollision_BreathAttackSub2();	// 足の動きで弱ダメージ。
 
-
-
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 

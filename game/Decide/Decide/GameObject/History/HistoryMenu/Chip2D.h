@@ -24,8 +24,6 @@ public:
 		SizeCodeNum,	//!< ƒTƒCƒY”.
 	};
 
-
-
 public:
 
 	/**

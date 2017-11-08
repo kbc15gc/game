@@ -236,6 +236,9 @@
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateStop.cpp">
       <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player</Filter>
+    </ClCompile>
     <ClCompile Include="GameObject\Component\ParticleEffect.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
@@ -339,9 +342,6 @@
     </ClCompile>
     <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp">
       <Filter>GameObject\MeshObject</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Player\Player.cpp">
-      <Filter>GameObject\Player\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
