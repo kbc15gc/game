@@ -59,11 +59,11 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 10.0f;
+		const float TMP = 0.01f / 6.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 
 		//100•b‚Åˆê“ú.
-		_SunAngle += (PI * 0.01f) * Time::DeltaTime() * TMP;
+		_SunAngle += PI * Time::DeltaTime() * TMP;
 
 		//XŽ²‰ñ“].
 		_SunPosition.Set(0.0f, sinf(_SunAngle), cosf(_SunAngle));
