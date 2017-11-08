@@ -147,7 +147,7 @@ public:
 	}
 
 	inline void SetIsRender(bool flg) {
-		_isRender = flg;
+     		_isRender = flg;
 	}
 
 private:

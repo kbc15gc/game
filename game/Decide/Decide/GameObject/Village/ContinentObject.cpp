@@ -28,7 +28,7 @@ void ContinentObject::Start() {
 	}
 }
 
-void ContinentObject::LoadModel(const char * filename)
+void ContinentObject::LoadModel(const char * filename, bool coll)
 {
 	SkinModelData* data = new SkinModelData();
 	data->CloneModelData(SkinModelManager::LoadModel(filename), _Anim);
@@ -40,15 +40,10 @@ void ContinentObject::LoadModel(const char * filename)
 	if (string(filename) == "tree.X")
 	{
 		_Model->SetTree();
-		return;
 	}
-
-	if (string(filename) == "kusa.X")
+	if (!coll)
 	{
-		return;
-	}
-
-	//“–‚½‚è”»’è’Ç‰ÁB
+		//“–‚½‚è”»’è’Ç‰ÁB
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 	mesh->GetBody();
@@ -64,4 +59,6 @@ void ContinentObject::LoadModel(const char * filename)
 	info.id = Collision_ID::BUILDING;
 	info.rotation = transform->GetRotation();
 	rigid->Create(info, false);
+	}
+
 }

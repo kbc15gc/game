@@ -86,7 +86,7 @@ void LastBossThroneState::_UpdateSubClass() {
 
 								static_cast<GhostPairAttackState*>(enemy->GetNowState())->SetIsStartAttack(true);
 								static_cast<GhostPairAttackState*>(enemy->GetNowState())->SetStartAttackInterval(startAttackOffset);
-								startAttackOffset += 0.5f;
+								startAttackOffset += 1.0f;
 							}
 						}
 					}

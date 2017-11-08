@@ -6,10 +6,11 @@
 
 // EnemyAttack。
 
-void EnemyAttack::Init(float attackRange, int animType, float interpolate, int animLoopNum,int playEventNo) {
+void EnemyAttack::Init(float attackRange, int animType, float interpolate, float playSpeed, int animLoopNum,int playEventNo) {
 	_AttackRange = attackRange;
 	_animType = animType;
 	_interpolate = interpolate;
+	_playSpeed = playSpeed;
 	_animLoopNum = animLoopNum;
 	_playEventNo = playEventNo;
 }
@@ -17,7 +18,10 @@ void EnemyAttack::Init(float attackRange, int animType, float interpolate, int a
 void EnemyAttack::Entry() {
 	if (_animType >= 0) {
 		// 再生するアニメーション番号が設定されている。
+		float saveSpeed = _enemyObject->GetAnimationSpeed();
+		_enemyObject->SetAnimationSpeed(_playSpeed);
 		_enemyObject->PlayAnimation_OriginIndex(_animType, _interpolate, _animLoopNum, _playEventNo);
+		_enemyObject->SetAnimationSpeed(saveSpeed);
 	}
 }
 
@@ -55,16 +59,20 @@ void GhostComboAttack::Entry() {
 	_oneCombo->Init(1.0f, _animType, _interpolate, 1, _playEventNo);
 	_comboCount = 0;
 	_nowWarpState = WarpState::Through;
+	_isWarpEnd = false;
+	_isAttackEnd = false;
 }
 
 bool GhostComboAttack::Update() {
+
+	bool ret = false;
 
 	float alpha = _enemyObject->GetAlpha();
 
 	if (_nowWarpState == WarpState::Through) {
 		// 透過処理中。
 
-		alpha -= 3.0f * Time::DeltaTime();
+		alpha -= 1.0f * Time::DeltaTime();
 		if (alpha <= 0.0f) {
 			// 完全に透明になった。
 
@@ -85,14 +93,15 @@ bool GhostComboAttack::Update() {
 	else {
 		// 実体化処理中。
 
-		alpha += 3.0f * Time::DeltaTime();
+		alpha += 1.0f * Time::DeltaTime();
 		if (alpha >= 1.0f) {
 			// 完全に実体化した。
 
 			alpha = 1.0f;
+			_isWarpEnd = true;
 		}
 
-		if(_counter < _chaceTime) {
+		if (_counter < _chaceTime) {
 			// 追跡時間を超えていない。
 
 			// プレイヤーにステップ回避が実装されると踏んでぎりぎりまで追尾。
@@ -122,21 +131,28 @@ bool GhostComboAttack::Update() {
 			_counter += Time::DeltaTime();
 		}
 
-		if (_oneCombo->Update()) {
-			// 攻撃一回終了。
+		if (!_isAttackEnd) {
+			if (_oneCombo->Update()) {
+				// 攻撃一回終了。
+
+				_isAttackEnd = true;
+			}
+		}
+
+		if(_isAttackEnd && _isWarpEnd) {
+			// 一回攻撃終了。
 
 			_comboCount++;
-
+			_nowWarpState = WarpState::Through;		// また消える。
+			_isWarpEnd = false;
 			if (_comboCount >= _attackNum) {
 				// 攻撃回数が指定回数に達した。
 
-				_nowWarpState = WarpState::Through;
-				return true;
+				ret = true;
 			}
-			_nowWarpState = WarpState::Through;		// また消える。
 		}
 	}
 	_enemyObject->SetAlpha(alpha);
 
-	return false;
+	return ret;
 }
