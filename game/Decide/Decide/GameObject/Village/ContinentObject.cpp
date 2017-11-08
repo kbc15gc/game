@@ -47,13 +47,16 @@ void ContinentObject::LoadModel(const char * filename)
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 
 	//メッシュコライダー生成。
-	//mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
+	mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
 	//MeshColliderManager::CloneMeshCollider(filename);
 	//mesh->Create(_Model);
+	auto sca = transform->GetLocalScale();
+	mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
 	RigidBodyInfo info;
 	info.mass = 0.0f;
 	info.coll = mesh;
+	//info.offset = _Model->GetModelData()->GetCenterPos();
 	info.id = Collision_ID::BUILDING;
 	info.rotation = transform->GetRotation();
-	//rigid->Create(info, false);
+	rigid->Create(info, false);
 }

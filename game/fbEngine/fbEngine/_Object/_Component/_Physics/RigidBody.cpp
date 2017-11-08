@@ -72,7 +72,6 @@ void RigidBody::Create(RigidBodyInfo& rbInfo, bool isAddWorld)
 	StartTrans.setOrigin(btVector3(_OffsetPos.x, _OffsetPos.y, _OffsetPos.z));
 	//‰ñ“]
 	StartTrans.setRotation(btQuaternion(rbInfo.rotation.x, rbInfo.rotation.y, rbInfo.rotation.z, rbInfo.rotation.w));
-
 	myMotionState = new btDefaultMotionState(StartTrans);
 	//„‘Ì‚ðì¬B
 	btRigidBody::btRigidBodyConstructionInfo btRbInfo(rbInfo.mass, myMotionState, rbInfo.coll->GetBody(), btVector3(rbInfo.inertia.x, rbInfo.inertia.y, rbInfo.inertia.z));

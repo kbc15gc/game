@@ -26,8 +26,8 @@ public:
 	//メッシュの形状をコピーする。
 	void Copy(const MeshCollider& mesh)
 	{
-		this->meshShape = mesh.meshShape;
 		this->stridingMeshInterface = mesh.stridingMeshInterface;
+		meshShape = new btBvhTriangleMeshShape(stridingMeshInterface, true);
 	}
 
 private:
