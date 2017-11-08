@@ -70,8 +70,8 @@ public:
 		{
 			_ItemIconImage->SetActive(false, true);
 			_ItemIconImage->SetTexture(nullptr);
-			_ItemName->SetActive(false, true);
-			_ItemName->SetText(L"");
+			_ItemName->SetActive(true, true);
+			_ItemName->SetText(L"İ’è‚È‚µ");
 		}
 	}
 

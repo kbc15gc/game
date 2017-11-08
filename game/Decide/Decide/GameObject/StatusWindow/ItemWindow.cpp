@@ -123,10 +123,10 @@ void ItemWindow::ItemInit()
 
 	Vector3 pos[4] =
 	{
-		Vector3(-250.0f,190.0f,0.0f),	//上
-		Vector3(-250.0f,300.0f,0.0f),	//下
-		Vector3(-220.0f,245.0f,0.0f),	//右
-		Vector3(-280.0f,245.0f,0.0f),	//左
+		Vector3(-250.0f,140.0f,0.0f),	//上
+		Vector3(-250.0f,250.0f,0.0f),	//下
+		Vector3(-220.0f,195.0f,0.0f),	//右
+		Vector3(-280.0f,195.0f,0.0f),	//左
 	};
 	for (int i = 0; i < 4; i++)
 	{
@@ -149,7 +149,7 @@ void ItemWindow::WeaponInit()
 
 	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
 	holdItem->transform->SetParent(transform);
-	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
 	holdItem->Init();
 	_HoldItem2DList.push_back(holdItem);
 }
@@ -165,7 +165,7 @@ void ItemWindow::ArmorInit()
 
 	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
 	holdItem->transform->SetParent(transform);
-	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
 	holdItem->Init();
 	_HoldItem2DList.push_back(holdItem);
 }
@@ -173,11 +173,15 @@ void ItemWindow::ArmorInit()
 /**
 * 更新.
 */
-void ItemWindow::Update()
+void ItemWindow::LateUpdate()
 {
 	Input();
 
 	_EIconImage->SetActive(false, true);
+	for (auto it : _HoldItem2DList)
+	{
+		it->SetHoldItem(nullptr);
+	}
 
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
@@ -247,6 +251,7 @@ void ItemWindow::Input()
 					_NowSelectItem = index.rangeIndex;
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 				LocalTime += Time::DeltaTime();
 				if (LocalTime >= ChangeTime)
@@ -257,6 +262,7 @@ void ItemWindow::Input()
 					_NowSelectItem = index.rangeIndex;
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 			}
 			else if (LStick.y <= -0.2f)
@@ -267,6 +273,7 @@ void ItemWindow::Input()
 					_NowSelectItem = index.rangeIndex;
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 	
 				LocalTime += Time::DeltaTime();
@@ -278,6 +285,7 @@ void ItemWindow::Input()
 					_NowSelectItem = index.rangeIndex;
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 			}
 			else
@@ -355,7 +363,7 @@ void ItemWindow::Input()
 				else if (_NowSelectItem >= itemCount)
 				{
 					//選択位置を一個下げる.
-					_NowSelectItem = _Cursor->PrevMove(1).rangeIndex;
+					_NowSelectItem = max(0, _Cursor->PrevMove(1).rangeIndex);
 				}
 				if (itemCount <= 0)
 				{
@@ -365,6 +373,7 @@ void ItemWindow::Input()
 				else
 				{
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 			}
 		}
@@ -528,6 +537,7 @@ void ItemWindow::_ConfigParamRender()
 		case Item::ItemCodeE::Armor:
 		{	
 			HoldArmor* armor = _Player->GetEquipment()->armor;
+
 			HoldArmor* newArmor = (HoldArmor*)_Item2DList[_NowSelectItem]->GetItemData();
 
 			//_ParameterRenderList[(int)AIShowStatus::RANK]->SetParam("RANK", "UI/S_Buff02.png", 0);

@@ -184,8 +184,6 @@ void HistoryMenu::EnableUpdate()
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	ChipMove();
-
-	PageMove();
 }
 
 /**
@@ -345,6 +343,8 @@ void HistoryMenu::SelectPageUpdate()
 				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
 
 				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
+
+				PageMove();
 
 				_IsOperation = false;
 				_HistoryBook->SetIsOperation(_IsOperation);

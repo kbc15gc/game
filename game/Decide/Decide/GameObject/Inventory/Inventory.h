@@ -77,6 +77,11 @@ public:
 		return _InventoryItemList[static_cast<int>(code)];
 	}
 
+	 int GetInventoryListSize()
+	 {
+		 return _InventoryItemList.size();
+	 }
+
 	//アイテムコードとIDを元に配列から検索。
 	HoldItemBase* FindItem( Item::ItemCodeE code, const unsigned int& id);
 

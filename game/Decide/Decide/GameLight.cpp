@@ -42,7 +42,7 @@ void GameLight::Start()
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
 	INSTANCE(SceneManager)->GetSky()->SetDayAmbientLight(Vector3(0.5f, 0.5f, 0.5f));
-	INSTANCE(SceneManager)->GetSky()->SetNightAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+	INSTANCE(SceneManager)->GetSky()->SetNightAmbientLight(Vector3(0.3f, 0.3f, 0.3f));
 }
 
 void GameLight::Update()
