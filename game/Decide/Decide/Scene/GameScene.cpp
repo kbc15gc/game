@@ -231,6 +231,7 @@ void GameScene::Start()
 
 void GameScene::Update()
 {
+#ifdef _DEBUG
 	//スタートボタンの押下確認
 	bool back = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_BACK);
 	bool start = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START);
@@ -243,6 +244,7 @@ void GameScene::Update()
 		return;
 	}
 
+
 	Collision *coll;
 	if(coll = INSTANCE(GameObjectManager)->mainCamera->GetClickCollision(1000.0f, (int)fbCollisionAttributeE::CHARACTER))
 	{
@@ -253,7 +255,7 @@ void GameScene::Update()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)) {
 		INSTANCE(Inventory)->ArrangementInventory();
 	}
-	
+#endif
 	//BGM変更したい
 	{
 		if (_Player->GetState() == Player::State::Death)
