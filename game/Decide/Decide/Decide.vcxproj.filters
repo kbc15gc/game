@@ -341,7 +341,7 @@
       <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Player\Player.cpp">
-      <Filter>GameObject\Player\PlayerState</Filter>
+      <Filter>GameObject\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
