@@ -67,11 +67,12 @@ void Player::Awake()
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
 	_Anim = AddComponent<Animation>();
+
 	//カプセルコライダー
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
-
 	//キャラクターコントローラー
 	_CharacterController = AddComponent<CCharacterController>();
+	
 	//キャラクターパラメーター
 	_PlayerParam = AddComponent<CharacterParameter>();
 	//回転コンポーネント

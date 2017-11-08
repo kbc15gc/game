@@ -11,6 +11,7 @@ namespace
 		Quaternion ang;	//回転
 		Vector3 sca;	//スケール
 		int hitcamera;
+		int coll;		//コリジョンがあるか
 	};
 
 	//メンバ変数の情報設定
@@ -21,6 +22,8 @@ namespace
 		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct ObjectInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct ObjectInfo,sca),sizeof(Vector3) },
 		{ "hitcamera",Support::DataTypeE::INT, offsetof(struct ObjectInfo,hitcamera),sizeof(int) },
+		{ "coll",Support::DataTypeE::INT, offsetof(struct ObjectInfo,coll),sizeof(int) },
+
 	};
 
 	//コリジョンの情報
@@ -50,7 +53,8 @@ public:
 	void Awake()override;
 	void Start()override;
 	//読み込むモデルのファイル名指定
-	void LoadModel(const char* filename);
+	//コリジョンを自動で生成するか。
+	void LoadModel(const char* filename, bool coll);
 protected:
 	//モデル描画
 	SkinModel* _Model;
