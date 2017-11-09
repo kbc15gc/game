@@ -14,7 +14,7 @@ CObjectFrustumCulling::~CObjectFrustumCulling()
 {
 }
 
-void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world)
+void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world, const Vector3& sca)
 {
 	if (_Camera != nullptr) {
 		//ビュープロジェクション行列作成。
@@ -82,6 +82,7 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world)
 		//形を形成。
 		auto hs = aabb.GetHalfSize();
 		btBoxShape box(btVector3(hs.x, hs.y, hs.z));
+		box.setLocalScaling(btVector3(sca.x, sca.y, sca.z));
 		coll.setCollisionShape(&box);
 		//移動と回転。
 		auto mat = world;

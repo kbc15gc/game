@@ -112,7 +112,7 @@ void SkinModel::LateUpdate()
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{
 			_ModelDate->UpdateAABB();
-			_Culling->Execute(_ModelDate->GetAABB(), wolrd);
+			_Culling->Execute(_ModelDate->GetAABB(), wolrd, transform->GetScale());
 		}
 	}
 }
