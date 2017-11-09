@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 2.0f;
+	const float CAMERA_SPEED = 1.5f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
