@@ -186,6 +186,16 @@ public:
 		auto itr = find(_HistoryPageList[(int)loc].begin(), _HistoryPageList[(int)loc].end(), page);
 		if (itr != _HistoryPageList[(int)loc].end())
 		{
+			float angle = (*itr)->GetAngle();
+			if (angle > 0.0f)
+			{
+				angle -= 0.1f;
+			}
+			else if(angle < 0.0f)
+			{
+				angle += 0.1f;
+			}
+			(*itr)->Rotation(angle);
 			(*itr)->ChangeState(HistoryPage::StateCodeE::PutOut);
 			_HistoryPageList[(int)loc].erase(itr);
 		}
