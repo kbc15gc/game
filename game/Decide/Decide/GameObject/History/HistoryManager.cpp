@@ -76,7 +76,6 @@ void HistoryManager::Start()
 			}
 			//読み込んだデータを元に歴史書にページをあらかじめ追加。
 			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
-			page->transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);

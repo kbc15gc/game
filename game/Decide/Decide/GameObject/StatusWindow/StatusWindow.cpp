@@ -61,7 +61,7 @@ void StatusWindow::Awake()
 	_MoneyRender = INSTANCE(GameObjectManager)->AddNew<ParameterRender>("MoneyRender", WindowBackPriorty+ 3);
 	_MoneyRender->transform->SetParent(_MoneyFrame->transform);
 	_MoneyRender->transform->SetLocalPosition(Vector3(60.0f,-13.0f,0.0f));
-	_MoneyRender->SetParamTextPos(_MoneyRender->GetParamTextPos() + Vector3(-380.0f,0.0f,0.0f));
+	_MoneyRender->SetParamTextPos(_MoneyRender->GetParamTextPos() + Vector3(-130.0f,0.0f,0.0f));
 
 
 	//Žn‚ß‚Í”ñ•\Ž¦.
@@ -73,7 +73,7 @@ void StatusWindow::Awake()
 */
 void StatusWindow::Update()
 {
-	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::UpperLeft);
+	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::UpperRight);
 
 	bool isChange = false;
 	static float ChangeTime = 0.5f;

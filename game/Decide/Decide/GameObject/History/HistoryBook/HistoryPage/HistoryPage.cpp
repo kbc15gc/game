@@ -31,7 +31,6 @@ void HistoryPage::Awake()
 	Quaternion Rot;
 	Rot.SetEuler(Vector3(-180.0f, 0.0f, 0.0f));
 	transform->SetRotation(Rot);
-	transform->SetPosition(Vector3(0.0f, 0.0f, 10.0f));
 	transform->UpdateWolrdMatrix();
 
 	D3DXMatrixIdentity(&_RotationMatrix);
@@ -44,7 +43,7 @@ void HistoryPage::Awake()
 /**
 * ‰Šú‰».
 */
-void HistoryPage::Start(ChipID chipID, LocationCodeE code, Vector3& pos)
+void HistoryPage::Start(ChipID chipID, LocationCodeE code)
 {
 	SkinModel* model = _HistoryBook->GetComponent<SkinModel>();
 	LPD3DXFRAME frame = model->GetFrameRoot();
@@ -58,7 +57,6 @@ void HistoryPage::Start(ChipID chipID, LocationCodeE code, Vector3& pos)
 	_ChipID = chipID;
 	_NowLocatuion = code;
 
-	_InitPos = pos;
 	ChangeState(StateCodeE::PutIn);
 }
 

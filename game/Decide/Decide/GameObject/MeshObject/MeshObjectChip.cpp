@@ -26,8 +26,8 @@ void MeshObjectChip::Init(const char* name, const Vector3& pos, const Vector3& s
 {
 	
 	transform->SetLocalPosition(pos);
-	transform->SetLocalScale(sca);
-	transform->SetLocalRotation(q);
+	/*transform->SetLocalScale(sca);
+	transform->SetLocalRotation(q);*/
 
 	//ƒXƒLƒ“ƒ‚ƒfƒ‹ì¬
 	SkinModel* model = AddComponent<SkinModel>();

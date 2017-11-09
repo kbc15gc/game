@@ -37,7 +37,7 @@ void HistoryBookStateClose::Entry()
 */
 void HistoryBookStateClose::Update()
 {
-	if (!_HistoryBook->GetIsPlay())
+	if (_HistoryBook->GetIsPlayAnim(HistoryBook::AnimationCodeE::Close) && !_HistoryBook->GetIsPlay())
 	{
 		_HistoryBook->ChangeState(HistoryBook::StateCodeE::Move);
 	}

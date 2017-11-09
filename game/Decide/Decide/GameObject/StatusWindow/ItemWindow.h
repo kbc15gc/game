@@ -220,7 +220,7 @@ private:
 	vector<ParameterRender*> _ParameterRenderList;
 
 	/** 装備アイテムリスト. */
-	vector<HoldItem2D*> _HoldItem2DList;
+	//vector<HoldItem2D*> _HoldItem2DList;
 
 	/** ダイアログ. */
 	Dialog* _Dialog = nullptr;

@@ -57,7 +57,7 @@ public:
 	/**
 	* èâä˙âª.
 	*/
-	void Start(ChipID chipID, LocationCodeE code,Vector3& pos);
+	void Start(ChipID chipID, LocationCodeE code);
 
 	/**
 	* çXêV.
@@ -130,6 +130,11 @@ public:
 	Vector3& GetInitPos()
 	{
 		return _InitPos;
+	}
+
+	void SetInitPos(Vector3& pos)
+	{
+		_InitPos = pos;
 	}
 
 private:
