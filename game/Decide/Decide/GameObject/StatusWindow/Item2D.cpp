@@ -35,7 +35,7 @@ void Item2D::Awake()
 	_ItemCountText->Initialize(L"", 30.0f);
 	_ItemCountText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	_ItemCountText->transform->SetParent(_BackWindow->transform);
-	_ItemCountText->transform->SetLocalPosition(Vector3(180.0f, -15.0f, 0.0f));
+	_ItemCountText->transform->SetLocalPosition(Vector3(150.0f, -15.0f, 0.0f));
 
 }
 

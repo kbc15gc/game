@@ -121,21 +121,21 @@ void ItemWindow::ItemInit()
 	// ステータス表示作成。
 	_CreateCIShowStatus();
 
-	Vector3 pos[4] =
-	{
-		Vector3(-250.0f,140.0f,0.0f),	//上
-		Vector3(-250.0f,250.0f,0.0f),	//下
-		Vector3(-220.0f,195.0f,0.0f),	//右
-		Vector3(-280.0f,195.0f,0.0f),	//左
-	};
-	for (int i = 0; i < 4; i++)
-	{
-		HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
-		holdItem->transform->SetParent(transform);
-		holdItem->transform->SetLocalPosition(pos[i]);
-		holdItem->Init((i % 2 == 1));
-		_HoldItem2DList.push_back(holdItem);
-	}
+	//Vector3 pos[4] =
+	//{
+	//	Vector3(-250.0f,140.0f,0.0f),	//上
+	//	Vector3(-250.0f,250.0f,0.0f),	//下
+	//	Vector3(-220.0f,195.0f,0.0f),	//右
+	//	Vector3(-280.0f,195.0f,0.0f),	//左
+	//};
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	//	holdItem->transform->SetParent(transform);
+	//	holdItem->transform->SetLocalPosition(pos[i]);
+	//	holdItem->Init((i % 2 == 1));
+	//	_HoldItem2DList.push_back(holdItem);
+	//}
 }
 
 /**
@@ -147,11 +147,11 @@ void ItemWindow::WeaponInit()
 
 	_CreateWIShowStatus();
 
-	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
-	holdItem->transform->SetParent(transform);
-	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
-	holdItem->Init();
-	_HoldItem2DList.push_back(holdItem);
+	//HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	//holdItem->transform->SetParent(transform);
+	//holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
+	//holdItem->Init();
+	//_HoldItem2DList.push_back(holdItem);
 }
 
 /**
@@ -163,11 +163,11 @@ void ItemWindow::ArmorInit()
 
 	_CreateAIShowStatus();
 
-	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
-	holdItem->transform->SetParent(transform);
-	holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
-	holdItem->Init();
-	_HoldItem2DList.push_back(holdItem);
+	//HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
+	//holdItem->transform->SetParent(transform);
+	//holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
+	//holdItem->Init();
+	//_HoldItem2DList.push_back(holdItem);
 }
 
 /**
@@ -178,10 +178,10 @@ void ItemWindow::LateUpdate()
 	Input();
 
 	_EIconImage->SetActive(false, true);
-	for (auto it : _HoldItem2DList)
+	/*for (auto it : _HoldItem2DList)
 	{
 		it->SetHoldItem(nullptr);
-	}
+	}*/
 
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
@@ -197,7 +197,7 @@ void ItemWindow::LateUpdate()
 				{
 					_EIconImage->SetActive(true, true);
 					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition());
-					_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
+					//_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
 				}
 			}
 		}
