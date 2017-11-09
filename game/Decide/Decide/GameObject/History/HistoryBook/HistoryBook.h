@@ -160,10 +160,10 @@ public:
 	{
 		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",2);
 		page->SetHistoryBook(this);
-		page->Start(chipID, code);
 		_HistoryPageList[(int)code].push_back(page);
 
 		_CalcPagePosition();
+		page->Start(chipID, code);
 
 		return page;
 	}
