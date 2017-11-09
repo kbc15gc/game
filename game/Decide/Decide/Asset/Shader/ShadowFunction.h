@@ -80,25 +80,25 @@ float CalcShadow(float3 worldPos)
 
 			float depth = min(posInLVP.z, 1.0f);
 
-			if (true)
-			{
-				if (depth > shadow_val.r)
-				{
-					//チェビシェフ
-					float depth_sq = shadow_val.r * shadow_val.r;
-					float variance = max(shadow_val.g - depth_sq, 0.0006f);
-					float md = depth - shadow_val.r;
-					float P = variance / (variance + md * md);
-					result = pow(P, 5.0f);
-				}
-			}
-			else
-			{
+			//if (false)
+			//{
+			//	if (depth > shadow_val.r)
+			//	{
+			//		//チェビシェフ
+			//		float depth_sq = shadow_val.r * shadow_val.r;
+			//		float variance = max(shadow_val.g - depth_sq, 0.0006f);
+			//		float md = depth - shadow_val.r;
+			//		float P = variance / (variance + md * md);
+			//		result = pow(P, 5.0f);
+			//	}
+			//}
+			//else
+			//{
 				if (depth > shadow_val.r + 0.006f)
 				{
 					result = 0.0f;
 				}
-			}
+			//}
 
 			//一枚にヒットしたらループを終わる
 			break;
