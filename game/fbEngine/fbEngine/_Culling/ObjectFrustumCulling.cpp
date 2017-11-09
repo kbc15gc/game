@@ -7,6 +7,7 @@
 
 CObjectFrustumCulling::CObjectFrustumCulling()
 {
+	
 }
 
 CObjectFrustumCulling::~CObjectFrustumCulling()
@@ -69,11 +70,33 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world)
 		AABB2D obj, screen;
 		obj.SetUpVertex(ru, ld);
 		screen.SetUpVertex(Vector2(1, -1), Vector2(-1, 1));
-		//AABBの衝突判定。
+		//2DのAABBの衝突判定。
 		if (screen.IsHit(obj))
 		{
 			SetCullingFlag(false);
 			return;
 		}
+
+		//3DのAABB。
+		btGhostObject coll;
+		//形を形成。
+		auto hs = aabb.GetHalfSize();
+		btBoxShape box(btVector3(hs.x, hs.y, hs.z));
+		coll.setCollisionShape(&box);
+		//移動と回転。
+		auto mat = world;
+		auto& trans = coll.getWorldTransform();
+		trans.setOrigin(btVector3(mat._41, mat._42, mat._43));
+		mat._41 = 0.0f;		mat._42 = 0.0f;		mat._43 = 0.0f;
+		D3DXQUATERNION q;		D3DXQuaternionRotationMatrix(&q, &mat);
+		trans.setRotation(btQuaternion(q.x, q.y, q.z, q.w));
+
+		//当たっているかどうか？
+		fbPhysicsCallback::ContactPairTestCallBack cb;
+		if(player == nullptr)
+			SetPlayer();
+		PhysicsWorld::Instance()->GetDynamicWorld()->contactPairTest(player, &coll, cb);
+		if (cb.isHit)
+			SetCullingFlag(false);
 	}
 }

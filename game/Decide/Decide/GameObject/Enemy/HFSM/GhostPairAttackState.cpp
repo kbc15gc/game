@@ -28,6 +28,7 @@ void GhostPairAttackState::_Start() {
 	_isEndWarp = false;
 	_isStartAttackAlready = false;
 	_counter = 0.0f;
+	_isStartAttack = false;
 
 	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle,0.2f);
 }
@@ -39,7 +40,7 @@ void GhostPairAttackState::_UpdateSubClass() {
 
 		float alpha = _EnemyObject->GetAlpha();
 
-		alpha -= 3.0f * Time::DeltaTime();
+		alpha -= 1.0f * Time::DeltaTime();
 		if (alpha <= 0.0f) {
 			// 完全に透明になった。
 
@@ -48,7 +49,7 @@ void GhostPairAttackState::_UpdateSubClass() {
 		}
 		_EnemyObject->SetAlpha(alpha);
 	}
-	else if (!_isStartAttackAlready && _isStartAttack) {
+	else if ((!_isStartAttackAlready) && _isStartAttack) {
 		// 側近がすべて消えたので攻撃開始。
 
 		if (_counter >= _startAttackInterval) {

@@ -10,6 +10,12 @@ class CObjectFrustumCulling : public IObjectCulling {
 public:
 	CObjectFrustumCulling();
 	~CObjectFrustumCulling();
+	void SetPlayer()
+	{
+		auto obj = INSTANCE(GameObjectManager)->FindObject("Player");
+		if (obj != nullptr)
+			player = obj->GetComponent<RigidBody>()->GetCollisionObj();
+	}
 	//ƒJƒƒ‰‚ğİ’èB
 	void SetCamera(const Camera& camera)
 	{
@@ -20,4 +26,6 @@ public:
 	void Execute(const AABB& aabb, const D3DXMATRIX& rotation) override;
 private:
 	const Camera*	_Camera = nullptr;
+
+	btCollisionObject* player;
 };

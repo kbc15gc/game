@@ -41,7 +41,7 @@ void EnemyDrarian::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(static_cast<int>(AnimationDrarian::Attack), 0.2f);
+	_singleAttack->Init(1.0f,static_cast<int>(AnimationDrarian::Attack), 0.2f);
 
 	// 攻撃処理に使用するパーティクル設定。
 	ParticleParameter param;

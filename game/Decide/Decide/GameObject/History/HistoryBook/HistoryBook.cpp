@@ -23,6 +23,7 @@ void HistoryBook::Awake()
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
 	_Anim = AddComponent<Animation>();
+
 	//モデルデータ。
 	SkinModelData* modeldata = new SkinModelData();
 	//クローンモデルの作成。
@@ -51,14 +52,10 @@ void HistoryBook::Start()
 
 	//アニメーションの終了時間設定.
 	//-1.0fを設定しているのはアニメーションの再生時間が1秒未満.
-	double animationEndTime[(int)AnimationCodeE::AnimationNum];
-	animationEndTime[(int)AnimationCodeE::CloseIdol] = 2.0f;		//待機アニメーション.
-
-	//各エンドタイムを設定.
-	for (int i = 0; i < (int)AnimationCodeE::AnimationNum; i++)
-	{
-		_Anim->SetAnimationEndTime(i, animationEndTime[i]);
-	}
+	_Anim->SetAnimationEndTime((int)AnimationCodeE::CloseIdol, 2.0f);
+	_Anim->SetAnimationEndTime((int)AnimationCodeE::OpenIdol, -1.0f);
+	_Anim->SetAnimationEndTime((int)AnimationCodeE::Open, -1.0f);
+	_Anim->SetAnimationEndTime((int)AnimationCodeE::Close, -1.0f);
 
 	//アニメーションの初期化。
 	PlayAnimation(AnimationCodeE::OpenIdol, 0.0f);
@@ -126,6 +123,14 @@ void HistoryBook::PlayAnimation(AnimationCodeE animno, float interpolatetime, in
 	//現在のアニメーションと違うアニメーション　&& アニメーションナンバーが無効でない。
 	if (_Anim->GetPlayAnimNo() != (int)animno && animno != AnimationCodeE::Invalid)
 	{
+		if (animno == AnimationCodeE::Close || animno == AnimationCodeE::Open)
+		{
+			_Anim->SetAnimeSpeed(0.5f);
+		}
+		else
+		{
+			_Anim->SetAnimeSpeed(1.0f);
+		}
 		_Anim->PlayAnimation((int)animno, interpolatetime, loopnum);
 	}
 }

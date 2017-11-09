@@ -76,7 +76,6 @@ void HistoryManager::Start()
 			}
 			//読み込んだデータを元に歴史書にページをあらかじめ追加。
 			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
-			page->transform->SetPosition(Vector3(0.0f, 0.0f, 0.2f));
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
@@ -216,11 +215,6 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
-		if (strcmp(objInfo[i]->filename, "kusa.X") == 0)
-		{
-			int a = 0;
-		}
-
 		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{

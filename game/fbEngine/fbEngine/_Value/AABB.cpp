@@ -1,7 +1,7 @@
 #include "fbstdafx.h"
 #include "AABB.h"
 
-AABB::AABB()
+AABB::AABB():_CenterPosition(Vector3::zero)
 {
 	memset(_VertexPosition, 0, sizeof(_VertexPosition));
 }
