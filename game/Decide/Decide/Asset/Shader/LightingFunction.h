@@ -30,6 +30,29 @@ sampler_state
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
 float4 g_EffectFlg;	//xは投影、yはスペキュラ
 
+
+#define DP_SIZE 8
+
+// ディザパターン.
+const float g_DitherPattern[DP_SIZE][DP_SIZE] =
+{
+	{ 1, 33, 9, 41, 3, 35, 11, 43 },
+	{ 49, 17, 57, 25, 51, 19, 59, 27 } ,
+	{ 13, 45, 5, 37, 15, 47, 7, 39 },
+	{ 61, 29, 53, 21, 63, 31, 55, 23 } ,
+	{ 4, 36, 12, 44, 2, 34, 10, 42 },
+	{ 52, 20, 60, 28, 50, 18, 58, 26 } ,
+	{ 16, 48, 8, 40, 14, 46, 6, 33 },
+	{ 64, 32, 56, 24, 62, 30, 54, 22 },
+};
+
+/**
+* ディザリングパラメータ
+* x : フラグ.
+* y : ディザ係数.
+*/
+float4 g_DitherParam;
+
 int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。
 float4	g_diffuseLightColor[NUM_DIFFUSE_LIGHT];		//ディフューズライトのカラー。

@@ -201,7 +201,7 @@ void Animation::_EndAnimation(const float endtime)
 		for (auto& call : _callback) {
 			// 関数ポインタに設定された関数を実行。
 
-			(call->object->*(call->callback))(_CurrentTrackNo);
+			(call->object->*(call->callback))(_CurrentAnimationSetNo);
 		}
 
 		//アニメーション時間をリセット

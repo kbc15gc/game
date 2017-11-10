@@ -20,6 +20,7 @@ enum ModelEffectE
 	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
 	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
 	ALPHA = BIT(8),				//!< アルファ.
+	DITHERING = BIT(9),			//!< ディザリング.
 };
 
 /**
@@ -158,7 +159,22 @@ public:
 
 	void SetTree()
 	{
-		hoge = true;
+		_IsTree = true;
+		SetModelEffect(ModelEffectE::DITHERING, true);
+	}
+
+	/**
+	* ディザ係数を設定する.
+	* 0~65の値を入れる.
+	* 0を入れると消えない.
+	* 値が大きくなるほど消えていく.
+	* モデルエフェクトの方も設定しないと意味ないよ？
+	* 
+	* 大川これだよ。これこれ。これですってば。
+	*/
+	void SetDitherCoefficient(float value)
+	{
+		_DitherCoefficient = value;
 	}
 
 private:
@@ -210,5 +226,10 @@ private:
 	/** アルファの閾値. */
 	float _Alpha = 0.0f;
 
-	bool hoge = false;
+	/** 木. */
+	bool _IsTree = false;
+
+	/** ディザ係数. */
+	float _DitherCoefficient = 0;
+
 };

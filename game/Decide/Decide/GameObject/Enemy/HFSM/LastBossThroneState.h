@@ -22,6 +22,8 @@ private:
 private:
 	bool _isOutsideRange = false;	// 範囲外に出たか。
 	float _timeCounter;
+	float _interval = 20.0f;
+	bool _isCommand = false;
 
 	static const int _entourageNum;	// 側近の数。
 	vector<BossGhost*> _entourageEnemys;	// 側近。
