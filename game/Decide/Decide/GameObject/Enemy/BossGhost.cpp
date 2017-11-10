@@ -9,6 +9,8 @@
 #include "GameObject\Enemy\EnemyAttack.h"
 #include "GameObject\Enemy\HFSM\GhostPairAttackState.h"
 
+BossGhost::PairAttackType BossGhost::_selectNowPairAttack;
+
 BossGhost::BossGhost(const char* name) : EnemyCharacter(name)
 {
 
@@ -28,6 +30,28 @@ void BossGhost::CreateCollision() {
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
 }
 
+void BossGhost::LaserStartSingle()
+{
+	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
+	laser->Create(this, Vector3::zero, 10.0f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.25f), 3.0f, Color::red);
+	_singleLaser->BreathStart(laser);
+}
+
+void BossGhost::LaserEndSingle() {
+	_singleLaser->BreathEnd();
+}
+
+void BossGhost::LaserStart() {
+	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
+	laser->Create(this, Vector3::zero, 10.0f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.25f),3.0f,Color::red);
+	static_cast<EnemyBreathAttack*>(_laserComboAttack->GetOneAttack())->BreathStart(laser);
+}
+
+void BossGhost::LaserEnd() {
+	static_cast<EnemyBreathAttack*>(_laserComboAttack->GetOneAttack())->BreathEnd();
+}
+
+
 void BossGhost::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("Ghost.X");
@@ -36,11 +60,11 @@ void BossGhost::_AwakeSubClass() {
 void BossGhost::_StartSubClass() {
 
 	// 視野角生成。
-	_ViewAngle = 160.0f;
-	_ViewRange = 30.0f;
+	_ViewAngle = 0.0f;
+	_ViewRange = 0.0f;
 
 	// 歩行速度設定。
-	_walkSpeed = 2.5f;
+	_walkSpeed = 3.0f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
@@ -57,28 +81,57 @@ void BossGhost::_StartSubClass() {
 	_MyComponent.Model->SetModelEffect(ModelEffectE::ALPHA);
 
 	// 攻撃処理を定義。
+	_singleAttack.reset(new EnemySingleAttack(this));
+	_singleAttack->Init(1.25f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+	_singleLaser.reset(new EnemyBreathAttack(this));
+	_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f, 1, 2);
 	_comboAttack.reset(new GhostComboAttack(this));
-	_comboAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
-	_breathAttack.reset(new EnemyBreathAttack(this));
-	_breathAttack->Init(13.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+	EnemyAttack* singleAttack = new EnemySingleAttack(this);
+	singleAttack->Init(1.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+	_comboAttack->Init(13.0f, singleAttack);
+	_laserComboAttack.reset(new GhostComboAttack(this));
+	EnemyAttack* singleAttack2 = new EnemyBreathAttack(this);
+	singleAttack2->Init(7.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f,1, 1);
+	_laserComboAttack->Init(13.0f,singleAttack2);
+
+	_pairAttackArray.push_back(_comboAttack.get());
+	_pairAttackArray.push_back(_laserComboAttack.get());
+
+	_isPairAttackReady = false;
 
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_initState = State::StartAttack;
+	_initState = State::Wait;
 	_ChangeState(_initState);
+	static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
 }
 
 void BossGhost::_UpdateSubClass() {
+	if (_pairGhost) {
+		if (_NowStateIdx == static_cast<EnemyCharacter::State>(BossGhostState::BossGhostPairAttack)) {
+			// 共同攻撃状態。
 
-	//if (!(_MyComponent.CharacterController->IsOnGround())) {
-	//	// エネミーが地面から離れている。
-	//	if (_NowStateIdx != State::Fall) {
-	//		// 現在のステートタイプを保存。
-	//		_saveState = _NowStateIdx;
-	//		// 落下ステートに切り替え。
-	//		_ChangeState(State::Fall);
-	//	}
-	//}
+			if (!_isPairAttackReady) {
+				_isPairAttackReady = static_cast<GhostPairAttackState*>(_NowState)->GetIsEndWarp();
+			}
+
+			if (_isPairAttackReady) {
+				// 自分の準備が完了している。
+				if (static_cast<BossGhostState>(_pairGhost->GetNowStateIndex()) == BossGhostState::BossGhostPairAttack) {
+					if (_pairGhost->GetIsPairAttackReady()) {
+						// ペアの準備も完了している。
+
+						static_cast<GhostPairAttackState*>(_NowState)->SetIsStartAttack(true);	// 攻撃を開始する。
+					}
+				}
+			}
+		}
+	}
+	else if(_NowStateIdx == static_cast<EnemyCharacter::State>(BossGhostState::BossGhostPairAttack)){
+		// 共同攻撃中にペア関係が解除された。
+
+		static_cast<GhostPairAttackState*>(_NowState)->SetIsStartAttack(true);	// 攻撃を開始する。
+	}
 }
 
 void BossGhost::_LateUpdateSubClass()
@@ -90,24 +143,44 @@ void BossGhost::_LateUpdateSubClass()
 EnemyAttack* BossGhost::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
-	// ※とりあえず暫定処理。
-	//int rnd = rand() % 3;
-	//if (rnd == 0) {
-		return _comboAttack.get();
-	//}
+	EnemyAttack* attack = nullptr;
+
+	if (static_cast<BossGhostState>(_NowStateIdx) == BossGhostState::BossGhostPairAttack) {
+		attack = _pairAttackArray[_selectNowPairAttack];
+	}
+	else {
+		// ※とりあえず暫定処理。
+		int rnd = rand() % 4;
+		if (rnd == 0) {
+			attack = _singleAttack.get();
+		}
+		else if (rnd == 1) {
+			attack = _singleLaser.get();
+		}
+		else if (rnd == 2) {
+			attack = _comboAttack.get();
+		}
+		else {
+			attack = _laserComboAttack.get();
+		}
+	}
+	return attack;
 }
 
 void BossGhost::_EndNowStateCallback(State EndStateType) {
 
 	// とりあえず連続で共同攻撃しないようにする。
 	if (EndStateType == static_cast<EnemyCharacter::State>(BossGhostState::BossGhostPairAttack)) {
-		_ChangeState(State::StartAttack);
+		_isPairAttackReady = false;
+		_ChangeState(State::Wait);
+		static_cast<EnemyWaitState*>(_NowState)->SetInterval(3.0f);
 	}
-	else if (_isCommand) {
+	else if (_pairGhost && _isCommand) {
 		// ラスボスから命令を受けた。
 
 		// 共同攻撃開始。
 		_ChangeState(static_cast<EnemyCharacter::State>(BossGhostState::BossGhostPairAttack));
+		static_cast<GhostPairAttackState*>(_NowState)->SetStartAttackInterval(_intervalStartPairAttack);
 		_isCommand = false;
 	}
 	else if (EndStateType == State::Damage) {
@@ -119,6 +192,10 @@ void BossGhost::_EndNowStateCallback(State EndStateType) {
 		// 一度攻撃が終了した。
 
 		// もう一度攻撃開始。
+		_ChangeState(State::Wait);
+		static_cast<EnemyWaitState*>(_NowState)->SetInterval(3.0f);
+	}
+	else if (EndStateType == State::Wait) {
 		_ChangeState(State::StartAttack);
 	}
 }
@@ -201,6 +278,22 @@ void BossGhost::_ConfigAnimationEvent() {
 	{
 		eventFrame = 0.5f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::CreateCollision));
+	}
+
+	// レーザー攻撃(単発)。
+	{
+		eventFrame = 0.5f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::LaserStartSingle), 2);
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::LaserEndSingle), 2);
+	}
+
+	// レーザー攻撃(コンボ)。
+	{
+		eventFrame = 0.5f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::LaserStart),1);
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::LaserEnd),1);
 	}
 }
 

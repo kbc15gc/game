@@ -12,6 +12,8 @@ class BossGhost :
 public:
 	enum class BossGhostState { BossGhostPairAttack = static_cast<int>(State::Death) + 1};
 
+	enum PairAttackType{Combo = 0,Laser,Max};
+
 private:
 	// ボス(歩行型ドラゴン)のアニメーション番号。
 	enum class AnimationBossGhost {
@@ -29,11 +31,36 @@ public:
 
 	// アニメーションイベント関連。
 	void CreateCollision();
+	void LaserStartSingle();
+	void LaserEndSingle();
+	void LaserStart();
+	void LaserEnd();
+
+
+	static void SelectPairAttack() {
+		_selectNowPairAttack = static_cast<PairAttackType>(rand() % PairAttackType::Max);
+	}
 
 	inline void SetIsCommand(bool flg) {
 		_isCommand = flg;
 	}
 
+	inline void SetPairGhost(BossGhost* ghost) {
+		_pairGhost = ghost;
+	}
+
+	inline void SetIntervalStartPairAttack(float time) {
+		_intervalStartPairAttack = time;
+	}
+
+	// 共同攻撃の準備完了か。
+	inline bool GetIsPairAttackReady()const {
+		return _isPairAttackReady;
+	}
+
+	inline EnemyAttack* GetNowPairAttack() {
+		return _pairAttackArray[_selectNowPairAttack];
+	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -88,6 +115,16 @@ private:
 private:
 	State _saveState;
 	unique_ptr<GhostComboAttack> _comboAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
-	unique_ptr<EnemyBreathAttack> _breathAttack;
+	unique_ptr<GhostComboAttack> _laserComboAttack;
+	unique_ptr<EnemySingleAttack> _singleAttack;
+	unique_ptr<EnemyBreathAttack> _singleLaser;
+
 	bool _isCommand = false;
+
+	float _intervalStartPairAttack;
+	bool _isPairAttackReady = false;	// ペア攻撃の準備完了か。
+	BossGhost* _pairGhost = nullptr;	// 相方。
+
+	static PairAttackType _selectNowPairAttack;	// 現在のペア攻撃が何か。
+	vector<EnemyAttack*> _pairAttackArray;
 };

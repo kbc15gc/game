@@ -123,6 +123,10 @@ void EnemyCharacter::Update() {
 			_EndNowStateCallback(work);
 		}
 	}
+	else {
+		// 何もしないステートに入っているので常にステート終了コールバックを呼ぶ。
+		_EndNowStateCallback(State::None);
+	}
 
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
