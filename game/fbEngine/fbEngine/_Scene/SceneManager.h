@@ -141,6 +141,4 @@ private:
 	//Ÿ‚ÌƒV[ƒ“
 	int _NextScene;
 
-public:
-	int hoge;
 };

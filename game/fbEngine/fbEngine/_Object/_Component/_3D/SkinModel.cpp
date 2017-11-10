@@ -19,6 +19,7 @@ namespace
 	bool g_ShadowRender = false;
 	/** 環境マップ描画フラグ. */
 	bool g_EnvironmentRender = false;
+
 }
 
 void CopyWorldMatrixToVertexBuffer(IDirect3DVertexBuffer9* buffer, vector<D3DXMATRIX*> stack);
@@ -147,12 +148,6 @@ void SkinModel::Render()
 		//開始。
 		_ModelDate->EndInstancing();
 	}
-
-	if (!_Culling->IsCulling() && hoge)
-	{
-		INSTANCE(SceneManager)->hoge++;
-	}
-
 }
 
 /**
@@ -356,6 +351,37 @@ void SkinModel::DrawMeshContainer(
 		//}
 
 		_Effect->SetFloat("g_Alpha", _Alpha);
+
+		D3DXVECTOR4 ditherParam = D3DXVECTOR4(0, 0, 0, 0);
+		if ((_ModelEffect & ModelEffectE::DITHERING) > 0)
+		{
+			//掛かりきる最低値.
+			const float MinLen = 1.5f;
+			//掛かり始める最高値.
+			const float MaxLen = 4.5f;
+
+			//カメラから座標へのベクトル.
+			Vector3 CameraToPos = gameObject->transform->GetPosition() - campos;
+			float CameraToPosLen = CameraToPos.Length();
+
+			CameraToPosLen -= MinLen;
+			//最低値~最高値にクランプ.
+			CameraToPosLen = min(MaxLen - MinLen, CameraToPosLen);
+			CameraToPosLen - max(0.0f, CameraToPosLen);
+			//正規化.
+			CameraToPosLen /= (MaxLen - MinLen);
+
+			// ディザ係数.
+			// 0 ~ 64.
+			// ディザ係数よりも大きい値のところが残る.
+			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
+
+			//フラグを設定.
+			ditherParam.x = 1.0f;
+		}
+		ditherParam.z = g_WindowSize.x;
+		ditherParam.w = g_WindowSize.y;
+		_Effect->SetVector("g_DitherParam", &ditherParam);
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
@@ -628,7 +654,7 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	}
 
 	//テクニック設定
-	if (!hoge)
+	if (!_IsTree)
 	{
 		_Effect->SetTechnique("Shadow");
 	}
