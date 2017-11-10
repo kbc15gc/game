@@ -72,19 +72,18 @@ void PlayerCamera::Start()
 
 void PlayerCamera::UpdateSubClass()
 {
-	float Pint = 3.0f;
+	float Pint = 4.0f;
 
 	//—ðŽj‘‚ðŒ©‚Ä‚¢‚é‚©‚Ç‚¤‚©B
 	if (_IsMove)
 	{
 		_StandardBehavior();
-		Pint = 3.0f;
 	}
 	else
 	{
 		Vector3 CameraToHistory;
 		CameraToHistory.Subtract(_HistoryBook->transform->GetPosition(), transform->GetPosition());
-		Pint = min(3.0f, CameraToHistory.Length());
+		Pint = min(Pint, CameraToHistory.Length());
 	}
 
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(Pint * 1000);
