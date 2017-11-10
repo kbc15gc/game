@@ -20,6 +20,9 @@ public:
 	inline void SetStartAttackInterval(float time) {
 		_startAttackInterval = time;
 	}
+	inline bool GetIsStartAttackAlready()const{
+		return _isStartAttackAlready;
+	}
 private:
 	void _EntrySubClass()override;
 

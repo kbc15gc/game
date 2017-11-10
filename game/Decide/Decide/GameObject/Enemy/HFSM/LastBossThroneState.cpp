@@ -25,6 +25,7 @@ void LastBossThroneState::_EntrySubClass() {
 
 	// 側近召喚。
 	float dir = 1.0f;
+	float startAttackOffset = 1.0f;	// 共同攻撃開始タイミングをずらす処理。
 	for (int idx = 0; idx < _entourageNum; idx++) {
 		_entourageEnemys.push_back(INSTANCE(GameObjectManager)->AddNew<BossGhost>("_entourageEnemy", 1));
 		vector<BarColor> color;
@@ -42,8 +43,20 @@ void LastBossThroneState::_EntrySubClass() {
 
 		_entourageEnemys[idx]->SetParamAll(color, param);
 		_entourageEnemys[idx]->transform->SetPosition(_EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir));
+		_entourageEnemys[idx]->SetIntervalStartPairAttack(startAttackOffset);
+		startAttackOffset += 0.97f;
+		if (idx >= 1) {
+			// 側近を二体とも生成した。
+
+			// お互いをペアとして登録。
+			_entourageEnemys[idx]->SetPairGhost(_entourageEnemys[idx - 1]);
+			_entourageEnemys[idx - 1]->SetPairGhost(_entourageEnemys[idx]);
+		}
 		dir *= -1.0f;
 	}
+
+	_isCommand = false;
+	_timeCounter = 0.0f;
 }
 
 void LastBossThroneState::_Start() {
@@ -57,50 +70,42 @@ void LastBossThroneState::_UpdateSubClass() {
 		_EnemyObject->ChangeStateRequest(_EnemyObject->GetInitState());
 	}
 
-	// 一定時間と確率で挑発とプレイヤーへのデバフ、側近へのバフと攻撃命令を行う。
-
 	// 側近が二体とも倒されればステート終了。
 	bool isEnd = true;	
 	int endWarpNum = 0;	// 攻撃開始の準備が完了している側近の数。
 	for (auto itr = _entourageEnemys.begin(); itr != _entourageEnemys.end();) {
 		if ((*itr)->GetNowState() && (*itr)->GetNowStateIndex() == EnemyCharacter::State::Death) {
+			for (auto entourage : _entourageEnemys) {
+				// お互いのペア関係を解除。
+				entourage->SetPairGhost(nullptr);
+			}
 			itr = _entourageEnemys.erase(itr);
 		}
 		else {
-
-			if (_entourageEnemys.size() == _entourageNum) {
-				// 側近が一体も減っていない。
-
-				if (static_cast<int>((*itr)->GetNowStateIndex()) == static_cast<int>(BossGhost::BossGhostState::BossGhostPairAttack)) {
-					// 共同攻撃状態。
-					if (static_cast<GhostPairAttackState*>((*itr)->GetNowState())->GetIsEndWarp()) {
-						// 今参照している側近の攻撃開始準備が完了している。
-						endWarpNum++;
-
-						if (endWarpNum >= _entourageNum) {
-							// すべての側近の攻撃準備が完了した。
-
-							float startAttackOffset = 1.0f;	// 攻撃開始タイミングをずらす処理。
-							for (auto enemy : _entourageEnemys) {
-								// 側近に攻撃を開始させる。
-
-								static_cast<GhostPairAttackState*>(enemy->GetNowState())->SetIsStartAttack(true);
-								static_cast<GhostPairAttackState*>(enemy->GetNowState())->SetStartAttackInterval(startAttackOffset);
-								startAttackOffset += 1.0f;
-							}
-						}
-					}
-				}
-
-				// 暫定処理。
-				// ※そのうち確率か経過時間制にする。
-				{
-					static_cast<BossGhost*>(*itr)->SetIsCommand(true); 
-				}
-			}
-
 			isEnd = false;
 			itr++;
+		}
+	}
+
+	_timeCounter += Time::DeltaTime();
+
+	// 一定時間と確率で挑発とプレイヤーへのデバフ、側近へのバフと攻撃命令を行う。
+	if (_timeCounter >= _interval) {
+		//int rnd = rand() % 2;
+		//if (rnd == 0) {
+		_isCommand = true;
+		//}
+		_timeCounter = 0.0f;
+	}
+
+	if (_isCommand) {
+		if (_entourageEnemys.size() == _entourageNum) {
+			// 側近が一体も減っていない。
+			for (auto enemy : _entourageEnemys) {
+				enemy->SetIsCommand(true);
+			}
+			BossGhost::SelectPairAttack();
+			_isCommand = false;
 		}
 	}
 

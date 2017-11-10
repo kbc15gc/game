@@ -15,7 +15,11 @@ GhostPairAttackState::~GhostPairAttackState()
 }
 
 void GhostPairAttackState::_EntrySubClass() {
-
+	_EnemyObject->ConfigDamageReaction(false);
+	_isEndWarp = false;
+	_isStartAttackAlready = false;
+	_counter = 0.0f;
+	_isStartAttack = false;
 }
 
 void GhostPairAttackState::_Start() {
@@ -23,12 +27,6 @@ void GhostPairAttackState::_Start() {
 	// ※エネミーの攻撃パターンを選別するステートを作ってしまうと、
 	//   エネミーの種類に応じてステートが爆発的に増えてしまうため、攻撃パターンの選別は各自エネミーに行わせる。
 	_EnemyObject->AttackSelect();
-
-	_EnemyObject->ConfigDamageReaction(false);
-	_isEndWarp = false;
-	_isStartAttackAlready = false;
-	_counter = 0.0f;
-	_isStartAttack = false;
 
 	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle,0.2f);
 }
