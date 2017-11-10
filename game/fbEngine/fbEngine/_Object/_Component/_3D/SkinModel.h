@@ -163,6 +163,20 @@ public:
 		SetModelEffect(ModelEffectE::DITHERING, true);
 	}
 
+	/**
+	* ディザ係数を設定する.
+	* 0~65の値を入れる.
+	* 0を入れると消えない.
+	* 値が大きくなるほど消えていく.
+	* モデルエフェクトの方も設定しないと意味ないよ？
+	* 
+	* 大川これだよ。これこれ。これですってば。
+	*/
+	void SetDitherCoefficient(float value)
+	{
+		_DitherCoefficient = value;
+	}
+
 private:
 	//子とか兄弟も一括で描画するための再帰関数
 	void DrawFrame(LPD3DXFRAME pFrame);
@@ -214,4 +228,8 @@ private:
 
 	/** 木. */
 	bool _IsTree = false;
+
+	/** ディザ係数. */
+	float _DitherCoefficient = 0;
+
 };

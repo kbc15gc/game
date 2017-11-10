@@ -376,6 +376,11 @@ void SkinModel::DrawMeshContainer(
 			// ディザ係数よりも大きい値のところが残る.
 			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
 
+			if (ditherParam.y < _DitherCoefficient)
+			{
+				ditherParam.y = _DitherCoefficient;
+			}
+
 			//フラグを設定.
 			ditherParam.x = 1.0f;
 		}
