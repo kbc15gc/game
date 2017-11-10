@@ -237,9 +237,9 @@ void Player::Start()
 	ChangeState(State::Idol);
 
 	//@todo for debug
-//#define Start1
+#define Start1
 //#define Start2
-#define Start3
+//#define Start3
 #ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 #elif defined(Start2)
