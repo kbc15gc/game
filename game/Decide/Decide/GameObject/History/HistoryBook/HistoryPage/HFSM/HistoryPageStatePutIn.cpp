@@ -36,7 +36,7 @@ void HistoryPageStatePutIn::Update()
 
 	pos.Add(movePos, initPos);
 	
-	_HistoryPage->transform->SetPosition(pos);
+	_HistoryPage->transform->SetLocalPosition(pos);
 
 	if (_LerpRate >= 1.0f)
 	{

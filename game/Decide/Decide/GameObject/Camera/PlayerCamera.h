@@ -37,7 +37,7 @@ private:
 	void _StandardBehavior();
 
 	//プレイヤーの方向を向く。
-	void _LookAtPlayer();
+	void _LookAtTarget();
 
 	//カメラをY軸に回転(横)。
 	void _RotateHorizon(float roty);

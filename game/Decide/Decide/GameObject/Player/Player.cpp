@@ -67,11 +67,12 @@ void Player::Awake()
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
 	_Anim = AddComponent<Animation>();
+
 	//カプセルコライダー
 	CCapsuleCollider* coll = AddComponent<CCapsuleCollider>();
-
 	//キャラクターコントローラー
 	_CharacterController = AddComponent<CCharacterController>();
+	
 	//キャラクターパラメーター
 	_PlayerParam = AddComponent<CharacterParameter>();
 	//回転コンポーネント
@@ -97,6 +98,7 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, true);
 	_Model->SetModelEffect(ModelEffectE::LIMLIGHT, true);
 	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
+	_Model->SetModelEffect(ModelEffectE::DITHERING, true);
 	//_Model->SetAllBlend(Color::white * 13);
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
@@ -235,9 +237,9 @@ void Player::Start()
 	ChangeState(State::Idol);
 
 	//@todo for debug
-#define Start1
+//#define Start1
 //#define Start2
-//#define Start3
+#define Start3
 #ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 #elif defined(Start2)

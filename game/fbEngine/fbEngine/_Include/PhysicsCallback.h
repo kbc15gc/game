@@ -52,6 +52,21 @@ namespace fbPhysicsCallback
 		}
 	};
 
+	struct ContactPairTestCallBack : public btCollisionWorld::ContactResultCallback
+	{
+	public:
+		ContactPairTestCallBack():isHit(false){}
+
+		//衝突された時の関数
+		virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1) override
+		{
+			isHit = true;
+			return 0.0f;
+		}
+	public:
+		bool isHit;
+	};
+
 	//ヒットした中で最も近いものを返すコールバック
 	struct ClosestContactResultCallback : public btCollisionWorld::ContactResultCallback
 	{

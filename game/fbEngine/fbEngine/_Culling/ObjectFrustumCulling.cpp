@@ -7,13 +7,14 @@
 
 CObjectFrustumCulling::CObjectFrustumCulling()
 {
+	
 }
 
 CObjectFrustumCulling::~CObjectFrustumCulling()
 {
 }
 
-void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world)
+void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world, const Vector3& sca)
 {
 	if (_Camera != nullptr) {
 		//ビュープロジェクション行列作成。
@@ -68,8 +69,8 @@ void CObjectFrustumCulling::Execute(const AABB & aabb, const D3DXMATRIX& world)
 	
 		AABB2D obj, screen;
 		obj.SetUpVertex(ru, ld);
-		screen.SetUpVertex(Vector2(1, -1), Vector2(-1, 1));
-		//AABBの衝突判定。
+		screen.SetUpVertex(Vector2(1, 1), Vector2(-1, -1));
+		//2DのAABBの衝突判定。
 		if (screen.IsHit(obj))
 		{
 			SetCullingFlag(false);

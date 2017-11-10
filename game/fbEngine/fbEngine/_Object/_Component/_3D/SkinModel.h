@@ -20,6 +20,7 @@ enum ModelEffectE
 	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
 	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
 	ALPHA = BIT(8),				//!< アルファ.
+	DITHERING = BIT(9),			//!< ディザリング.
 };
 
 /**
@@ -158,7 +159,8 @@ public:
 
 	void SetTree()
 	{
-		hoge = true;
+		_IsTree = true;
+		SetModelEffect(ModelEffectE::DITHERING, true);
 	}
 
 private:
@@ -210,5 +212,6 @@ private:
 	/** アルファの閾値. */
 	float _Alpha = 0.0f;
 
-	bool hoge = false;
+	/** 木. */
+	bool _IsTree = false;
 };

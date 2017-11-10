@@ -86,4 +86,5 @@ void ShopS_Select::ExitState()
 
 void ShopS_Select::DiveState()
 {
+	_SelectWindow->SetActive(false, true);
 }

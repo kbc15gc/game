@@ -15,6 +15,9 @@ void HistoryPageStateTakeOff::Entry()
 	_LerpRate = 0.0f;
 
 	_MoveSpeed = 2.0f;
+
+	_InitialPosition = _HistoryPage->transform->GetLocalPosition();
+	_MovePosition = _InitialPosition + Vector3(0, 0, 2);
 }
 
 /**
@@ -34,7 +37,7 @@ void HistoryPageStateTakeOff::Update()
 
 	pos.Add(movePos, initPos);
 
-	_HistoryPage->transform->SetPosition(pos);
+	_HistoryPage->transform->SetLocalPosition(pos);
 
 	if (lerpRate >= 1.0f)
 	{

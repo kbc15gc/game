@@ -299,6 +299,7 @@ public:
 		
 		btAssert(!fuzzyZero());
 
+
 #if defined(BT_USE_SSE_IN_API) && defined (BT_USE_SSE)		
         // dot product first
 		__m128 vd = _mm_mul_ps(mVec128, mVec128);

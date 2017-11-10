@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 2.0f;
+	const float CAMERA_SPEED = 1.5f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -72,19 +72,18 @@ void PlayerCamera::Start()
 
 void PlayerCamera::UpdateSubClass()
 {
-	float Pint = 3.0f;
+	float Pint = 4.0f;
 
 	//歴史書を見ているかどうか。
 	if (_IsMove)
 	{
 		_StandardBehavior();
-		Pint = 3.0f;
 	}
 	else
 	{
 		Vector3 CameraToHistory;
 		CameraToHistory.Subtract(_HistoryBook->transform->GetPosition(), transform->GetPosition());
-		Pint = min(3.0f, CameraToHistory.Length());
+		Pint = min(Pint, CameraToHistory.Length());
 	}
 
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(Pint * 1000);
@@ -102,6 +101,9 @@ Vector3 PlayerCamera::_GetPlayerPos()
 */
 void PlayerCamera::_StandardBehavior()
 {
+	//ターゲットを追いかける。
+	_LookAtTarget();
+
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
@@ -126,17 +128,21 @@ void PlayerCamera::_StandardBehavior()
 	//移動先ポジションを取得。
 	_DestinationPos = _ClosetRay();
 
-	//プレイヤーを見る。
-	_LookAtPlayer();
+	
 
 	//カメラを移動させる。
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, 50.0f, 12.0f, Time::DeltaTime()));
+	//transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, 100.0f, 12.0f, Time::DeltaTime()));
+	auto pos = transform->GetPosition();
+	pos.Lerp(_DestinationPos, 0.8f);
+	transform->SetPosition(pos);
 }
 
-void PlayerCamera::_LookAtPlayer()
+void PlayerCamera::_LookAtTarget()
 {
 	auto trg = _GetPlayerPos();
-	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, 80.0f, 12.0f, Time::DeltaTime());
+	static float spring = 85.0f;
+	static float damping = 12.0f;
+	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, spring, damping, Time::DeltaTime());
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
 }
@@ -154,9 +160,6 @@ void PlayerCamera::_RotateHorizon(float roty)
 	D3DXVECTOR4 v;
 	D3DXVec3Transform(&v, &(D3DXVECTOR3)_ToCameraDir, &rot);
 	_ToCameraDir = v;
-	auto nextPos = _GetPlayerPos() + (Vector3(v.x, v.y, v.z) * _Dist);
-	//transform->SetPosition(nextPos);
-	//_DestinationPos = nextPos;
 }
 
 void PlayerCamera::_RotateVertical(float rotx)
@@ -192,9 +195,6 @@ void PlayerCamera::_RotateVertical(float rotx)
 	if (notlimit)
 	{
 		_ToCameraDir = v;
-		auto nextPos = _GetPlayerPos() + (Vector3(v.x, v.y, v.z) * _Dist);
-		//transform->SetPosition(nextPos);
-		//_DestinationPos = nextPos;
 	}
 }
 

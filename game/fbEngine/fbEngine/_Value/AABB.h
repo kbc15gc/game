@@ -21,6 +21,11 @@ public:
 		//TK_ASSERT(vertNo < 8, "vertNo is invalid");
 		return _VertexPosition[vertNo];
 	}
+	//
+	const Vector3& GetHalfSize()const
+	{
+		return _HalfSize;
+	}
 private:
 	void CalcVertexPosition();
 private:

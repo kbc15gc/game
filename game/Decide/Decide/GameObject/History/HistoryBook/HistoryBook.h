@@ -107,6 +107,11 @@ public:
 		}
 	}
 
+	bool GetIsPlayAnim(AnimationCodeE code)
+	{
+		return _Anim->GetPlayAnimNo() == (int)code;
+	}
+
 	/**
 	* アニメーションの再生.
 	*
@@ -157,8 +162,8 @@ public:
 		page->SetHistoryBook(this);
 		_HistoryPageList[(int)code].push_back(page);
 
-		Vector3 pos = _CalcPagePosition(page);
-		page->Start(chipID, code, pos);
+		_CalcPagePosition();
+		page->Start(chipID, code);
 
 		return page;
 	}
@@ -181,6 +186,16 @@ public:
 		auto itr = find(_HistoryPageList[(int)loc].begin(), _HistoryPageList[(int)loc].end(), page);
 		if (itr != _HistoryPageList[(int)loc].end())
 		{
+			float angle = (*itr)->GetAngle();
+			if (angle > 0.0f)
+			{
+				angle -= 0.1f;
+			}
+			else if(angle < 0.0f)
+			{
+				angle += 0.1f;
+			}
+			(*itr)->Rotation(angle);
 			(*itr)->ChangeState(HistoryPage::StateCodeE::PutOut);
 			_HistoryPageList[(int)loc].erase(itr);
 		}
@@ -256,7 +271,7 @@ private:
 	/**
 	* ページの座標を計算する.
 	*/
-	Vector3& _CalcPagePosition(HistoryPage* page)
+	void _CalcPagePosition()
 	{
 		vector<HistoryPage*> pageList;
 		for (auto& loc : _HistoryPageList)
@@ -270,16 +285,14 @@ private:
 		int size = pageList.size();
 		for (int i = 0; i < size; i++)
 		{
-			if (page == pageList[i])
-			{
-				//位置.
-				int pos = i - size / 2;
-				Vector3 posVec = Vector3(-0.01f * pos, 0.0f, 0.2f - 0.01f * i);
-				return posVec;
-			}
+			int posX = i - size / 2;
+			Vector3 pos = Vector3(-0.01f * posX, 0.0f, (0.2f - 0.01f * i));
+
+			//位置.
+			pageList[i]->transform->SetLocalPosition(pos);
+			pageList[i]->SetInitPos(pos);
 		}
-		
-		FB_ASSERT(false, "ページ登録されてねぇぞ.");
+
 	}
 
 
