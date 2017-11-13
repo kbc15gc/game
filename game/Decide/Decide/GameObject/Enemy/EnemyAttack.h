@@ -26,7 +26,7 @@ public:
 	//			アニメーション再生速度(1.0より大きい値で再生速度が速くなり、小さい値で遅くなる、デフォルトは1.0)。
 	//			アニメーションループ再生数(1でループなし、-1で無限ループ)。
 	//			使用するアニメーションイベント番号(指定した番号のイベントリストに登録されたイベントが呼び出される、デフォルトは0)。
-	void Init(float attackRange, int animType = -1, float interpolate = 0.0f,float playSpeed = 1.0f, int animLoopNum = 1, int playEventNo = 0);
+	virtual void Init(float attackRange, int animType = -1, float interpolate = 0.0f,float playSpeed = 1.0f, int animLoopNum = 1, int playEventNo = 0);
 	virtual void Entry();	// 攻撃ステートの最初の更新前に一度だけ呼ばれる処理。
 	virtual bool Update() = 0;	// 攻撃ステートの更新処理で呼び出される処理(戻り値は終了したか)。
 	virtual void Exit() = 0;	// 攻撃ステート終了時に呼び出される処理。
@@ -136,9 +136,17 @@ private:
 public:
 	GhostComboAttack(EnemyCharacter* object) :EnemyAttack(object) {
 		_player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
-		_oneCombo.reset(new EnemySingleAttack(object));
 	}
-	~GhostComboAttack() {};
+	~GhostComboAttack() {
+	};
+
+	// 連続攻撃の初期化関数。
+	// 引数：	攻撃可能範囲(ここでは攻撃開始可能範囲)。
+	//			攻撃一回を定義したクラスのポインタ(Init関数を呼んだ後のものを渡す)。
+	void Init(float attackRange,EnemyAttack* oneAttack) {
+		_AttackRange = attackRange;
+		_oneCombo.reset(oneAttack);
+	}
 
 	void Entry()override;
 
@@ -148,9 +156,20 @@ public:
 		_enemyObject->SetAlpha(1.0f);
 	}
 
+
+	inline EnemyAttack* GetOneAttack() {
+		return _oneCombo.get();
+	}
+private:
+
+	void Init(float attackRange, int animType = -1, float interpolate = 0.0f, float playSpeed = 1.0f, int animLoopNum = 1, int playEventNo = 0)override {
+		//EnemyAttack::Init(attackRange, animType, interpolate, playSpeed, animLoopNum, playEventNo);
+	}
+
+
 private:
 	Player* _player = nullptr;
-	unique_ptr<EnemySingleAttack> _oneCombo;
+	unique_ptr<EnemyAttack> _oneCombo;
 	int _attackNum = 4;
 	int _comboCount;
 	WarpState _nowWarpState;

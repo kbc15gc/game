@@ -19,6 +19,7 @@ namespace
 	bool g_ShadowRender = false;
 	/** 環境マップ描画フラグ. */
 	bool g_EnvironmentRender = false;
+
 }
 
 void CopyWorldMatrixToVertexBuffer(IDirect3DVertexBuffer9* buffer, vector<D3DXMATRIX*> stack);
@@ -112,7 +113,7 @@ void SkinModel::LateUpdate()
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{
 			_ModelDate->UpdateAABB();
-			_Culling->Execute(_ModelDate->GetAABB(), wolrd);
+			_Culling->Execute(_ModelDate->GetAABB(), wolrd, transform->GetScale());
 		}
 	}
 }
@@ -147,12 +148,6 @@ void SkinModel::Render()
 		//開始。
 		_ModelDate->EndInstancing();
 	}
-
-	if (!_Culling->IsCulling() && hoge)
-	{
-		INSTANCE(SceneManager)->hoge++;
-	}
-
 }
 
 /**
@@ -356,6 +351,64 @@ void SkinModel::DrawMeshContainer(
 		//}
 
 		_Effect->SetFloat("g_Alpha", _Alpha);
+
+		D3DXVECTOR4 ditherParam = D3DXVECTOR4(0, 0, 0, 0);
+		if ((_ModelEffect & ModelEffectE::DITHERING) > 0)
+		{
+			//掛かりきる最低値.
+			const float MinLen = 1.5f;
+			//掛かり始める最高値.
+			const float MaxLen = 4.5f;
+
+			//カメラから座標へのベクトル.
+			Vector3 CameraToPos = gameObject->transform->GetPosition() - campos;
+			float CameraToPosLen = CameraToPos.Length();
+
+			CameraToPosLen -= MinLen;
+			//最低値~最高値にクランプ.
+			CameraToPosLen = min(MaxLen - MinLen, CameraToPosLen);
+			CameraToPosLen - max(0.0f, CameraToPosLen);
+			//正規化.
+			CameraToPosLen /= (MaxLen - MinLen);
+
+			// ディザ係数.
+			// 0 ~ 64.
+			// ディザ係数よりも大きい値のところが残る.
+			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
+
+			if (ditherParam.y < _DitherCoefficient)
+			{
+				ditherParam.y = _DitherCoefficient;
+			}
+
+			//フラグを設定.
+			ditherParam.x = 1.0f;
+		}
+		ditherParam.z = g_WindowSize.x;
+		ditherParam.w = g_WindowSize.y;
+		_Effect->SetVector("g_DitherParam", &ditherParam);
+
+		Vector4 fogParam = Vector4(1, 1, 1, 1);
+		if (_FogFunc == FogFunc::FogFuncDist)
+		{
+			//距離フォグ
+			fogParam.x = _FogParam[0];
+			fogParam.y = _FogParam[1];
+			fogParam.z = 1.0f;
+		}
+		else if (_FogFunc == FogFunc::FogFuncHeight)
+		{
+			//高さフォグ
+			fogParam.x = _FogParam[0];
+			fogParam.y = _FogParam[1];
+			fogParam.z = 2.0f;
+		}
+		else
+		{
+			fogParam.z = 0.0f;
+		}
+		_Effect->SetVector("g_fogParam", (D3DXVECTOR4*)&fogParam);
+		_Effect->SetVector("g_fogColor", (D3DXVECTOR4*)&_FogColor);
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
@@ -628,7 +681,7 @@ void SkinModel::CreateShadow(D3DXMESHCONTAINER_DERIVED * pMeshContainer, D3DXFRA
 	}
 
 	//テクニック設定
-	if (!hoge)
+	if (!_IsTree)
 	{
 		_Effect->SetTechnique("Shadow");
 	}

@@ -77,7 +77,7 @@ void DepthofField::Render()
 		float backDof = (CoC * _F * _Pint * _Pint) / (_FocalLength * _FocalLength - CoC * _F * _Pint);
 		if (backDof < 0.0f)
 		{
-			backDof = 10000.0f;
+			return;
 		}
 		//手前ボケ、奥ボケ、ピントをm単位に変更してGPUに送る
 		float dofParam[] = {

@@ -20,6 +20,7 @@ enum ModelEffectE
 	CAST_ENVIRONMENT = BIT(6),	//環境マップを作る.
 	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
 	ALPHA = BIT(8),				//!< アルファ.
+	DITHERING = BIT(9),			//!< ディザリング.
 };
 
 /**
@@ -31,6 +32,16 @@ enum AtmosphereFunc
 	enAtomosphereFuncObjectFromAtomosphere,	//オブジェクトを大気圏から見た場合の大気錯乱シミュレーション。
 	enAtomosphereFuncSkyFromAtomosphere,	//空を大気圏から見た場合の大気錯乱シミュレーション。
 	enAtomosphereFuncNum,
+};
+
+/**
+* フォグパラメータ.
+*/
+enum class FogFunc
+{
+	FogFuncNone,	// フォグなし.
+	FogFuncDist,	// 距離フォグ.
+	FogFuncHeight,	// 高さフォグ.
 };
 
 //モデルの描画を行うクラス
@@ -158,7 +169,39 @@ public:
 
 	void SetTree()
 	{
-		hoge = true;
+		_IsTree = true;
+		SetModelEffect(ModelEffectE::DITHERING, true);
+	}
+
+	/**
+	* ディザ係数を設定する.
+	* 0~65の値を入れる.
+	* 0を入れると消えない.
+	* 値が大きくなるほど消えていく.
+	* モデルエフェクトの方も設定しないと意味ないよ？
+	* 
+	* 大川これだよ。これこれ。これですってば。
+	*/
+	void SetDitherCoefficient(float value)
+	{
+		_DitherCoefficient = value;
+	}
+
+	/**
+	* フォグパラメータを設定.
+	*
+	* @param fogfunc フォグの種類.
+	* @param idx0    フォグがかかり始める距離.
+	* @param idx1    フォグがかかりきる距離.
+	* @param color	　フォグの色
+	*/
+	void SetFogParam(FogFunc fogFunc, float idx0, float idx1, const Vector4& color, bool isNight = false)
+	{
+		_FogFunc = fogFunc;
+		_FogParam[0] = idx0;
+		_FogParam[1] = idx1;
+		_FogParam[3] = isNight;
+		_FogColor = color;
 	}
 
 private:
@@ -210,5 +253,17 @@ private:
 	/** アルファの閾値. */
 	float _Alpha = 0.0f;
 
-	bool hoge = false;
+	/** 木. */
+	bool _IsTree = false;
+
+	/** ディザ係数. */
+	float _DitherCoefficient = 0;
+
+	/** フォグの種類. */
+	FogFunc _FogFunc = FogFunc::FogFuncNone;
+	/** フォグのパラメータ. */
+	float _FogParam[2];
+	/** フォグの色. */
+	Vector4 _FogColor = Vector4(0, 0, 0, 1);
+
 };

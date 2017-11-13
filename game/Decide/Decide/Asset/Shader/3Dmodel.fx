@@ -180,6 +180,24 @@ struct PSOutput
  */
 PSOutput PSMain(VS_OUTPUT In)
 {
+	if (g_DitherParam.x > 0.0f)
+	{
+		float2 f2TextureUV = 0.0f;
+		f2TextureUV.x = In._WVP.x / In._WVP.w;
+		f2TextureUV.y = In._WVP.y / In._WVP.w;
+
+		f2TextureUV.x *= 0.5;
+		f2TextureUV.y *= -0.5;
+		f2TextureUV += 0.5;
+
+		f2TextureUV.x *= g_DitherParam.z / 5;
+		f2TextureUV.y *= g_DitherParam.w / 5;
+
+		int2 uv = fmod(f2TextureUV, DP_SIZE);
+
+		clip(g_DitherPattern[uv.x][uv.y] - g_DitherParam.y);
+	}
+
     float4 diff = 0.0f; //メッシュのマテリアル
 	//カラー
     if (Texflg)
@@ -191,6 +209,8 @@ PSOutput PSMain(VS_OUTPUT In)
         diff = g_diffuseMaterial;
     }
     diff *= g_blendcolor;
+
+	clip(diff.a - g_Alpha);
 
     float4 color = diff; //最終的に出力するカラー
 
@@ -238,7 +258,8 @@ PSOutput PSMain(VS_OUTPUT In)
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
 
-    clip(diff.a - g_Alpha);
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
 
     PSOutput Out = (PSOutput) 0;
 
@@ -476,6 +497,9 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	
     //アンビエントライトを加算。
     color.rgb += diffuseColor.rgb * ambient;
+
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
 
 	PSOutput Out = (PSOutput)0;
 

@@ -30,6 +30,29 @@ sampler_state
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
 float4 g_EffectFlg;	//xは投影、yはスペキュラ
 
+
+#define DP_SIZE 8
+
+// ディザパターン.
+const float g_DitherPattern[DP_SIZE][DP_SIZE] =
+{
+	{ 1, 33, 9, 41, 3, 35, 11, 43 },
+	{ 49, 17, 57, 25, 51, 19, 59, 27 } ,
+	{ 13, 45, 5, 37, 15, 47, 7, 39 },
+	{ 61, 29, 53, 21, 63, 31, 55, 23 } ,
+	{ 4, 36, 12, 44, 2, 34, 10, 42 },
+	{ 52, 20, 60, 28, 50, 18, 58, 26 } ,
+	{ 16, 48, 8, 40, 14, 46, 6, 33 },
+	{ 64, 32, 56, 24, 62, 30, 54, 22 },
+};
+
+/**
+* ディザリングパラメータ
+* x : フラグ.
+* y : ディザ係数.
+*/
+float4 g_DitherParam;
+
 int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。
 float4	g_diffuseLightColor[NUM_DIFFUSE_LIGHT];		//ディフューズライトのカラー。
@@ -261,6 +284,44 @@ float CalcLuminance( float3 color )
 		luminance = 0.0f;
 	}
 	return luminance;
+}
+
+// フォグパラメータ 
+// x:フォグがかかり始める距離.
+// y:フォグがかかりきる距離.
+// z:フォグの種類.
+float4 g_fogParam;
+// フォグの色.
+float4 g_fogColor;
+
+/**
+* フォグを計算.
+*/
+float3 CalcFog(float3 worldPos, float3 color)
+{
+	float3 retColor = color;
+	float night = 1.0f;
+	if(g_fogParam.w)
+	{
+		night = dot(g_atmosParam.v3LightDirection, float3(0.0f, -1.0f, 0.0f));
+		night = max(0.0f, min(1.0f, night + 0.2f));
+	}
+	if (g_fogParam.z > 1.9f)
+	{
+		//高さフォグ.
+		float h = max(0.0f, worldPos.y - g_fogParam.y);
+		float t = min(1.0f, h / g_fogParam.x);
+		retColor = lerp(g_fogColor.xyz, color.xyz, t * night);
+	}
+	else if (g_fogParam.z > 0.0f)
+	{
+		//距離フォグ.
+		float z = length(worldPos - g_cameraPos);
+		z = max(0.0f, z - g_fogParam.x);
+		float t = z / g_fogParam.y;
+		retColor = lerp(color, g_fogColor.xyz, t * night);
+	}
+	return retColor;
 }
 
 // The scale equation calculated by Vernier's Graphical Analysis

@@ -147,6 +147,26 @@ struct PSOutput
  */
 PSOutput PSMain( VS_OUTPUT In )
 {
+
+	if (g_DitherParam.x > 0.0f)
+	{
+		float2 f2TextureUV = 0.0f;
+		f2TextureUV.x = In._WVP.x / In._WVP.w;
+		f2TextureUV.y = In._WVP.y / In._WVP.w;
+
+		f2TextureUV.x *= 0.5;
+		f2TextureUV.y *= -0.5;
+		f2TextureUV += 0.5;
+
+		f2TextureUV.x *= g_DitherParam.z / 5;
+		f2TextureUV.y *= g_DitherParam.w / 5;
+
+		int2 uv = fmod(f2TextureUV, DP_SIZE);
+
+		clip(g_DitherPattern[uv.x][uv.y] - g_DitherParam.y);
+	}
+
+
 	float4 diff = (float4)0;	//メッシュのマテリアル
     
     float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
@@ -204,6 +224,9 @@ PSOutput PSMain( VS_OUTPUT In )
 
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
+
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
 
 	PSOutput Out = (PSOutput)0;
 
