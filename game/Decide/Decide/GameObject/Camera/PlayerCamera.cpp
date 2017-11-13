@@ -52,6 +52,7 @@ void PlayerCamera::Start()
 {
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
+	_PForward = &_Player->transform->GetForward();
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	{
@@ -125,10 +126,31 @@ void PlayerCamera::_StandardBehavior()
 		_RotateVertical(-CAMERA_SPEED * Time::DeltaTime());
 	}
 
-	//移動先ポジションを取得。
-	_DestinationPos = _ClosetRay();
+	//補正カメラ。
+	//_CameraSupport();
+
+	//カメラリセット。
+	if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
+	{
+		CameraReset();
+	}
+
+	if (_Reset) {
+		_Timer += Time::DeltaTime()*9.5f;
+		_Timer = min(_Timer, 1.0f);
+
+		auto dir = *_PForward * -1;
+		_ToCameraDir = Vector3::Lerp(tmp, dir, _Timer);
+
+		if (_Timer == 1.0f)
+		{
+			_Reset = false;
+		}
+	}
 
 	
+	//移動先ポジションを取得。
+	_DestinationPos = _ClosetRay();
 
 	//カメラを移動させる。
 	//transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, 100.0f, 12.0f, Time::DeltaTime()));
@@ -198,6 +220,16 @@ void PlayerCamera::_RotateVertical(float rotx)
 	}
 }
 
+void PlayerCamera::_CameraSupport()
+{
+	//カメラの方向とプレイヤーの方向の内積をとる。
+	auto dot = _PForward->Dot(_ToCameraDir);
+	/*if (dot < 0.7f)
+	{
+		CameraReset();
+	}*/
+}
+
 Vector3 PlayerCamera::_ClosetRay()
 {
 	//プレイヤーとカメラの距離
@@ -245,4 +277,14 @@ Vector3 PlayerCamera::_SpringChaseMove(const Vector3& now, const Vector3& target
 	//オイラー積分を使ってカメラの速度と位置を更新。
 	_Velocity += vSpringAccel * time * CAMERA_SPEED;
 	return now + (_Velocity * time);
+}
+
+void PlayerCamera::CameraReset()
+{
+	if (_Reset == false)
+	{
+		_Reset = true;
+		_Timer = 0.0f;
+		tmp = _ToCameraDir;
+	}
 }
