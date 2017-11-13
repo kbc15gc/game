@@ -154,7 +154,7 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 
 	float4 defColor = 0;
 	float3 color = float3(0, 151, 156) / 255;
-	defColor = float4(color, 0.3f);
+	defColor = float4(color, 0.45f);
 
 	//出力カラー.
 	float4 OutColor = defColor;
@@ -168,12 +168,11 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
     {
 		//ワールド空間での視線ベクトル.
         float3 worldViewVec = In.WorldPos.xyz - g_cameraPos.xyz;
-        float3 vReflect = reflect(worldViewVec, normal);
+        float3 vReflect = reflect(worldViewVec, float3(0.0f, 1.0f, 0.0f));
 		//環境マップのカラー.
-        float4 EnvironmentColor = texCUBE(g_EnvironmentMapSampler, vReflect);
-		
-        float R = 0.5f;
-        OutColor.xyz = lerp(EnvironmentColor.xyz, defColor.xyz, R);
+        float4 EnvironmentColor = texCUBE(g_EnvironmentMapSampler, vReflect)* 0.8f;
+        //float R = 0.5f;
+        OutColor.xyz = lerp(EnvironmentColor.xyz, defColor.xyz, 0.1f);
     }
 
 	float4 LightColor = DiffuseLight(normal);

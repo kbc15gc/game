@@ -92,7 +92,7 @@ void Bloom::Render()
 			(*graphicsDevice()).SetDepthStencilSurface(_LuminanceRT->depth);
 
 			//テクスチャのクリア
-			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
+			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
 			_Effect->SetTechnique("SamplingLuminance");
 
@@ -112,10 +112,6 @@ void Bloom::Render()
 			_Effect->End();
 
 		}//輝度抽出
-		D3DXVECTOR3 l, r;
-		l = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
-		r = D3DXVECTOR3(0.2125f, 0.7154f, 0.0721f);
-		float a = D3DXVec3Dot(&l, &r);
 
 		 //輝度をぼかす
 		{

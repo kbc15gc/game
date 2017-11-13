@@ -210,6 +210,8 @@ PSOutput PSMain(VS_OUTPUT In)
     }
     diff *= g_blendcolor;
 
+	clip(diff.a - g_Alpha);
+
     float4 color = diff; //最終的に出力するカラー
 
     float4 light = 0.0f;
@@ -256,7 +258,8 @@ PSOutput PSMain(VS_OUTPUT In)
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
 
-    clip(diff.a - g_Alpha);
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
 
     PSOutput Out = (PSOutput) 0;
 
@@ -494,6 +497,9 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	
     //アンビエントライトを加算。
     color.rgb += diffuseColor.rgb * ambient;
+
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
 
 	PSOutput Out = (PSOutput)0;
 

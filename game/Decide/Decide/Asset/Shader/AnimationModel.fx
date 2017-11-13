@@ -225,6 +225,9 @@ PSOutput PSMain( VS_OUTPUT In )
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
 
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
+
 	PSOutput Out = (PSOutput)0;
 
     Out.Color.xyz = color.xyz;
