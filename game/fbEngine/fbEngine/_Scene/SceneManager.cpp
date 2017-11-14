@@ -38,7 +38,7 @@ SceneManager::SceneManager():
 #else
 	_AntiAliasing.SetEnable(true);
 	_DepthofField.SetEnable(true);
-	_Bloom.SetEnable(false);
+	_Bloom.SetEnable(true);
 #endif
 
 	//アンチエイリアスの作成.
