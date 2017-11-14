@@ -200,7 +200,7 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 0.0f));
 	_CharaLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
 	
-	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 10.0f));
+	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 60.0f));
 	_CharaLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
