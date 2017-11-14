@@ -164,7 +164,7 @@ public class CSVExportFunction : Editor
         //ポジション
         string pos = Vector3ToString(coll.localPosition,true);
         //回転
-        string ang = QuaternionToString(coll.rotation);
+        string ang = QuaternionToString(coll.localRotation);
         //スケール
         string sca = Vector3ToString(coll.lossyScale);
         ExportCollision c = coll.gameObject.GetComponent<ExportCollision>();

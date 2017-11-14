@@ -114,7 +114,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 
 	//メッシュコライダーオブジェクトを生成
-	INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
+	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
