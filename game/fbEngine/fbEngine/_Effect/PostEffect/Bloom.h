@@ -46,14 +46,14 @@ public:
 	/**
 	* 輝度用レンダリングターゲットを取得.
 	*/
-	RenderTarget* GetLuminanceRT()
-	{
-		if (_IsEnable)
-		{
-			return _LuminanceRT;
-		}
-		return nullptr;
-	}
+	//RenderTarget* GetLuminanceRT()
+	//{
+	//	if (_IsEnable)
+	//	{
+	//		return _LuminanceRT;
+	//	}
+	//	return nullptr;
+	//}
 
 private:
 

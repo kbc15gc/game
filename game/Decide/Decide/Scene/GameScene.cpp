@@ -125,27 +125,27 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//g->SetParamAll(Color, param);
-
-	//@todo for debug
-	// テスト。
-	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
+	BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	g->SetParamAll(Color, param);
+
+	//@todo for debug
+	// テスト。
+	// ラスボス作成。
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
