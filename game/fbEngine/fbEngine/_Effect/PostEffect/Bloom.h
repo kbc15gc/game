@@ -46,14 +46,14 @@ public:
 	/**
 	* 輝度用レンダリングターゲットを取得.
 	*/
-	RenderTarget* GetLuminanceRT()
-	{
-		if (_IsEnable)
-		{
-			return _LuminanceRT;
-		}
-		return nullptr;
-	}
+	//RenderTarget* GetLuminanceRT()
+	//{
+	//	if (_IsEnable)
+	//	{
+	//		return _LuminanceRT;
+	//	}
+	//	return nullptr;
+	//}
 
 private:
 
@@ -81,6 +81,9 @@ private:
 	* 輝度用のレンダリングターゲット
 	*/
 	RenderTarget* _LuminanceRT;
+
+	/** 輝度カラー用のレンダリングターゲット. */
+	RenderTarget* _LuminanceColorRT = nullptr;
 
 	//ぼかし合成用のRT
 	RenderTarget* _CombineRT;

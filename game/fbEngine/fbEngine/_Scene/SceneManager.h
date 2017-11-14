@@ -112,6 +112,11 @@ public:
 		return _Sky;
 	}
 
+	Bloom& GetBloom()
+	{
+		return _Bloom;
+	}
+
 private:
 	//ƒV[ƒ“Ø‚è‘Ö‚¦B
 	void _ChangeScene();

@@ -173,6 +173,7 @@ struct PSOutput
 {
 	float4 Color : COLOR0;
 	float4 Depth : COLOR1;
+	float4 Luminance : COLOR2;
 };
 
 /*!
@@ -268,6 +269,10 @@ PSOutput PSMain(VS_OUTPUT In)
     float3 depth = In._World.w;
     Out.Depth = float4(depth, diff.a);
 
+	//‹P“x‚ðŒvŽZ.
+	float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, t - 1.0f);
+
     return Out;
 }
 
@@ -331,6 +336,10 @@ PSOutput PSSkySphere(VS_OUTPUT In)
     Out.Color = float4(OutColor.xyz, 1.0f);
     float3 depth = In._World.w;
     Out.Depth = float4(depth, 1.0f);
+
+	//‹P“x‚ðŒvŽZ.
+	float lum = dot(OutColor.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, lum - 1.0f);
 
     return Out;
 }
@@ -506,6 +515,10 @@ PSOutput PSTerrain(VS_OUTPUT In)
     Out.Color = color;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
+
+	//‹P“x‚ðŒvŽZ.
+	float lum = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, lum - 1.0f);
 
 	return Out;
 }

@@ -125,27 +125,27 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//g->SetParamAll(Color, param);
-
-	//@todo for debug
-	// テスト。
-	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
+	BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	g->SetParamAll(Color, param);
+
+	//@todo for debug
+	// テスト。
+	// ラスボス作成。
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -214,11 +214,11 @@ void GameScene::Start()
 	//チップを作成
 	_NewChip();
 
-	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	g_depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(0));
-	g_depth->SetPivot(Vector2(0, 0));
-	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	g_depth->SetActive(true);*/
+	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
+	//g_depth->SetPivot(Vector2(0, 0));
+	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	//g_depth->SetActive(true);
 }
 
 void GameScene::Update()

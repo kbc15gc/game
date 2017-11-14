@@ -140,6 +140,7 @@ struct PSOutput
 {
 	float4 Color : COLOR0;
 	float4 Depth : COLOR1;
+	float4 Luminance : COLOR2;
 };
 
 /*!
@@ -234,6 +235,10 @@ PSOutput PSMain( VS_OUTPUT In )
     Out.Color.w = diff.a;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
+
+	//‹P“x‚ðŒvŽZ.
+	float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, t - 1.0f);
 
 	return Out;
 }
