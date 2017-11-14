@@ -82,6 +82,9 @@ private:
 	*/
 	RenderTarget* _LuminanceRT;
 
+	/** 輝度カラー用のレンダリングターゲット. */
+	RenderTarget* _LuminanceColorRT = nullptr;
+
 	//ぼかし合成用のRT
 	RenderTarget* _CombineRT;
 

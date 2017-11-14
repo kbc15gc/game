@@ -50,6 +50,9 @@ void Bloom::Create()
 		_LuminanceRT = new RenderTarget();
 		_LuminanceRT->Create(size, D3DFMT_A16B16G16R16F);
 
+		//_LuminanceColorRT = new RenderTarget();
+		//_LuminanceColorRT->Create(size, D3DFMT_A16B16G16R16F);
+
 		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++)
 		{
 			//シフト量の計算

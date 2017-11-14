@@ -125,6 +125,7 @@ void SceneManager::DrawScene()
 	//0番目に設定(オフスクリーンレンダリング用)
 	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
 	(*graphicsDevice()).SetRenderTarget(1, _DepthofField.GetDepthRenderTarget()->buffer);
+	//(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
 	(*graphicsDevice()).Clear(
 		1,
 		NULL,
@@ -136,6 +137,7 @@ void SceneManager::DrawScene()
 	INSTANCE(GameObjectManager)->RenderObject();
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
+	//(*graphicsDevice()).SetRenderTarget(2, nullptr);
 
 	//ブルームの描画.
 	_Bloom.Render();
