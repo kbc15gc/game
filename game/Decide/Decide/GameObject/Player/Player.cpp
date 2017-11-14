@@ -236,10 +236,13 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 
+
+	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 	//@todo for debug
+#ifdef _DEBUG
 #define Start1
-//#define Start2
-//#define Start3
+	//#define Start2
+	//#define Start3
 #ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 #elif defined(Start2)
@@ -248,6 +251,8 @@ void Player::Start()
 	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
 #endif // Start1
+#endif
+
 
 	//ポジション
 	
