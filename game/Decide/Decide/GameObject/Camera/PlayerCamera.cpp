@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 2.0f;
+	const float CAMERA_SPEED = 2.5f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -159,8 +159,8 @@ void PlayerCamera::_StandardBehavior()
 	_DestinationPos = _ClosetRay();
 
 	//カメラを移動させる。
-	static float sp = 100.0f;
-	static float dp = 12.0f;
+	static float sp = 40.0f;
+	static float dp = 1.0f;
 	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime()));
 	/*auto pos = transform->GetPosition();
 	pos.Lerp(_DestinationPos, 0.8f);
