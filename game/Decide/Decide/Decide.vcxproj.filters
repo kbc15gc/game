@@ -343,6 +343,11 @@
     <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp">
       <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\BossGolem.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp" />
+    <ClCompile Include="GameObject\Enemy\CodeNameD.cpp">
+      <Filter>GameObject\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -703,6 +708,11 @@
     </ClInclude>
     <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h">
       <Filter>GameObject\MeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\BossGolem.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h" />
+    <ClInclude Include="GameObject\Enemy\CodeNameD.h">
+      <Filter>GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
