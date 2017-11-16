@@ -43,7 +43,7 @@ public:
 
 	// 自分がどの種類のエネミーか。
 	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
-	enum class EnemyType{Born = 0,BossDrarian,Drarian, Golem,Soldier};
+	enum class EnemyType{Born = 0,BossDrarian,Drarian,Golem,BossGolem,Soldier};
 
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
