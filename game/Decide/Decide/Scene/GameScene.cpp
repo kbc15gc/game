@@ -125,6 +125,8 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
+	//@todo for debug
+	//邪魔なので消します。
 	/*BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
