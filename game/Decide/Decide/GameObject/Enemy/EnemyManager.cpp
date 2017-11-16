@@ -9,6 +9,7 @@
 #include "EnemyGolem.h"
 #include "EnemySoldier.h"
 #include "BossGolem.h"
+#include "CodeNameD.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -87,6 +88,12 @@ void EnemyManager::CreateEnemy() {
 			enemy = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
 			Color.push_back(BarColor::Red);
 			break;
+		case EnemyCharacter::EnemyType::BossD:
+			//ボスゴーレム生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+			Color.push_back(BarColor::Yellow);
+			Color.push_back(BarColor::Red);
+			break;
 		}
 
 		if (enemy) {
@@ -158,6 +165,11 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					break;
 				case EnemyCharacter::EnemyType::Soldier:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemySoldier>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::BossD:
+					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Yellow);
 					Color.push_back(BarColor::Red);
 					break;
 				}
