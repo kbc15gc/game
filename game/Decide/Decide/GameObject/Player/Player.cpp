@@ -134,8 +134,8 @@ void Player::Awake()
 	// テスト。
 	//int lv = 30;
 #ifdef _DEBUG
-//#define Village1
-#define Village2
+#define Village1
+//#define Village2
 //#define Village3
 
 #ifdef Village1
@@ -255,9 +255,9 @@ void Player::Start()
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 	//@todo for debug
 #ifdef _DEBUG
-	//#define Start1
+	#define Start1
 	//#define Start2
-	#define Start3
+	//#define Start3
 #ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 #elif defined(Start2)

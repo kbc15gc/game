@@ -18,7 +18,7 @@ BossD::~BossD()
 }
 
 void BossD::_AwakeSubClass() {
-	SetFileName("doragon.X");
+	SetFileName("d.X");
 }
 void BossD::_StartSubClass() {
 
@@ -49,21 +49,24 @@ void BossD::_StartSubClass() {
 	
 	// 初期ステートに移行。
 	// ※暫定処理。
-	_initState = State::Wandering;
-	_ChangeState(_initState);
+	//_initState = State::Wandering;
+	//_ChangeState(_initState);
+
+	_MyComponent.Animation->PlayAnimation(0);
+
 }
 
 void BossD::_UpdateSubClass() {
 
-	if (!(_MyComponent.CharacterController->IsOnGround())) {
-		// エネミーが地面から離れている。
-		if (_NowStateIdx != State::Fall) {
-			// 現在のステートタイプを保存。
-			_saveState = _NowStateIdx;
-			// 落下ステートに切り替え。
-			_ChangeState(State::Fall);
-		}
-	}
+	//if (!(_MyComponent.CharacterController->IsOnGround())) {
+	//	// エネミーが地面から離れている。
+	//	if (_NowStateIdx != State::Fall) {
+	//		// 現在のステートタイプを保存。
+	//		_saveState = _NowStateIdx;
+	//		// 落下ステートに切り替え。
+	//		_ChangeState(State::Fall);
+	//	}
+	//}
 }
 
 void BossD::_LateUpdateSubClass()
@@ -88,32 +91,32 @@ EnemyAttack* BossD::_AttackSelectSubClass() {
 
 void BossD::_EndNowStateCallback(State EndStateType) {
 
-	if (EndStateType == State::Wandering) {
-		// 徘徊ステート終了。
-		_ChangeState(State::Wandering);
-	}
-	else if (EndStateType == State::StartAttack) {
-		// 一度攻撃が終了した。
+	//if (EndStateType == State::Wandering) {
+	//	// 徘徊ステート終了。
+	//	_ChangeState(State::Wandering);
+	//}
+	//else if (EndStateType == State::StartAttack) {
+	//	// 一度攻撃が終了した。
 
-		// もう一度攻撃開始。
-		_ChangeState(State::StartAttack);
-	}
-	else if (EndStateType == State::Fall) {
-		// 落下ステート終了。
+	//	// もう一度攻撃開始。
+	//	_ChangeState(State::StartAttack);
+	//}
+	//else if (EndStateType == State::Fall) {
+	//	// 落下ステート終了。
 
-		// 直前のステートに切り替え。
-		_ChangeState(_saveState);
-	}
-	else if (EndStateType == State::Damage) {
-		// 攻撃を受けた。
-		// 攻撃開始。
-		_ChangeState(State::StartAttack);
-	}
-	else if (EndStateType == State::Threat) {
-		// 威嚇終了。
-		// 攻撃開始。
-		_ChangeState(State::StartAttack);
-	}
+	//	// 直前のステートに切り替え。
+	//	_ChangeState(_saveState);
+	//}
+	//else if (EndStateType == State::Damage) {
+	//	// 攻撃を受けた。
+	//	// 攻撃開始。
+	//	_ChangeState(State::StartAttack);
+	//}
+	//else if (EndStateType == State::Threat) {
+	//	// 威嚇終了。
+	//	// 攻撃開始。
+	//	_ChangeState(State::StartAttack);
+	//}
 }
 
 void BossD::_ConfigCollision() {
