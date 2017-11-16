@@ -125,14 +125,6 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	/*
-	*	セーブデータがあれば、ここにレベルを入れる。
-	*/
-
-	//int lv = 0;
-
-	// テスト。
-	//int lv = 30;
 	int lv = 0;
 
 	if (IS_CONTINUE)
@@ -144,6 +136,22 @@ void Player::Awake()
 			lv = player["Level"].get<double>() - 1;
 		}
 	}
+//#ifdef _DEBUG
+//#define Village1
+//#define Village2
+//#define Village3
+
+//#ifdef Village1
+//	int lv = 1;
+//#elif defined(Village2)
+//	int lv = 12;
+//#elif defined(Village3)
+//	int lv = 22;
+//#endif
+//#else
+//	int lv = 1;
+//#endif
+	
 
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
@@ -250,13 +258,13 @@ void Player::Start()
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 	//@todo for debug
 #ifdef _DEBUG
-#define Start1
+	#define Start1
 	//#define Start2
 	//#define Start3
 #ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 #elif defined(Start2)
-	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
 #elif defined(Start3)
 	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
