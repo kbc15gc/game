@@ -140,15 +140,15 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	//// パラメーター設定。
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//enemy->SetParamAll(Color, param);
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -316,13 +316,10 @@ void GameScene::_NewChip()
 		}
 	}
 	{
-		//銅
-		//@todo for Delete
-		//第2のボスが落とすので、削除予定
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Copper))
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
 		{
 			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Copper);
+			chip->SetChipID(ChipID::Iron);
 		}
 	}
 }
