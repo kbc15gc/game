@@ -125,14 +125,14 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
+	/*BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	g->SetParamAll(Color, param);
+	g->SetParamAll(Color, param);*/
 
 	//@todo for debug
 	// テスト。
@@ -166,9 +166,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
 
-#ifdef _NKMT
+#ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
-#endif // _NKMT
+#endif // _NKMT_
 
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
