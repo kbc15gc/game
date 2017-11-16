@@ -51,6 +51,7 @@
 #include "GameObject\Enemy\EnemySoldier.h"
 #include "GameObject\Enemy\BossDrarian.h"
 #include "GameObject\Enemy\BossGolem.h"
+#include "GameObject\Enemy\CodeNameD.h"
 
 ImageObject* g_depth;
 
@@ -125,22 +126,17 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-
 	//@todo for debug
-	//邪魔なので消します。
-	/*BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	g->SetParamAll(Color, param);*/
+	// テスト。
+	//ボスゴーレム作成。
+	BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
+	//ボスD作成。
+	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
 
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -148,7 +144,9 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	g->SetParamAll(Color, param);*/
+	//d->SetParamAll(Color, param);
+
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -169,9 +167,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
 
-#ifdef _NKMT
+#ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
-#endif // _NKMT
+#endif // _NKMT_
 
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);

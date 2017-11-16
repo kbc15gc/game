@@ -84,7 +84,7 @@ struct PS_OUTPUT {
 	//ê[ìx
 	float4 depth	: COLOR1;
 	//ãPìx
-	float4 luminance	: COLOR2;
+	//float4 luminance	: COLOR2;
 };
 
 /*!
@@ -142,8 +142,8 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 	Out.depth = In.wvp.z / In.wvp.w;
 
 	//ãPìxÇåvéZ.
-	float t = dot(Out.color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-	Out.luminance = max(0.0f, t - 1.0f);
+	//float t = dot(Out.color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	//Out.luminance = max(0.0f, t - 1.0f);
 
 	return Out;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "fbEngine\fbstdafx.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 class Cursor : public GameObject {
 public:
@@ -127,4 +128,5 @@ private:
 	Vector2 _initPos;	// 初期位置。
 	float _move = 0.0f;	// 一要素の移動量。
 	CursorMoveType _moveType;	// カーソルの移動方向。
+
 };
