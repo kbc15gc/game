@@ -164,7 +164,7 @@ public class CSVExportFunction : Editor
         //ポジション
         string pos = Vector3ToString(coll.localPosition,true);
         //回転
-        string ang = QuaternionToString(coll.rotation);
+        string ang = QuaternionToString(coll.localRotation);
         //スケール
         string sca = Vector3ToString(coll.lossyScale);
         ExportCollision c = coll.gameObject.GetComponent<ExportCollision>();
@@ -260,7 +260,8 @@ public class CSVExportFunction : Editor
         float x = val.x;
         float y = val.y;
         float z = val.z;
-        return String.Format("{0}/{1}/{2}/{3}", x.ToString("f6"), y.ToString("f6"), z.ToString("f6"), 1.0f);
+        float w = val.w;
+        return String.Format("{0}/{1}/{2}/{3}", x.ToString("f6"), y.ToString("f6"), z.ToString("f6"), w.ToString("f6"));
         //return String.Format("{0}/{1}/{2}/{3}", val.x, val.y, val.z, val.w);
     }
 

@@ -22,10 +22,6 @@ public:
 		Equip,			//!< 装備.
 		Dump,			//!< 捨てる.
 		UseItem,		//!< アイテム使用.
-		EquipItemUp,	//!< アイテム装備↑.
-		EquipItemDwon,	//!< アイテム装備↓.
-		EquipItemLeft,	//!< アイテム装備←.
-		EquipItemRight,	//!< アイテム装備→.
 	};
 
 public:

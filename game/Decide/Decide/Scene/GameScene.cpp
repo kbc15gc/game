@@ -115,7 +115,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 
 	//メッシュコライダーオブジェクトを生成
-	INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
+	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
@@ -125,12 +125,16 @@ void GameScene::Start()
 
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
+
 	//@todo for debug
 	// テスト。
 	//ボスゴーレム作成。
 	BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
 	//ボスD作成。
 	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+
+	//@todo for debug
+	// テスト。
 	// ラスボス作成。
 	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
@@ -163,9 +167,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
 
-#ifdef _NKMT
+#ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
-#endif // _NKMT
+#endif // _NKMT_
 
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
@@ -211,11 +215,11 @@ void GameScene::Start()
 	//チップを作成
 	_NewChip();
 
-	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	g_depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(0));
-	g_depth->SetPivot(Vector2(0, 0));
-	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	g_depth->SetActive(true);*/
+	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
+	//g_depth->SetPivot(Vector2(0, 0));
+	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	//g_depth->SetActive(true);
 }
 
 void GameScene::Update()

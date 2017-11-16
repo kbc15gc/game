@@ -44,6 +44,7 @@ void BossDrarian::_StartSubClass() {
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
+	_MyComponent.Model->SetDitherCoefficient(30.0f);
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));

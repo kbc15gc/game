@@ -343,10 +343,9 @@
     <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp">
       <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BossGolem.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp" />
-    <ClCompile Include="GameObject\Enemy\CodeNameD.cpp">
-      <Filter>GameObject\Enemy</Filter>
+    <ClCompile Include="GameObject\Enemy\BossGolem.cpp">
+      <Filter>GameObject\Enemy\BossGolem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -709,10 +708,9 @@
     <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h">
       <Filter>GameObject\MeshObject</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\BossGolem.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h" />
-    <ClInclude Include="GameObject\Enemy\CodeNameD.h">
-      <Filter>GameObject\Enemy</Filter>
+    <ClInclude Include="GameObject\Enemy\BossGolem.h">
+      <Filter>GameObject\Enemy\BossGolem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -806,6 +804,9 @@
     </Filter>
     <Filter Include="GameObject\MeshObject">
       <UniqueIdentifier>{32d160e8-e00b-4c52-84c1-416148838477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Enemy\BossGolem">
+      <UniqueIdentifier>{8df8b66e-857d-4a26-9c11-54a3982a0a6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -50,6 +50,9 @@ void Bloom::Create()
 		_LuminanceRT = new RenderTarget();
 		_LuminanceRT->Create(size, D3DFMT_A16B16G16R16F);
 
+		//_LuminanceColorRT = new RenderTarget();
+		//_LuminanceColorRT->Create(size, D3DFMT_A16B16G16R16F);
+
 		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++)
 		{
 			//シフト量の計算
@@ -112,10 +115,6 @@ void Bloom::Render()
 			_Effect->End();
 
 		}//輝度抽出
-		D3DXVECTOR3 l, r;
-		l = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
-		r = D3DXVECTOR3(0.2125f, 0.7154f, 0.0721f);
-		float a = D3DXVec3Dot(&l, &r);
 
 		 //輝度をぼかす
 		{

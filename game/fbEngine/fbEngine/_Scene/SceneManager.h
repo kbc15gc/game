@@ -112,6 +112,11 @@ public:
 		return _Sky;
 	}
 
+	Bloom& GetBloom()
+	{
+		return _Bloom;
+	}
+
 private:
 	//シーン切り替え。
 	void _ChangeScene();
@@ -141,6 +146,4 @@ private:
 	//次のシーン
 	int _NextScene;
 
-public:
-	int hoge;
 };

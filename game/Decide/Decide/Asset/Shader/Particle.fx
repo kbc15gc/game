@@ -40,6 +40,7 @@ VS_OUTPUT VSMain( VS_INPUT In )
 	Out.uv = In.uv;
 	return Out;
 }
+
 /*!
  * @brief	半透明合成用のピクセルシェーダー。
  */

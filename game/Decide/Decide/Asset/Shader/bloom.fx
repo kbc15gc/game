@@ -44,6 +44,7 @@ float4 PSSamplingLuminance( VS_OUTPUT In ) : COLOR
 	//t = dot(color.xyz, float3(0.2f, 0.2f, 0.2f));
 	clip(t - 1.001f);			//輝度が1.0以下ならピクセルキル
 	color.xyz *= (t - 1.0f);
+	color.a = 1.0f;
 	return color;
 }
 
@@ -252,7 +253,9 @@ VS_OUTPUT VSFinal( VS_INPUT In )
 float4 PSFinal( VS_OUTPUT In ) : COLOR
 {
 	float2 uv = In.tex;
-	return clamp(tex2D(g_blurSampler, uv ), 0.0f, 1.0f);
+	float4 color = tex2D(g_blurSampler, uv);
+	color.w = 1.0f;
+	return clamp(color, 0.0f, 1.0f);
 }
 /*!
  * @brief	輝度抽出テクニック。

@@ -289,6 +289,7 @@
       <Filter>Value</Filter>
     </ClCompile>
     <ClCompile Include="MeshColliderManager.cpp" />
+    <ClCompile Include="_Data\Json\nkJsonData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -567,5 +568,7 @@
     <ClInclude Include="MeshColliderManager.h">
       <Filter>Object\Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="_Data\Json\nkJsonData.h" />
+    <ClInclude Include="_Data\Json\picojson.h" />
   </ItemGroup>
 </Project>

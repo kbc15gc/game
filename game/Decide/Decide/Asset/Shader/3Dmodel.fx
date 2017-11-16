@@ -173,6 +173,7 @@ struct PSOutput
 {
 	float4 Color : COLOR0;
 	float4 Depth : COLOR1;
+	//float4 Luminance : COLOR2;
 };
 
 /*!
@@ -180,6 +181,24 @@ struct PSOutput
  */
 PSOutput PSMain(VS_OUTPUT In)
 {
+	if (g_DitherParam.x > 0.0f)
+	{
+		float2 f2TextureUV = 0.0f;
+		f2TextureUV.x = In._WVP.x / In._WVP.w;
+		f2TextureUV.y = In._WVP.y / In._WVP.w;
+
+		f2TextureUV.x *= 0.5;
+		f2TextureUV.y *= -0.5;
+		f2TextureUV += 0.5;
+
+		f2TextureUV.x *= g_DitherParam.z / 5;
+		f2TextureUV.y *= g_DitherParam.w / 5;
+
+		int2 uv = fmod(f2TextureUV, DP_SIZE);
+
+		clip(g_DitherPattern[uv.x][uv.y] - g_DitherParam.y);
+	}
+
     float4 diff = 0.0f; //メッシュのマテリアル
 	//カラー
     if (Texflg)
@@ -191,6 +210,8 @@ PSOutput PSMain(VS_OUTPUT In)
         diff = g_diffuseMaterial;
     }
     diff *= g_blendcolor;
+
+	clip(diff.a - g_Alpha);
 
     float4 color = diff; //最終的に出力するカラー
 
@@ -238,7 +259,8 @@ PSOutput PSMain(VS_OUTPUT In)
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
 
-    clip(diff.a - g_Alpha);
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
 
     PSOutput Out = (PSOutput) 0;
 
@@ -246,6 +268,10 @@ PSOutput PSMain(VS_OUTPUT In)
     Out.Color.w = diff.a;
     float3 depth = In._World.w;
     Out.Depth = float4(depth, diff.a);
+
+	//輝度を計算.
+	/*float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, t - 1.0f);*/
 
     return Out;
 }
@@ -310,6 +336,10 @@ PSOutput PSSkySphere(VS_OUTPUT In)
     Out.Color = float4(OutColor.xyz, 1.0f);
     float3 depth = In._World.w;
     Out.Depth = float4(depth, 1.0f);
+
+	//輝度を計算.
+	//float lum = dot(OutColor.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	//Out.Luminance = max(0.0f, lum - 1.0f);
 
     return Out;
 }
@@ -477,11 +507,18 @@ PSOutput PSTerrain(VS_OUTPUT In)
     //アンビエントライトを加算。
     color.rgb += diffuseColor.rgb * ambient;
 
+	//フォグを計算.
+	color.xyz = CalcFog(In._World.xyz, color.xyz);
+
 	PSOutput Out = (PSOutput)0;
 
     Out.Color = color;
 	float3 depth = In._World.w;
 	Out.Depth = float4(depth, 1.0f);
+
+	//輝度を計算.
+	/*float lum = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, lum - 1.0f);*/
 
 	return Out;
 }

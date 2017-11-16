@@ -37,13 +37,16 @@ private:
 	void _StandardBehavior();
 
 	//プレイヤーの方向を向く。
-	void _LookAtPlayer();
+	void _LookAtTarget();
 
 	//カメラをY軸に回転(横)。
 	void _RotateHorizon(float roty);
 
 	//カメラをX軸に回転(縦)。
 	void _RotateVertical(float rotx);
+
+	//カメラ補助。
+	void _CameraSupport();
 
 	//レイを飛ばして、カメラの移動先を確認。
 	Vector3 _ClosetRay();
@@ -59,6 +62,9 @@ private:
 		//プレイヤーの更新を止める。
 		_Player->SetIsStopUpdate(false);
 	}
+
+	//カメラリセット。
+	void CameraReset();
 private:
 	//歴史書オブジェクト。
 	HistoryBook* _HistoryBook = nullptr;
@@ -84,4 +90,11 @@ private:
 
 	//ターゲットからカメラへの向きベクトル。
 	Vector3 _ToCameraDir;
+	//プレイヤー向いている方向。
+	const Vector3* _PForward;
+
+	//カメラリセットフラグ。
+	bool _Reset = false;
+	float _Timer = 0.0f;
+	Vector3 tmp;
 };

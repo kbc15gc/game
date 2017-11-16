@@ -56,7 +56,7 @@ bool EnemyBreathAttack::Update() {
 
 
 void GhostComboAttack::Entry() {
-	_oneCombo->Init(1.0f, _animType, _interpolate, 1, _playEventNo);
+	//_oneCombo->Init(1.0f, _animType, _interpolate, 1, _playEventNo);
 	_comboCount = 0;
 	_nowWarpState = WarpState::Through;
 	_isWarpEnd = false;
@@ -124,7 +124,7 @@ bool GhostComboAttack::Update() {
 			if (work.Length() > 0.0001f) {
 				// –Ú“IˆÊ’u‚É‚¢‚È‚¢B
 				work.Normalize();
-				speed = 10.0f;
+				speed = 5.0f;
 				_enemyObject->AddMoveSpeed(work * speed);
 			}
 

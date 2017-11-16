@@ -48,12 +48,22 @@ public:
 		{
 			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
 		}
+
+		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		se->Init("Asset/Sound/UI/Menu.wav");
+		se->SetDelete(true);
+		se->Play(false);
 	}
 
 	void OnDisable()override
 	{
 		INSTANCE(EventManager)->NotifyEndEvent();
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->DeleteList();
+	
+		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		se->Init("Asset/Sound/UI/Menu.wav");
+		se->SetDelete(true);
+		se->Play(false);
 	}
 
 private:
