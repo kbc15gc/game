@@ -133,7 +133,17 @@ void Player::Awake()
 
 	// テスト。
 	//int lv = 30;
-	int lv = 1;
+	int lv = 0;
+
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			lv = player["Level"].get<double>() - 1;
+		}
+	}
 
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
@@ -772,6 +782,8 @@ void Player::_LevelUP()
 	//レベルアップエフェクト
 	/*_ParticleEffect->LevelUpEffect();
 	_ParticleEffect->SetLevelUPEffectFlag(true);*/
+
+	SaveLevel();
 }
 
 void Player::Speak()

@@ -68,15 +68,18 @@ void HistoryManager::Start()
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
-		for (int j = 0; j < (int)ChipID::ChipNum; j++)
+		if (IS_CONTINUE)
 		{
-			if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
+			for (int j = 0; j < (int)ChipID::ChipNum; j++)
 			{
-				continue;
+				if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
+				{
+					continue;
+				}
+				//読み込んだデータを元に歴史書にページをあらかじめ追加。
+				HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
+				page->ChangeState(HistoryPage::StateCodeE::Close);
 			}
-			//読み込んだデータを元に歴史書にページをあらかじめ追加。
-			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
-			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
 	}
