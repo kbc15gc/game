@@ -5,6 +5,9 @@
 
 EnemyTranslationState::EnemyTranslationState(EnemyCharacter* Object) : EnemyState(Object)
 {
+	_playAnimation = EnemyCharacter::AnimationType::Walk;
+	_interpolate = 0.5f;
+	_loopNum = -1;
 }
 
 
@@ -14,11 +17,9 @@ EnemyTranslationState::~EnemyTranslationState()
 
 void EnemyTranslationState::_EntrySubClass() {
 	_isWandering = false;
-	float InterpolateTime = 0.5f;	// •âŠÔŠÔB
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Walk, InterpolateTime);
 }
 
-void EnemyTranslationState::_Start() {
+void EnemyTranslationState::_StartSubClass() {
 
 	_InitPos = _EnemyObject->transform->GetPosition();	// ‰ŠúˆÊ’u‚ğ•Û‘¶‚µ‚Ä‚¨‚­B
 	_isOutsideRange = false;

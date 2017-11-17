@@ -4,6 +4,9 @@
 
 EnemyFallState::EnemyFallState(EnemyCharacter* Object) : EnemyState(Object)
 {
+	_playAnimation = EnemyCharacter::AnimationType::Fall;
+	_interpolate = 0.1f;
+	_loopNum = -1;
 }
 
 
@@ -12,11 +15,9 @@ EnemyFallState::~EnemyFallState()
 }
 
 void EnemyFallState::_EntrySubClass() {
-	// 落下中のアニメーション再生。
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Fall, 0.1f);
 }
 
-void EnemyFallState::_Start() {
+void EnemyFallState::_StartSubClass() {
 }
 
 void EnemyFallState::_UpdateSubClass() {

@@ -104,9 +104,6 @@ private:
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
 
-	// 効果音のテーブル作成関数。
-	void _BuildSoundTable()override;
-
 	inline void _DropSubClass()override {
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 		chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
@@ -114,8 +111,8 @@ private:
 
 private:
 	State _saveState;
-	unique_ptr<GhostComboAttack> _comboAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
-	unique_ptr<GhostComboAttack> _laserComboAttack;
+	unique_ptr<EnemyComboAttack> _comboAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
+	unique_ptr<EnemyComboAttack> _laserComboAttack;
 	unique_ptr<EnemySingleAttack> _singleAttack;
 	unique_ptr<EnemyBreathAttack> _singleLaser;
 

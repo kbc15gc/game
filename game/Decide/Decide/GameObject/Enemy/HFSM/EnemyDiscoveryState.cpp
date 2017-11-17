@@ -17,7 +17,7 @@ EnemyDiscoveryState::~EnemyDiscoveryState()
 void EnemyDiscoveryState::_EntrySubClass() {
 }
 
-void EnemyDiscoveryState::_Start() {
+void EnemyDiscoveryState::_StartSubClass() {
 	// ‚Ì‚¯‚¼‚èÝ’èB
 	_EnemyObject->ConfigDamageReaction(true, 3);
 }

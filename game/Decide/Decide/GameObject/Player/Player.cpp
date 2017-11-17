@@ -621,6 +621,7 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 }
 
 bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
+	bool ret = false;
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 		int value = effectValue[idx];
 		if (value > 0) {
@@ -635,13 +636,13 @@ bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], floa
 			}
 #endif //  _DEBUG
 
-			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), time);
+			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), value, time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 
 			_StatusUpSound->Play(false);
 
-			return  true;
+			ret = true;
 		}
 		else if (value < 0) {
 			// デバフ(デメリット)。
@@ -654,16 +655,16 @@ bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], floa
 				abort();
 			}
 #endif //  _DEBUG
-			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), time);
+			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx),abs(value), time);
 			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
 			_BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 
 			_StatusDownSound->Play(false);
 
-			return true;
+			ret = true;
 		}
 	}
-	return false;
+	return ret;
 }
 
 /**
@@ -675,7 +676,7 @@ void Player::EffectUpdate()
 	bool isDeBuffEffect = false;
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
 
-		if (_PlayerParam->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
+		if (_PlayerParam->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
 		{
 			isBuffEffect = true;
 		}
@@ -684,7 +685,7 @@ void Player::EffectUpdate()
 			_BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
 		}
 
-		if (_PlayerParam->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
+		if (_PlayerParam->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
 		{
 			isDeBuffEffect = true;
 		}

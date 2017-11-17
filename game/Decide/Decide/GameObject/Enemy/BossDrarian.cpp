@@ -102,7 +102,7 @@ void BossDrarian::AnimationEvent_Kamituki() {
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub1() 
@@ -138,7 +138,7 @@ void BossDrarian::CreateAttackCollision_TailAttack1() {
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Buoon);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack2() {
@@ -148,35 +148,27 @@ void BossDrarian::CreateAttackCollision_TailAttack2() {
 	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 0.0f), rot, Vector3(2.0f, 2.0f, 5.0f), 0.15f, transform, false, false, AttackCollision::ReactionType::Blown);
 	attack->RemoveParent();
 
-	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack3() {
 	//çUåÇÉRÉäÉWÉáÉìçÏê¨ÅB
 	AttackCollision* attack = CreateAttack(Vector3(4.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(4.0f, 2.0f, 2.0f), 0.15f, transform, false, false, AttackCollision::ReactionType::Blown);
 	attack->RemoveParent();
-
-	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack4() {
 	//çUåÇÉRÉäÉWÉáÉìçÏê¨ÅB
 	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 4.5f), Quaternion::Identity, Vector3(2.0f, 2.0f, 3.0f), 0.15f, transform, false, false, AttackCollision::ReactionType::Blown);
 	attack->RemoveParent();
-
-	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack2);
 }
 
 void BossDrarian::AnimationEvent_BreathStart() {
 	LaserBreath* breath = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("breath", 8);
-	breath->Create(this, Vector3(0.0f, 0.0f, 5.0f), 10.0f,Vector3::axisY,0.0f);
+	breath->Create(this, Vector3(0.0f, 0.0f, 5.0f), 10.0f,0.01f,Vector3::axisY,0.0f);
 
 	_breathAttack->BreathStart(breath);
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack3);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Buoon);
 }
 
 void BossDrarian::AnimationEvent_BreathEnd() {
@@ -378,12 +370,5 @@ void BossDrarian::_ConfigAnimationEvent() {
 		eventFrame = 5.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
 	}
-}
-
-void BossDrarian::_BuildSoundTable() {
-	// çUåÇâπìoò^ÅB
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack2, "Buoonn.wav", false, false);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack3, "Buoonn.wav", false, false);
 }
 

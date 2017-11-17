@@ -227,8 +227,3 @@ void BossGolem::_ConfigAnimationEvent() {
 	}
 }
 
-void BossGolem::_BuildSoundTable() {
-	// çUåÇâπìoò^ÅB
-	
-}
-

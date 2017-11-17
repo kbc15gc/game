@@ -61,9 +61,6 @@ private:
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
 
-	// 効果音のテーブル作成関数。
-	void _BuildSoundTable()override;
-
 	inline void _DropSubClass()override {
 	}
 private:

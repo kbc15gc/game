@@ -344,7 +344,12 @@
       <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\BossGolem.cpp" />
-    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyBackStepState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -707,7 +712,12 @@
       <Filter>GameObject\MeshObject</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\BossGolem.h" />
-    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyBackStepState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />

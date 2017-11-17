@@ -23,7 +23,7 @@ void LastBossDownState::_EntrySubClass() {
 	// 落下ステートに移行。
 }
 
-void LastBossDownState::_Start() {
+void LastBossDownState::_StartSubClass() {
 	// のけぞり設定。
 	_EnemyObject->ConfigDamageReaction(false);
 }

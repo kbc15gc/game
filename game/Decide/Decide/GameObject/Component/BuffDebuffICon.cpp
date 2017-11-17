@@ -352,17 +352,17 @@ void BuffDebuffICon::Debug()
 		Item::ItemInfo testInfo;
 		testInfo.time = 999.0f;
 
-		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
-		{
-			testInfo.effectValue[idx] = 100;
-		}
-		p->ItemEffect(&testInfo);
+		//for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
+		//{
+		//	testInfo.effectValue[idx] = 100;
+		//}
+		//p->ItemEffect(&testInfo);
 
 		for (int idx = 0; idx < CharacterParameter::Param::MAX; idx++)
 		{
-			testInfo.effectValue[idx] = -100;
+			testInfo.effectValue[idx] = -20;
 		}
-		p->ItemEffect(&testInfo);
+		p->BuffAndDebuff(testInfo.effectValue, testInfo.time);
 
 	}
 }

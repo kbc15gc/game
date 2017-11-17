@@ -49,6 +49,10 @@ public:
 	inline void SetEmitterTransform(Transform* parent) {
 		_parent = parent;
 	}
+
+	inline float GetLife()const {
+		return _Life;
+	}
 private:		
 	static Vertex* _Vertex;						//’¸“_
 
