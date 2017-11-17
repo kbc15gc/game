@@ -281,44 +281,44 @@ void GameScene::_NewChip()
 {
 	//必要なチップを設置する。
 	//所持されていないチップを作成する。
+	//火
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Fire))
 	{
-		//火
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Fire))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Fire);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("FireChip", 2);
+		chip->SetChipID(ChipID::Fire);
 	}
+
+	//木
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Tree))
 	{
-		//木
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Tree))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Tree);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("TreeChip", 2);
+		chip->SetChipID(ChipID::Tree);
 	}
+
+	//狩
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
 	{
-		//狩
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Hunt);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("HuntChip", 2);
+		chip->SetChipID(ChipID::Hunt);
 	}
+
+	//農
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Agriculture))
 	{
-		//農
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Agriculture))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Agriculture);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("AgricultureChip", 2);
+		chip->SetChipID(ChipID::Agriculture);
 	}
+	//鉄
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
 	{
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Iron);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("IronChip", 2);
+		chip->SetChipID(ChipID::Iron);
+	}
+	//油
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Oil))
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("OilChip", 2);
+		chip->SetChipID(ChipID::Oil);
 	}
 }
 

@@ -10,6 +10,12 @@
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
+//各村の設定。
+//各村によってスタート位置・レベルが変わります。
+//#define Village1
+//#define Village2
+#define Village3
+
 namespace
 {
 	float NormalAnimationSpeed = 1.0f;
@@ -134,10 +140,6 @@ void Player::Awake()
 	// テスト。
 	//int lv = 30;
 #ifdef _DEBUG
-#define Village1
-//#define Village2
-//#define Village3
-
 #ifdef Village1
 	int lv = 1;
 #elif defined(Village2)
@@ -253,16 +255,18 @@ void Player::Start()
 
 
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+
+	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
+
+
+	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
 	//@todo for debug
 #ifdef _DEBUG
-	#define Start1
-	//#define Start2
-	//#define Start3
-#ifdef Start1
+#ifdef Village1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
-#elif defined(Start2)
+#elif defined(Village2)
 	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
-#elif defined(Start3)
+#elif defined(Village3)
 	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
 #endif // Start1
@@ -290,43 +294,6 @@ void Player::Start()
 
 void Player::Update()
 {
-
-	//@todo for debug
-#define CHIP
-#ifdef CHIP
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
-	}
-#endif // 
-
-
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
