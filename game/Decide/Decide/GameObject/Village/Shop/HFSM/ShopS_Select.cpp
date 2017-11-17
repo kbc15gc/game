@@ -74,8 +74,8 @@ void ShopS_Select::EnterState()
 {
 	//ウィンドウをアクティブにする。
 	_SelectWindow->SetActive(true, true);
-	//テキスト設定。
-	_Shop->SetDescriptionText("いらっしゃい、なにか買っていくかい？\nそれとも買い取ろうか？");
+	//テキスト設定。ボイス再生。
+	_Shop->SetDescription("いらっしゃい、なにか買っていくかい？\nそれとも買い取ろうか？","Asset/Sound/UI/Menu.wav");
 }
 
 void ShopS_Select::ExitState()
