@@ -84,13 +84,13 @@ bool XInput::KeyRepeat(int in, float interval)
 		if (IsPushButton(in))
 		{
 			_RepeatTimer[BUTTON][in] = 0.0f;
-			_Interval[BUTTON][in] = 0.001f;
 			return true;
 		}
 		//ŽžŠÔ‰ÁŽZB
 		_RepeatTimer[BUTTON][in] += Time::DeltaTime();
 		if (_RepeatTimer[BUTTON][in] >= _Interval[BUTTON][in])
 		{
+			_Interval[ANALOG][in] = 0.001f;
 			_RepeatTimer[BUTTON][in] = 0.0f;
 			return true;
 		}
@@ -217,13 +217,13 @@ bool XInput::AnalogRepeat(AnalogE analog, float interval, bool exclusive)
 		if (IsPushAnalog(analog))
 		{
 			_RepeatTimer[ANALOG][in] = 0.0f;
-			_Interval[ANALOG][in] = 0.001f;
 			return true;
 		}
 		//ŽžŠÔ‰ÁŽZB
 		_RepeatTimer[ANALOG][in] += Time::DeltaTime();
 		if (_RepeatTimer[ANALOG][in] >= _Interval[ANALOG][in])
 		{
+			_Interval[ANALOG][in] = 0.001f;
 			_RepeatTimer[ANALOG][in] = 0.0f;
 			return true;
 		}

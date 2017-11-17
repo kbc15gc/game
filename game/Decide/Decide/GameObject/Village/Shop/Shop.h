@@ -4,6 +4,7 @@
 #include "GameObject\ItemManager\HoldItem\HoldItemBase.h"
 
 #include "GameObject\Village\EventManager.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 class ImageObject;
 class TextObject;
@@ -80,6 +81,14 @@ private:
 
 	//説明テキストに文字を設定する。
 	void SetDescriptionText(string text);
+	//ボイスの再生。
+	void PlayVoice(string wavfilepath);
+	//説明の設定とボイスの再生。
+	void SetDescription(string text, string filepath)
+	{
+		SetDescriptionText(text);
+		PlayVoice(filepath);
+	}
 	//支払い
 	void Pay(int money);
 private:
@@ -111,4 +120,7 @@ private:
 	ImageObject* _MoneyWindow;
 	//お金のテキスト。
 	TextObject* _MoneyText;
+
+	//ボイス再生。
+	SoundSource _Voice;
 };

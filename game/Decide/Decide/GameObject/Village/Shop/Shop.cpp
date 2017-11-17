@@ -14,7 +14,8 @@
 
 Shop::Shop(const char * name):
 	GameObject(name),
-	_State(ShopStateE::Select)
+	_State(ShopStateE::Select),
+	_Voice("Voice")
 {
 }
 
@@ -66,6 +67,7 @@ void Shop::Awake()
 void Shop::Update()
 {
 	_StateList.at((int)_State)->Update();
+	_Voice.Update();
 }
 
 void Shop::OpenShop(const unsigned int & shopID)
@@ -157,6 +159,12 @@ void Shop::_ChangeState(const ShopStateE state)
 void Shop::SetDescriptionText(string text)
 {
 	_DescriptionText->SetText(text.c_str());
+}
+
+void Shop::PlayVoice(string wavfilepath)
+{
+	_Voice.Init(wavfilepath.c_str(), false);
+	_Voice.Play(false);
 }
 
 void Shop::Pay(int money)
