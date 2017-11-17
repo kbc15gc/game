@@ -23,8 +23,8 @@ void BossGolem::_AwakeSubClass(){
 void BossGolem::_StartSubClass() {
 
 	//ポジション
-	_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
-	transform->SetPosition(_InitPos);
+	/*_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
+	transform->SetPosition(_InitPos);*/
 
 	// 視野角生成。
 	_ViewAngle = 100.0f;
@@ -154,7 +154,7 @@ void BossGolem::_ConfigCollision() {
 	{
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
-		_collisionInfo.radius = 1.8;
+		_collisionInfo.radius = 1.8f;
 		_collisionInfo.height = 6.0f;
 		_collisionInfo.offset = Vector3(0.0f, 1.0f, 0.0f);
 		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;

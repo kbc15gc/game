@@ -51,6 +51,7 @@
 #include "GameObject\Enemy\EnemySoldier.h"
 #include "GameObject\Enemy\BossDrarian.h"
 #include "GameObject\Enemy\BossGolem.h"
+#include "GameObject\Enemy\CodeNameD.h"
 
 ImageObject* g_depth;
 
@@ -114,7 +115,7 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 
 	//メッシュコライダーオブジェクトを生成
-	INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
+	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
 	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
@@ -125,27 +126,27 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
+	//@todo for debug
+	// テスト。
+	//ボスゴーレム作成。
 	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
+	//ボスD作成。
+	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("doragon", 1);
+
+	////@todo for debug
+	//// テスト。
+	//// ラスボス作成。
+	////LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
 	//vector<BarColor> Color;
 	//Color.push_back(BarColor::Blue);
 	//Color.push_back(BarColor::Green);
 	//Color.push_back(BarColor::Yellow);
 	//Color.push_back(BarColor::Red);
 	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//g->SetParamAll(Color, param);
+	////g->SetParamAll(Color, param);
+	//d->SetParamAll(Color, param);
 
-	//@todo for debug
-	// テスト。
-	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
 
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -166,9 +167,9 @@ void GameScene::Start()
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
 
-#ifdef _NKMT
+#ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
-#endif // _NKMT
+#endif // _NKMT_
 
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
@@ -214,11 +215,11 @@ void GameScene::Start()
 	//チップを作成
 	_NewChip();
 
-	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	g_depth->SetTexture(INSTANCE(SceneManager)->GetShadowMap()->GetTexture(0));
-	g_depth->SetPivot(Vector2(0, 0));
-	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	g_depth->SetActive(true);*/
+	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
+	//g_depth->SetPivot(Vector2(0, 0));
+	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	//g_depth->SetActive(true);
 }
 
 void GameScene::Update()
@@ -313,13 +314,10 @@ void GameScene::_NewChip()
 		}
 	}
 	{
-		//銅
-		//@todo for Delete
-		//第2のボスが落とすので、削除予定
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Copper))
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
 		{
 			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Copper);
+			chip->SetChipID(ChipID::Iron);
 		}
 	}
 }

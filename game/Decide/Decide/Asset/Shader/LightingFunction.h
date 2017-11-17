@@ -286,6 +286,44 @@ float CalcLuminance( float3 color )
 	return luminance;
 }
 
+// フォグパラメータ 
+// x:フォグがかかり始める距離.
+// y:フォグがかかりきる距離.
+// z:フォグの種類.
+float4 g_fogParam;
+// フォグの色.
+float4 g_fogColor;
+
+/**
+* フォグを計算.
+*/
+float3 CalcFog(float3 worldPos, float3 color)
+{
+	float3 retColor = color;
+	float night = 1.0f;
+	if(g_fogParam.w)
+	{
+		night = dot(g_atmosParam.v3LightDirection, float3(0.0f, -1.0f, 0.0f));
+		night = max(0.0f, min(1.0f, night + 0.2f));
+	}
+	if (g_fogParam.z > 1.9f)
+	{
+		//高さフォグ.
+		float h = max(0.0f, worldPos.y - g_fogParam.y);
+		float t = min(1.0f, h / g_fogParam.x);
+		retColor = lerp(g_fogColor.xyz, color.xyz, t * night);
+	}
+	else if (g_fogParam.z > 0.0f)
+	{
+		//距離フォグ.
+		float z = length(worldPos - g_cameraPos);
+		z = max(0.0f, z - g_fogParam.x);
+		float t = z / g_fogParam.y;
+		retColor = lerp(color, g_fogColor.xyz, t * night);
+	}
+	return retColor;
+}
+
 // The scale equation calculated by Vernier's Graphical Analysis
 float scale(float fCos)
 {

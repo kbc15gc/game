@@ -29,14 +29,16 @@ Inventory::~Inventory(){
 void Inventory::Initialize() {
 	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 
-
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
 		// コードごとの最大ID数分配列確保。
-		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx)) + 1,0));
+		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx)) + 1, 0));
 	}
 
-	// CSV読み込み。
-	_LoadData();
+	if (IS_CONTINUE)
+	{
+		// CSV読み込み。
+		_LoadData();
+	}
 }
 
 //アイテムをインベントリに追加。
@@ -301,6 +303,13 @@ void Inventory::_LoadData() {
 			break;
 		}
 	}
+
+	JsonData MoneyData;
+	if (MoneyData.Load("Money"))
+	{
+		picojson::object money = MoneyData.GetDataObject("Money");
+		_PlayerMoney = money["Money"].get<double>();
+	}
 }
 
 void Inventory::_OutData(Item::ItemCodeE code) {
@@ -333,6 +342,7 @@ void Inventory::_OutData(Item::ItemCodeE code) {
 	}
 	//CSVに書き出し。
 	Support::OutputCSV<Hold::HoldInfo>(filepath, recordArray[static_cast<int>(code)], recordSize[static_cast<int>(code)], OutPutCSVList);
+
 }
 
 void Inventory::_OutData_All() {

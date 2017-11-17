@@ -61,7 +61,7 @@ public:
 private:
 	//丸める
 	void _Rounding();
-
+private:
 	int _UserIndex;			//コントローラーのナンバー(0~3)
 	bool _IsConnect;			//接続されているかどうか
 	XINPUT_STATE _State;		//現在の入力情報
@@ -73,4 +73,6 @@ private:
 	AnalogE _Most;
 	//キーリピート機能で使うタイマー。
 	map<int,float> _RepeatTimer[2];
+	//
+	map<float, float> _Interval[2];
 };

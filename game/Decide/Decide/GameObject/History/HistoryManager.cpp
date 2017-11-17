@@ -45,7 +45,7 @@ void HistoryManager::Start()
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
 //木が邪魔な場合これを使ってください。
-#define NPCONLY
+//#define NPCONLY
 
 #ifdef NPCONLY
 	//共通オブジェクト生成。
@@ -68,15 +68,18 @@ void HistoryManager::Start()
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
-		for (int j = 0; j < (int)ChipID::ChipNum; j++)
+		if (IS_CONTINUE)
 		{
-			if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
+			for (int j = 0; j < (int)ChipID::ChipNum; j++)
 			{
-				continue;
+				if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
+				{
+					continue;
+				}
+				//読み込んだデータを元に歴史書にページをあらかじめ追加。
+				HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
+				page->ChangeState(HistoryPage::StateCodeE::Close);
 			}
-			//読み込んだデータを元に歴史書にページをあらかじめ追加。
-			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
-			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
 	}
@@ -270,10 +273,10 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 					//カメラと当たらないコリジョンかどうか？
 					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
 					Rinfo.offset = info->pos;
-					Quaternion q;
-					q.SetRotation(Vector3::up, PI / 2);
-					q.Multiply(info->ang);
-					Rinfo.rotation = q;
+					//Quaternion q;
+					//q.SetRotation(Vector3::up, PI / 2);
+					//q.Multiply(info->ang);
+					Rinfo.rotation = info->ang;
 					coll->Create(Rinfo, true);
 				}
 				else

@@ -312,14 +312,26 @@ void ItemWindow::Input()
 					//入力なし.
 					break;
 				case Dialog::Equip:
+				{
 					//装備もしくは外す.
 					_Player->SetEquipment(_Item2DList[_NowSelectItem]->GetItemData());
+					SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+					se->Init("Asset/Sound/UI/Equipment.wav");
+					se->SetDelete(true);
+					se->Play(false);
 					break;
+				}
 				case Dialog::Dump:
+				{
 					//捨てる.
 					INSTANCE(Inventory)->SubHoldNum(_Item2DList[_NowSelectItem]->GetItemData(), 1);
+					SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+					se->Init("Asset/Sound/UI/tableware_crash1.wav");
+					se->SetDelete(true);
+					se->Play(false);
 					isPack = true;
 					break;
+				}
 				case Dialog::UseItem:
 					//アイテム使用.
 				{
@@ -328,18 +340,14 @@ void ItemWindow::Input()
 					if (item->UseItem() == false) {
 						
 					}
+					SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+					se->Init("Asset/Sound/UI/drinking1.wav");
+					se->SetDelete(true);
+					se->Play(false);
 					INSTANCE(Inventory)->SubHoldNum(item, 1);
 					isPack = true;
 					break;
 				}
-				case Dialog::EquipItemUp:
-					break;
-				case Dialog::EquipItemDwon:
-					break;
-				case Dialog::EquipItemLeft:
-					break;
-				case Dialog::EquipItemRight:
-					break;
 			}
 
 			//リストが詰められた可能性があるため表示を更新.

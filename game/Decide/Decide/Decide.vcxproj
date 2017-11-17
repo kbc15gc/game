@@ -224,6 +224,7 @@
     <ClInclude Include="GameObject\Enemy\BossGhost.h" />
     <ClInclude Include="GameObject\Enemy\BossGolem.h" />
     <ClInclude Include="GameObject\Enemy\BreathObject.h" />
+    <ClInclude Include="GameObject\Enemy\CodeNameD.h" />
     <ClInclude Include="GameObject\Enemy\Enemy.h" />
     <ClInclude Include="GameObject\Enemy\EnemyAttack.h" />
     <ClInclude Include="GameObject\Enemy\EnemyCharacter.h" />
@@ -352,6 +353,7 @@
     <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\BossGhost.cpp" />
     <ClCompile Include="GameObject\Enemy\BossGolem.cpp" />
+    <ClCompile Include="GameObject\Enemy\CodeNameD.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttack.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyCharacter.cpp" />

@@ -50,6 +50,5 @@ void MeshObjectChip::Init(const char* name, const Vector3& pos, const Vector3& s
 	info.mass = 0.0f;
 	info.coll = mesh;
 	info.id = Collision_ID::BUILDING;
-	info.rotation = transform->GetRotation();
 	rigid->Create(info, false);
 }

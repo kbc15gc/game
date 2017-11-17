@@ -39,7 +39,10 @@ void HistoryMenu::Start()
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
 	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
 
-	LoadChip();
+	if (IS_CONTINUE)
+	{
+		LoadChip();
+	}
 }
 
 /**
@@ -267,6 +270,11 @@ void HistoryMenu::SelectLocationUpdate()
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
 		}
+
+		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		se->Init("Asset/Sound/UI/Menu.wav");
+		se->SetDelete(true);
+		se->Play(false);
 	}
 }
 
@@ -319,19 +327,27 @@ void HistoryMenu::SelectPageUpdate()
 		LocalTime = 0.0f;
 	}
 
-	if (_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() > 0)
+	if (beforeLookPage != _NowLookPage)
 	{
-		if (beforeLookPage < _NowLookPage)
+		if (_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() > 0)
 		{
-			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[beforeLookPage]->SetRotAngle(90.0f);
-			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[beforeLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
-		}
-		else if (beforeLookPage > _NowLookPage)
-		{
+			if (beforeLookPage < _NowLookPage)
+			{
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[beforeLookPage]->SetRotAngle(90.0f);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[beforeLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+			}
+			else if (beforeLookPage > _NowLookPage)
+			{
 
-			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
-			_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+			}
 		}
+
+		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		se->Init("Asset/Sound/UI/Menu.wav");
+		se->SetDelete(true);
+		se->Play(false);
 	}
 
 	//AボタンもしくはJkeyが押されたら。
@@ -350,6 +366,11 @@ void HistoryMenu::SelectPageUpdate()
 
 				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
 
+				SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+				se->Init("Asset/Sound/UI/paper-tear1.wav");
+				se->SetDelete(true);
+				se->Play(false);
+
 				PageMove();
 
 				_IsOperation = false;
@@ -365,6 +386,8 @@ void HistoryMenu::SelectPageUpdate()
 */
 void HistoryMenu::SelectChipUpdate()
 {
+	int befSelectChip = _NowSelectChip;
+
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 	//左スティックの情報.
@@ -402,6 +425,14 @@ void HistoryMenu::SelectChipUpdate()
 	{
 		ChangeTime = 0.5f;
 		LocalTime = 0.0f;
+	}
+
+	if (befSelectChip != _NowSelectChip)
+	{
+		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		se->Init("Asset/Sound/UI/Menu.wav");
+		se->SetDelete(true);
+		se->Play(false);
 	}
 
 	//Aボタン押.

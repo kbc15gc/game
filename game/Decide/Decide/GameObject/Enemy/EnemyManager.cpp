@@ -8,6 +8,8 @@
 #include "GameObject\Component\ParticleEffect.h"
 #include "EnemyGolem.h"
 #include "EnemySoldier.h"
+#include "BossGolem.h"
+#include "CodeNameD.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -74,9 +76,22 @@ void EnemyManager::CreateEnemy() {
 			enemy = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);	
 			Color.push_back(BarColor::Red);
 			break;
+		case EnemyCharacter::EnemyType::BossGolem:
+			//ボスゴーレム生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
+			Color.push_back(BarColor::Yellow);
+			Color.push_back(BarColor::Red);
+			break;
+
 		case EnemyCharacter::EnemyType::Soldier:
 			//兵士を生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+			Color.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::BossD:
+			//ボスゴーレム生成。
+			enemy = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+			Color.push_back(BarColor::Yellow);
 			Color.push_back(BarColor::Red);
 			break;
 		}
@@ -143,8 +158,18 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					Color.push_back(BarColor::Red);
 					break;
+				case EnemyCharacter::EnemyType::BossGolem:
+					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Yellow);
+					Color.push_back(BarColor::Red);
+					break;
 				case EnemyCharacter::EnemyType::Soldier:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemySoldier>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::BossD:
+					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					Color.push_back(BarColor::Yellow);
 					Color.push_back(BarColor::Red);
 					break;
 				}

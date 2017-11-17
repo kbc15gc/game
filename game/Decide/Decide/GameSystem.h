@@ -7,6 +7,9 @@ static const UINT CONTINENT_NUM = 1;
 //歴史チップの数
 static const UINT HISTORY_CHIP_NUM = 3;
 
+/** コンティニューフラグ. */
+extern bool IS_CONTINUE;
+
 enum Collision_ID
 {
 	NOT_ID = fbCollisionAttributeE::NOTHING,

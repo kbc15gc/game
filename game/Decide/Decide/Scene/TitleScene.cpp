@@ -58,7 +58,7 @@ void TitleScene::Start()
 	_AnyButton = false;
 
 	//セレクト
-	_Select = Select::Continue;
+	_Select = Select::NewGame;
 
 	INSTANCE(SceneManager)->GetSky()->SetActive(false);
 }
@@ -100,18 +100,26 @@ void TitleScene::Update()
 		
 		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU) || KeyBoardInput->isPush(DIK_UP))
 		{
-			_Select = Select::Continue;
+			_Select = Select::NewGame;
 			_StartBar->transform->SetPosition(455, 405, 0);
 		}
 		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD) || KeyBoardInput->isPush(DIK_DOWN))
 		{
-			_Select = Select::NewGame;
+			_Select = Select::Continue;
 			_StartBar->transform->SetPosition(455, 475, 0);
 		}
 
 		//スタート
 		if (flag)
 		{
+			if (_Select == Select::Continue)
+			{
+				IS_CONTINUE = true;
+			}
+			else
+			{
+				IS_CONTINUE = false;
+			}
 			//ゲームシーンへ移行
 			_StartSE->Play(false);
 			INSTANCE(SceneManager)->ChangeScene("GameScene",true);

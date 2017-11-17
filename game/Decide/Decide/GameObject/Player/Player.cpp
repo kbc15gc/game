@@ -125,15 +125,33 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	/*
-	*	セーブデータがあれば、ここにレベルを入れる。
-	*/
+	int lv = 0;
 
-	//int lv = 0;
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			lv = player["Level"].get<double>() - 1;
+		}
+	}
+//#ifdef _DEBUG
+//#define Village1
+//#define Village2
+//#define Village3
 
-	// テスト。
-	//int lv = 30;
-	int lv = 1;
+//#ifdef Village1
+//	int lv = 1;
+//#elif defined(Village2)
+//	int lv = 12;
+//#elif defined(Village3)
+//	int lv = 22;
+//#endif
+//#else
+//	int lv = 1;
+//#endif
+	
 
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
@@ -200,7 +218,7 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 0.0f));
 	_CharaLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
 	
-	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 10.0f));
+	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 60.0f));
 	_CharaLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -236,18 +254,23 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 
+
+	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 	//@todo for debug
-#define Start1
-//#define Start2
-//#define Start3
+#ifdef _DEBUG
+	#define Start1
+	//#define Start2
+	//#define Start3
 #ifdef Start1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 #elif defined(Start2)
-	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
 #elif defined(Start3)
 	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
 #endif // Start1
+#endif
+
 
 	//ポジション
 	
@@ -768,6 +791,8 @@ void Player::_LevelUP()
 	//レベルアップエフェクト
 	/*_ParticleEffect->LevelUpEffect();
 	_ParticleEffect->SetLevelUPEffectFlag(true);*/
+
+	SaveLevel();
 }
 
 void Player::Speak()

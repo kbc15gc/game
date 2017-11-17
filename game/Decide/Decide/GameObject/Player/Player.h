@@ -305,6 +305,15 @@ private:
 	//話す
 	void Speak();
 
+	void SaveLevel()
+	{
+		picojson::object player;
+		player["Level"] = (picojson::value)(double)_PlayerParam->GetParam(CharacterParameter::LV);
+		JsonData LevelData;
+		LevelData.SetDataObject("Player", player);
+		LevelData.Save("Player");
+	}
+
 #ifdef _DEBUG
 	//デバッグ機能
 	void _DebugPlayer();

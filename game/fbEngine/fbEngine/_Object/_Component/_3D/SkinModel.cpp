@@ -376,12 +376,39 @@ void SkinModel::DrawMeshContainer(
 			// ディザ係数よりも大きい値のところが残る.
 			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
 
+			if (ditherParam.y < _DitherCoefficient)
+			{
+				ditherParam.y = _DitherCoefficient;
+			}
+
 			//フラグを設定.
 			ditherParam.x = 1.0f;
 		}
 		ditherParam.z = g_WindowSize.x;
 		ditherParam.w = g_WindowSize.y;
 		_Effect->SetVector("g_DitherParam", &ditherParam);
+
+		Vector4 fogParam = Vector4(1, 1, 1, 1);
+		if (_FogFunc == FogFunc::FogFuncDist)
+		{
+			//距離フォグ
+			fogParam.x = _FogParam[0];
+			fogParam.y = _FogParam[1];
+			fogParam.z = 1.0f;
+		}
+		else if (_FogFunc == FogFunc::FogFuncHeight)
+		{
+			//高さフォグ
+			fogParam.x = _FogParam[0];
+			fogParam.y = _FogParam[1];
+			fogParam.z = 2.0f;
+		}
+		else
+		{
+			fogParam.z = 0.0f;
+		}
+		_Effect->SetVector("g_fogParam", (D3DXVECTOR4*)&fogParam);
+		_Effect->SetVector("g_fogColor", (D3DXVECTOR4*)&_FogColor);
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
