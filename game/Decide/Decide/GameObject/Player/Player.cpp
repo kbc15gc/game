@@ -131,26 +131,38 @@ void Player::Awake()
 	_CharacterController->SetGravity(_Gravity);
 
 	//プレイヤーのパラメーター初期化。
-	/*
-	*	セーブデータがあれば、ここにレベルを入れる。
-	*/
+	int lv = 0;
+
 
 	//int lv = 0;
 
 	// テスト。
 	//int lv = 30;
-#ifdef _DEBUG
-#ifdef Village1
-	int lv = 1;
-#elif defined(Village2)
-	int lv = 12;
-#elif defined(Village3)
-	int lv = 22;
-#endif
-#else
-	int lv = 1;
-#endif
-	
+
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			lv = player["Level"].get<double>() - 1;
+		}
+	}
+//#ifdef _DEBUG
+//#define Village1
+//#define Village2
+//#define Village3
+
+//#ifdef Village1
+//	int lv = 1;
+//#elif defined(Village2)
+//	int lv = 12;
+//#elif defined(Village3)
+//	int lv = 22;
+//#endif
+//#else
+//	int lv = 1;
+//#endif
 
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	
@@ -754,6 +766,8 @@ void Player::_LevelUP()
 	//レベルアップエフェクト
 	/*_ParticleEffect->LevelUpEffect();
 	_ParticleEffect->SetLevelUPEffectFlag(true);*/
+
+	SaveLevel();
 }
 
 void Player::Speak()

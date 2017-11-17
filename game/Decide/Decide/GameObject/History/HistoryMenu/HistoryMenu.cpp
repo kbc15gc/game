@@ -39,7 +39,10 @@ void HistoryMenu::Start()
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
 	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
 
-	LoadChip();
+	if (IS_CONTINUE)
+	{
+		LoadChip();
+	}
 }
 
 /**

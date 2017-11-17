@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 1.5f;
+	const float CAMERA_SPEED = 2.5f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -105,25 +105,31 @@ void PlayerCamera::_StandardBehavior()
 	//ターゲットを追いかける。
 	_LookAtTarget();
 
+	//入力されたかどうか？
+	bool input = false;
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
 		_RotateHorizon(CAMERA_SPEED * Time::DeltaTime());
+		input = true;
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
 		_RotateHorizon(-CAMERA_SPEED * Time::DeltaTime());
+		input = true;
 	}
 	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) > 0.1f)
 	{
 		_RotateVertical(CAMERA_SPEED * Time::DeltaTime());
+		input = true;
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
 	{
 		_RotateVertical(-CAMERA_SPEED * Time::DeltaTime());
+		input = true;
 	}
 
 	//補正カメラ。
@@ -153,10 +159,12 @@ void PlayerCamera::_StandardBehavior()
 	_DestinationPos = _ClosetRay();
 
 	//カメラを移動させる。
-	//transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, 100.0f, 12.0f, Time::DeltaTime()));
-	auto pos = transform->GetPosition();
+	static float sp = 40.0f;
+	static float dp = 1.0f;
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime()));
+	/*auto pos = transform->GetPosition();
 	pos.Lerp(_DestinationPos, 0.8f);
-	transform->SetPosition(pos);
+	transform->SetPosition(pos);*/
 }
 
 void PlayerCamera::_LookAtTarget()
@@ -224,10 +232,6 @@ void PlayerCamera::_CameraSupport()
 {
 	//カメラの方向とプレイヤーの方向の内積をとる。
 	auto dot = _PForward->Dot(_ToCameraDir);
-	/*if (dot < 0.7f)
-	{
-		CameraReset();
-	}*/
 }
 
 Vector3 PlayerCamera::_ClosetRay()
@@ -276,7 +280,10 @@ Vector3 PlayerCamera::_SpringChaseMove(const Vector3& now, const Vector3& target
 	auto vSpringAccel = (-spring * vDisplace) - (damping * _Velocity);
 	//オイラー積分を使ってカメラの速度と位置を更新。
 	_Velocity += vSpringAccel * time * CAMERA_SPEED;
-	return now + (_Velocity * time);
+	auto next = now + (_Velocity * time);
+	auto diff = next - target;
+
+	return next;
 }
 
 void PlayerCamera::CameraReset()

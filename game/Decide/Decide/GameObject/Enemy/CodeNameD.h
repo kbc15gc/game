@@ -5,15 +5,28 @@
 #include "GameObject\History\Chip.h"
 
 // 継承クラス。
-// ボスエネミー(中ボスドラゴン)。
+// ボスエネミー(modelがうまくいかなかったので代用でゴーレム出してます。）
 class BossD :
 	public EnemyCharacter
 {
 private:
-	// ボス(中ボスゴーレム)のアニメーション番号。
-	enum class AnimationDoragon
+	// ボス(中ボス)のアニメーション番号。
+	enum class AnimationBossD
 	{
-		
+		Idle = 0,
+		IdleAction,
+		SleepS,
+		SleepL,
+		SleepE,
+		Damage,
+		Hit,
+		Die,
+		Walk,
+		Hit2,
+		Rage,
+		Jump,
+		Fly,
+		Land
 	};
 
 public:
@@ -21,7 +34,8 @@ public:
 	~BossD();
 
 	// アニメーションイベント関連。
-	
+	void AnimationEvent_Kobushi();
+	void AnimationEvent_Zutuki();
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -74,5 +88,4 @@ private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
 	unique_ptr<EnemySingleAttack> _singleAttackSecondPattern;
-
 };

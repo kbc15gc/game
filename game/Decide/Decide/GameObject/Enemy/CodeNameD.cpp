@@ -18,7 +18,7 @@ BossD::~BossD()
 }
 
 void BossD::_AwakeSubClass() {
-	SetFileName("d.X");
+	SetFileName("Boss_Golem_idle.X");
 }
 void BossD::_StartSubClass() {
 
@@ -46,27 +46,29 @@ void BossD::_StartSubClass() {
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//攻撃処理。
-	
+	_singleAttack.reset(new EnemySingleAttack(this));
+	_singleAttack->Init(4.5f, static_cast<int>(AnimationBossD::Hit));
+
+	_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
+	_singleAttackSecondPattern->Init(4.5f, static_cast<int>(AnimationBossD::Hit2));
+
 	// 初期ステートに移行。
 	// ※暫定処理。
-	//_initState = State::Wandering;
-	//_ChangeState(_initState);
-
-	_MyComponent.Animation->PlayAnimation(0);
-
+	_initState = State::Wandering;
+	_ChangeState(_initState);
 }
 
 void BossD::_UpdateSubClass() {
 
-	//if (!(_MyComponent.CharacterController->IsOnGround())) {
-	//	// エネミーが地面から離れている。
-	//	if (_NowStateIdx != State::Fall) {
-	//		// 現在のステートタイプを保存。
-	//		_saveState = _NowStateIdx;
-	//		// 落下ステートに切り替え。
-	//		_ChangeState(State::Fall);
-	//	}
-	//}
+	if (!(_MyComponent.CharacterController->IsOnGround())) {
+		// エネミーが地面から離れている。
+		if (_NowStateIdx != State::Fall) {
+			// 現在のステートタイプを保存。
+			_saveState = _NowStateIdx;
+			// 落下ステートに切り替え。
+			_ChangeState(State::Fall);
+		}
+	}
 }
 
 void BossD::_LateUpdateSubClass()
@@ -87,36 +89,44 @@ EnemyAttack* BossD::_AttackSelectSubClass() {
 	}
 
 }
+void BossD::AnimationEvent_Kobushi() {
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+	attack->RemoveParent();
+}
 
+void BossD::AnimationEvent_Zutuki() {
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+	attack->RemoveParent();
+}
 
 void BossD::_EndNowStateCallback(State EndStateType) {
 
-	//if (EndStateType == State::Wandering) {
-	//	// 徘徊ステート終了。
-	//	_ChangeState(State::Wandering);
-	//}
-	//else if (EndStateType == State::StartAttack) {
-	//	// 一度攻撃が終了した。
+	if (EndStateType == State::Wandering) {
+		// 徘徊ステート終了。
+		_ChangeState(State::Wandering);
+	}
+	else if (EndStateType == State::StartAttack) {
+		// 一度攻撃が終了した。
 
-	//	// もう一度攻撃開始。
-	//	_ChangeState(State::StartAttack);
-	//}
-	//else if (EndStateType == State::Fall) {
-	//	// 落下ステート終了。
+		// もう一度攻撃開始。
+		_ChangeState(State::StartAttack);
+	}
+	else if (EndStateType == State::Fall) {
+		// 落下ステート終了。
 
-	//	// 直前のステートに切り替え。
-	//	_ChangeState(_saveState);
-	//}
-	//else if (EndStateType == State::Damage) {
-	//	// 攻撃を受けた。
-	//	// 攻撃開始。
-	//	_ChangeState(State::StartAttack);
-	//}
-	//else if (EndStateType == State::Threat) {
-	//	// 威嚇終了。
-	//	// 攻撃開始。
-	//	_ChangeState(State::StartAttack);
-	//}
+		// 直前のステートに切り替え。
+		_ChangeState(_saveState);
+	}
+	else if (EndStateType == State::Damage) {
+		// 攻撃を受けた。
+		// 攻撃開始。
+		_ChangeState(State::StartAttack);
+	}
+	else if (EndStateType == State::Threat) {
+		// 威嚇終了。
+		// 攻撃開始。
+		_ChangeState(State::StartAttack);
+	}
 }
 
 void BossD::_ConfigCollision() {
@@ -132,7 +142,7 @@ void BossD::_ConfigCollision() {
 			info.id = Collision_ID::BOSS;
 			info.mass = 0.0f;
 			info.physicsType = Collision::PhysicsType::Kinematick;
-			info.offset = Vector3(0.0f, 0.0f, 0.0f);
+			info.offset = Vector3(0.0f, 1.0f, 0.0f);
 			info.rotation = Quaternion::Identity;
 			coll->Create(info, true);
 
@@ -144,7 +154,7 @@ void BossD::_ConfigCollision() {
 	{
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
-		_collisionInfo.radius = 1.8;
+		_collisionInfo.radius = 1.8f;
 		_collisionInfo.height = 6.0f;
 		_collisionInfo.offset = Vector3(0.0f, 1.0f, 0.0f);
 		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;
@@ -185,15 +195,39 @@ void BossD::_BuildAnimationSubClass(vector<double>& datas) {
 	// アニメーションタイプにデータを関連づけ。
 	// ※エネミーはすべて同じステートクラスを使用するため、ステートからアニメーションを再生できるよう
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
-	
+	{
+		// 待機状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossD::Idle));
+		// 歩行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossD::Walk));
+		// 走行状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossD::Walk));
+		// 吠える。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, static_cast<unsigned int>(AnimationBossD::IdleAction));
+		// ダメージ反応。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationBossD::Damage));
+		// 落下状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(AnimationBossD::Fly));
+		// 死亡状態。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationBossD::Die));
+	}
+
 }
 
 void BossD::_ConfigAnimationEvent() {
-	
+	//頭突き
+	{
+		float eventFrame = 0.3f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Hit2), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Zutuki));
+	}
+	//拳
+	{
+		float eventFrame = 0.3f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Hit), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Kobushi));
+	}
 }
 
 void BossD::_BuildSoundTable() {
 	// 攻撃音登録。
 
 }
-
