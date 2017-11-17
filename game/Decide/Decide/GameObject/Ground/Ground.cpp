@@ -33,6 +33,8 @@ void Ground::Awake()
 
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
+	model->SetFogParam(FogFunc::FogFuncDist, 350.0f, 600.0f, Vector4(0, 0, 0, 1), true);
+
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();
 

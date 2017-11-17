@@ -5,6 +5,8 @@
 
 #define MAX_LOADSTRING 100
 
+bool IS_CONTINUE;
+
 // グローバル変数:
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 WCHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名

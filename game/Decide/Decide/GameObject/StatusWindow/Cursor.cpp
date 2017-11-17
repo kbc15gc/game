@@ -29,6 +29,8 @@ void Cursor::CreateCursor(const char* filepath, Transform* parent, const Vector2
 	_indexInfo.rangeIndex = 0;
 	_indexInfo.offset = 0;
 	_initPos = localPos;
+
+
 }
 
 void Cursor::_Move(short num, float offset, int max, int maxMove, bool isLoop, CursorMoveType type, const Vector2& direction) {
@@ -71,6 +73,10 @@ void Cursor::_UpdateCursor(float offset, CursorMoveType type, const Vector2& dir
 }
 
 const Cursor::CursorIndex& Cursor::_NextMove(short num, float offset, int Max, int maxMove, bool isLoop, CursorMoveType type, const Vector2& direction) {
+	
+	//変更前の値.
+	int befIndex = _indexInfo.rangeIndex;
+	
 	maxMove = min(Max, maxMove);
 	int maxMoveStart = max(0,Max - maxMove);	// スタート位置の最大値は最大要素から最大移動要素。
 
@@ -107,6 +113,15 @@ const Cursor::CursorIndex& Cursor::_NextMove(short num, float offset, int Max, i
 		}
 	}
 
+	if (befIndex != _indexInfo.rangeIndex)
+	{
+		//カーソルの位置が変わっている.
+		SoundSource* changeSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		changeSE->Init("Asset/Sound/UI/Select.wav");
+		changeSE->SetDelete(true);
+		changeSE->Play(false);
+	}
+
 	// カーソルの位置を更新。
 	_UpdateCursor(offset, type, direction);
 
@@ -114,6 +129,10 @@ const Cursor::CursorIndex& Cursor::_NextMove(short num, float offset, int Max, i
 }
 
 const Cursor::CursorIndex& Cursor::_PrevMove(short num, float offset, int Max, int maxMove, bool isLoop, CursorMoveType type, const Vector2& direction) {
+	
+	//変更前の値.
+	int befIndex = _indexInfo.rangeIndex;
+	
 	maxMove = min(Max, maxMove);
 	int maxMoveStart = max(0, Max - maxMove);	// スタート位置の最大値は最大要素から最大移動要素。
 
@@ -146,6 +165,15 @@ const Cursor::CursorIndex& Cursor::_PrevMove(short num, float offset, int Max, i
 			_indexInfo.rangeIndex = maxMove;
 			_indexInfo.offset = max(0,Max - maxMove);
 		}
+	}
+
+	if (befIndex != _indexInfo.rangeIndex)
+	{
+		//カーソルの位置が変わっている.
+		SoundSource* changeSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		changeSE->Init("Asset/Sound/UI/Select.wav");
+		changeSE->SetDelete(true);
+		changeSE->Play(false);
 	}
 
 	// カーソルの位置を更新。

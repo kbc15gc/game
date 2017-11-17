@@ -73,6 +73,7 @@ void StatusWindow::Awake()
 */
 void StatusWindow::Update()
 {
+	int befSelectWindow = _NowSelectWindow;
 	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::UpperRight);
 
 	bool isChange = false;
@@ -142,6 +143,14 @@ void StatusWindow::Update()
 	{
 		ChangeTime = 0.5f;
 		LocalTime = 0.0f;
+	}
+
+	if (befSelectWindow != _NowSelectWindow)
+	{
+		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+		se->Init("Asset/Sound/UI/Menu.wav");
+		se->SetDelete(true);
+		se->Play(false);
 	}
 
 	if (isChange)

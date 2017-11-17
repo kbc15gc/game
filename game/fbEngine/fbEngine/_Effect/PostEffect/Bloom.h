@@ -3,14 +3,36 @@
 class Vertex;
 class Effect;
 
+/**
+* ブルームのポストエフェクト.
+*/
 class Bloom
 {
 public:
+
+	/**
+	* コンストラクタ.
+	*/
 	Bloom(){}
+
+	/**
+	* デストラクタ.
+	*/
 	~Bloom(){}
 
+	/**
+	* 作成.
+	*/
 	void Create();
+	
+	/**
+	* 描画.
+	*/
 	void Render();
+
+	/**
+	* 解放.
+	*/
 	void Release();
 
 	/**
@@ -21,10 +43,27 @@ public:
 		_IsEnable = value;
 	}
 
+	/**
+	* 輝度用レンダリングターゲットを取得.
+	*/
+	//RenderTarget* GetLuminanceRT()
+	//{
+	//	if (_IsEnable)
+	//	{
+	//		return _LuminanceRT;
+	//	}
+	//	return nullptr;
+	//}
+
 private:
+
+	/**
+	* 重みを計算.
+	*/
 	void _UpdateWeight(const float& dis);
 
 private:
+
 	//
 	Vertex* _Vertex;
 	//有効フラグ. 
@@ -38,8 +77,13 @@ private:
 	//エフェクト
 	Effect* _Effect;
 
-	//輝度用のレンダリングターゲット
+	/**
+	* 輝度用のレンダリングターゲット
+	*/
 	RenderTarget* _LuminanceRT;
+
+	/** 輝度カラー用のレンダリングターゲット. */
+	RenderTarget* _LuminanceColorRT = nullptr;
 
 	//ぼかし合成用のRT
 	RenderTarget* _CombineRT;

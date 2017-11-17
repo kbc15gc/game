@@ -36,11 +36,13 @@ public:
 
 	//プレイヤーの所持金を取得。
 	int GetPlayerMoney() {
+		SaveMoney();
 		return _PlayerMoney;
 	}
 
 	int* GetPlayerMoneyPt()
 	{
+		SaveMoney();
 		return &_PlayerMoney;
 	}
 
@@ -48,11 +50,13 @@ public:
 	void AddPlayerMoney(int add)
 	{
 		_PlayerMoney += add;
+		SaveMoney();
 	}
 
 	//プレイヤーの所持金から減算。
 	void SubtractPlayerMoney(int sub) {
 		_PlayerMoney -= sub;
+		SaveMoney();
 	}
 
 	//アイテムをインベントリに追加。
@@ -116,6 +120,15 @@ private:
 	//所持品のデータを書き出し。
 	// 引数：	アイテムコード。
 	void _OutData(Item::ItemCodeE code);
+
+	void SaveMoney()
+	{
+		picojson::object money;
+		money["Money"] = (picojson::value)(double)_PlayerMoney;
+		JsonData MoneyData;
+		MoneyData.SetDataObject("Money", money);
+		MoneyData.Save("Money");
+	}
 
 	// 全所持品書き出し。
 	void _OutData_All();

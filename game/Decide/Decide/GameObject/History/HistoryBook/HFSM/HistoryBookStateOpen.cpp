@@ -11,7 +11,6 @@
 void HistoryBookStateOpen::Entry()
 {
 	_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::Open, 0.2f, 1);
-
 }
 
 /**
