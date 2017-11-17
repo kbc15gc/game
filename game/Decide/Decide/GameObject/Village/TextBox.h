@@ -4,6 +4,7 @@
 #include "fbEngine\_Object\_GameObject\ImageObject.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\Village\MessageManager.h"
+#include "fbEngine\_Object\_GameObject\SoundSource.h"
 
 namespace
 {
@@ -61,6 +62,13 @@ private:
 	void _Animation();
 	//表示させる文字数増加
 	void _IncreaseChar();
+
+	//ボイスの再生。
+	void _PlayVoice(string filepath)
+	{
+		_Voice.Init(filepath.c_str(), false);
+		_Voice.Play(false);
+	}
 private:
 	//テキストボックスの背景□とカーソル▼
 	ImageObject* _BoxImage[2];
@@ -79,4 +87,7 @@ private:
 	TextBoxStateE _State;
 	//スケール
 	float _AnimeTime;
+
+	//再生するボイス。
+	SoundSource _Voice;
 };

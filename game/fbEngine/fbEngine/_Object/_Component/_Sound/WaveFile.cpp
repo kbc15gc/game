@@ -14,7 +14,7 @@ WaveFile::~WaveFile()
 	Release();
 }
 
-void WaveFile::Open(const char* fileName)
+bool WaveFile::Open(const char* fileName)
 {
 	m_filePath = fileName;
 	m_filePathHash = Support::MakeHash((char*)fileName);
@@ -26,7 +26,7 @@ void WaveFile::Open(const char* fileName)
 		strcat(text, fileName);
 		strcat(text, "\nファイルが見つかりませんでした。");
 		MessageBoxA(NULL, text, "音楽ファイル読み込みエラー", MB_OK);
-		return;
+		return false;
 	}
 	MMCKINFO ckIn;           // chunk info. for general use.
 	PCMWAVEFORMAT pcmWaveFormat;  // Temp PCM structure to load in.
@@ -37,13 +37,13 @@ void WaveFile::Open(const char* fileName)
 	if ((0 != mmioDescend(m_hmmio, &m_ckRiff, NULL, 0))) {
 		//TK_LOG("Failed mmioDescend");
 		Release();
-		return;
+		return false;
 	}
 	if ((m_ckRiff.ckid != FOURCC_RIFF) ||
 		(m_ckRiff.fccType != mmioFOURCC('W', 'A', 'V', 'E'))) {
 		//TK_LOG("Failed mmioDescend");
 		Release();
-		return;
+		return false;
 	}
 
 	// Search the input file for for the 'fmt ' chunk.
@@ -51,7 +51,7 @@ void WaveFile::Open(const char* fileName)
 	if (0 != mmioDescend(m_hmmio, &ckIn, &m_ckRiff, MMIO_FINDCHUNK)) {
 		//TK_LOG("Failed mmioDescend");
 		Release();
-		return;
+		return false;
 	}
 
 	// Expect the 'fmt' chunk to be at least as large as <PCMWAVEFORMAT>;
@@ -59,7 +59,7 @@ void WaveFile::Open(const char* fileName)
 	if (ckIn.cksize < (LONG)sizeof(PCMWAVEFORMAT)) {
 		//TK_LOG("Failed mmioDescend");
 		Release();
-		return;
+		return false;
 	}
 
 	// Read the 'fmt ' chunk into <pcmWaveFormat>.
@@ -67,7 +67,7 @@ void WaveFile::Open(const char* fileName)
 		sizeof(pcmWaveFormat)) != sizeof(pcmWaveFormat)) {
 		//TK_LOG("Failed mmioRead");
 		Release();
-		return;
+		return false;
 	}
 
 	// Allocate the waveformatex, but if its not pcm format, read the next
@@ -87,7 +87,7 @@ void WaveFile::Open(const char* fileName)
 		if (mmioRead(m_hmmio, (CHAR*)&cbExtraBytes, sizeof(WORD)) != sizeof(WORD)) {
 			//TK_LOG("Failed mmioRead");
 			Release();
-			return;
+			return false;
 		}
 
 		m_pwfx = (WAVEFORMATEX*)new CHAR[sizeof(WAVEFORMATEX) + cbExtraBytes];
@@ -102,7 +102,7 @@ void WaveFile::Open(const char* fileName)
 		{
 			//TK_LOG("Failed mmioRead");
 			Release();
-			return;
+			return false;
 		}
 	}
 
@@ -111,10 +111,12 @@ void WaveFile::Open(const char* fileName)
 	{
 		//TK_LOG("Failed mmioAscend");
 		Release();
-		return;
+		return false;
 	}
 	ResetFile();
 	m_dwSize = m_ck.cksize;
+
+	return true;
 }
 void WaveFile::ResetFile()
 {
