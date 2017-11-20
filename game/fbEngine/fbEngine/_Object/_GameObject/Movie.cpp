@@ -3,7 +3,7 @@
 
 void Movie::Awake()
 {
-	//COM初期化
+	//COMの初期化
 	HRESULT hRes = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	if (FAILED(hRes)) {
 		// COM初期化失敗
@@ -42,25 +42,25 @@ void Movie::Awake()
 	pVMRWndCont->Release();
 
 	//ソースファイルネーム
-	WCHAR wFileName[] = L"Asset/Movie/Bemybaby.avi";
+	WCHAR wFileName[] = L"Asset/Movie/baby.avi";
 	IBaseFilter *pSource = NULL;
 	//Source Filterを作成し、フィルタグラフに追加します
 	_GraphBuilder->AddSourceFilter(wFileName, L"FiltaName", &pSource);
 
-	ICaptureGraphBuilder2 *pCGB2 = NULL;
+	
 	HRESULT hr = CoCreateInstance(
 		CLSID_CaptureGraphBuilder2,
 		NULL,
 		CLSCTX_INPROC_SERVER,
 		IID_ICaptureGraphBuilder2,
-		(void**)&pCGB2);
+		(void**)&_CGB2);
 	//初期化
-	hr = pCGB2->SetFiltergraph(_GraphBuilder);
+	hr = _CGB2->SetFiltergraph(_GraphBuilder);
 
 	//ソースフィルタをVMR9に接続
-	pCGB2->RenderStream(0, 0, pSource, 0, _BaseFilterVMR9);
+	_CGB2->RenderStream(0, 0, pSource, 0, _BaseFilterVMR9);
 	//デフォルトオーディオに接続
-	pCGB2->RenderStream(0, &MEDIATYPE_Audio, pSource, 0, 0);
+	_CGB2->RenderStream(0, &MEDIATYPE_Audio, pSource, 0, 0);
 
 	// 描画領域の設定（接続後でないとエラーになる）
 	LONG W, H;
@@ -97,30 +97,31 @@ void Movie::Awake()
 	SAFE_RELEASE(pMediaPosition);
 
 	// メディア再生
-	if (FAILED(hRes = _MediaControl->Run()))
-		return ;
+	//if (FAILED(hRes = _MediaControl->Run()))
+	//	return ;
 
-	// 待機時間の設定(ミリ秒)
-	long pEvCode;
-	hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
+	//// 待機時間の設定(ミリ秒)
+	//long pEvCode;
+	//hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
 
-	//グラフフィルタ停止
-	_MediaControl->Stop();
-
-	//インターフェースをリリース
-	//作ったときと逆順に解放
-	SAFE_RELEASE(_MediaEvent);
-	SAFE_RELEASE(_MediaControl);
-	SAFE_RELEASE(_BaseFilterVMR9);
-	SAFE_RELEASE(pCGB2);
-	//SAFE_RELEASE(_GraphBuilder);
-	CoUninitialize();
+	////グラフフィルタ停止
+	//_MediaControl->Stop();	
 }
 
 void Movie::Start()
 {
+	_MediaControl->Run();
 }
 
 void Movie::Update()
 {
+	
+	/*if(GetAsyncKeyState(VK_SPACE))
+		_MediaControl->Run();*/
+}
+
+void Movie::Render()
+{
+	//_MediaControl->Pause();
+	//_MediaControl->Run();
 }

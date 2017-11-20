@@ -3,9 +3,13 @@
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
 #include "GameObject\Camera\GameCamera.h"
 #include "GameLight.h"
+#include "fbEngine/_Object/_GameObject/Movie.h"
 
 void TitleScene::Start()
 {
+	//“®‰æ
+	//INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+
 	//ƒ^ƒCƒgƒ‹‰æ‘œ
 	ImageObject* title = INSTANCE(GameObjectManager)->AddNew<ImageObject>("title",0);
 	title->SetTexture(LOADTEXTURE("Title.png"));

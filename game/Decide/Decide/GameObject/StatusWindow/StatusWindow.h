@@ -42,28 +42,23 @@ public:
 	*/
 	void Update()override;
 
+	/**
+	* —ğj‘‚ğŠO•”‚©‚çÀs‚·‚é(ŠJ‚­or•Â‚¶‚éˆ—)ˆ—.
+	*/
+	void Execute();
+
 	void OnEnable()override
 	{
 		for (int i = 0; i < _WindowCount; i++)
 		{
 			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
 		}
-
-		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
-		se->Init("Asset/Sound/UI/Menu.wav");
-		se->SetDelete(true);
-		se->Play(false);
 	}
 
 	void OnDisable()override
 	{
 		INSTANCE(EventManager)->NotifyEndEvent();
 		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->DeleteList();
-	
-		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
-		se->Init("Asset/Sound/UI/Menu.wav");
-		se->SetDelete(true);
-		se->Play(false);
 	}
 
 private:
