@@ -67,6 +67,7 @@ namespace
 	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
+	Vector3 MATI3_POS = { 214.80f, 64.70f, -84.10f };
 
 	SCollisionInfo soundcollisition[]
 	{
@@ -277,6 +278,9 @@ void GameScene::Update()
 						case BGM::MATI2:
 							_Player->SetRespawnPos(MATI2_POS);
 							break;
+						case BGM::MATI3:
+							_Player->SetRespawnPos(MATI3_POS);
+							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
@@ -351,6 +355,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _MatiBGM;
 			break;
 		case GameScene::BGM::MATI2:
+			_GameBGM = _Mati2BGM;
+			break;
+		case GameScene::BGM::MATI3:
+			//@todo for debug âºê›íË
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::DEAD:
