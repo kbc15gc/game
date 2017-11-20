@@ -18,6 +18,8 @@ private:
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 private:
+	unique_ptr<Transform> _buildingsParent;	// すべての舞台装置の親。
+
 	bool _isOutsideRange = false;	// 範囲外に出たか。
 
 	vector<GameObject*> _historyBuildings;	// 舞台装置。

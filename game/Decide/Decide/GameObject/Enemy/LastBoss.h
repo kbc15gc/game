@@ -128,6 +128,4 @@ private:
 	SordShock* _sordAttackShot0 = nullptr;
 	SordShock* _sordAttackShot1 = nullptr;
 	SordShock* _sordAttackShot2 = nullptr;
-
-	unique_ptr<SoundData> _voiceYokukitana;
 };

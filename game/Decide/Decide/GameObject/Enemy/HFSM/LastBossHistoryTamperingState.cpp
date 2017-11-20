@@ -5,10 +5,20 @@
 #include "EnemyWaitState.h"
 #include "GameObject\Enemy\LastBoss.h"
 #include "GameObject\History\HistoryManager.h"
+#include "GameObject\Village\ContinentObject.h"
 
 LastBossHistoryTamperingState::LastBossHistoryTamperingState(EnemyCharacter* Object) : EnemyState(Object)
 {
-	 //INSTANCE(HistoryManager)->CreateBuilding("Asset/Data/LastBossStageEquipment/.csv", _historyBuildings);
+	//_buildingsParent.reset(new Transform(nullptr,nullptr));
+	//_buildingsParent->SetPosition(_EnemyObject->transform->GetPosition());
+	//_buildingsParent->SetRotation(Quaternion::Identity);
+	// INSTANCE(HistoryManager)->CreateBuilding("Asset/Data/LastBossStageEquipment/Test.csv", _historyBuildings);
+	// for (auto obj : _historyBuildings) {
+	//	 // 吐き出した座標をバトルフィールドの座標系に変換。
+	//	 obj->transform->SetParent(_buildingsParent.get());
+	//	 obj->transform->SetLocalPosition(obj->transform->GetPosition());
+	//	 obj->transform->SetLocalRotation(obj->transform->GetRotation());
+	// }
 }
 
 
@@ -37,8 +47,15 @@ void LastBossHistoryTamperingState::_UpdateSubClass() {
 	// 大魔法がキャンセルされるとダウンに移行。
 	_EnemyObject->ChangeStateRequest(static_cast<EnemyCharacter::State>(LastBoss::LastBossState::LastBossDown));
 	
+	for (auto obj : _historyBuildings) {
+		// 吐き出した座標をバトルフィールドの座標系に変換。
+		if (static_cast<ContinentObject*>(obj)->GetIsAddPhysicsWorld()) {
+			OutputDebugString("LastBossBuild!");
+		}
+	}
+
 	// ※暫定処理。
-	_EndState();
+	//_EndState();
 }
 
 void LastBossHistoryTamperingState::_ExitSubClass(EnemyCharacter::State next) {

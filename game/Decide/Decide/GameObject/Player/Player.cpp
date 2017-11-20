@@ -286,7 +286,7 @@ void Player::Start()
 		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
 	}
 
-	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+	//_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 
 	//@todo for debug
 #ifdef _DEBUG
@@ -295,7 +295,7 @@ void Player::Start()
 #elif defined(Village2)
 	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
 #elif defined(Village3)
-	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
+	//_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
 #endif // Start1
 #endif

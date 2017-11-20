@@ -292,6 +292,8 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 
 	}
 	objInfo.clear();
+
+	return Builds;
 }
 
 void HistoryManager::_CreateNPC(int location, const char * path)
