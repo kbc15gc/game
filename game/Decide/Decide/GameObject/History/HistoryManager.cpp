@@ -25,7 +25,15 @@ HistoryManager::HistoryManager()
 	}
 	else
 	{
-		//データを保存.
+		//CSVから歴史情報読み取り。
+		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		FOR(i, _LocationHistoryList.size())
+		{
+			for (int j = 0; j < (int)ChipID::ChipNum; j++)
+			{
+				_LocationHistoryList.at(i)->_ChipSlot[j] = ChipID::None;
+			}
+		}
 		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 
