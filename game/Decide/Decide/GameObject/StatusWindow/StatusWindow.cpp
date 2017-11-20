@@ -163,3 +163,22 @@ void StatusWindow::Update()
 	}
 
 }
+
+void StatusWindow::Execute()
+{
+	//アクティブ状況を反転にする。
+	this->SetActive(!this->_Active, true);
+
+	//効果音再生。
+	SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusWindow_SE", 0);
+
+	//開いたときと閉じた時で異なる音。
+	if (this->_Active)
+		se->Init("Asset/Sound/UI/Menu.wav");
+	else
+		se->Init("Asset/Sound/UI/Menu.wav");
+
+	//再生後に自動で削除するようにする。
+	se->SetDelete(true);
+	se->Play(false);
+}

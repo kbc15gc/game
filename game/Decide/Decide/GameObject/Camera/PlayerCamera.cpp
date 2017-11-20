@@ -159,7 +159,7 @@ void PlayerCamera::_StandardBehavior()
 	_DestinationPos = _ClosetRay();
 
 	//ƒJƒƒ‰‚ðˆÚ“®‚³‚¹‚éB
-	static float sp = 40.0f;
+	static float sp = 70.0f;
 	static float dp = 1.0f;
 	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime()));
 	/*auto pos = transform->GetPosition();

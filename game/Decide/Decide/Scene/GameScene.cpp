@@ -179,23 +179,24 @@ void GameScene::Start()
 	//BOSSBGM
 	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
 	_BossBGM->Init("Asset/Sound/boss1.wav");
+	_BossBGM->SetVolume(0.5f);
 
 	//ŠXBGM
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
+	_MatiBGM->SetVolume(0.5f);
 
 	//ŠX2BGM
 	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
 	_Mati2BGM->Init("Asset/Sound/mati2.wav");
+	_Mati2BGM->SetVolume(0.5f);
 
 	//Ž€–SBGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
 	_DeadBGM->Init("Asset/Sound/dead.wav");
-	_DeadBGM->SetVolume(3.0f);
 
 	//Ä¶—pBGM
 	_GameBGM = _WorldBGM;
-	
 #ifndef _NOBO_
 	_GameBGM->Play(true);
 #endif // !_NOBO_

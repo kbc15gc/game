@@ -34,7 +34,7 @@
 #include <strmif.h>
 #include <objbase.h>
 #include <vmr9.h>
-//コンパイラを通すために必要
+//COMのコンパイラを通すために必要
 #define _WIN32_DCOM
 //XInput
 #pragma comment(lib, "Xinput.lib")
