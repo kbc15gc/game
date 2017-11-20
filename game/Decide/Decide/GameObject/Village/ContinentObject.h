@@ -55,9 +55,16 @@ public:
 	//読み込むモデルのファイル名指定
 	//コリジョンを自動で生成するか。
 	void LoadModel(const char* filename, bool coll);
+
+	inline bool GetIsAddPhysicsWorld(){
+		return _isAddPhysicsWorld;
+	}
 protected:
 	//モデル描画
 	SkinModel* _Model;
 	//アニメーション
 	Animation* _Anim;
+
+private:
+	bool _isAddPhysicsWorld = false;
 };

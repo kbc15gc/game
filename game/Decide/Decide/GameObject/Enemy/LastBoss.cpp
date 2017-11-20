@@ -152,13 +152,12 @@ void LastBoss::EncourageBuff() {
 void LastBoss::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("LastBoss.X");
-}
-
-void LastBoss::_StartSubClass() {
-
 	//ポジション
 	_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
 	transform->SetPosition(_InitPos);
+}
+
+void LastBoss::_StartSubClass() {
 
 	// 視野角生成。
 	_ViewAngle = 360.0f;
@@ -198,6 +197,7 @@ void LastBoss::_StartSubClass() {
 	// 初期ステートに移行。
 	// ※暫定処理。
 	//_initState = static_cast<State>(LastBossState::LastBossMagician);
+	//_initState = static_cast<State>(LastBossState::LastBossHistory);
 	_initState = State::Speak;
 
 	//_voiceYokukitana.reset(_CreateSoundData("LastBoss_YOKUKITANA1.wav",35.0f,true));
