@@ -10,6 +10,12 @@
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
+//各村の設定。
+//各村によってスタート位置・レベルが変わります。
+//#define Village1
+//#define Village2
+#define Village3
+
 namespace
 {
 	float NormalAnimationSpeed = 1.0f;
@@ -127,6 +133,12 @@ void Player::Awake()
 	//プレイヤーのパラメーター初期化。
 	int lv = 0;
 
+
+	//int lv = 0;
+
+	// テスト。
+	//int lv = 30;
+
 	if (IS_CONTINUE)
 	{
 		JsonData PlayerData;
@@ -152,7 +164,6 @@ void Player::Awake()
 //#else
 //	int lv = 1;
 //#endif
-	
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 
 	if (!IS_CONTINUE)
@@ -275,17 +286,16 @@ void Player::Start()
 		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
 	}
 
+	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+
 	//@todo for debug
 #ifdef _DEBUG
-	#define Start1
-	//#define Start2
-	//#define Start3
-#ifdef Start1
-	SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
-#elif defined(Start2)
-	SetRespawnPos(Vector3(-118.0f, 58.0f, 547.0f));
-#elif defined(Start3)
-	SetRespawnPos(Vector3(250.0f, 70.0f, -31.0f));
+#ifdef Village1
+	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+#elif defined(Village2)
+	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
+#elif defined(Village3)
+	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
 #endif // Start1
 #endif
@@ -312,43 +322,6 @@ void Player::Start()
 
 void Player::Update()
 {
-
-	//@todo for debug
-#define CHIP
-#ifdef CHIP
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
-	}
-#endif // 
-
-
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
