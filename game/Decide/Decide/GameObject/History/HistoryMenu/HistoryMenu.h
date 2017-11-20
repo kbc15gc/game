@@ -48,6 +48,11 @@ public:
 	}
 
 	/**
+	* ‰Šú‰». 
+	*/
+	void Awake()override;
+
+	/**
 	* ‰Šú‰».
 	*/
 	void Start()override;

@@ -77,7 +77,7 @@ void HistoryManager::Start()
 					continue;
 				}
 				//読み込んだデータを元に歴史書にページをあらかじめ追加。
-				HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
+				HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, 0);
 				page->ChangeState(HistoryPage::StateCodeE::Close);
 			}
 		}
@@ -92,9 +92,9 @@ void HistoryManager::Start()
 * @param slot		スロット番号.
 * @param chip		チップID.
 */
-bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip)
+bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip, int index)
 {
-	_HistoryBook->PutInChip(chip, location);
+	_HistoryBook->PutInChip(chip, location, index);
 	//ひとまず入れるだけで上書されてしまう.
 	_LocationHistoryList[(int)location]->SetData(_HistoryBook->GetLocationList(location));
 

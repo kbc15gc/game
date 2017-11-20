@@ -10,6 +10,18 @@
 
 #include "GameObject\History\HistoryManager.h"
 
+void HistoryMenu::Awake()
+{
+	if (IS_CONTINUE)
+	{
+		LoadChip();
+	}
+	else
+	{
+		SaveChip();
+	}
+}
+
 /**
 * 初期化.
 */
@@ -38,15 +50,6 @@ void HistoryMenu::Start()
 	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
 	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
-
-	if (IS_CONTINUE)
-	{
-		LoadChip();
-	}
-	else
-	{
-		SaveChip();
-	}
 }
 
 /**
@@ -300,12 +303,12 @@ void HistoryMenu::SelectPageUpdate()
 		int size = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size();
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
 		{
-			_NowLookPage = min(max(0, size - 1), _NowLookPage + 1);
+			_NowLookPage = min(size, _NowLookPage + 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowLookPage = min(max(0, size - 1), _NowLookPage + 1);
+			_NowLookPage = min(size, _NowLookPage + 1);
 
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
@@ -446,7 +449,7 @@ void HistoryMenu::SelectChipUpdate()
 		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
 		{
 			//現在指定している場所にチップを設定.
-			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID());
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID(), _NowLookPage);
 
 			//搬入したチップを所持チップから削除.
 			auto it = _Chip2DList.begin();
