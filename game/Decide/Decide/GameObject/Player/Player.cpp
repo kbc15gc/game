@@ -792,6 +792,10 @@ void Player::Speak()
 	//NPCを取得
 	vector<vector<NPC*>> npc;
 	npc = INSTANCE(HistoryManager)->GetNPCList();
+
+	//ショップイベントフラグ取得。
+	bool eventflag = INSTANCE(EventManager)->ShopEvent();
+
 	//村
 	for (auto village : npc)
 	{
@@ -811,13 +815,15 @@ void Player::Speak()
 			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
 			float len = dir.Length();
 			//範囲内かどうか
-			if (npc->GetRadius() >= len)
+			//ショップイベント中でないとき
+			if (npc->GetRadius() >= len && !eventflag)
 			{
 				if (_CharacterController == nullptr)
 				{
 					return;
 				}
 				//地面についていれば話しかけれる
+				//ショップイベントでないとき。
 				if (_CharacterController->IsOnGround())
 				{
 					//会話のためHPバーなどを消す。
