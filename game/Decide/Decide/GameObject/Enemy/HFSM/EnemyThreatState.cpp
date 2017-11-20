@@ -4,7 +4,6 @@
 void EnemyThreatState::_EntrySubClass() {
 	if (_EnemyObject->GetAnimationNo(EnemyCharacter::AnimationType::Threat) >= 0) {
 		// テーブルにアニメーションが設定されている。
-		_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Threat, 0.5f);
 		_isNotMotion = false;
 	}
 	else {
@@ -12,7 +11,7 @@ void EnemyThreatState::_EntrySubClass() {
 	}
 }
 
-void EnemyThreatState::Start() {
+void EnemyThreatState::_StartSubClass() {
 }
 
 void EnemyThreatState::_UpdateSubClass() {

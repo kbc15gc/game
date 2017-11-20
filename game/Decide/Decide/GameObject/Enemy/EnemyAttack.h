@@ -130,14 +130,54 @@ private:
 	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。
 };
 
-class GhostComboAttack:public EnemyAttack{
+class EnemyWarpAttack : public EnemyAttack {
 private:
-	enum WarpState{Through, Materialization};
+	enum WarpState { Through, Materialization };
 public:
-	GhostComboAttack(EnemyCharacter* object) :EnemyAttack(object) {
+	EnemyWarpAttack(EnemyCharacter* object) :EnemyAttack(object) {
 		_player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
 	}
-	~GhostComboAttack() {
+	~EnemyWarpAttack() {
+	};
+
+	// 連続攻撃の初期化関数。
+	// 引数：	攻撃可能範囲(ここでは攻撃開始可能範囲)。
+	//			攻撃一回を定義したクラスのポインタ(Init関数を呼んだ後のものを渡す)。
+	void Init(float attackRange, EnemyAttack* attack) {
+		_AttackRange = attackRange;
+		_attack.reset(attack);
+	}
+
+	void Entry()override;
+
+	bool Update()override;
+
+	void Exit()override {
+		_enemyObject->SetAlpha(1.0f);
+		_isAttackEnd = false;
+	}
+
+private:
+	void Init(float attackRange, int animType = -1, float interpolate = 0.0f, float playSpeed = 1.0f, int animLoopNum = 1, int playEventNo = 0)override {
+		//EnemyAttack::Init(attackRange, animType, interpolate, playSpeed, animLoopNum, playEventNo);
+	}
+
+private:
+	unique_ptr<EnemyAttack> _attack;
+	WarpState _nowWarpState;
+	Player* _player = nullptr;
+	bool _isWarpEnd = false;	// 実体化完了か。
+	bool _isAttackEnd = false;
+	const float _chaceTime = 0.45f;
+	float _counter = 0.0f;
+};
+
+class EnemyComboAttack:public EnemyAttack{
+public:
+	EnemyComboAttack(EnemyCharacter* object) :EnemyAttack(object) {
+		_player = static_cast<Player*>(INSTANCE(GameObjectManager)->FindObject("Player"));
+	}
+	~EnemyComboAttack() {
 	};
 
 	// 連続攻撃の初期化関数。
@@ -172,12 +212,6 @@ private:
 	unique_ptr<EnemyAttack> _oneCombo;
 	int _attackNum = 4;
 	int _comboCount;
-	WarpState _nowWarpState;
-
+	bool _isStartAttack = false;
 	//const float _chaceTime = 0.4f;
-	const float _chaceTime = 0.45f;
-
-	float _counter = 0.0f;
-	bool _isWarpEnd = false;	// 実体化完了か。
-	bool _isAttackEnd = false;
 };

@@ -54,7 +54,7 @@ void LastBoss::SordAttackEvent() {
 
 
 	// 攻撃音再生。
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
 void LastBoss::SordAttackEvent2() {
@@ -104,28 +104,48 @@ void LastBoss::MagicAttackShot3() {
 	_magicAttack->BreathEnd();
 }
 
-void LastBoss::BuffDebuffEvent() {
-	int rnd = rand() % 2;
-
+void LastBoss::BuffEvent() {
 	int value[CharacterParameter::Param::MAX];
 	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
 		value[idx] = 0;
 	}
 
-	if (rnd == 0) {
-		// 自身にバフ。
-		value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
-		value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
-		value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
-		value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
-		BuffAndDebuff(value, 20.0f);
+	// 自身にバフ。
+	value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
+	BuffAndDebuff(value, 30.0f);
+}
+
+void LastBoss::DebuffEvent() {
+	int value[CharacterParameter::Param::MAX];
+	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
+		value[idx] = 0;
 	}
-	else {
-		value[static_cast<int>(CharacterParameter::Param::ATK)] = -50;
-		value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
-		value[static_cast<int>(CharacterParameter::Param::DEF)] = -20;
-		value[static_cast<int>(CharacterParameter::Param::MDE)] = -20;
-		PlayerBuffAndDebuff(value, 20.0f);
+
+	// プレイヤーにデバフ。
+	value[static_cast<int>(CharacterParameter::Param::ATK)] = -50;
+	value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
+	value[static_cast<int>(CharacterParameter::Param::DEF)] = -30;
+	value[static_cast<int>(CharacterParameter::Param::MDE)] = -30;
+	PlayerBuffAndDebuff(value, 30.0f);
+}
+
+void LastBoss::EntourageCommand() {
+	if (_NowStateIdx == static_cast<State>(LastBossState::LastBossThrone)) {
+		if (!static_cast<LastBossThroneState*>(_NowState)->EntourageCommand()) {
+			// 側近が片方減っている。
+
+			EncourageBuff();
+			DebuffEvent();
+		}
+	}
+}
+
+void LastBoss::EncourageBuff() {
+	if (_NowStateIdx == static_cast<State>(LastBossState::LastBossThrone)) {
+		static_cast<LastBossThroneState*>(_NowState)->EncourageBuff();
 	}
 }
 
@@ -169,30 +189,30 @@ void LastBoss::_StartSubClass() {
 	_buffAttack.reset(new EnemySingleAttack(this));
 	_buffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 	_debuffAttack.reset(new EnemySingleAttack(this));
-	_debuffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
+	_debuffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::MagicThrone), 0.2f);
+	_commandAttack.reset(new EnemySingleAttack(this));
+	_commandAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::MagicThrone), 0.2f, 1.0f, 1, 1);
+	_encourageBuffAttack.reset(new EnemySingleAttack(this));
+	_encourageBuffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::MagicThrone), 0.2f, 1.0f, 1, 2);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
 	//_initState = static_cast<State>(LastBossState::LastBossMagician);
 	_initState = State::Speak;
 
+	//_voiceYokukitana.reset(_CreateSoundData("LastBoss_YOKUKITANA1.wav",35.0f,true));
+	//_voiceYokukitana.reset(_CreateSoundData("maou_test.wav", 4.0f, true));
+
 	_ChangeState(_initState);
 }
 
 void LastBoss::_UpdateSubClass() {
-	//if (!(_MyComponent.CharacterController->IsOnGround())) {
-	//	// エネミーが地面から離れている。
-	//	if (_NowStateIdx != State::Fall) {
-	//		// 現在のステートタイプを保存。
-	//		_saveState = _NowStateIdx;
-	//		// 落下ステートに切り替え。
-	//		_ChangeState(State::Fall);
-	//	}
-	//}
 #ifdef _DEBUG
 	Debug();
 #endif // _DEBUG
 
+	// サウンドテスト。
+	//_voiceYokukitana->Play();
 }
 
 void LastBoss::_LateUpdateSubClass()
@@ -225,7 +245,7 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 			attack = _magicAttack.get();
 		}
 		//else if(rnd == 2){
-		//	// バフ。
+		//// バフ。
 
 		//	attack = _buffAttack.get();
 		//}
@@ -239,7 +259,16 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 		// 玉座ステート。
 		// デバフしかしない。
 
-		return _debuffAttack.get();
+		rnd = rand() % 3;
+		if (rnd == 0) {
+			attack = _debuffAttack.get();
+		}
+		else if(rnd == 1){
+			attack = _commandAttack.get();
+		}
+		else {
+			attack = _encourageBuffAttack.get();
+		}
 	}
 
 	return attack;
@@ -254,6 +283,12 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 	}
 	else if (static_cast<LastBossState>(EndStateType) == LastBossState::LastBossThrone) {
 		// 玉座ステート終了。
+
+		// 玉座なしの状態にモーションを変更。
+		_ConfigAnimationType(AnimationType::Idle, static_cast<int>(AnimationLastBoss::Wait));
+		_ConfigAnimationType(AnimationType::Walk, static_cast<int>(AnimationLastBoss::Move));
+		_ConfigAnimationType(AnimationType::Dash, static_cast<int>(AnimationLastBoss::Move));
+		_ConfigAnimationType(AnimationType::BackStep, static_cast<int>(AnimationLastBoss::Move));
 
 		// 魔術師ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossMagician));
@@ -275,6 +310,19 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 
 		// 一瞬前のステートに移行。
 		_ChangeState(static_cast<EnemyCharacter::State>(_saveState));
+	}
+}
+
+void LastBoss::_ChangeStateCallback(State prev, State next) {
+	if (next == State::Speak) {
+		// 初期ステートに戻った。
+
+		// 会話ステートの中には書きたくないが、モーション変更は行いたいのでこちらで書き換える。
+		// 玉座ありの状態にモーションを変更。
+		_ConfigAnimationType(AnimationType::Idle, static_cast<int>(AnimationLastBoss::WaitThrone));
+		_ConfigAnimationType(AnimationType::Walk, static_cast<int>(AnimationLastBoss::MoveThrone));
+		_ConfigAnimationType(AnimationType::Dash, static_cast<int>(AnimationLastBoss::MoveThrone));
+		_ConfigAnimationType(AnimationType::BackStep, static_cast<int>(AnimationLastBoss::MoveThrone));
 	}
 }
 
@@ -334,19 +382,21 @@ void LastBoss::_BuildAnimationSubClass(vector<double>& datas) {
 	//   EnemyCharacterクラスで定義されているすべてのエネミー共通の列挙子に関連付ける必要がある。
 	{
 		// 待機状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationLastBoss::Wait));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationLastBoss::WaitThrone));
 		// 歩行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationLastBoss::Move));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationLastBoss::MoveThrone));
 		//走行状態。
 		 //※このオブジェクトにはダッシュのアニメーションがないので歩くアニメーションで代用。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationLastBoss::Move));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationLastBoss::MoveThrone));
 	//	// 落下状態。
 	//	// ※このオブジェクトには落下のアニメーションがないので待機アニメーションで代用。
 	//	_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, *Datas[static_cast<int>(AnimationProt::Stand)].get());
+		// バックステップ。
+		_ConfigAnimationType(EnemyCharacter::AnimationType::BackStep, static_cast<unsigned int>(AnimationLastBoss::Move));
 		// ダメージ状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationLastBoss::Damage));
 		// 死亡状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationLastBoss::Damage));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationLastBoss::Death));
 	}
 }
 
@@ -392,13 +442,21 @@ void LastBoss::_ConfigAnimationEvent() {
 
 	// デバフ。
 	{
-
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::DebuffEvent));
 	}
-}
 
-void LastBoss::_BuildSoundTable() {
-	// 攻撃音登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
+	// 側近命令(側近が一体になった場合はプレイヤーへのデバフと側近へのバフ)。
+	{
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::EntourageCommand),1);
+	}
+
+	// 側近バフ。
+	{
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::EncourageBuff), 2);
+	}
 }
 
 #ifdef _DEBUG

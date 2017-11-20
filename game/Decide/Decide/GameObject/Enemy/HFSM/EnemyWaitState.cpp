@@ -5,6 +5,8 @@
 
 EnemyWaitState::EnemyWaitState(EnemyCharacter* Object) : EnemyState(Object)
 {
+	_playAnimation = EnemyCharacter::AnimationType::Idle;
+	_interpolate = 0.5f;
 }
 
 
@@ -16,9 +18,7 @@ void EnemyWaitState::_EntrySubClass() {
 	_TimeCounter = 0.0f;	// カウンター初期化。
 }
 
-void EnemyWaitState::_Start() {
-	float InterpolateTime = 0.5f;	// 補間時間。
-	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Idle, InterpolateTime);
+void EnemyWaitState::_StartSubClass() {
 }
 
 void EnemyWaitState::_UpdateSubClass() {

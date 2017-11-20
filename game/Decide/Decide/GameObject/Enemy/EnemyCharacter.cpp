@@ -18,6 +18,7 @@
 #include "HFSM\LastBossMagicianState.h"
 #include "HFSM\LastBossHistoryTamperingState.h"
 #include "HFSM\LastBossDownState.h"
+#include "HFSM\EnemyBackStepState.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
@@ -301,6 +302,8 @@ void EnemyCharacter::_BuildState() {
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
 	// 追跡ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyChaceState>(new EnemyChaceState(this)));
+	// バックステップステートを追加。
+	_MyState.push_back(unique_ptr<EnemyBackStepState>(new EnemyBackStepState(this)));
 	// 威嚇ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyThreatState>(new EnemyThreatState(this)));
 	// 会話ステートを追加。
@@ -432,7 +435,7 @@ bool EnemyCharacter::ItemEffect(Item::ItemInfo * info)
 }
 
 bool EnemyCharacter::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
-
+	bool ret = false;
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
 		int value = effectValue[idx];
 		if (value > 0) {
@@ -447,10 +450,13 @@ bool EnemyCharacter::BuffAndDebuff(int effectValue[CharacterParameter::Param::MA
 			}
 #endif //  _DEBUG
 
-			_MyComponent.Parameter->Buff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(value), time);
+			_MyComponent.Parameter->Buff(static_cast<CharacterParameter::Param>(idx), value, time);
 			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
 			_MyComponent.BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
-			return true;
+
+			EnemyPlaySound(EnemyCharacter::SoundIndex::StatusUp);
+
+			ret = true;
 		}
 		else if (value < 0) {
 			// デバフ(デメリット)。
@@ -463,13 +469,16 @@ bool EnemyCharacter::BuffAndDebuff(int effectValue[CharacterParameter::Param::MA
 				abort();
 			}
 #endif //  _DEBUG
-			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), static_cast<unsigned short>(abs(value)), time);
+			_MyComponent.Parameter->Debuff(static_cast<CharacterParameter::Param>(idx), abs(value), time);
 			_MyComponent.BuffDebuffICon->SelectUseIconType_Enemy();
 			_MyComponent.BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
-			return true;
+
+			EnemyPlaySound(EnemyCharacter::SoundIndex::StatusDown);
+
+			ret = true;
 		}
 	}
-	return false;
+	return ret;
 }
 
 void EnemyCharacter::_ChangeState(State next) {
@@ -501,18 +510,47 @@ void EnemyCharacter::_ChangeState(State next) {
 		_NowState->Entry();
 	}
 
+	// ステート切り替え時のコールバック呼び出し。
+	_ChangeStateCallback(_NowStateIdx, next);
+
 	// 現在のステートの添え字を保存。
 	_NowStateIdx = next;
 }
 
+void EnemyCharacter::_BuildSoundTable() {
+	// 汎用効果音登録。
+
+	// 攻撃音登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Buoon, "Buoonn.wav",1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackGolem, "EnemyGolemAttack01.wav", 1.0f);
+
+	// 死んだ時の声登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav",1.0f);
+
+	// ダメージを受けた時の声登録。
+	_ConfigSoundData(EnemyCharacter::SoundIndex::DamageGolem, "EnemyGolemDamage.wav", 1.0f);
+
+	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusUp, "Player/statusup.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusDown, "Player/statusdown.wav", 1.0f);
+
+}
+
 void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
-	strcpy(_SoundData[static_cast<int>(idx)].Path, filePath);
-	_SoundData[static_cast<int>(idx)].Is3D = is3D;
-	_SoundData[static_cast<int>(idx)].IsLoop = isLoop;
-	_SoundData[static_cast<int>(idx)].Source = INSTANCE(GameObjectManager)->AddNew<SoundSource>(filePath, 0);
+	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, is3D, isLoop));
+}
+
+EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool isLoop, bool is3D) {
+	EnemyCharacter::SoundData* data = new EnemyCharacter::SoundData;
+	strcpy(data->Path, filePath);
+	data->volume = volume;
+	data->Is3D = is3D;
+	data->IsLoop = isLoop;
+	data->Source = INSTANCE(GameObjectManager)->AddNew<SoundSource>(filePath, 0);
 	string work = "Asset/Sound/";
 	work = work + filePath;
-	_SoundData[static_cast<int>(idx)].Source->Init(work.c_str(), is3D);
+	data->Source->Init(work.c_str(), is3D);
+	return data;
 }
 
 void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
@@ -596,7 +634,7 @@ void EnemyCharacter::EffectUpdate() {
 	bool isDeBuffEffect = false;
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
 
-		if (_MyComponent.Parameter->GetBuffParam((CharacterParameter::Param)idx) > 0.0f)
+		if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
 		{
 			isBuffEffect = true;
 		}
@@ -604,7 +642,7 @@ void EnemyCharacter::EffectUpdate() {
 		{
 			_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
 		}
-		if (_MyComponent.Parameter->GetDebuffParam((CharacterParameter::Param)idx) > 0.0f)
+		if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
 		{
 			isDeBuffEffect = true;
 		}

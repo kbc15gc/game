@@ -78,7 +78,7 @@ private:
 	void _ConfigAnimationEvent()override;
 
 	// 効果音のテーブル作成関数。
-	void _BuildSoundTable()override;
+	//void _BuildSoundTable()override;
 
 	inline void _DropSubClass()override {
 

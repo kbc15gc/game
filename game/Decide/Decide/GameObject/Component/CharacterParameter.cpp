@@ -36,12 +36,6 @@ void CharacterParameter::ParamReset(const vector<int>& param) {
 }
 
 void CharacterParameter::Update() {
-	//HPが0以下になったので死んだ。
-	if (_Info[Param::HP].param <= 0)
-	{
-		_DeathFlag = true;
-	}
-
 	// バフやデバフの状況を更新。
 	_UpdateInfo();
 }
@@ -83,8 +77,10 @@ int CharacterParameter::ReceiveDamageMass(const DamageInfo& info, HoldArmor* arm
 int CharacterParameter::ReciveDamageThrough(int damage) {
 	if (damage > 0) {
 		int hp = GetParam(Param::HP) - damage;
-		if (hp < 0) {
+		if (hp <= 0) {
 			_Info[Param::HP].param = 0;
+			//HPが0以下になったので死んだ。
+			_DeathFlag = true;
 		}
 		else {
 			_Info[Param::HP].param = hp;

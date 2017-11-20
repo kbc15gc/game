@@ -84,6 +84,9 @@ void TitleScene::Update()
 	//	return;
 	//}
 
+	//点滅させる。
+	Alpha();
+
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y) || KeyBoardInput->isPush(DIK_RETURN);
 
 	//プレスエニイボタンの処理
@@ -118,6 +121,11 @@ void TitleScene::Update()
 		{
 			if (_Select == Select::Continue)
 			{
+				JsonData PlayerData;
+				if (!PlayerData.Load("Player"))
+				{
+					return;
+				}
 				IS_CONTINUE = true;
 			}
 			else
@@ -127,11 +135,9 @@ void TitleScene::Update()
 			//ゲームシーンへ移行
 			_StartSE->Play(false);
 			INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+			_AnyButton = false;
 		}
 	}
-
-	//点滅させる。
-	Alpha();
 }
 
 void TitleScene::Alpha()

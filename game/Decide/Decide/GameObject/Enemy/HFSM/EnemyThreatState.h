@@ -5,10 +5,13 @@
 // エネミー威嚇ステート。
 class EnemyThreatState : public EnemyState {
 public:
-	EnemyThreatState(EnemyCharacter* Object) :EnemyState(Object) {};
+	EnemyThreatState(EnemyCharacter* Object) :EnemyState(Object) {
+		_playAnimation = EnemyCharacter::AnimationType::Threat;
+		_interpolate = 0.5f;
+	};
 	~EnemyThreatState() {};
 
-	void Start();
+	void _StartSubClass()override;
 
 private:
 	void _EntrySubClass()override;

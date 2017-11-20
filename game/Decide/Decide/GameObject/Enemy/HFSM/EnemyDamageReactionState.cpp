@@ -3,7 +3,6 @@
 
 
 void EnemyDamageReactionState::_EntrySubClass() {
-	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Damage, 0.2f);
 }
 
 void EnemyDamageReactionState::_UpdateSubClass() 

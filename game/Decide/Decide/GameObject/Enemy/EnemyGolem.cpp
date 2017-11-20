@@ -53,7 +53,7 @@ void EnemyGolem::CreateAttackCollsion()
 	attack->RemoveParent();
 
 	//UŒ‚‰¹Ä¶B
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::DamageGolem);
 }
 
 void EnemyGolem::_UpdateSubClass() 
@@ -138,18 +138,6 @@ void EnemyGolem::_ConfigAnimationEvent()
 	float eventFrame = 0.4f;
 
 	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemyGolemAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemyGolem::CreateAttackCollsion));
-}
-
-void EnemyGolem::_BuildSoundTable()
-{
-	// UŒ‚‰¹“o˜^B
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "EnemyGolemAttack01.wav", false, false);
-
-	// €‚ñ‚¾‚Ìº“o˜^B
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav", false, false);
-
-	// ƒ_ƒ[ƒW‚ğó‚¯‚½‚Ìº“o˜^B
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "EnemyGolemDamage.wav", false, false);
 }
 
 void EnemyGolem::_EndNowStateCallback(State EndStateType) {

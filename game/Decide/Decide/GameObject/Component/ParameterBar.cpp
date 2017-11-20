@@ -241,23 +241,16 @@ void BarAdapter::ImageRender() {
 }
 
 void BarAdapter::_UpdateValue(float value) {
-	float work;
-	if (fabsf(value) < 0.0001f) {
-		work = 0.0f;
-	}
-	else {
-		work = static_cast<int>(value) % (static_cast<int>(_MaxValue) / _MaxBarNum);	// 最後のバーにセットする値を算出。※割った余りを算出したいのでintにキャストしている。
-	}
 	float Difference = _Value - value;	// 一瞬前の値との差分を算出。
 	if (fabsf(Difference) >= 0.0001f) {
 		// 一瞬前の値と違う値が設定された。
 		if (Difference > 0.0f) {
 			// 減算処理。
-			_UpdateSubValue(Difference, work);
+			_UpdateSubValue(Difference);
 		}
 		else {
 			// 加算処理。
-			_UpdateAddValue(Difference, work);
+			_UpdateAddValue(Difference);
 		}
 
 		// 全体としての値を更新。
@@ -273,7 +266,7 @@ void BarAdapter::_UpdateValue(float value) {
 	}
 }
 
-void BarAdapter::_UpdateSubValue(float Difference, float Fraction) {
+void BarAdapter::_UpdateSubValue(float Difference) {
 	while (true) {
 		float nowBarValue = _NowSettingBar->GetTargetValue();	// 現在のゲージが持つ値を取得。
 		if (nowBarValue <= Difference) {
@@ -307,13 +300,13 @@ void BarAdapter::_UpdateSubValue(float Difference, float Fraction) {
 		}
 		else {
 			// あふれない場合はバーに入れて処理を終了。
-			_NowSettingBar->SetValue(Fraction);
+			_NowSettingBar->SetValue(nowBarValue - Difference);
 			break;
 		}
 	}
 }
 
-void BarAdapter::_UpdateAddValue(float Difference, float Fraction) {
+void BarAdapter::_UpdateAddValue(float Difference) {
 	Difference *= -1.0f;
 	while (true) {
 		float nowBarBusy = _NowSettingBar->GetMaxValue() - _NowSettingBar->GetTargetValue();	// 現在のゲージに入れることのできる値を取得。
@@ -338,13 +331,13 @@ void BarAdapter::_UpdateAddValue(float Difference, float Fraction) {
 		}
 		else {
 			// あふれない場合はバーに入れて処理を終了。
-			if (Fraction < 0.0001f) {
+			if (fabsf(nowBarBusy - Difference) < 0.0001f) {
 				// ジャスト最大値が設定された。
 				_NowSettingBar->SetValue(_NowSettingBar->GetMaxValue());
 			}
 			else {
 				// 他のバーに入れて余った値を設定。
-				_NowSettingBar->SetValue(Fraction);
+				_NowSettingBar->SetValue(_NowSettingBar->GetTargetValue() + Difference);
 			}
 
 			break;

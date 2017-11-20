@@ -227,7 +227,7 @@ void BossD::_ConfigAnimationEvent() {
 	}
 }
 
-void BossD::_BuildSoundTable() {
-	// UŒ‚‰¹“o˜^B
-
-}
+//void BossD::_BuildSoundTable() {
+//	// UŒ‚‰¹“o˜^B
+//
+//}

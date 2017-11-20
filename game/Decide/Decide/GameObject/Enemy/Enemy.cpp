@@ -25,7 +25,7 @@ void Enemy::CreateAttackCollision() {
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
 void Enemy::_AwakeSubClass() {
@@ -179,9 +179,4 @@ void Enemy::_ConfigAnimationEvent() {
 	float eventFrame = 1.0f;
 	
 	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationProt::Attack), eventFrame, static_cast<AnimationEvent>(&Enemy::CreateAttackCollision));
-}
-
-void Enemy::_BuildSoundTable() {
-	// çUåÇâπìoò^ÅB
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1,"Damage_01.wav",false,false);
 }

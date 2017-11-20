@@ -27,13 +27,13 @@ void BossGhost::CreateCollision() {
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
 void BossGhost::LaserStartSingle()
 {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 10.0f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.25f), 3.0f, Color::red);
+	laser->Create(this, Vector3::zero, 30.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red);
 	_singleLaser->BreathStart(laser);
 }
 
@@ -43,7 +43,7 @@ void BossGhost::LaserEndSingle() {
 
 void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 10.0f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.25f),3.0f,Color::red);
+	laser->Create(this, Vector3::zero, 30.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red);
 	static_cast<EnemyBreathAttack*>(_laserComboAttack->GetOneAttack())->BreathStart(laser);
 }
 
@@ -81,18 +81,27 @@ void BossGhost::_StartSubClass() {
 	_MyComponent.Model->SetModelEffect(ModelEffectE::ALPHA);
 
 	// çUåÇèàóùÇíËã`ÅB
-	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(1.25f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
-	_singleLaser.reset(new EnemyBreathAttack(this));
-	_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f, 1, 2);
-	_comboAttack.reset(new GhostComboAttack(this));
-	EnemyAttack* singleAttack = new EnemySingleAttack(this);
-	singleAttack->Init(1.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
-	_comboAttack->Init(13.0f, singleAttack);
-	_laserComboAttack.reset(new GhostComboAttack(this));
-	EnemyAttack* singleAttack2 = new EnemyBreathAttack(this);
-	singleAttack2->Init(7.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f,1, 1);
-	_laserComboAttack->Init(13.0f,singleAttack2);
+	{
+		_singleAttack.reset(new EnemySingleAttack(this));
+		_singleAttack->Init(1.25f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+
+		_singleLaser.reset(new EnemyBreathAttack(this));
+		_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f, 1, 2);
+
+		_comboAttack.reset(new EnemyComboAttack(this));
+		EnemyAttack* singleAttack = new EnemySingleAttack(this);
+		singleAttack->Init(1.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+		EnemyAttack* warpAttack = new EnemyWarpAttack(this);
+		static_cast<EnemyWarpAttack*>(warpAttack)->Init(13.0f, singleAttack);
+		_comboAttack->Init(13.0f, warpAttack);
+
+		_laserComboAttack.reset(new EnemyComboAttack(this));
+		EnemyAttack* singleAttack2 = new EnemyBreathAttack(this);
+		singleAttack2->Init(7.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f, 1, 1);
+		EnemyAttack* warpAttack2 = new EnemyWarpAttack(this);
+		static_cast<EnemyWarpAttack*>(warpAttack2)->Init(13.0f, singleAttack2);
+		_laserComboAttack->Init(13.0f, warpAttack2);
+	}
 
 	_pairAttackArray.push_back(_comboAttack.get());
 	_pairAttackArray.push_back(_laserComboAttack.get());
@@ -295,12 +304,5 @@ void BossGhost::_ConfigAnimationEvent() {
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::LaserEnd),1);
 	}
-}
-
-void BossGhost::_BuildSoundTable() {
-	// çUåÇâπìoò^ÅB
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack2, "Buoonn.wav", false, false);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack3, "Buoonn.wav", false, false);
 }
 

@@ -137,6 +137,11 @@ public:
 		_InitPos = pos;
 	}
 
+	void SetBlendColor(Color& color)
+	{
+		_Model->SetAllBlend(color);
+	}
+
 private:
 
 	/**
