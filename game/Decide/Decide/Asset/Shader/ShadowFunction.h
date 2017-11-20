@@ -49,6 +49,8 @@ struct ShadowReceiverParam
 	
 	/** シャドウマップの数. */
 	int _NumShadowMap;
+
+	int _IsVSM;
 };
 
 ShadowReceiverParam g_ShadowReceiverParam : register(c0);
@@ -80,25 +82,25 @@ float CalcShadow(float3 worldPos)
 
 			float depth = min(posInLVP.z, 1.0f);
 
-			//if (false)
-			//{
-			//	if (depth > shadow_val.r)
-			//	{
-			//		//チェビシェフ
-			//		float depth_sq = shadow_val.r * shadow_val.r;
-			//		float variance = max(shadow_val.g - depth_sq, 0.0006f);
-			//		float md = depth - shadow_val.r;
-			//		float P = variance / (variance + md * md);
-			//		result = pow(P, 5.0f);
-			//	}
-			//}
-			//else
-			//{
+			if (g_ShadowReceiverParam._IsVSM > 0)
+			{
+				if (depth > shadow_val.r)
+				{
+					//チェビシェフ
+					float depth_sq = shadow_val.r * shadow_val.r;
+					float variance = max(shadow_val.g - depth_sq, 0.0006f);
+					float md = depth - shadow_val.r;
+					float P = variance / (variance + md * md);
+					result = pow(P, 5.0f);
+				}
+			}
+			else
+			{
 				if (depth > shadow_val.r + 0.006f)
 				{
 					result = 0.0f;
 				}
-			//}
+			}
 
 			//一枚にヒットしたらループを終わる
 			break;

@@ -10,6 +10,12 @@
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
+//各村の設定。
+//各村によってスタート位置・レベルが変わります。
+//#define Village1
+//#define Village2
+#define Village3
+
 namespace
 {
 	float NormalAnimationSpeed = 1.0f;
@@ -127,6 +133,12 @@ void Player::Awake()
 	//プレイヤーのパラメーター初期化。
 	int lv = 0;
 
+
+	//int lv = 0;
+
+	// テスト。
+	//int lv = 30;
+
 	if (IS_CONTINUE)
 	{
 		JsonData PlayerData;
@@ -136,6 +148,7 @@ void Player::Awake()
 			lv = player["Level"].get<double>() - 1;
 		}
 	}
+
 //#ifdef _DEBUG
 //#define Village1
 //#define Village2
@@ -151,10 +164,13 @@ void Player::Awake()
 //#else
 //	int lv = 1;
 //#endif
-	
-
 	_PlayerParam->ParamReset(_ParamTable[lv]);
-	
+
+	if (!IS_CONTINUE)
+	{
+		SaveLevel();
+	}
+
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
@@ -254,18 +270,31 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player_Pos"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			_RespawnPos.x = player["RespawnPos_X"].get<double>();
+			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
+			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+		}
+	}
+	else
+	{
+		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+	}
 
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+
 	//@todo for debug
 #ifdef _DEBUG
-	#define Start1
-	//#define Start2
-	//#define Start3
-#ifdef Start1
+#ifdef Village1
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
-#elif defined(Start2)
+#elif defined(Village2)
 	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
-#elif defined(Start3)
+#elif defined(Village3)
 	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
 	//250.71/67.2/-31.7
 #endif // Start1
@@ -274,7 +303,7 @@ void Player::Start()
 
 	//ポジション
 	
-	transform->SetLocalPosition(_StartPos);
+	transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//攻撃アニメーションステートの初期化
@@ -293,43 +322,6 @@ void Player::Start()
 
 void Player::Update()
 {
-
-	//@todo for debug
-#define CHIP
-#ifdef CHIP
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
-	}
-#endif // 
-
-
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{

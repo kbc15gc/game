@@ -43,6 +43,10 @@ void HistoryMenu::Start()
 	{
 		LoadChip();
 	}
+	else
+	{
+		SaveChip();
+	}
 }
 
 /**

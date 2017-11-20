@@ -37,6 +37,9 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
+	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+	_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, true);
+
 	if (string(filename) == "tree.X")
 	{
 		_Model->SetTree();

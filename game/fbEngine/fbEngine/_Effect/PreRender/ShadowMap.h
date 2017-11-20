@@ -27,7 +27,8 @@ public:
 		D3DXMATRIX _LVPMatrix[SHADOWMAP_NUM];
 		/** シャドウマップテクスチャの数. */
 		int _ShadowMapNum = SHADOWMAP_NUM;
-
+		/** バリアンスシャドウマップをするか. */
+		int _IsVSM = true;
 	};
 
 public:
@@ -109,26 +110,26 @@ public:
 	/**
 	* シャドウレシーバー用パラメータの取得.
 	*/
-	ShadowReceiverParam* GetShadowReceiverParam()
+	ShadowReceiverParam& GetShadowReceiverParam()
 	{
-		return &_ShadowReceiverParam;
+		return _ShadowReceiverParam;
 	}
 
 	/**
 	* 深度書き込みテクスチャの取得.
 	*/
-	IDirect3DTexture9* GetShadowMapTexture(int idx)
+	IDirect3DTexture9* GetShadowMapTexture(int idx,bool isVSM = true)
 	{
-		if (_isVSM)
+		if (isVSM)
 		{
 			return _Blur[idx].GetTexture()->pTexture;
 		}
 		return _ShadowMapRT[idx].texture->pTexture;
 	}
 
-	TEXTURE* GetTexture(int idx)
+	TEXTURE* GetTexture(int idx, bool isVSM = true)
 	{
-		if (_isVSM)
+		if (isVSM)
 		{
 			return _Blur[idx].GetTexture();
 		}
@@ -203,9 +204,6 @@ private:
 
 	/** ブラークラス. */
 	Blur _Blur[SHADOWMAP_NUM];
-
-	/** バリアンスシャドウマップのフラグ. */
-	bool _isVSM = true;
 
 	/** カメラクラスのポインタ. */
 	Camera* _Camera = nullptr;

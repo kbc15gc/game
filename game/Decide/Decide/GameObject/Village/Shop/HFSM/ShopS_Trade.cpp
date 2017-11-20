@@ -413,9 +413,13 @@ void ShopS_Trade::_Decision()
 {
 	//テキスト。
 	char msg[256];
+	//音声
+	char cv[256];
+	bool isCV = false;
 	if (_IndexList.size() > 0)
 	{
 		sprintf(msg, "全部で %d$ になります。", _SumValue);
+		isCV = false;
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
@@ -430,6 +434,8 @@ void ShopS_Trade::_Decision()
 			{
 				//購入できない旨を表示。
 				sprintf(msg, "お金がたりませんよ。");
+				sprintf(cv, "Asset/Sound/NPC/SHOP/Mic1_50.wav");
+				isCV = true;
 			}
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
@@ -440,8 +446,16 @@ void ShopS_Trade::_Decision()
 		}
 	}
 	else
+	{
 		sprintf(msg, "何も選択されていませんよ。");
-	_Shop->SetDescriptionText(msg);
+		sprintf(cv, "Asset/Sound/NPC/SHOP/Mic1_51.wav");
+		isCV = true;
+	}
+
+	if (isCV)
+		_Shop->SetDescription(msg, cv);
+	else
+		_Shop->SetDescriptionText(msg);
 }
 
 void ShopS_Trade::BuyItem()
@@ -465,11 +479,11 @@ void ShopS_Trade::BuyItem()
 		{
 			//アイテムの値段分お金を払う。
 			_Shop->Pay((*_DisplayList)[idx]->GetInfo()->Value * _TradeNum[idx]);
-			_Shop->SetDescriptionText("まいどあり。");
+			_Shop->SetDescription("まいどあり。","Asset/Sound/NPC/SHOP/Mic1_53.wav");
 		}
 		else
 		{
-			_Shop->SetDescriptionText("インベントリが一杯ですね。");
+			_Shop->SetDescription("インベントリが一杯ですね。", "Asset/Sound/NPC/SHOP/Mic1_54.wav");
 		}
 	}
 
@@ -493,7 +507,7 @@ void ShopS_Trade::SellItem()
 			}
 			//アイテムの値段分お金を貰う。
 			_Shop->Pay(-_SumValue);
-			_Shop->SetDescriptionText("まいどあり。");
+			_Shop->SetDescription("まいどあり。", "Asset/Sound/NPC/SHOP/Mic1_53.wav");
 		}
 		else
 		{
@@ -502,14 +516,14 @@ void ShopS_Trade::SellItem()
 			{
 				//アイテムの値段分お金を貰う。
 				_Shop->Pay(-_SumValue);
-				_Shop->SetDescriptionText("まいどあり。");
+				_Shop->SetDescription("まいどあり。", "Asset/Sound/NPC/SHOP/Mic1_53.wav");
 				erase = true;
 				offset++;
 			}
 			else
 			{
 				//装備している武具を売ろうとした。
-				_Shop->SetDescriptionText("装備品を外してください。");
+				_Shop->SetDescription("装備品を外してください。", "Asset/Sound/NPC/SHOP/Mic1_55.wav");
 			}
 		}
 

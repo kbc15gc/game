@@ -39,6 +39,10 @@ void Inventory::Initialize() {
 		// CSV読み込み。
 		_LoadData();
 	}
+	else
+	{
+		SaveMoney();
+	}
 }
 
 //アイテムをインベントリに追加。
