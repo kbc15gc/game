@@ -23,6 +23,7 @@ public:
 		BOSS1 = 0,
 		MATI1,
 		MATI2,
+		MATI3,
 		WORLD,
 		DEAD,
 	};

@@ -118,7 +118,7 @@ void TextBox::_OpenMessage()
 		//テキスト設定。
 		_SetText(_Message->Text);
 		//ボイス再生。
-		_PlayVoice(_Message->Text);
+		_PlayVoice(_Message->VoicePath);
 
 		//ボックスを表示する
 		for each (ImageObject* image in _BoxImage)
