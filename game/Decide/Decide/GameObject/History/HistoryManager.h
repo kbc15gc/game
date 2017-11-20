@@ -58,7 +58,7 @@ public:
 	* @param slot		スロット番号.
 	* @param chip		チップID.
 	*/
-	bool SetHistoryChip(LocationCodeE location, ChipID chip);
+	bool SetHistoryChip(LocationCodeE location, ChipID chip,int index);
 
 	/**
 	* 歴史情報を取得.
