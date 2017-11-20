@@ -59,7 +59,8 @@ void SoundSource::Init(const NameKey& nameKey, bool is3DSound)
 	m_waveFile = INSTANCE(SoundEngine)->GetWaveFileBank().FindWaveFile(0, nameKey);
 	if (!m_waveFile) {
 		m_waveFile.reset(new WaveFile);
-		m_waveFile->Open(nameKey.GetName());
+		if (m_waveFile->Open(nameKey.GetName()) == false)
+			return;
 		INSTANCE(SoundEngine)->GetWaveFileBank().RegistWaveFile(0, m_waveFile);
 		m_waveFile->AllocReadBuffer(m_waveFile->GetSize());	//waveファイルのサイズ分の読み込みバッファを確保する。
 		INSTANCE(SoundEngine)->GetWaveFileBank().RegistWaveFile(0, m_waveFile);
@@ -114,11 +115,11 @@ void SoundSource::Release()
 }
 void SoundSource::Play(char* buff, unsigned int bufferSize)
 {
-	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.pAudioData = (BYTE*)buff;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;  // tell the source voice not to expect any data after this buffer
-	buffer.AudioBytes = bufferSize;
 	if (m_sourceVoice != nullptr && bufferSize > 0) {
+		XAUDIO2_BUFFER buffer = { 0 };
+		buffer.pAudioData = (BYTE*)buff;
+		buffer.Flags = XAUDIO2_END_OF_STREAM;  // tell the source voice not to expect any data after this buffer
+		buffer.AudioBytes = bufferSize;
 		//再生開始。
 		if (FAILED(m_sourceVoice->SubmitSourceBuffer(&buffer))) {
 			Release();
@@ -143,25 +144,28 @@ void SoundSource::StartStreamingBuffring()
 }
 void SoundSource::Play(bool isLoop)
 {
-	if (m_isPlaying) {
-		//再生中のものを再開する。
-		m_sourceVoice->Start(0);
-	}
-	else {
-		if (m_isStreaming) {
-			//バッファリング開始
-			m_waveFile->ResetFile();
-			StartStreamingBuffring();
-			m_sourceVoice->Start(0, 0);
+	if (m_sourceVoice != nullptr)
+	{
+		if (m_isPlaying) {
+			//再生中のものを再開する。
+			m_sourceVoice->Start(0);
 		}
 		else {
-			m_sourceVoice->FlushSourceBuffers();
-			m_sourceVoice->Start(0);
-			Play(m_waveFile->GetReadBuffer(), m_waveFile->GetSize());
+			if (m_isStreaming) {
+				//バッファリング開始
+				m_waveFile->ResetFile();
+				StartStreamingBuffring();
+				m_sourceVoice->Start(0, 0);
+			}
+			else {
+				m_sourceVoice->FlushSourceBuffers();
+				m_sourceVoice->Start(0);
+				Play(m_waveFile->GetReadBuffer(), m_waveFile->GetSize());
+			}
+			m_isPlaying = true;
 		}
-		m_isPlaying = true;
+		m_isLoop = isLoop;
 	}
-	m_isLoop = isLoop;
 }
 
 void SoundSource::UpdateStreaming()

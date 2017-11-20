@@ -67,7 +67,6 @@ public:
 	{
 		_Height = height;
 	}
-
 protected:
 	//˜b‚·
 	void _Speak();

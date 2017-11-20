@@ -93,7 +93,7 @@ void EventManager::AddEvent()
 	//ステータスウィンドウの開閉処理。
 	_ActionList.push_back([status]
 	{
-		status->SetActive(!status->GetActive(), true);
+		status->Execute();
 	});
 	//歴史書の開閉処理。
 	_ActionList.push_back([book]
