@@ -23,8 +23,10 @@ void ContinentObject::Start() {
 
 	// Transform‚ªXV‚³‚ê‚é‚Ì‚Å‚±‚±‚Å’Ç‰ÁB
 	unique_ptr<vector<RigidBody*>> rigidArray = GetComponents<RigidBody>();
-	for (auto rigid : *rigidArray.get()) {
-		rigid->AddWorld();
+	for(int idx = 0;idx < static_cast<int>(rigidArray->size());idx++)
+	{
+		(*rigidArray)[idx]->AddWorld();
+		_isAddPhysicsWorld = true;
 	}
 }
 
@@ -58,6 +60,7 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	RigidBodyInfo info;
 	info.mass = 0.0f;
 	info.coll = mesh;
+	info.physicsType = RigidBody::PhysicsType::Kinematick;
 	//info.offset = _Model->GetModelData()->GetCenterPos();
 	info.id = Collision_ID::BUILDING;
 	info.rotation = transform->GetRotation();

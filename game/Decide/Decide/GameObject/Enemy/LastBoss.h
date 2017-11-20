@@ -25,6 +25,9 @@ public:
 		MoveThrone,	// 玉座移動。
 		MagicThrone,	// 玉座魔法。
 		ThroneEnd,	// 玉座削除。
+		HistoryStart,	// 大魔法杖出し。
+		//HistoryCharge,	// 大魔法詠唱。
+
 		Max,
 	};
 
@@ -125,6 +128,4 @@ private:
 	SordShock* _sordAttackShot0 = nullptr;
 	SordShock* _sordAttackShot1 = nullptr;
 	SordShock* _sordAttackShot2 = nullptr;
-
-	unique_ptr<SoundData> _voiceYokukitana;
 };
