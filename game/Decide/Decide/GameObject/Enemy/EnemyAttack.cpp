@@ -54,16 +54,14 @@ bool EnemyBreathAttack::Update() {
 	return !_enemyObject->GetIsPlaying();
 }
 
-
-void GhostComboAttack::Entry() {
+void EnemyWarpAttack::Entry() {
 	//_oneCombo->Init(1.0f, _animType, _interpolate, 1, _playEventNo);
-	_comboCount = 0;
 	_nowWarpState = WarpState::Through;
 	_isWarpEnd = false;
 	_isAttackEnd = false;
 }
 
-bool GhostComboAttack::Update() {
+bool EnemyWarpAttack::Update() {
 
 	bool ret = false;
 
@@ -77,14 +75,19 @@ bool GhostComboAttack::Update() {
 			// 完全に透明になった。
 
 			_nowWarpState = WarpState::Materialization;		// 消えたので次は実体化。
-			//Transform* parent = _enemyObject->transform->GetParent();	// 現在のエネミーの親を保存。
+															//Transform* parent = _enemyObject->transform->GetParent();	// 現在のエネミーの親を保存。
 
 			// プレイヤーの近くに移動。
 			_enemyObject->transform->SetParent(_player->transform);
 			_enemyObject->transform->SetLocalPosition(Vector3(0.0f, 1.0f, -0.7f));
 			_enemyObject->transform->SetParent(/*parent*/nullptr);
 
-			_oneCombo->Entry();	// 攻撃開始。
+			_enemyObject->LookAtObject(_player);
+
+			// ゴースト同士が重ならないようにする。
+			_enemyObject->AddMoveSpeed(_enemyObject->transform->GetForward() * -0.1f);
+
+			_attack->Entry();	// 攻撃開始。
 
 			_counter = 0.0f;
 			alpha = 0.0f;
@@ -116,7 +119,7 @@ bool GhostComboAttack::Update() {
 
 			float speed = _player->GetSpeed();
 
-			if (moveDir.Length() > _oneCombo->GetAttackRange()) {
+			if (moveDir.Length() > _attack->GetAttackRange()) {
 				// 攻撃範囲内に入っていない。
 				moveDir.Normalize();
 				_enemyObject->AddMoveSpeed(moveDir * speed);
@@ -132,27 +135,51 @@ bool GhostComboAttack::Update() {
 		}
 
 		if (!_isAttackEnd) {
-			if (_oneCombo->Update()) {
-				// 攻撃一回終了。
+			if (_attack->Update()) {
+				// 攻撃終了。
 
 				_isAttackEnd = true;
 			}
 		}
 
-		if(_isAttackEnd && _isWarpEnd) {
-			// 一回攻撃終了。
+		if (_isAttackEnd && _isWarpEnd) {
+			// 攻撃と実体化終了。
 
-			_comboCount++;
-			_nowWarpState = WarpState::Through;		// また消える。
-			_isWarpEnd = false;
-			if (_comboCount >= _attackNum) {
-				// 攻撃回数が指定回数に達した。
-
-				ret = true;
-			}
+			ret = true;
 		}
 	}
 	_enemyObject->SetAlpha(alpha);
 
 	return ret;
+}
+
+void EnemyComboAttack::Entry() {
+	//_oneCombo->Init(1.0f, _animType, _interpolate, 1, _playEventNo);
+	_comboCount = 0;
+	_isStartAttack = false;
+}
+
+bool EnemyComboAttack::Update() {
+
+	if (!_isStartAttack) {
+		_oneCombo->Entry();
+		_isStartAttack = true;
+	}
+	if (_isStartAttack) {
+		if (_oneCombo->Update()) {
+			// 攻撃一回終了。
+
+			_comboCount++;
+			if (_comboCount >= _attackNum) {
+				// 攻撃回数が指定回数に達した。
+
+				return true;
+			}
+			else {
+				// もう一度攻撃する。
+				_isStartAttack = false;
+			}
+		}
+	}
+	return false;
 }

@@ -29,7 +29,7 @@ void LaserBreath::Awake() {
 	_particleEmitter = p;
 }
 
-void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float power, const Vector3& axis, float deg, const char* fileName, const Vector2& size, const float brightness, Color mul){
+void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float power, float interval, const Vector3& axis, float deg, const char* fileName, const Vector2& size, const float brightness, Color mul){
 	BreathObject::Create(obj);
 	_particleEmitter->transform->SetParent(_enemyObject->transform);
 	_particleEmitter->transform->SetLocalPosition(emitPosLocal);
@@ -43,6 +43,7 @@ void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float
 	_initParticleParam.size = size;
 	_initParticleParam.mulColor = mul;
 	_initParticleParam.brightness = brightness;
+	_initParticleParam.intervalTime = interval;
 }
 
 void LaserBreath::Update() {

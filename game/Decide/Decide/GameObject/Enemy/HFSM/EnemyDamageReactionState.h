@@ -6,8 +6,12 @@
 // エネミーダメージ反応ステート。
 class EnemyDamageReactionState : public EnemyState {
 public:
-	EnemyDamageReactionState(EnemyCharacter* Object) : EnemyState(Object) {};
-	~EnemyDamageReactionState() {};
+	EnemyDamageReactionState(EnemyCharacter* Object) : EnemyState(Object) {
+		_playAnimation = EnemyCharacter::AnimationType::Damage;
+	};
+	~EnemyDamageReactionState() {
+
+	};
 private:
 	void _EntrySubClass()override;
 

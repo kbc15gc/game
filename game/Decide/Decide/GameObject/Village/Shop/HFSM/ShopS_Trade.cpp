@@ -78,11 +78,11 @@ void ShopS_Trade::Update()
 		//数量決定
 		_UpdateTradeNum();
 		//アイテム選択
-		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
+		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 2.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
 		{
 			_SetIndex((_Select > 0) ? _Select - 1 : _DisplayItemNum - 1);
 		}
-		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.2f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.2f))
+		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 2.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.2f))
 		{
 			_SetIndex((_Select + 1) % _DisplayItemNum);
 		}
@@ -146,7 +146,7 @@ void ShopS_Trade::_SwitchTab()
 
 void ShopS_Trade::_UpdateTradeNum()
 {
-	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,0.1f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKR, 0.1f))
+	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,5.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKR, 0.1f))
 	{
 		int maxNum = 0;
 		//アイテムか消耗品かどうか？
@@ -159,7 +159,7 @@ void ShopS_Trade::_UpdateTradeNum()
 		_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
 		_UpdateText();
 	}
-	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,0.1f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKL, 0.1f))
+	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,5.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKL, 0.1f))
 	{
 		_TradeNum[_Select] = max(0, _TradeNum[_Select] - 1);
 		_UpdateText();

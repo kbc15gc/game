@@ -50,6 +50,15 @@ public:
 		return _IsEndState;
 	}
 
+	// 指定した値で使用するアニメーションや補間時間を書き換える。
+	inline void CustamParameter(EnemyCharacter::AnimationType type, float interpolate,int loopNum,int eventNo,float speed) {
+		_playAnimation = type;
+		_interpolate = interpolate;
+		_loopNum = loopNum;
+		_eventNo = eventNo;
+		_playSpeed = speed;
+	}
+
 protected:
 	// ローカルステート切り替え関数。
 	void _ChangeLocalState(EnemyCharacter::State next);
@@ -58,15 +67,27 @@ protected:
 	inline void _EndState() {
 		_IsEndState = true;
 	}
+
+	void _PlayAnimation() {
+		_saveSpeed = _EnemyObject->GetAnimationSpeed();
+		_EnemyObject->SetAnimationSpeed(_playSpeed);
+		_EnemyObject->PlayAnimation(_playAnimation, _interpolate, _loopNum, _eventNo);
+	}
+
 private:
 	// 継承先での切り替え時初期化処理。
 	// ※継承先で必ず上書きして使用。
 	virtual void _EntrySubClass() = 0;
 
+	void Start() {
+		_PlayAnimation();
+		_StartSubClass();
+	}
+
 	// 更新開始前初期化。
 	// ※更新が始まる直前に一度だけ呼ばれる関数。
 	// ※継承先で上書きして使用。
-	virtual void _Start() {};
+	virtual void _StartSubClass() {};
 
 	// 継承先での更新処理。
 	// ※継承先で必ず上書きして使用。
@@ -82,12 +103,23 @@ private:
 	// ※この関数は各ステートが自発的に終了した場合にのみ呼び出される。
 	// ※処理自体は継承先に委譲。
 	virtual void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {};
+
+
 protected:
+
+	EnemyCharacter::AnimationType _playAnimation = EnemyCharacter::AnimationType::None;
+	float _interpolate = 0.2f;
+	int _loopNum = 1;
+	int _eventNo = 0;
+	float _playSpeed = 1.0f;
+	float _saveSpeed;
+
 	bool _IsEndState = false;		// ステートの処理が終了したかのフラグ(trueで終了)。
 	EnemyCharacter* _EnemyObject = nullptr;	// このステートを持つエネミーのポインタ。
 	EnemyState* _NowLocalState = nullptr;	// 現在のローカルステート。
 	EnemyCharacter::State _NowLocalStateIdx;		// 現在のローカルステートの添え字。
 private:
+
 	bool _IsFirstUpdate = true;	// ステートが切り替わってから最初の更新か。
 };
 

@@ -56,7 +56,7 @@ void EnemySoldier::CreateAttackCollsion()
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
 void EnemySoldier::_UpdateSubClass()
@@ -142,12 +142,6 @@ void EnemySoldier::_ConfigAnimationEvent()
 	float eventFrame = 0.2f;
 
 	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemySoldierAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemySoldier::CreateAttackCollsion));
-}
-
-void EnemySoldier::_BuildSoundTable()
-{
-	// çUåÇâπìoò^ÅB
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
 }
 
 void EnemySoldier::_EndNowStateCallback(State EndStateType) {

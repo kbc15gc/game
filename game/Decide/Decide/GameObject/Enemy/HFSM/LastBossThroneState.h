@@ -2,16 +2,22 @@
 #include "EnemyState.h"
 
 class BossGhost;
+class Player;
 
 // ラスボス玉座(側近召喚、プレイヤーにデバフ、魔王無敵状態)ステート。
 class LastBossThroneState : public EnemyState {
 public:
 	LastBossThroneState(EnemyCharacter* Object);
 	~LastBossThroneState();
+
+	// 側近に共同攻撃命令。
+	bool EntourageCommand();
+	// 側近にバフ。
+	void EncourageBuff();
 private:
 	void _EntrySubClass()override;
 
-	void _Start()override;
+	void _StartSubClass()override;
 
 	void _UpdateSubClass()override;
 
@@ -22,9 +28,10 @@ private:
 private:
 	bool _isOutsideRange = false;	// 範囲外に出たか。
 	float _timeCounter;
-	float _interval = 20.0f;
-	bool _isCommand = false;
+	float _interval = 10.0f;
 
+	bool _isDeathEntourage = false;
 	static const int _entourageNum;	// 側近の数。
 	vector<BossGhost*> _entourageEnemys;	// 側近。
+	Player* _player = nullptr;
 };

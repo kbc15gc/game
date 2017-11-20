@@ -45,7 +45,7 @@ void EnemyWanderingState::_EntrySubClass() {
 	_TranslationPalam(_EnemyObject->transform->GetForward(), speed * 5.0f, speed);
 }
 
-void EnemyWanderingState::_Start() {
+void EnemyWanderingState::_StartSubClass () {
 	// ‚Ì‚¯‚¼‚èÝ’èB
 	_EnemyObject->ConfigDamageReaction(true, 1);
 }

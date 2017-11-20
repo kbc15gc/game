@@ -118,9 +118,15 @@ void ParticleEmitter::ReleaseParticleAll() {
 		_achievedArray = nullptr;
 	}
 	for (auto particle : _ParticleList) {
-		// パーティクルの自発削除許可(フェードアウトなどの処理をエミッターを削除した場合も行いたいため)。
-		particle->SetIsAutoDelete(true);
-		particle->SetEmitterTransform(nullptr);
+		if (particle->GetLife() >= 0.0f) {
+			// パーティクルの自発削除許可(フェードアウトなどの処理をエミッターを削除した場合も行いたいため)。
+			particle->SetIsAutoDelete(true);
+			particle->SetEmitterTransform(nullptr);
+		}
+		else {
+			// 寿命が無限。
+			INSTANCE(GameObjectManager)->AddRemoveList(particle);
+		}
 	}
 	_ParticleList.clear();
 }

@@ -10,7 +10,7 @@ public:
 private:
 	void _EntrySubClass()override;
 
-	void _Start()override;
+	void _StartSubClass()override;
 
 	void _UpdateSubClass()override;
 

@@ -116,10 +116,9 @@ private:
 	void _UpdateValue(float value);
 	// バーの値を減算更新。
 	// 引数：	今の値との差分。
-	//			最後のゲージに設定する値。
-	void _UpdateSubValue(float Difference, float Fraction);
+	void _UpdateSubValue(float Difference);
 	// バーの値を加算更新。
-	void _UpdateAddValue(float Difference, float Fraction);
+	void _UpdateAddValue(float Difference);
 	// HUDとして使用しない場合にスクリーン座標系に変換する関数。
 	void _ToScreenPos();
 

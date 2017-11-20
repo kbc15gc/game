@@ -23,7 +23,8 @@ class BuffDebuffICon;
 class EnemyAttack;
 class EnemySingleAttack;
 class EnemyBreathAttack;
-class GhostComboAttack;
+class EnemyComboAttack;
+class EnemyWarpAttack;
 
 // 基底クラス。
 // エネミーのキャラクター。
@@ -49,20 +50,40 @@ public:
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
 	// ※追加する際はこのクラスの_BuildState関数に記述した順番になっているかをしっかり確認すること。
 	// ※ステートを追加した際はここだけでなくこのクラス内の_BuildState関数も更新すること。
-	enum class State {None = -1, Wandering = 0,Discovery, Chace,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
+	enum class State {None = -1, Wandering = 0,Discovery, Chace,BackStep,Threat, Speak,StartAttack, Attack ,Wait ,Translation, Fall,Damage,Death};
 
 	// アニメーションデータテーブルの添え字。
 	// ※0番なら待機アニメーション、1番なら歩くアニメーション。
 	// ※この列挙子を添え字として、継承先のクラスでアニメーション番号のテーブルを作成する。
 	// ※攻撃モーションはモデルによって数が異なるのでここでは扱わない。
-	enum class AnimationType { None = -1,Idle = 0, Walk, Dash, Threat, Fall,Damage, Death,Max };
+	enum class AnimationType { None = -1,Idle = 0, Walk,BackStep, Dash, Threat, Fall,Damage, Death,Max };
 
 	// サウンドデータテーブルの添え字。
-	enum class SoundIndex{None = -1, Attack1 = 0, Attack2, Attack3, Threat,Damage,Death, Max};
+	enum class SoundIndex{None = -1, Damage = 0, Buoon, AttackGolem, Threat, DamageGolem, StatusUp, StatusDown ,Death, Max};
 
 	// サウンドデータ構造体。
 	struct SoundData {
+		SoundData(){}
+		~SoundData() {
+			if (Source) {
+				Source->Stop();
+				INSTANCE(GameObjectManager)->AddRemoveList(Source);
+			}
+		}
+		void Play() {
+			if (Source) {
+				Source->SetVolume(volume);
+				Source->Play(IsLoop);
+			}
+		}
+
+		void Stop() {
+			if (Source) {
+				Source->Stop();
+			}
+		}
 		char Path[FILENAME_MAX];	// サウンド名(.wavも入れてね)。
+		float volume = 1.0f;
 		bool Is3D = false;		// 3Dサウンドか。
 		bool IsLoop = false;	// ループ再生か。
 		SoundSource* Source = nullptr;	// サウンド再生オブジェクト。
@@ -147,8 +168,10 @@ public:
 	// 引数：	アニメーションタイプ(テーブルのほう)。
 	//			補間時間。
 	//			どのイベントリストを再生するか(デフォルトは0)。
-	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime,int eventNo = 0) {
-		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime,-1, eventNo);
+	inline void PlayAnimation_Loop(const AnimationType animationType, const float interpolateTime, int eventNo = 0) {
+		if (animationType != AnimationType::None) {
+			PlayAnimation_OriginIndex(_AnimationNo[static_cast<int>(animationType)], interpolateTime, -1, eventNo);
+		}
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
@@ -157,7 +180,9 @@ public:
 	//			ループ回数(デフォルトは1)。
 	//			どのイベントリストを再生するか(デフォルトは0)。
 	inline void PlayAnimation(const AnimationType animationType, const float interpolateTime, const int loopCount = 1, int eventNo = 0) {
-		PlayAnimation_OriginIndex(_AnimationNo[static_cast<unsigned int>(animationType)], interpolateTime, loopCount, eventNo);
+		if (animationType != AnimationType::None) {
+			PlayAnimation_OriginIndex(_AnimationNo[static_cast<int>(animationType)], interpolateTime, loopCount, eventNo);
+		}
 	}
 
 	// エネミーのアニメーション再生関数(指定回数ループ)。
@@ -166,7 +191,7 @@ public:
 	//			ループ回数(-1で無限ループ)。
 	//			どのイベントリストを再生するか(デフォルトは0)。
 	inline void PlayAnimation_OriginIndex(const int animationNum, const float interpolateTime, const int loopCount = 1, int eventNo = 0) {
-		if (animationNum == -1) {
+		if (animationNum < 0) {
 			// アニメーションを再生しない。
 			return;
 		}
@@ -178,9 +203,9 @@ public:
 	// 音再生関数。
 	// 引数：	効果音テーブルの添え字。
 	inline void EnemyPlaySound(const SoundIndex idx) {
-		if (_SoundData[static_cast<int>(idx)].Source) {
+		if (_SoundData[static_cast<int>(idx)]->Source) {
 			// サウンドソースが作成されている。
-			_SoundData[static_cast<int>(idx)].Source->Play(_SoundData[static_cast<int>(idx)].IsLoop);
+			_SoundData[static_cast<int>(idx)]->Source->Play(_SoundData[static_cast<int>(idx)]->IsLoop);
 		}
 	}
 
@@ -499,6 +524,12 @@ protected:
 	// ※Noneを渡すとステートがオフになる。
 	void _ChangeState(State next);
 
+	// ステートが切り替わったときに呼ばれるコールバック。
+	// 引数：	切り替わる前のステートタイプ。
+	//			切り替わった後のステートタイプ。
+	// ※処理自体は継承先で実装。
+	virtual void _ChangeStateCallback(State prev,State next){}
+
 	// アニメーションテーブル作成関数。
 	// 引数：	アニメーション終了時間の格納用配列(この配列に終了時間を設定する、添え字はモデルに設定されているアニメーション番号)。
 	// ※受け取る配列内の値はデフォルトで-1となっているので、アニメーションの終了時間が1秒以上のものは設定しなくてよい。
@@ -512,7 +543,7 @@ protected:
 		_AnimationNo[static_cast<unsigned int>(Type)] = animNo;
 	}
 
-	// 引数のパラメータをサウンドテーブルに登録する関数。
+	// 引数のパラメータをもとに汎用サウンドテーブルを作成する関数。
 	// 引数：	登録するサウンドのタイプ(列挙子)。
 	//			waveファイルの名前(.wavまで含めて)。
 	//			3Dサウンドにするか。
@@ -520,11 +551,27 @@ protected:
 	void _ConfigSoundData(SoundIndex idx, char* filePath, bool is3D = false, bool isLoop = false);
 
 	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
-	// 引数は終了したステートのタイプ。
+	// 引数;	終了したステートのタイプ。
 	// ※この関数は各ステートが自発的に終了した場合にのみ呼び出される。
 	// ※このクラスのChangeStateRequestで終了した場合は呼ばれない。
 	// ※ローカルステートの終了時にも呼ばれない。
 	virtual void _EndNowStateCallback(State EndStateType) {};
+
+	//// ステートを作成してテーブルに登録する関数。
+	//// 引数：	関連付けるID。
+	//template<class T : public EnemyState>
+	//T* AddState(State Type) {
+	//	T* newState = new T(this);
+	//	_MyState[Type].reset(newState);
+	//	return newState;
+	//}
+
+	// 引数のパラメータをもとにサウンドデータを作成する関数。
+	// 引数：	waveファイルの名前(.wavまで含めて)。
+	//			音量。
+	//			ループ再生するか。
+	//			3Dサウンドにするか。
+	SoundData* _CreateSoundData(char* filePath,float volume = 1.0f, bool isLoop = false, bool is3D = false);
 
 private:
 
@@ -593,9 +640,8 @@ private:
 	// ※処理自体は継承先に委譲。
 	virtual void _ConfigAnimationEvent() = 0;
 
-	// 効果音のテーブル作成。
-	// ※処理自体は継承先に委譲。
-	virtual void _BuildSoundTable() = 0;
+	// エネミーの汎用効果音のテーブル作成。
+	void _BuildSoundTable();
 
 	// 死亡時ドロップ処理。
 	// ※継承先によって異なる処理。
@@ -616,7 +662,7 @@ protected:
 
 	int _AnimationNo[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	float _animationSpeed = 1.0f;	// アニメーションの再生速度(デフォルトは1.0)。
-	SoundData _SoundData[static_cast<int>(SoundIndex::Max)];
+	unique_ptr<SoundData> _SoundData[static_cast<int>(SoundIndex::Max)];
 
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。

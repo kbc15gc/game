@@ -4,6 +4,7 @@
 #include "GameObject\Player\Player.h"
 
 EnemyDeathState::EnemyDeathState(EnemyCharacter* Object):EnemyState(Object) {
+	_playAnimation = EnemyCharacter::AnimationType::Death;
 }
 
 EnemyDeathState::~EnemyDeathState() {
@@ -13,13 +14,12 @@ EnemyDeathState::~EnemyDeathState() {
 void EnemyDeathState::_EntrySubClass() {
 	_isEndAnim = false;
 	_timeCounter = 0.0f;
-	_EnemyObject->PlayAnimation(EnemyCharacter::AnimationType::Death,0.5f);
 
 	// エネミー死亡時のドロップ処理。
 	_EnemyObject->Drop();
 }
 
-void EnemyDeathState::_Start() {
+void EnemyDeathState::_StartSubClass() {
 }
 
 void EnemyDeathState::_UpdateSubClass() {

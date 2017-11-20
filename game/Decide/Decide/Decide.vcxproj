@@ -233,6 +233,7 @@
     <ClInclude Include="GameObject\Enemy\EnemyManager.h" />
     <ClInclude Include="GameObject\Enemy\EnemySoldier.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyAttackState.h" />
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyBackStepState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyChaceState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.h" />
     <ClInclude Include="GameObject\Enemy\HFSM\EnemyDeathState.h" />
@@ -361,6 +362,7 @@
     <ClCompile Include="GameObject\Enemy\EnemyManager.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemySoldier.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyAttackState.cpp" />
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyBackStepState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyChaceState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDamageReactionState.cpp" />
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyDeathState.cpp" />

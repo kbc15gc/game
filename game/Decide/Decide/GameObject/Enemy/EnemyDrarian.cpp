@@ -99,7 +99,7 @@ void EnemyDrarian::AnimationEvent_Kamituki() {
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Attack1);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
 
@@ -201,11 +201,4 @@ void EnemyDrarian::_ConfigAnimationEvent() {
 		float eventFrame = 15;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&EnemyDrarian::AnimationEvent_Kamituki));
 	}
-}
-
-void EnemyDrarian::_BuildSoundTable() {
-	// çUåÇâπìoò^ÅB
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack1, "Damage_01.wav", false, false);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack2, "Buoonn.wav", false, false);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Attack3, "Buoonn.wav", false, false);
 }
