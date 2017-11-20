@@ -4,6 +4,9 @@
 
 EnemySpeakState::EnemySpeakState(EnemyCharacter* Object) : EnemyState(Object)
 {
+	_playAnimation = EnemyCharacter::AnimationType::Idle;
+	_interpolate = 0.2f;
+	_loopNum = -1;
 }
 
 
@@ -12,11 +15,9 @@ EnemySpeakState::~EnemySpeakState()
 }
 
 void EnemySpeakState::_EntrySubClass() {
-	// 待機中のアニメーション再生。
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle, 0.1f);
 }
 
-void EnemySpeakState::_Start() {
+void EnemySpeakState::_StartSubClass() {
 }
 
 void EnemySpeakState::_UpdateSubClass() {
@@ -31,6 +32,7 @@ void EnemySpeakState::_UpdateSubClass() {
 
 		_speakObject = static_cast<NPC*>(INSTANCE(GameObjectManager)->FindObject(const_cast<char*>(_EnemyObject->GetFileName())));
 		if (_speakObject) {
+			_speakObject->SetActive(true);
 			const_cast<ComponentManager&>(_speakObject->GetComponentManager()).RemoveComponent<SkinModel>();
 			const_cast<ComponentManager&>(_speakObject->GetComponentManager()).RemoveComponent<Animation>();
 			_speakObject->transform->SetPosition(_EnemyObject->transform->GetPosition());

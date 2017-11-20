@@ -15,7 +15,7 @@ void EnemyAttackState::_EntrySubClass() {
 	_attack = _EnemyObject->GetNowSelectAttack();
 }
 
-void EnemyAttackState::_Start() {
+void EnemyAttackState::_StartSubClass() {
 	if (_attack) {
 		// UŒ‚ˆ—‚ªİ’è‚³‚ê‚Ä‚¢‚éB
 		_attack->Entry();	// ‰Šú‰»B

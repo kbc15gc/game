@@ -29,8 +29,7 @@ bool EnemyState::Update() {
 
 		if (_IsFirstUpdate) {
 			// ステートが切り替わってから最初の更新。	
-			// ※仮想関数。
-			_Start();
+			Start();
 			_IsFirstUpdate = false;
 		}
 
@@ -57,12 +56,14 @@ bool EnemyState::Update() {
 }
 
 void EnemyState::Exit(EnemyCharacter::State next) {
+
 	_ExitSubClass(next);
 
 	if (_NowLocalState) {
 		// ローカルステートが設定されている。
 		_ChangeLocalState(EnemyCharacter::State::None);
 	}
+	_EnemyObject->SetAnimationSpeed(_saveSpeed);
 }
 
 void EnemyState::_ChangeLocalState(EnemyCharacter::State next) {

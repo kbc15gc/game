@@ -13,7 +13,6 @@ class LastBoss :
 public:
 	enum class LastBossState { LastBossThrone = static_cast<int>(State::Death) + 1, LastBossMagician, LastBossHistory, LastBossDown };
 
-private:
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
 		Wait = 0,
@@ -21,9 +20,15 @@ private:
 		Magic,
 		Damage,
 		Move,
+		Death,
+		WaitThrone,	// 玉座待機。
+		MoveThrone,	// 玉座移動。
+		MagicThrone,	// 玉座魔法。
+		ThroneEnd,	// 玉座削除。
 		Max,
 	};
 
+private:
 public:
 	LastBoss(const char* name);
 	~LastBoss();
@@ -37,7 +42,10 @@ public:
 	void MagicAttackShot2();
 	void MagicAttackStart3();
 	void MagicAttackShot3();
-	void BuffDebuffEvent();
+	void BuffEvent();
+	void DebuffEvent();
+	void EntourageCommand();
+	void EncourageBuff();
 
 #ifdef _DEBUG
 	void Debug()override;
@@ -49,6 +57,12 @@ public:
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
+
+	// ステートが切り替わったときに呼ばれるコールバック。
+	// 引数：	切り替わる前のステートタイプ。
+	//			切り替わった後のステートタイプ。
+	// ※処理自体は継承先で実装。
+	void _ChangeStateCallback(State prev, State next)override;
 
 private:
 	void _AwakeSubClass()override;
@@ -91,9 +105,6 @@ private:
 	// アニメーションイベントを設定する関数。
 	void _ConfigAnimationEvent()override;
 
-	// 効果音のテーブル作成関数。
-	void _BuildSoundTable()override;
-
 	inline void _DropSubClass()override {
 	}
 
@@ -101,9 +112,11 @@ private:
 private:
 	LastBossState _saveState;
 	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
+	unique_ptr<EnemyBreathAttack> _magicAttack;
 	unique_ptr<EnemySingleAttack> _buffAttack;
 	unique_ptr<EnemySingleAttack> _debuffAttack;
-	unique_ptr<EnemyBreathAttack> _magicAttack;
+	unique_ptr<EnemySingleAttack> _commandAttack;
+	unique_ptr<EnemySingleAttack> _encourageBuffAttack;
 
 	LastBossMagic* _magicFire1 = nullptr;
 	LastBossMagic* _magicFire2 = nullptr;
@@ -112,4 +125,6 @@ private:
 	SordShock* _sordAttackShot0 = nullptr;
 	SordShock* _sordAttackShot1 = nullptr;
 	SordShock* _sordAttackShot2 = nullptr;
+
+	unique_ptr<SoundData> _voiceYokukitana;
 };

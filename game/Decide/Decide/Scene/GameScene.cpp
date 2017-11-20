@@ -267,6 +267,15 @@ void GameScene::Update()
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
+					switch ((BGM)i)
+					{
+						case BGM::MATI1:
+							_Player->SetRespawnPos(MATI_POS);
+							break;
+						case BGM::MATI2:
+							_Player->SetRespawnPos(MATI2_POS);
+							break;
+					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
 				}

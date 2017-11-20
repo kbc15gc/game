@@ -7,6 +7,8 @@
 
 EnemyChaceState::EnemyChaceState(EnemyCharacter* Object) : EnemyState(Object)
 {
+	_playAnimation = EnemyCharacter::AnimationType::Dash;
+	_loopNum = -1;
 }
 
 
@@ -20,9 +22,7 @@ void EnemyChaceState::_EntrySubClass() {
 	_isOutside = false;
 }
 
-void EnemyChaceState::_Start() {
-	// アニメーション再生。
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Dash, 0.2f);
+void EnemyChaceState::_StartSubClass() {
 	// のけぞり設定。
 	_EnemyObject->ConfigDamageReaction(true, _EnemyObject->GetDamageMotionRandNum());
 }
@@ -43,8 +43,8 @@ void EnemyChaceState::_UpdateSubClass() {
 			_EnemyObject->LookAtObject(_Player);
 
 			Vector3 EnemyToPlayer = _Player->transform->GetPosition() - _EnemyObject->transform->GetPosition();
-			if (EnemyToPlayer.Length() <= _EnemyObject->GetNowSelectAttackRange()) {
-				// 攻撃範囲に入った。
+			if (EnemyToPlayer.Length() <= _endRange) {
+				// 追跡終了範囲に入った。
 
 				// ステート終了。
 				_EndState();
@@ -86,6 +86,7 @@ void EnemyChaceState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalS
 	if (EndLocalStateType == EnemyCharacter::State::Translation) {
 		// 初期位置に戻った。
 
+		// 初期ステートに戻す。
 		_EnemyObject->ChangeStateRequest(_EnemyObject->GetInitState());
 	}
 }

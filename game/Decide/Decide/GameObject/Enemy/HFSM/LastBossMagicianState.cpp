@@ -21,7 +21,7 @@ void LastBossMagicianState::_EntrySubClass() {
 	_timeCounter = 0.0f;
 }
 
-void LastBossMagicianState::_Start() {
+void LastBossMagicianState::_StartSubClass() {
 	// ‚Ì‚¯‚¼‚èÝ’èB
 	//_EnemyObject->ConfigDamageReaction(true,30);
 	_EnemyObject->ConfigDamageReaction(true, 1);

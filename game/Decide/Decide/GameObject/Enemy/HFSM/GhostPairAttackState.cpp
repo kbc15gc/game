@@ -7,6 +7,8 @@
 GhostPairAttackState::GhostPairAttackState(EnemyCharacter* Object) : EnemyState(Object)
 {
 	_Player = INSTANCE(GameObjectManager)->FindObject("Player");
+	_playAnimation = EnemyCharacter::AnimationType::Idle;
+	_loopNum = -1;
 }
 
 
@@ -22,13 +24,11 @@ void GhostPairAttackState::_EntrySubClass() {
 	_isStartAttack = false;
 }
 
-void GhostPairAttackState::_Start() {
+void GhostPairAttackState::_StartSubClass() {
 	// エネミーにどの攻撃を行うかを判断させる。
 	// ※エネミーの攻撃パターンを選別するステートを作ってしまうと、
 	//   エネミーの種類に応じてステートが爆発的に増えてしまうため、攻撃パターンの選別は各自エネミーに行わせる。
 	_EnemyObject->AttackSelect();
-
-	_EnemyObject->PlayAnimation_Loop(EnemyCharacter::AnimationType::Idle,0.2f);
 }
 
 void GhostPairAttackState::_UpdateSubClass() {

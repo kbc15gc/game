@@ -169,7 +169,7 @@ public:
 		return _Info[idx].originParam;
 	}
 
-	// 指定したパラメーターの現在のバフ値取得。
+	// 指定したパラメーターの現在のバフ値(実際に加算されている値)取得。
 	// 引数：	パラメータータイプ。
 	inline int GetBuffParam(Param idx)const {
 		if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
@@ -178,7 +178,7 @@ public:
 		}
 		return static_cast<int>(static_cast<float>(_Info[idx].buffPercentage) * 0.01f * _Info[idx].originParam);
 	}
-	// 指定したパラメーターの現在のデバフ値取得。
+	// 指定したパラメーターの現在のデバフ値(実際に減算されている値)取得。
 	// 引数：	パラメータータイプ。
 	inline int GetDebuffParam(Param idx)const {
 		if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
@@ -187,6 +187,25 @@ public:
 		}
 		return static_cast<int>(static_cast<float>(_Info[idx].debuffPercentage) * 0.01f * _Info[idx].originParam);
 	}
+	// 指定したパラメーターの現在のバフ値(パーセント)取得。
+	// 引数：	パラメータータイプ。
+	inline int GetBuffParam_Percentage(Param idx)const {
+		if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
+			// バフとデバフに対応していないものは非対応。
+			abort();
+		}
+		return _Info[idx].buffPercentage;
+	}
+	// 指定したパラメーターの現在のデバフ値(パーセント)取得。
+	// 引数：	パラメータータイプ。
+	inline int GetDebuffParam_Percentage(Param idx)const {
+		if (idx == Param::HP || idx == Param::MP || idx == Param::CRT || idx == Param::LV) {
+			// バフとデバフに対応していないものは非対応。
+			abort();
+		}
+		return _Info[idx].debuffPercentage;
+	}
+
 
 	inline int GetMaxHP()const {
 		return _Info[Param::HP].originParam;

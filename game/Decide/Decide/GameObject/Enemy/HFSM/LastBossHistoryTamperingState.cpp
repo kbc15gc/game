@@ -20,7 +20,7 @@ void LastBossHistoryTamperingState::_EntrySubClass() {
 	// —ðŽj‘¢Š«B
 }
 
-void LastBossHistoryTamperingState::_Start() {
+void LastBossHistoryTamperingState::_StartSubClass() {
 	// ‚Ì‚¯‚¼‚èÝ’èB
 	_EnemyObject->ConfigDamageReaction(false);
 }
