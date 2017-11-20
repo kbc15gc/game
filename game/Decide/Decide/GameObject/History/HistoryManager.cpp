@@ -18,8 +18,24 @@ HistoryManager* HistoryManager::_Instance = nullptr;
 */
 HistoryManager::HistoryManager()
 {
-	//CSVから歴史情報読み取り。
-	Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	if (IS_CONTINUE)
+	{
+		//CSVから歴史情報読み取り。
+		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	}
+	else
+	{
+		//CSVから歴史情報読み取り。
+		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		FOR(i, _LocationHistoryList.size())
+		{
+			for (int j = 0; j < (int)ChipID::ChipNum; j++)
+			{
+				_LocationHistoryList.at(i)->_ChipSlot[j] = ChipID::None;
+			}
+		}
+		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	}
 
 	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
 	{
@@ -68,18 +84,15 @@ void HistoryManager::Start()
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
-		if (IS_CONTINUE)
+		for (int j = 0; j < (int)ChipID::ChipNum; j++)
 		{
-			for (int j = 0; j < (int)ChipID::ChipNum; j++)
+			if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
 			{
-				if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
-				{
-					continue;
-				}
-				//読み込んだデータを元に歴史書にページをあらかじめ追加。
-				HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, 0);
-				page->ChangeState(HistoryPage::StateCodeE::Close);
+				continue;
 			}
+			//読み込んだデータを元に歴史書にページをあらかじめ追加。
+			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, 0);
+			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
 	}

@@ -39,6 +39,7 @@ void HistoryMenu::Start()
 
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+	_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
 
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 
@@ -252,6 +253,8 @@ void HistoryMenu::SelectLocationUpdate()
 
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
+		_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
+
 		_NowLookPage = 0;
 		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
