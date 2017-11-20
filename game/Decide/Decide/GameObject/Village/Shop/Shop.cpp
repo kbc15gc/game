@@ -164,6 +164,8 @@ void Shop::SetDescriptionText(string text)
 void Shop::PlayVoice(string wavfilepath)
 {
 	_Voice.Init(wavfilepath.c_str(), false);
+	//âπè¨Ç≥Ç©Ç¡ÇΩÇÃÇ≈ÅB
+	_Voice.SetVolume(2.0f);
 	_Voice.Play(false);
 }
 

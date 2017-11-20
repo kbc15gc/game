@@ -268,10 +268,6 @@ void Player::Start()
 
 	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
 
-	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
-
-
-	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
 	//@todo for debug
 #ifdef _DEBUG
 #ifdef Village1

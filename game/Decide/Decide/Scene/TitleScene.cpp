@@ -123,6 +123,7 @@ void TitleScene::Update()
 			//ゲームシーンへ移行
 			_StartSE->Play(false);
 			INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+			_AnyButton = false;
 		}
 	}
 
