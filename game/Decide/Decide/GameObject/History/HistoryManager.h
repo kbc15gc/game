@@ -102,6 +102,14 @@ public:
 		return false;
 	}
 
+	/**
+	* 建物を作成.
+	*
+	* @param path		フォルダパス.
+	* @param Builds		作成した建物を格納する配列.
+	*/
+	vector<GameObject*>& CreateBuilding(const char* path, vector<GameObject*>& Builds);
+
 private:
 	
 	/**
@@ -126,14 +134,6 @@ private:
 	* @param type		生成するオブジェクトのタイプ.
 	*/
 	void _CreateObject(int location, const char* path, int type);
-
-	/**
-	* 建物を作成.
-	*
-	* @param location	場所ID.
-	* @param path		フォルダパス.
-	*/
-	void _CreateBuilding(int location, const char* path);
 
 	/**
 	* NPCを作成.

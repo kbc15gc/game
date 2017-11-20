@@ -4,9 +4,11 @@
 #include "EnemyTranslationState.h"
 #include "EnemyWaitState.h"
 #include "GameObject\Enemy\LastBoss.h"
+#include "GameObject\History\HistoryManager.h"
 
 LastBossHistoryTamperingState::LastBossHistoryTamperingState(EnemyCharacter* Object) : EnemyState(Object)
 {
+	 //INSTANCE(HistoryManager)->CreateBuilding("Asset/Data/LastBossStageEquipment/.csv", _historyBuildings);
 }
 
 

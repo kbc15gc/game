@@ -188,13 +188,27 @@ void HistoryManager::_CreateObject(int location, const char * path, int type)
 	if (type == 0)
 	{
 		//前のオブジェクトを削除
-		for (auto& it : _GameObjectList[(int)location])
+		for (auto& it : _GameObjectList[location])
 		{
 			INSTANCE(GameObjectManager)->AddRemoveList(it);
 		}
-		_GameObjectList[(int)location].clear();
+		_GameObjectList[location].clear();
+
 		//生成。
-		_CreateBuilding(location, path);
+		CreateBuilding(path, _GameObjectList[location]);
+
+		//第3の村だけ
+		if (location == (int)LocationCodeE::Prosperity)
+		{
+			for (auto obj : _GameObjectList[location]) {
+				//X軸に180ど回転させる。
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX, PI);
+				q.Multiply(obj->transform->GetRotation());
+				obj->transform->SetRotation(q);
+			}
+		}
+
 	}
 	else if (type == 1)
 	{
@@ -209,7 +223,7 @@ void HistoryManager::_CreateObject(int location, const char * path, int type)
 	}
 }
 
-void HistoryManager::_CreateBuilding(int location, const char * path)
+vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<GameObject*>& Builds)
 {
 	//CSVからオブジェクトの情報読み込み
 	vector<unique_ptr<ObjectInfo>> objInfo;
@@ -227,23 +241,13 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 
 			obj->transform->SetRotation(objInfo[i]->ang);
-			//第3の村だけ
-			if (location == (int)LocationCodeE::Prosperity)
-			{
-				//X軸に180ど回転させる。
-				Quaternion q = Quaternion::Identity;
-				q.SetRotation(Vector3::axisX, PI);
-				q.Multiply(objInfo[i]->ang);
-				obj->transform->SetRotation(q);
-
-			}
 
 			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			obj->LoadModel(objInfo[i]->filename, objInfo[i]->coll);
 
-			//管理用の配列に追加。
-			_GameObjectList[location].push_back(obj);
+			//配列に追加。
+			Builds.push_back(obj);
 
 			//次がコリジョンかどうか？
 			while (true)

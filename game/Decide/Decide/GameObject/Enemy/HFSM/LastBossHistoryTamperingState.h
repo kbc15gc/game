@@ -19,4 +19,6 @@ private:
 
 private:
 	bool _isOutsideRange = false;	// 範囲外に出たか。
+
+	vector<GameObject*> _historyBuildings;	// 舞台装置。
 };
