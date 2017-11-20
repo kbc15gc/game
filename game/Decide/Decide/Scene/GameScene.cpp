@@ -194,7 +194,7 @@ void GameScene::Start()
 
 	//Ä¶—pBGM
 	_GameBGM = _WorldBGM;
-	
+	_GameBGM->SetVolume(0.3f);
 #ifndef _NOBO_
 	_GameBGM->Play(true);
 #endif // !_NOBO_
