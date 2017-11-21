@@ -67,6 +67,7 @@ namespace
 	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
+	Vector3 MATI3_POS = { 214.80f, 64.70f, -84.10f };
 
 	SCollisionInfo soundcollisition[]
 	{
@@ -133,18 +134,19 @@ void GameScene::Start()
 	//ボスD作成。
 	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("doragon", 1);
 
-	////@todo for debug
-	//// テスト。
-	//// ラスボス作成。
-	////LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	//// パラメーター設定。
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	////g->SetParamAll(Color, param);
+	//@todo for debug
+	// テスト。
+	// ラスボス作成。
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
+	//g->SetParamAll(Color, param);
 	//d->SetParamAll(Color, param);
 
 
@@ -174,21 +176,22 @@ void GameScene::Start()
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
-	
+	_WorldBGM->SetVolume(0.2f);
+
 	//BOSSBGM
 	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
 	_BossBGM->Init("Asset/Sound/boss1.wav");
-	_BossBGM->SetVolume(0.5f);
+	_BossBGM->SetVolume(0.2f);
 
 	//街BGM
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
-	_MatiBGM->SetVolume(0.5f);
+	_MatiBGM->SetVolume(0.2f);
 
 	//街2BGM
 	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
 	_Mati2BGM->Init("Asset/Sound/mati2.wav");
-	_Mati2BGM->SetVolume(0.5f);
+	_Mati2BGM->SetVolume(0.2f);
 
 	//死亡BGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -276,6 +279,9 @@ void GameScene::Update()
 						case BGM::MATI2:
 							_Player->SetRespawnPos(MATI2_POS);
 							break;
+						case BGM::MATI3:
+							_Player->SetRespawnPos(MATI3_POS);
+							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
@@ -350,6 +356,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _MatiBGM;
 			break;
 		case GameScene::BGM::MATI2:
+			_GameBGM = _Mati2BGM;
+			break;
+		case GameScene::BGM::MATI3:
+			//@todo for debug 仮設定
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::DEAD:

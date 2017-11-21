@@ -40,6 +40,16 @@ public:
 		}
 		return _Instance;
 	}
+
+	bool ShopEvent()
+	{
+		if (_ActiveEvent == Event::EventID::ShopF)
+		{
+			return true;
+		}
+		return false;
+	}
+
 private:
 	Player* GetPlayer()
 	{

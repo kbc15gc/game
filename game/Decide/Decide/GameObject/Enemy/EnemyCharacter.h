@@ -137,6 +137,11 @@ public:
 	// ※継承先独自の実装は、privateにある_LateUpdateSubClass関数を継承して実装すること。
 	void LateUpdate()override;
 	
+	void OnDestroy()override {
+		for (auto& data : _SoundData) {
+			data.reset(nullptr);
+		}
+	}
 
 	// エネミーを指定したオブジェクトに向かせる処理(補間なし)。
 	// 引数：	見たいオブジェクト。
@@ -543,7 +548,7 @@ protected:
 		_AnimationNo[static_cast<unsigned int>(Type)] = animNo;
 	}
 
-	// 引数のパラメータをもとに汎用サウンドテーブルを作成する関数。
+	// 引数のパラメータをもとにサウンドテーブルを作成する関数。
 	// 引数：	登録するサウンドのタイプ(列挙子)。
 	//			waveファイルの名前(.wavまで含めて)。
 	//			3Dサウンドにするか。
@@ -566,14 +571,14 @@ protected:
 	//	return newState;
 	//}
 
+private:
+
 	// 引数のパラメータをもとにサウンドデータを作成する関数。
 	// 引数：	waveファイルの名前(.wavまで含めて)。
 	//			音量。
 	//			ループ再生するか。
 	//			3Dサウンドにするか。
-	SoundData* _CreateSoundData(char* filePath,float volume = 1.0f, bool isLoop = false, bool is3D = false);
-
-private:
+	SoundData* _CreateSoundData(char* filePath, float volume = 1.0f, bool isLoop = false, bool is3D = false);
 
 	// HPバーの描画状態更新処理。
 	void _BarRenderUpdate();
@@ -662,7 +667,7 @@ protected:
 
 	int _AnimationNo[static_cast<int>(AnimationType::Max)];	// 各アニメーションタイプのアニメーション番号と再生時間の配列。
 	float _animationSpeed = 1.0f;	// アニメーションの再生速度(デフォルトは1.0)。
-	unique_ptr<SoundData> _SoundData[static_cast<int>(SoundIndex::Max)];
+	vector<unique_ptr<SoundData>> _SoundData = vector<unique_ptr<SoundData>>(static_cast<int>(SoundIndex::Max));
 
 	State _NowStateIdx;		// 現在のステートの添え字。
 	EnemyState* _NowState = nullptr;	// 現在のステート。
