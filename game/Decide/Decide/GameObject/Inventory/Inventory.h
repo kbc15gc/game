@@ -109,6 +109,16 @@ public:
 	//リストの中身を全て削除。
 	void deleteList();
 
+	void SaveArmor()
+	{
+		_OutData(Item::ItemCodeE::Armor);
+	}
+
+	void SaveWeapon()
+	{
+		_OutData(Item::ItemCodeE::Weapon);
+	}
+
 private:
 
 	//リストから指定されたアイテムを削除。

@@ -146,6 +146,7 @@ void Player::Awake()
 		{
 			picojson::object player = PlayerData.GetDataObject("Player");
 			lv = player["Level"].get<double>() - 1;
+			_nowEXP = player["EXP"].get<double>();
 		}
 	}
 
@@ -189,21 +190,23 @@ void Player::Awake()
 	//レベルアップ音初期化
 	_LevelUpSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUpSound", 0);
 	_LevelUpSound->Init("Asset/Sound/Player/lvup.wav");
-	_LevelUpSound->SetVolume(1.0f);
+	_LevelUpSound->SetVolume(0.3f);
 	//死亡ボイス初期化
 	_DeathSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeathSound", 0);
 	_DeathSound->Init("Asset/Sound/Player/death.wav");
+	_DeathSound->SetVolume(0.3f);
 	//回復SE初期化
 	_HeelSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("HeelSound", 0);
 	_HeelSound->Init("Asset/Sound/Player/heal02.wav");
+	_HeelSound->SetVolume(2.0f);
 	//ステータスアップサウンド初期化
 	_StatusUpSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusUpSound", 0);
 	_StatusUpSound->Init("Asset/Sound/Player/statusup.wav");
-	_StatusUpSound->SetVolume(2.0f);
+	_StatusUpSound->SetVolume(1.0f);
 	//ステータスダウンサウンド初期化
 	_StatusDownSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusDownSound", 0);
 	_StatusDownSound->Init("Asset/Sound/Player/statusdown.wav");
-	_StatusDownSound->SetVolume(2.0f);
+	_StatusDownSound->SetVolume(1.0f);
 	//攻撃サウンド初期化
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
@@ -988,6 +991,8 @@ void Player::SetEquipment(HoldItemBase* equi) {
 		_Equipment->armor = static_cast<HoldArmor*>(equi);
 		//装備フラグをtrueにする。
 		_Equipment->armor->SetIsEquipTrue();
+
+		INSTANCE(Inventory)->SaveArmor();
 	}
 	else
 		//武器。
@@ -1007,6 +1012,8 @@ void Player::SetEquipment(HoldItemBase* equi) {
 		_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		//装備フラグをtrueにする。
 		_Equipment->weapon->SetIsEquipTrue();
+
+		INSTANCE(Inventory)->SaveWeapon();
 	}
 }
 
