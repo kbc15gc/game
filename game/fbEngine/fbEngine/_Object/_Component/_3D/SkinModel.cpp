@@ -376,7 +376,7 @@ void SkinModel::DrawMeshContainer(
 			CameraToPosLen /= (MaxLen - MinLen);
 
 			// ディザ係数.
-			// 0 ~ 64.
+			// 0 ~ 65.
 			// ディザ係数よりも大きい値のところが残る.
 			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
 

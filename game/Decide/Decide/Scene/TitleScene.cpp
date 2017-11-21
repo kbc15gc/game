@@ -62,9 +62,6 @@ void TitleScene::Start()
 	//ボタンのフラグ
 	_AnyButton = false;
 
-	//セレクト
-	_Select = Select::NewGame;
-
 	INSTANCE(SceneManager)->GetSky()->SetActive(false);
 }
 
@@ -100,6 +97,18 @@ void TitleScene::Update()
 		_AnyButton = true;
 		_StartSE->Play(false);
 		flag = false;
+
+		JsonData PlayerData;
+		if (PlayerData.Load("Player"))
+		{
+			_Select = Select::Continue;
+			_StartBar->transform->SetPosition(455, 475, 0);
+		}
+		else
+		{
+			_Select = Select::NewGame;
+			_StartBar->transform->SetPosition(455, 405, 0);
+		}
 	}
 
 	//コンティニューかニューゲームの処理

@@ -146,6 +146,7 @@ void Player::Awake()
 		{
 			picojson::object player = PlayerData.GetDataObject("Player");
 			lv = player["Level"].get<double>() - 1;
+			_nowEXP = player["EXP"].get<double>();
 		}
 	}
 
@@ -990,6 +991,8 @@ void Player::SetEquipment(HoldItemBase* equi) {
 		_Equipment->armor = static_cast<HoldArmor*>(equi);
 		//装備フラグをtrueにする。
 		_Equipment->armor->SetIsEquipTrue();
+
+		INSTANCE(Inventory)->SaveArmor();
 	}
 	else
 		//武器。
@@ -1009,6 +1012,8 @@ void Player::SetEquipment(HoldItemBase* equi) {
 		_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		//装備フラグをtrueにする。
 		_Equipment->weapon->SetIsEquipTrue();
+
+		INSTANCE(Inventory)->SaveWeapon();
 	}
 }
 
