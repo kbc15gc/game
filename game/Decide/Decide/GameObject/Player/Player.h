@@ -173,6 +173,7 @@ public:
 	void TakeDrop(int dropexp, int money)
 	{
 		_nowEXP += dropexp;
+		SaveLevel();
 		// ‚¨‹à‚ÍƒCƒ“ƒxƒ“ƒgƒŠ‚ÉŠi”[B
 		INSTANCE(Inventory)->AddPlayerMoney(money);
 	}
@@ -331,6 +332,7 @@ private:
 	{
 		picojson::object player;
 		player["Level"] = (picojson::value)(double)_PlayerParam->GetParam(CharacterParameter::LV);
+		player["EXP"] = (picojson::value)(double)_nowEXP;
 		JsonData LevelData;
 		LevelData.SetDataObject("Player", player);
 		LevelData.Save("Player");

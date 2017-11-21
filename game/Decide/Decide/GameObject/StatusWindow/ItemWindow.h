@@ -128,6 +128,8 @@ public:
 			_EIconImage->SetActive(false, true);
 		if (_Dialog)
 			_Dialog->SetActive(false, true);
+		if (_Cursor)
+			_Cursor->SetActive(false, true);
 	}
 
 private:

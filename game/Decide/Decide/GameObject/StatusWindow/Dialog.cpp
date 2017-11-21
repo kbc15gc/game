@@ -12,7 +12,6 @@ namespace
 	wchar_t* ItemCommandName[]=
 	{
 		L"使う",
-		L"装備する",
 		L"捨てる",
 	};
 
@@ -47,36 +46,26 @@ void Dialog::Init(Item::ItemCodeE code)
 
 	_ItemCode = code;
 
-	if (Item::ItemCodeE::Item == _ItemCode)
+	for (int i = 0; i < 2; i++)
 	{
-		for (int i = 0; i < 3; i++)
+		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("", 9);
+		if (Item::ItemCodeE::Item == _ItemCode)
 		{
-			TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("", 9);
 			text->Initialize(ItemCommandName[i], 30.0f);
-			text->transform->SetParent(_BackWindow->transform);
-			text->transform->SetLocalPosition(pos);
-			text->SetAnchor(fbText::TextAnchorE::UpperLeft);
-			pos.y += 35.0f;
-			_CommandList.push_back(text);
 		}
-		_Cursor->CreateCursor("cursor.png", _CommandList[0]->transform, Vector2(-20.0f, 15.0f), Vector2(50.0f, 50.0f), 0.0f, 3, 3, true, -90.0f);
-		_BackWindow->SetSize(Vector2(200.0f, 150.0f));
-	}
-	else
-	{
-		for (int i = 0; i < 2; i++)
+		else
 		{
-			TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("", 9);
 			text->Initialize(EquipCommandName[i], 30.0f);
-			text->transform->SetParent(_BackWindow->transform);
-			text->transform->SetLocalPosition(pos);
-			text->SetAnchor(fbText::TextAnchorE::UpperLeft);
-			pos.y += 35.0f;
-			_CommandList.push_back(text);
+
 		}
-		_Cursor->CreateCursor("cursor.png", _CommandList[0]->transform, Vector2(-20.0f, 15.0f), Vector2(50.0f, 50.0f), 0.0f, 2, 2, true, -90.0f);
-		_BackWindow->SetSize(Vector2(200.0f, 100.0f));
+		text->transform->SetParent(_BackWindow->transform);
+		text->transform->SetLocalPosition(pos);
+		text->SetAnchor(fbText::TextAnchorE::UpperLeft);
+		pos.y += 35.0f;
+		_CommandList.push_back(text);
 	}
+	_Cursor->CreateCursor("cursor.png", _CommandList[0]->transform, Vector2(-20.0f, 15.0f), Vector2(50.0f, 50.0f), 0.0f, 2, 2, true, -90.0f);
+	_BackWindow->SetSize(Vector2(200.0f, 100.0f));
 
 	SetActive(false, true);
 }
@@ -112,11 +101,6 @@ Dialog::DialogCommand Dialog::InputUpdate()
 						_Cursor->SetActive(false, true);
 						return DialogCommand::UseItem;
 					case 1:
-						//アイテムを十字キーに設定予定.
-						SetActive(false, true);
-						_Cursor->SetActive(false, true);
-						return DialogCommand::None;
-					case 2:
 						//捨てる.
 						SetActive(false, true);
 						_Cursor->SetActive(false, true);
@@ -159,13 +143,7 @@ void Dialog::Enable(Item2D * item)
 	transform->SetLocalPosition(item->transform->GetPosition() + Vector3(100.0f, 0.0f, 0.0f));
 	_Cursor->SetActive(true, true);
 
-	if (_ItemCode == Item::ItemCodeE::Item)
-	{
-		ConsumptionItem* cItem = (ConsumptionItem*)item->GetItemData();
-
-		_CommandList[1]->SetText(L"装備する");
-	}
-	else
+	if (_ItemCode != Item::ItemCodeE::Item)
 	{
 		HoldEquipment* eItem = (HoldEquipment*)item->GetItemData();
 
