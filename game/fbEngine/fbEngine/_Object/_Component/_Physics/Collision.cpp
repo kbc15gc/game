@@ -15,6 +15,7 @@ Collision::~Collision()
 
 	// シェアードポインタなので、このコンポーネントが削除された後もコリジョンオブジェクトが参照されることを考慮する。
 	_CollisionObject->setUserPointer(nullptr);
+	_CollisionObject = nullptr;
 }
 
 void Collision::Awake()

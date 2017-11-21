@@ -70,6 +70,12 @@ private:
 	}
 	//最初にイベントを追加する処理。
 	void AddEvent();
+
+	//現在イベント再生中かどうか？
+	bool IsEvent()
+	{
+		return (_ActiveEvent != Event::EventID::None);
+	}
 private:
 	static EventManager* _Instance;
 
