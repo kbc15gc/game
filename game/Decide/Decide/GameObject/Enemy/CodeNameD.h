@@ -5,7 +5,7 @@
 #include "GameObject\History\Chip.h"
 
 // 継承クラス。
-// ボスエネミー(modelがうまくいかなかったので代用でゴーレム出してます。）
+// ボスエネミー(ヒューマン型）
 class BossD :
 	public EnemyCharacter
 {
@@ -14,19 +14,15 @@ private:
 	enum class AnimationBossD
 	{
 		Idle = 0,
-		IdleAction,
-		SleepS,
-		SleepL,
-		SleepE,
-		Damage,
-		Hit,
-		Die,
 		Walk,
-		Hit2,
-		Rage,
-		Jump,
-		Fly,
-		Land
+		Run,
+		DrawingaSword,
+		Kakusei,
+		Attack,
+		Kick,
+		Kiriage,
+		Attack360,
+		Damage
 	};
 
 public:
@@ -34,8 +30,11 @@ public:
 	~BossD();
 
 	// アニメーションイベント関連。
-	void AnimationEvent_Kobushi();
-	void AnimationEvent_Zutuki();
+	void AnimationEvent_Attack();
+	void AnimationEvent_Kick();
+	void AnimationEvent_Kiriage();
+	void AnimationEvent_360Attack();
+
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -78,7 +77,7 @@ private:
 	void _ConfigAnimationEvent()override;
 
 	// 効果音のテーブル作成関数。
-	//void _BuildSoundTable()override;
+	
 
 	inline void _DropSubClass()override {
 
@@ -87,5 +86,7 @@ private:
 private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
-	unique_ptr<EnemySingleAttack> _singleAttackSecondPattern;
+	unique_ptr<EnemySingleAttack> _kick;
+	unique_ptr<EnemySingleAttack> _kiriage;
+	unique_ptr<EnemySingleAttack> _360Attack;
 };
