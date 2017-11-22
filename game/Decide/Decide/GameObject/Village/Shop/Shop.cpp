@@ -111,8 +111,18 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		INSTANCE(GameObjectManager)->AddRemoveList(_ItemList[i]);
 	_ItemList.clear();
 
+	//ID‚ª”ÍˆÍŠO‚È‚çB
 	if(shopID > _ShopNameList.size())
 	{
+		FOR(code, Item::ItemCodeE::Max)
+		{
+			auto maxnum = INSTANCE(ItemManager)->GetMaxID((Item::ItemCodeE)code);
+			FOR(id, maxnum)
+			{
+				HoldItemBase* hitem = HoldItemFactory::CreateItem((Item::ItemCodeE)code, id, false);
+				_ItemList.push_back(hitem);
+			}
+		}
 		return;
 	}
 	char path[256];
