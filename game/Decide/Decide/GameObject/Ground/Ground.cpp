@@ -27,7 +27,7 @@ void Ground::Awake()
 	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
 	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
 	//model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
-	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,false);
+	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 	//ƒJƒŠƒ“ƒOˆ—‚ð‚µ‚È‚¢‚æ‚¤‚É‚·‚éB
 	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 

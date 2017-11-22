@@ -39,18 +39,18 @@ void HistoryMenu::Start()
 
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
-	_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
+	//_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
 
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 
 	//スプライトクラスを追加.
-	_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
-	_CursorSpriteL->SetTexture(LOADTEXTURE("UI/brackets.png"));
-	_CursorSpriteL->SetSize(_CursorSpriteL->GetSize() * 0.1f);
-	_CursorSpriteR = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
-	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
-	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
-	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
+	//_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	//_CursorSpriteL->SetTexture(LOADTEXTURE("UI/brackets.png"));
+	//_CursorSpriteL->SetSize(_CursorSpriteL->GetSize() * 0.1f);
+	//_CursorSpriteR = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	//_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
+	//_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
+	//_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
 }
 
 /**
@@ -70,8 +70,8 @@ void HistoryMenu::Update()
 	{
 		//非表示.
 		_LocationNameRender->SetActive(false);
-		_CursorSpriteL->SetActive(false);
-		_CursorSpriteR->SetActive(false);
+		//_CursorSpriteL->SetActive(false);
+		//_CursorSpriteR->SetActive(false);
 		for (auto& it : _Chip2DList)
 		{
 			it->SetActive(false);
@@ -127,20 +127,23 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 void HistoryMenu::EnableUpdate()
 {
 
-	Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
-	switch ((SelectCodeE)_SelectCode)
-	{
-		case SelectCodeE::Location:
-			//場所選択中の更新.
-			SelectLocationUpdate();
-			cursorPos.y = 90.0f;
-			break;
-		case SelectCodeE::Page:
-			//ページ選択中の更新.
-			SelectPageUpdate();
-			cursorPos.y = g_WindowSize.y / 2.0f;
-			break;
-	}
+	//Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
+	//switch ((SelectCodeE)_SelectCode)
+	//{
+	//	case SelectCodeE::Location:
+	//		//場所選択中の更新.
+	//		SelectLocationUpdate();
+	//		cursorPos.y = 90.0f;
+	//		break;
+	//	case SelectCodeE::Page:
+	//		//ページ選択中の更新.
+	//		SelectPageUpdate();
+	//		cursorPos.y = g_WindowSize.y / 2.0f;
+	//		break;
+	//}
+
+	//ページの初期化.
+	SelectPageUpdate();
 
 	if (_IsOperation)
 	{
@@ -189,13 +192,13 @@ void HistoryMenu::EnableUpdate()
 		LocalTime = 0.0f;
 	}
 
-	_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
-	_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
+	//_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
+	//_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
 
 	//表示.
 	_LocationNameRender->SetActive(true);
-	_CursorSpriteL->SetActive(true);
-	_CursorSpriteR->SetActive(true);
+	//_CursorSpriteL->SetActive(true);
+	//_CursorSpriteR->SetActive(true);
 
 	//場所名描画.
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
@@ -253,8 +256,6 @@ void HistoryMenu::SelectLocationUpdate()
 
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
-		_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
-
 		_NowLookPage = 0;
 		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)

@@ -337,7 +337,7 @@ float4 g_DitherParam;
 //掛かりきる最低値.
 const float DitherMinLen = 1.5f;
 //掛かり始める最高値.
-const float DitherMaxLen = 4.5f;
+const float DitherMaxLen = 3.0f;
 
 /**
 * ディザリング.

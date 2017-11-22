@@ -153,7 +153,7 @@ void GameScene::Start()
 	//ƒƒjƒ…[
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//—ðŽj‘
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -272,20 +272,28 @@ void GameScene::Update()
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
+					_HistoryBook->SetIsOperation(true);
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
 							_Player->SetRespawnPos(MATI_POS);
+							_HistoryBook->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
 							_Player->SetRespawnPos(MATI2_POS);
+							_HistoryBook->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
 							_Player->SetRespawnPos(MATI3_POS);
+							_HistoryBook->SetLocationCode(LocationCodeE::Prosperity);
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
+				}
+				else
+				{
+					_HistoryBook->SetIsOperation(false);
 				}
 			}
 		}

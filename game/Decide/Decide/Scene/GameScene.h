@@ -14,6 +14,8 @@ namespace
 	};
 }
 
+class HistoryBook;
+
 
 class GameScene : public Scene
 {
@@ -49,5 +51,7 @@ private:
 	SoundSource* _DeadBGM;
 	BGM _BGM;
 	Player* _Player;
+
+	HistoryBook* _HistoryBook = nullptr;
 
 };
