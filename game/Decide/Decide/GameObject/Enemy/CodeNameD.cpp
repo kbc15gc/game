@@ -18,12 +18,12 @@ BossD::~BossD()
 }
 
 void BossD::_AwakeSubClass() {
-	SetFileName("Boss_Golem_idle.X");
+	SetFileName("BossD.X");
 }
 void BossD::_StartSubClass() {
 
 	//ポジション
-	_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
+	_InitPos = Vector3(-202.0f, 120.0f, -156.0f);
 	transform->SetPosition(_InitPos);
 
 	// 視野角生成。
@@ -47,10 +47,16 @@ void BossD::_StartSubClass() {
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//攻撃処理。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(4.5f, static_cast<int>(AnimationBossD::Hit));
+	_singleAttack->Init(6.5f, static_cast<int>(AnimationBossD::Attack), 0.2f);
 
-	_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
-	_singleAttackSecondPattern->Init(4.5f, static_cast<int>(AnimationBossD::Hit2));
+	_kick.reset(new EnemySingleAttack(this));
+	_kick->Init(6.5f, static_cast<int>(AnimationBossD::Kick), 0.2f);
+
+	_kiriage.reset(new EnemySingleAttack(this));
+	_kiriage->Init(6.5f, static_cast<int>(AnimationBossD::Kiriage), 0.2f);
+
+	_360Attack.reset(new EnemySingleAttack(this));
+	_360Attack->Init(6.5f, static_cast<int>(AnimationBossD::Attack360), 0.2f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -79,26 +85,39 @@ void BossD::_LateUpdateSubClass()
 EnemyAttack* BossD::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
-	// ※とりあえず暫定処理。
-	int rnd = rand() % 2;
+	 //※とりあえず暫定処理。
+	int rnd = rand() % 4;
 	if (rnd == 0) {
 		return _singleAttack.get();
 	}
-	else {
-		return _singleAttackSecondPattern.get();
+	else if(rnd == 1)
+	{
+		return _kiriage.get();
 	}
-
+	else if (rnd == 2)
+	{
+		return _360Attack.get();
+	}
+	else {
+		return _kick.get();
+	}
 }
-void BossD::AnimationEvent_Kobushi() {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+void BossD::AnimationEvent_Attack(){
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 5.0f, 1.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
-
-void BossD::AnimationEvent_Zutuki() {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+void BossD::AnimationEvent_Kick(){
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
-
+void BossD::AnimationEvent_Kiriage(){
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.5f), Quaternion::Identity, Vector3(1.0f, 5.0f, 1.0f), 0.25f, transform);
+	attack->RemoveParent();
+}
+void BossD::AnimationEvent_360Attack(){
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(5.0f, 1.0f, 1.0f), 0.25f, transform);
+	attack->RemoveParent();
+}
 void BossD::_EndNowStateCallback(State EndStateType) {
 
 	if (EndStateType == State::Wandering) {
@@ -130,42 +149,24 @@ void BossD::_EndNowStateCallback(State EndStateType) {
 }
 
 void BossD::_ConfigCollision() {
-	// 攻撃判定用のコリジョン。
-	{
-		// 胴体。
-		{
-			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
-
-			RigidBodyInfo info;
-			info.coll = AddComponent<CCapsuleColliderZ>();
-			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 5.1f);
-			info.id = Collision_ID::BOSS;
-			info.mass = 0.0f;
-			info.physicsType = Collision::PhysicsType::Kinematick;
-			info.offset = Vector3(0.0f, 1.0f, 0.0f);
-			info.rotation = Quaternion::Identity;
-			coll->Create(info, true);
-
-			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
-		}
-	}
-
+	
 	// キャラクターコントローラ用。
 	{
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
-		_collisionInfo.radius = 1.8f;
-		_collisionInfo.height = 6.0f;
+		_collisionInfo.radius = 0.5f;
+		_collisionInfo.height = 1.1f;
 		_collisionInfo.offset = Vector3(0.0f, 1.0f, 0.0f);
-		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;
+		_collisionInfo.id = Collision_ID::BOSS;
 
 		// 重力設定。
 		_Gravity = -9.8f;
 
-		// コンポーネントにカプセルコライダーZを追加。
-		_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
+		// コンポーネントにカプセルコライダーを追加。
+		_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 		// カプセルコライダーを作成。
-		static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+		static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+
 	}
 }
 
@@ -188,6 +189,7 @@ void BossD::_ConfigCharacterController() {
 }
 
 void BossD::_CreateExtrudeCollision() {
+	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// ついでに押し出しようコリジョンに追加しておく。
 }
 
 void BossD::_BuildAnimationSubClass(vector<double>& datas) {
@@ -201,33 +203,39 @@ void BossD::_BuildAnimationSubClass(vector<double>& datas) {
 		// 歩行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossD::Walk));
 		// 走行状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossD::Walk));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Dash, static_cast<unsigned int>(AnimationBossD::Run));
 		// 吠える。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, static_cast<unsigned int>(AnimationBossD::IdleAction));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Threat, static_cast<unsigned int>(AnimationBossD::DrawingaSword));
 		// ダメージ反応。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Damage, static_cast<unsigned int>(AnimationBossD::Damage));
 		// 落下状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(AnimationBossD::Fly));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Fall, static_cast<unsigned int>(AnimationBossD::Idle));
 		// 死亡状態。
-		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationBossD::Die));
+		_ConfigAnimationType(EnemyCharacter::AnimationType::Death, static_cast<unsigned int>(AnimationBossD::Damage));
 	}
-
+	datas[static_cast<int>(AnimationBossD::Run)] = 44.0f / 60.0f;
 }
 
 void BossD::_ConfigAnimationEvent() {
-	//頭突き
+	//斬撃
 	{
-		float eventFrame = 0.3f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Hit2), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Zutuki));
+		float eventFrame = 0.9f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Attack), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Attack));
 	}
-	//拳
+	//キック
 	{
-		float eventFrame = 0.3f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Hit), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Kobushi));
+		float eventFrame = 0.9f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kick), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Kick));
+	}
+	//斬り上げ
+	{
+		float eventFrame = 0.9f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kiriage), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Kiriage));
+	}
+	//回転斬り
+	{
+		float eventFrame = 0.9f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Attack360), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_360Attack));
 	}
 }
 
-void BossD::_BuildSoundTable() {
-	// 攻撃音登録。
-
-}
