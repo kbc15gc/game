@@ -72,7 +72,7 @@ void NPC::_Speak()
 		{
 			//‰ï˜b‚·‚éB
 			_TextBox->Speak();
-			if (_State != State::Speak)
+			if (_State != State::Speak && _IsAnimation)
 			{
 				_State = State::Speak;
 				_Anim->PlayAnimation(static_cast<int>(State::Speak), 0.2f);
@@ -84,7 +84,7 @@ void NPC::_Speak()
 	{
 		//—£‚ê‚½‚È‚ç•Â‚¶‚é
 		_TextBox->CloseMessage();
-		if (_State != State::Idol)
+		if (_State != State::Idol && _IsAnimation)
 		{
 			_State = State::Idol;
 			_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);

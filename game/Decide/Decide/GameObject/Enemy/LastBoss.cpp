@@ -153,7 +153,7 @@ void LastBoss::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("LastBoss.X");
 	//ポジション
-	_InitPos = Vector3(-114.23, 180.59, 184.95);
+	_InitPos = Vector3(-114.23f, 183.0f, 184.95f);
 	transform->SetPosition(_InitPos);
 }
 
