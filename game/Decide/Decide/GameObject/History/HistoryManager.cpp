@@ -36,6 +36,8 @@ HistoryManager::HistoryManager()
 */
 void HistoryManager::Start()
 {
+	_LocationHistoryList.clear();
+
 	if (IS_CONTINUE)
 	{
 		//CSV‚©‚ç—ğjî•ñ“Ç‚İæ‚èB
