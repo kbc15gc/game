@@ -76,6 +76,13 @@ public:
 	{
 		_Height = height;
 	}
+
+	//アニメーションを流すか。
+	void SetAnimation(bool flag)
+	{
+		_IsAnimation = flag;
+	}
+
 protected:
 	//話す
 	void _Speak();
@@ -95,5 +102,6 @@ protected:
 	bool _IsSpeak;
 private:
 	State _State;
+	bool _IsAnimation = true;
 
 };

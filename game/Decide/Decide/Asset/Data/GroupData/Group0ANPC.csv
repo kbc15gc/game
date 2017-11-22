@@ -1,3 +1,2 @@
-name,pos,ang,sca,messeageid,showtitle
-villager1.X,-381.99/58.75/-71.06,0.000000/0.000000/0.000000/1.000000,0.4/0.4/0.4,1,0,12,1
+name,pos,ang,sca,type,shopid,messeageid,showtitle
 villager1.X,-400.53/60.9/-51.01,0.000000/0.000000/0.000000/1.000000,0.4/0.4/0.4,0,0,13,1

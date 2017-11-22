@@ -52,7 +52,7 @@ void EnemySoldier::CreateAttackCollsion()
 	//攻撃コリジョン作成。
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 1.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, AttackCollision::ReactionType::Leans, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 1.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, AttackCollision::ReactionType::NotAction, transform);
 	attack->RemoveParent();
 
 	// 攻撃音再生。

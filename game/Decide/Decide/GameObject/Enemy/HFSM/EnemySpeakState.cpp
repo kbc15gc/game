@@ -40,6 +40,8 @@ void EnemySpeakState::_UpdateSubClass() {
 			_speakObject->transform->SetPosition(_EnemyObject->transform->GetPosition());
 			_speakObject->transform->SetRotation(_EnemyObject->transform->GetRotation());
 			_speakObject->transform->SetScale(_EnemyObject->transform->GetScale());
+
+			_speakObject->SetAnimation(false);
 		}
 	}
 }
