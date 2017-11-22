@@ -67,7 +67,7 @@ namespace
 	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
-	Vector3 MATI3_POS = { 214.80f, 64.70f, -84.10f };
+	Vector3 MATI3_POS = { 214.80f, 65.70f, -84.10f };
 
 	SCollisionInfo soundcollisition[]
 	{

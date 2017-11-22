@@ -18,6 +18,24 @@ HistoryManager* HistoryManager::_Instance = nullptr;
 */
 HistoryManager::HistoryManager()
 {
+	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
+	{
+		//グループ状態を0で初期化。
+		_NowGroupIDList.push_back(0);
+
+		//vectorを追加
+		vector<GameObject*> list;
+		_GameObjectList.push_back(list);
+		vector<NPC*> npcs;
+		_NPCList.push_back(npcs);
+	}
+}
+
+/**
+* 初期化.
+*/
+void HistoryManager::Start()
+{
 	if (IS_CONTINUE)
 	{
 		//CSVから歴史情報読み取り。
@@ -37,24 +55,6 @@ HistoryManager::HistoryManager()
 		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 
-	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
-	{
-		//グループ状態を0で初期化。
-		_NowGroupIDList.push_back(0);
-
-		//vectorを追加
-		vector<GameObject*> list;
-		_GameObjectList.push_back(list);
-		vector<NPC*> npcs;
-		_NPCList.push_back(npcs);
-	}
-}
-
-/**
-* 初期化.
-*/
-void HistoryManager::Start()
-{
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
@@ -91,7 +91,7 @@ void HistoryManager::Start()
 				continue;
 			}
 			//読み込んだデータを元に歴史書にページをあらかじめ追加。
-			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, 0);
+			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, j);
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
