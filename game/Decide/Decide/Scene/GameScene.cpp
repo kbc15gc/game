@@ -137,15 +137,15 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 	//g->SetParamAll(Color, param);
 	//d->SetParamAll(Color, param);
 
@@ -196,6 +196,7 @@ void GameScene::Start()
 	//死亡BGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
 	_DeadBGM->Init("Asset/Sound/dead.wav");
+	_DeadBGM->SetVolume(0.4f);
 
 	//再生用BGM
 	_GameBGM = _WorldBGM;
@@ -335,6 +336,13 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("OilChip", 2);
 		chip->SetChipID(ChipID::Oil);
+	}
+	//@todo for debug
+	//テスト用
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Medicine))
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("MedicineChip", 2);
+		chip->SetChipID(ChipID::Medicine);
 	}
 }
 

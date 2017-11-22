@@ -329,6 +329,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		npc->LoadModel(npcInfo[i]->filename,false);
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
+		model->SetCullMode(D3DCULL::D3DCULL_CCW);
 
 		//ŠÇ——p‚Ì”z—ñ‚É’Ç‰ÁB
 		_NPCList[location].push_back(npc);

@@ -32,8 +32,8 @@ MessageID,Title,Text,NextID,EventID,VoicePath
 30,ありがとう。,助かったよ,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 31,モンスターがいて怖いよ。,この道を進んだ先に\nモンスターがたくさんいて\n困ってるんだ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 32,ページみたいなものが落ちてたよ。,モンスターがその周りにいて詳しくは\n確かめれなかったよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-33,あのねあのね！,湖の上で遊んでたらね。ページみたいなの落ちてたの。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-34,なにしょうかなぁ。,なにしょうかなぁ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+33,あのねあのね！,湖の上で遊んでたらね。ページみたいなの落ちてたの。,-1,-1,Asset/Sound/NPC/NPC/Mic1_89.wav
+34,あのねあのね！,すぐそこの湖だよ。,-1,-1,Asset/Sound/NPC/NPC/Mic1_90.wav
 35,この道を行くと\n洞窟がありました。,危険なモンスターがいる雰囲気でしたので\nすぐ逃げ帰ってしまいました。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 36,この道を行くと\n洞窟がありました。,魔王の手下がいるのかもね。怖いよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 37,橋の向こうのモンスター。,こわくて、ろくに村からでれん。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
@@ -49,3 +49,11 @@ MessageID,Title,Text,NextID,EventID,VoicePath
 47,魔物が襲ってきた。,助けてくれ！,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 48,向こうの島に行ければ。,安全だろう。橋があれば。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 49,このページをあげるから。,助けてくれ！,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+50,旅人,世界にはいろんな文化があるのね。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+51,旅人,ここはまだ発展途中だからね。\n良い街にしたいね。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+52,ここはどこだ。,ここは昔とちがうような。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+53,ありがとう。,あなたのおかげでかつての村に戻ったよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+54,この道を進むと。,違う村があったんだけどなぁ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+55,おっす。この道を進んだ先に。,小さな家がひとつあったんだ。そこでお世話になったんだ。,-1,56,Asset/Sound/NPC/SHOP/Mic1_16.wav
+56,おっす。この道を進んだ先に。,そこも昔は村があったみたいだよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_17.wav
+57,子供たちが遊んでる場所に。,なにかあったらしいわ。詳しくは子供に聞いてみて。\n大きな木の前にいるわ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
