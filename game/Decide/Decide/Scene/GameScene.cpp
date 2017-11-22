@@ -118,7 +118,7 @@ void GameScene::Start()
 	//メッシュコライダーオブジェクトを生成
 	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
-	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
 	INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
 	//海生成.
