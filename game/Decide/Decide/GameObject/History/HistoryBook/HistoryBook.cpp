@@ -83,7 +83,7 @@ void HistoryBook::SetActive(const bool & act, const bool & children)
 			for (int i = 0; i < 3; i++)
 			{
 				float angle = -90.0f;
-				Color color = Color(1.0f, 1.0f, 1.0f);
+				Color color = Color(0.2f, 0.2f, 0.2f);
 
 				if (i < (int)_NowLocationCode)
 				{
@@ -91,7 +91,7 @@ void HistoryBook::SetActive(const bool & act, const bool & children)
 				}
 				if (i == (int)_NowLocationCode)
 				{
-					color = Color(0.2f, 0.2f, 0.2f);
+					color = Color(1.0f, 1.0f, 1.0f);
 				}
 
 				for (auto it : _HistoryPageList[i])

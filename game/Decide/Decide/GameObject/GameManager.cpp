@@ -52,7 +52,8 @@ void GameManager::Update()
 		INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
 	}
 	else if (VPadInput->IsPush(fbEngine::VPad::ButtonStart)
-		&& !_StatusWindow->GetActive())
+		&& !_StatusWindow->GetActive()
+		&& _HistoryBook->GetIsOperation())
 	{
 		/*bool active = !_HistoryBook->GetActive();
 		_HistoryBook->SetActive(active, true);*/

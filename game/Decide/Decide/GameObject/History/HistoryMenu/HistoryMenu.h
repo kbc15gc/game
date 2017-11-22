@@ -83,8 +83,6 @@ public:
 		return false;
 	}
 
-
-
 private:
 
 	/**

@@ -234,6 +234,11 @@ public:
 		_IsOperation = is;
 	}
 
+	bool GetIsOperation()
+	{
+		return _IsOperation;
+	}
+
 	void PlayerStopDisable()
 	{
 		INSTANCE(EventManager)->NotifyEndEvent();
@@ -260,6 +265,11 @@ public:
 	void SetLocationCode(LocationCodeE code)
 	{
 		_NowLocationCode = code;
+	}
+
+	LocationCodeE GetLocationCode()
+	{
+		return _NowLocationCode;
 	}
 
 private:

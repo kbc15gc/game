@@ -137,15 +137,15 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	//// パラメーター設定。
-	//vector<BarColor> Color;
-	//Color.push_back(BarColor::Blue);
-	//Color.push_back(BarColor::Green);
-	//Color.push_back(BarColor::Yellow);
-	//Color.push_back(BarColor::Red);
-	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//enemy->SetParamAll(Color, param);
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	// パラメーター設定。
+	vector<BarColor> Color;
+	Color.push_back(BarColor::Blue);
+	Color.push_back(BarColor::Green);
+	Color.push_back(BarColor::Yellow);
+	Color.push_back(BarColor::Red);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	enemy->SetParamAll(Color, param);
 	//g->SetParamAll(Color, param);
 	//d->SetParamAll(Color, param);
 
@@ -267,35 +267,37 @@ void GameScene::Update()
 		}
 		else
 		{
+
+			bool isOperation = false;
 			//各場所のコリジョンに当たっているか。
 			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
-					_HistoryBook->SetIsOperation(true);
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
 							_Player->SetRespawnPos(MATI_POS);
 							_HistoryBook->SetLocationCode(LocationCodeE::Begin);
+							isOperation = true;
 							break;
 						case BGM::MATI2:
 							_Player->SetRespawnPos(MATI2_POS);
 							_HistoryBook->SetLocationCode(LocationCodeE::Hunting);
+							isOperation = true;
 							break;
 						case BGM::MATI3:
 							_Player->SetRespawnPos(MATI3_POS);
 							_HistoryBook->SetLocationCode(LocationCodeE::Prosperity);
+							isOperation = true;
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
 				}
-				else
-				{
-					_HistoryBook->SetIsOperation(false);
-				}
 			}
+			_HistoryBook->SetIsOperation(isOperation);
+
 		}
 		
 	}

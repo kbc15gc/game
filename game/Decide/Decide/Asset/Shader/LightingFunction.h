@@ -346,7 +346,7 @@ void CalcDither(float4 WVP,float3 World)
 {
 	if (g_DitherParam.x > 0.0f)
 	{
-		float dither = g_DitherParam.y;
+		float dither = 0;
 
 		if (g_DitherParam.x > 1.0f)
 		{
@@ -363,7 +363,7 @@ void CalcDither(float4 WVP,float3 World)
 			// ディザ係数.
 			// 0 ~ 65.
 			// ディザ係数よりも大きい値のところが残る.
-			dither = max(dither, (1.0f - CameraToPosLen) * 65.0f);
+			dither = max(g_DitherParam.y, (1.0f - CameraToPosLen) * 65.0f);
 		}
 
 		if (dither <= 0.0f)
