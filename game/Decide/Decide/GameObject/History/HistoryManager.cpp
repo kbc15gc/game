@@ -63,7 +63,7 @@ void HistoryManager::Start()
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
 //木が邪魔な場合これを使ってください。
-#define NPCONLY
+//#define NPCONLY
 
 #ifdef NPCONLY
 	//共通オブジェクト生成。
