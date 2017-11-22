@@ -213,10 +213,8 @@ void Player::Awake()
 	//攻撃ボイス初期化
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
 	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack2.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack2.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -510,11 +508,11 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		if (_State != State::Stop)
+		if (_State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
 		{
 			ChangeState(State::Impact);
+		}
 
-		}		
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(static_cast<float>(damage));
@@ -1137,7 +1135,7 @@ void Player::Attack5()
 	//攻撃時のサウンド再生。
 	_AttackSoound->Play(false);
 	//攻撃ボイス再生
-	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {
