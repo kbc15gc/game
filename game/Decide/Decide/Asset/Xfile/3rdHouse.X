@@ -9941,7 +9941,7 @@ Frame obj1 {
     0.000000;0.000000;0.000000;;
 
     TextureFilename Diffuse {
-     "3rdHouse_diffuse.png";
+     "House_1_mat1_BaseColor.png";
     }
    }
   }
