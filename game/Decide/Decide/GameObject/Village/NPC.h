@@ -41,6 +41,15 @@ class Player;
 class NPC :public ContinentObject
 {
 public:
+
+	enum class State
+	{
+		None = -1,
+		Idol,
+		Speak,
+		Num,
+	};
+
 	NPC(const char* name);
 	~NPC();
 	void Awake()override;
@@ -67,7 +76,6 @@ public:
 	{
 		_Height = height;
 	}
-
 protected:
 	//˜b‚·
 	void _Speak();
@@ -85,4 +93,7 @@ protected:
 
 	//Player‚Æ˜b‚µ‚ª‚Å‚«‚é‚©
 	bool _IsSpeak;
+private:
+	State _State;
+
 };

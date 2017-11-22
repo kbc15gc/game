@@ -200,7 +200,7 @@ public:
 	//			更新優先度(デフォルトは8)。
 	//			バーの背景を使用するか(デフォルトはfalse)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 8, bool isBackColor = false,bool isHud = true) {
+	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 5, bool isBackColor = false,bool isHud = true) {
 		if (_Object) {
 			INSTANCE(GameObjectManager)->AddRemoveList(_Object);
 		}

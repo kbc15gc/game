@@ -297,12 +297,16 @@ void SkinModel::DrawMeshContainer(
 
 		{
 			//レシーバー用パラメータを設定.
-			ShadowMap::ShadowReceiverParam* shadowParam = INSTANCE(SceneManager)->GetShadowMap()->GetShadowReceiverParam();
-			_Effect->SetValue("g_ShadowReceiverParam", shadowParam, sizeof(ShadowMap::ShadowReceiverParam));
+			ShadowMap::ShadowReceiverParam shadowParam = INSTANCE(SceneManager)->GetShadowMap()->GetShadowReceiverParam();
+			if (terain)
+			{
+				shadowParam._IsVSM = false;
+			}
+			_Effect->SetValue("g_ShadowReceiverParam", &shadowParam, sizeof(ShadowMap::ShadowReceiverParam));
 			//深度テクスチャ
-			_Effect->SetTexture("g_ShadowMap_0", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(0));
-			_Effect->SetTexture("g_ShadowMap_1", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(1));
-			_Effect->SetTexture("g_ShadowMap_2", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(2));
+			_Effect->SetTexture("g_ShadowMap_0", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(0, shadowParam._IsVSM));
+			_Effect->SetTexture("g_ShadowMap_1", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(1, shadowParam._IsVSM));
+			_Effect->SetTexture("g_ShadowMap_2", INSTANCE(SceneManager)->GetShadowMap()->GetShadowMapTexture(2, shadowParam._IsVSM));
 			//影を映すかどうかのフラグセット
 			_Effect->SetInt("ReceiveShadow", (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0);
 		}
@@ -372,7 +376,7 @@ void SkinModel::DrawMeshContainer(
 			CameraToPosLen /= (MaxLen - MinLen);
 
 			// ディザ係数.
-			// 0 ~ 64.
+			// 0 ~ 65.
 			// ディザ係数よりも大きい値のところが残る.
 			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
 
@@ -382,7 +386,7 @@ void SkinModel::DrawMeshContainer(
 			}
 
 			//フラグを設定.
-			ditherParam.x = 1.0f;
+			ditherParam.x = 2.0f;
 		}
 		ditherParam.z = g_WindowSize.x;
 		ditherParam.w = g_WindowSize.y;

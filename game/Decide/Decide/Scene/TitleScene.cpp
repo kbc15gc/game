@@ -3,9 +3,13 @@
 #include "fbEngine/_Object/_GameObject/ImageObject.h"
 #include "GameObject\Camera\GameCamera.h"
 #include "GameLight.h"
+#include "fbEngine/_Object/_GameObject/Movie.h"
 
 void TitleScene::Start()
 {
+	//動画
+	//INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+
 	//タイトル画像
 	ImageObject* title = INSTANCE(GameObjectManager)->AddNew<ImageObject>("title",0);
 	title->SetTexture(LOADTEXTURE("Title.png"));
@@ -47,18 +51,16 @@ void TitleScene::Start()
 	//ボタン音
 	_StartSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 	_StartSE->Init("Asset/Sound/start.wav");
-	_StartSE->SetVolume(1.5f);
+	_StartSE->SetVolume(0.5f);
 
 	//タイトルBGM
 	_TitleBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TitleBGM", 0);
 	_TitleBGM->InitStreaming("Asset/Sound/titleBgm.WAV");
+	_TitleBGM->SetVolume(0.5f);
 	_TitleBGM->Play(true);
 
 	//ボタンのフラグ
 	_AnyButton = false;
-
-	//セレクト
-	_Select = Select::NewGame;
 
 	INSTANCE(SceneManager)->GetSky()->SetActive(false);
 }
@@ -80,6 +82,9 @@ void TitleScene::Update()
 	//	return;
 	//}
 
+	//点滅させる。
+	Alpha();
+
 	bool flag = INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_START) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_A) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_B) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_X) || INSTANCE(InputManager)->IsPushButtonAll(XINPUT_GAMEPAD_Y) || KeyBoardInput->isPush(DIK_RETURN);
 
 	//プレスエニイボタンの処理
@@ -92,6 +97,18 @@ void TitleScene::Update()
 		_AnyButton = true;
 		_StartSE->Play(false);
 		flag = false;
+
+		JsonData PlayerData;
+		if (PlayerData.Load("Player"))
+		{
+			_Select = Select::Continue;
+			_StartBar->transform->SetPosition(455, 475, 0);
+		}
+		else
+		{
+			_Select = Select::NewGame;
+			_StartBar->transform->SetPosition(455, 405, 0);
+		}
 	}
 
 	//コンティニューかニューゲームの処理
@@ -114,6 +131,11 @@ void TitleScene::Update()
 		{
 			if (_Select == Select::Continue)
 			{
+				JsonData PlayerData;
+				if (!PlayerData.Load("Player"))
+				{
+					return;
+				}
 				IS_CONTINUE = true;
 			}
 			else
@@ -123,11 +145,9 @@ void TitleScene::Update()
 			//ゲームシーンへ移行
 			_StartSE->Play(false);
 			INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+			_AnyButton = false;
 		}
 	}
-
-	//点滅させる。
-	Alpha();
 }
 
 void TitleScene::Alpha()

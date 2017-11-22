@@ -58,6 +58,7 @@
     <ClCompile Include="_Object\_Component\Component.cpp" />
     <ClCompile Include="_Object\_Component\ComponentManager.cpp" />
     <ClCompile Include="_Object\_Component\Transform.cpp" />
+    <ClCompile Include="_Object\_Component\_2D\BitmapFont.cpp" />
     <ClCompile Include="_Object\_Component\_2D\CircleCollision.cpp" />
     <ClCompile Include="_Object\_Component\_2D\FontManager.cpp" />
     <ClCompile Include="_Object\_Component\_2D\Sprite.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="_Object\_Component\Component.h" />
     <ClInclude Include="_Object\_Component\ComponentManager.h" />
     <ClInclude Include="_Object\_Component\Transform.h" />
+    <ClInclude Include="_Object\_Component\_2D\BitmapFont.h" />
     <ClInclude Include="_Object\_Component\_2D\CircleCollision.h" />
     <ClInclude Include="_Object\_Component\_2D\Collisiont2D.h" />
     <ClInclude Include="_Object\_Component\_2D\FontManager.h" />

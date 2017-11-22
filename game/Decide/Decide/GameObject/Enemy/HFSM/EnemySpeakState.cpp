@@ -35,6 +35,8 @@ void EnemySpeakState::_UpdateSubClass() {
 			_speakObject->SetActive(true);
 			const_cast<ComponentManager&>(_speakObject->GetComponentManager()).RemoveComponent<SkinModel>();
 			const_cast<ComponentManager&>(_speakObject->GetComponentManager()).RemoveComponent<Animation>();
+			const_cast<ComponentManager&>(_speakObject->GetComponentManager()).RemoveComponent<RigidBody>();
+
 			_speakObject->transform->SetPosition(_EnemyObject->transform->GetPosition());
 			_speakObject->transform->SetRotation(_EnemyObject->transform->GetRotation());
 			_speakObject->transform->SetScale(_EnemyObject->transform->GetScale());

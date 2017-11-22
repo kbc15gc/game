@@ -10,6 +10,12 @@
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
+//各村の設定。
+//各村によってスタート位置・レベルが変わります。
+//#define Village1
+//#define Village2
+#define Village3
+
 namespace
 {
 	float NormalAnimationSpeed = 1.0f;
@@ -127,6 +133,12 @@ void Player::Awake()
 	//プレイヤーのパラメーター初期化。
 	int lv = 0;
 
+
+	//int lv = 0;
+
+	// テスト。
+	//int lv = 30;
+
 	if (IS_CONTINUE)
 	{
 		JsonData PlayerData;
@@ -134,8 +146,10 @@ void Player::Awake()
 		{
 			picojson::object player = PlayerData.GetDataObject("Player");
 			lv = player["Level"].get<double>() - 1;
+			_nowEXP = player["EXP"].get<double>();
 		}
 	}
+
 //#ifdef _DEBUG
 //#define Village1
 //#define Village2
@@ -151,10 +165,13 @@ void Player::Awake()
 //#else
 //	int lv = 1;
 //#endif
-	
-
 	_PlayerParam->ParamReset(_ParamTable[lv]);
-	
+
+	if (!IS_CONTINUE)
+	{
+		SaveLevel();
+	}
+
 	// HPのバーを表示。
 	{
 		vector<BarColor> Colors;
@@ -173,31 +190,31 @@ void Player::Awake()
 	//レベルアップ音初期化
 	_LevelUpSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("LevelUpSound", 0);
 	_LevelUpSound->Init("Asset/Sound/Player/lvup.wav");
-	_LevelUpSound->SetVolume(1.0f);
+	_LevelUpSound->SetVolume(0.3f);
 	//死亡ボイス初期化
 	_DeathSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeathSound", 0);
 	_DeathSound->Init("Asset/Sound/Player/death.wav");
+	_DeathSound->SetVolume(0.3f);
 	//回復SE初期化
 	_HeelSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("HeelSound", 0);
 	_HeelSound->Init("Asset/Sound/Player/heal02.wav");
+	_HeelSound->SetVolume(2.0f);
 	//ステータスアップサウンド初期化
 	_StatusUpSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusUpSound", 0);
 	_StatusUpSound->Init("Asset/Sound/Player/statusup.wav");
-	_StatusUpSound->SetVolume(2.0f);
+	_StatusUpSound->SetVolume(1.0f);
 	//ステータスダウンサウンド初期化
 	_StatusDownSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StatusDownSound", 0);
 	_StatusDownSound->Init("Asset/Sound/Player/statusdown.wav");
-	_StatusDownSound->SetVolume(2.0f);
+	_StatusDownSound->SetVolume(1.0f);
 	//攻撃サウンド初期化
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//攻撃ボイス初期化
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
 	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack2.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack2.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -254,19 +271,32 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player_Pos"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			_RespawnPos.x = player["RespawnPos_X"].get<double>();
+			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
+			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+		}
+	}
+	else
+	{
+		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+	}
 
-	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
-	//@todo for debug
 #ifdef _DEBUG
-	#define Start1
+#define Start1
 	//#define Start2
 	//#define Start3
 #ifdef Start1
-	_StartPos = Vector3(-202.0f, 58.0f, -156.0f);
+	SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
 #elif defined(Start2)
-	_StartPos = Vector3(-118.0f, 58.0f, 547.0f);
+	SetRespawnPos(Vector3(-118.0f, 58.0f, 547.0f));
 #elif defined(Start3)
-	_StartPos = Vector3(250.0f, 70.0f, -31.0f);
+	SetRespawnPos(Vector3(250.0f, 70.0f, -31.0f));
 	//250.71/67.2/-31.7
 #endif // Start1
 #endif
@@ -274,7 +304,7 @@ void Player::Start()
 
 	//ポジション
 	
-	transform->SetLocalPosition(_StartPos);
+	transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//攻撃アニメーションステートの初期化
@@ -293,43 +323,6 @@ void Player::Start()
 
 void Player::Update()
 {
-
-	//@todo for debug
-#define CHIP
-#ifdef CHIP
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_1))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Fire);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_2))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Tree);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_3))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Stone);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Agriculture);
-	}
-	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
-	{
-		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
-	}
-#endif // 
-
-
 	//カレントステートがNULLでない && ストップステートじゃない場合更新
 	if (_CurrentState != nullptr && _State != State::Stop)
 	{
@@ -515,11 +508,11 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		if (_State != State::Stop)
+		if (_State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
 		{
 			ChangeState(State::Impact);
+		}
 
-		}		
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
 		_HPBar->SubValue(static_cast<float>(damage));
@@ -762,6 +755,8 @@ void Player::_LoadEXPTable()
 	std::vector<std::unique_ptr<ExperiencePointTableInfo>> exptbaleinfo;
 	Support::LoadCSVData<ExperiencePointTableInfo>("Asset/Data/PlayerParameter.csv", ExperiencePointTableInfoData, ARRAYSIZE(ExperiencePointTableInfoData), exptbaleinfo);
 	
+	_EXPTable.clear();
+
 	for (int i = 0; i < MAXLV; i++)
 	{
 		_EXPTable.push_back(exptbaleinfo[i]->ExperiencePoint);
@@ -800,6 +795,10 @@ void Player::Speak()
 	//NPCを取得
 	vector<vector<NPC*>> npc;
 	npc = INSTANCE(HistoryManager)->GetNPCList();
+
+	//ショップイベントフラグ取得。
+	bool eventflag = INSTANCE(EventManager)->ShopEvent();
+
 	//村
 	for (auto village : npc)
 	{
@@ -819,13 +818,15 @@ void Player::Speak()
 			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
 			float len = dir.Length();
 			//範囲内かどうか
-			if (npc->GetRadius() >= len)
+			//ショップイベント中でないとき
+			if (npc->GetRadius() >= len && !eventflag)
 			{
 				if (_CharacterController == nullptr)
 				{
 					return;
 				}
 				//地面についていれば話しかけれる
+				//ショップイベントでないとき。
 				if (_CharacterController->IsOnGround())
 				{
 					//会話のためHPバーなどを消す。
@@ -990,6 +991,8 @@ void Player::SetEquipment(HoldItemBase* equi) {
 		_Equipment->armor = static_cast<HoldArmor*>(equi);
 		//装備フラグをtrueにする。
 		_Equipment->armor->SetIsEquipTrue();
+
+		INSTANCE(Inventory)->SaveArmor();
 	}
 	else
 		//武器。
@@ -1009,6 +1012,8 @@ void Player::SetEquipment(HoldItemBase* equi) {
 		_Equipment->weapon = static_cast<HoldWeapon*>(equi);
 		//装備フラグをtrueにする。
 		_Equipment->weapon->SetIsEquipTrue();
+
+		INSTANCE(Inventory)->SaveWeapon();
 	}
 }
 
@@ -1080,7 +1085,7 @@ void Player::Attack1()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1094,7 +1099,7 @@ void Player::Attack2()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1108,7 +1113,7 @@ void Player::Attack3()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1122,7 +1127,7 @@ void Player::Attack4()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1132,11 +1137,11 @@ void Player::Attack5()
 	//攻撃時のサウンド再生。
 	_AttackSoound->Play(false);
 	//攻撃ボイス再生
-	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 150)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.5f, 1.5f), AttackCollision::CollisionMaster::Player, 0.5f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 150)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }

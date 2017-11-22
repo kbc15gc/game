@@ -11,6 +11,7 @@ namespace
 		{ "Text",Support::DataTypeE::STRING, offsetof(struct MessageInfo,Text),sizeof(char) * 256 },
 		{ "NextID",Support::DataTypeE::INT , offsetof(struct MessageInfo,NextID),sizeof(int) },
 		{ "EventID",Support::DataTypeE::INT , offsetof(struct MessageInfo,EventID),sizeof(int) },
+		{ "VoicePath",Support::DataTypeE::STRING, offsetof(struct MessageInfo,VoicePath),sizeof(char)*256 },
 	};
 }
 
@@ -34,6 +35,7 @@ MessageInfo* MessageManager::GetMess(const int & id)
 
 void MessageManager::_LoadCSV()
 {
+	_Messages.clear();
 	//ファイルパス
 	const char* filepath = "Asset/Data/TextData/Message.csv";
 	//ファイルから歴史の情報読み込み

@@ -57917,7 +57917,7 @@ Frame Cube {
     0.000000;0.000000;0.000000;;
 
     TextureFilename Diffuse {
-     "Castle Set UV New.png";
+     "1_AlbedoTransparency.png";
     }
    }
   }

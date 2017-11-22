@@ -40,9 +40,6 @@ void ShadowMap::Create()
 
 		_Blur[count].Create(size[count][0], size[count][1], _ShadowMapRT[count].texture);
 	}
-
-	_isVSM = true;
-
 }
 
 /**

@@ -23,8 +23,10 @@ void ContinentObject::Start() {
 
 	// Transform‚ªXV‚³‚ê‚é‚Ì‚Å‚±‚±‚Å’Ç‰ÁB
 	unique_ptr<vector<RigidBody*>> rigidArray = GetComponents<RigidBody>();
-	for (auto rigid : *rigidArray.get()) {
-		rigid->AddWorld();
+	for(int idx = 0;idx < static_cast<int>(rigidArray->size());idx++)
+	{
+		(*rigidArray)[idx]->AddWorld();
+		_isAddPhysicsWorld = true;
 	}
 }
 
@@ -36,6 +38,9 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	_Model->SetModelData(data);
 	_Model->SetCullMode(D3DCULL::D3DCULL_CW);
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+
+	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+	_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, true);
 
 	if (string(filename) == "tree.X")
 	{
@@ -55,6 +60,7 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	RigidBodyInfo info;
 	info.mass = 0.0f;
 	info.coll = mesh;
+	info.physicsType = RigidBody::PhysicsType::Kinematick;
 	//info.offset = _Model->GetModelData()->GetCenterPos();
 	info.id = Collision_ID::BUILDING;
 	info.rotation = transform->GetRotation();

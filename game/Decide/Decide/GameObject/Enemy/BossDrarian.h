@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\ParticleEmitter.h"
 #include "GameObject\Enemy\LaserBreath.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\History\HistoryManager.h"
 
 // 継承クラス。
 // ボスエネミー(歩行型ドラゴン)。
@@ -84,8 +85,11 @@ private:
 	void _ConfigAnimationEvent()override;
 
 	inline void _DropSubClass()override {
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
-		chip->SetDropChipID(ChipID::Stone, transform->GetPosition() + Vector3(0.0f,-1.5f,0.0f));
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Stone))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
+			chip->SetDropChipID(ChipID::Stone, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
+		}
 	}
 
 private:

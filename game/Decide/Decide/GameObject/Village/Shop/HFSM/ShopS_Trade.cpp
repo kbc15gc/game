@@ -78,11 +78,11 @@ void ShopS_Trade::Update()
 		//数量決定
 		_UpdateTradeNum();
 		//アイテム選択
-		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 2.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.2f))
+		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.8f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.8f))
 		{
 			_SetIndex((_Select > 0) ? _Select - 1 : _DisplayItemNum - 1);
 		}
-		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 2.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.2f))
+		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.8f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.8f))
 		{
 			_SetIndex((_Select + 1) % _DisplayItemNum);
 		}
@@ -146,7 +146,7 @@ void ShopS_Trade::_SwitchTab()
 
 void ShopS_Trade::_UpdateTradeNum()
 {
-	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,5.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKR, 0.1f))
+	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,0.4f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKR, 0.4f))
 	{
 		int maxNum = 0;
 		//アイテムか消耗品かどうか？
@@ -159,7 +159,7 @@ void ShopS_Trade::_UpdateTradeNum()
 		_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
 		_UpdateText();
 	}
-	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,5.0f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKL, 0.1f))
+	else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonLeft,0.4f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKL, 0.4f))
 	{
 		_TradeNum[_Select] = max(0, _TradeNum[_Select] - 1);
 		_UpdateText();
@@ -352,21 +352,23 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto weapon = (HoldWeapon*)item;
 			//現在の装備取得。
 			auto equip = GetPlayer()->GetEquipment()->weapon;
+			
+			
 			if (equip == nullptr)
 			{
 				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
-					0, _CalcColorCode(weapon->GetAtk()), weapon->GetAtk(),
-					0, _CalcColorCode(weapon->GetMagicAtk()), weapon->GetMagicAtk(),
-					0, _CalcColorCode(weapon->GetDex()), weapon->GetDex(),
-					0, _CalcColorCode(weapon->GetCrt()), weapon->GetCrt());
+					player->GetParam(CharacterParameter::Param::ATK), _CalcColorCode(weapon->GetAtk()), player->GetParam(CharacterParameter::Param::ATK) + weapon->GetAtk(),
+					player->GetParam(CharacterParameter::Param::MAT), _CalcColorCode(weapon->GetMagicAtk()), player->GetParam(CharacterParameter::Param::MAT) + weapon->GetMagicAtk(),
+					player->GetParam(CharacterParameter::Param::DEX), _CalcColorCode(weapon->GetDex()), player->GetParam(CharacterParameter::Param::DEX) + weapon->GetDex(),
+					player->GetParam(CharacterParameter::Param::CRT), _CalcColorCode(weapon->GetCrt()), player->GetParam(CharacterParameter::Param::CRT) + weapon->GetCrt());
 			}
 			else
 			{
 				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
-					equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , weapon->GetAtk(),
-					equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetMagicAtk()), weapon->GetMagicAtk(),
-					equip->GetDex(), _CalcColorCode(weapon->GetDex()- equip->GetDex()), weapon->GetDex(),
-					equip->GetCrt(), _CalcColorCode(weapon->GetCrt() - equip->GetCrt()), weapon->GetCrt());
+					player->GetParam(CharacterParameter::Param::ATK) + equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , player->GetParam(CharacterParameter::Param::ATK) + weapon->GetAtk(),
+					player->GetParam(CharacterParameter::Param::MAT) + equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetMagicAtk()), player->GetParam(CharacterParameter::Param::MAT) + weapon->GetMagicAtk(),
+					player->GetParam(CharacterParameter::Param::DEX) + equip->GetDex(), _CalcColorCode(weapon->GetDex()- equip->GetDex()), player->GetParam(CharacterParameter::Param::DEX) + weapon->GetDex(),
+					player->GetParam(CharacterParameter::Param::CRT) + equip->GetCrt(), _CalcColorCode(weapon->GetCrt() - equip->GetCrt()), player->GetParam(CharacterParameter::Param::CRT) + weapon->GetCrt());
 			}
 		}
 		else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
@@ -378,14 +380,14 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			if (equip == nullptr)
 			{
 				sprintf(text, "DEF %4d -> %s%4d</color>\nMDE %4d -> %s%4d</color>",
-					0, _CalcColorCode(armor->GetDef()), armor->GetDef(),
-					0, _CalcColorCode(armor->GetMagicDef()), armor->GetMagicDef());
+					player->GetParam(CharacterParameter::Param::DEF), _CalcColorCode(armor->GetDef()), player->GetParam(CharacterParameter::Param::DEF) + armor->GetDef(),
+					player->GetParam(CharacterParameter::Param::MDE), _CalcColorCode(armor->GetMagicDef()), player->GetParam(CharacterParameter::Param::MDE) + armor->GetMagicDef());
 			}
 			else
 			{
 				sprintf(text, "DEF %4d -> %s%4d</color>\nMDE %4d -> %s%4d</color>",
-					equip->GetDef(), _CalcColorCode(armor->GetDef() - equip->GetDef()) , armor->GetDef(),
-					equip->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equip->GetMagicDef()), armor->GetMagicDef());
+					player->GetParam(CharacterParameter::Param::DEF) + equip->GetDef(), _CalcColorCode(armor->GetDef() - equip->GetDef()) , player->GetParam(CharacterParameter::Param::DEF) + armor->GetDef(),
+					player->GetParam(CharacterParameter::Param::MDE) + equip->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equip->GetMagicDef()), player->GetParam(CharacterParameter::Param::MDE) + armor->GetMagicDef());
 			}
 		}
 
@@ -413,9 +415,13 @@ void ShopS_Trade::_Decision()
 {
 	//テキスト。
 	char msg[256];
+	//音声
+	char cv[256];
+	bool isCV = false;
 	if (_IndexList.size() > 0)
 	{
 		sprintf(msg, "全部で %d$ になります。", _SumValue);
+		isCV = false;
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
@@ -430,6 +436,8 @@ void ShopS_Trade::_Decision()
 			{
 				//購入できない旨を表示。
 				sprintf(msg, "お金がたりませんよ。");
+				sprintf(cv, "Asset/Sound/NPC/SHOP/Mic1_50.wav");
+				isCV = true;
 			}
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
@@ -440,8 +448,16 @@ void ShopS_Trade::_Decision()
 		}
 	}
 	else
+	{
 		sprintf(msg, "何も選択されていませんよ。");
-	_Shop->SetDescriptionText(msg);
+		sprintf(cv, "Asset/Sound/NPC/SHOP/Mic1_51.wav");
+		isCV = true;
+	}
+
+	if (isCV)
+		_Shop->SetDescription(msg, cv);
+	else
+		_Shop->SetDescriptionText(msg);
 }
 
 void ShopS_Trade::BuyItem()
@@ -465,11 +481,11 @@ void ShopS_Trade::BuyItem()
 		{
 			//アイテムの値段分お金を払う。
 			_Shop->Pay((*_DisplayList)[idx]->GetInfo()->Value * _TradeNum[idx]);
-			_Shop->SetDescriptionText("まいどあり。");
+			_Shop->SetDescription("まいどあり。","Asset/Sound/NPC/SHOP/Mic1_53.wav");
 		}
 		else
 		{
-			_Shop->SetDescriptionText("インベントリが一杯ですね。");
+			_Shop->SetDescription("インベントリが一杯ですね。", "Asset/Sound/NPC/SHOP/Mic1_54.wav");
 		}
 	}
 
@@ -493,7 +509,7 @@ void ShopS_Trade::SellItem()
 			}
 			//アイテムの値段分お金を貰う。
 			_Shop->Pay(-_SumValue);
-			_Shop->SetDescriptionText("まいどあり。");
+			_Shop->SetDescription("まいどあり。", "Asset/Sound/NPC/SHOP/Mic1_53.wav");
 		}
 		else
 		{
@@ -502,14 +518,14 @@ void ShopS_Trade::SellItem()
 			{
 				//アイテムの値段分お金を貰う。
 				_Shop->Pay(-_SumValue);
-				_Shop->SetDescriptionText("まいどあり。");
+				_Shop->SetDescription("まいどあり。", "Asset/Sound/NPC/SHOP/Mic1_53.wav");
 				erase = true;
 				offset++;
 			}
 			else
 			{
 				//装備している武具を売ろうとした。
-				_Shop->SetDescriptionText("装備品を外してください。");
+				_Shop->SetDescription("装備品を外してください。", "Asset/Sound/NPC/SHOP/Mic1_55.wav");
 			}
 		}
 

@@ -67,6 +67,7 @@ namespace
 	float MATI_RADIUS = 35.0f;
 	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
 	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
+	Vector3 MATI3_POS = { 214.80f, 65.70f, -84.10f };
 
 	SCollisionInfo soundcollisition[]
 	{
@@ -117,7 +118,7 @@ void GameScene::Start()
 	//メッシュコライダーオブジェクトを生成
 	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
-	INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
+	//INSTANCE(GameObjectManager)->AddNew<Dungeon>("Dungeon", 1);
 	//洞窟生成
 	INSTANCE(GameObjectManager)->AddNew<RockCave>("RockCave", 1);
 	//海生成.
@@ -131,12 +132,12 @@ void GameScene::Start()
 	//ボスゴーレム作成。
 	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
 	//ボスD作成。
-	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("doragon", 1);
 
-	////@todo for debug
-	//// テスト。
-	//// ラスボス作成。
-	////LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//@todo for debug
+	// テスト。
+	// ラスボス作成。
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	//// パラメーター設定。
 	//vector<BarColor> Color;
 	//Color.push_back(BarColor::Blue);
@@ -144,6 +145,7 @@ void GameScene::Start()
 	//Color.push_back(BarColor::Yellow);
 	//Color.push_back(BarColor::Red);
 	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//enemy->SetParamAll(Color, param);
 	//g->SetParamAll(Color, param);
 	//d->SetParamAll(Color, param);
 
@@ -174,27 +176,30 @@ void GameScene::Start()
 	//通常BGM
 	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
 	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
-	
+	_WorldBGM->SetVolume(0.2f);
+
 	//BOSSBGM
 	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
 	_BossBGM->Init("Asset/Sound/boss1.wav");
+	_BossBGM->SetVolume(0.2f);
 
 	//街BGM
 	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
 	_MatiBGM->Init("Asset/Sound/mati1.wav");
+	_MatiBGM->SetVolume(0.2f);
 
 	//街2BGM
 	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
 	_Mati2BGM->Init("Asset/Sound/mati2.wav");
+	_Mati2BGM->SetVolume(0.2f);
 
 	//死亡BGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
 	_DeadBGM->Init("Asset/Sound/dead.wav");
-	_DeadBGM->SetVolume(3.0f);
+	_DeadBGM->SetVolume(0.4f);
 
 	//再生用BGM
 	_GameBGM = _WorldBGM;
-	
 #ifndef _NOBO_
 	_GameBGM->Play(true);
 #endif // !_NOBO_
@@ -267,6 +272,18 @@ void GameScene::Update()
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
+					switch ((BGM)i)
+					{
+						case BGM::MATI1:
+							_Player->SetRespawnPos(MATI_POS);
+							break;
+						case BGM::MATI2:
+							_Player->SetRespawnPos(MATI2_POS);
+							break;
+						case BGM::MATI3:
+							_Player->SetRespawnPos(MATI3_POS);
+							break;
+					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
 				}
@@ -281,44 +298,51 @@ void GameScene::_NewChip()
 {
 	//必要なチップを設置する。
 	//所持されていないチップを作成する。
+	//火
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Fire))
 	{
-		//火
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Fire))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Fire);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("FireChip", 2);
+		chip->SetChipID(ChipID::Fire);
 	}
+
+	//木
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Tree))
 	{
-		//木
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Tree))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Tree);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("TreeChip", 2);
+		chip->SetChipID(ChipID::Tree);
 	}
+
+	//狩
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
 	{
-		//狩
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Hunt);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("HuntChip", 2);
+		chip->SetChipID(ChipID::Hunt);
 	}
+
+	//農
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Agriculture))
 	{
-		//農
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Agriculture))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Agriculture);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("AgricultureChip", 2);
+		chip->SetChipID(ChipID::Agriculture);
 	}
+	//鉄
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
 	{
-		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
-		{
-			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 2);
-			chip->SetChipID(ChipID::Iron);
-		}
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("IronChip", 2);
+		chip->SetChipID(ChipID::Iron);
+	}
+	//油
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Oil))
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("OilChip", 2);
+		chip->SetChipID(ChipID::Oil);
+	}
+	//@todo for debug
+	//テスト用
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Medicine))
+	{
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("MedicineChip", 2);
+		chip->SetChipID(ChipID::Medicine);
 	}
 }
 
@@ -340,6 +364,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _MatiBGM;
 			break;
 		case GameScene::BGM::MATI2:
+			_GameBGM = _Mati2BGM;
+			break;
+		case GameScene::BGM::MATI3:
+			//@todo for debug 仮設定
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::DEAD:

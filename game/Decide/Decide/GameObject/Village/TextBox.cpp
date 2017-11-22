@@ -8,7 +8,8 @@ TextBox::TextBox(const char * name):
 	_StartTextID(-1),
 	_TextSpeed(1.0f),
 	_State(TextBoxStateE::CLOSE),
-	_AnimeTime(0.0f)
+	_AnimeTime(0.0f),
+	_Voice("Voice")
 {
 }
 
@@ -53,6 +54,8 @@ void TextBox::Update()
 	_Animation();
 	//表示する文字数の増加。
 	_IncreaseChar();
+	//
+	_Voice.Update();
 }
 
 void TextBox::SetMessageID(const int & id)
@@ -114,6 +117,8 @@ void TextBox::_OpenMessage()
 		_State = TextBoxStateE::OPENING;
 		//テキスト設定。
 		_SetText(_Message->Text);
+		//ボイス再生。
+		_PlayVoice(_Message->VoicePath);
 
 		//ボックスを表示する
 		for each (ImageObject* image in _BoxImage)

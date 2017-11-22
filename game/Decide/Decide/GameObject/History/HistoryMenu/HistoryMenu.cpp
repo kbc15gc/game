@@ -10,6 +10,18 @@
 
 #include "GameObject\History\HistoryManager.h"
 
+void HistoryMenu::Awake()
+{
+	if (IS_CONTINUE)
+	{
+		LoadChip();
+	}
+	else
+	{
+		SaveChip();
+	}
+}
+
 /**
 * 初期化.
 */
@@ -27,6 +39,7 @@ void HistoryMenu::Start()
 
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
+	_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
 
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 
@@ -38,11 +51,6 @@ void HistoryMenu::Start()
 	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
 	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
-
-	if (IS_CONTINUE)
-	{
-		LoadChip();
-	}
 }
 
 /**
@@ -132,11 +140,11 @@ void HistoryMenu::EnableUpdate()
 			SelectPageUpdate();
 			cursorPos.y = g_WindowSize.y / 2.0f;
 			break;
-		case SelectCodeE::Chip:
-			//チップ選択中の更新.
-			SelectChipUpdate();
-			cursorPos.y = g_WindowSize.y - 100.0f;
-			break;
+	}
+
+	if (_IsOperation)
+	{
+		SelectChipUpdate();
 	}
 
 	static float ChangeTime = 0.5f;
@@ -149,12 +157,12 @@ void HistoryMenu::EnableUpdate()
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
 		{
-			_SelectCode = max((int)SelectCodeE::Location, _SelectCode - 1);
+			_SelectCode = max((int)SelectCodeE::Min, _SelectCode - 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_SelectCode = max((int)SelectCodeE::Location, _SelectCode - 1);
+			_SelectCode = max((int)SelectCodeE::Min, _SelectCode - 1);
 
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
@@ -165,12 +173,12 @@ void HistoryMenu::EnableUpdate()
 	{
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
 		{
-			_SelectCode = min((int)SelectCodeE::Chip, _SelectCode + 1);
+			_SelectCode = min((int)SelectCodeE::Max, _SelectCode + 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_SelectCode = min((int)SelectCodeE::Chip, _SelectCode + 1);
+			_SelectCode = min((int)SelectCodeE::Max, _SelectCode + 1);
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -245,6 +253,8 @@ void HistoryMenu::SelectLocationUpdate()
 
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
+		_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
+
 		_NowLookPage = 0;
 		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
@@ -296,12 +306,12 @@ void HistoryMenu::SelectPageUpdate()
 		int size = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size();
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
 		{
-			_NowLookPage = min(max(0, size - 1), _NowLookPage + 1);
+			_NowLookPage = min(size, _NowLookPage + 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowLookPage = min(max(0, size - 1), _NowLookPage + 1);
+			_NowLookPage = min(size, _NowLookPage + 1);
 
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
@@ -351,7 +361,7 @@ void HistoryMenu::SelectPageUpdate()
 	}
 
 	//AボタンもしくはJkeyが押されたら。
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A) || KeyBoardInput->isPush(DIK_J))
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
 	{
 		//歴史書からリストを取得。
 		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
@@ -390,12 +400,10 @@ void HistoryMenu::SelectChipUpdate()
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
-	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
-	LStick /= 32767.0f;
-	if (LStick.x >= 0.2f)
+
+	if (VPadInput->IsPress(fbEngine::VPad::ButtonRB1))
 	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+		if (VPadInput->IsPush(fbEngine::VPad::ButtonRB1))
 		{
 			_NowSelectChip = max(0, _NowSelectChip - 1);
 		}
@@ -407,9 +415,9 @@ void HistoryMenu::SelectChipUpdate()
 			ChangeTime = 0.01f;
 		}
 	}
-	else if (LStick.x <= -0.2f)
+	else if (VPadInput->IsPress(fbEngine::VPad::ButtonLB1))
 	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+		if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
 		{
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
 		}
@@ -436,13 +444,13 @@ void HistoryMenu::SelectChipUpdate()
 	}
 
 	//Aボタン押.
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A) || KeyBoardInput->isPush(DIK_J))
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//存在していれば.
 		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
 		{
 			//現在指定している場所にチップを設定.
-			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID());
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID(), _NowLookPage);
 
 			//搬入したチップを所持チップから削除.
 			auto it = _Chip2DList.begin();

@@ -125,7 +125,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("name,pos,ang,sca,messeageid,showtitle");
+        sw.WriteLine("name,pos,ang,sca,type,shopid,messeageid,showtitle");
         foreach (Transform child in Children)
         {
             if (child.name == npcs.name)

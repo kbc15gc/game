@@ -22,6 +22,7 @@ void RigidBody::Release()
 {
 	if (_CollisionObject)
 	{
+		INSTANCE(PhysicsWorld)->RemoveRigidBody(this);
 		SAFE_DELETE(myMotionState);
 	}
 }

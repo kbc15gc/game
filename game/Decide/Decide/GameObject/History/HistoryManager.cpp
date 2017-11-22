@@ -18,9 +18,6 @@ HistoryManager* HistoryManager::_Instance = nullptr;
 */
 HistoryManager::HistoryManager()
 {
-	//CSVから歴史情報読み取り。
-	Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
-
 	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
 	{
 		//グループ状態を0で初期化。
@@ -39,6 +36,27 @@ HistoryManager::HistoryManager()
 */
 void HistoryManager::Start()
 {
+	_LocationHistoryList.clear();
+
+	if (IS_CONTINUE)
+	{
+		//CSVから歴史情報読み取り。
+		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	}
+	else
+	{
+		//CSVから歴史情報読み取り。
+		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		FOR(i, _LocationHistoryList.size())
+		{
+			for (int j = 0; j < (int)ChipID::ChipNum; j++)
+			{
+				_LocationHistoryList.at(i)->_ChipSlot[j] = ChipID::None;
+			}
+		}
+		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	}
+
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
@@ -68,18 +86,15 @@ void HistoryManager::Start()
 	//歴史オブジェクト生成。
 	FOR(i, _LocationHistoryList.size())
 	{
-		if (IS_CONTINUE)
+		for (int j = 0; j < (int)ChipID::ChipNum; j++)
 		{
-			for (int j = 0; j < (int)ChipID::ChipNum; j++)
+			if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
 			{
-				if (_LocationHistoryList.at(i)->_ChipSlot[j] == ChipID::None)
-				{
-					continue;
-				}
-				//読み込んだデータを元に歴史書にページをあらかじめ追加。
-				HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID);
-				page->ChangeState(HistoryPage::StateCodeE::Close);
+				continue;
 			}
+			//読み込んだデータを元に歴史書にページをあらかじめ追加。
+			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, j);
+			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
 	}
@@ -92,9 +107,9 @@ void HistoryManager::Start()
 * @param slot		スロット番号.
 * @param chip		チップID.
 */
-bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip)
+bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip, int index)
 {
-	_HistoryBook->PutInChip(chip, location);
+	_HistoryBook->PutInChip(chip, location, index);
 	//ひとまず入れるだけで上書されてしまう.
 	_LocationHistoryList[(int)location]->SetData(_HistoryBook->GetLocationList(location));
 
@@ -188,13 +203,27 @@ void HistoryManager::_CreateObject(int location, const char * path, int type)
 	if (type == 0)
 	{
 		//前のオブジェクトを削除
-		for (auto& it : _GameObjectList[(int)location])
+		for (auto& it : _GameObjectList[location])
 		{
 			INSTANCE(GameObjectManager)->AddRemoveList(it);
 		}
-		_GameObjectList[(int)location].clear();
+		_GameObjectList[location].clear();
+
 		//生成。
-		_CreateBuilding(location, path);
+		CreateBuilding(path, _GameObjectList[location]);
+
+		//第3の村だけ
+		if (location == (int)LocationCodeE::Prosperity)
+		{
+			for (auto obj : _GameObjectList[location]) {
+				//X軸に180ど回転させる。
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX, PI);
+				q.Multiply(obj->transform->GetRotation());
+				obj->transform->SetRotation(q);
+			}
+		}
+
 	}
 	else if (type == 1)
 	{
@@ -209,7 +238,7 @@ void HistoryManager::_CreateObject(int location, const char * path, int type)
 	}
 }
 
-void HistoryManager::_CreateBuilding(int location, const char * path)
+vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<GameObject*>& Builds)
 {
 	//CSVからオブジェクトの情報読み込み
 	vector<unique_ptr<ObjectInfo>> objInfo;
@@ -227,23 +256,13 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 
 			obj->transform->SetRotation(objInfo[i]->ang);
-			//第3の村だけ
-			if (location == (int)LocationCodeE::Prosperity)
-			{
-				//X軸に180ど回転させる。
-				Quaternion q = Quaternion::Identity;
-				q.SetRotation(Vector3::axisX, PI);
-				q.Multiply(objInfo[i]->ang);
-				obj->transform->SetRotation(q);
-
-			}
 
 			objInfo[i]->sca.y *= -1.0f;
 			obj->transform->SetLocalScale(objInfo[i]->sca);
 			obj->LoadModel(objInfo[i]->filename, objInfo[i]->coll);
 
-			//管理用の配列に追加。
-			_GameObjectList[location].push_back(obj);
+			//配列に追加。
+			Builds.push_back(obj);
 
 			//次がコリジョンかどうか？
 			while (true)
@@ -288,6 +307,8 @@ void HistoryManager::_CreateBuilding(int location, const char * path)
 
 	}
 	objInfo.clear();
+
+	return Builds;
 }
 
 void HistoryManager::_CreateNPC(int location, const char * path)
@@ -310,6 +331,7 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		npc->LoadModel(npcInfo[i]->filename,false);
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
+		model->SetCullMode(D3DCULL::D3DCULL_CCW);
 
 		//管理用の配列に追加。
 		_NPCList[location].push_back(npc);

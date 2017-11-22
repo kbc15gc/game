@@ -173,6 +173,7 @@ public:
 	void TakeDrop(int dropexp, int money)
 	{
 		_nowEXP += dropexp;
+		SaveLevel();
 		// お金はインベントリに格納。
 		INSTANCE(Inventory)->AddPlayerMoney(money);
 	}
@@ -280,7 +281,29 @@ public:
 	{
 		return _NowSpeed;
 	}
+
+	/**
+	* リスポーン座標を設定.
+	*/
+	void SetRespawnPos(const Vector3& pos)
+	{
+		_RespawnPos = pos;
+		SaveRespawnPos();
+	}
+
+	void SaveRespawnPos()
+	{
+		picojson::object player;
+		player["RespawnPos_X"] = (picojson::value)(double)_RespawnPos.x;
+		player["RespawnPos_Y"] = (picojson::value)(double)_RespawnPos.y;
+		player["RespawnPos_Z"] = (picojson::value)(double)_RespawnPos.z;
+		JsonData LevelData;
+		LevelData.SetDataObject("Player", player);
+		LevelData.Save("Player_Pos");
+	}
+
 private:
+
 	//アニメーションイベント
 	void AnimationEventControl();
 	//攻撃1
@@ -309,6 +332,7 @@ private:
 	{
 		picojson::object player;
 		player["Level"] = (picojson::value)(double)_PlayerParam->GetParam(CharacterParameter::LV);
+		player["EXP"] = (picojson::value)(double)_nowEXP;
 		JsonData LevelData;
 		LevelData.SetDataObject("Player", player);
 		LevelData.Save("Player");
@@ -331,6 +355,9 @@ private:
 	//プレイヤーの速度。
 	//現在のスピード（ランかダッシュかによって変わる）
 	float _NowSpeed;
+
+	/** リスポーン座標. */
+	Vector3 _RespawnPos = Vector3::zero;
 	
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
@@ -341,8 +368,6 @@ private:
 	float _Height;
 	//半径
 	float _Radius;
-	//最初のポジション
-	Vector3 _StartPos;
 	//最終的な移動量
 	Vector3 _MoveSpeed;
 	//進行

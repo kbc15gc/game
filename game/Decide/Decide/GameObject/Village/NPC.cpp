@@ -26,6 +26,9 @@ void NPC::Awake()
 	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox",StatusWindow::WindowBackPriorty - 1);
 	_TextBox->SetTextSpeed(12.0f);
 	_IsSpeak = false;
+	_State = State::Idol;
+
+	_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);
 }
 
 void NPC::Update()
@@ -69,11 +72,22 @@ void NPC::_Speak()
 		{
 			//‰ï˜b‚·‚éB
 			_TextBox->Speak();
+			if (_State != State::Speak)
+			{
+				_State = State::Speak;
+				_Anim->PlayAnimation(static_cast<int>(State::Speak), 0.2f);
+
+			}
 		}
 	}
 	else
 	{
 		//—£‚ê‚½‚È‚ç•Â‚¶‚é
 		_TextBox->CloseMessage();
+		if (_State != State::Idol)
+		{
+			_State = State::Idol;
+			_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);
+		}
 	}
 }

@@ -34,10 +34,17 @@ void Inventory::Initialize() {
 		_HoldNumList.push_back(vector<int>(INSTANCE(ItemManager)->GetMaxID(static_cast<Item::ItemCodeE>(idx)) + 1, 0));
 	}
 
+	_PlayerMoney = 100;
+
 	if (IS_CONTINUE)
 	{
 		// CSVì«Ç›çûÇ›ÅB
 		_LoadData();
+	}
+	else
+	{
+		SaveMoney();
+		_OutData_All();
 	}
 }
 

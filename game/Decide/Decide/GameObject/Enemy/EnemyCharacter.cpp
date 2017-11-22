@@ -47,15 +47,13 @@ void EnemyCharacter::Awake() {
 	// 位置情報初期化。
 	transform->SetPosition(Vector3(0.0f,0.0f,0.0f));
 	
-	// 使用するステートを列挙。
-	_BuildState();
-
 	// 継承先により変わる処理。
 	_AwakeSubClass();
-
 }
 
 void EnemyCharacter::Start() {
+	// 使用するステートを列挙。
+	_BuildState();
 	// 剛体生成。
 	_BuildCollision();
 	// モデル生成。
@@ -519,6 +517,7 @@ void EnemyCharacter::_ChangeState(State next) {
 
 void EnemyCharacter::_BuildSoundTable() {
 	// 汎用効果音登録。
+	//_SoundData = vector<unique_ptr<SoundData>>(static_cast<int>(SoundIndex::Max));
 
 	// 攻撃音登録。
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f);
@@ -537,6 +536,11 @@ void EnemyCharacter::_BuildSoundTable() {
 }
 
 void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+	if (idx >= SoundIndex::Max) {
+		// 継承先独自の効果音。
+
+		_SoundData.resize(static_cast<int>(idx) + 1);
+	}
 	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, is3D, isLoop));
 }
 
