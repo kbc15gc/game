@@ -89,7 +89,7 @@ void EnemyManager::CreateEnemy() {
 			Color.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::BossD:
-			//ボスゴーレム生成。
+			//ボスD生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
 			Color.push_back(BarColor::Yellow);
 			Color.push_back(BarColor::Red);

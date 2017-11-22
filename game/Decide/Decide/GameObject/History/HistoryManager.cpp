@@ -63,7 +63,7 @@ void HistoryManager::Start()
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
 //木が邪魔な場合これを使ってください。
-#define NPCONLY
+//#define NPCONLY
 
 #ifdef NPCONLY
 	//共通オブジェクト生成。
@@ -314,21 +314,16 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 void HistoryManager::_CreateNPC(int location, const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
-	vector<unique_ptr<NPCInfo>> npcInfo;
-	Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
+	vector<unique_ptr<npc::NPCInfo>> npcInfo;
+	Support::LoadCSVData<npc::NPCInfo>(path, npc::NPCInfoData, ARRAY_SIZE(npc::NPCInfoData), npcInfo);
 
 	//情報からオブジェクト生成。
 	FOR(i, npcInfo.size())
 	{
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-
-		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-		npc->transform->SetLocalPosition(npcInfo[i]->pos);
-		npc->transform->SetRotation(npcInfo[i]->ang);
-		npc->transform->SetLocalScale(npcInfo[i]->sca);
-
-		npc->LoadModel(npcInfo[i]->filename,false);
+		npc->CreateNPC(npcInfo[i].get());
+		
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
 		model->SetCullMode(D3DCULL::D3DCULL_CCW);

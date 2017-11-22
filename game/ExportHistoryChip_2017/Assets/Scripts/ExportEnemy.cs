@@ -13,6 +13,7 @@ public class ExportEnemy : MonoBehaviour {
         Golem,      //ゴーレム
         BossGolem,  //第2のボスゴーレム
         Soldier,    //兵士
+        BossD,      //第3のボス
     }
     //エネミーのタイプ指定。
     public EnemyType _EnemyType;
