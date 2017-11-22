@@ -142,7 +142,10 @@ void HistoryMenu::EnableUpdate()
 			break;
 	}
 
-	SelectChipUpdate();
+	if (_IsOperation)
+	{
+		SelectChipUpdate();
+	}
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
@@ -398,9 +401,9 @@ void HistoryMenu::SelectChipUpdate()
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
 
-	if (XboxInput(0)->IsPushButton(VK_PAD_RSHOULDER))
+	if (VPadInput->IsPress(fbEngine::VPad::ButtonRB1))
 	{
-		if (XboxInput(0)->IsPressButton(VK_PAD_RSHOULDER))
+		if (VPadInput->IsPush(fbEngine::VPad::ButtonRB1))
 		{
 			_NowSelectChip = max(0, _NowSelectChip - 1);
 		}
@@ -412,9 +415,9 @@ void HistoryMenu::SelectChipUpdate()
 			ChangeTime = 0.01f;
 		}
 	}
-	else if (XboxInput(0)->IsPushButton(VK_PAD_LSHOULDER))
+	else if (VPadInput->IsPress(fbEngine::VPad::ButtonLB1))
 	{
-		if (XboxInput(0)->IsPressButton(VK_PAD_LSHOULDER))
+		if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
 		{
 			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
 		}

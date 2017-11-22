@@ -15,6 +15,8 @@ void ItemManager::LoadAllItemData()
 
 	FOR(i, Item::ItemCodeE::Max)
 	{
+		_InfoList[i].clear();
+
 		//ファイルパス
 		char filepath[256] = "";
 		sprintf(filepath, "Asset/Data/ItemData/%s.csv", filename[i]);
