@@ -119,3 +119,4 @@ static const float FontSize = 512.0f;
 extern HWND g_MainWindow;	//ウィンドウハンドル
 extern Vector2 g_WindowSize; 
 extern Vector2 g_FrameSize;
+extern Vector2 g_StartWindowSize;
