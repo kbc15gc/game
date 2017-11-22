@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject\Village\ContinentObject.h"
 
-namespace
+namespace npc
 {
 	//NPC‚Ìƒ^ƒCƒv
 	enum NPCTypeE : int
@@ -55,6 +55,8 @@ public:
 	void Awake()override;
 	void Update()override;
 	void LateUpdate()override;
+
+	void CreateNPC(const npc::NPCInfo* info);
 
 	void SetMesseage(const int& id, const bool show);
 

@@ -47,6 +47,17 @@ void NPC::LateUpdate()
 	_TextBox->transform->SetPosition(Vector3(screemPos, 0));
 }
 
+void NPC::CreateNPC(const npc::NPCInfo* info)
+{
+	SetMesseage(info->MesseageID, info->ShowTitle);
+	_TextBox->id = info->ShopID;
+	transform->SetLocalPosition(info->pos);
+	transform->SetRotation(info->ang);
+	transform->SetLocalScale(info->sca);
+
+	LoadModel(info->filename, false);
+}
+
 void NPC::SetMesseage(const int & id, const bool show)
 {
 	_TextBox->SetMessageID(id);
