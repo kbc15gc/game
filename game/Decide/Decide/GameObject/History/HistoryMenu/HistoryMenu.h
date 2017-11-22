@@ -25,9 +25,10 @@ public:
 	*/
 	enum class SelectCodeE
 	{
-		Location,	//!< 場所.
+		Min = 0,
+		Location = Min,	//!< 場所.
 		Page,		//!< ページ.
-		Chip,		//!< チップ.
+		Max = Page,
 	};
 
 public:
