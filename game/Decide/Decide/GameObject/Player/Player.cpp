@@ -755,6 +755,8 @@ void Player::_LoadEXPTable()
 	std::vector<std::unique_ptr<ExperiencePointTableInfo>> exptbaleinfo;
 	Support::LoadCSVData<ExperiencePointTableInfo>("Asset/Data/PlayerParameter.csv", ExperiencePointTableInfoData, ARRAYSIZE(ExperiencePointTableInfoData), exptbaleinfo);
 	
+	_EXPTable.clear();
+
 	for (int i = 0; i < MAXLV; i++)
 	{
 		_EXPTable.push_back(exptbaleinfo[i]->ExperiencePoint);

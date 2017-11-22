@@ -386,7 +386,7 @@ void SkinModel::DrawMeshContainer(
 			}
 
 			//ƒtƒ‰ƒO‚ğİ’è.
-			ditherParam.x = 1.0f;
+			ditherParam.x = 2.0f;
 		}
 		ditherParam.z = g_WindowSize.x;
 		ditherParam.w = g_WindowSize.y;
