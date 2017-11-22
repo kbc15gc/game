@@ -108,6 +108,15 @@ unique_ptr<CharacterParameter::DamageInfo> CharacterParameter::GiveDamageMass(bo
 		if (weapon) {
 			weaponDamage = weapon->GetAtk();
 			crit += weapon->GetDex();
+
+			//@todo for debug
+			//critの値がランクによって100を超える場合があるため。
+			//100以上の場合は100にします。
+			//不具合が出た場合変更します。
+			if (crit > 100)
+			{
+				crit = 100;
+			}
 		}
 	}
 
