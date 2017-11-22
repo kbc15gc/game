@@ -16,14 +16,14 @@ namespace
 	struct Product:Noncopyable
 	{
 	public:
-		int ItemID;		//ID。
 		Item::ItemCodeE Code;	//アイテムを識別するコード。
+		int ItemID;		//ID。
 	};
 
 	const Support::DATARECORD ProductData[] =
 	{
-		{ "ItemID",Support::DataTypeE::INT , offsetof(struct Product,ItemID),sizeof(int) },
 		{ "Code",Support::DataTypeE::INT, offsetof(struct Product,Code),sizeof(int) },
+		{ "ItemID",Support::DataTypeE::INT , offsetof(struct Product,ItemID),sizeof(int) },
 	};
 }
 
