@@ -14,7 +14,7 @@ namespace
 	};
 }
 
-class HistoryBook;
+class HistoryMenu;
 
 
 class GameScene : public Scene
@@ -52,6 +52,6 @@ private:
 	BGM _BGM;
 	Player* _Player;
 
-	HistoryBook* _HistoryBook = nullptr;
+	HistoryMenu* _HistoryMenu = nullptr;
 
 };

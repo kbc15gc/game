@@ -44,13 +44,13 @@ void HistoryMenu::Start()
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 
 	//スプライトクラスを追加.
-	//_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
-	//_CursorSpriteL->SetTexture(LOADTEXTURE("UI/brackets.png"));
-	//_CursorSpriteL->SetSize(_CursorSpriteL->GetSize() * 0.1f);
-	//_CursorSpriteR = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
-	//_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
-	//_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
-	//_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
+	_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	_CursorSpriteL->SetTexture(LOADTEXTURE("UI/brackets.png"));
+	_CursorSpriteL->SetSize(_CursorSpriteL->GetSize() * 0.1f);
+	_CursorSpriteR = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
+	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
+	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
 }
 
 /**
@@ -70,8 +70,8 @@ void HistoryMenu::Update()
 	{
 		//非表示.
 		_LocationNameRender->SetActive(false);
-		//_CursorSpriteL->SetActive(false);
-		//_CursorSpriteR->SetActive(false);
+		_CursorSpriteL->SetActive(false);
+		_CursorSpriteR->SetActive(false);
 		for (auto& it : _Chip2DList)
 		{
 			it->SetActive(false);
@@ -121,29 +121,37 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 	}
 }
 
+void HistoryMenu::SetLocationCode(LocationCodeE code)
+{
+	_NowSelectLocation = (int)code;
+	_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+}
+
 /**
 * 表示中の更新.
 */
 void HistoryMenu::EnableUpdate()
 {
-
-	//Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
-	//switch ((SelectCodeE)_SelectCode)
-	//{
-	//	case SelectCodeE::Location:
-	//		//場所選択中の更新.
-	//		SelectLocationUpdate();
-	//		cursorPos.y = 90.0f;
-	//		break;
-	//	case SelectCodeE::Page:
-	//		//ページ選択中の更新.
-	//		SelectPageUpdate();
-	//		cursorPos.y = g_WindowSize.y / 2.0f;
-	//		break;
-	//}
+	Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
+	switch ((SelectCodeE)_SelectCode)
+	{
+		case SelectCodeE::Location:
+			//場所選択中の更新.
+			if (!_IsLocation)
+			{
+				SelectLocationUpdate();
+			}
+			cursorPos.y = 90.0f;
+			break;
+		case SelectCodeE::Page:
+			//ページ選択中の更新.
+			SelectPageUpdate();
+			cursorPos.y = g_WindowSize.y / 2.0f;
+			break;
+	}
 
 	//ページの初期化.
-	SelectPageUpdate();
+	//SelectPageUpdate();
 
 	if (_IsOperation)
 	{
@@ -192,16 +200,16 @@ void HistoryMenu::EnableUpdate()
 		LocalTime = 0.0f;
 	}
 
-	//_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
-	//_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
+	_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
+	_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
 
 	//表示.
 	_LocationNameRender->SetActive(true);
-	//_CursorSpriteL->SetActive(true);
-	//_CursorSpriteR->SetActive(true);
+	_CursorSpriteL->SetActive(true);
+	_CursorSpriteR->SetActive(true);
 
 	//場所名描画.
-	_LocationNameRender->SetText(LocationNameList[(int)_HistoryBook->GetLocationCode()].c_str());
+	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
 
 	ChipMove();
 }
@@ -282,6 +290,8 @@ void HistoryMenu::SelectLocationUpdate()
 			}
 		}
 
+		_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+
 		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 		se->Init("Asset/Sound/UI/Menu.wav");
 		se->SetDelete(true);
@@ -304,7 +314,7 @@ void HistoryMenu::SelectPageUpdate()
 	LStick /= 32767.0f;
 	if (LStick.x >= 0.2f)
 	{
-		int size = _HistoryBook->GetLocationList(_HistoryBook->GetLocationCode()).size();
+		int size = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size();
 		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
 		{
 			_NowLookPage = min(size, _NowLookPage + 1);
@@ -340,18 +350,18 @@ void HistoryMenu::SelectPageUpdate()
 
 	if (beforeLookPage != _NowLookPage)
 	{
-		if (_HistoryBook->GetLocationList(_HistoryBook->GetLocationCode()).size() > 0)
+		if (_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation).size() > 0)
 		{
 			if (beforeLookPage < _NowLookPage)
 			{
-				_HistoryBook->GetLocationList(_HistoryBook->GetLocationCode())[beforeLookPage]->SetRotAngle(90.0f);
-				_HistoryBook->GetLocationList(_HistoryBook->GetLocationCode())[beforeLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[beforeLookPage]->SetRotAngle(90.0f);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[beforeLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
 			else if (beforeLookPage > _NowLookPage)
 			{
 
-				_HistoryBook->GetLocationList(_HistoryBook->GetLocationCode())[_NowLookPage]->SetRotAngle(-90.0f);
-				_HistoryBook->GetLocationList(_HistoryBook->GetLocationCode())[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->SetRotAngle(-90.0f);
+				_HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation)[_NowLookPage]->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
 		}
 
@@ -365,7 +375,7 @@ void HistoryMenu::SelectPageUpdate()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
 	{
 		//歴史書からリストを取得。
-		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList(_HistoryBook->GetLocationCode());
+		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
 		//取得したリストサイズが0以上なら削除処理を行う。
 		if (pagelist.size() > 0 && 0 <= _NowLookPage  && _NowLookPage < pagelist.size())
 		{
@@ -373,9 +383,9 @@ void HistoryMenu::SelectPageUpdate()
 
 			if (page != nullptr)
 			{
-				_HistoryBook->PutOutPage(_HistoryBook->GetLocationCode(), page);
+				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
 
-				INSTANCE(HistoryManager)->PutOutPage(_HistoryBook->GetLocationCode(), _HistoryBook->GetLocationList(_HistoryBook->GetLocationCode()));
+				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
 
 				SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 				se->Init("Asset/Sound/UI/paper-tear1.wav");
@@ -451,7 +461,7 @@ void HistoryMenu::SelectChipUpdate()
 		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
 		{
 			//現在指定している場所にチップを設定.
-			INSTANCE(HistoryManager)->SetHistoryChip(_HistoryBook->GetLocationCode(), _Chip2DList[_NowSelectChip]->GetChipID(), _NowLookPage);
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID(), _NowLookPage);
 
 			//搬入したチップを所持チップから削除.
 			auto it = _Chip2DList.begin();
