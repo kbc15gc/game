@@ -405,6 +405,15 @@ public:
 		}
 	}
 
+	//@todo for debug 
+	//Unityで設定したカラーを設定。
+	//仮設定なので後で修正してね。
+	inline void SetColor(Color c)
+	{
+		_MyComponent.Model->SetAllBlend(c);
+	}
+
+
 	inline float GetWalkSpeed()const {
 		return _walkSpeed;
 	}
