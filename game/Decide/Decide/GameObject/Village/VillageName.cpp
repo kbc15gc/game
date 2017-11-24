@@ -33,11 +33,11 @@ void VillageName::Update()
 
 void VillageName::Excute(const int location)
 {
-	if (now != location && LocationNames[location].size() > location)
-	{
-		//•\Ž¦–¼‚ðÝ’è.
-		_Text->SetText(LocationNames[location].c_str());
-		_Timer = 0.0f;
-		now = location;
-	}
+	//if (now != location && LocationNames[location].size() > location)
+	//{
+	//	//•\Ž¦–¼‚ðÝ’è.
+	//	_Text->SetText(LocationNames[location].c_str());
+	//	_Timer = 0.0f;
+	//	now = location;
+	//}
 }
