@@ -2,6 +2,7 @@
 #include "fbEngine\_Scene\Scene.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
+class VillageName;
 
 namespace 
 {
@@ -50,4 +51,5 @@ private:
 	BGM _BGM;
 	Player* _Player;
 
+	VillageName* _VillageName;
 };

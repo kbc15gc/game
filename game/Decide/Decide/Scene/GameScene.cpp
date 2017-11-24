@@ -24,6 +24,7 @@
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\History\HistoryMenu\HistoryMenu.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\Village\VillageName.h"
 
 #include "GameObject\Village\EventManager.h"
 
@@ -168,6 +169,7 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
+	_VillageName = INSTANCE(GameObjectManager)->AddNew<VillageName>("VillageName", 10);
 
 #ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
@@ -285,6 +287,7 @@ void GameScene::Update()
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
+					_VillageName->Excute(i);
 					break;
 				}
 			}

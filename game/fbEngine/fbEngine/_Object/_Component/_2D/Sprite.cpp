@@ -261,6 +261,7 @@ void Sprite::_CreateOutLine()
 	pos = posbuf = transform->GetPosition();
 	//F‚ğ•‚É
 	_BlendColor = Color::black;
+	_BlendColor.a = colorbuf.a;
 	//ˆÚ“®—Ê
 	float offset = 1.0f;
 	//ã‰º¶‰E‚ÉˆÚ“®‚³‚¹‚Ä•`‰æ
