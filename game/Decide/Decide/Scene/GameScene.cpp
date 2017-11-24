@@ -279,14 +279,17 @@ void GameScene::Update()
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
+							_Player->SetRespawnPos(LocationPosition[0]);
 							if(!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
+							_Player->SetRespawnPos(LocationPosition[1]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
+							_Player->SetRespawnPos(LocationPosition[2]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
