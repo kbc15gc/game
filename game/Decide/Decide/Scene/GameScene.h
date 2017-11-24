@@ -51,5 +51,6 @@ private:
 	BGM _BGM;
 	Player* _Player;
 
+	HistoryMenu* _HistoryMenu;
 	VillageName* _VillageName;
 };

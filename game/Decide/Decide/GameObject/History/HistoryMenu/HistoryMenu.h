@@ -83,6 +83,13 @@ public:
 		return false;
 	}
 
+	void SetLocationCode(LocationCodeE code);
+
+	void SetIsLocation(bool value)
+	{
+		_IsLocation = value;
+	}
+
 private:
 
 	/**
@@ -171,5 +178,8 @@ private:
 
 	/** 操作可能フラグ. */
 	bool _IsOperation = true;
+
+	/** 場所に居るかフラグ. */
+	bool _IsLocation = false;
 
 };

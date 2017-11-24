@@ -362,7 +362,7 @@ void SkinModel::DrawMeshContainer(
 			//掛かりきる最低値.
 			const float MinLen = 1.5f;
 			//掛かり始める最高値.
-			const float MaxLen = 4.5f;
+			const float MaxLen = 4.0f;
 
 			//カメラから座標へのベクトル.
 			Vector3 CameraToPos = gameObject->transform->GetPosition() - campos;
