@@ -24,6 +24,7 @@
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\History\HistoryMenu\HistoryMenu.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\Village\VillageName.h"
 
 #include "GameObject\Village\EventManager.h"
 
@@ -65,9 +66,6 @@ namespace
 	Vector3 BOSS_POS = { -686.0f,61.9f,68.0f };
 	//街
 	float MATI_RADIUS = 35.0f;
-	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
-	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
-	Vector3 MATI3_POS = { 214.80f, 65.70f, -84.10f };
 
 	SCollisionInfo soundcollisition[]
 	{
@@ -153,7 +151,7 @@ void GameScene::Start()
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -168,6 +166,7 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
+	_VillageName = INSTANCE(GameObjectManager)->AddNew<VillageName>("VillageName", 10);
 
 #ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
@@ -272,8 +271,6 @@ void GameScene::Update()
 		}
 		else
 		{
-			_HistoryMenu->SetIsLocation(false);
-
 			//各場所のコリジョンに当たっているか。
 			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
@@ -282,30 +279,25 @@ void GameScene::Update()
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
-							_Player->SetRespawnPos(MATI_POS);
-							_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
-							_HistoryMenu->SetIsLocation(true);
+							if(!_HistoryBook->GetActive())
+								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
-							_Player->SetRespawnPos(MATI2_POS);
-							_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
-							_HistoryMenu->SetIsLocation(true);
+							if (!_HistoryBook->GetActive())
+								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
-							_Player->SetRespawnPos(MATI3_POS);
-							_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
-							_HistoryMenu->SetIsLocation(true);
+							if (!_HistoryBook->GetActive())
+								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
+					_VillageName->Excute(i);
 					break;
 				}
 			}
-
 		}
-		
 	}
-
 }
 
 void GameScene::_NewChip()

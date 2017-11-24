@@ -346,7 +346,7 @@ void CalcDither(float4 WVP,float3 World)
 {
 	if (g_DitherParam.x > 0.0f)
 	{
-		float dither = 0;
+		float dither = g_DitherParam.y;
 
 		if (g_DitherParam.x > 1.0f)
 		{

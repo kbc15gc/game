@@ -78,6 +78,16 @@ static const string LocationNameList[(int)LocationCodeE::LocationNum] =
 };
 
 /**
+* 場所の座標.
+*/
+static const Vector3 LocationPosition[(int)LocationCodeE::Prosperity + 1] =
+{
+	Vector3(-387.3f,58.0f,-75.8f),
+	Vector3(-108.1f ,55.5f ,533.9f),
+	Vector3(214.80f, 65.70f, -84.10f),
+};
+
+/**
 * 各場所の歴史チップの状況.
 */
 struct LocationHistoryInfo : Noncopyable

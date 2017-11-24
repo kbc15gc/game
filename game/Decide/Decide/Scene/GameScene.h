@@ -2,6 +2,7 @@
 #include "fbEngine\_Scene\Scene.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
+class VillageName;
 
 namespace 
 {
@@ -15,7 +16,7 @@ namespace
 }
 
 class HistoryMenu;
-
+class HistoryBook;
 
 class GameScene : public Scene
 {
@@ -54,5 +55,7 @@ private:
 	Player* _Player;
 
 	HistoryMenu* _HistoryMenu = nullptr;
+	HistoryBook* _HistoryBook = nullptr;
 
+	VillageName* _VillageName = nullptr;
 };
