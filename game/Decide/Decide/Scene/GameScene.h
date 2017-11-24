@@ -57,4 +57,5 @@ private:
 	HistoryMenu* _HistoryMenu = nullptr;
 	HistoryBook* _HistoryBook = nullptr;
 
+	VillageName* _VillageName = nullptr;
 };
