@@ -1,0 +1,43 @@
+#include "stdafx.h"
+#include "VillageName.h"
+#include "fbEngine\_Object\_GameObject\TextObject.h"
+
+static const string LocationNames[] =
+{
+	"–³–¼",
+	"‚Í‚¶‚Ü‚è‚ÌW—Ž",
+	"Žë—Â‚Ì‘º",
+	"”É‰h‚Ì’¬",
+	"‚»‚Æ"
+};
+
+void VillageName::Start()
+{
+	_Text = INSTANCE(GameObjectManager)->AddNew<TextObject>("VillageName", 10);
+	_Text->Initialize(L"", 50.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::‚l‚r_–¾’©));
+	
+	//À•W‚ðÝ’è.
+	_Text->transform->SetLocalPosition(Vector3(g_WindowSize.x / 2.0f, 50.0f, 0));
+	_Text->SetAnchor(fbText::TextAnchorE::UpperCenter);
+	
+}
+
+void VillageName::Update()
+{
+	_Timer += Time::DeltaTime();
+	if (_Timer < 1.0f)
+		_Text->SetBlendColor(Color(1.0f, 1.0f, 1.0f, min(1.0f, _Timer)));
+	else
+		_Text->SetBlendColor(Color(1.0f, 1.0f, 1.0f, min(1.0f, max(0.0, 3.0f - _Timer))));
+}
+
+void VillageName::Excute(const int location)
+{
+	if (now != location && LocationNames[location].size() > location)
+	{
+		//•\Ž¦–¼‚ðÝ’è.
+		_Text->SetText(LocationNames[location].c_str());
+		_Timer = 0.0f;
+		now = location;
+	}
+}

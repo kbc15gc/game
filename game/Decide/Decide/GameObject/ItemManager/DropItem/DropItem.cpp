@@ -108,7 +108,8 @@ void DropItem::Awake() {
 
 	//以下衝突を取りたい属性(縦方向)を指定。
 	_CCharacterController->AttributeY_AllOff();		//全衝突無視。
-	_CCharacterController->AddAttributeY(Collision_ID::GROUND);	//地面コリジョンを追加。
+	_CCharacterController->AddAttributeY(Collision_ID::GROUND);		//地面コリジョンを追加。
+	_CCharacterController->AddAttributeY(Collision_ID::BUILDING);	//建物のコリジョンを追加。
 	
 	_CCharacterController->SetGravity(_Gravity);
 

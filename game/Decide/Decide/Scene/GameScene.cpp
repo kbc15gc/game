@@ -24,6 +24,7 @@
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\History\HistoryMenu\HistoryMenu.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\Village\VillageName.h"
 
 #include "GameObject\Village\EventManager.h"
 
@@ -165,6 +166,7 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
+	_VillageName = INSTANCE(GameObjectManager)->AddNew<VillageName>("VillageName", 10);
 
 #ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
@@ -189,6 +191,11 @@ void GameScene::Start()
 	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
 	_Mati2BGM->Init("Asset/Sound/mati2.wav");
 	_Mati2BGM->SetVolume(0.2f);
+
+	//äX3BGM
+	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
+	_Mati3BGM->Init("Asset/Sound/mati3.wav");
+	_Mati3BGM->SetVolume(0.2f);
 
 	//éÄñSBGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -285,6 +292,7 @@ void GameScene::Update()
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
+					_VillageName->Excute(i);
 					break;
 				}
 			}
@@ -365,8 +373,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::MATI3:
-			//@todo for debug âºê›íË
-			_GameBGM = _Mati2BGM;
+			_GameBGM = _Mati3BGM;
 			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;
