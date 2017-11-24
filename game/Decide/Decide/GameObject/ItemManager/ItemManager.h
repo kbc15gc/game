@@ -104,7 +104,10 @@ public:
 
 	//指定された種類とIDのアイテムを取得。
 	Item::BaseInfo* GetItemInfo(const unsigned int& id, Item::ItemCodeE code) {
-		return _InfoList[static_cast<int>(code)].at(id).get();
+		auto i = static_cast<int>(code);
+		auto info = std::find_if(_InfoList[i].begin(), _InfoList[i].end(), [&id](unique_ptr<Item::BaseInfo>& info) {return (id == info.get()->ID); })->get();
+		return info;
+		//return _InfoList[static_cast<int>(code)].at(id).get();
 	}
 	
 	static ItemManager* Instance()

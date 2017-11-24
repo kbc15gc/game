@@ -298,7 +298,7 @@ void GameScene::Update()
 				}
 			}
 
-			if(i == ARRAY_SIZE(soundcollisition))
+			if(i == ARRAY_SIZE(soundcollisition)-1)
 				_VillageName->Excute(i);
 		}
 	}
