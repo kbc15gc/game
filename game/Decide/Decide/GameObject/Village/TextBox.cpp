@@ -163,8 +163,8 @@ void TextBox::_NextMessage()
 			//次のメッセージを再生
 			_SetMessage(_Message->NextID);
 			//0以上なら
-			if (_Message->EventID >= 0)
-				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), 0);
+			if (_Message->EventID >= 0 && id >= 0)
+				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), id);
 		}
 	}
 }

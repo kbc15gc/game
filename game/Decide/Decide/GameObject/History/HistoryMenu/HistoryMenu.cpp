@@ -39,7 +39,7 @@ void HistoryMenu::Start()
 
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
-	_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
+	//_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
 
 	_ReleaseLocation = (int)LocationCodeE::Prosperity;
 
@@ -121,18 +121,26 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 	}
 }
 
+void HistoryMenu::SetLocationCode(LocationCodeE code)
+{
+	_NowSelectLocation = (int)code;
+	_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+}
+
 /**
 * 表示中の更新.
 */
 void HistoryMenu::EnableUpdate()
 {
-
 	Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
 	switch ((SelectCodeE)_SelectCode)
 	{
 		case SelectCodeE::Location:
 			//場所選択中の更新.
-			SelectLocationUpdate();
+			if (!_IsLocation)
+			{
+				SelectLocationUpdate();
+			}
 			cursorPos.y = 90.0f;
 			break;
 		case SelectCodeE::Page:
@@ -141,6 +149,9 @@ void HistoryMenu::EnableUpdate()
 			cursorPos.y = g_WindowSize.y / 2.0f;
 			break;
 	}
+
+	//ページの初期化.
+	//SelectPageUpdate();
 
 	if (_IsOperation)
 	{
@@ -253,8 +264,6 @@ void HistoryMenu::SelectLocationUpdate()
 
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
-		_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
-
 		_NowLookPage = 0;
 		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
@@ -280,6 +289,8 @@ void HistoryMenu::SelectLocationUpdate()
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
 		}
+
+		_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
 
 		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 		se->Init("Asset/Sound/UI/Menu.wav");

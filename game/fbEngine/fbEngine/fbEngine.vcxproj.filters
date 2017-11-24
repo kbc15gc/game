@@ -19,9 +19,6 @@
     <Filter Include="Effect">
       <UniqueIdentifier>{6bbaaa73-c54f-4a29-b78f-ac4a34631e7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{3ba0883e-7d34-4a03-9992-4a04a2da02fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object">
       <UniqueIdentifier>{f81acd50-cf41-4d0e-8092-e796ae815671}</UniqueIdentifier>
     </Filter>
@@ -58,6 +55,9 @@
     <Filter Include="Support">
       <UniqueIdentifier>{f58ec9e8-9358-45f6-aeaf-76135b8851b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Resource">
+      <UniqueIdentifier>{3ba0883e-7d34-4a03-9992-4a04a2da02fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Inputs\InputManager.cpp">
@@ -88,16 +88,16 @@
       <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\Material.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\SkinModelData.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\SkinModelManager.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\TextureManager.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Support\Random.cpp">
       <Filter>Support</Filter>
@@ -290,9 +290,7 @@
     </ClCompile>
     <ClCompile Include="MeshColliderManager.cpp" />
     <ClCompile Include="_Data\Json\nkJsonData.cpp" />
-    <ClCompile Include="_Object\_Component\_2D\BitmapFont.cpp">
-      <Filter>Object\Component\2D</Filter>
-    </ClCompile>
+    <ClCompile Include="_Object\_Component\_2D\BitmapFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -338,16 +336,16 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\Material.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\SkinModelData.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\SkinModelManager.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\TextureManager.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Support\Assert.h">
       <Filter>Support</Filter>

@@ -151,7 +151,7 @@ void GameScene::Start()
 
 
 	//メニュー
-	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
+	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
@@ -272,6 +272,8 @@ void GameScene::Update()
 		}
 		else
 		{
+			_HistoryMenu->SetIsLocation(false);
+
 			//各場所のコリジョンに当たっているか。
 			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
@@ -281,18 +283,25 @@ void GameScene::Update()
 					{
 						case BGM::MATI1:
 							_Player->SetRespawnPos(MATI_POS);
+							_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
+							_HistoryMenu->SetIsLocation(true);
 							break;
 						case BGM::MATI2:
 							_Player->SetRespawnPos(MATI2_POS);
+							_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
+							_HistoryMenu->SetIsLocation(true);
 							break;
 						case BGM::MATI3:
 							_Player->SetRespawnPos(MATI3_POS);
+							_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
+							_HistoryMenu->SetIsLocation(true);
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					break;
 				}
 			}
+
 		}
 		
 	}
