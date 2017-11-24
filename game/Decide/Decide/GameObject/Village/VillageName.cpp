@@ -11,7 +11,7 @@ static const string LocationNames[] =
 	"‚»‚Æ"
 };
 
-void VillageName::Start()
+void VillageName::Awake()
 {
 	_Text = INSTANCE(GameObjectManager)->AddNew<TextObject>("VillageName", 10);
 	_Text->Initialize(L"", 50.0f, Color::white, fbSprite::SpriteEffectE::OUTLINE, STRING(fbText::TextStyleE::‚l‚r_–¾’©));
