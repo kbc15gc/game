@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
 class VillageName;
+class HistoryMenu;
 
 namespace 
 {

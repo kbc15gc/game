@@ -8,7 +8,7 @@ class VillageName:public GameObject
 {
 public:
 	VillageName(const char* name) :GameObject(name) {};
-	void Start()override;
+	void Awake()override;
 	void Update()override;
 
 	void Excute(const int location);
