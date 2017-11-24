@@ -295,7 +295,7 @@ void GameScene::Update()
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
-					//_VillageName->Excute(i);
+					_VillageName->Excute(i);
 					break;
 				}
 			}
