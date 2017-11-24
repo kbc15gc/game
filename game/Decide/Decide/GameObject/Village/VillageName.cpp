@@ -25,10 +25,11 @@ void VillageName::Start()
 void VillageName::Update()
 {
 	_Timer += Time::DeltaTime();
+	float in = 1.0f, stay = 1.5f, out = 1.0f;
 	if (_Timer < 1.0f)
-		_Text->SetBlendColor(Color(1.0f, 1.0f, 1.0f, min(1.0f, _Timer)));
+		_Text->SetBlendColor(Color(1.0f, 1.0f, 1.0f, min(1.0f, _Timer / in)));
 	else
-		_Text->SetBlendColor(Color(1.0f, 1.0f, 1.0f, min(1.0f, max(0.0, 3.0f - _Timer))));
+		_Text->SetBlendColor(Color(1.0f, 1.0f, 1.0f, min(1.0f, max(0.0, (in + stay - _Timer) / out))));
 }
 
 void VillageName::Excute(const int location)
