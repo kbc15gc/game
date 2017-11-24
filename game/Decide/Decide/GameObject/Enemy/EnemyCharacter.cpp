@@ -79,6 +79,7 @@ void EnemyCharacter::Start() {
 	
 	//プレイヤー。
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
 }
 
 void EnemyCharacter::Update() {

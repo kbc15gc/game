@@ -9,6 +9,7 @@ class SplitSpace;
 namespace LoadEnemyInfo{
 
 	const int dropMax = 5;
+	const int ColorNum = 4;
 
 	// CSVから読み込むエネミーのデータ形式。
 	struct EnemyInfo : Noncopyable {
@@ -23,6 +24,8 @@ namespace LoadEnemyInfo{
 		int item[dropMax];
 		int armor[dropMax];
 		int weapon[dropMax];
+		int colorflag;
+		float color[ColorNum];
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -43,6 +46,8 @@ namespace LoadEnemyInfo{
 		{ "item",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
 		{ "armor",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
 		{ "weapon",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
+		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
+		{ "color",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,color),	sizeof(EnemyInfo::color) },
 	};
 }
 

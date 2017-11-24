@@ -195,6 +195,11 @@ void GameScene::Start()
 	_Mati2BGM->Init("Asset/Sound/mati2.wav");
 	_Mati2BGM->SetVolume(0.2f);
 
+	//äX3BGM
+	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
+	_Mati3BGM->Init("Asset/Sound/mati3.wav");
+	_Mati3BGM->SetVolume(0.2f);
+
 	//éÄñSBGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
 	_DeadBGM->Init("Asset/Sound/dead.wav");
@@ -379,8 +384,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::MATI3:
-			//@todo for debug âºê›íË
-			_GameBGM = _Mati2BGM;
+			_GameBGM = _Mati3BGM;
 			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;

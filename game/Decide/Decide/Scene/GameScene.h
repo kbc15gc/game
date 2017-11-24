@@ -46,6 +46,7 @@ private:
 	SoundSource* _BossBGM;
 	SoundSource* _MatiBGM;
 	SoundSource* _Mati2BGM;
+	SoundSource* _Mati3BGM;
 	SoundSource* _GameBGM;
 	SoundSource* _DeadBGM;
 	BGM _BGM;
