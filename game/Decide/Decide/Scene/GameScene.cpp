@@ -194,8 +194,8 @@ void GameScene::Start()
 
 	//ŠX3BGM
 	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
-	_Mati3BGM->Init("Asset/Sound/mati3.wav");
-	_Mati3BGM->SetVolume(0.2f);
+	//_Mati3BGM->Init("Asset/Sound/mati3.wav");
+	//_Mati3BGM->SetVolume(0.2f);
 
 	//Ž€–SBGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -295,7 +295,7 @@ void GameScene::Update()
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
-					_VillageName->Excute(i);
+					//_VillageName->Excute(i);
 					break;
 				}
 			}
@@ -376,7 +376,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::MATI3:
-			_GameBGM = _Mati3BGM;
+			//_GameBGM = _Mati3BGM;
 			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;

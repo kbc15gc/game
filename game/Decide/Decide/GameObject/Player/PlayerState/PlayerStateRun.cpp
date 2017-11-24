@@ -41,7 +41,7 @@ void PlayerStateRun::Update()
 		//通常移動
 		Move();
 		//攻撃へ移動
-		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_SPACE))
+		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_X) || KeyBoardInput->isPush(DIK_Z))
 		{
 			if (_Player->GetCharaCon().IsOnGround() == true)
 			{
@@ -87,7 +87,7 @@ void PlayerStateRun::Move()
 	//コントローラー移動
 	dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
 	dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	//キーボード(デバッグ用)
 	if (KeyBoardInput->isPressed(DIK_W))
 	{
@@ -105,7 +105,7 @@ void PlayerStateRun::Move()
 	{
 		dir.x++;
 	}
-#endif
+//#endif
 	//移動したか
 	if (dir.Length() != 0)
 	{
