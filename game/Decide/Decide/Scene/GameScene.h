@@ -17,6 +17,8 @@ namespace
 	};
 }
 
+class HistoryMenu;
+class HistoryBook;
 
 class GameScene : public Scene
 {
@@ -54,6 +56,8 @@ private:
 	BGM _BGM;
 	Player* _Player;
 
-	HistoryMenu* _HistoryMenu;
-	VillageName* _VillageName;
+	HistoryMenu* _HistoryMenu = nullptr;
+	HistoryBook* _HistoryBook = nullptr;
+
+	VillageName* _VillageName = nullptr;
 };

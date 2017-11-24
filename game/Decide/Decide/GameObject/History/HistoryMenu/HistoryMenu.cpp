@@ -137,10 +137,7 @@ void HistoryMenu::EnableUpdate()
 	{
 		case SelectCodeE::Location:
 			//場所選択中の更新.
-			if (!_IsLocation)
-			{
-				SelectLocationUpdate();
-			}
+			SelectLocationUpdate();
 			cursorPos.y = 90.0f;
 			break;
 		case SelectCodeE::Page:

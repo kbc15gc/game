@@ -385,8 +385,16 @@ void SkinModel::DrawMeshContainer(
 				ditherParam.y = _DitherCoefficient;
 			}
 
-			//フラグを設定.
-			ditherParam.x = 2.0f;
+			if (_IsTree)
+			{
+				//フラグを設定.
+				ditherParam.x = 2.0f;
+			}
+			else
+			{
+				//フラグを設定.
+				ditherParam.x = 1.0f;
+			}
 		}
 		ditherParam.z = g_WindowSize.x;
 		ditherParam.w = g_WindowSize.y;
