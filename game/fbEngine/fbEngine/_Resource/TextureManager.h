@@ -29,9 +29,9 @@ public:
 
 	//外部から使う用
 	//引数として受け取ったファイル名からテクスチャの情報を取得し返す関数
-	//画像ファイルはImageフォルダに入っている物のみ読み込める
+	//画像ファイルは"Asset/Texture"フォルダに入っている物のみ読み込める
 	//引数:char* 画像ファイルの名前(拡張子含む)
-	static TEXTURE* LoadTexture(char* filename);
+	static TEXTURE* LoadTexture(const char* filename);
 	//テクスチャを読み取る
 	//読み込むだけでマップには登録されない
 	//ファイルパスは"Asset/"からのパスを書く

@@ -51,48 +51,48 @@ void EnemyManager::CreateEnemy() {
 	for (auto info : _enemys)
 	{
 		EnemyCharacter* enemy = nullptr;
-		vector<BarColor> Color;
+		vector<BarColor> barColor;
 		switch (static_cast<EnemyCharacter::EnemyType>(info->InfoData->type))
 		{
 		case EnemyCharacter::EnemyType::Born:
 			// 骨エネミー生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::BossDrarian:
 			// ボスドラリアン生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
-			Color.push_back(BarColor::Yellow);
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::Drarian:
 			// ドラリアン生成。
 
 			// ※まだ作成しない。
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::Golem:
 			//ゴーレム生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);	
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::BossGolem:
 			//ボスゴーレム生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-			Color.push_back(BarColor::Yellow);
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
 			break;
 
 		case EnemyCharacter::EnemyType::Soldier:
 			//兵士を生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::BossD:
-			//ボスゴーレム生成。
+			//ボスD生成。
 			enemy = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
-			Color.push_back(BarColor::Yellow);
-			Color.push_back(BarColor::Red);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
 			break;
 		}
 
@@ -103,11 +103,20 @@ void EnemyManager::CreateEnemy() {
 			enemy->transform->SetRotation(info->InfoData->rotation);
 			enemy->transform->SetScale(info->InfoData->scale);
 			// パラメーター設定。
-			enemy->SetParamAll(Color, info->InfoData->param);
+			enemy->SetParamAll(barColor, info->InfoData->param);
 			// ドロップ設定。
 			enemy->SetDropEXP(info->InfoData->exp);
 			enemy->SetDropMoney(info->InfoData->money);
 			enemy->SetItem(info->InfoData->item, info->InfoData->armor, info->InfoData->weapon);
+			//カラーの設定
+			float* color = info->InfoData->color;
+			Color c;
+			c.Set(color[0], color[1], color[2], color[3]);
+			//カラーを設定するフラグの場合。
+			if (info->InfoData->colorflag == true)
+			{
+				enemy->SetColor(c);
+			}
 		}
 		else {
 			// 生成失敗。
@@ -138,47 +147,56 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			}
 			
 			// エネミーをリスポーン。
-			vector<BarColor> Color;
+			vector<BarColor> barColor;
 			ObjectSpawn* Spawner = enemy->Object->GetSpawner();
 			if (Spawner) {
 				switch (static_cast<EnemyCharacter::EnemyType>(enemy->InfoData->type)) {
 				case EnemyCharacter::EnemyType::Born:
 					enemy->Object = Spawner->DeathAndRespawnObject<Enemy>(nullptr, 0.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
-					Color.push_back(BarColor::Red);
+					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::BossDrarian:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossDrarian>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
-					Color.push_back(BarColor::Yellow);
-					Color.push_back(BarColor::Red);
+					barColor.push_back(BarColor::Yellow);
+					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::Drarian:
 					// まだ何もしない。
 					break;
 				case EnemyCharacter::EnemyType::Golem:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
-					Color.push_back(BarColor::Red);
+					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::BossGolem:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
-					Color.push_back(BarColor::Yellow);
-					Color.push_back(BarColor::Red);
+					barColor.push_back(BarColor::Yellow);
+					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::Soldier:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemySoldier>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
-					Color.push_back(BarColor::Red);
+					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::BossD:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
-					Color.push_back(BarColor::Yellow);
-					Color.push_back(BarColor::Red);
+					barColor.push_back(BarColor::Yellow);
+					barColor.push_back(BarColor::Red);
 					break;
 				}
 			}
 			// パラメーター設定。
-			enemy->Object->SetParamAll(Color,enemy->InfoData->param);
+			enemy->Object->SetParamAll(barColor,enemy->InfoData->param);
 			enemy->Object->SetDropEXP(enemy->InfoData->exp);
 			enemy->Object->SetDropMoney(enemy->InfoData->money);
 			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
+			//カラーを設定。
+			float* color = enemy->InfoData->color;
+			Color c;
+			c.Set(color[0], color[1], color[2], color[3]);
+			//カラーを設定するフラグの場合。
+			if (enemy->InfoData->colorflag == true)
+			{
+				enemy->Object->SetColor(c);
+			}
 			return;
 		}
 	}

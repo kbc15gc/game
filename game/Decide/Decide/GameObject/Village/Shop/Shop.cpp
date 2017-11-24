@@ -106,19 +106,32 @@ void Shop::SetState()
 
 void Shop::_LoadShopData(const unsigned int& shopID)
 {
+	//リストの中身削除。
+	FOR(i, _ItemList.size())
+		INSTANCE(GameObjectManager)->AddRemoveList(_ItemList[i]);
+	_ItemList.clear();
+
+	//IDが範囲外なら。
+	if(shopID > _ShopNameList.size())
+	{
+		FOR(code, Item::ItemCodeE::Max)
+		{
+			auto maxnum = INSTANCE(ItemManager)->GetMaxID((Item::ItemCodeE)code);
+			FOR(id, maxnum)
+			{
+				HoldItemBase* hitem = HoldItemFactory::CreateItem((Item::ItemCodeE)code, id, false);
+				_ItemList.push_back(hitem);
+			}
+		}
+		return;
+	}
 	char path[256];
 	//読み込むCSV決定。
 	sprintf(path, "Asset/Data/ShopData/%s.csv", _ShopNameList.at(shopID).get()->name);
 	//商品の品ぞろえ。
 	vector<unique_ptr<Product>> _ProductList;
-
 	//品揃えを読み込み
 	Support::LoadCSVData<Product>(path, ProductData, ARRAY_SIZE(ProductData), _ProductList);
-
-	//リストの中身削除。
-	FOR(i, _ItemList.size())
-		INSTANCE(GameObjectManager)->AddRemoveList(_ItemList[i]);
-	_ItemList.clear();
 
 	//ショップに並べるアイテム作成。
 	for(int idx = 0;idx < _ProductList.size();idx++)

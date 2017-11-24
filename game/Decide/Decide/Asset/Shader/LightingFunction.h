@@ -31,27 +31,6 @@ float4 g_MapFlg;		//どんなマップを使うかのフラグ
 float4 g_EffectFlg;	//xは投影、yはスペキュラ
 
 
-#define DP_SIZE 8
-
-// ディザパターン.
-const float g_DitherPattern[DP_SIZE][DP_SIZE] =
-{
-	{ 1, 33, 9, 41, 3, 35, 11, 43 },
-	{ 49, 17, 57, 25, 51, 19, 59, 27 } ,
-	{ 13, 45, 5, 37, 15, 47, 7, 39 },
-	{ 61, 29, 53, 21, 63, 31, 55, 23 } ,
-	{ 4, 36, 12, 44, 2, 34, 10, 42 },
-	{ 52, 20, 60, 28, 50, 18, 58, 26 } ,
-	{ 16, 48, 8, 40, 14, 46, 6, 33 },
-	{ 64, 32, 56, 24, 62, 30, 54, 22 },
-};
-
-/**
-* ディザリングパラメータ
-* x : フラグ.
-* y : ディザ係数.
-*/
-float4 g_DitherParam;
 
 int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。
@@ -322,6 +301,91 @@ float3 CalcFog(float3 worldPos, float3 color)
 		retColor = lerp(color, g_fogColor.xyz, t * night);
 	}
 	return retColor;
+}
+
+
+#define DP_SIZE 8
+
+// ディザパターン.
+const float g_DitherPattern[DP_SIZE][DP_SIZE] =
+{
+	//	{ 1, 1, 1, 1, 1, 1, 1, 1 },
+	//	{ 2, 1, 10, 1, 4, 1, 12, 1 } ,
+	//	{ 1, 1, 1, 1, 1, 1, 1, 1 },
+	//	{ 14, 1, 6, 1, 16, 1, 8, 1 } ,
+	//	{ 1, 1, 1, 1, 1, 1, 1, 1 },
+	//	{ 5, 1, 13, 1, 3, 1, 11, 1 } ,
+	//	{ 1, 1, 1, 1, 1, 1, 1, 1 },
+	//	{ 17, 1, 9, 1, 15, 1, 7, 1 },
+	{ 1, 33, 9, 41, 3, 35, 11, 43 },
+	{ 49, 17, 57, 25, 51, 19, 59, 27 } ,
+	{ 13, 45, 5, 37, 15, 47, 7, 39 },
+	{ 61, 29, 53, 21, 63, 31, 55, 23 } ,
+	{ 4, 36, 12, 44, 2, 34, 10, 42 },
+	{ 52, 20, 60, 28, 50, 18, 58, 26 } ,
+	{ 16, 48, 8, 40, 14, 46, 6, 33 },
+	{ 64, 32, 56, 24, 62, 30, 54, 22 },
+};
+
+/**
+* ディザリングパラメータ
+* x : フラグ.
+* y : ディザ係数.
+*/
+float4 g_DitherParam;
+
+//掛かりきる最低値.
+const float DitherMinLen = 1.5f;
+//掛かり始める最高値.
+const float DitherMaxLen = 3.0f;
+
+/**
+* ディザリング.
+*/
+void CalcDither(float4 WVP,float3 World)
+{
+	if (g_DitherParam.x > 0.0f)
+	{
+		float dither = 0;
+
+		if (g_DitherParam.x > 1.0f)
+		{
+			//カメラから座標へのベクトル.
+			float CameraToPosLen = length(World - g_cameraPos.xyz);
+
+			CameraToPosLen -= DitherMinLen;
+			//最低値~最高値にクランプ.
+			CameraToPosLen = min(DitherMaxLen - DitherMinLen, CameraToPosLen);
+			CameraToPosLen - max(0.0f, CameraToPosLen);
+			//正規化.
+			CameraToPosLen /= (DitherMaxLen - DitherMinLen);
+
+			// ディザ係数.
+			// 0 ~ 65.
+			// ディザ係数よりも大きい値のところが残る.
+			dither = max(g_DitherParam.y, (1.0f - CameraToPosLen) * 65.0f);
+		}
+
+		if (dither <= 0.0f)
+		{
+			return;
+		}
+
+		float2 f2TextureUV = 0.0f;
+		f2TextureUV.x = WVP.x / WVP.w;
+		f2TextureUV.y = WVP.y / WVP.w;
+
+		f2TextureUV.x *= 0.5;
+		f2TextureUV.y *= -0.5;
+		f2TextureUV += 0.5;
+
+		f2TextureUV.x *= g_DitherParam.z / 5;
+		f2TextureUV.y *= g_DitherParam.w / 5;
+
+		int2 uv = fmod(f2TextureUV, DP_SIZE);
+
+		clip(g_DitherPattern[uv.x][uv.y] - dither);
+	}
 }
 
 // The scale equation calculated by Vernier's Graphical Analysis

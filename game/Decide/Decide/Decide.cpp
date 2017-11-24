@@ -4,6 +4,8 @@
 #include"Decide.h"
 
 #define MAX_LOADSTRING 100
+//最初のスクリーンサイズ
+Vector2 g_StartWindowSize;
 
 bool IS_CONTINUE;
 
@@ -62,14 +64,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Diff.y = WindowSize.y - ClientSize.y;
 	//ゲームウィンドウの大きさ調整
 
-	g_WindowSize = Vector2(WindowW,WindowH);
+	g_StartWindowSize = Vector2(WindowW,WindowH);
+	g_WindowSize = Vector2(WindowW, WindowH);
 
 #ifdef RELEASE_LOW
 	g_FrameSize = g_WindowSize * 0.5f;
 #else
 	g_FrameSize = g_WindowSize * 1.0f;
 #endif // RELEASE_LOW
-
 
 	SetWindowPos(g_MainWindow, HWND_TOP, 0, 0, WindowW + Diff.x, WindowH + Diff.y, (SWP_NOZORDER));
 

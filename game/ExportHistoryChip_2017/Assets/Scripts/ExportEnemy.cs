@@ -13,6 +13,7 @@ public class ExportEnemy : MonoBehaviour {
         Golem,      //ゴーレム
         BossGolem,  //第2のボスゴーレム
         Soldier,    //兵士
+        BossD,      //第3のボス
     }
     //エネミーのタイプ指定。
     public EnemyType _EnemyType;
@@ -34,4 +35,8 @@ public class ExportEnemy : MonoBehaviour {
     public int[] _Item;
     public int[] _Armor;
     public int[] _Weapon;
+
+    //モンスターのカラー
+    public int _ColorFlag = 0;
+    public Color _Color = Color.white;
 }

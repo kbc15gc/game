@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject\Village\ContinentObject.h"
 
-namespace
+namespace npc
 {
 	//NPCのタイプ
 	enum NPCTypeE : int
@@ -41,11 +41,22 @@ class Player;
 class NPC :public ContinentObject
 {
 public:
+
+	enum class State
+	{
+		None = -1,
+		Idol,
+		Speak,
+		Num,
+	};
+
 	NPC(const char* name);
 	~NPC();
 	void Awake()override;
 	void Update()override;
 	void LateUpdate()override;
+
+	void CreateNPC(const npc::NPCInfo* info);
 
 	void SetMesseage(const int& id, const bool show);
 
@@ -67,6 +78,13 @@ public:
 	{
 		_Height = height;
 	}
+
+	//アニメーションを流すか。
+	void SetAnimation(bool flag)
+	{
+		_IsAnimation = flag;
+	}
+
 protected:
 	//話す
 	void _Speak();
@@ -84,4 +102,8 @@ protected:
 
 	//Playerと話しができるか
 	bool _IsSpeak;
+private:
+	State _State;
+	bool _IsAnimation = true;
+
 };

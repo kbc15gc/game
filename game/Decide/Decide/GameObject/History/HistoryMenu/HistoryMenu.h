@@ -25,9 +25,10 @@ public:
 	*/
 	enum class SelectCodeE
 	{
-		Location,	//!< 場所.
+		Min = 0,
+		Location = Min,	//!< 場所.
 		Page,		//!< ページ.
-		Chip,		//!< チップ.
+		Max = Page,
 	};
 
 public:
@@ -80,6 +81,13 @@ public:
 			}
 		}
 		return false;
+	}
+
+	void SetLocationCode(LocationCodeE code);
+
+	void SetIsLocation(bool value)
+	{
+		_IsLocation = value;
 	}
 
 private:
@@ -170,5 +178,8 @@ private:
 
 	/** 操作可能フラグ. */
 	bool _IsOperation = true;
+
+	/** 場所に居るかフラグ. */
+	bool _IsLocation = false;
 
 };

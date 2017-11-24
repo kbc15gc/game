@@ -18,6 +18,26 @@ HistoryManager* HistoryManager::_Instance = nullptr;
 */
 HistoryManager::HistoryManager()
 {
+	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
+	{
+		//グループ状態を0で初期化。
+		_NowGroupIDList.push_back(0);
+
+		//vectorを追加
+		vector<GameObject*> list;
+		_GameObjectList.push_back(list);
+		vector<NPC*> npcs;
+		_NPCList.push_back(npcs);
+	}
+}
+
+/**
+* 初期化.
+*/
+void HistoryManager::Start()
+{
+	_LocationHistoryList.clear();
+
 	if (IS_CONTINUE)
 	{
 		//CSVから歴史情報読み取り。
@@ -37,24 +57,6 @@ HistoryManager::HistoryManager()
 		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 
-	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
-	{
-		//グループ状態を0で初期化。
-		_NowGroupIDList.push_back(0);
-
-		//vectorを追加
-		vector<GameObject*> list;
-		_GameObjectList.push_back(list);
-		vector<NPC*> npcs;
-		_NPCList.push_back(npcs);
-	}
-}
-
-/**
-* 初期化.
-*/
-void HistoryManager::Start()
-{
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
@@ -91,7 +93,7 @@ void HistoryManager::Start()
 				continue;
 			}
 			//読み込んだデータを元に歴史書にページをあらかじめ追加。
-			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, 0);
+			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, j);
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
 		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
@@ -312,23 +314,19 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 void HistoryManager::_CreateNPC(int location, const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
-	vector<unique_ptr<NPCInfo>> npcInfo;
-	Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
+	vector<unique_ptr<npc::NPCInfo>> npcInfo;
+	Support::LoadCSVData<npc::NPCInfo>(path, npc::NPCInfoData, ARRAY_SIZE(npc::NPCInfoData), npcInfo);
 
 	//情報からオブジェクト生成。
 	FOR(i, npcInfo.size())
 	{
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-
-		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-		npc->transform->SetLocalPosition(npcInfo[i]->pos);
-		npc->transform->SetRotation(npcInfo[i]->ang);
-		npc->transform->SetLocalScale(npcInfo[i]->sca);
-
-		npc->LoadModel(npcInfo[i]->filename,false);
+		npc->CreateNPC(npcInfo[i].get());
+		
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
+		model->SetCullMode(D3DCULL::D3DCULL_CCW);
 
 		//管理用の配列に追加。
 		_NPCList[location].push_back(npc);

@@ -590,6 +590,10 @@ void ItemWindow::_ConfigParamRender()
 			int atknewParam = 0;
 			int matParam = 0;
 			int matnewParam = 0;
+			int crtParam = 0;
+			int crtnewParam = 0;
+			int dexParam = 0;
+			int dexnewParam = 0;
 
 			HoldEquipment::Rank rank = HoldEquipment::Rank::None;
 			HoldEquipment::Rank newRank = HoldEquipment::Rank::None;
@@ -598,12 +602,16 @@ void ItemWindow::_ConfigParamRender()
 			{
 				atkParam = weapon->GetAtk();
 				matParam = weapon->GetMagicAtk();
+				crtParam = weapon->GetCrt();
+				dexParam = weapon->GetDex();
 				rank = weapon->GetRank();
 			}
 			if (newWeapon)
 			{
 				atknewParam = newWeapon->GetAtk();
 				matnewParam = newWeapon->GetMagicAtk();
+				crtnewParam = newWeapon->GetCrt();
+				dexnewParam = newWeapon->GetDex();
 				newRank = newWeapon->GetRank();
 			}
 			_ParameterRenderList[(int)WIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
@@ -612,9 +620,9 @@ void ItemWindow::_ConfigParamRender()
 			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]),
 				_Player->GetParam(CharacterParameter::Param::MAT), matParam, matnewParam);
 			_ParameterRenderList[(int)WIShowStatus::CRT]->SetParamEquip("CRT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::CRT)]),
-				_Player->GetParam(CharacterParameter::Param::CRT), 0, 0);
+				_Player->GetParam(CharacterParameter::Param::CRT), crtParam, crtnewParam);
 			_ParameterRenderList[(int)WIShowStatus::DEX]->SetParamEquip("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]),
-				_Player->GetParam(CharacterParameter::Param::DEX), 0, 0);
+				_Player->GetParam(CharacterParameter::Param::DEX), dexParam, dexnewParam);
 			break;
 		}
 	}

@@ -26,6 +26,9 @@ void NPC::Awake()
 	_TextBox = INSTANCE(GameObjectManager)->AddNew<TextBox>("TextBox",StatusWindow::WindowBackPriorty - 1);
 	_TextBox->SetTextSpeed(12.0f);
 	_IsSpeak = false;
+	_State = State::Idol;
+
+	_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);
 }
 
 void NPC::Update()
@@ -42,6 +45,17 @@ void NPC::LateUpdate()
 	Vector2 screemPos = INSTANCE(GameObjectManager)->mainCamera->WorldToScreen(headPos);
 	//テキストの場所設定。
 	_TextBox->transform->SetPosition(Vector3(screemPos, 0));
+}
+
+void NPC::CreateNPC(const npc::NPCInfo* info)
+{
+	SetMesseage(info->MesseageID, info->ShowTitle);
+	_TextBox->id = info->ShopID;
+	transform->SetLocalPosition(info->pos);
+	transform->SetRotation(info->ang);
+	transform->SetLocalScale(info->sca);
+
+	LoadModel(info->filename, false);
 }
 
 void NPC::SetMesseage(const int & id, const bool show)
@@ -69,11 +83,22 @@ void NPC::_Speak()
 		{
 			//会話する。
 			_TextBox->Speak();
+			if (_State != State::Speak && _IsAnimation)
+			{
+				_State = State::Speak;
+				_Anim->PlayAnimation(static_cast<int>(State::Speak), 0.2f);
+
+			}
 		}
 	}
 	else
 	{
 		//離れたなら閉じる
 		_TextBox->CloseMessage();
+		if (_State != State::Idol && _IsAnimation)
+		{
+			_State = State::Idol;
+			_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);
+		}
 	}
 }

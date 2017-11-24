@@ -103,6 +103,7 @@ void BossGolem::_EndNowStateCallback(State EndStateType) {
 
 	if (EndStateType == State::Wandering) {
 		// 徘徊ステート終了。
+		SetAnimationSpeed(10.0f);
 		_ChangeState(State::Wandering);
 	}
 	else if (EndStateType == State::StartAttack) {

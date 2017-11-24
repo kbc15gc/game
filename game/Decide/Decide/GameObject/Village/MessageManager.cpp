@@ -35,6 +35,7 @@ MessageInfo* MessageManager::GetMess(const int & id)
 
 void MessageManager::_LoadCSV()
 {
+	_Messages.clear();
 	//ファイルパス
 	const char* filepath = "Asset/Data/TextData/Message.csv";
 	//ファイルから歴史の情報読み込み

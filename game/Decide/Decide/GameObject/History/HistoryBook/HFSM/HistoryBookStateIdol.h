@@ -44,9 +44,4 @@ public:
 
 private:
 
-	/** ゲームカメラのポインタ. */
-	PlayerCamera* _PlayerCamera = nullptr;
-	/** プレイヤーのポインタ. */
-	Player* _Player = nullptr;
-
 };

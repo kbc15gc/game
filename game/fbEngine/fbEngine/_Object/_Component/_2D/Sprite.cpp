@@ -105,28 +105,30 @@ bool Sprite::SetEffectFlg(const DWORD& e, bool f)
 
 void Sprite::_RenderSprite()
 {
+	RECT rect;
+	//ウィンドウハンドルからクライアントエリアのサイズを取得
+	HWND hWnd = FindWindow("DECIDE", NULL);
+	GetClientRect(hWnd, &rect);
+	float w = (float)rect.right - (float)rect.left;
+	float h = (float)rect.bottom - (float)rect.top;
+	Vector2 mag = Vector2(w, h) / g_StartWindowSize;
+
+
 	//シェーダファイル読み込み
 	_Effect = EffectManager::LoadEffect("Sprite.fx");
 
 	D3DXMATRIX  matWorld, matSize, matScale, matRot, matTrans;
 	//画像のサイズを設定
-	D3DXMatrixScaling(&matSize, _Size.x, _Size.y, 1.0f);
+	D3DXMatrixScaling(&matSize, _Size.x * mag.x, _Size.y * mag.y, 1.0f);
 	//設定されたスケールを設定
 	D3DXMatrixScaling(&matScale, transform->GetScale().x, transform->GetScale().y, transform->GetScale().z);
 	//回転
 	D3DXMatrixRotationZ(&matRot, D3DXToRadian(transform->GetAngle().z));
 	//移動
-	D3DXMatrixTranslation(&matTrans, transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	D3DXMatrixTranslation(&matTrans, transform->GetPosition().x * mag.x, transform->GetPosition().y * mag.y, transform->GetPosition().z);
 
 	//画像サイズ　*　スケール　*　回転　*　ポジション
 	matWorld = matSize * matScale *matRot * matTrans;
-
-	RECT rect;
-	//ウィンドウハンドルからクライアントエリアのサイズを取得
-	HWND hWnd = FindWindow("DECIDE", NULL);
-	GetClientRect(hWnd, &rect);
-	float w = (float)rect.right;
-	float h = (float)rect.bottom;
 
 	//射影変換行列
 	//スクリーンのサイズに収める。
@@ -259,6 +261,7 @@ void Sprite::_CreateOutLine()
 	pos = posbuf = transform->GetPosition();
 	//色を黒に
 	_BlendColor = Color::black;
+	_BlendColor.a = colorbuf.a;
 	//移動量
 	float offset = 1.0f;
 	//上下左右に移動させて描画

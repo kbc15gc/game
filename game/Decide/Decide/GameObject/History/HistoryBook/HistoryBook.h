@@ -234,6 +234,11 @@ public:
 		_IsOperation = is;
 	}
 
+	bool GetIsOperation()
+	{
+		return _IsOperation;
+	}
+
 	void PlayerStopDisable()
 	{
 		INSTANCE(EventManager)->NotifyEndEvent();
@@ -257,20 +262,29 @@ public:
 		return false;
 	}
 
-	void SetNowSelectLocation(int value)
+	void SetLocationCode(LocationCodeE code)
 	{
-		_NowSelectLocation = value;
-		for (int i = 0; i < _HistoryPageList.size(); i++)
+		_NowLocationCode = code;
+		for (int i = 0; i < 3; i++)
 		{
-			for (auto itPage : _HistoryPageList[i])
+			float angle = -90.0f;
+			Color color = Color(0.2f, 0.2f, 0.2f);
+
+			if (i < (int)_NowLocationCode)
 			{
-				if (i == _NowSelectLocation)
+				angle = 90.0f;
+			}
+			if (i == (int)_NowLocationCode)
+			{
+				color = Color(1.0f, 1.0f, 1.0f);
+			}
+
+			for (auto it : _HistoryPageList[i])
+			{
+				if (it != nullptr)
 				{
-					itPage->SetBlendColor(Color(1.0f, 1.0f, 1.0f));
-				}
-				else
-				{
-					itPage->SetBlendColor(Color(0.2f, 0.2f, 0.2f));
+					it->SetBlendColor(color);
+					it->SetRotAngle(angle);
 				}
 			}
 		}
@@ -315,7 +329,6 @@ private:
 
 	}
 
-
 private:
 
 	/** 歴史書のモデル. */
@@ -341,12 +354,11 @@ private:
 	/** ページクラスのポインタ. */
 	vector<vector<HistoryPage*>> _HistoryPageList;
 
-	/** 現在みている場所. */
-	int _NowSelectLocation = 0;
-
 	/** 操作可能フラグ. */
 	bool _IsOperation = true;
 
 	PlayerCamera* _PlayerCamera = nullptr;
+
+	LocationCodeE _NowLocationCode = LocationCodeE::Begin;
 
 };

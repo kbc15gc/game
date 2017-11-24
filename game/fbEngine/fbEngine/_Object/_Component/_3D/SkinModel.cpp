@@ -362,7 +362,7 @@ void SkinModel::DrawMeshContainer(
 			//掛かりきる最低値.
 			const float MinLen = 1.5f;
 			//掛かり始める最高値.
-			const float MaxLen = 4.5f;
+			const float MaxLen = 4.0f;
 
 			//カメラから座標へのベクトル.
 			Vector3 CameraToPos = gameObject->transform->GetPosition() - campos;
@@ -376,7 +376,7 @@ void SkinModel::DrawMeshContainer(
 			CameraToPosLen /= (MaxLen - MinLen);
 
 			// ディザ係数.
-			// 0 ~ 64.
+			// 0 ~ 65.
 			// ディザ係数よりも大きい値のところが残る.
 			ditherParam.y = (1.0f - CameraToPosLen) * 65.0f;
 
@@ -386,7 +386,7 @@ void SkinModel::DrawMeshContainer(
 			}
 
 			//フラグを設定.
-			ditherParam.x = 1.0f;
+			ditherParam.x = 2.0f;
 		}
 		ditherParam.z = g_WindowSize.x;
 		ditherParam.w = g_WindowSize.y;

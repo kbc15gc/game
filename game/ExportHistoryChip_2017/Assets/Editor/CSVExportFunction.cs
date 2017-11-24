@@ -125,7 +125,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("name,pos,ang,sca,messeageid,showtitle");
+        sw.WriteLine("name,pos,ang,sca,type,shopid,messeageid,showtitle");
         foreach (Transform child in Children)
         {
             if (child.name == npcs.name)
@@ -193,7 +193,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("type,hp,mp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca,item,armor,weapon");
+        sw.WriteLine("type,hp,mp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca,item,armor,weapon,colorflag,color");
         foreach (Transform child in Children)
         {
             if (child.name == enemys.name)
@@ -229,7 +229,15 @@ public class CSVExportFunction : Editor
                 weapon[i] = Convert.ToString(e._Weapon[i]);
             }
 
-            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14},{15}/{16}/{17}/{18}/{19},{20}/{21}/{22}/{23}/{24},{25}/{26}/{27}/{28}/{29}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca, item[0], item[1], item[2], item[3], item[4], armor[0], armor[1], armor[2], armor[3], armor[4], weapon[0], weapon[1], weapon[2], weapon[3], weapon[4]);
+            //カラー
+            string colorflag = Convert.ToString(e._ColorFlag);
+            string[] color = new string[4];
+            color[0] = Convert.ToString(e._Color.r);
+            color[1] = Convert.ToString(e._Color.g);
+            color[2] = Convert.ToString(e._Color.b);
+            color[3] = Convert.ToString(e._Color.a);
+
+            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14},{15}/{16}/{17}/{18}/{19},{20}/{21}/{22}/{23}/{24},{25}/{26}/{27}/{28}/{29},{30},{31}/{32}/{33}/{34}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca, item[0], item[1], item[2], item[3], item[4], armor[0], armor[1], armor[2], armor[3], armor[4], weapon[0], weapon[1], weapon[2], weapon[3], weapon[4], colorflag, color[0],color[1], color[2], color[3]);
 
             //列書き出し
             sw.WriteLine(line);
