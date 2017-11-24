@@ -37,7 +37,7 @@ MessageID,Title,Text,NextID,EventID,VoicePath
 35,この道を行くと\n洞窟がありました。,危険なモンスターがいる雰囲気でしたので\nすぐ逃げ帰ってしまいました。,-1,-1,Asset/Sound/NPC/NPC/Mic1_91.wav
 36,この道を行くと\n洞窟がありました。,魔王の手下かもね。助けて。,-1,-1,Asset/Sound/NPC/NPC/Mic1_92.wav
 37,橋の向こうのモンスター。,こわくて、ろくに村からでれん。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-38,橋の向こうのモンスター。,俺もだよ。誰か退治してくれないかなぁ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+38,橋の向こうのモンスター。,誰か退治してくれないかなぁ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 39,モンスターについて。,そこの最近植えた小さい木の\n前の二人に聞きな。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 40,なにして遊ぼうかなぁ。,なにして遊ぼうかなぁ。,-1,-1,Asset/Sound/NPC/NPC/anone.wav
 41,賑やかな。,最近あんたのおかげで賑やかになってきたよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
