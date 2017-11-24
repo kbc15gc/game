@@ -28,7 +28,7 @@ void NPC::Awake()
 	_IsSpeak = false;
 	_State = State::Idol;
 
-	_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);
+	PlayAnimation(State::Idol, 0.2f);
 }
 
 void NPC::Update()
@@ -86,7 +86,7 @@ void NPC::_Speak()
 			if (_State != State::Speak && _IsAnimation)
 			{
 				_State = State::Speak;
-				_Anim->PlayAnimation(static_cast<int>(State::Speak), 0.2f);
+				PlayAnimation(State::Speak, 0.2f);
 
 			}
 		}
@@ -98,7 +98,7 @@ void NPC::_Speak()
 		if (_State != State::Idol && _IsAnimation)
 		{
 			_State = State::Idol;
-			_Anim->PlayAnimation(static_cast<int>(State::Idol), 0.2f);
+			PlayAnimation(State::Idol, 0.2f);
 		}
 	}
 }

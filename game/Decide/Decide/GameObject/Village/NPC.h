@@ -88,6 +88,11 @@ public:
 protected:
 	//話す
 	void _Speak();
+	//アニメーション再生
+	void PlayAnimation(State idx, const float interpolateTime, const int lnum = -1)
+	{
+		_Anim->PlayAnimation(_AnimationNo[static_cast<int>(idx)], interpolateTime, lnum);
+	}
 protected:
 	//NPCの身長(モデルのサイズを計算してもいいかもしれない。)
 	float _Height;
@@ -103,7 +108,9 @@ protected:
 	//Playerと話しができるか
 	bool _IsSpeak;
 private:
+	//アニメーション
 	State _State;
 	bool _IsAnimation = true;
+	int _AnimationNo[static_cast<int>(State::Num)];
 
 };

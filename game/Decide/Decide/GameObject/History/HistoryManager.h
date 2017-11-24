@@ -11,7 +11,7 @@
 
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
-
+class Player;
 
 /**
 * 歴史を管理するクラス.
@@ -171,5 +171,8 @@ private:
 
 	MysteryLight* _MysteryLight = nullptr;
 	vector<int> _NowGroupIDList;
+
+Player
+	* _Player = nullptr;
 
 };
