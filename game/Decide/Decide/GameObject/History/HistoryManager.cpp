@@ -62,6 +62,8 @@ void HistoryManager::Start()
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
 //–Ø‚ªŽ×–‚‚Èê‡‚±‚ê‚ðŽg‚Á‚Ä‚­‚¾‚³‚¢B
 //#define NPCONLY
 
@@ -137,6 +139,7 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 
 		if (_NowGroupIDList[(int)location] != group)
 		{
+			_Player->transform->SetLocalPosition(LocationPosition[(int)location]);
 			_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
 		}
