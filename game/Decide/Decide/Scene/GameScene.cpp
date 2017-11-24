@@ -194,8 +194,8 @@ void GameScene::Start()
 
 	//ŠX3BGM
 	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
-	_Mati3BGM->Init("Asset/Sound/mati3.wav");
-	_Mati3BGM->SetVolume(0.2f);
+	//_Mati3BGM->Init("Asset/Sound/mati3.wav");
+	//_Mati3BGM->SetVolume(0.2f);
 
 	//Ž€–SBGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -279,14 +279,17 @@ void GameScene::Update()
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
+							_Player->SetRespawnPos(LocationPosition[0]);
 							if(!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
+							_Player->SetRespawnPos(LocationPosition[1]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
+							_Player->SetRespawnPos(LocationPosition[2]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
@@ -373,7 +376,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::MATI3:
-			_GameBGM = _Mati3BGM;
+			//_GameBGM = _Mati3BGM;
 			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;

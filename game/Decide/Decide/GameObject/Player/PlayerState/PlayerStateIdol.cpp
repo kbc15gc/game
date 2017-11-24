@@ -41,7 +41,7 @@ void PlayerStateIdol::Update()
 	//コントローラー移動
 	dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
 	dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	//キーボード(デバッグ用)
 	if (KeyBoardInput->isPressed(DIK_W))
 	{
@@ -59,7 +59,7 @@ void PlayerStateIdol::Update()
 	{
 		dir.x++;
 	}
-#endif
+//#endif
 	//移動したか
 	if (dir.Length() != 0)
 	{
