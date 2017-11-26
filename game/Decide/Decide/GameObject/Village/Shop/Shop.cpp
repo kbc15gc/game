@@ -112,7 +112,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	_ItemList.clear();
 
 	//ID‚ª”ÍˆÍŠO‚È‚çB
-	if(shopID > _ShopNameList.size())
+	if(shopID >= _ShopNameList.size())
 	{
 		FOR(code, Item::ItemCodeE::Max)
 		{

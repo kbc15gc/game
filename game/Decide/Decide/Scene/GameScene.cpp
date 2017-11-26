@@ -272,7 +272,8 @@ void GameScene::Update()
 		else
 		{
 			//各場所のコリジョンに当たっているか。
-			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
+			int i = 0;
+			for (i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
@@ -299,6 +300,9 @@ void GameScene::Update()
 					break;
 				}
 			}
+
+			if(i == ARRAY_SIZE(soundcollisition)-1)
+				_VillageName->Excute(i);
 		}
 	}
 }
