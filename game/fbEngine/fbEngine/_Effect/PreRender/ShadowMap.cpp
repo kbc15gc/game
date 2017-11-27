@@ -168,7 +168,7 @@ void ShadowMap::CalcLVPMatrixFromCamera()
 
 	Vector3 tmpVector;
 	tmpVector = lightViewForward;
-	tmpVector.Scale(-30.0f);
+	tmpVector.Scale(-60.0f);
 
 	for (int i = 0; i < SHADOWMAP_NUM; i++)
 	{

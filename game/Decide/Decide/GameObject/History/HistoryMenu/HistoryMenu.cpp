@@ -125,6 +125,8 @@ void HistoryMenu::SetLocationCode(LocationCodeE code)
 {
 	_NowSelectLocation = (int)code;
 	_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+	_NowLookPage = 0;
+	_SelectCode = (int)SelectCodeE::Page;
 }
 
 /**
