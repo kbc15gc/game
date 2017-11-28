@@ -7,6 +7,15 @@ namespace
 {
 	//オブジェクトを識別するタイプ。
 	const char* ObjectType[2] = { "Obj","NPC" };
+
+	/**
+	* チップIDからビット値を求める.
+	*/
+	int ChipIDToBit(ChipID id)
+	{
+		return BIT((int)id + 1);
+	}
+
 }
 
 
@@ -166,31 +175,48 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 	//CSVからグループ情報読み込み
 	vector<unique_ptr<VillageGroup>> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
+
+	int infoBit = 0;
+	for (int i = 0; i < (int)ChipID::ChipNum; i++)
+	{
+		infoBit += ChipIDToBit(info->_ChipSlot[i]);
+	}
 	
 	//一致するものがあるか調べる。
 	for(auto& group : groupList)
 	{
-		bool isMatch = true;
-		//各スロットを比較
+		int groupBit = 0;
 		for (int i = 0; i < (int)ChipID::ChipNum; i++)
+		{
+			groupBit += ChipIDToBit(group->Slot[i]);
+		}
+
+		//bool isMatch = true;
+		//各スロットを比較
+		/*for (int i = 0; i < (int)ChipID::ChipNum; i++)
 		{
 			if (group->Slot[i] != info->_ChipSlot[i])
 			{
 				isMatch = false;
 			}
-		}
+		}*/
 
-		if (!isMatch)
+		if (groupBit == infoBit)
 		{
-			//マッチングしていないので次へ.
-			continue;
+			return group->GroupID;
 		}
 
-		//パターン一致したのでID設定。
-		return group->GroupID;
+		//if (!isMatch)
+		//{
+		//	//マッチングしていないので次へ.
+		//	continue;
+		//}
+
+		////パターン一致したのでID設定。
+		//return group->GroupID;
 	}
 
-	return -1;
+	return 0;
 }
 
 /**

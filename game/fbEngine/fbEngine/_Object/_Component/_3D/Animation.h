@@ -153,26 +153,26 @@ private:
 	//アニメーションが終了した時の処理。
 	void _EndAnimation(const float endtime);
 private:
-	ID3DXAnimationController*				_AnimController;		//!<アニメーションコントローラ。
-	UINT									_NumAnimSet;				//!<アニメーションセットの数。
-	std::unique_ptr<ID3DXAnimationSet*[]>	_AnimationSets;			//!<アニメーションセットの配列。
+	ID3DXAnimationController*				_AnimController = nullptr;		//!<アニメーションコントローラ。
+	UINT									_NumAnimSet = 0;				//!<アニメーションセットの数。
+	std::unique_ptr<ID3DXAnimationSet*[]>	_AnimationSets = nullptr;			//!<アニメーションセットの配列。
 	vector<float>							_BlendRateTable;			//!<ブレンディングレートのテーブル。
-	UINT									_CurrentAnimationSetNo;	//!<現在再生中のアニメーショントラックの番号。
-	UINT									_CurrentTrackNo;			//!<現在のトラックの番号。
-	UINT									_NumMaxTracks;			//!<アニメーショントラックの最大数。
-	bool									_IsBlending;				//!<アニメーションブレンディング中？
-	bool									_IsInterpolate;			//!<補間中？
-	float									_InterpolateEndTime;		//!<補間終了時間。
-	float									_InterpolateTimer;		//!<補間時間。
+	UINT									_CurrentAnimationSetNo = 0;	//!<現在再生中のアニメーショントラックの番号。
+	UINT									_CurrentTrackNo = 0;			//!<現在のトラックの番号。
+	UINT									_NumMaxTracks = 0;			//!<アニメーショントラックの最大数。
+	bool									_IsBlending = true;				//!<アニメーションブレンディング中？
+	bool									_IsInterpolate = true;			//!<補間中？
+	float									_InterpolateEndTime = 0.0f;		//!<補間終了時間。
+	float									_InterpolateTimer = 0.0f;		//!<補間時間。
 
 	vector<double> _EndTime;			//各アニメーションの終了時間を格納した配列
-	double _TimeRatio;					//正規化された時間の割合。
-	double _LocalAnimationTime;			//ローカルなアニメーションの経過時間(ややこしかったので自分で管理することにした)
-	double _CurrentFrame;				//アニメーションが再生されて現在何フレーム目か。
-	float _PlaySpeed;					//再生速度
-	int _LoopNum;						//アニメーションをループさせる数。
-	int _LoopCount;						//ループ数をカウントする。
-	bool _IsPlaying;					//アニメーション再生中であることを示す。
+	double _TimeRatio = 0.0;					//正規化された時間の割合。
+	double _LocalAnimationTime = 0.0;			//ローカルなアニメーションの経過時間(ややこしかったので自分で管理することにした)
+	double _CurrentFrame = 0.0;				//アニメーションが再生されて現在何フレーム目か。
+	float _PlaySpeed = 0.0f;					//再生速度
+	int _LoopNum = 0;						//アニメーションをループさせる数。
+	int _LoopCount = 0;						//ループ数をカウントする。
+	bool _IsPlaying = true;					//アニメーション再生中であることを示す。
 
 	std::queue<PlayAnimInfo*> _AnimationQueue;	//アニメーションを保持するキュー。
 
