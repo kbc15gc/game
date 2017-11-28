@@ -1,4 +1,7 @@
-TypeID,ID,DefRnd,MDefRnd,IsEquip
-1,1,0,0,1
-1,1,0,0,0
-1,1,0,0,0
+TypeID,ID,DefRnd,MDefRnd,IsEquip,Rank
+1,0,0,0,0,4
+1,1,0,0,1,4
+1,1,0,0,0,4
+1,1,1,0,0,4
+1,1,0,0,0,4
+1,1,0,0,0,4
