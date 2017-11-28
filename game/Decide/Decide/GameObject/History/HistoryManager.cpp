@@ -7,6 +7,15 @@ namespace
 {
 	//オブジェクトを識別するタイプ。
 	const char* ObjectType[2] = { "Obj","NPC" };
+
+	/**
+	* チップIDからビット値を求める.
+	*/
+	int ChipIDToBit(ChipID id)
+	{
+		return BIT((int)id + 1);
+	}
+
 }
 
 
@@ -64,6 +73,7 @@ void HistoryManager::Start()
 
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
+	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 //木が邪魔な場合これを使ってください。
 //#define NPCONLY
 
@@ -133,12 +143,29 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 {
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
+
 	//どれかのグループに該当するのなら。
 	if (group >= 0)
 	{
 
 		if (_NowGroupIDList[(int)location] != group)
 		{
+			if (_NowLocationCode == (int)location)
+			{
+				//_PlayerCamera->transform->SetParent(_Player->transform);
+				_Player->transform->SetLocalPosition(LocationPosition[(int)location]);
+				_PlayerCamera->LookAtTarget();
+				//_PlayerCamera->transform->SetParent(nullptr);
+
+				Camera* camera = _PlayerCamera->GetComponent<Camera>();
+				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
+				cameraFoward.Normalize();
+				cameraFoward.y -= 0.5f;
+				cameraFoward.Scale(0.8f);
+				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
+				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
+				
+			}
 			_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
 		}
@@ -166,31 +193,48 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 	//CSVからグループ情報読み込み
 	vector<unique_ptr<VillageGroup>> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
+
+	int infoBit = 0;
+	for (int i = 0; i < (int)ChipID::ChipNum; i++)
+	{
+		infoBit += ChipIDToBit(info->_ChipSlot[i]);
+	}
 	
 	//一致するものがあるか調べる。
 	for(auto& group : groupList)
 	{
-		bool isMatch = true;
-		//各スロットを比較
+		int groupBit = 0;
 		for (int i = 0; i < (int)ChipID::ChipNum; i++)
+		{
+			groupBit += ChipIDToBit(group->Slot[i]);
+		}
+
+		//bool isMatch = true;
+		//各スロットを比較
+		/*for (int i = 0; i < (int)ChipID::ChipNum; i++)
 		{
 			if (group->Slot[i] != info->_ChipSlot[i])
 			{
 				isMatch = false;
 			}
-		}
+		}*/
 
-		if (!isMatch)
+		if (groupBit == infoBit)
 		{
-			//マッチングしていないので次へ.
-			continue;
+			return group->GroupID;
 		}
 
-		//パターン一致したのでID設定。
-		return group->GroupID;
+		//if (!isMatch)
+		//{
+		//	//マッチングしていないので次へ.
+		//	continue;
+		//}
+
+		////パターン一致したのでID設定。
+		//return group->GroupID;
 	}
 
-	return -1;
+	return 0;
 }
 
 /**

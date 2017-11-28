@@ -271,6 +271,7 @@ void GameScene::Update()
 		}
 		else
 		{
+			int location = -1;
 			//各場所のコリジョンに当たっているか。
 			int i = 0;
 			for (i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
@@ -280,17 +281,20 @@ void GameScene::Update()
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
-							_Player->SetRespawnPos(LocationPosition[0]);
+							location = 0;
+							_Player->SetRespawnPos(LocationPosition[location]);
 							if(!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
-							_Player->SetRespawnPos(LocationPosition[1]);
+							location = 1;
+							_Player->SetRespawnPos(LocationPosition[location]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
-							_Player->SetRespawnPos(LocationPosition[2]);
+							location = 2;
+							_Player->SetRespawnPos(LocationPosition[location]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
@@ -300,6 +304,8 @@ void GameScene::Update()
 					break;
 				}
 			}
+
+			INSTANCE(HistoryManager)->SetNowLocation(location);
 
 			if(i == ARRAY_SIZE(soundcollisition)-1)
 				_VillageName->Excute(i);

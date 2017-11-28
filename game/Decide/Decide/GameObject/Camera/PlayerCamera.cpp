@@ -55,14 +55,7 @@ void PlayerCamera::Start()
 	_PForward = &_Player->transform->GetForward();
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
-	{
-		_Camera->SetTarget(_GetPlayerPos());
-		_DestinationPos = _GetPlayerPos() + (_Player->transform->GetForward() * _Dist);
-		transform->SetPosition(_DestinationPos);
-		_Camera->Update();
-
-		_ToCameraDir = (_Player->transform->GetForward());
-	}
+	Init();
 
 	//歴史書を検索。
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");

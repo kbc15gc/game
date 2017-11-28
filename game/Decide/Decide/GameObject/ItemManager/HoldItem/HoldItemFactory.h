@@ -52,6 +52,7 @@ namespace Hold {
 		HoldEquipInfo(HoldItemBase* info);
 
 		int _IsEquip;		//装備されているかフラグ。(tureなら装備されている。falseなら装備してない)。
+		int _Rank;
 	};
 
 	// 武器の所持情報。
@@ -79,6 +80,7 @@ namespace Hold {
 		{ "MagicRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_MAtkRnd),		sizeof(int) },
 		{ "DexRnd",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_DexRnd),		sizeof(int) },
 		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldWeaponInfo,_IsEquip),		sizeof(int) },
+		{ "Rank",Support::DataTypeE::INT ,			offsetof(struct HoldWeaponInfo,_Rank),			sizeof(int) },
 	};
 
 	// 防具の所持情報。
@@ -104,6 +106,7 @@ namespace Hold {
 		{ "DefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_DefRnd),		sizeof(int) },
 		{ "MDefRnd",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_MDefRnd),		sizeof(int) },
 		{ "IsEquip",Support::DataTypeE::INT ,		offsetof(struct HoldArmorInfo,_IsEquip),		sizeof(int) },
+		{ "Rank",Support::DataTypeE::INT ,			offsetof(struct HoldArmorInfo,_Rank),			sizeof(int) },
 	};
 };
 
