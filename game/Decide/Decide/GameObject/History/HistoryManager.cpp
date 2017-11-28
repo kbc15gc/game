@@ -73,6 +73,7 @@ void HistoryManager::Start()
 
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
+	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 //木が邪魔な場合これを使ってください。
 //#define NPCONLY
 
@@ -142,12 +143,29 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 {
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
+
 	//どれかのグループに該当するのなら。
 	if (group >= 0)
 	{
 
 		if (_NowGroupIDList[(int)location] != group)
 		{
+			if (_NowLocationCode == (int)location)
+			{
+				//_PlayerCamera->transform->SetParent(_Player->transform);
+				_Player->transform->SetLocalPosition(LocationPosition[(int)location]);
+				_PlayerCamera->LookAtTarget();
+				//_PlayerCamera->transform->SetParent(nullptr);
+
+				Camera* camera = _PlayerCamera->GetComponent<Camera>();
+				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
+				cameraFoward.Normalize();
+				cameraFoward.y -= 0.5f;
+				cameraFoward.Scale(0.8f);
+				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
+				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
+				
+			}
 			_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
 		}

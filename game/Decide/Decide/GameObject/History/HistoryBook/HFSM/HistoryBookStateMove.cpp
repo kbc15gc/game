@@ -11,7 +11,7 @@
 HistoryBookStateMove::HistoryBookStateMove(HistoryBook * historybook) :
 	IHistoryBookState(historybook)
 {
-	_GameCamera = (GameCamera*)INSTANCE(GameObjectManager)->FindObject("GameCamera");
+	//_GameCamera = (GameCamera*)INSTANCE(GameObjectManager)->FindObject("GameCamera");
 }
 
 /**
