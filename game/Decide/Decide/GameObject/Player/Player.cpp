@@ -807,7 +807,7 @@ void Player::Speak()
 	npc = INSTANCE(HistoryManager)->GetNPCList();
 
 	//ショップイベントフラグ取得。
-	bool eventflag = INSTANCE(EventManager)->ShopEvent();
+	bool eventflag = INSTANCE(EventManager)->IsEvent();
 
 	//村
 	for (auto village : npc)
