@@ -24,7 +24,7 @@ void RockCave::Awake()
 	modeldata->CloneModelData(SkinModelManager::LoadModel("RockCave.X"));
 	model->SetModelData(modeldata);
 
-	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
+	//model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 	RigidBody* rigid = AddComponent<RigidBody>();

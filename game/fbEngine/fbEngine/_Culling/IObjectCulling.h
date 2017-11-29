@@ -14,7 +14,7 @@ public:
 	virtual ~IObjectCulling() {}
 
 	//カリングアルゴリズムを実行。
-	virtual void Execute(const AABB& aabb,const D3DXMATRIX& rotation, const Vector3& sca) = 0;
+	virtual void Execute(const AABB& aabb,const D3DXMATRIX& rotation, const D3DXMATRIX& view, const D3DXMATRIX& proj) = 0;
 	//カリングされているか判定。
 	bool IsCulling() const
 	{
