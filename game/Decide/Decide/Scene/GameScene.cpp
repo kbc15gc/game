@@ -194,8 +194,8 @@ void GameScene::Start()
 
 	//街3BGM
 	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
-	//_Mati3BGM->Init("Asset/Sound/mati3.wav");
-	//_Mati3BGM->SetVolume(0.2f);
+	_Mati3BGM->Init("Asset/Sound/mati3.wav");
+	_Mati3BGM->SetVolume(0.2f);
 
 	//死亡BGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -204,9 +204,9 @@ void GameScene::Start()
 
 	//再生用BGM
 	_GameBGM = _WorldBGM;
-#ifndef _NOBO_
-	_GameBGM->Play(true);
-#endif // !_NOBO_
+//#ifndef _NOBO_
+//	_GameBGM->Play(true);
+//#endif // !_NOBO_
 	//シャドウマップ有効.
 	_isShadowMap = true;
 	//環境マップ有効.
@@ -273,8 +273,8 @@ void GameScene::Update()
 		{
 			int location = -1;
 			//各場所のコリジョンに当たっているか。
-			int i = 0;
-			for (i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
+			int i = 0,size = sizeof(soundcollisition) / sizeof(soundcollisition[0]);
+			for (i = 0; i < size; i++)
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
@@ -307,7 +307,7 @@ void GameScene::Update()
 
 			INSTANCE(HistoryManager)->SetNowLocation(location);
 
-			if(i == ARRAY_SIZE(soundcollisition)-1)
+			if (i == size - 1)
 				_VillageName->Excute(i);
 		}
 	}
@@ -386,7 +386,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::MATI3:
-			//_GameBGM = _Mati3BGM;
+			_GameBGM = _Mati3BGM;
 			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;
