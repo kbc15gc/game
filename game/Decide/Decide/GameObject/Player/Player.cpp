@@ -45,8 +45,10 @@ Player::Player(const char * name) :
 	_StopState(this),
 	//デバッグか
 	_Debug(false),
+	//ジャンプしているか
+	_NoJump(false),
 	//話しているか
-	_NoJump(false)
+	_IsSpeak(false)
 {
 	//経験値テーブルをロード
 	_LoadEXPTable();
@@ -213,8 +215,10 @@ void Player::Awake()
 	//攻撃ボイス初期化
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
+	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
 	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
 	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack2.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack3.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -843,7 +847,8 @@ void Player::Speak()
 					_HPBar->RenderDisable();
 					//_MPBar->RenderDisable();
 					//話すフラグセット
-					npc->SetIsSpeak(true);
+					_IsSpeak = true;
+					npc->SetIsSpeak(_IsSpeak);
 					//プレイヤー話すフラグ設定
 					//ジャンプしなくなる
 					_NoJump = true;
@@ -854,7 +859,8 @@ void Player::Speak()
 			else
 			{
 				//話すNPCがいないので
-				npc->SetIsSpeak(false);
+				_IsSpeak = false;
+				npc->SetIsSpeak(_IsSpeak);
 				//話し終わると
 				if (_NoJump)
 				{
@@ -1147,7 +1153,7 @@ void Player::Attack5()
 	//攻撃時のサウンド再生。
 	_AttackSoound->Play(false);
 	//攻撃ボイス再生
-	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {

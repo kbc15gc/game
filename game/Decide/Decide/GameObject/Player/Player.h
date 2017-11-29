@@ -302,6 +302,11 @@ public:
 		LevelData.Save("Player_Pos");
 	}
 
+	//話しているかのフラグ
+	bool GetSpeakFlag()
+	{
+		return _IsSpeak;
+	}
 private:
 
 	//アニメーションイベント
@@ -327,6 +332,7 @@ private:
 	void _LevelUP();
 	//話す
 	void Speak();
+	bool _IsSpeak;
 
 	void SaveLevel()
 	{
