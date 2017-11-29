@@ -48,10 +48,10 @@ void Bloom::Create()
 
 		//輝度レンダリングターゲットの作成
 		_LuminanceRT = new RenderTarget();
-		_LuminanceRT->Create(size, D3DFMT_A16B16G16R16F);
+		_LuminanceRT->Create(size, D3DFMT_R16F);
 
-		//_LuminanceColorRT = new RenderTarget();
-		//_LuminanceColorRT->Create(size, D3DFMT_A16B16G16R16F);
+		_LuminanceColorRT = new RenderTarget();
+		_LuminanceColorRT->Create(size, D3DFMT_A16B16G16R16F);
 
 		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++)
 		{
@@ -91,8 +91,8 @@ void Bloom::Render()
 		{
 
 			//輝度抽出用のレンダリングターゲットに変更
-			(*graphicsDevice()).SetRenderTarget(0, _LuminanceRT->buffer);
-			(*graphicsDevice()).SetDepthStencilSurface(_LuminanceRT->depth);
+			(*graphicsDevice()).SetRenderTarget(0, _LuminanceColorRT->buffer);
+			(*graphicsDevice()).SetDepthStencilSurface(_LuminanceColorRT->depth);
 
 			//テクスチャのクリア
 			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
@@ -105,7 +105,8 @@ void Bloom::Render()
 			//テクスチャの設定
 			//オフスクリーンしたやつ
 			_Effect->SetTexture("g_Scene", INSTANCE(SceneManager)->GetMainRenderTarget()->texture->pTexture);
-
+			_Effect->SetTexture("g_Lum", _LuminanceRT->texture->pTexture);
+			
 			_Effect->CommitChanges();
 
 			//画像描画
@@ -119,7 +120,7 @@ void Bloom::Render()
 		 //輝度をぼかす
 		{
 			//ループ用RTクラスのポインタ
-			RenderTarget* prevRT = _LuminanceRT;
+			RenderTarget* prevRT = _LuminanceColorRT;
 			//ダウンサンプリング用RTの添え字
 			int rtIndex = 0;
 
