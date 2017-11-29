@@ -34,7 +34,7 @@ void VillageName::Update()
 
 void VillageName::Excute(const int location)
 {
-	if (now != location && LocationNames[location].size() > location)
+	if (now != location && location < ARRAY_SIZE(LocationNames))
 	{
 		//•\Ž¦–¼‚ðÝ’è.
 		_Text->SetText(LocationNames[location].c_str());

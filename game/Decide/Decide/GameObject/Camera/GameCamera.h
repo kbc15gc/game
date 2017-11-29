@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	~GameCamera();
+	virtual ~GameCamera();
 
 	//コンストラクタ後の初期化。
 	void Awake()override;
@@ -24,38 +24,26 @@ public:
 	//更新。
 	void Update()override;
 
+	//遅れた更新。
+	void LateUpdate()override;
+
 	// 継承先の更新処理。
 	virtual void UpdateSubClass() = 0;
 
-	//次のカメラを指定。
-	void SetNextCamera(GameCamera* next);
-
 	void ChangeRequest();
 
-	//このカメラをメインカメラとして使用する。
-	void ActiveCamera()
+	//次のカメラを指定。
+	void SetNextCamera(GameCamera* next)
 	{
-		Camera* cam = INSTANCE(GameObjectManager)->mainCamera;	//GameObjectManagerに登録している場合、取り外して更新を停止する。
-		if (cam) {
-			static_cast<GameCamera*>(cam->gameObject)->UnActivateFlg();
-		}
-		INSTANCE(GameObjectManager)->mainCamera = this->_Camera;
-		ChangeCameraReAction();
-		_isActivate = true;
+		_NextCamera = next;
 	}
-	
-	void LateUpdate()override {
-		if (_isActivate) {
-			ActivateFlg();
-			_isActivate = false;
-		}
-	}
+
+	//このカメラをメインカメラとして使用する。
+	void ActiveCamera();
 protected:
 	// 継承先の更新処理。
 	virtual void _Move() = 0;
-	void ActivateFlg() {
-		_isActive = true;
-	}
+	
 	void UnActivateFlg() {
 		_isActive = false;
 		_isActivate = false;
@@ -87,6 +75,12 @@ protected:
 private:
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {}
+protected:
+	//バネの様に追跡。
+	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping, float time, float speed);
+
+	//カメラ移動の加速度。
+	Vector3 _Velocity;
 protected:
 	//カメラコンポーネント。
 	Camera* _Camera = nullptr;

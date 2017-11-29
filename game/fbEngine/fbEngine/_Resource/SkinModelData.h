@@ -125,6 +125,10 @@ public:
 	{
 		return _TerrainSize;
 	}
+	const Vector3& GetAABBSize()
+	{
+		return _Size;
+	}
 	//インスタンシングフラグを設定。
 	void SetInstancing(bool flg)
 	{

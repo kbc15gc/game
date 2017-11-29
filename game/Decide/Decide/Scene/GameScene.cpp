@@ -273,8 +273,8 @@ void GameScene::Update()
 		{
 			int location = -1;
 			//各場所のコリジョンに当たっているか。
-			int i = 0;
-			for (i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
+			int i = 0,size = sizeof(soundcollisition) / sizeof(soundcollisition[0]);
+			for (i = 0; i < size; i++)
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
@@ -307,7 +307,7 @@ void GameScene::Update()
 
 			INSTANCE(HistoryManager)->SetNowLocation(location);
 
-			if(i == ARRAY_SIZE(soundcollisition)-1)
+			if (i == size - 1)
 				_VillageName->Excute(i);
 		}
 	}
