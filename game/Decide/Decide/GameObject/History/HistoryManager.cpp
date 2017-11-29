@@ -36,6 +36,12 @@ HistoryManager::HistoryManager()
 */
 void HistoryManager::Start()
 {
+	//各オブジェクトリストを初期化。
+	/*for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
+	{
+		_GameObjectList[i].clear();
+		_NPCList[i].clear();
+	}*/
 	_LocationHistoryList.clear();
 
 	if (IS_CONTINUE)
@@ -230,9 +236,10 @@ void HistoryManager::_CreateObject(int location, const char * path, int type)
 	else if (type == 1)
 	{
 		//前のNPCを削除
-		for (auto& it : _NPCList[(int)location])
+		for (auto& npc : _NPCList[(int)location])
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(it);
+			if (npc != nullptr)
+				INSTANCE(GameObjectManager)->AddRemoveList(npc);
 		}
 		_NPCList[(int)location].clear();
 		//生成。
