@@ -303,7 +303,6 @@ void Player::Start()
 
 
 	//ポジション
-	
 	transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -370,6 +369,17 @@ void Player::Update()
 
 	//NPCと話すか
 	Speak();
+
+	//@todo for DebugRelease
+	//リリース時のレベルアップ。
+#define LEVELDEBUG
+#ifdef LEVELDEBUG
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(1000, 1000);
+	}
+#endif
 }
 
 void Player::ChangeState(State nextstate)
@@ -797,7 +807,7 @@ void Player::Speak()
 	npc = INSTANCE(HistoryManager)->GetNPCList();
 
 	//ショップイベントフラグ取得。
-	bool eventflag = INSTANCE(EventManager)->ShopEvent();
+	bool eventflag = INSTANCE(EventManager)->IsEvent();
 
 	//村
 	for (auto village : npc)
@@ -865,7 +875,7 @@ void Player::Speak()
 	}
 }
 
-#ifdef _DEBUG
+#ifdef _DEBUG || LEVELDEBUG
 void Player::_DebugPlayer()
 {
 	//お金増える

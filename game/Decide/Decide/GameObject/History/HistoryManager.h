@@ -110,6 +110,11 @@ public:
 	*/
 	vector<GameObject*>& CreateBuilding(const char* path, vector<GameObject*>& Builds);
 
+	void SetNowLocation(int loc)
+	{
+		_NowLocationCode = loc;
+	}
+
 private:
 	
 	/**
@@ -172,7 +177,11 @@ private:
 	MysteryLight* _MysteryLight = nullptr;
 	vector<int> _NowGroupIDList;
 
-Player
-	* _Player = nullptr;
+	Player* _Player = nullptr;
+
+	/** プレイヤーカメラ. */
+	PlayerCamera* _PlayerCamera = nullptr;
+
+	int _NowLocationCode = -1;
 
 };

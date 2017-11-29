@@ -88,7 +88,7 @@ void EnemyCharacter::Update() {
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);
-			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
+			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(2.0f);
 		}
 	}
 	else {

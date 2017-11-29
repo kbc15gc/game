@@ -31,6 +31,29 @@ public:
 	{
 		_IsMove = value;
 	}
+
+	/**
+	* カメラの座標などの初期化.
+	*/
+	inline void Init()
+	{
+		_Camera->SetTarget(_GetPlayerPos());
+		_DestinationPos = _GetPlayerPos() + (_Player->transform->GetForward() * _Dist);
+		transform->SetPosition(_DestinationPos);
+		_Camera->Update();
+
+		_ToCameraDir = (_Player->transform->GetForward());
+	}
+	//プレイヤーの方向を向く。
+	void LookAtTarget()
+	{
+		auto next = _GetPlayerPos();
+		_Camera->SetTarget(next);
+		_DestinationPos = _ClosetRay();
+		transform->SetPosition(_DestinationPos);
+		transform->LockAt(next);
+	}
+
 private:
 	Vector3 _GetPlayerPos();
 	//通常時のカメラ挙動

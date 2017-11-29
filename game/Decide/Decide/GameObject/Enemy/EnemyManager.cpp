@@ -113,10 +113,12 @@ void EnemyManager::CreateEnemy() {
 			Color c;
 			c.Set(color[0], color[1], color[2], color[3]);
 			//カラーを設定するフラグの場合。
-			if (info->InfoData->colorflag == true)
+			//@todo for debug
+			//いったん消します。
+			/*if (info->InfoData->colorflag == true)
 			{
 				enemy->SetColor(c);
-			}
+			}*/
 		}
 		else {
 			// 生成失敗。
@@ -193,10 +195,12 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			Color c;
 			c.Set(color[0], color[1], color[2], color[3]);
 			//カラーを設定するフラグの場合。
-			if (enemy->InfoData->colorflag == true)
+			//@todo for debug
+			//いったん消します。
+			/*if (enemy->InfoData->colorflag == true)
 			{
 				enemy->Object->SetColor(c);
-			}
+			}*/
 			return;
 		}
 	}

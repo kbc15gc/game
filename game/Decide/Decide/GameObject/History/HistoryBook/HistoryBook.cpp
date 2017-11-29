@@ -82,24 +82,10 @@ void HistoryBook::SetActive(const bool & act, const bool & children)
 			ChangeState(StateCodeE::Move);
 			for (int i = 0; i < 3; i++)
 			{
-				float angle = -90.0f;
-				Color color = Color(0.2f, 0.2f, 0.2f);
-
-				if (i < (int)_NowLocationCode)
-				{
-					angle = 90.0f;
-				}
-				if (i == (int)_NowLocationCode)
-				{
-					color = Color(1.0f, 1.0f, 1.0f);
-				}
-
 				for (auto it : _HistoryPageList[i])
 				{
 					if (it != nullptr)
 					{
-						it->SetBlendColor(color);
-						it->SetRotAngle(angle);
 						it->SetActive(act);
 					}
 				}

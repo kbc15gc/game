@@ -243,9 +243,9 @@ void ItemWindow::Input()
 		{
 			Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 			LStick /= 32767.0f;
-			if (LStick.y >= 0.2f)
+			if (LStick.y >= 0.2f || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_DPAD_UP))
 			{
-				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_UP))
 				{
 					Cursor::CursorIndex index = _Cursor->PrevMove(1);
 					_NowSelectItem = index.rangeIndex;
@@ -265,9 +265,9 @@ void ItemWindow::Input()
 					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 			}
-			else if (LStick.y <= -0.2f)
+			else if (LStick.y <= -0.2f || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_DPAD_DOWN))
 			{
-				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_DOWN))
 				{
 					Cursor::CursorIndex index = _Cursor->NextMove(1);
 					_NowSelectItem = index.rangeIndex;
