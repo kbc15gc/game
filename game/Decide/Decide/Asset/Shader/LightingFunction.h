@@ -42,6 +42,9 @@ float3	g_cameraDir;	//!<カメラ方向。
 
 float g_Alpha; //アルファのしきい値.
 
+float4 g_LuminanceColor;	//!< 輝度の色.
+int g_IsLuminance;			//!< 溢れ輝度フラグ.
+
 #define NUM_CHARA_DIFFLIGHT 4
 /**
 * キャラクターライトクラス.

@@ -108,6 +108,7 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	_Model->SetModelEffect(ModelEffectE::DITHERING, true);
 	//_Model->SetAllBlend(Color::white * 13);
+	//_Model->SetLuminanceColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
@@ -239,7 +240,7 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 0.0f));
 	_CharaLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
 	
-	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 60.0f));
+	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 30.0f));
 	_CharaLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));

@@ -431,6 +431,9 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetVector("g_fogParam", (D3DXVECTOR4*)&fogParam);
 		_Effect->SetVector("g_fogColor", (D3DXVECTOR4*)&_FogColor);
 
+		_Effect->SetVector("g_LuminanceColor", (D3DXVECTOR4*)&_LuminanceColor);
+		_Effect->SetInt("g_IsLuminance", _IsLuminance);
+
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)
 		{

@@ -32,6 +32,24 @@ public:
 	void SetPivot(float x, float y);
 	void SetUV(const Vector4& uv);
 	void SetBlendColor(const Color& c);
+
+	/**
+	* 溢れ輝度を書き込むかのフラグ.
+	*/
+	void SetIsLuminance(bool value)
+	{
+		_IsLuminance = value;
+	}
+
+	/**
+	* 色々な色の輝度を設定できるよ.
+	* aに1を入れると書き込まれるよ.
+	*/
+	void SetLuminanceColor(Color lumColor)
+	{
+		_LuminanceColor = lumColor;
+	}
+
 private:
 	//ビルボードするかどうか？
 	bool _IsBillboard;
@@ -53,6 +71,13 @@ private:
 	Light* _Light;
 	//混ぜる色
 	Color _BlendColor;
+
+	/** 輝度の色. */
+	Color _LuminanceColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
+
+	/** 溢れ輝度を書き込むかフラグ. */
+	bool _IsLuminance = true;
+
 
 	static Vertex* _Vertex;	//頂点
 };
