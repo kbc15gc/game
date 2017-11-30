@@ -91,6 +91,7 @@ void GameScene::Start()
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	playerCamera->ActiveCamera();
 
+	//INSTANCE(EventManager)->Execute(Event::EventID::EventCameraF, 0);
 #ifdef _DEBUG
 
 	//‚Ó‚©‚ñƒJƒƒ‰‚Ì¶¬B

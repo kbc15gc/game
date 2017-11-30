@@ -3,6 +3,7 @@
 
 #include "GameObject\Player\Player.h"
 #include "GameObject\Camera\PlayerCamera.h"
+#include "GameObject\Camera\EventCamera.h"
 
 #include "GameObject\Village\Shop\Shop.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
@@ -21,7 +22,7 @@ void EventManager::ReSet()
 	_ActiveEvent = Event::EventID::None;
 
 	_Player = nullptr;
-	_Camera = nullptr;
+	_Pcamera = nullptr;
 }
 
 bool EventManager::Execute(Event::EventID id, int idx)
@@ -78,7 +79,11 @@ void EventManager::NotifyEndEvent()
 
 void EventManager::AddEvent()
 {
+	//ショップ。
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("Shop", 0);
+	//イベントカメラ。
+	auto Ecamera = INSTANCE(GameObjectManager)->AddNew<EventCamera>("ThirdPersonCamera", 8);
+	Ecamera->SetNextCamera(GetCamera());
 	
 	StatusWindow* status = (StatusWindow*)INSTANCE(GameObjectManager)->FindObject("StatusWindow");
 	HistoryBook* book = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
@@ -87,6 +92,9 @@ void EventManager::AddEvent()
 
 	//ショップを開く処理。
 	_FuncList.push_back(std::bind(&Shop::OpenShop, shop, std::placeholders::_1));
+	//イベントカメラを起動する処理。
+	_FuncList.push_back(std::bind(&EventCamera::Excute, Ecamera, std::placeholders::_1));
+
 
 	//
 
