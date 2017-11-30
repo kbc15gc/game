@@ -18,140 +18,123 @@ EnemyManager::EnemyManager() {
 }
 
 EnemyManager::~EnemyManager() {
-	for (auto enemy : _commonEnemys) {
-		enemy->Object = nullptr;
-		SAFE_DELETE(enemy);
-	}
-	_commonEnemys.clear();
-	for (auto& enemyArray : _historyEnemys) {
-		for (auto enemy : enemyArray) {
+	for (auto& enemyArray : _enemys) {
+		for (auto& enemy : enemyArray) {
 			enemy->Object = nullptr;
-			SAFE_DELETE(enemy);
 		}
 		enemyArray.clear();
 	}
-	_historyEnemys.clear();
+	_enemys.clear();
 }
 
 void EnemyManager::Start() {
 }
 
 
-void EnemyManager::CreateEnemys(LocationCodeE location, const vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos) {
-	vector<ManagingData*>* l_infos = nullptr;
+void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos) {
 	if (location != LocationCodeE::None) {
-		if (location == LocationCodeE::Common) {
-			// 共通エネミーを作成。
-			l_infos = &_commonEnemys;
+		// エネミーを作成。
+		if (static_cast<int>(_enemys.size()) < static_cast<int>(location) + 1) {
+			_enemys.resize(static_cast<int>(location) + 1);
 		}
-		else {
-			// 歴史に影響されるエネミーを作成。
-			if (static_cast<int>(_historyEnemys.size()) < static_cast<int>(location) + 1) {
-				_historyEnemys.resize(static_cast<int>(location) + 1);
-			}
-			l_infos = &(_historyEnemys[static_cast<int>(location)]);
-		}
-	}
-
-	if (l_infos == nullptr) {
-		return;
 	}
 	else {
-		if (l_infos->size() > 0) {
-			for (auto obj : *l_infos) {
-				if (obj->Object) {
-					INSTANCE(GameObjectManager)->AddRemoveList(obj->Object);
-				}
+		return;
+	}
+
+	if (_enemys[static_cast<int>(location)].size() > 0) {
+		// すでにエネミーが生成されている。
+		for (auto& obj : _enemys[static_cast<int>(location)]) {
+			if (obj->Object) {
+				INSTANCE(GameObjectManager)->AddRemoveList(obj->Object);
 			}
-			l_infos->clear();
+		}
+		_enemys[static_cast<int>(location)].clear();
+	}
+
+	for (int idx = 0; idx < static_cast<int>(infos.size()); idx++)
+	{
+		unique_ptr<ManagingData> newData(new ManagingData);
+		newData->Object = nullptr;
+
+		vector<BarColor> barColor;
+		switch (static_cast<EnemyCharacter::EnemyType>(infos[idx]->type))
+		{
+		case EnemyCharacter::EnemyType::Born:
+			// 骨エネミー生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::BossDrarian:
+			// ボスドラリアン生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::Drarian:
+			// ドラリアン生成。
+
+			// ※まだ作成しない。
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::Golem:
+			//ゴーレム生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::BossGolem:
+			//ボスゴーレム生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
+			break;
+
+		case EnemyCharacter::EnemyType::Soldier:
+			//兵士を生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::BossD:
+			//ボスD生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
+			break;
 		}
 
-		for (int idx = 0; idx < static_cast<int>(infos.size()); idx++)
-		{
-			ManagingData* newData = new ManagingData;
-			newData->Object = nullptr;
-
-			vector<BarColor> barColor;
-			switch (static_cast<EnemyCharacter::EnemyType>(infos[idx]->type))
+		if (newData->Object) {
+			newData->Object->SetLocationCode(location);
+			// infoを保存。
+			newData->InfoData = move(infos[idx]);
+			// Transform情報設定。
+			newData->Object->transform->SetPosition(newData->InfoData->position);
+			newData->Object->transform->SetRotation(newData->InfoData->rotation);
+			newData->Object->transform->SetScale(newData->InfoData->scale);
+			// パラメーター設定。
+			newData->Object->SetParamAll(barColor, newData->InfoData->param);
+			// ドロップ設定。
+			newData->Object->SetDropEXP(newData->InfoData->exp);
+			newData->Object->SetDropMoney(newData->InfoData->money);
+			newData->Object->SetItem(newData->InfoData->item, newData->InfoData->armor, newData->InfoData->weapon);
+			//カラーを設定するフラグの場合。
+			if (newData->InfoData->colorflag)
 			{
-			case EnemyCharacter::EnemyType::Born:
-				// 骨エネミー生成。
-				newData->Object = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
-				barColor.push_back(BarColor::Red);
-				break;
-			case EnemyCharacter::EnemyType::BossDrarian:
-				// ボスドラリアン生成。
-				newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
-				barColor.push_back(BarColor::Yellow);
-				barColor.push_back(BarColor::Red);
-				break;
-			case EnemyCharacter::EnemyType::Drarian:
-				// ドラリアン生成。
-
-				// ※まだ作成しない。
-				barColor.push_back(BarColor::Red);
-				break;
-			case EnemyCharacter::EnemyType::Golem:
-				//ゴーレム生成。
-				newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);
-				barColor.push_back(BarColor::Red);
-				break;
-			case EnemyCharacter::EnemyType::BossGolem:
-				//ボスゴーレム生成。
-				newData->Object = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-				barColor.push_back(BarColor::Yellow);
-				barColor.push_back(BarColor::Red);
-				break;
-
-			case EnemyCharacter::EnemyType::Soldier:
-				//兵士を生成。
-				newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
-				barColor.push_back(BarColor::Red);
-				break;
-			case EnemyCharacter::EnemyType::BossD:
-				//ボスD生成。
-				newData->Object = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
-				barColor.push_back(BarColor::Yellow);
-				barColor.push_back(BarColor::Red);
-				break;
+				//カラーの設定
+				float* color = newData->InfoData->color;
+				Color c;
+				c.Set(color[0], color[1], color[2], color[3]);
+				newData->Object->SetColor(c);
 			}
 
-			if (newData->Object) {
-				newData->Object->SetLocationCode(location);
-				// infoを保存。
-				newData->InfoData = infos[idx].get();
-				// Transform情報設定。
-				newData->Object->transform->SetPosition(newData->InfoData->position);
-				newData->Object->transform->SetRotation(newData->InfoData->rotation);
-				newData->Object->transform->SetScale(newData->InfoData->scale);
-				// パラメーター設定。
-				newData->Object->SetParamAll(barColor, newData->InfoData->param);
-				// ドロップ設定。
-				newData->Object->SetDropEXP(newData->InfoData->exp);
-				newData->Object->SetDropMoney(newData->InfoData->money);
-				newData->Object->SetItem(newData->InfoData->item, newData->InfoData->armor, newData->InfoData->weapon);
-				//カラーを設定するフラグの場合。
-				if (newData->InfoData->colorflag)
-				{
-					//カラーの設定
-					float* color = newData->InfoData->color;
-					Color c;
-					c.Set(color[0], color[1], color[2], color[3]);
-					newData->Object->SetColor(c);
-				}
-
-				l_infos->push_back(newData);
-			}
-			else {
-				// 生成失敗。
-				// EnemyTypeに新種を追加した？。
-				abort();
-			}
+			_enemys[static_cast<int>(location)].push_back(move(newData));
+		}
+		else {
+			// 生成失敗。
+			// EnemyTypeに新種を追加した？。
+			abort();
 		}
 	}
 }
-
-
 
 
 void EnemyManager::DeathEnemy(EnemyCharacter* object) {
@@ -171,22 +154,12 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 		icon->DeleteAllBuffDebuffIcon();
 	}
 
-	vector<ManagingData*>* datas = nullptr;
-
-	if (object->GetLocationCode() == LocationCodeE::Common) {
-		datas = &_commonEnemys;
-	}
-	else {
-		if (object->GetLocationCode() == LocationCodeE::None) {
-			// 外部から読み込まれたデータではないので終了。
-			return;
-		}
-		else {
-			datas = &_historyEnemys[static_cast<int>(object->GetLocationCode())];
-		}
+	if (object->GetLocationCode() == LocationCodeE::None) {
+		// 外部から読み込まれたデータではないので終了。
+		return;
 	}
 
-	for (auto enemy : *datas) {
+	for (auto& enemy : _enemys[static_cast<int>(object->GetLocationCode())]) {
 		if (object == enemy->Object) {
 			// このクラスで生成したエネミーが死亡している。
 	

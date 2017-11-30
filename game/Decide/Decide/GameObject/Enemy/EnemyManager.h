@@ -61,7 +61,7 @@ private:
 		//	InfoData = move(info);	// ユニークポインタの所有権を譲渡。
 		//}
 		EnemyCharacter* Object = nullptr;	// InfoDataをもとに生成されたオブジェクトデータ。
-		LoadEnemyInfo::EnemyInfo* InfoData = nullptr;	// CSVファイルから読み込んだ設定データ。
+		unique_ptr<LoadEnemyInfo::EnemyInfo> InfoData;	// CSVファイルから読み込んだ設定データ。
 	};
 private:
 	EnemyManager();
@@ -84,7 +84,7 @@ public:
 	// テーブルに登録されている情報をもとにエネミーを作成。
 	// 引数：	どの場所のエネミーを作成するか。
 	//			エネミー情報の配列。
-	void CreateEnemys(LocationCodeE location,const vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos);
+	void CreateEnemys(LocationCodeE location,vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos);
 
 	// エネミー死亡関数。
 	// ※スポナーコンポーネントがあれば自動でリスポーンする。
@@ -92,8 +92,8 @@ public:
 
 
 private:
-	vector<vector<ManagingData*>> _historyEnemys;	// チップ情報によって変動するエネミー。
-	vector<ManagingData*> _commonEnemys;	// チップ情報に関係なく存在するエネミー。
+	vector<vector<unique_ptr<ManagingData>>> _enemys;	// エネミー。
+	//vector<ManagingData*> _commonEnemys;	// チップ情報に関係なく存在するエネミー。
 
 private:
 	static EnemyManager* _instance;

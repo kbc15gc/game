@@ -36,8 +36,6 @@ HistoryManager::HistoryManager()
 		_GameObjectList.push_back(list);
 		vector<NPC*> npcs;
 		_NPCList.push_back(npcs);
-
-		_EnemyInfoList = vector<vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>>(static_cast<int>(LocationCodeE::LocationNum));
 	}
 }
 
@@ -390,15 +388,14 @@ void HistoryManager::_CreateNPC(LocationCodeE location, const char * path)
 }
 
 void HistoryManager::_CreateEnemy(LocationCodeE location, const char * path) {
-	// 前のエネミーを削除。
-	if (_EnemyInfoList[(int)location].size() > 0) {
-		_EnemyInfoList[(int)location].clear();
-	}
+	//Enemy情報構造体へのポインタをまとめたもの。
+	// ※読み込み用。
+	vector<unique_ptr<LoadEnemyInfo::EnemyInfo>> _EnemyInfoList;
 
 	//CSVからエネミー情報読み取り。
-	Support::LoadCSVData<LoadEnemyInfo::EnemyInfo>(path, LoadEnemyInfo::EnemyInfoDecl, ARRAY_SIZE(LoadEnemyInfo::EnemyInfoDecl), _EnemyInfoList[static_cast<int>(location)]);
+	Support::LoadCSVData<LoadEnemyInfo::EnemyInfo>(path, LoadEnemyInfo::EnemyInfoDecl, ARRAY_SIZE(LoadEnemyInfo::EnemyInfoDecl), _EnemyInfoList);
 
-	INSTANCE(EnemyManager)->CreateEnemys(location, _EnemyInfoList[static_cast<int>(location)]);
+	INSTANCE(EnemyManager)->CreateEnemys(location, _EnemyInfoList);
 }
 
 /**

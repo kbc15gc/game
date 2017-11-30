@@ -179,8 +179,6 @@ private:
 	vector<vector<GameObject*>> _GameObjectList;
 	//NPCへのポインタをまとめたもの。
 	vector<vector<NPC*>> _NPCList;
-	//Enemy情報構造体へのポインタをまとめたもの。
-	vector<vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>> _EnemyInfoList;
 	/** ヒストリ―メニュークラスのポインタ. */
 	HistoryMenu* _HistoryMenu = nullptr;
 
