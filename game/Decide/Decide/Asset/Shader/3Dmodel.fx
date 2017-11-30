@@ -286,56 +286,51 @@ technique InstancingRender
 
 PSOutput PSSkySphere(VS_OUTPUT In)
 {
-    
-    //法線計算.
-    //float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
 
-    //反転しているので-1をかけて法線をもどす
-    float4 diffColor = texCUBE(g_cubeSampler, In._Normal * -1.0f);
+	//法線計算.
+	//float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
 
-    float3 mono = float3(0.29900f, 0.58700f, 0.11400f);
+	//反転しているので-1をかけて法線をもどす
+	float4 diffColor = texCUBE(g_cubeSampler, In._Normal * -1.0f);
 
-    //白黒にする.
-    float Y = dot(mono, diffColor.xyz);
+	float3 mono = float3(0.29900f, 0.58700f, 0.11400f);
+
+	//白黒にする.
+	float Y = dot(mono, diffColor.xyz);
 
 	//白黒化したテクスチャをn乗した白に近い成分だけ抜き出す。
-    float cloudRate = pow(Y, 3.0f);
+	float cloudRate = pow(Y, 3.0f);
 
-    //星空の白い要素を抜き出す.
-    float starRate = pow(dot(mono, texCUBE(g_NightSampler, In._Normal * -1.0f).xyz), 3.0f);
+	//星空の白い要素を抜き出す.
+	float starRate = pow(dot(mono, texCUBE(g_NightSampler, In._Normal * -1.0f).xyz), 3.0f);
 
-    float nightRate = max(0.0f, dot(float3(0.0f, -1.0f, 0.0f), g_atmosParam.v3LightDirection));
+	float nightRate = max(0.0f, dot(float3(0.0f, -1.0f, 0.0f), g_atmosParam.v3LightDirection));
 
 	//雲の色.
-    float3 eyeToPos = normalize(In._World.xyz - g_cameraPos.xyz);
-    float t = saturate(dot(eyeToPos, g_cameraDir));
-    float cloudColor = lerp(0.1f, 1.0f, pow(1.0f - nightRate, 3.0f));
-    float starColor = lerp(0.0f, 30.0f, pow(nightRate, 2.0f)) * starRate * pow(t, 10.0f);
+	float3 eyeToPos = normalize(In._World.xyz - g_cameraPos.xyz);
+	float t = saturate(dot(eyeToPos, g_cameraDir));
+	float cloudColor = lerp(0.1f, 1.0f, pow(1.0f - nightRate, 3.0f));
+	float starColor = lerp(0.0f, 30.0f, pow(nightRate, 2.0f)) * starRate * pow(t, 10.0f);
 
-    float3 OutColor = 0.0f;
+	float3 OutColor = 0.0f;
 
-    OutColor = In._RayColor + 0.25f * In._MieColor;
+	OutColor = In._RayColor + 0.25f * In._MieColor;
 
 	//空の色.
-    OutColor.xyz = lerp(OutColor.xyz, cloudColor, cloudRate);
-    OutColor.xyz += starColor;
+	OutColor.xyz = lerp(OutColor.xyz, cloudColor, cloudRate);
+	OutColor.xyz += starColor;
 
-    PSOutput Out = (PSOutput) 0;
+	PSOutput Out = (PSOutput)0;
 
-    Out.Color = float4(OutColor.xyz, 1.0f);
-    float3 depth = In._World.w;
-    Out.Depth = float4(depth, 1.0f);
+	Out.Color = float4(OutColor.xyz, 1.0f);
+	float3 depth = In._World.w;
+	Out.Depth = float4(depth, 1.0f);
 
-	Out.Luminance = 0.0f;
-	if (g_IsLuminance)
-	{
-		//輝度を計算.
-		float t = dot(OutColor.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-		Out.Luminance = max(0.0f, t - 1.0f);
-	}
+	//輝度を計算.
+	float lum = dot(OutColor.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	Out.Luminance = max(0.0f, lum - 1.5f);
 
-
-    return Out;
+	return Out;
 }
 
 /**

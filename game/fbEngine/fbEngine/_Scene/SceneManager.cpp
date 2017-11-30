@@ -140,13 +140,7 @@ void SceneManager::DrawScene()
 		1.0f,
 		0);
 	(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
-	(*graphicsDevice()).Clear(
-		2,
-		NULL,
-		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_RGBA(0, 0, 0, 0),
-		1.0f,
-		0);
+	(*graphicsDevice()).Clear(2,NULL,D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,D3DCOLOR_RGBA(0, 0, 0, 1),1.0f,0);
 
 	INSTANCE(GameObjectManager)->RenderObject();
 
