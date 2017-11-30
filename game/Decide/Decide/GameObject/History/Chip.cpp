@@ -91,7 +91,7 @@ void Chip::SetChipID(ChipID chipID)
 	//設定されたIDのモデルをロード。
 	_Model = AddComponent<SkinModel>();
 	SkinModelData* modelData = new SkinModelData();
-	modelData->CloneModelData(SkinModelManager::LoadModel("Page.x"));
+	modelData->CloneModelData(SkinModelManager::LoadModel("Page2.x"));
 	_Material = modelData->FindMaterial("HuntingPage.png");
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
@@ -99,7 +99,7 @@ void Chip::SetChipID(ChipID chipID)
 	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos[(int)_ChipID]);
-	transform->SetLocalScale(Vector3::one);
+	transform->SetLocalScale(Vector3::one * 5.0f);
 
 }
 
@@ -112,7 +112,7 @@ void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 	//設定されたIDのモデルをロード。
 	_Model = AddComponent<SkinModel>();
 	SkinModelData* modelData = new SkinModelData();
-	modelData->CloneModelData(SkinModelManager::LoadModel("Page.x"));
+	modelData->CloneModelData(SkinModelManager::LoadModel("Page2.x"));
 	_Material = modelData->FindMaterial("HuntingPage.png");
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
@@ -120,5 +120,5 @@ void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos);
-	transform->SetLocalScale(Vector3::one);
+	transform->SetLocalScale(Vector3::one * 5.0f);
 }

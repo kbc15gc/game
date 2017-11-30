@@ -239,7 +239,9 @@ void ShopS_Trade::_UpdateList()
 	//テキストの文字更新。
 	_UpdateText();
 	//選択している添え字更新。
-	_SetIndex(_Select);
+	int tmp = _Select;
+	_Select = -1;
+	_SetIndex(tmp);
 	//表示するアイテムをスクロール。
 	_ScrollDisplayItem();
 }
@@ -302,18 +304,18 @@ void ShopS_Trade::_UpdateText()
 		{
 			auto Info = item->GetInfo();
 			//持っている個数　交換個数　値段。
-			sprintf(info, "%2d   %2d %4d$", Inventory::Instance()->GetHoldNum(Info->TypeID, Info->ID), _TradeNum[i], Info->Value);
+			sprintf(info, "%2d   %2d %5d$", Inventory::Instance()->GetHoldNum(Info->TypeID, Info->ID), _TradeNum[i], Info->Value);
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
 		{
 			if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 			{
 				//持っている個数　交換個数　値段。
-				sprintf(info, "%2d   %2d %4d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
+				sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
 			}
 			else
 			{
-				sprintf(info, "%2d %4d$", _TradeNum[i], item->GetInfo()->Value);
+				sprintf(info, "%2d %5d$", _TradeNum[i], item->GetInfo()->Value);
 			}
 		}
 		
@@ -338,56 +340,77 @@ void ShopS_Trade::_ScrollDisplayItem()
 	}
 }
 
+typedef CharacterParameter::Param param;
+
 void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 {
 	try
 	{
 		//パラメータの文字列を格納。
-		char text[256];
-		ZeroMemory(text, 256);
-
-		if (item->GetInfo()->TypeID == Item::ItemCodeE::Weapon)
+		char text[512];
+		ZeroMemory(text, 512);
+		auto code = item->GetInfo()->TypeID;
+		if (code == Item::ItemCodeE::Item)
 		{
-			//武器にキャスト。
-			auto weapon = (HoldWeapon*)item;
-			//現在の装備取得。
-			auto equip = GetPlayer()->GetEquipment()->weapon;
+			//消費アイテムにキャスト
+			auto citem = dynamic_cast<ConsumptionItem*>(item);
+			auto info = static_cast<Item::ItemInfo*>(citem->GetInfo());
+			auto& val = info->effectValue;
 			
-			
-			if (equip == nullptr)
+			string tmp = "";
+			const char* p[9] = { "HP: ","MP: ","ATK:","DEF:","INT:","RES:","DEX:","CRT:","LV: " };
+			FOR(idx,9)
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
-					player->GetParam(CharacterParameter::Param::ATK), _CalcColorCode(weapon->GetAtk()), player->GetParam(CharacterParameter::Param::ATK) + weapon->GetAtk(),
-					player->GetParam(CharacterParameter::Param::MAT), _CalcColorCode(weapon->GetMagicAtk()), player->GetParam(CharacterParameter::Param::MAT) + weapon->GetMagicAtk(),
-					player->GetParam(CharacterParameter::Param::DEX), _CalcColorCode(weapon->GetDex()), player->GetParam(CharacterParameter::Param::DEX) + weapon->GetDex(),
-					player->GetParam(CharacterParameter::Param::CRT), _CalcColorCode(weapon->GetCrt()), player->GetParam(CharacterParameter::Param::CRT) + weapon->GetCrt());
+				char per = ' ';
+				if (1 < idx && idx < 8)
+					per = '%';
+				sprintf(text, "%s%s%4d%c</color>\n", p[idx], _CalcColorCode(val[idx]), val[idx], per);
+				tmp += text;
 			}
-			else
-			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
-					player->GetParam(CharacterParameter::Param::ATK) + equip->GetAtk(), _CalcColorCode(weapon->GetAtk() - equip->GetAtk()) , player->GetParam(CharacterParameter::Param::ATK) + weapon->GetAtk(),
-					player->GetParam(CharacterParameter::Param::MAT) + equip->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equip->GetMagicAtk()), player->GetParam(CharacterParameter::Param::MAT) + weapon->GetMagicAtk(),
-					player->GetParam(CharacterParameter::Param::DEX) + equip->GetDex(), _CalcColorCode(weapon->GetDex()- equip->GetDex()), player->GetParam(CharacterParameter::Param::DEX) + weapon->GetDex(),
-					player->GetParam(CharacterParameter::Param::CRT) + equip->GetCrt(), _CalcColorCode(weapon->GetCrt() - equip->GetCrt()), player->GetParam(CharacterParameter::Param::CRT) + weapon->GetCrt());
-			}
+			strcpy(text, tmp.c_str());
 		}
-		else if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor)
+		else if (code == Item::ItemCodeE::Armor)
 		{
 			//防具にキャスト。
 			auto armor = (HoldArmor*)item;
 			//現在の装備取得。
-			auto equip = GetPlayer()->GetEquipment()->armor;
-			if (equip == nullptr)
+			auto equipA = GetPlayer()->GetEquipment()->armor;
+			if (equipA == nullptr)
 			{
 				sprintf(text, "DEF %4d -> %s%4d</color>\nMDE %4d -> %s%4d</color>",
-					player->GetParam(CharacterParameter::Param::DEF), _CalcColorCode(armor->GetDef()), player->GetParam(CharacterParameter::Param::DEF) + armor->GetDef(),
-					player->GetParam(CharacterParameter::Param::MDE), _CalcColorCode(armor->GetMagicDef()), player->GetParam(CharacterParameter::Param::MDE) + armor->GetMagicDef());
+					player->GetParam(param::DEF), _CalcColorCode(armor->GetDef()), player->GetParam(param::DEF) + armor->GetDef(),
+					player->GetParam(param::MDE), _CalcColorCode(armor->GetMagicDef()), player->GetParam(param::MDE) + armor->GetMagicDef());
 			}
 			else
 			{
 				sprintf(text, "DEF %4d -> %s%4d</color>\nMDE %4d -> %s%4d</color>",
-					player->GetParam(CharacterParameter::Param::DEF) + equip->GetDef(), _CalcColorCode(armor->GetDef() - equip->GetDef()) , player->GetParam(CharacterParameter::Param::DEF) + armor->GetDef(),
-					player->GetParam(CharacterParameter::Param::MDE) + equip->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equip->GetMagicDef()), player->GetParam(CharacterParameter::Param::MDE) + armor->GetMagicDef());
+					player->GetParam(param::DEF) + equipA->GetDef(), _CalcColorCode(armor->GetDef() - equipA->GetDef()), player->GetParam(param::DEF) + armor->GetDef(),
+					player->GetParam(param::MDE) + equipA->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equipA->GetMagicDef()), player->GetParam(param::MDE) + armor->GetMagicDef());
+			}
+		}
+		else if (code == Item::ItemCodeE::Weapon)
+		{
+			//武器にキャスト。
+			auto weapon = (HoldWeapon*)item;
+			//現在の装備取得。
+			auto equipW = GetPlayer()->GetEquipment()->weapon;
+
+
+			if (equipW == nullptr)
+			{
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+					player->GetParam(param::ATK), _CalcColorCode(weapon->GetAtk()), player->GetParam(param::ATK) + weapon->GetAtk(),
+					player->GetParam(param::MAT), _CalcColorCode(weapon->GetMagicAtk()), player->GetParam(param::MAT) + weapon->GetMagicAtk(),
+					player->GetParam(param::DEX), _CalcColorCode(weapon->GetDex()), player->GetParam(param::DEX) + weapon->GetDex(),
+					player->GetParam(param::CRT), _CalcColorCode(weapon->GetCrt()), player->GetParam(param::CRT) + weapon->GetCrt());
+			}
+			else
+			{
+				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+					player->GetParam(param::ATK) + equipW->GetAtk(), _CalcColorCode(weapon->GetAtk() - equipW->GetAtk()), player->GetParam(param::ATK) + weapon->GetAtk(),
+					player->GetParam(param::MAT) + equipW->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equipW->GetMagicAtk()), player->GetParam(param::MAT) + weapon->GetMagicAtk(),
+					player->GetParam(param::DEX) + equipW->GetDex(), _CalcColorCode(weapon->GetDex() - equipW->GetDex()), player->GetParam(param::DEX) + weapon->GetDex(),
+					player->GetParam(param::CRT) + equipW->GetCrt(), _CalcColorCode(weapon->GetCrt() - equipW->GetCrt()), player->GetParam(param::CRT) + weapon->GetCrt());
 			}
 		}
 
@@ -404,10 +427,13 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 
 char * ShopS_Trade::_CalcColorCode(int diff)
 {
+	//青色。
 	if (diff > 0)
 		return  "<color=0fffffff>";
+	//赤色。
 	else if (diff < 0)
 		return  "<color=ff0000ff>";
+	//白色。
 	return "<color=ffffffff>";
 }
 
