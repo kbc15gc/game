@@ -41,7 +41,7 @@ MessageID,Title,Text,NextID,EventID,VoicePath
 39,モンスターについて。,そこの最近植えた小さい木の\n前の二人に聞きな。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 40,なにして遊ぼうかなぁ。,なにして遊ぼうかなぁ。,-1,-1,Asset/Sound/NPC/NPC/anone.wav
 41,賑やかな。,最近あんたのおかげで賑やかになってきたよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-42,村の発展。,あんたのおかげだよ。ありがとう。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+42,村の発展。,あんたのおかげだよ。ありがとう。,-1,-1,Asset/Sound/NPC/NPC/Mic1_45.wav
 43,この先は狩り場。,狩場として残しているよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 44,もっと強い敵を倒したければ。,狩場のもう少し先に行ってみな。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 45,次の村は,敵がかなり強い。\nきちんと準備していったほうがいいよ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav

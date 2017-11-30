@@ -208,7 +208,6 @@
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
-    <ClInclude Include="GameObject\Camera\EventCamera.h" />
     <ClInclude Include="GameObject\Camera\FreeCamera.h" />
     <ClInclude Include="GameObject\Camera\GameCamera.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
@@ -340,7 +339,6 @@
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
-    <ClCompile Include="GameObject\Camera\EventCamera.cpp" />
     <ClCompile Include="GameObject\Camera\FreeCamera.cpp" />
     <ClCompile Include="GameObject\Camera\GameCamera.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />

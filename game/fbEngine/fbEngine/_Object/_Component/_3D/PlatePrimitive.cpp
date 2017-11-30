@@ -165,6 +165,9 @@ void PlatePrimitive::Render()
 	Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
 	_Effect->SetValue("g_cameraPos", &D3DXVECTOR4(campos.x, campos.y, campos.z, 1.0f), sizeof(D3DXVECTOR4));
 
+	_Effect->SetVector("g_LuminanceColor", (D3DXVECTOR4*)&_LuminanceColor);
+	_Effect->SetInt("g_IsLuminance", _IsLuminance);
+
 	//テクスチャが格納されていればセット
 	if (_Texture != NULL)
 	{
