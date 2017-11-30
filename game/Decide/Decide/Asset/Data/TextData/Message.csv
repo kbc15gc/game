@@ -24,11 +24,11 @@ MessageID,Title,Text,NextID,EventID,VoicePath
 22,ようこそ。歴史を失った世界へ。,ああああああああああああ,23,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 23,ようこそ。歴史を失った世界へ。,また、わたしの話を聞きたくなったら\nここへ来てください。,24,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 24,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-25,魔王,よくきたな。勇者よ。,26,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+25,魔王,よくきたな。勇者よ。,26,-1,Asset/Sound/NPC/MAOU/5.wav
 26,魔王,八つ裂きにしてやるぅぅぅぅぅ。,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 27,村人A,何もないとこだけど、ゆっくりしていって。,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
 28,村人B,たまには休んでいってね。,-1,-1,Asset/Sound/NPC/NPC/Mic1_84.wav
-29,やぁ。,ここも昔はもっと活気があったんだけどな。,-1,-1,Asset/Sound/NPC/NPC/Mic1_85.wav
+29,やぁ。,ここも昔はもっと活気があったんだけどな。,-1,-1,Asset/Sound/NPC/NPC/Mic1_117.wav
 30,ありがとう。,助かったよ。,-1,-1,Asset/Sound/NPC/NPC/Mic1_86.wav
 31,モンスターがいて怖いよ。,この道を進んだ先に\nモンスターがたくさんいて\n困ってるんだ。,-1,-1,Asset/Sound/NPC/NPC/Mic1_87.wav
 32,ページみたいなものが落ちてたよ。,モンスターがその周りにいて詳しくは\n確かめれなかったよ。,-1,-1,Asset/Sound/NPC/NPC/Mic1_88.wav
