@@ -41,13 +41,16 @@ namespace Support {
 	enum DataTypeE
 	{
 		INT,	//整数
-		INTARRAY,	// 整数配列。
 		FLOAT,	//浮動小数
 		VECTOR2,	// Vector2。
 		VECTOR3,//Vector3
 		VECTOR4,// Vector4。
 		QUATERNION,//Quaternion。
 		STRING,	//文字
+		ARRAY = BIT(8),
+		INT_ARRAY = INT | ARRAY,	// 整数配列。
+		FLOAT_ARRAY = FLOAT | ARRAY,
+		VECTOR3_ARRAY = VECTOR3 | ARRAY,	//Vector3配列。
 	};
 	//メンバ変数の情報。
 	struct DATARECORD
@@ -193,69 +196,122 @@ namespace
 	//文字列を数字に変換し、受け取ったアドレスに設定。
 	void SetValue(char* addres, char* word, Support::DataTypeE type, const int size)
 	{
-		if (type == Support::DataTypeE::INT)
+		//配列ではない
+		if((type & Support::DataTypeE::ARRAY) == 0)
 		{
-			int val = Support::StringToInt(word);
-			memcpy(addres, &val, size);
-		}
-		else if (type == Support::DataTypeE::INTARRAY) {
-			int offset = 0;
-			char copy[256];
-			strcpy(copy, word);
-			const int max = size / sizeof(int);
-			int Array[999];	// とりあえず多めに取っておく。
-			ZeroMemory(Array, sizeof(Array));
-
-			for (int idx = 0; idx < max; idx++) {
-				//数字の部分を取り出す。
-				char* num = strtok(copy + offset, "/");
-				//数字に変換する。
-				Array[idx] = Support::StringToInt(num);
-				//オフセット量を増やす。
-				offset += strlen(num) + 1;
+			if (type == Support::DataTypeE::INT)
+			{
+				int val = Support::StringToInt(word);
+				memcpy(addres, &val, size);
 			}
+			else if (type == Support::DataTypeE::FLOAT)
+			{
+				float val = Support::StringToDouble(word);
+				memcpy(addres, &val, size);
+			}
+			else if (type == Support::DataTypeE::VECTOR2)
+			{
+				Vector2 v2 = Vector2(0.0f, 0.0f);
 
-			memcpy(addres, &Array, size);
+				Support::ConvertFloatArrayFromString(word, &v2, 2);
+				memcpy(addres, &v2, size);
+			}
+			else if (type == Support::DataTypeE::VECTOR3)
+			{
+				Vector3 v3 = Vector3::zero;
+
+				Support::ConvertFloatArrayFromString(word, &v3, 3);
+
+				memcpy(addres, &v3, size);
+			}
+			else if (type == Support::DataTypeE::VECTOR4)
+			{
+				Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+
+				Support::ConvertFloatArrayFromString(word, &v4, 4);
+
+				memcpy(addres, &v4, size);
+			}
+			else if (type == Support::DataTypeE::QUATERNION)
+			{
+				Quaternion quat = Quaternion::Identity;
+
+				Support::ConvertFloatArrayFromString(word, &quat, 4);
+
+				memcpy(addres, &quat, size);
+			}
+			else if (type == Support::DataTypeE::STRING)
+			{
+				memcpy(addres, word, size);
+			}
 		}
-		else if (type == Support::DataTypeE::FLOAT)
+		//配列。
+		else
 		{
-			float val = Support::StringToDouble(word);
-			memcpy(addres, &val, size);
-		}
-		else if (type == Support::DataTypeE::VECTOR2)
-		{
-			Vector2 v2 = Vector2(0.0f, 0.0f);
+			size_t offset = 0;
+			char copy[512];
+			ZeroMemory(copy, sizeof(copy));//初期化。
 
-			Support::ConvertFloatArrayFromString(word, &v2, 2);
-			memcpy(addres, &v2, size);
-		}
-		else if (type == Support::DataTypeE::VECTOR3)
-		{
-			Vector3 v3 = Vector3::zero;
+			if (type == Support::DataTypeE::INT_ARRAY) 
+			{
+				strcpy(copy, word);
+				const int max = size / sizeof(int);
+				int Array[999];	// とりあえず多めに取っておく。									
+				ZeroMemory(Array, sizeof(Array));//初期化。
 
-			Support::ConvertFloatArrayFromString(word, &v3, 3);
+				for (int idx = 0; idx < max; idx++) {
+					//数字の部分を取り出す。
+					char* num = strtok(copy + offset, "/");
+					//数字に変換する。
+					Array[idx] = Support::StringToInt(num);
+					//オフセット量を増やす。
+					offset += strlen(num) + 1;
+				}
+				memcpy(addres, &Array, size);
+			}
+			else if (type == Support::DataTypeE::FLOAT_ARRAY)
+			{
+				//[]を外す。
+				auto len = strlen(word) - 2;
+				strncpy(copy, word + 1, len);
+				strcpy(copy, word);
+				const int max = size / sizeof(float);
+				float Array[999];	// とりあえず多めに取っておく。									
+				ZeroMemory(Array, sizeof(Array));//初期化。
 
-			memcpy(addres, &v3, size);
-		}
-		else if (type == Support::DataTypeE::VECTOR4)
-		{
-			Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+				for (int idx = 0; idx < max, *(copy + offset) != '\0'; idx++) {
+					//配列の一要素を取り出す。
+					char* num = strtok(copy + offset, ",");
+					//数字に変換する。
+					Array[idx] = Support::StringToDouble(num);
+					//オフセット量を増やす。
+					offset += strlen(num) + 1;
+				}
 
-			Support::ConvertFloatArrayFromString(word, &v4, 4);
+				memcpy(addres, &Array, size);
+			}
+			else if (type == Support::DataTypeE::VECTOR3_ARRAY)
+			{
+				//[]を外す。
+				auto len = strlen(word) - 2;
+				strncpy(copy, word + 1, len);
+				const int max = size / sizeof(Vector3);
+				Vector3 Array[999];	// とりあえず多めに取っておく。									
+				ZeroMemory(Array, sizeof(Array));//初期化。
 
-			memcpy(addres, &v4, size);
-		}
-		else if (type == Support::DataTypeE::QUATERNION)
-		{
-			Quaternion quat = Quaternion::Identity;
+				for (int idx = 0; idx < max, *(copy + offset) != '\0'; idx++) {
+					//配列の一要素を取り出す。
+					char* num = strtok(copy + offset, ",");
+					Vector3 v3 = Vector3::zero;
+					//文字列を値に変換。
+					Support::ConvertFloatArrayFromString(num, &v3, 3);
+					Array[idx] = v3;
 
-			Support::ConvertFloatArrayFromString(word, &quat, 4);
-
-			memcpy(addres, &quat, size);
-		}
-		else if (type == Support::DataTypeE::STRING)
-		{
-			memcpy(addres, word, size);
+					//オフセット量を増やす。
+					offset += strlen(num) + 1;
+				}
+				memcpy(addres, &Array, size);
+			}
 		}
 	}
 }
@@ -301,6 +357,7 @@ namespace Support {
 				break;
 
 			//csvの"\n"が"//n"と認識される問題(根本的な解決ではないかも)。
+			//\\nを\nに置き換える処理。
 			StrReplace(line, "\\n", "\n");
 
 			int idx = 0;		//何番目の要素か？
@@ -312,15 +369,27 @@ namespace Support {
 			while (*(line + offset) != '\0' &&	//1行の終端までループ
 				idx < datanum)					//範囲チェック
 			{
-				//","区切りで単語を抽出
-				//","の部分には'\0'が埋め込まれるのでコピーを使う
-				char* word = strtok(copy + offset, ",");
+				auto type = (DataTypeE)datas[idx].type;
+				char* word;
+				if (type == DataTypeE::VECTOR3_ARRAY || type == DataTypeE::FLOAT_ARRAY)
+				{
+					//","の部分には'\0'が埋め込まれるのでコピーを使う
+					word = strtok(copy + offset, "]");
+					strcat(word, "]");
+				}
+				else
+				{
+					//","区切りで単語を抽出
+					//","の部分には'\0'が埋め込まれるのでコピーを使う
+					word = strtok(copy + offset, ",");
+				}
+				
 
 				//変数の先頭アドレスを求める。
 				//char*型(1byte)にキャストすることで1づつずらすことができる。
 				auto addres = (char*)tmp + datas[idx].offset;
 				//アドレスに値を設定。
-				SetValue(addres, word, (DataTypeE)datas[idx].type, datas[idx].size);
+				SetValue(addres, word, type, datas[idx].size);
 
 				//単語の長さ+1(","分)をオフセット量に加算
 				offset += strlen(word) + 1;
@@ -395,7 +464,7 @@ namespace Support {
 					sprintf(word, "%d", i);
 					//ToString(i, word);
 					break;
-				case DataTypeE::INTARRAY:	// 配列に対応?。
+				case DataTypeE::INT_ARRAY:	// 配列に対応?。
 					FOR(num, datas[idx].size / sizeof(int)){
 						memcpy(&i, addres, sizeof(int));
 						sprintf(word, "%d", i);

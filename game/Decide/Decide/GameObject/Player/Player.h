@@ -46,7 +46,7 @@ namespace
 	const Support::DATARECORD ExperiencePointTableInfoData[] =
 	{
 		{ "ExperiencePoint",Support::DataTypeE::INT, offsetof(struct ExperiencePointTableInfo,ExperiencePoint),sizeof(int) },
-		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct ExperiencePointTableInfo,param),	sizeof(ExperiencePointTableInfo::param) },
+		{ "param",	Support::DataTypeE::INT_ARRAY, offsetof(struct ExperiencePointTableInfo,param),	sizeof(ExperiencePointTableInfo::param) },
 	};
 
 }
