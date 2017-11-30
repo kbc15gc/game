@@ -95,10 +95,10 @@ void Text::SetText(const wchar_t * s)
 void Text::SetText(const char * s)
 {
 	//wchar‚É•ÏŠ·
-	wchar_t w[256];
+	wchar_t w[512];
 	setlocale(LC_CTYPE, "jpn");
 
-	mbstowcs(w, s, 256);
+	mbstowcs(w, s, 512);
 	SetText(w);
 }
 
