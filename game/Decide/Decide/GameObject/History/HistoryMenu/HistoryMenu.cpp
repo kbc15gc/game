@@ -102,6 +102,9 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 	chip2D->Start(chipID);
 	_Chip2DList.push_back(chip2D);
 
+	_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
+	_NowSelectChip = max(0, _NowSelectChip);
+
 	int len = _Chip2DList.size() - 1 - _NowSelectChip;
 	float offset = -150.0f;
 	Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
