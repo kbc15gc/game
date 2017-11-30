@@ -7,9 +7,9 @@ sampler g_SceneSampler =
 sampler_state
 {
     Texture = <g_Scene>;
-    MipFilter = LINEAR;
-    MinFilter = LINEAR;
-    MagFilter = LINEAR;
+    MipFilter = NONE;
+    MinFilter = NONE;
+    MagFilter = NONE;
     AddressU = CLAMP;
     AddressV = CLAMP;
 };
@@ -19,9 +19,9 @@ sampler g_LumSampler =
 sampler_state
 {
 	Texture = <g_Lum>;
-	MipFilter = LINEAR;
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
+	MipFilter = NONE;
+	MinFilter = NONE;
+	MagFilter = NONE;
 	AddressU = CLAMP;
 	AddressV = CLAMP;
 };

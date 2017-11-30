@@ -349,7 +349,7 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
 		//アルファブレンド.
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);

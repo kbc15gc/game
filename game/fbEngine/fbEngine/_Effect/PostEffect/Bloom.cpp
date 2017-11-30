@@ -95,7 +95,7 @@ void Bloom::Render()
 			(*graphicsDevice()).SetDepthStencilSurface(_LuminanceColorRT->depth);
 
 			//テクスチャのクリア
-			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
+			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 			_Effect->SetTechnique("SamplingLuminance");
 
