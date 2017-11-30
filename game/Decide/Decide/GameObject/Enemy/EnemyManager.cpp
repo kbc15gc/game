@@ -15,137 +15,181 @@ EnemyManager* EnemyManager::_instance = nullptr;
 
 
 EnemyManager::EnemyManager() {
-	LoadEnemyOrigin();
 }
 
 EnemyManager::~EnemyManager() {
-	for (auto enemy : _enemys) {
+	for (auto enemy : _commonEnemys) {
 		enemy->Object = nullptr;
 		SAFE_DELETE(enemy);
 	}
-	_enemys.clear();
+	_commonEnemys.clear();
+	for (auto& enemyArray : _historyEnemys) {
+		for (auto enemy : enemyArray) {
+			enemy->Object = nullptr;
+			SAFE_DELETE(enemy);
+		}
+		enemyArray.clear();
+	}
+	_historyEnemys.clear();
 }
 
 void EnemyManager::Start() {
-	CreateEnemy();
 }
 
-void EnemyManager::LoadEnemyOrigin() {
-	vector<unique_ptr<LoadEnemyInfo::EnemyInfo>> infoDatas;
 
-	//CSVからエネミー情報読み取り。
-	Support::LoadCSVData<LoadEnemyInfo::EnemyInfo>("Asset/Data/EnemyData/CommonGroupEnemy.csv", LoadEnemyInfo::EnemyInfoDecl, ARRAY_SIZE(LoadEnemyInfo::EnemyInfoDecl), infoDatas);
-
-	for (int idx = 0; idx < static_cast<int>(infoDatas.size()); idx++) {
-		// 読み取ったデータを管理用構造体で登録。
-		ManagingData* data(new ManagingData());
-		data->Object = nullptr;
-		data->InfoData = move(const_cast<unique_ptr<LoadEnemyInfo::EnemyInfo>&>(infoDatas[idx]));
-		
-		// 生成した管理用構造体をリストに追加。
-		_enemys.push_back(data);
-	}
-}
-
-void EnemyManager::CreateEnemy() {
-	for (auto info : _enemys)
-	{
-		EnemyCharacter* enemy = nullptr;
-		vector<BarColor> barColor;
-		switch (static_cast<EnemyCharacter::EnemyType>(info->InfoData->type))
-		{
-		case EnemyCharacter::EnemyType::Born:
-			// 骨エネミー生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
-			barColor.push_back(BarColor::Red);
-			break;
-		case EnemyCharacter::EnemyType::BossDrarian:
-			// ボスドラリアン生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
-			barColor.push_back(BarColor::Yellow);
-			barColor.push_back(BarColor::Red);
-			break;
-		case EnemyCharacter::EnemyType::Drarian:
-			// ドラリアン生成。
-
-			// ※まだ作成しない。
-			barColor.push_back(BarColor::Red);
-			break;
-		case EnemyCharacter::EnemyType::Golem:
-			//ゴーレム生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);	
-			barColor.push_back(BarColor::Red);
-			break;
-		case EnemyCharacter::EnemyType::BossGolem:
-			//ボスゴーレム生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-			barColor.push_back(BarColor::Yellow);
-			barColor.push_back(BarColor::Red);
-			break;
-
-		case EnemyCharacter::EnemyType::Soldier:
-			//兵士を生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
-			barColor.push_back(BarColor::Red);
-			break;
-		case EnemyCharacter::EnemyType::BossD:
-			//ボスD生成。
-			enemy = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
-			barColor.push_back(BarColor::Yellow);
-			barColor.push_back(BarColor::Red);
-			break;
-		}
-
-		if (enemy) {
-			info->Object = enemy;	// 生成したエネミーオブジェクトを保存。
-			// Transform情報設定。
-			enemy->transform->SetPosition(info->InfoData->position);
-			enemy->transform->SetRotation(info->InfoData->rotation);
-			enemy->transform->SetScale(info->InfoData->scale);
-			// パラメーター設定。
-			enemy->SetParamAll(barColor, info->InfoData->param);
-			// ドロップ設定。
-			enemy->SetDropEXP(info->InfoData->exp);
-			enemy->SetDropMoney(info->InfoData->money);
-			enemy->SetItem(info->InfoData->item, info->InfoData->armor, info->InfoData->weapon);
-			//カラーの設定
-			float* color = info->InfoData->color;
-			Color c;
-			c.Set(color[0], color[1], color[2], color[3]);
-			//カラーを設定するフラグの場合。
-			if (info->InfoData->colorflag == true)
-			{
-				enemy->SetColor(c);
-			}
+void EnemyManager::CreateEnemys(LocationCodeE location, const vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos) {
+	vector<ManagingData*>* l_infos = nullptr;
+	if (location != LocationCodeE::None) {
+		if (location == LocationCodeE::Common) {
+			// 共通エネミーを作成。
+			l_infos = &_commonEnemys;
 		}
 		else {
-			// 生成失敗。
-			// EnemyTypeに新種を追加した？。
-			abort();
+			// 歴史に影響されるエネミーを作成。
+			if (static_cast<int>(_historyEnemys.size()) < static_cast<int>(location) + 1) {
+				_historyEnemys.resize(static_cast<int>(location) + 1);
+			}
+			l_infos = &(_historyEnemys[static_cast<int>(location)]);
+		}
+	}
+
+	if (l_infos == nullptr) {
+		return;
+	}
+	else {
+		if (l_infos->size() > 0) {
+			for (auto obj : *l_infos) {
+				if (obj->Object) {
+					INSTANCE(GameObjectManager)->AddRemoveList(obj->Object);
+				}
+			}
+			l_infos->clear();
+		}
+
+		for (int idx = 0; idx < static_cast<int>(infos.size()); idx++)
+		{
+			ManagingData* newData = new ManagingData;
+			newData->Object = nullptr;
+
+			vector<BarColor> barColor;
+			switch (static_cast<EnemyCharacter::EnemyType>(infos[idx]->type))
+			{
+			case EnemyCharacter::EnemyType::Born:
+				// 骨エネミー生成。
+				newData->Object = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
+				barColor.push_back(BarColor::Red);
+				break;
+			case EnemyCharacter::EnemyType::BossDrarian:
+				// ボスドラリアン生成。
+				newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
+				barColor.push_back(BarColor::Yellow);
+				barColor.push_back(BarColor::Red);
+				break;
+			case EnemyCharacter::EnemyType::Drarian:
+				// ドラリアン生成。
+
+				// ※まだ作成しない。
+				barColor.push_back(BarColor::Red);
+				break;
+			case EnemyCharacter::EnemyType::Golem:
+				//ゴーレム生成。
+				newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);
+				barColor.push_back(BarColor::Red);
+				break;
+			case EnemyCharacter::EnemyType::BossGolem:
+				//ボスゴーレム生成。
+				newData->Object = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
+				barColor.push_back(BarColor::Yellow);
+				barColor.push_back(BarColor::Red);
+				break;
+
+			case EnemyCharacter::EnemyType::Soldier:
+				//兵士を生成。
+				newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemySoldier>("EnemySoldier", 1);
+				barColor.push_back(BarColor::Red);
+				break;
+			case EnemyCharacter::EnemyType::BossD:
+				//ボスD生成。
+				newData->Object = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+				barColor.push_back(BarColor::Yellow);
+				barColor.push_back(BarColor::Red);
+				break;
+			}
+
+			if (newData->Object) {
+				newData->Object->SetLocationCode(location);
+				// infoを保存。
+				newData->InfoData = infos[idx].get();
+				// Transform情報設定。
+				newData->Object->transform->SetPosition(newData->InfoData->position);
+				newData->Object->transform->SetRotation(newData->InfoData->rotation);
+				newData->Object->transform->SetScale(newData->InfoData->scale);
+				// パラメーター設定。
+				newData->Object->SetParamAll(barColor, newData->InfoData->param);
+				// ドロップ設定。
+				newData->Object->SetDropEXP(newData->InfoData->exp);
+				newData->Object->SetDropMoney(newData->InfoData->money);
+				newData->Object->SetItem(newData->InfoData->item, newData->InfoData->armor, newData->InfoData->weapon);
+				//カラーの設定
+				float* color = newData->InfoData->color;
+				Color c;
+				c.Set(color[0], color[1], color[2], color[3]);
+				//カラーを設定するフラグの場合。
+				if (newData->InfoData->colorflag == true)
+				{
+					newData->Object->SetColor(c);
+				}
+
+				l_infos->push_back(newData);
+			}
+			else {
+				// 生成失敗。
+				// EnemyTypeに新種を追加した？。
+				abort();
+			}
 		}
 	}
 }
 
+
+
+
 void EnemyManager::DeathEnemy(EnemyCharacter* object) {
+	// エネミー削除予約。
 	INSTANCE(GameObjectManager)->AddRemoveList(object);
 
-	for (auto enemy : _enemys) {
+	//バフデバフエフェクトを消す処理。
+	ParticleEffect* pe = object->GetComponent<ParticleEffect>();
+	if (pe) {
+		pe->SetBuffEffectFlag(false);
+		pe->SetDebuffEffectFlag(false);
+	}
+
+	//死んだのですべてのバフデバフアイコンを削除。
+	BuffDebuffICon* icon = object->GetComponent<BuffDebuffICon>();
+	if (icon) {
+		icon->DeleteAllBuffDebuffIcon();
+	}
+
+	vector<ManagingData*>* datas = nullptr;
+
+	if (object->GetLocationCode() == LocationCodeE::Common) {
+		datas = &_commonEnemys;
+	}
+	else {
+		if (object->GetLocationCode() == LocationCodeE::None) {
+			// 外部から読み込まれたデータではないので終了。
+			return;
+		}
+		else {
+			datas = &_historyEnemys[static_cast<int>(object->GetLocationCode())];
+		}
+	}
+
+	for (auto enemy : *datas) {
 		if (object == enemy->Object) {
 			// このクラスで生成したエネミーが死亡している。
-
-			//バフデバフエフェクトを消す処理。
-			ParticleEffect* pe = object->GetComponent<ParticleEffect>();
-			if (pe) {
-				pe->SetBuffEffectFlag(false);
-				pe->SetDebuffEffectFlag(false);
-			}
-
-			//死んだのですべてのバフデバフアイコンを削除。
-			BuffDebuffICon* icon = object->GetComponent<BuffDebuffICon>();
-			if (icon) {
-				icon->DeleteAllBuffDebuffIcon();
-			}
-			
+	
 			// エネミーをリスポーン。
 			vector<BarColor> barColor;
 			ObjectSpawn* Spawner = enemy->Object->GetSpawner();

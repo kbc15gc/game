@@ -41,7 +41,7 @@ void HistoryMenu::Start()
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 	//_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
 
-	_ReleaseLocation = (int)LocationCodeE::Prosperity;
+	_ReleaseLocation = (int)LocationCodeE::Common - 1;
 
 	//スプライトクラスを追加.
 	_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);

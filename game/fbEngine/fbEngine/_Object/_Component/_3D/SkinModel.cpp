@@ -128,11 +128,14 @@ void SkinModel::PreRender()
 	{
 		INSTANCE(SceneManager)->GetEnvironmentMap()->EntryModel(this);
 	}
-	//インスタンシングフラグをチェック。
-	if(_ModelDate->GetInstancing())
-	{
-		//開始。
-		_ModelDate->StartInstancing();
+
+	if (_ModelDate) {
+		//インスタンシングフラグをチェック。
+		if (_ModelDate->GetInstancing())
+		{
+			//開始。
+			_ModelDate->StartInstancing();
+		}
 	}
 }
 

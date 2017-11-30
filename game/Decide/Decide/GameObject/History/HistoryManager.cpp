@@ -6,7 +6,7 @@
 namespace
 {
 	//オブジェクトを識別するタイプ。
-	const char* ObjectType[2] = { "Obj","NPC" };
+	const char* ObjectType[3] = { "Obj","NPC","Enemy" };
 }
 
 
@@ -28,6 +28,8 @@ HistoryManager::HistoryManager()
 		_GameObjectList.push_back(list);
 		vector<NPC*> npcs;
 		_NPCList.push_back(npcs);
+
+		_EnemyInfoList = vector<vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>>(static_cast<int>(LocationCodeE::LocationNum));
 	}
 }
 
@@ -76,11 +78,10 @@ void HistoryManager::Start()
 #else // NPCONLY
 	//共通オブジェクト生成。
 	char path[128];
-	FOR(type, 2)
-	{
+	for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		_CreateObject((int)LocationCodeE::Common, path, type);
+		_CreateObject(LocationCodeE::Common, path, static_cast<LoadObjectType>(type));
 	}
 
 #endif
@@ -145,11 +146,10 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 
 		char path[128];
 
-		FOR(type,2)		
-		{
+		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
 			//パス生成
 			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)location, 'A' + group, ObjectType[type]);
-			_CreateObject((int)location, path, type);
+			_CreateObject(location, path, static_cast<LoadObjectType>(type));
 			ZeroMemory(path, 128);
 		}
 	}
@@ -200,43 +200,46 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 * @param path		フォルダパス.
 * @param type		生成するオブジェクトのタイプ.
 */
-void HistoryManager::_CreateObject(int location, const char * path, int type)
+void HistoryManager::_CreateObject(LocationCodeE location, const char * path, HistoryManager::LoadObjectType type)
 {
-	if (type == 0)
+	if (type == HistoryManager::LoadObjectType::Object)
 	{
 		//前のオブジェクトを削除
-		for (auto& it : _GameObjectList[location])
+		for (auto obj : _GameObjectList[static_cast<int>(location)])
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(it);
+			INSTANCE(GameObjectManager)->AddRemoveList(obj);
 		}
-		_GameObjectList[location].clear();
+		_GameObjectList[static_cast<int>(location)].clear();
 
 		//生成。
-		CreateBuilding(path, _GameObjectList[location]);
+		CreateBuilding(path, _GameObjectList[static_cast<int>(location)]);
 
-		//第3の村だけ
-		if (location == (int)LocationCodeE::Prosperity)
+		//第3の村以降のみ。
+		if (location == LocationCodeE::Prosperity || location == LocationCodeE::DevilKingdom)
 		{
-			for (auto obj : _GameObjectList[location]) {
+			for (auto obj : _GameObjectList[static_cast<int>(location)]) {
 				//X軸に180ど回転させる。
-				Quaternion q = Quaternion::Identity;
-				q.SetRotation(Vector3::axisX, PI);
-				q.Multiply(obj->transform->GetRotation());
-				obj->transform->SetRotation(q);
+				//Quaternion q = Quaternion::Identity;
+				//q.SetRotation(Vector3::axisX, PI);
+				//q.Multiply(obj->transform->GetRotation());
+				//obj->transform->SetRotation(q);
 			}
 		}
-
 	}
-	else if (type == 1)
+	else if (type == HistoryManager::LoadObjectType::NPC)
 	{
 		//前のNPCを削除
-		for (auto& it : _NPCList[(int)location])
+		for (auto npc : _NPCList[(int)location])
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(it);
+			INSTANCE(GameObjectManager)->AddRemoveList(npc);
 		}
 		_NPCList[(int)location].clear();
 		//生成。
 		_CreateNPC(location, path);
+	}
+	else if (type == HistoryManager::LoadObjectType::Enemy) {
+		// エネミーの情報を読み込み。
+		_CreateEnemy(location, path);
 	}
 }
 
@@ -313,7 +316,7 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 	return Builds;
 }
 
-void HistoryManager::_CreateNPC(int location, const char * path)
+void HistoryManager::_CreateNPC(LocationCodeE location, const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
 	vector<unique_ptr<npc::NPCInfo>> npcInfo;
@@ -331,10 +334,22 @@ void HistoryManager::_CreateNPC(int location, const char * path)
 		model->SetCullMode(D3DCULL::D3DCULL_CCW);
 
 		//管理用の配列に追加。
-		_NPCList[location].push_back(npc);
+		_NPCList[static_cast<int>(location)].push_back(npc);
 	}
 	//いらんので破棄。
 	npcInfo.clear();
+}
+
+void HistoryManager::_CreateEnemy(LocationCodeE location, const char * path) {
+	// 前のエネミーを削除。
+	if (_EnemyInfoList[(int)location].size() > 0) {
+		_EnemyInfoList[(int)location].clear();
+	}
+
+	//CSVからエネミー情報読み取り。
+	Support::LoadCSVData<LoadEnemyInfo::EnemyInfo>(path, LoadEnemyInfo::EnemyInfoDecl, ARRAY_SIZE(LoadEnemyInfo::EnemyInfoDecl), _EnemyInfoList[static_cast<int>(location)]);
+
+	INSTANCE(EnemyManager)->CreateEnemys(location, _EnemyInfoList[static_cast<int>(location)]);
 }
 
 /**
