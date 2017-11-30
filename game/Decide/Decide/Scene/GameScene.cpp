@@ -194,8 +194,8 @@ void GameScene::Start()
 
 	//街3BGM
 	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
-	//_Mati3BGM->Init("Asset/Sound/mati3.wav");
-	//_Mati3BGM->SetVolume(0.2f);
+	_Mati3BGM->Init("Asset/Sound/mati3.wav");
+	_Mati3BGM->SetVolume(0.2f);
 
 	//死亡BGM
 	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
@@ -204,9 +204,9 @@ void GameScene::Start()
 
 	//再生用BGM
 	_GameBGM = _WorldBGM;
-#ifndef _NOBO_
-	_GameBGM->Play(true);
-#endif // !_NOBO_
+//#ifndef _NOBO_
+//	_GameBGM->Play(true);
+//#endif // !_NOBO_
 	//シャドウマップ有効.
 	_isShadowMap = true;
 	//環境マップ有効.
@@ -224,11 +224,11 @@ void GameScene::Start()
 	//チップを作成
 	_NewChip();
 
-	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
-	//g_depth->SetPivot(Vector2(0, 0));
-	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	//g_depth->SetActive(true);
+	g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
+	g_depth->SetPivot(Vector2(0, 0));
+	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	g_depth->SetActive(true);
 }
 
 void GameScene::Update()
@@ -271,25 +271,30 @@ void GameScene::Update()
 		}
 		else
 		{
+			int location = -1;
 			//各場所のコリジョンに当たっているか。
-			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
+			int i = 0,size = sizeof(soundcollisition) / sizeof(soundcollisition[0]);
+			for (i = 0; i < size; i++)
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
-							_Player->SetRespawnPos(LocationPosition[0]);
+							location = 0;
+							_Player->SetRespawnPos(LocationPosition[location]);
 							if(!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
-							_Player->SetRespawnPos(LocationPosition[1]);
+							location = 1;
+							_Player->SetRespawnPos(LocationPosition[location]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
-							_Player->SetRespawnPos(LocationPosition[2]);
+							location = 2;
+							_Player->SetRespawnPos(LocationPosition[location]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
@@ -299,6 +304,11 @@ void GameScene::Update()
 					break;
 				}
 			}
+
+			INSTANCE(HistoryManager)->SetNowLocation(location);
+
+			if (i == size - 1)
+				_VillageName->Excute(i);
 		}
 	}
 }
@@ -376,7 +386,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			_GameBGM = _Mati2BGM;
 			break;
 		case GameScene::BGM::MATI3:
-			//_GameBGM = _Mati3BGM;
+			_GameBGM = _Mati3BGM;
 			break;
 		case GameScene::BGM::DEAD:
 			_GameBGM = _DeadBGM;

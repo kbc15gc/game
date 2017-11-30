@@ -7,7 +7,7 @@ static const string LocationNames[] =
 	"–³–¼",
 	"‚Í‚¶‚Ü‚è‚ÌW—Ž",
 	"Žë—Â‚Ì‘º",
-	"”É‰h‚Ì’¬",
+	"”É‰h‚ÌŠX",
 	"‚»‚Æ"
 };
 
@@ -34,11 +34,11 @@ void VillageName::Update()
 
 void VillageName::Excute(const int location)
 {
-	//if (now != location && LocationNames[location].size() > location)
-	//{
-	//	//•\Ž¦–¼‚ðÝ’è.
-	//	_Text->SetText(LocationNames[location].c_str());
-	//	_Timer = 0.0f;
-	//	now = location;
-	//}
+	if (now != location && location < ARRAY_SIZE(LocationNames))
+	{
+		//•\Ž¦–¼‚ðÝ’è.
+		_Text->SetText(LocationNames[location].c_str());
+		_Timer = 0.0f;
+		now = location;
+	}
 }

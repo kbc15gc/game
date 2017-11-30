@@ -81,13 +81,13 @@ static const string LocationNameList[(int)LocationCodeE::Common] =
 };
 
 /**
-* 場所の座標.
+* プレイヤーのリスポーン地点の座標.
 */
 static const Vector3 LocationPosition[(int)LocationCodeE::Common] =
 {
 	Vector3(-387.3f,58.0f,-75.8f),
 	Vector3(-108.1f ,55.5f ,533.9f),
-	Vector3(214.80f, 65.70f, -84.10f),
+	Vector3(212.88f, 67.0f, 6.92f),
 	Vector3(-114.23f, 183.0f, 184.95f),
 };
 

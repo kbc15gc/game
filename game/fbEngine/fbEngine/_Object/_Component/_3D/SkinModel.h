@@ -204,6 +204,23 @@ public:
 		_FogColor = color;
 	}
 
+	/**
+	* 溢れ輝度を書き込むかのフラグ.
+	*/
+	void SetIsLuminance(bool value)
+	{
+		_IsLuminance = value;
+	}
+
+	/**
+	* 色々な色の輝度を設定できるよ.
+	* aに1を入れると書き込まれるよ.
+	*/
+	void SetLuminanceColor(Color lumColor)
+	{
+		_LuminanceColor = lumColor;
+	}
+
 private:
 	//子とか兄弟も一括で描画するための再帰関数
 	void DrawFrame(LPD3DXFRAME pFrame);
@@ -265,5 +282,11 @@ private:
 	float _FogParam[2];
 	/** フォグの色. */
 	Vector4 _FogColor = Vector4(0, 0, 0, 1);
+
+	/** 輝度の色. */
+	Color _LuminanceColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
+
+	/** 溢れ輝度を書き込むかフラグ. */
+	bool _IsLuminance = true;
 
 };

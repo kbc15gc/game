@@ -37,7 +37,7 @@ void MeshObjectChip::Init(const char* name, const Vector3& pos, const Vector3& s
 	modeldata->CloneModelData(SkinModelManager::LoadModel(name));
 	model->SetModelData(modeldata);
 
-	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
+	//model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 	//“–‚½‚è”»’è’Ç‰ÁB

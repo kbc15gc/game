@@ -130,13 +130,13 @@ void EnemyManager::CreateEnemys(LocationCodeE location, const vector<unique_ptr<
 				newData->Object->SetDropEXP(newData->InfoData->exp);
 				newData->Object->SetDropMoney(newData->InfoData->money);
 				newData->Object->SetItem(newData->InfoData->item, newData->InfoData->armor, newData->InfoData->weapon);
-				//カラーの設定
-				float* color = newData->InfoData->color;
-				Color c;
-				c.Set(color[0], color[1], color[2], color[3]);
 				//カラーを設定するフラグの場合。
-				if (newData->InfoData->colorflag == true)
+				if (newData->InfoData->colorflag)
 				{
+					//カラーの設定
+					float* color = newData->InfoData->color;
+					Color c;
+					c.Set(color[0], color[1], color[2], color[3]);
 					newData->Object->SetColor(c);
 				}
 
@@ -237,6 +237,8 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			Color c;
 			c.Set(color[0], color[1], color[2], color[3]);
 			//カラーを設定するフラグの場合。
+			//@todo for debug
+			//いったん消します。
 			if (enemy->InfoData->colorflag == true)
 			{
 				enemy->Object->SetColor(c);

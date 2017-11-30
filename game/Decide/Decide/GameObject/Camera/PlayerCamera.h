@@ -31,6 +31,29 @@ public:
 	{
 		_IsMove = value;
 	}
+
+	/**
+	* カメラの座標などの初期化.
+	*/
+	inline void Init()
+	{
+		_Camera->SetTarget(_GetPlayerPos());
+		_DestinationPos = _GetPlayerPos() + (_Player->transform->GetForward() * _Dist);
+		transform->SetPosition(_DestinationPos);
+		_Camera->Update();
+
+		_ToCameraDir = (_Player->transform->GetForward());
+	}
+	//プレイヤーの方向を向く。
+	void LookAtTarget()
+	{
+		auto next = _GetPlayerPos();
+		_Camera->SetTarget(next);
+		_DestinationPos = _ClosetRay();
+		transform->SetPosition(_DestinationPos);
+		transform->LockAt(next);
+	}
+
 private:
 	Vector3 _GetPlayerPos();
 	//通常時のカメラ挙動
@@ -54,9 +77,7 @@ private:
 	//カメラを移動させる処理。
 	void _Move()override;
 
-	//バネの様に追跡。
-	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, const float& spring, const float& damping, const float& time);
-
+	
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
 		//プレイヤーの更新を止める。
@@ -71,30 +92,23 @@ private:
 	/** 移動可能フラグ. */
 	bool _IsMove = true;
 
-
 	//当たり判定をとるためのレイの形状
-	SphereCollider* _Sphere;
+	SphereCollider* _Sphere = nullptr;
 	//距離
-	float _Dist;
+	float _Dist = 0.0f;
 	//当たり判定の半径
-	float _Radius;
+	float _Radius = 0.0f;
 
 	//カメラが最終的に到達する目標座標。
-	Vector3 _DestinationPos;
-	//カメラ移動の加速度。
-	Vector3 _Velocity;
-	//ダンピング定数。
-	float _Damping;
-	//バネ定数。
-	float _Spring;
+	Vector3 _DestinationPos = Vector3::zero;
 
 	//ターゲットからカメラへの向きベクトル。
-	Vector3 _ToCameraDir;
+	Vector3 _ToCameraDir = Vector3::zero;
 	//プレイヤー向いている方向。
-	const Vector3* _PForward;
+	const Vector3* _PForward = nullptr;
 
 	//カメラリセットフラグ。
 	bool _Reset = false;
 	float _Timer = 0.0f;
-	Vector3 tmp;
+	Vector3 tmp = Vector3::zero;
 };

@@ -90,7 +90,7 @@ void EnemyCharacter::Update() {
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);
-			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
+			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(2.0f);
 		}
 	}
 	else {
@@ -292,6 +292,7 @@ void EnemyCharacter::_BuildModelData() {
 
 	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 	_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
+	_MyComponent.Model->SetIsLuminance(false);
 
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }

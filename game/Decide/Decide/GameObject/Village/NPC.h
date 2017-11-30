@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject\Village\ContinentObject.h"
+#include"GameObject\Component\ObjectRotation.h"
 
 namespace npc
 {
@@ -85,6 +86,12 @@ public:
 		_IsAnimation = flag;
 	}
 
+	//初期回転設定
+	void SetRotation(Quaternion q)
+	{
+		_Rot = q;
+	}
+
 protected:
 	//話す
 	void _Speak();
@@ -107,6 +114,11 @@ protected:
 
 	//Playerと話しができるか
 	bool _IsSpeak;
+	
+	//回転
+	ObjectRotation* _Rotation = nullptr;
+	Quaternion _Rot;
+
 private:
 	//アニメーション
 	State _State;

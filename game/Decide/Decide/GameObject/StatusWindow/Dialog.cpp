@@ -75,13 +75,13 @@ void Dialog::Init(Item::ItemCodeE code)
 */
 Dialog::DialogCommand Dialog::InputUpdate()
 {
-	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_UP))
 	{
 		_NowSelect = _Cursor->PrevMove(1).rangeIndex;
 		_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
 		_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 	}
-	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_DOWN))
 	{
 		_NowSelect = _Cursor->NextMove(1).rangeIndex;
 		_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);

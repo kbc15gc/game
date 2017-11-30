@@ -41,24 +41,47 @@ VS_OUTPUT VSMain( VS_INPUT In )
 	return Out;
 }
 
+struct VS_PUTPUT
+{
+	float4 Color : COLOR0;
+	float4 Depth : COLOR1;
+	float4 Luminance : COLOR2;
+};
+
 /*!
  * @brief	半透明合成用のピクセルシェーダー。
  */
-float4 PSMainTrans( VS_OUTPUT In ) : COLOR0
+VS_PUTPUT PSMainTrans( VS_OUTPUT In )
 {
+	VS_PUTPUT Out = (VS_PUTPUT)0;
 	float4 tex = tex2D(g_textureSampler, In.uv);
 	tex *= g_mulColor;
-	return float4(tex.xyz * g_brightness, g_alpha  * tex.a);
+
+	Out.Color.xyz = tex.xyz * g_brightness;
+	Out.Color.w = g_alpha  * tex.a;
+	Out.Luminance = g_brightness;
+
+	Out.Depth = float4(0, 0, 0, 0);
+
+	return Out;
 }
 /*!
  * @brief	加算合成用のピクセルシェーダー。
  */
-float4 PSMainAdd( VS_OUTPUT In ) : COLOR0
+VS_PUTPUT PSMainAdd( VS_OUTPUT In )
 {
+	VS_PUTPUT Out = (VS_PUTPUT)0;
+
 	float4 tex = tex2D(g_textureSampler, In.uv);
 	tex *= g_mulColor;
 
-	return float4(tex.xyz * g_brightness * tex.a, g_alpha);
+	Out.Color.xyz = tex.xyz * g_brightness * tex.a;
+	Out.Color.w = g_alpha;
+	Out.Luminance = g_brightness;
+	
+	Out.Depth = float4(0, 0, 0, 0);
+
+	return Out;
 }
 /*!
  * @brief	半透明合成用のテクニック。
@@ -67,8 +90,8 @@ technique ColorTexPrimTrans
 {
 	pass P0
     {          
-        VertexShader = compile vs_2_0 VSMain();
-        PixelShader  = compile ps_2_0 PSMainTrans();
+        VertexShader = compile vs_3_0 VSMain();
+        PixelShader  = compile ps_3_0 PSMainTrans();
     }
 }
 /*!
@@ -78,7 +101,7 @@ technique ColorTexPrimAdd
 {
     pass P0
     {          
-        VertexShader = compile vs_2_0 VSMain();
-        PixelShader  = compile ps_2_0 PSMainAdd();
+        VertexShader = compile vs_3_0 VSMain();
+        PixelShader  = compile ps_3_0 PSMainAdd();
     }
 }

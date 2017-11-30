@@ -25,6 +25,9 @@ float2 g_UVLength;
 float4  g_Color;		//カラー
 float4  g_blendColor;
 
+float4 g_LuminanceColor;	//!< 輝度の色.
+int g_IsLuminance;			//!< 溢れ輝度フラグ.
+
 texture g_Texture;				//テクスチャ。
 sampler g_TextureSampler = 
 sampler_state
@@ -84,7 +87,7 @@ struct PS_OUTPUT {
 	//深度
 	float4 depth	: COLOR1;
 	//輝度
-	//float4 luminance	: COLOR2;
+	float4 Luminance	: COLOR2;
 };
 
 /*!
@@ -141,9 +144,13 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 	//深度は射影変換済みの頂点の Z / W で算出できる
 	Out.depth = In.wvp.z / In.wvp.w;
 
-	//輝度を計算.
-	//float t = dot(Out.color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-	//Out.luminance = max(0.0f, t - 1.0f);
+	Out.Luminance = 0.0f;
+	if (g_IsLuminance)
+	{
+		//輝度を計算.
+		float t = dot(Out.color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+		Out.Luminance = max(0.0f, t - 1.0f);
+	}
 
 	return Out;
 }

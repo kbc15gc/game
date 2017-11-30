@@ -95,7 +95,7 @@ void SkinModel::Awake()
 
 void SkinModel::Start()
 {
-	dynamic_cast<CObjectFrustumCulling*>(_Culling)->SetCamera(*_Camera);
+	
 }
 
 //モデルデータの行列更新
@@ -110,11 +110,7 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 
-		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
-		{
-			_ModelDate->UpdateAABB();
-			_Culling->Execute(_ModelDate->GetAABB(), wolrd, transform->GetScale());
-		}
+		_ModelDate->UpdateAABB();
 	}
 }
 
@@ -146,6 +142,12 @@ void SkinModel::Render()
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			if (_Camera != nullptr)
+				//カリングするかどうか判定。
+				_Culling->Execute(_ModelDate->GetAABB(), transform->GetWorldMatrix(), _Camera->GetViewMat(), _Camera->GetProjectionMat());
+		}
 		//再帰関数呼び出し
 		DrawFrame(_ModelDate->GetFrameRoot());
 		//開始。
@@ -165,6 +167,13 @@ void SkinModel::RenderToShadowMap()
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			//シャドウマップ・
+			auto shadowmap = INSTANCE(SceneManager)->GetShadowMap();
+			//カリングするかどうか判定。
+			_Culling->Execute(_ModelDate->GetAABB(), transform->GetWorldMatrix(), *shadowmap->GetLVMatrix(), *shadowmap->GetLPMatrix());
+		}
 		//再帰関数呼び出し
 		DrawFrame(_ModelDate->GetFrameRoot());
 	}
@@ -424,6 +433,9 @@ void SkinModel::DrawMeshContainer(
 		}
 		_Effect->SetVector("g_fogParam", (D3DXVECTOR4*)&fogParam);
 		_Effect->SetVector("g_fogColor", (D3DXVECTOR4*)&_FogColor);
+
+		_Effect->SetVector("g_LuminanceColor", (D3DXVECTOR4*)&_LuminanceColor);
+		_Effect->SetInt("g_IsLuminance", _IsLuminance);
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)

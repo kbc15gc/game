@@ -38,6 +38,7 @@ namespace Hold {
 		else {
 			_IsEquip = 0;
 		}
+		_Rank = HoldEquipment::Rank::C;
 	}
 
 	HoldEquipInfo::HoldEquipInfo(HoldItemBase* info) : HoldInfo(info) {
@@ -47,6 +48,7 @@ namespace Hold {
 		else {
 			_IsEquip = 0;
 		}
+		_Rank = static_cast<HoldEquipment*>(info)->GetRank();
 	}
 
 	// 引数：	アイテム種別。
