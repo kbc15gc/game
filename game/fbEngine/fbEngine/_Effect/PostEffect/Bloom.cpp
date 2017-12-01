@@ -95,7 +95,7 @@ void Bloom::Render()
 			(*graphicsDevice()).SetDepthStencilSurface(_LuminanceColorRT->depth);
 
 			//テクスチャのクリア
-			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
+			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 			_Effect->SetTechnique("SamplingLuminance");
 
@@ -133,7 +133,7 @@ void Bloom::Render()
 					(*graphicsDevice()).SetDepthStencilSurface(_DownSamplingRT[rtIndex]->depth);
 
 					//画像をクリア
-					(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
+					(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 					//テクニックを設定
 					_Effect->SetTechnique("XBlur");
@@ -184,7 +184,7 @@ void Bloom::Render()
 					(*graphicsDevice()).SetDepthStencilSurface(_DownSamplingRT[rtIndex]->depth);
 
 					//画像をクリア
-					(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
+					(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 					_Effect->SetTechnique("YBlur");
 
@@ -241,7 +241,7 @@ void Bloom::Render()
 			(*graphicsDevice()).SetDepthStencilSurface(_CombineRT->depth);
 
 			//画像をクリア
-			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0);
+			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 			float offset[] =
 			{

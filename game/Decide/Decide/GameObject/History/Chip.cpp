@@ -14,7 +14,7 @@ namespace
 		Vector3(-453.0f, 58.0f, -295.0f),		//木
 		Vector3(-1060.0f, 69.0f, -1950.0f),				//石
 		Vector3(-125.0f,54.2f,443.0f),//!< 狩りのチップ.
-		Vector3(-351.0f,65.0f,649.0f),//!< 農業のチップ
+		Vector3(-351.0f,64.5f,649.0f),//!< 農業のチップ
 		Vector3(275.0f,54.0f,621.0f),//!< 銅のチップ.
 		Vector3(249.36f,65.0f,121.88f),//!< 鉄のチップ.
 		Vector3(410.43f,90.0f,214.52),//!< 石油のチップ.
@@ -91,7 +91,7 @@ void Chip::SetChipID(ChipID chipID)
 	//設定されたIDのモデルをロード。
 	_Model = AddComponent<SkinModel>();
 	SkinModelData* modelData = new SkinModelData();
-	modelData->CloneModelData(SkinModelManager::LoadModel("Page.x"));
+	modelData->CloneModelData(SkinModelManager::LoadModel("Page2.x"));
 	_Material = modelData->FindMaterial("HuntingPage.png");
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
@@ -99,7 +99,7 @@ void Chip::SetChipID(ChipID chipID)
 	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos[(int)_ChipID]);
-	transform->SetLocalScale(Vector3::one);
+	transform->SetLocalScale(Vector3::one * 5.0f);
 
 }
 
@@ -112,7 +112,7 @@ void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 	//設定されたIDのモデルをロード。
 	_Model = AddComponent<SkinModel>();
 	SkinModelData* modelData = new SkinModelData();
-	modelData->CloneModelData(SkinModelManager::LoadModel("Page.x"));
+	modelData->CloneModelData(SkinModelManager::LoadModel("Page2.x"));
 	_Material = modelData->FindMaterial("HuntingPage.png");
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
@@ -120,5 +120,5 @@ void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos);
-	transform->SetLocalScale(Vector3::one);
+	transform->SetLocalScale(Vector3::one * 5.0f);
 }
