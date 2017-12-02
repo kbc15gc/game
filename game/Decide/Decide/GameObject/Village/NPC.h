@@ -15,9 +15,8 @@ namespace npc
 	{
 	public:
 		NPCTypeE NPCType = NPCTypeE::VILLAGER;
-		//店のID
-		int ShopID = -1;
-		int MesseageID;	//メッセージのID
+		int EventNo = -1;//イベントの番号。
+		int MesseageID;	//メッセージのID。
 		bool ShowTitle;	//タイトルを見せるかどうか？
 	};
 
@@ -29,7 +28,7 @@ namespace npc
 		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct NPCInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,sca),sizeof(Vector3) },
 		{ "NPCType",Support::DataTypeE::INT, offsetof(struct NPCInfo,NPCType),sizeof(NPCTypeE) },
-		{ "ShopID",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShopID),sizeof(int) },
+		{ "EventNo",Support::DataTypeE::INT, offsetof(struct NPCInfo,EventNo),sizeof(int) },
 		{ "MesseageID",Support::DataTypeE::INT, offsetof(struct NPCInfo,MesseageID),sizeof(int) },
 		{ "ShowTitle",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShowTitle),sizeof(bool) },
 	};

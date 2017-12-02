@@ -789,4 +789,12 @@ public:
 		out.z = pw * qz + px * qy - py * qx + pz * qw;
 		return out;
 	}
+
+	static Quaternion Lerp(const Quaternion& a, const Quaternion& b, float per)
+	{
+		per = min(1.0f, max(0.0f, per));
+		D3DXQUATERNION out;
+		D3DXQuaternionSlerp(&out, (D3DXQUATERNION*)&a, (D3DXQUATERNION*)&b, per);
+		return out;
+	}
 };

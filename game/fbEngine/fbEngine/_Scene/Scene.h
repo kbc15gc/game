@@ -8,13 +8,20 @@ namespace fbScene
 	//フェードのステート
 	enum class FadeStateE
 	{
-		WAIT,		//待機
-		START,		//開始
-		RUNNING,	//実行中
-		END	=100,	//終了
-		INEND,		//フェードインの終了
-		OUTEND,		//フェードアウトの終了
+		In = BIT(1),
+		Out = BIT(2),
+		//実行中。
+		Fade = BIT(3),
+		FadeIn = Fade | In,
+		FadeOut = Fade | Out,
+		//フェード終了。
+		End	= BIT(4),
+		EndFadeIn = End | In,
+		EndFadeOut = End | Out,
 	};
+	FadeStateE operator-(FadeStateE L, FadeStateE R);
+	FadeStateE operator|(FadeStateE L, FadeStateE R);
+	FadeStateE operator&(FadeStateE L, FadeStateE R);
 }
 
 //シーンの基底クラス
@@ -30,18 +37,12 @@ public:
 	//切り替えられたら毎フレーム呼び出される処理(いるのか？)
 	virtual void Update() {};
 
-	//フェード
-	//フェード中はtrueが帰る。
+	//フェードの処理。
 	void Fade();
 	//フェードの実行
-	//第一引数はフェードインかフェードアウトか指定
-	//第二引数はフェードにかかる時間(秒)
-	static void StartFade(const bool& fade,const float& fadetime = 2.0f);
-	//待機状態へ移行する
-	static void WaitFade()
-	{
-		_FadeState = fbScene::FadeStateE::WAIT;
-	}
+	//[in] フェードインかどうか？(falseならフェードアウト)
+	//[in] フェードにかかる時間(秒)
+	static void StartFade(bool fadein,float fadetime = 2.0f);
 
 	/**
 	* シャドウマップの有効フラグ.
@@ -59,7 +60,7 @@ public:
 		return _isEnvironmentMap;
 	}
 
-	static fbScene::FadeStateE GetState()
+	static fbScene::FadeStateE GetFadeState()
 	{
 		return _FadeState;
 	}

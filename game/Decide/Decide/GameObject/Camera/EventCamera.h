@@ -3,20 +3,22 @@
 
 namespace
 {
-	static const int MAX_ARRAY_NUM = 10;
+	static const int MAX_ARRAY_NUM = 20;
 	//イベントカメラを起動するのに必要な情報。
 	struct EventCameraInfo
 	{
-		Vector3 pos[MAX_ARRAY_NUM];	//座標。
-		float times[MAX_ARRAY_NUM];	//時間。
-		int arraynum;				//配列の要素数。
+		Vector3 pos[MAX_ARRAY_NUM];			//座標。
+		Quaternion rot[MAX_ARRAY_NUM];	//回転。
+		float times[MAX_ARRAY_NUM];			//時間。
+		int size;							//配列の要素数。
 	};
 
 	const Support::DATARECORD EventCameraData[] =
 	{
 		{ "pos",Support::DataTypeE::VECTOR3_ARRAY ,offsetof(struct EventCameraInfo,pos),sizeof(Vector3) * MAX_ARRAY_NUM },
+		{ "rot",Support::DataTypeE::QUATERNION_ARRAY ,offsetof(struct EventCameraInfo,rot),sizeof(Quaternion) * MAX_ARRAY_NUM },
 		{ "times",Support::DataTypeE::FLOAT_ARRAY ,offsetof(struct EventCameraInfo,times),sizeof(float) * MAX_ARRAY_NUM },
-		{ "arraynum",Support::DataTypeE::INT ,offsetof(struct EventCameraInfo,arraynum),sizeof(int) },
+		{ "size",Support::DataTypeE::INT ,offsetof(struct EventCameraInfo,size),sizeof(int) },
 	};
 }
 
@@ -36,6 +38,8 @@ public:
 
 	//実行。
 	void Excute(int id);
+	//イベントカメラ終了。
+	void EndEvent();
 private:
 	virtual void _Move()override;
 private:

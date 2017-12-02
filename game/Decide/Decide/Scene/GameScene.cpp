@@ -90,8 +90,6 @@ void GameScene::Start()
 	//プレイヤーカメラ生成
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	playerCamera->ActiveCamera();
-
-	//INSTANCE(EventManager)->Execute(Event::EventID::EventCameraF, 0);
 #ifdef _DEBUG
 
 	//ふかんカメラの生成。
@@ -261,8 +259,13 @@ void GameScene::Update()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)) {
 		INSTANCE(Inventory)->ArrangementInventory();
 	}
+	
 #endif
-
+	//
+	if (KeyBoardInput->isPush(DIK_P))
+	{
+		INSTANCE(EventManager)->Execute(Event::EventID::EventCameraF, 0);
+	}
 	//BGM変更したい
 	//場所によってBGM変更
 	{

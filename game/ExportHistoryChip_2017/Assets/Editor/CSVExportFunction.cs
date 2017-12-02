@@ -304,4 +304,57 @@ public class CSVExportFunction : Editor
         }
         return obj;
     }
+
+    [MenuItem("Export/EventCameraInfo")]
+    static public void ExportEventCameraInfo()
+    {
+        //検索。
+        var name = "EventCamera";
+        var export = GameObject.Find(name);
+        if (export == null)
+        {
+            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
+            return;
+        }
+
+        string path = Application.dataPath + "/Export/EventCameraInfo.csv";
+
+        FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+        StreamWriter sw = new StreamWriter(fs);
+        sw.WriteLine("pos[],rot[],time[],size");
+
+        for (int idx = 0, num = export.transform.childCount; idx < num; idx++)
+        {
+            Transform No = export.transform.GetChild(idx);
+            //配列の要素数。
+            int size = No.transform.childCount;
+            string pos = "", rot = "", time = "";
+            bool conma = false;
+            for (int i = 0; i < size; i++)
+            {
+                if (conma)
+                {
+                    pos += ',';
+                    rot += ',';
+                    time += ',';
+                }
+
+                //カメラの情報とか持ってるやつ。
+                Transform child = No.transform.GetChild(i);
+                pos += Vector3ToString(child.position,true);
+                rot += QuaternionToString(child.rotation);
+                var info = child.gameObject.GetComponent<EventCameraInfo>();
+                time += info.time.ToString();
+
+                conma = true;
+            }
+            string line = string.Format("[{0}],[{1}],[{2}],{3}", pos, rot, time, size);
+            //列書き出し
+            sw.WriteLine(line);
+        }
+        sw.Close();
+        fs.Close();
+
+        Debug.Log("ExportEventCameraInfo");
+    }
 }

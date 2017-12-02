@@ -81,7 +81,7 @@ void SceneManager::UpdateScene()
 {
 	//次のシーンが設定されている場合はシーン切り替え
 	if (_NextScene >= 0 &&
-		Scene::GetState() == fbScene::FadeStateE::WAIT)
+		(int)(Scene::GetFadeState() & fbScene::FadeStateE::End) > 0)
 		_ChangeScene();
 
 	_Scenes[_NowScene]->Update();

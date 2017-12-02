@@ -1,5 +1,11 @@
 #include "stdafx.h"
 #include "EventCamera.h"
+#include "GameObject\Village\EventManager.h"
+#include "fbEngine\_Scene\Scene.h"
+
+namespace {
+	static const int FADE_TIME = 1.0f;
+}
 
 void EventCamera::Awake()
 {
@@ -9,24 +15,43 @@ void EventCamera::Awake()
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.1f);
 	_Camera->SetFar(1500.0f);
-	INSTANCE(GameObjectManager)->mainCamera = _Camera;
+	_Camera->SetUseTarget(false);
+	
+	UnActivateFlg();
 }
 
 void EventCamera::Start()
 {
-	UnActivateFlg();
+
 }
 
 void EventCamera::UpdateSubClass()
 {
 	if(_Runtime)
 	{
-		_Move();
+		if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeOut)
+			_Move();
+		else if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+		{
+			//イベントカメラに切り替える。
+			ActiveCamera();
+			Scene::StartFade(false, FADE_TIME);
+		}
+	}
+	else
+	{	
+		if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+		{
+			EndEvent();
+			Scene::StartFade(false, FADE_TIME);
+		}
 	}
 }
 
 void EventCamera::Excute(int id)
 {
+	//フェード開始。
+	Scene::StartFade(true, FADE_TIME);
 	//実行フラグ設定。
 	_Runtime = true;
 	//タイマー初期化。
@@ -34,13 +59,25 @@ void EventCamera::Excute(int id)
 	//インデックス初期化。
 	_Index = 0;
 
-	//このカメラを使う。
-	ActiveCamera();
+	_isActive = true;
 
 	//CSVから情報取得。
 	vector<unique_ptr<EventCameraInfo>> list;
 	Support::LoadCSVData<EventCameraInfo>("Asset/Data/EventCameraInfo.csv", EventCameraData, ARRAY_SIZE(EventCameraData), list);
 	_Info = *list[id].get();
+	transform->SetPosition(_Info.pos[0]);
+	transform->SetRotation(_Info.rot[0]);
+}
+
+void EventCamera::EndEvent()
+{
+	//次のカメラに変更(PlayerCamera)。
+	if (_NextCamera) {
+		// 次のカメラを有効化。
+		_NextCamera->ActiveCamera();
+	}
+	//終了を通知。
+	INSTANCE(EventManager)->NotifyEndEvent();
 }
 
 void EventCamera::_Move()
@@ -52,24 +89,23 @@ void EventCamera::_Move()
 		//移動
 		auto pos = Vector3::Lerp(_Info.pos[_Index], _Info.pos[_Index + 1], _Timer);
 		transform->SetPosition(pos);
+		auto rot = Quaternion::Lerp(_Info.rot[_Index], _Info.rot[_Index + 1], _Timer);
+		transform->SetRotation(rot);
 	}
 	else
 	{
 		//次があるか？
-		if (_Index + 1< _Info.arraynum)
+		if (++_Index < _Info.size-1)
 		{
-			//次に移る前に、現在の目標時間分を引く。
-			_Timer -= _Info.times[_Index++];
+			//一つ前の目標時間分を引く。
+			_Timer -= _Info.times[_Index - 1];
 		}
 		else
 		{
 			//終了。
 			_Runtime = false;
-			//次のカメラに変更(PlayerCamera)。
-			if (_NextCamera) {
-				// 次のカメラを有効化。
-				_NextCamera->ActiveCamera();
-			}
+			//フェードイン。
+			Scene::StartFade(true, FADE_TIME);
 		}
 	}
 }
