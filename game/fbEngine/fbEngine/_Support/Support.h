@@ -45,12 +45,14 @@ namespace Support {
 		VECTOR2,	// Vector2。
 		VECTOR3,//Vector3
 		VECTOR4,// Vector4。
-		QUATERNION,//Quaternion。
+		QUATERNION = VECTOR4,//Quaternion。
 		STRING,	//文字
-		ARRAY = BIT(8),
-		INT_ARRAY = INT | ARRAY,	// 整数配列。
-		FLOAT_ARRAY = FLOAT | ARRAY,
-		VECTOR3_ARRAY = VECTOR3 | ARRAY,	//Vector3配列。
+		ARRAY = BIT(8),	//配列。
+		INT_ARRAY = INT | ARRAY,				//整数配列。
+		FLOAT_ARRAY = FLOAT | ARRAY,			//浮動小数配列。
+		VECTOR3_ARRAY = VECTOR3 | ARRAY,		//Vector3配列。
+		VECTOR4_ARRAY = VECTOR4 | ARRAY,		//Vector4配列。
+		QUATERNION_ARRAY = QUATERNION | ARRAY	//Quaternion配列。
 	};
 	//メンバ変数の情報。
 	struct DATARECORD
@@ -64,136 +66,11 @@ namespace Support {
 
 namespace
 {
-	//文字列を受け取って値に変換し、アドレスを返す。
-	//こいつはクビや。
-	//void* ConvertValueFromString(char* word, Support::DataTypeE type, const int size)
-	//{
-	//	if (type == Support::DataTypeE::INT)
-	//	{
-	//		int val = Support::StringToInt(word);
-	//		return &val;
-	//	}
-	//	else if (type == Support::DataTypeE::INTARRAY) {
-	//		int offset = 0;
-	//		char copy[256];
-	//		strcpy(copy, word);
-	//		const int max = size / sizeof(int);
-	//		int Array[999];	// とりあえず多めに取っておく。
-	//		ZeroMemory(Array, sizeof(Array));
-
-	//		for (int idx = 0; idx < max; idx++) {
-	//			//数字の部分を取り出す。
-	//			char* num = strtok(copy + offset, "/");
-	//			//数字に変換する。
-	//			Array[idx] = Support::StringToInt(num);
-	//			//オフセット量を増やす。
-	//			offset += strlen(num) + 1;
-	//		}
-
-	//		return Array;
-	//	}
-	//	else if (type == Support::DataTypeE::FLOAT)
-	//	{
-	//		float val = Support::StringToDouble(word);
-	//		return &val;
-	//	}
-	//	else if (type == Support::DataTypeE::VECTOR2)
-	//	{
-	//		Vector2 v2 = Vector2(0.0f, 0.0f);
-
-	//		Support::ConvertFloatArrayFromString(word, &v2, 2);
-
-	//		//int offset = 0;
-	//		//char copy[256];
-	//		//strcpy(copy, word);
-	//		//FOR(i, 3)
-	//		//{
-	//		//	//数字の部分を取り出す。
-	//		//	char* num = strtok(copy + offset, "/");
-	//		//	//数字に変換する。
-	//		//	float value = Support::StringToDouble(num);
-	//		//	//値セット。
-	//		//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-	//		//	//オフセット量を増やす。
-	//		//	offset += strlen(num) + 1;
-	//		//}
-	//		return &v2;
-	//	}
-	//	else if (type == Support::DataTypeE::VECTOR3)
-	//	{
-	//		Vector3 v3 = Vector3::zero;
-
-	//		Support::ConvertFloatArrayFromString(word, &v3, 3);
-
-	//		//int offset = 0;
-	//		//char copy[256];
-	//		//strcpy(copy, word);
-	//		//FOR(i, 3)
-	//		//{
-	//		//	//数字の部分を取り出す。
-	//		//	char* num = strtok(copy + offset, "/");
-	//		//	//数字に変換する。
-	//		//	float value = Support::StringToDouble(num);
-	//		//	//値セット。
-	//		//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-	//		//	//オフセット量を増やす。
-	//		//	offset += strlen(num) + 1;
-	//		//}
-	//		return &v3;
-	//	}
-	//	else if (type == Support::DataTypeE::VECTOR4)
-	//	{
-	//		Vector4 v4 = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	//		Support::ConvertFloatArrayFromString(word, &v4, 4);
-
-	//		//int offset = 0;
-	//		//char copy[256];
-	//		//strcpy(copy, word);
-	//		//FOR(i, 3)
-	//		//{
-	//		//	//数字の部分を取り出す。
-	//		//	char* num = strtok(copy + offset, "/");
-	//		//	//数字に変換する。
-	//		//	float value = Support::StringToDouble(num);
-	//		//	//値セット。
-	//		//	memcpy((char*)&v3 + (sizeof(float) * i), &value, sizeof(float));
-	//		//	//オフセット量を増やす。
-	//		//	offset += strlen(num) + 1;
-	//		//}
-	//		return &v4;
-	//	}
-	//	else if (type == Support::DataTypeE::QUATERNION)
-	//	{
-	//		Quaternion quat = Quaternion::Identity;
-
-	//		Support::ConvertFloatArrayFromString(word, &quat, 4);
-
-	//		//int offset = 0;
-	//		//char copy[256];
-	//		//strcpy(copy, word);
-	//		//FOR(i, 4)
-	//		//{
-	//		//	//数字の部分を取り出す。
-	//		//	char* num = strtok(copy + offset, "/");
-	//		//	//数字に変換する。
-	//		//	float value = Support::StringToDouble(num);
-	//		//	//値セット。
-	//		//	memcpy((char*)&quat + (sizeof(float) * i), &value, sizeof(float));
-	//		//	//オフセット量を増やす。
-	//		//	offset += strlen(num) + 1;
-	//		//}
-	//		return &quat;
-	//	}
-	//	else if (type == Support::DataTypeE::STRING)
-	//	{
-	//		return word;
-	//	}
-
-	//	return nullptr;
-	//}
-
 	//文字列を数字に変換し、受け取ったアドレスに設定。
+	//[out] 結果を格納するアドレス。
+	//[in] 変換する文字列。
+	//[in] 型を指定する列挙型。
+	//[in] コピーするデータのサイズ。
 	void SetValue(char* addres, char* word, Support::DataTypeE type, const int size)
 	{
 		//配列ではない
@@ -232,14 +109,6 @@ namespace
 
 				memcpy(addres, &v4, size);
 			}
-			else if (type == Support::DataTypeE::QUATERNION)
-			{
-				Quaternion quat = Quaternion::Identity;
-
-				Support::ConvertFloatArrayFromString(word, &quat, 4);
-
-				memcpy(addres, &quat, size);
-			}
 			else if (type == Support::DataTypeE::STRING)
 			{
 				memcpy(addres, word, size);
@@ -250,18 +119,21 @@ namespace
 		{
 			size_t offset = 0;
 			char copy[512];
-			ZeroMemory(copy, sizeof(copy));//初期化。
+			//初期化。
+			ZeroMemory(copy, sizeof(copy));
+			//[]を外す。
+			auto len = strlen(word) - 2;
+			strncpy(copy, word + 1, len);
 
 			if (type == Support::DataTypeE::INT_ARRAY) 
 			{
-				strcpy(copy, word);
 				const int max = size / sizeof(int);
 				int Array[999];	// とりあえず多めに取っておく。									
 				ZeroMemory(Array, sizeof(Array));//初期化。
 
 				for (int idx = 0; idx < max; idx++) {
 					//数字の部分を取り出す。
-					char* num = strtok(copy + offset, "/");
+					char* num = strtok(copy + offset, ",");
 					//数字に変換する。
 					Array[idx] = Support::StringToInt(num);
 					//オフセット量を増やす。
@@ -271,10 +143,6 @@ namespace
 			}
 			else if (type == Support::DataTypeE::FLOAT_ARRAY)
 			{
-				//[]を外す。
-				auto len = strlen(word) - 2;
-				strncpy(copy, word + 1, len);
-				strcpy(copy, word);
 				const int max = size / sizeof(float);
 				float Array[999];	// とりあえず多めに取っておく。									
 				ZeroMemory(Array, sizeof(Array));//初期化。
@@ -292,9 +160,6 @@ namespace
 			}
 			else if (type == Support::DataTypeE::VECTOR3_ARRAY)
 			{
-				//[]を外す。
-				auto len = strlen(word) - 2;
-				strncpy(copy, word + 1, len);
 				const int max = size / sizeof(Vector3);
 				Vector3 Array[999];	// とりあえず多めに取っておく。									
 				ZeroMemory(Array, sizeof(Array));//初期化。
@@ -306,6 +171,25 @@ namespace
 					//文字列を値に変換。
 					Support::ConvertFloatArrayFromString(num, &v3, 3);
 					Array[idx] = v3;
+
+					//オフセット量を増やす。
+					offset += strlen(num) + 1;
+				}
+				memcpy(addres, &Array, size);
+			}
+			else if (type == Support::DataTypeE::VECTOR4_ARRAY)
+			{
+				const int max = size / sizeof(Vector4);
+				Vector4 Array[999];	// とりあえず多めに取っておく。									
+				ZeroMemory(Array, sizeof(Array));//初期化。
+
+				for (int idx = 0; idx < max, *(copy + offset) != '\0'; idx++) {
+					//配列の一要素を取り出す。
+					char* num = strtok(copy + offset, ",");
+					Vector4 v4(0, 0, 0, 0);
+					//文字列を値に変換。
+					Support::ConvertFloatArrayFromString(num, &v4, 4);
+					Array[idx] = v4;
 
 					//オフセット量を増やす。
 					offset += strlen(num) + 1;
@@ -371,9 +255,9 @@ namespace Support {
 			{
 				auto type = (DataTypeE)datas[idx].type;
 				char* word;
-				if (type == DataTypeE::VECTOR3_ARRAY || type == DataTypeE::FLOAT_ARRAY)
+				if ((type & DataTypeE::ARRAY) > 0)
 				{
-					//","の部分には'\0'が埋め込まれるのでコピーを使う
+					//']'まで取得。
 					word = strtok(copy + offset, "]");
 					strcat(word, "]");
 				}
@@ -465,6 +349,7 @@ namespace Support {
 					//ToString(i, word);
 					break;
 				case DataTypeE::INT_ARRAY:	// 配列に対応?。
+					strcat(word, "[");
 					FOR(num, datas[idx].size / sizeof(int)){
 						memcpy(&i, addres, sizeof(int));
 						sprintf(word, "%d", i);
@@ -472,11 +357,12 @@ namespace Support {
 						//配列の最後ではない
 						if (num < (datas[idx].size / sizeof(int)) - 1)
 						{
-							//"/"を追加
-							strcat(word, "/");
+							//","を追加
+							strcat(word, ",");
 						}
 						addres += sizeof(int);	// int一要素分ずらす。
 					}
+					strcat(word, "]");
 					break;
 				case DataTypeE::FLOAT:
 					memcpy(&f, addres, datas[idx].size);
@@ -486,7 +372,6 @@ namespace Support {
 				case DataTypeE::VECTOR2:
 				case DataTypeE::VECTOR3:
 				case DataTypeE::VECTOR4:
-				case DataTypeE::QUATERNION:
 					FOR(num, datas[idx].size / sizeof(float)){
 						memcpy(&f, addres, sizeof(float));
 						sprintf(word, "%f", f);
