@@ -158,7 +158,8 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 		return;
 	}
 
-	for (auto& enemy : _enemys[static_cast<int>(object->GetLocationCode())]) {
+	LocationCodeE code = object->GetLocationCode();
+	for (auto& enemy : _enemys[static_cast<int>(code)]) {
 		if (object == enemy->Object) {
 			// このクラスで生成したエネミーが死亡している。
 	
@@ -204,6 +205,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetDropEXP(enemy->InfoData->exp);
 			enemy->Object->SetDropMoney(enemy->InfoData->money);
 			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
+			enemy->Object->SetLocationCode(code);
 			//カラーを設定。
 			Color c;
 			c.Set(enemy->InfoData->color.x, enemy->InfoData->color.y, enemy->InfoData->color.z, enemy->InfoData->color.w);
