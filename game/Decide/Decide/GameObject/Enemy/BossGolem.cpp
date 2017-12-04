@@ -23,8 +23,8 @@ void BossGolem::_AwakeSubClass(){
 void BossGolem::_StartSubClass() {
 
 	//ポジション
-	_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
-	transform->SetPosition(_InitPos);
+	/*_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
+	transform->SetPosition(_InitPos);*/
 
 	// 視野角生成。
 	_ViewAngle = 100.0f;
