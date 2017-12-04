@@ -266,10 +266,10 @@ void HistoryManager::_CreateObject(LocationCodeE location, const char * path, Hi
 		{
 			for (auto obj : _GameObjectList[static_cast<int>(location)]) {
 				//XŽ²‚É180‚Ç‰ñ“]‚³‚¹‚éB
-				//Quaternion q = Quaternion::Identity;
-				//q.SetRotation(Vector3::axisX, PI);
-				//q.Multiply(obj->transform->GetRotation());
-				//obj->transform->SetRotation(q);
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX, PI);
+				q.Multiply(obj->transform->GetRotation());
+				obj->transform->SetRotation(q);
 			}
 		}
 	}
