@@ -21,6 +21,7 @@ enum ModelEffectE
 	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
 	ALPHA = BIT(8),				//!< アルファ.
 	DITHERING = BIT(9),			//!< ディザリング.
+	ZENABLE = BIT(10),			//!< Zテスト.
 };
 
 /**
@@ -95,9 +96,10 @@ public:
 	{
 		return _ModelDate->GetFrameRoot();
 	}
-	void SetSky(bool f)
+	void SetSky()
 	{
-		_SkyBox = f;
+		_IsSky = true;
+		SetModelEffect(ModelEffectE::ZENABLE, false);
 		SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncSkyFromAtomosphere);
 	}
 	//void SetTextureBlend(const Color& c)
@@ -250,8 +252,8 @@ private:
 
 	//エフェクトを描けるかどうかのフラグ
 	ModelEffectE _ModelEffect;
-	//スカイボックスかどうか(いつか直す)
-	bool _SkyBox;
+
+	bool _IsSky = false;
 
 	//最大数
 	static const int MAX_MATRIX_PALLET = 50;

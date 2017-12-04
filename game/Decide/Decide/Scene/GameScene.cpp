@@ -54,6 +54,8 @@
 #include "GameObject\Enemy\BossGolem.h"
 #include "GameObject\Enemy\CodeNameD.h"
 
+#include "fbEngine/_Object/_GameObject/Movie.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -78,6 +80,15 @@ namespace
 
 void GameScene::Start()
 {
+	//最初からならオープニング再生するよー。
+	if (IS_CONTINUE == false)
+	{
+		//オープニング動画。
+		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+		movie->Init(L"op.avi");
+		movie->Play();
+	}
+
 	INSTANCE(EventManager)->ReSet();
 
 	//ゲームライト生成
@@ -126,15 +137,8 @@ void GameScene::Start()
 
 	//@todo for debug
 	// テスト。
-	//ボスゴーレム作成。
-	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-	//ボスD作成。
-	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("doragon", 1);
-
-	//@todo for debug
-	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -142,15 +146,12 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
-	//g->SetParamAll(Color, param);
-	//d->SetParamAll(Color, param);
-
-
+	//enemy->SetParamAll(Color, param);
+	
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -172,7 +173,7 @@ void GameScene::Start()
 #endif // _NKMT_
 	for (int i = 0; i < static_cast<int>(BGM::NUM); i++)
 	{
-		_SoundBGM.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("BGM", 9));
+		_SoundBGM[i] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BGM", 9);
 	}
 	InitBGM(BGM::WORLD, "Asset/Sound/Battle_BGM.wav", 0.2f);
 	InitBGM(BGM::BOSS1, "Asset/Sound/boss1.wav", 0.2f);

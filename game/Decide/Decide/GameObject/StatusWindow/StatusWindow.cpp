@@ -78,7 +78,7 @@ void StatusWindow::Update()
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
-	const float RepeatTime = 0.1f;
+	const float RepeatTime = 0.2f;
 	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
 		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
