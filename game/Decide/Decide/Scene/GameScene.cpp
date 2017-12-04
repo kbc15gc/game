@@ -129,15 +129,8 @@ void GameScene::Start()
 
 	//@todo for debug
 	// テスト。
-	//ボスゴーレム作成。
-	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-	//ボスD作成。
-	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("doragon", 1);
-
-	//@todo for debug
-	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -145,11 +138,8 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
-	//g->SetParamAll(Color, param);
-	//d->SetParamAll(Color, param);
-
-
+	//enemy->SetParamAll(Color, param);
+	
 	//メニュー
 	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書

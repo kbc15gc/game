@@ -23,8 +23,8 @@ void BossGolem::_AwakeSubClass(){
 void BossGolem::_StartSubClass() {
 
 	//ポジション
-	/*_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
-	transform->SetPosition(_InitPos);*/
+	_InitPos = Vector3(-202.0f, 60.0f, -156.0f);
+	transform->SetPosition(_InitPos);
 
 	// 視野角生成。
 	_ViewAngle = 100.0f;
@@ -131,42 +131,22 @@ void BossGolem::_EndNowStateCallback(State EndStateType) {
 }
 
 void BossGolem::_ConfigCollision() {
-	// 攻撃判定用のコリジョン。
-	{
-		// 胴体。
-		{
-			RigidBody* coll = AddComponent<RigidBody>();	// キャラクターコントローラとは別に新しく作成(プレイヤーをキャラコンの形状で押し出したくないため)。
-
-			RigidBodyInfo info;
-			info.coll = AddComponent<CCapsuleColliderZ>();
-			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 5.1f);
-			info.id = Collision_ID::BOSS;
-			info.mass = 0.0f;
-			info.physicsType = Collision::PhysicsType::Kinematick;
-			info.offset = Vector3(0.0f, 1.0f, 0.0f);
-			info.rotation = Quaternion::Identity;
-			coll->Create(info, true);
-
-			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
-		}
-	}
-
 	// キャラクターコントローラ用。
 	{
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
-		_collisionInfo.radius = 1.8f;
-		_collisionInfo.height = 6.0f;
-		_collisionInfo.offset = Vector3(0.0f, 1.0f, 0.0f);
-		_collisionInfo.id = Collision_ID::CHARACTER_GHOST;
+		_collisionInfo.radius = 2.0f;
+		_collisionInfo.height = 1.5f;
+		_collisionInfo.offset = Vector3(0.0f, 1.7f, 0.0f);
+		_collisionInfo.id = Collision_ID::BOSS;
 
 		// 重力設定。
 		_Gravity = -9.8f;
 
 		// コンポーネントにカプセルコライダーZを追加。
-		_MyComponent.Collider = AddComponent<CCapsuleColliderZ>();
+		_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 		// カプセルコライダーを作成。
-		static_cast<CCapsuleColliderZ*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
+		static_cast<CCapsuleCollider*>(_MyComponent.Collider)->Create(_collisionInfo.radius, _collisionInfo.height);
 	}
 }
 
@@ -189,6 +169,7 @@ void BossGolem::_ConfigCharacterController() {
 }
 
 void BossGolem::_CreateExtrudeCollision() {
+	_MyComponent.ExtrudeCollisions.push_back(_MyComponent.CharacterController->GetRigidBody());	// ついでに押し出しようコリジョンに追加しておく。
 }
 
 void BossGolem::_BuildAnimationSubClass(vector<double>& datas) {
