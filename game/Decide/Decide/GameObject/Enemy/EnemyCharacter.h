@@ -13,6 +13,7 @@
 #include "GameObject\Player\Player.h"
 #include "fbEngine\_Object\_Component\_Physics\CharacterExtrude.h"
 #include "GameObject\ItemManager\DropItem\DropItem.h"
+#include "GameObject\History\HistoryInfo.h"
 
 class SkinModel;
 class Animation;
@@ -405,6 +406,15 @@ public:
 		}
 	}
 
+	//@todo for debug 
+	//Unityで設定したカラーを設定。
+	//仮設定なので後で修正してね。
+	inline void SetColor(Color c)
+	{
+		_MyComponent.Model->SetAllBlend(c);
+	}
+
+
 	inline float GetWalkSpeed()const {
 		return _walkSpeed;
 	}
@@ -524,6 +534,15 @@ public:
 	inline float GetAnimationSpeed()const {
 		return _animationSpeed;
 	}
+
+	inline void SetLocationCode(LocationCodeE code) {
+		_locationCode = code;
+	}
+
+	inline LocationCodeE GetLocationCode()const {
+		return _locationCode;
+	}
+
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。
@@ -707,7 +726,7 @@ private:
 
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
 
-
+	LocationCodeE _locationCode;	// どの場所の歴史に属するか。
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };

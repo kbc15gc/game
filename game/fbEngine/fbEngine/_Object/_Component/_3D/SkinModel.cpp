@@ -95,7 +95,7 @@ void SkinModel::Awake()
 
 void SkinModel::Start()
 {
-	dynamic_cast<CObjectFrustumCulling*>(_Culling)->SetCamera(*_Camera);
+	
 }
 
 //モデルデータの行列更新
@@ -110,11 +110,7 @@ void SkinModel::LateUpdate()
 		wolrd = transform->GetWorldMatrix();
 		_ModelDate->UpdateBoneMatrix(wolrd);	//行列を更新。
 
-		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
-		{
-			_ModelDate->UpdateAABB();
-			_Culling->Execute(_ModelDate->GetAABB(), wolrd, transform->GetScale());
-		}
+		_ModelDate->UpdateAABB();
 	}
 }
 
@@ -128,11 +124,14 @@ void SkinModel::PreRender()
 	{
 		INSTANCE(SceneManager)->GetEnvironmentMap()->EntryModel(this);
 	}
-	//インスタンシングフラグをチェック。
-	if(_ModelDate->GetInstancing())
-	{
-		//開始。
-		_ModelDate->StartInstancing();
+
+	if (_ModelDate) {
+		//インスタンシングフラグをチェック。
+		if (_ModelDate->GetInstancing())
+		{
+			//開始。
+			_ModelDate->StartInstancing();
+		}
 	}
 }
 
@@ -143,6 +142,12 @@ void SkinModel::Render()
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			if (_Camera != nullptr)
+				//カリングするかどうか判定。
+				_Culling->Execute(_ModelDate->GetAABB(), transform->GetWorldMatrix(), _Camera->GetViewMat(), _Camera->GetProjectionMat());
+		}
 		//再帰関数呼び出し
 		DrawFrame(_ModelDate->GetFrameRoot());
 		//開始。
@@ -162,6 +167,13 @@ void SkinModel::RenderToShadowMap()
 	//モデルデータがあるなら
 	if (_ModelDate)
 	{
+		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
+		{
+			//シャドウマップ・
+			auto shadowmap = INSTANCE(SceneManager)->GetShadowMap();
+			//カリングするかどうか判定。
+			_Culling->Execute(_ModelDate->GetAABB(), transform->GetWorldMatrix(), *shadowmap->GetLVMatrix(), *shadowmap->GetLPMatrix());
+		}
 		//再帰関数呼び出し
 		DrawFrame(_ModelDate->GetFrameRoot());
 	}
@@ -340,7 +352,7 @@ void SkinModel::DrawMeshContainer(
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
 		//アルファブレンド.
-		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -362,7 +374,7 @@ void SkinModel::DrawMeshContainer(
 			//掛かりきる最低値.
 			const float MinLen = 1.5f;
 			//掛かり始める最高値.
-			const float MaxLen = 4.5f;
+			const float MaxLen = 4.0f;
 
 			//カメラから座標へのベクトル.
 			Vector3 CameraToPos = gameObject->transform->GetPosition() - campos;
@@ -385,8 +397,16 @@ void SkinModel::DrawMeshContainer(
 				ditherParam.y = _DitherCoefficient;
 			}
 
-			//フラグを設定.
-			ditherParam.x = 2.0f;
+			if (_IsTree)
+			{
+				//フラグを設定.
+				ditherParam.x = 2.0f;
+			}
+			else
+			{
+				//フラグを設定.
+				ditherParam.x = 1.0f;
+			}
 		}
 		ditherParam.z = g_WindowSize.x;
 		ditherParam.w = g_WindowSize.y;
@@ -413,6 +433,9 @@ void SkinModel::DrawMeshContainer(
 		}
 		_Effect->SetVector("g_fogParam", (D3DXVECTOR4*)&fogParam);
 		_Effect->SetVector("g_fogColor", (D3DXVECTOR4*)&_FogColor);
+
+		_Effect->SetVector("g_LuminanceColor", (D3DXVECTOR4*)&_LuminanceColor);
+		_Effect->SetInt("g_IsLuminance", _IsLuminance);
 
 		//アニメーションの有無で分岐
 		if (pMeshContainer->pSkinInfo != NULL)

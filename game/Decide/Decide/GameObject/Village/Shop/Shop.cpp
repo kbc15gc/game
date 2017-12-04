@@ -12,6 +12,14 @@
 #include "GameObject\ItemManager\HoldItem\HoldArmor.h"
 #include "GameObject\ItemManager\HoldItem\HoldWeapon.h"
 
+namespace 
+{
+	const char* ShopMessageList[] =
+	{
+		"First_1.csv"
+	};
+}
+
 Shop::Shop(const char * name):
 	GameObject(name),
 	_State(ShopStateE::Select),
@@ -112,7 +120,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 	_ItemList.clear();
 
 	//IDが範囲外なら。
-	if(shopID > _ShopNameList.size())
+	if(shopID >= _ShopNameList.size())
 	{
 		FOR(code, Item::ItemCodeE::Max)
 		{
@@ -139,6 +147,13 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 		HoldItemBase* hitem = HoldItemFactory::CreateItem(_ProductList[idx]->Code,_ProductList[idx]->ItemID, false);
 		_ItemList.push_back(hitem);
 	}
+
+	_MessageList.clear();
+	string mespath = "Asset/Data/TextData/";
+	mespath += ShopMessageList[0];
+	//ショップのメッセージを読み込み
+	Support::LoadCSVData<ShopMessage>(mespath.c_str(), ShopMessageData, ARRAY_SIZE(ShopMessageData), _MessageList);
+
 }
 
 void Shop::_ChangeState(const ShopStateE state)

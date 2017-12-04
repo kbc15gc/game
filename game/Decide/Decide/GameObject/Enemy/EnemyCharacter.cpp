@@ -22,6 +22,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
+#include "GameObject\History\HistoryManager.h"
 
 
 EnemyCharacter::NearEnemyInfo EnemyCharacter::nearEnemyInfo = NearEnemyInfo(FLT_MAX,nullptr);
@@ -38,6 +39,7 @@ EnemyCharacter::~EnemyCharacter()
 
 
 void EnemyCharacter::Awake() {
+	_locationCode = LocationCodeE::None;
 	_Type = vector<vector<int>>(static_cast<int>(Item::ItemCodeE::Max), vector<int>(LoadEnemyInfo::dropMax, -1));
 
 	// このクラスで使用するコンポーネントを追加。
@@ -79,6 +81,7 @@ void EnemyCharacter::Start() {
 	
 	//プレイヤー。
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
 }
 
 void EnemyCharacter::Update() {
@@ -87,7 +90,7 @@ void EnemyCharacter::Update() {
 	{
 		if (_NowStateIdx != State::Death) {
 			_ChangeState(State::Death);
-			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(1.0f);
+			static_cast<EnemyDeathState*>(_NowState)->SetWaitTime(2.0f);
 		}
 	}
 	else {
@@ -289,6 +292,7 @@ void EnemyCharacter::_BuildModelData() {
 
 	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 	_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
+	_MyComponent.Model->SetIsLuminance(false);
 
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }

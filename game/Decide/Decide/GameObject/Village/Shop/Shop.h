@@ -25,6 +25,20 @@ namespace
 		{ "Code",Support::DataTypeE::INT, offsetof(struct Product,Code),sizeof(int) },
 		{ "ItemID",Support::DataTypeE::INT , offsetof(struct Product,ItemID),sizeof(int) },
 	};
+
+	//ショップで使うテキスト。
+	struct ShopMessage
+	{
+	public:
+		char text[256];
+		char path[256];
+	};
+
+	const Support::DATARECORD ShopMessageData[] =
+	{
+		{ "text",Support::DataTypeE::STRING, offsetof(struct ShopMessage,text),sizeof(char) * 256 },
+		{ "path",Support::DataTypeE::STRING, offsetof(struct ShopMessage,path),sizeof(char) * 256}
+	};
 }
 
 namespace
@@ -89,6 +103,11 @@ private:
 		SetDescriptionText(text);
 		PlayVoice(filepath);
 	}
+	void SpeakMess(int idx)
+	{
+		SetDescriptionText(_MessageList[idx].get()->text);
+		PlayVoice(_MessageList[idx].get()->path);
+	}
 	//支払い
 	void Pay(int money);
 private:
@@ -107,6 +126,8 @@ private:
 	vector<unique_ptr<ShopName>> _ShopNameList;
 	//アイテムのリスト。
 	vector<HoldItemBase*> _ItemList;
+	//メッセージ情報リスト。
+	vector<unique_ptr<ShopMessage>> _MessageList;
 
 	//確認後に実行する関数。
 	function<void()> _ShopFunc;

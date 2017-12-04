@@ -39,9 +39,9 @@ void HistoryMenu::Start()
 
 	//歴史書のポインタを取得.
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
-	_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
+	//_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
 
-	_ReleaseLocation = (int)LocationCodeE::Prosperity;
+	_ReleaseLocation = (int)LocationCodeE::Common - 1;
 
 	//スプライトクラスを追加.
 	_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
@@ -102,6 +102,9 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 	chip2D->Start(chipID);
 	_Chip2DList.push_back(chip2D);
 
+	_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
+	_NowSelectChip = max(0, _NowSelectChip);
+
 	int len = _Chip2DList.size() - 1 - _NowSelectChip;
 	float offset = -150.0f;
 	Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
@@ -121,12 +124,19 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 	}
 }
 
+void HistoryMenu::SetLocationCode(LocationCodeE code)
+{
+	_NowSelectLocation = (int)code;
+	_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+	_NowLookPage = 0;
+	_SelectCode = (int)SelectCodeE::Page;
+}
+
 /**
 * 表示中の更新.
 */
 void HistoryMenu::EnableUpdate()
 {
-
 	Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
 	switch ((SelectCodeE)_SelectCode)
 	{
@@ -141,6 +151,9 @@ void HistoryMenu::EnableUpdate()
 			cursorPos.y = g_WindowSize.y / 2.0f;
 			break;
 	}
+
+	//ページの初期化.
+	//SelectPageUpdate();
 
 	if (_IsOperation)
 	{
@@ -253,8 +266,6 @@ void HistoryMenu::SelectLocationUpdate()
 
 	if (beforeSelectLocation != _NowSelectLocation)
 	{
-		_HistoryBook->SetNowSelectLocation(_NowSelectLocation);
-
 		_NowLookPage = 0;
 		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
 		if (beforeSelectLocation < _NowSelectLocation)
@@ -280,6 +291,8 @@ void HistoryMenu::SelectLocationUpdate()
 				it->ChangeState(HistoryPage::StateCodeE::Turn);
 			}
 		}
+
+		_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
 
 		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 		se->Init("Asset/Sound/UI/Menu.wav");

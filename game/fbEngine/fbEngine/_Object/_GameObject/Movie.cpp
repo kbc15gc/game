@@ -18,6 +18,7 @@ void Movie::Awake()
 		(void **)(&_GraphBuilder)
 	);
 
+	//VMR9作成。
 	CoCreateInstance(
 		CLSID_VideoMixingRenderer9,
 		NULL,
@@ -29,11 +30,22 @@ void Movie::Awake()
 
 	IVMRFilterConfig *pVMRCfg = NULL;
 	_BaseFilterVMR9->QueryInterface(IID_IVMRFilterConfig9, (void**)&pVMRCfg);
-	//ウィンドウレスモードへ
+	//ウィンドウレスモードへ(フルスクリーン)
 	pVMRCfg->SetRenderingMode(VMRMode_Windowless);
 	//とりあえず使わないので破棄
 	pVMRCfg->Release();
 
+	//グラフィックビルダー作成。
+	CoCreateInstance(
+		CLSID_CaptureGraphBuilder2,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_ICaptureGraphBuilder2,
+		(void**)&_CGB2);
+}
+
+void Movie::Init(const wstring& filename)
+{
 	//出力するウィンドウ設定
 	IVMRWindowlessControl *pVMRWndCont = NULL;
 	_BaseFilterVMR9->QueryInterface(IID_IVMRWindowlessControl9, (void**)&pVMRWndCont);
@@ -41,21 +53,13 @@ void Movie::Awake()
 	//破棄
 	pVMRWndCont->Release();
 
-	//ソースファイルネーム
-	WCHAR wFileName[] = L"Asset/Movie/baby.avi";
+	wstring path = L"Asset/Movie/" + filename;
 	IBaseFilter *pSource = NULL;
 	//Source Filterを作成し、フィルタグラフに追加します
-	_GraphBuilder->AddSourceFilter(wFileName, L"FiltaName", &pSource);
+	_GraphBuilder->AddSourceFilter(path.c_str(), L"FiltaName", &pSource);
 
-	
-	HRESULT hr = CoCreateInstance(
-		CLSID_CaptureGraphBuilder2,
-		NULL,
-		CLSCTX_INPROC_SERVER,
-		IID_ICaptureGraphBuilder2,
-		(void**)&_CGB2);
 	//初期化
-	hr = _CGB2->SetFiltergraph(_GraphBuilder);
+	HRESULT hRes = _CGB2->SetFiltergraph(_GraphBuilder);
 
 	//ソースフィルタをVMR9に接続
 	_CGB2->RenderStream(0, 0, pSource, 0, _BaseFilterVMR9);
@@ -66,19 +70,22 @@ void Movie::Awake()
 	LONG W, H;
 	RECT SrcR, DestR;
 	//動画の縦横サイズ取得
-	hr = pVMRWndCont->GetNativeVideoSize(&W, &H, NULL, NULL);
+	hRes = pVMRWndCont->GetNativeVideoSize(&W, &H, NULL, NULL);
 	SetRect(&SrcR, 0, 0, W, H);
 	GetClientRect(g_MainWindow, &DestR);
-	hr = pVMRWndCont->SetVideoPosition(&SrcR, &DestR);
+	hRes = pVMRWndCont->SetVideoPosition(&SrcR, &DestR);
 	pVMRWndCont->Release();           // ウィンドウレスコントロールはもう必要ない
 
 
 	if (FAILED(hRes))
 		return;
+}
 
+void Movie::Play()
+{
 	// メディアコントロールインターフェイスの取得
 	//フィルタグラフの流れを管理
-	hRes = _GraphBuilder->QueryInterface(IID_IMediaControl, (void**)(&_MediaControl));
+	HRESULT hRes = _GraphBuilder->QueryInterface(IID_IMediaControl, (void**)(&_MediaControl));
 	if (FAILED(hRes))
 		return;
 
@@ -97,31 +104,25 @@ void Movie::Awake()
 	SAFE_RELEASE(pMediaPosition);
 
 	// メディア再生
-	//if (FAILED(hRes = _MediaControl->Run()))
-	//	return ;
+	if (FAILED(hRes = _MediaControl->Run()))
+		return;
 
-	//// 待機時間の設定(ミリ秒)
-	//long pEvCode;
-	//hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
+	// 待機時間の設定(ミリ秒)
+	long pEvCode;
+	hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
 
-	////グラフフィルタ停止
-	//_MediaControl->Stop();	
+	//グラフフィルタ停止
+	_MediaControl->Stop();
 }
 
-void Movie::Start()
-{
-	_MediaControl->Run();
-}
-
-void Movie::Update()
-{
-	
-	/*if(GetAsyncKeyState(VK_SPACE))
-		_MediaControl->Run();*/
-}
-
-void Movie::Render()
-{
-	//_MediaControl->Pause();
-	//_MediaControl->Run();
-}
+//void Movie::Update()
+//{
+//	if(GetAsyncKeyState(VK_SPACE))
+//		_MediaControl->Run();
+//}
+//
+//void Movie::Render()
+//{
+//	_MediaControl->Pause();
+//	_MediaControl->Run();
+//}

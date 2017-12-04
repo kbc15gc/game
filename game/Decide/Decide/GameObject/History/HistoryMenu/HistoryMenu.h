@@ -83,6 +83,8 @@ public:
 		return false;
 	}
 
+	void SetLocationCode(LocationCodeE code);
+
 private:
 
 	/**

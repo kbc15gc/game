@@ -3,7 +3,6 @@
  */
 
 texture g_Scene;	//シーンテクスチャ。
-
 sampler g_SceneSampler = 
 sampler_state
 {
@@ -13,6 +12,18 @@ sampler_state
     MagFilter = LINEAR;
     AddressU = CLAMP;
     AddressV = CLAMP;
+};
+
+texture g_Lum;	//輝度テクスチャ。
+sampler g_LumSampler =
+sampler_state
+{
+	Texture = <g_Lum>;
+	MipFilter = LINEAR;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
 };
 
 struct VS_INPUT{
@@ -37,13 +48,14 @@ VS_OUTPUT VSMain( VS_INPUT In )
 }
 float4 PSSamplingLuminance( VS_OUTPUT In ) : COLOR
 {
+	float lum = tex2D(g_LumSampler,In.tex);
 	//テクスチャから1以上の数値が取れるのか？
 	float4 color = tex2D(g_SceneSampler, In.tex);
 	float t;
-	t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+	//t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
 	//t = dot(color.xyz, float3(0.2f, 0.2f, 0.2f));
-	clip(t - 1.001f);			//輝度が1.0以下ならピクセルキル
-	color.xyz *= (t - 1.0f);
+	clip(lum);			//輝度が1.0以下ならピクセルキル
+	color.xyz *= lum;
 	color.a = 1.0f;
 	return color;
 }

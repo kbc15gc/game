@@ -76,9 +76,9 @@ void StatusWindow::Update()
 	int befSelectWindow = _NowSelectWindow;
 	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(),fbText::TextAnchorE::UpperRight);
 
-	bool isChange = false;
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
+	const float RepeatTime = 0.2f;
 	if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
 	{
 		if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER))
@@ -91,7 +91,6 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow -= 1;
 			}
-			isChange = true;
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -104,9 +103,8 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow -= 1;
 			}
-			isChange = true;
 			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
+			ChangeTime = RepeatTime;
 		}
 	}
 	else if (XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_RIGHT_SHOULDER))
@@ -121,7 +119,6 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow += 1;
 			}
-			isChange = true;
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
@@ -134,9 +131,8 @@ void StatusWindow::Update()
 			{
 				_NowSelectWindow += 1;
 			}
-			isChange = true;
 			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
+			ChangeTime = RepeatTime;
 		}
 	}
 	else
@@ -151,10 +147,7 @@ void StatusWindow::Update()
 		se->Init("Asset/Sound/UI/Menu.wav");
 		se->SetDelete(true);
 		se->Play(false);
-	}
 
-	if (isChange)
-	{
 		for (int i = 0; i < _WindowCount; i++)
 		{
 			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);

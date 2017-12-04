@@ -19,9 +19,6 @@
     <Filter Include="Effect">
       <UniqueIdentifier>{6bbaaa73-c54f-4a29-b78f-ac4a34631e7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{3ba0883e-7d34-4a03-9992-4a04a2da02fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object">
       <UniqueIdentifier>{f81acd50-cf41-4d0e-8092-e796ae815671}</UniqueIdentifier>
     </Filter>
@@ -33,9 +30,6 @@
     </Filter>
     <Filter Include="Object\Component\2D">
       <UniqueIdentifier>{6fbe8fc1-5047-45fb-bd83-04b123dd2d3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Component\3D">
-      <UniqueIdentifier>{a90e3439-46b9-403f-9a2b-77aa0415b1af}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Component\Sound">
       <UniqueIdentifier>{bd72b096-47ac-45fa-ae33-9054bf97f58e}</UniqueIdentifier>
@@ -57,6 +51,12 @@
     </Filter>
     <Filter Include="Support">
       <UniqueIdentifier>{f58ec9e8-9358-45f6-aeaf-76135b8851b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Resource">
+      <UniqueIdentifier>{3ba0883e-7d34-4a03-9992-4a04a2da02fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component\3D">
+      <UniqueIdentifier>{a90e3439-46b9-403f-9a2b-77aa0415b1af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,16 +88,16 @@
       <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\Material.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\SkinModelData.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\SkinModelManager.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Resource\TextureManager.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClCompile>
     <ClCompile Include="_Support\Random.cpp">
       <Filter>Support</Filter>
@@ -290,9 +290,7 @@
     </ClCompile>
     <ClCompile Include="MeshColliderManager.cpp" />
     <ClCompile Include="_Data\Json\nkJsonData.cpp" />
-    <ClCompile Include="_Object\_Component\_2D\BitmapFont.cpp">
-      <Filter>Object\Component\2D</Filter>
-    </ClCompile>
+    <ClCompile Include="_Object\_Component\_2D\BitmapFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -338,16 +336,16 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\Material.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\SkinModelData.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\SkinModelManager.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Resource\TextureManager.h">
-      <Filter>Resource</Filter>
+      <Filter>Object\Resource</Filter>
     </ClInclude>
     <ClInclude Include="_Support\Assert.h">
       <Filter>Support</Filter>

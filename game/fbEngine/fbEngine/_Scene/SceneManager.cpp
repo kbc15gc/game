@@ -81,7 +81,7 @@ void SceneManager::UpdateScene()
 {
 	//次のシーンが設定されている場合はシーン切り替え
 	if (_NextScene >= 0 &&
-		Scene::GetState() == fbScene::FadeStateE::WAIT)
+		(int)(Scene::GetFadeState() & fbScene::FadeStateE::End) > 0)
 		_ChangeScene();
 
 	_Scenes[_NowScene]->Update();
@@ -124,18 +124,28 @@ void SceneManager::DrawScene()
 
 	//0番目に設定(オフスクリーンレンダリング用)
 	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
+	(*graphicsDevice()).Clear(
+		0,
+		NULL,
+		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+		D3DCOLOR_RGBA(0, 0, 0, 1),
+		1.0f,
+		0);
 	(*graphicsDevice()).SetRenderTarget(1, _DepthofField.GetDepthRenderTarget()->buffer);
 	(*graphicsDevice()).Clear(
 		1,
 		NULL,
 		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_RGBA(0, 0,1,1),
+		D3DCOLOR_RGBA(0, 0,0,1),
 		1.0f,
 		0);
+	(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
+	(*graphicsDevice()).Clear(2,NULL,D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,D3DCOLOR_RGBA(0, 0, 0, 1),1.0f,0);
 
 	INSTANCE(GameObjectManager)->RenderObject();
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
+	(*graphicsDevice()).SetRenderTarget(2, nullptr);
 
 	//ブルームの描画.
 	_Bloom.Render();

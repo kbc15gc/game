@@ -24,6 +24,7 @@
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\History\HistoryMenu\HistoryMenu.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\Village\VillageName.h"
 
 #include "GameObject\Village\EventManager.h"
 
@@ -53,6 +54,8 @@
 #include "GameObject\Enemy\BossGolem.h"
 #include "GameObject\Enemy\CodeNameD.h"
 
+#include "fbEngine/_Object/_GameObject/Movie.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -65,9 +68,6 @@ namespace
 	Vector3 BOSS_POS = { -686.0f,61.9f,68.0f };
 	//街
 	float MATI_RADIUS = 35.0f;
-	Vector3 MATI_POS = { -387.3f,58.0f,-75.8f };
-	Vector3 MATI2_POS = { -108.1f ,55.5f ,533.9f };
-	Vector3 MATI3_POS = { 214.80f, 65.70f, -84.10f };
 
 	SCollisionInfo soundcollisition[]
 	{
@@ -80,6 +80,15 @@ namespace
 
 void GameScene::Start()
 {
+	//最初からならオープニング再生するよー。
+	if (IS_CONTINUE == false)
+	{
+		//オープニング動画。
+		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+		movie->Init(L"op.avi");
+		movie->Play();
+	}
+
 	INSTANCE(EventManager)->ReSet();
 
 	//ゲームライト生成
@@ -92,7 +101,6 @@ void GameScene::Start()
 	//プレイヤーカメラ生成
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	playerCamera->ActiveCamera();
-
 #ifdef _DEBUG
 
 	//ふかんカメラの生成。
@@ -141,9 +149,9 @@ void GameScene::Start()
 	//enemy->SetParamAll(Color, param);
 	
 	//メニュー
-	INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
+	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -158,41 +166,27 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
+	_VillageName = INSTANCE(GameObjectManager)->AddNew<VillageName>("VillageName", 10);
 
 #ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
 #endif // _NKMT_
-
-	//通常BGM
-	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
-	_WorldBGM->SetVolume(0.2f);
-
-	//BOSSBGM
-	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
-	_BossBGM->Init("Asset/Sound/boss1.wav");
-	_BossBGM->SetVolume(0.2f);
-
-	//街BGM
-	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
-	_MatiBGM->Init("Asset/Sound/mati1.wav");
-	_MatiBGM->SetVolume(0.2f);
-
-	//街2BGM
-	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
-	_Mati2BGM->Init("Asset/Sound/mati2.wav");
-	_Mati2BGM->SetVolume(0.2f);
-
-	//死亡BGM
-	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
-	_DeadBGM->Init("Asset/Sound/dead.wav");
-	_DeadBGM->SetVolume(0.4f);
-
+	for (int i = 0; i < static_cast<int>(BGM::NUM); i++)
+	{
+		_SoundBGM[i] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BGM", 9);
+	}
+	InitBGM(BGM::WORLD, "Asset/Sound/Battle_BGM.wav", 0.2f);
+	InitBGM(BGM::BOSS1, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
+	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
+	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
+	InitBGM(BGM::MAOU, "Asset/Sound/LastDangion2.wav", 0.2f);
+	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
-	_GameBGM = _WorldBGM;
-#ifndef _NOBO_
-	_GameBGM->Play(true);
-#endif // !_NOBO_
+	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
+//#ifndef _NOBO_
+//	_GameBGM->Play(true);
+//#endif // !_NOBO_
 	//シャドウマップ有効.
 	_isShadowMap = true;
 	//環境マップ有効.
@@ -246,8 +240,13 @@ void GameScene::Update()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_START)) {
 		INSTANCE(Inventory)->ArrangementInventory();
 	}
+	
 #endif
-
+	//
+	if (KeyBoardInput->isPush(DIK_P))
+	{
+		INSTANCE(EventManager)->Execute(Event::EventID::EventCameraF, 0);
+	}
 	//BGM変更したい
 	//場所によってBGM変更
 	{
@@ -257,31 +256,46 @@ void GameScene::Update()
 		}
 		else
 		{
+			int location = -1;
 			//各場所のコリジョンに当たっているか。
-			for (int i = 0; i < sizeof(soundcollisition) / sizeof(soundcollisition[0]); i++)
+			int i = 0,size = sizeof(soundcollisition) / sizeof(soundcollisition[0]);
+			for (i = 0; i < size; i++)
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
-							_Player->SetRespawnPos(MATI_POS);
+							location = 0;
+							_Player->SetRespawnPos(LocationPosition[location]);
+							if(!_HistoryBook->GetActive())
+								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
-							_Player->SetRespawnPos(MATI2_POS);
+							location = 1;
+							_Player->SetRespawnPos(LocationPosition[location]);
+							if (!_HistoryBook->GetActive())
+								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
-							_Player->SetRespawnPos(MATI3_POS);
+							location = 2;
+							_Player->SetRespawnPos(LocationPosition[location]);
+							if (!_HistoryBook->GetActive())
+								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
+					_VillageName->Excute(i);
 					break;
 				}
 			}
-		}
-		
-	}
 
+			INSTANCE(HistoryManager)->SetNowLocation(location);
+
+			if (i == size - 1)
+				_VillageName->Excute(i);
+		}
+	}
 }
 
 void GameScene::_NewChip()
@@ -340,35 +354,22 @@ void GameScene::_ChangeBGM(BGM bgm)
 {
 	if (_BGM != bgm)
 	{
+		//BGM変更
 		_BGM = bgm;
+		//現在のBMGストップ
 		_GameBGM->Stop();
-		switch (bgm)
-		{
-		case GameScene::BGM::WORLD:
-			_GameBGM = _WorldBGM;
-			break;
-		case GameScene::BGM::BOSS1:
-			_GameBGM = _BossBGM;
-			break;
-		case GameScene::BGM::MATI1:
-			_GameBGM = _MatiBGM;
-			break;
-		case GameScene::BGM::MATI2:
-			_GameBGM = _Mati2BGM;
-			break;
-		case GameScene::BGM::MATI3:
-			//@todo for debug 仮設定
-			_GameBGM = _Mati2BGM;
-			break;
-		case GameScene::BGM::DEAD:
-			_GameBGM = _DeadBGM;
-			break;
-		default:
-			break;
-		}
+		//サウンドを設定。
+		_GameBGM = _SoundBGM[static_cast<int>(_BGM)];
+		//再生
 		_GameBGM->Play(true);
 
 	}
+}
+
+void GameScene::InitBGM(BGM bgm, char* name, float volume)
+{
+	_SoundBGM[static_cast<int>(bgm)]->Init(name);
+	_SoundBGM[static_cast<int>(bgm)]->SetVolume(volume);
 }
 
 

@@ -194,7 +194,8 @@ PS_OUTPUT PSMain(VS_OUTPUT In)
 
 	//‹P“x‚ðŒvŽZ.
 	float t = dot(OutColor.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-	Out.Luminance = max(0.0f, t - 1.0f);
+	Out.Luminance.xyz = OutColor.xyz * max(0.0f, t - 1.0f);
+	Out.Luminance.w = max(0.0f, t - 1.0f);
 
 	return Out;
 }

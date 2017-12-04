@@ -42,6 +42,9 @@ float3	g_cameraDir;	//!<カメラ方向。
 
 float g_Alpha; //アルファのしきい値.
 
+float4 g_LuminanceColor;	//!< 輝度の色.
+int g_IsLuminance;			//!< 溢れ輝度フラグ.
+
 #define NUM_CHARA_DIFFLIGHT 4
 /**
 * キャラクターライトクラス.
@@ -337,7 +340,7 @@ float4 g_DitherParam;
 //掛かりきる最低値.
 const float DitherMinLen = 1.5f;
 //掛かり始める最高値.
-const float DitherMaxLen = 4.5f;
+const float DitherMaxLen = 3.0f;
 
 /**
 * ディザリング.
@@ -363,7 +366,7 @@ void CalcDither(float4 WVP,float3 World)
 			// ディザ係数.
 			// 0 ~ 65.
 			// ディザ係数よりも大きい値のところが残る.
-			dither = max(dither, (1.0f - CameraToPosLen) * 65.0f);
+			dither = max(g_DitherParam.y, (1.0f - CameraToPosLen) * 65.0f);
 		}
 
 		if (dither <= 0.0f)

@@ -45,8 +45,10 @@ Player::Player(const char * name) :
 	_StopState(this),
 	//デバッグか
 	_Debug(false),
+	//ジャンプしているか
+	_NoJump(false),
 	//話しているか
-	_NoJump(false)
+	_IsSpeak(false)
 {
 	//経験値テーブルをロード
 	_LoadEXPTable();
@@ -106,6 +108,7 @@ void Player::Awake()
 	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	_Model->SetModelEffect(ModelEffectE::DITHERING, true);
 	//_Model->SetAllBlend(Color::white * 13);
+	//_Model->SetLuminanceColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
@@ -213,8 +216,10 @@ void Player::Awake()
 	//攻撃ボイス初期化
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
 	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
+	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
 	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
 	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack2.wav");
+	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack3.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -235,7 +240,7 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightDirection(2, Vector3(0.0f, 0.0f, 0.0f));
 	_CharaLight.SetDiffuseLightDirection(3, Vector3(0.0f, 0.0f, 0.0f));
 	
-	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 60.0f));
+	_CharaLight.SetDiffuseLightColor(0, Vector4(0.5f, 0.5f, 0.5f, 30.0f));
 	_CharaLight.SetDiffuseLightColor(1, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(2, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -303,7 +308,6 @@ void Player::Start()
 
 
 	//ポジション
-	
 	transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
@@ -370,6 +374,17 @@ void Player::Update()
 
 	//NPCと話すか
 	Speak();
+
+	//@todo for DebugRelease
+	//リリース時のレベルアップ。
+#define LEVELDEBUG
+#ifdef LEVELDEBUG
+	//経験値を増やす。
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
+	{
+		TakeDrop(1000, 1000);
+	}
+#endif
 }
 
 void Player::ChangeState(State nextstate)
@@ -797,7 +812,7 @@ void Player::Speak()
 	npc = INSTANCE(HistoryManager)->GetNPCList();
 
 	//ショップイベントフラグ取得。
-	bool eventflag = INSTANCE(EventManager)->ShopEvent();
+	bool eventflag = INSTANCE(EventManager)->IsEvent();
 
 	//村
 	for (auto village : npc)
@@ -833,7 +848,8 @@ void Player::Speak()
 					_HPBar->RenderDisable();
 					//_MPBar->RenderDisable();
 					//話すフラグセット
-					npc->SetIsSpeak(true);
+					_IsSpeak = true;
+					npc->SetIsSpeak(_IsSpeak);
 					//プレイヤー話すフラグ設定
 					//ジャンプしなくなる
 					_NoJump = true;
@@ -844,7 +860,8 @@ void Player::Speak()
 			else
 			{
 				//話すNPCがいないので
-				npc->SetIsSpeak(false);
+				_IsSpeak = false;
+				npc->SetIsSpeak(_IsSpeak);
 				//話し終わると
 				if (_NoJump)
 				{
@@ -865,7 +882,7 @@ void Player::Speak()
 	}
 }
 
-#ifdef _DEBUG
+#ifdef _DEBUG || LEVELDEBUG
 void Player::_DebugPlayer()
 {
 	//お金増える
@@ -1137,7 +1154,7 @@ void Player::Attack5()
 	//攻撃時のサウンド再生。
 	_AttackSoound->Play(false);
 	//攻撃ボイス再生
-	_AttackBoiceSound[(int)Player::AttackBoice::Attack1]->Play(false);
+	_AttackBoiceSound[(int)Player::AttackBoice::Attack3]->Play(false);
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {

@@ -350,6 +350,13 @@
     <ClCompile Include="GameObject\Enemy\CodeNameD.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyBackStepState.cpp" />
+    <ClCompile Include="GameObject\Village\VillageName.cpp">
+      <Filter>GameObject\Village</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Camera\EventCamera.cpp">
+      <Filter>GameObject\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -717,6 +724,13 @@
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\CodeNameD.h">
       <Filter>GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyBackStepState.h" />
+    <ClInclude Include="GameObject\Village\VillageName.h">
+      <Filter>GameObject\Village</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Camera\EventCamera.h">
+      <Filter>GameObject\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

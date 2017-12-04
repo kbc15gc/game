@@ -18,7 +18,6 @@ public:
 #ifdef _DEBUG
 		this->_CollisionModel = nullptr;
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
-		RenderDisable();
 #endif
 	};
 	Collider(GameObject* g, Transform* t,const char* classname) :Component(g, t, classname)
@@ -26,7 +25,6 @@ public:
 #ifdef _DEBUG
 		this->_CollisionModel = nullptr;
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
-		RenderDisable();
 #endif
 	};
 	~Collider();

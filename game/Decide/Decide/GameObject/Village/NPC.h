@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject\Village\ContinentObject.h"
+#include"GameObject\Component\ObjectRotation.h"
 
-namespace
+namespace npc
 {
 	//NPCのタイプ
 	enum NPCTypeE : int
@@ -14,9 +15,8 @@ namespace
 	{
 	public:
 		NPCTypeE NPCType = NPCTypeE::VILLAGER;
-		//店のID
-		int ShopID = -1;
-		int MesseageID;	//メッセージのID
+		int EventNo = -1;//イベントの番号。
+		int MesseageID;	//メッセージのID。
 		bool ShowTitle;	//タイトルを見せるかどうか？
 	};
 
@@ -28,7 +28,7 @@ namespace
 		{ "ang",Support::DataTypeE::QUATERNION, offsetof(struct NPCInfo,ang),sizeof(Quaternion) },
 		{ "sca",Support::DataTypeE::VECTOR3, offsetof(struct NPCInfo,sca),sizeof(Vector3) },
 		{ "NPCType",Support::DataTypeE::INT, offsetof(struct NPCInfo,NPCType),sizeof(NPCTypeE) },
-		{ "ShopID",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShopID),sizeof(int) },
+		{ "EventNo",Support::DataTypeE::INT, offsetof(struct NPCInfo,EventNo),sizeof(int) },
 		{ "MesseageID",Support::DataTypeE::INT, offsetof(struct NPCInfo,MesseageID),sizeof(int) },
 		{ "ShowTitle",Support::DataTypeE::INT, offsetof(struct NPCInfo,ShowTitle),sizeof(bool) },
 	};
@@ -55,6 +55,8 @@ public:
 	void Awake()override;
 	void Update()override;
 	void LateUpdate()override;
+
+	void CreateNPC(const npc::NPCInfo* info);
 
 	void SetMesseage(const int& id, const bool show);
 
@@ -83,9 +85,20 @@ public:
 		_IsAnimation = flag;
 	}
 
+	//初期回転設定
+	void SetRotation(Quaternion q)
+	{
+		_Rot = q;
+	}
+
 protected:
 	//話す
 	void _Speak();
+	//アニメーション再生
+	void PlayAnimation(State idx, const float interpolateTime, const int lnum = -1)
+	{
+		_Anim->PlayAnimation(_AnimationNo[static_cast<int>(idx)], interpolateTime, lnum);
+	}
 protected:
 	//NPCの身長(モデルのサイズを計算してもいいかもしれない。)
 	float _Height;
@@ -100,8 +113,15 @@ protected:
 
 	//Playerと話しができるか
 	bool _IsSpeak;
+	
+	//回転
+	ObjectRotation* _Rotation = nullptr;
+	Quaternion _Rot;
+
 private:
+	//アニメーション
 	State _State;
 	bool _IsAnimation = true;
+	int _AnimationNo[static_cast<int>(State::Num)];
 
 };

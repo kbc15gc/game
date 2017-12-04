@@ -80,9 +80,9 @@ void HistoryBook::SetActive(const bool & act, const bool & children)
 			_PlayerCamera->SetIsMove(false);
 			_IsOpenOrClose = true;
 			ChangeState(StateCodeE::Move);
-			for (auto& locList : _HistoryPageList)
+			for (int i = 0; i < 3; i++)
 			{
-				for (auto it : locList)
+				for (auto it : _HistoryPageList[i])
 				{
 					if (it != nullptr)
 					{

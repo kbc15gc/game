@@ -8,16 +8,19 @@
 #include "HistoryBook\HistoryBook.h"
 #include "GameObject\Village\NPC.h"
 #include "Effect\MysteryLight.h"
+#include "GameObject\Enemy\EnemyManager.h"
 
 /** 各場所の歴史チップの状況. */
 struct LocationHistoryInfo;
-
+class Player;
 
 /**
 * 歴史を管理するクラス.
 */
 class HistoryManager
 {
+private:
+	enum class LoadObjectType{Object = 0,NPC,Enemy,Max};
 private:
 
 	/**
@@ -110,6 +113,11 @@ public:
 	*/
 	vector<GameObject*>& CreateBuilding(const char* path, vector<GameObject*>& Builds);
 
+	void SetNowLocation(int loc)
+	{
+		_NowLocationCode = loc;
+	}
+
 private:
 	
 	/**
@@ -133,7 +141,7 @@ private:
 	* @param path		フォルダパス.
 	* @param type		生成するオブジェクトのタイプ.
 	*/
-	void _CreateObject(int location, const char* path, int type);
+	void _CreateObject(LocationCodeE location, const char* path, HistoryManager::LoadObjectType type);
 
 	/**
 	* NPCを作成.
@@ -141,7 +149,15 @@ private:
 	* @param location	場所ID.
 	* @param path		フォルダパス.
 	*/
-	void _CreateNPC(int location, const char* path);
+	void _CreateNPC(LocationCodeE location, const char* path);
+
+	/**
+	* エネミーを作成.
+	*
+	* @param location	場所ID.
+	* @param path		フォルダパス.
+	*/
+	void _CreateEnemy(LocationCodeE location, const char * path);
 
 	/**
 	* コリジョンを作成.
@@ -171,5 +187,12 @@ private:
 
 	MysteryLight* _MysteryLight = nullptr;
 	vector<int> _NowGroupIDList;
+
+	Player* _Player = nullptr;
+
+	/** プレイヤーカメラ. */
+	PlayerCamera* _PlayerCamera = nullptr;
+
+	int _NowLocationCode = -1;
 
 };

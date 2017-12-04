@@ -43,11 +43,13 @@ public:
 		_TextSpeed = speed;
 	}
 
-
-
 	// 最後のメッセージか取得。
 	inline bool IsLastMessage()const {
 		return (_State == TextBoxStateE::CLOSING);
+	}
+	void SetEventNo(int no)
+	{
+		_EventNo = no;
 	}
 private:
 	//メッセージボックスを開く。
@@ -88,6 +90,8 @@ private:
 	//スケール
 	float _AnimeTime;
 
+	//実行するイベントの番号。
+	int _EventNo = -1;
 	//再生するボイス。
 	SoundSource _Voice;
 };

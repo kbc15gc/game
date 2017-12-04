@@ -6,6 +6,7 @@ namespace Event
 	{
 		None = -1,
 		ShopF = 0,
+		EventCameraF,
 		FunctionNum,
 
 		StatusWindowA = FunctionNum,
@@ -49,7 +50,11 @@ public:
 		}
 		return false;
 	}
-
+	//現在イベント再生中かどうか？
+	bool IsEvent()
+	{
+		return (_ActiveEvent != Event::EventID::None);
+	}
 private:
 	Player* GetPlayer()
 	{
@@ -62,20 +67,14 @@ private:
 
 	PlayerCamera* GetCamera()
 	{
-		if (!_Camera)
+		if (!_Pcamera)
 		{
-			_Camera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
+			_Pcamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 		}
-		return _Camera;
+		return _Pcamera;
 	}
 	//最初にイベントを追加する処理。
 	void AddEvent();
-
-	//現在イベント再生中かどうか？
-	bool IsEvent()
-	{
-		return (_ActiveEvent != Event::EventID::None);
-	}
 private:
 	static EventManager* _Instance;
 
@@ -89,5 +88,5 @@ private:
 	Event::EventID _ActiveEvent = Event::EventID::None;
 private:
 	Player* _Player;
-	PlayerCamera* _Camera;
+	PlayerCamera* _Pcamera;
 };

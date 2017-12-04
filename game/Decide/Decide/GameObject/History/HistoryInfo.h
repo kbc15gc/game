@@ -20,6 +20,9 @@ enum class ChipID : int
 	Iron,		//!< 鉄のチップ.
 	Oil,		//!< 石油のチップ.
 	Medicine,	//!< 薬のチップ.
+	DevilTown,	//!< 魔王の街のチップ.
+	DevilCastel,//!< 魔王の城のチップ.
+	DevilThrone,//!< 魔王の玉座のチップ.
 	ChipNum,	//!< チップの数.
 };
 
@@ -53,6 +56,9 @@ static const string ChipFileName[(int)ChipID::ChipNum] =
 	"IronPage.png",
 	"OilPage.png",
 	"MedicinePage.png",
+	"None.png",
+	"None.png",
+	"None.png",
 };
 
 /**
@@ -60,9 +66,11 @@ static const string ChipFileName[(int)ChipID::ChipNum] =
 */
 enum class LocationCodeE : int
 {
-	Begin,			//!< はじまりの集落.
+	None = -1,
+	Begin = 0,			//!< はじまりの集落.
 	Hunting,		//!< 狩猟の村.
-	Prosperity,		//!< 繁栄の町.
+	Prosperity,		//!< 繁栄の街.
+	DevilKingdom,	//!< 魔王の国.	
 	Common,			//!< 共通のNPC.
 	LocationNum,	//!< 場所の数.
 };
@@ -70,11 +78,23 @@ enum class LocationCodeE : int
 /** 
 * 場所名. 
 */
-static const string LocationNameList[(int)LocationCodeE::LocationNum] =
+static const string LocationNameList[(int)LocationCodeE::Common] =
 {
 	"はじまりの集落",
 	"狩猟の村",
-	"繁栄の町",
+	"繁栄の街",
+	"魔王の国",
+};
+
+/**
+* プレイヤーのリスポーン地点の座標.
+*/
+static const Vector3 LocationPosition[(int)LocationCodeE::Common] =
+{
+	Vector3(-387.3f,58.0f,-75.8f),
+	Vector3(-108.1f ,55.5f ,533.9f),
+	Vector3(212.88f, 67.0f, 6.92f),
+	Vector3(-114.23f, 183.0f, 184.95f),
 };
 
 /**
@@ -123,6 +143,9 @@ namespace
 		{ "Slot[6]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[6]),	sizeof(int) },
 		{ "Slot[7]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[7]),	sizeof(int) },
 		{ "Slot[8]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[8]),	sizeof(int) },
+		{ "Slot[9]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[9]),	sizeof(int) },
+		{ "Slot[10]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[10]),	sizeof(int) },
+		{ "Slot[11]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[11]),	sizeof(int) },
 	};
 
 	//オブジェクトの情報
@@ -147,6 +170,9 @@ namespace
 		{ "Slot[6]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[6]),sizeof(ChipID) },
 		{ "Slot[7]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[7]),sizeof(ChipID) },
 		{ "Slot[8]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[8]),sizeof(ChipID) },
+		{ "Slot[9]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[9]),sizeof(ChipID) },
+		{ "Slot[10]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[10]),sizeof(ChipID) },
+		{ "Slot[11]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[11]),sizeof(ChipID) },
 	};
 
 }

@@ -14,9 +14,7 @@ namespace
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
-	GameCamera(name),
-	_Spring(50.0f),
-	_Damping(12.0f)
+	GameCamera(name)
 {
 }
 
@@ -36,11 +34,11 @@ void PlayerCamera::Awake()
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(0.01f);
-	_Camera->SetFar(10000.0f);
+	_Camera->SetFar(1500.0f);
 	INSTANCE(GameObjectManager)->mainCamera = _Camera;
 
 	//カメラのコリジョンの半径設定
-	_Radius = 0.001f;
+	_Radius = 0.2f;
 	_Sphere = AddComponent<SphereCollider>();
 	_Sphere->Create(_Radius);
 	//距離の下限と上限
@@ -55,14 +53,7 @@ void PlayerCamera::Start()
 	_PForward = &_Player->transform->GetForward();
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
-	{
-		_Camera->SetTarget(_GetPlayerPos());
-		_DestinationPos = _GetPlayerPos() + (_Player->transform->GetForward() * _Dist);
-		transform->SetPosition(_DestinationPos);
-		_Camera->Update();
-
-		_ToCameraDir = (_Player->transform->GetForward());
-	}
+	Init();
 
 	//歴史書を検索。
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
@@ -161,7 +152,7 @@ void PlayerCamera::_StandardBehavior()
 	//カメラを移動させる。
 	static float sp = 70.0f;
 	static float dp = 1.0f;
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime()));
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime(),CAMERA_SPEED));
 	/*auto pos = transform->GetPosition();
 	pos.Lerp(_DestinationPos, 0.8f);
 	transform->SetPosition(pos);*/
@@ -172,7 +163,7 @@ void PlayerCamera::_LookAtTarget()
 	auto trg = _GetPlayerPos();
 	static float spring = 85.0f;
 	static float damping = 12.0f;
-	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, spring, damping, Time::DeltaTime());
+	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, spring, damping, Time::DeltaTime(),CAMERA_SPEED);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
 }
@@ -268,22 +259,6 @@ Vector3 PlayerCamera::_ClosetRay()
 void PlayerCamera::_Move()
 {
 	
-}
-
-Vector3 PlayerCamera::_SpringChaseMove(const Vector3& now, const Vector3& target, const float& spring, const float& damping, const float& time)
-{
-	//ワールド行列でのカメラの理想位置。
-	//auto vIdealPos = _DestinationPos;
-
-	//この理想位置へのバネによる加速度を計算。
-	auto vDisplace = now - target;
-	auto vSpringAccel = (-spring * vDisplace) - (damping * _Velocity);
-	//オイラー積分を使ってカメラの速度と位置を更新。
-	_Velocity += vSpringAccel * time * CAMERA_SPEED;
-	auto next = now + (_Velocity * time);
-	auto diff = next - target;
-
-	return next;
 }
 
 void PlayerCamera::CameraReset()

@@ -6,7 +6,15 @@
 namespace
 {
 	//オブジェクトを識別するタイプ。
-	const char* ObjectType[2] = { "Obj","NPC" };
+	const char* ObjectType[3] = { "Obj","NPC","Enemy" };
+
+	/**
+	* チップIDからビット値を求める.
+	*/
+	int ChipIDToBit(ChipID id)
+	{
+		return BIT((int)id + 1);
+	}
 }
 
 
@@ -36,6 +44,12 @@ HistoryManager::HistoryManager()
 */
 void HistoryManager::Start()
 {
+	//各オブジェクトリストを初期化。
+	/*for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
+	{
+		_GameObjectList[i].clear();
+		_NPCList[i].clear();
+	}*/
 	_LocationHistoryList.clear();
 
 	if (IS_CONTINUE)
@@ -62,6 +76,9 @@ void HistoryManager::Start()
 
 	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
 
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+
+	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 //木が邪魔な場合これを使ってください。
 //#define NPCONLY
 
@@ -74,11 +91,10 @@ void HistoryManager::Start()
 #else // NPCONLY
 	//共通オブジェクト生成。
 	char path[128];
-	FOR(type, 2)
-	{
+	for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
 		//パス生成
 		sprintf(path, "Asset/Data/GroupData/CommonGroup%s.csv", ObjectType[type]);
-		_CreateObject((int)LocationCodeE::Common, path, type);
+		_CreateObject(LocationCodeE::Common, path, static_cast<LoadObjectType>(type));
 	}
 
 #endif
@@ -131,23 +147,39 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 {
 	//チップの状態からグループを計算。
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
+
 	//どれかのグループに該当するのなら。
 	if (group >= 0)
 	{
 
 		if (_NowGroupIDList[(int)location] != group)
 		{
+			if (_NowLocationCode == (int)location)
+			{
+				//_PlayerCamera->transform->SetParent(_Player->transform);
+				_Player->transform->SetLocalPosition(LocationPosition[(int)location]);
+				_PlayerCamera->LookAtTarget();
+				//_PlayerCamera->transform->SetParent(nullptr);
+
+				Camera* camera = _PlayerCamera->GetComponent<Camera>();
+				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
+				cameraFoward.Normalize();
+				cameraFoward.y -= 0.5f;
+				cameraFoward.Scale(0.8f);
+				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
+				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
+				
+			}
 			_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
 		}
 
 		char path[128];
 
-		FOR(type,2)		
-		{
+		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
 			//パス生成
 			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)location, 'A' + group, ObjectType[type]);
-			_CreateObject((int)location, path, type);
+			_CreateObject(location, path, static_cast<LoadObjectType>(type));
 			ZeroMemory(path, 128);
 		}
 	}
@@ -164,31 +196,48 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 	//CSVからグループ情報読み込み
 	vector<unique_ptr<VillageGroup>> groupList;
 	Support::LoadCSVData<VillageGroup>(path, VillageGroupData, ARRAY_SIZE(VillageGroupData), groupList);
+
+	int infoBit = 0;
+	for (int i = 0; i < (int)ChipID::ChipNum; i++)
+	{
+		infoBit += ChipIDToBit(info->_ChipSlot[i]);
+	}
 	
 	//一致するものがあるか調べる。
 	for(auto& group : groupList)
 	{
-		bool isMatch = true;
-		//各スロットを比較
+		int groupBit = 0;
 		for (int i = 0; i < (int)ChipID::ChipNum; i++)
+		{
+			groupBit += ChipIDToBit(group->Slot[i]);
+		}
+
+		//bool isMatch = true;
+		//各スロットを比較
+		/*for (int i = 0; i < (int)ChipID::ChipNum; i++)
 		{
 			if (group->Slot[i] != info->_ChipSlot[i])
 			{
 				isMatch = false;
 			}
-		}
+		}*/
 
-		if (!isMatch)
+		if (groupBit == infoBit)
 		{
-			//マッチングしていないので次へ.
-			continue;
+			return group->GroupID;
 		}
 
-		//パターン一致したのでID設定。
-		return group->GroupID;
+		//if (!isMatch)
+		//{
+		//	//マッチングしていないので次へ.
+		//	continue;
+		//}
+
+		////パターン一致したのでID設定。
+		//return group->GroupID;
 	}
 
-	return -1;
+	return 0;
 }
 
 /**
@@ -198,24 +247,24 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 * @param path		フォルダパス.
 * @param type		生成するオブジェクトのタイプ.
 */
-void HistoryManager::_CreateObject(int location, const char * path, int type)
+void HistoryManager::_CreateObject(LocationCodeE location, const char * path, HistoryManager::LoadObjectType type)
 {
-	if (type == 0)
+	if (type == HistoryManager::LoadObjectType::Object)
 	{
 		//前のオブジェクトを削除
-		for (auto& it : _GameObjectList[location])
+		for (auto obj : _GameObjectList[static_cast<int>(location)])
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(it);
+			INSTANCE(GameObjectManager)->AddRemoveList(obj);
 		}
-		_GameObjectList[location].clear();
+		_GameObjectList[static_cast<int>(location)].clear();
 
 		//生成。
-		CreateBuilding(path, _GameObjectList[location]);
+		CreateBuilding(path, _GameObjectList[static_cast<int>(location)]);
 
-		//第3の村だけ
-		if (location == (int)LocationCodeE::Prosperity)
+		//第3の村以降のみ。
+		if (location == LocationCodeE::Prosperity || location == LocationCodeE::DevilKingdom)
 		{
-			for (auto obj : _GameObjectList[location]) {
+			for (auto obj : _GameObjectList[static_cast<int>(location)]) {
 				//X軸に180ど回転させる。
 				Quaternion q = Quaternion::Identity;
 				q.SetRotation(Vector3::axisX, PI);
@@ -223,18 +272,21 @@ void HistoryManager::_CreateObject(int location, const char * path, int type)
 				obj->transform->SetRotation(q);
 			}
 		}
-
 	}
-	else if (type == 1)
+	else if (type == HistoryManager::LoadObjectType::NPC)
 	{
-		//前のNPCを削除
-		for (auto& it : _NPCList[(int)location])
+		for (auto& npc : _NPCList[(int)location])
 		{
-			INSTANCE(GameObjectManager)->AddRemoveList(it);
+			if (npc != nullptr)
+				INSTANCE(GameObjectManager)->AddRemoveList(npc);
 		}
 		_NPCList[(int)location].clear();
 		//生成。
 		_CreateNPC(location, path);
+	}
+	else if (type == HistoryManager::LoadObjectType::Enemy) {
+		// エネミーの情報を読み込み。
+		_CreateEnemy(location, path);
 	}
 }
 
@@ -311,33 +363,39 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 	return Builds;
 }
 
-void HistoryManager::_CreateNPC(int location, const char * path)
+void HistoryManager::_CreateNPC(LocationCodeE location, const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
-	vector<unique_ptr<NPCInfo>> npcInfo;
-	Support::LoadCSVData<NPCInfo>(path, NPCInfoData, ARRAY_SIZE(NPCInfoData), npcInfo);
+	vector<unique_ptr<npc::NPCInfo>> npcInfo;
+	Support::LoadCSVData<npc::NPCInfo>(path, npc::NPCInfoData, ARRAY_SIZE(npc::NPCInfoData), npcInfo);
 
 	//情報からオブジェクト生成。
 	FOR(i, npcInfo.size())
 	{
 		//生成
 		NPC* npc = INSTANCE(GameObjectManager)->AddNew<NPC>(npcInfo[i]->filename, 2);
-
-		npc->SetMesseage(npcInfo[i]->MesseageID, npcInfo[i]->ShowTitle);
-		npc->transform->SetLocalPosition(npcInfo[i]->pos);
-		npc->transform->SetRotation(npcInfo[i]->ang);
-		npc->transform->SetLocalScale(npcInfo[i]->sca);
-
-		npc->LoadModel(npcInfo[i]->filename,false);
+		npc->CreateNPC(npcInfo[i].get());
+		
 		auto model = npc->GetComponent<SkinModel>();
 		model->GetModelData()->SetInstancing(false);
 		model->SetCullMode(D3DCULL::D3DCULL_CCW);
 
 		//管理用の配列に追加。
-		_NPCList[location].push_back(npc);
+		_NPCList[static_cast<int>(location)].push_back(npc);
 	}
 	//いらんので破棄。
 	npcInfo.clear();
+}
+
+void HistoryManager::_CreateEnemy(LocationCodeE location, const char * path) {
+	//Enemy情報構造体へのポインタをまとめたもの。
+	// ※読み込み用。
+	vector<unique_ptr<LoadEnemyInfo::EnemyInfo>> _EnemyInfoList;
+
+	//CSVからエネミー情報読み取り。
+	Support::LoadCSVData<LoadEnemyInfo::EnemyInfo>(path, LoadEnemyInfo::EnemyInfoDecl, ARRAY_SIZE(LoadEnemyInfo::EnemyInfoDecl), _EnemyInfoList);
+
+	INSTANCE(EnemyManager)->CreateEnemys(location, _EnemyInfoList);
 }
 
 /**

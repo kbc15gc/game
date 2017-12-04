@@ -208,6 +208,7 @@
     <ClInclude Include="AttackCollision.h" />
     <ClInclude Include="Decide.h" />
     <ClInclude Include="GameLight.h" />
+    <ClInclude Include="GameObject\Camera\EventCamera.h" />
     <ClInclude Include="GameObject\Camera\FreeCamera.h" />
     <ClInclude Include="GameObject\Camera\GameCamera.h" />
     <ClInclude Include="GameObject\Camera\PlayerCamera.h" />
@@ -326,6 +327,7 @@
     <ClInclude Include="GameObject\Village\Shop\HFSM\ShopS_Select.h" />
     <ClInclude Include="GameObject\Village\Shop\Shop.h" />
     <ClInclude Include="GameObject\Village\TextBox.h" />
+    <ClInclude Include="GameObject\Village\VillageName.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene\GameScene.h" />
@@ -338,6 +340,7 @@
     <ClCompile Include="AttackCollision.cpp" />
     <ClCompile Include="Decide.cpp" />
     <ClCompile Include="GameLight.cpp" />
+    <ClCompile Include="GameObject\Camera\EventCamera.cpp" />
     <ClCompile Include="GameObject\Camera\FreeCamera.cpp" />
     <ClCompile Include="GameObject\Camera\GameCamera.cpp" />
     <ClCompile Include="GameObject\Camera\PlayerCamera.cpp" />
@@ -450,6 +453,7 @@
     <ClCompile Include="GameObject\Village\Shop\HFSM\ShopS_Select.cpp" />
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
+    <ClCompile Include="GameObject\Village\VillageName.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\LastBossTestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />

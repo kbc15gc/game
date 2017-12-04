@@ -160,11 +160,14 @@ void TextBox::_NextMessage()
 		}
 		else
 		{
+			//メッセージのNoを優先。
+			int eventNo = (_Message->EventNo >= 0) ? _Message->EventNo : _EventNo;
+			//0以上なら
+			if (_Message->EventID >= 0 && eventNo >= 0)
+				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), eventNo);
+
 			//次のメッセージを再生
 			_SetMessage(_Message->NextID);
-			//0以上なら
-			if (_Message->EventID >= 0)
-				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), 0);
 		}
 	}
 }

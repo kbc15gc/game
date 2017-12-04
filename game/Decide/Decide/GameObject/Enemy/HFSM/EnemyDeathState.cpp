@@ -39,6 +39,8 @@ void EnemyDeathState::_UpdateSubClass() {
 			return;
 		}
 		_timeCounter += Time::DeltaTime();
+		float dc = 65.0f * (_timeCounter / max(0.1f, _waitTime));
+		_EnemyObject->GetComponent<SkinModel>()->SetDitherCoefficient(dc);
 	}
 }
 

@@ -9,6 +9,7 @@ class SplitSpace;
 namespace LoadEnemyInfo{
 
 	const int dropMax = 5;
+	const int ColorNum = 4;
 
 	// CSVから読み込むエネミーのデータ形式。
 	struct EnemyInfo : Noncopyable {
@@ -23,6 +24,8 @@ namespace LoadEnemyInfo{
 		int item[dropMax];
 		int armor[dropMax];
 		int weapon[dropMax];
+		int colorflag;
+		Vector4 color;
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -34,15 +37,17 @@ namespace LoadEnemyInfo{
 	const Support::DATARECORD EnemyInfoDecl[] =
 	{
 		{ "type",Support::DataTypeE::INT, offsetof(struct EnemyInfo,type),	sizeof(EnemyCharacter::EnemyType) },
-		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,param),	sizeof(EnemyInfo::param) },
+		{ "param",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,param),	sizeof(EnemyInfo::param) },
 		{ "exp",	Support::DataTypeE::INT, offsetof(struct EnemyInfo,exp),	sizeof(int) },
 		{ "money",	Support::DataTypeE::INT, offsetof(struct EnemyInfo,money),	sizeof(int) },
 		{ "position",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,position),	sizeof(Vector3) },
 		{ "rotation",	Support::DataTypeE::QUATERNION, offsetof(struct EnemyInfo,rotation),	sizeof(Quaternion) },
 		{ "scale",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,scale),	sizeof(Vector3) },
-		{ "item",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
-		{ "armor",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
-		{ "weapon",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
+		{ "item",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
+		{ "armor",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
+		{ "weapon",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
+		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
+		{ "color",	Support::DataTypeE::VECTOR4, offsetof(struct EnemyInfo,color),	sizeof(Vector4) },
 	};
 }
 
@@ -75,12 +80,11 @@ public:
 
 	// 初期化.
 	void Start();
-
-	// エネミーの位置データなどを外部ファイルから読み込んで保存。
-	void LoadEnemyOrigin();
 	
-	// 読み込んだエネミーをGameObjectManagerに追加。
-	void CreateEnemy();
+	// テーブルに登録されている情報をもとにエネミーを作成。
+	// 引数：	どの場所のエネミーを作成するか。
+	//			エネミー情報の配列。
+	void CreateEnemys(LocationCodeE location,vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos);
 
 	// エネミー死亡関数。
 	// ※スポナーコンポーネントがあれば自動でリスポーンする。
@@ -88,7 +92,9 @@ public:
 
 
 private:
-	vector<ManagingData*> _enemys;
+	vector<vector<unique_ptr<ManagingData>>> _enemys;	// エネミー。
+	//vector<ManagingData*> _commonEnemys;	// チップ情報に関係なく存在するエネミー。
+
 private:
 	static EnemyManager* _instance;
 };

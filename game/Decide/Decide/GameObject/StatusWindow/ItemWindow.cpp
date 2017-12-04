@@ -243,9 +243,9 @@ void ItemWindow::Input()
 		{
 			Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 			LStick /= 32767.0f;
-			if (LStick.y >= 0.2f)
+			if (LStick.y >= 0.2f || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_DPAD_UP))
 			{
-				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_UP))
 				{
 					Cursor::CursorIndex index = _Cursor->PrevMove(1);
 					_NowSelectItem = index.rangeIndex;
@@ -265,9 +265,9 @@ void ItemWindow::Input()
 					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 				}
 			}
-			else if (LStick.y <= -0.2f)
+			else if (LStick.y <= -0.2f || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_DPAD_DOWN))
 			{
-				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+				if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_DOWN))
 				{
 					Cursor::CursorIndex index = _Cursor->NextMove(1);
 					_NowSelectItem = index.rangeIndex;
@@ -590,6 +590,10 @@ void ItemWindow::_ConfigParamRender()
 			int atknewParam = 0;
 			int matParam = 0;
 			int matnewParam = 0;
+			int crtParam = 0;
+			int crtnewParam = 0;
+			int dexParam = 0;
+			int dexnewParam = 0;
 
 			HoldEquipment::Rank rank = HoldEquipment::Rank::None;
 			HoldEquipment::Rank newRank = HoldEquipment::Rank::None;
@@ -598,12 +602,16 @@ void ItemWindow::_ConfigParamRender()
 			{
 				atkParam = weapon->GetAtk();
 				matParam = weapon->GetMagicAtk();
+				crtParam = weapon->GetCrt();
+				dexParam = weapon->GetDex();
 				rank = weapon->GetRank();
 			}
 			if (newWeapon)
 			{
 				atknewParam = newWeapon->GetAtk();
 				matnewParam = newWeapon->GetMagicAtk();
+				crtnewParam = newWeapon->GetCrt();
+				dexnewParam = newWeapon->GetDex();
 				newRank = newWeapon->GetRank();
 			}
 			_ParameterRenderList[(int)WIShowStatus::RANK]->SetParamRank("RANK", "UI/S_Buff02.png", rank, newRank);
@@ -612,9 +620,9 @@ void ItemWindow::_ConfigParamRender()
 			_ParameterRenderList[(int)WIShowStatus::MAT]->SetParamEquip("MAT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::MAT)]),
 				_Player->GetParam(CharacterParameter::Param::MAT), matParam, matnewParam);
 			_ParameterRenderList[(int)WIShowStatus::CRT]->SetParamEquip("CRT", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::CRT)]),
-				_Player->GetParam(CharacterParameter::Param::CRT), 0, 0);
+				_Player->GetParam(CharacterParameter::Param::CRT), crtParam, crtnewParam);
 			_ParameterRenderList[(int)WIShowStatus::DEX]->SetParamEquip("DEX", const_cast<char*>(IconTextureNameList[static_cast<int>(IconIndex::DEX)]),
-				_Player->GetParam(CharacterParameter::Param::DEX), 0, 0);
+				_Player->GetParam(CharacterParameter::Param::DEX), dexParam, dexnewParam);
 			break;
 		}
 	}
