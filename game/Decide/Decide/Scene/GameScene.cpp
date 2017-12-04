@@ -170,39 +170,19 @@ void GameScene::Start()
 #ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
 #endif // _NKMT_
-
-	//通常BGM
-	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
-	_WorldBGM->SetVolume(0.2f);
-
-	//BOSSBGM
-	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
-	_BossBGM->Init("Asset/Sound/boss1.wav");
-	_BossBGM->SetVolume(0.2f);
-
-	//街BGM
-	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
-	_MatiBGM->Init("Asset/Sound/mati1.wav");
-	_MatiBGM->SetVolume(0.2f);
-
-	//街2BGM
-	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
-	_Mati2BGM->Init("Asset/Sound/mati2.wav");
-	_Mati2BGM->SetVolume(0.2f);
-
-	//街3BGM
-	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
-	_Mati3BGM->Init("Asset/Sound/mati3.wav");
-	_Mati3BGM->SetVolume(0.2f);
-
-	//死亡BGM
-	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
-	_DeadBGM->Init("Asset/Sound/dead.wav");
-	_DeadBGM->SetVolume(0.4f);
-
+	for (int i = 0; i < static_cast<int>(BGM::NUM); i++)
+	{
+		_SoundBGM.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("BGM", 9));
+	}
+	InitBGM(BGM::WORLD, "Asset/Sound/Battle_BGM.wav", 0.2f);
+	InitBGM(BGM::BOSS1, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
+	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
+	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
+	InitBGM(BGM::MAOU, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
-	_GameBGM = _WorldBGM;
+	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
 //#ifndef _NOBO_
 //	_GameBGM->Play(true);
 //#endif // !_NOBO_
@@ -373,34 +353,22 @@ void GameScene::_ChangeBGM(BGM bgm)
 {
 	if (_BGM != bgm)
 	{
+		//BGM変更
 		_BGM = bgm;
+		//現在のBMGストップ
 		_GameBGM->Stop();
-		switch (bgm)
-		{
-		case GameScene::BGM::WORLD:
-			_GameBGM = _WorldBGM;
-			break;
-		case GameScene::BGM::BOSS1:
-			_GameBGM = _BossBGM;
-			break;
-		case GameScene::BGM::MATI1:
-			_GameBGM = _MatiBGM;
-			break;
-		case GameScene::BGM::MATI2:
-			_GameBGM = _Mati2BGM;
-			break;
-		case GameScene::BGM::MATI3:
-			_GameBGM = _Mati3BGM;
-			break;
-		case GameScene::BGM::DEAD:
-			_GameBGM = _DeadBGM;
-			break;
-		default:
-			break;
-		}
+		//サウンドを設定。
+		_GameBGM = _SoundBGM[static_cast<int>(_BGM)];
+		//再生
 		_GameBGM->Play(true);
 
 	}
+}
+
+void GameScene::InitBGM(BGM bgm, char* name, float volume)
+{
+	_SoundBGM[static_cast<int>(bgm)]->Init(name);
+	_SoundBGM[static_cast<int>(bgm)]->SetVolume(volume);
 }
 
 

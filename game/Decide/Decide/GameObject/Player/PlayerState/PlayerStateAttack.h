@@ -12,4 +12,5 @@ public:
 	void Leave()override;
 	//•ûŒü“]Š·
 	void Dir();
+
 };
