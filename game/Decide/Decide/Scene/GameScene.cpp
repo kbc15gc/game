@@ -54,6 +54,8 @@
 #include "GameObject\Enemy\BossGolem.h"
 #include "GameObject\Enemy\CodeNameD.h"
 
+#include "fbEngine/_Object/_GameObject/Movie.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -78,6 +80,15 @@ namespace
 
 void GameScene::Start()
 {
+	//最初からならオープニング再生するよー。
+	if (IS_CONTINUE == false)
+	{
+		//オープニング動画。
+		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+		movie->Init(L"op.avi");
+		movie->Play();
+	}
+
 	INSTANCE(EventManager)->ReSet();
 
 	//ゲームライト生成
