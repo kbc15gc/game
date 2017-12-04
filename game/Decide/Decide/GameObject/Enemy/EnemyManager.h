@@ -25,7 +25,7 @@ namespace LoadEnemyInfo{
 		int armor[dropMax];
 		int weapon[dropMax];
 		int colorflag;
-		float color[ColorNum];
+		Vector4 color;
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -47,7 +47,7 @@ namespace LoadEnemyInfo{
 		{ "armor",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
 		{ "weapon",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
 		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
-		{ "color",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,color),	sizeof(EnemyInfo::color) },
+		{ "color",	Support::DataTypeE::VECTOR4, offsetof(struct EnemyInfo,color),	sizeof(Vector4) },
 	};
 }
 

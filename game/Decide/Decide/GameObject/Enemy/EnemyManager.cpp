@@ -109,9 +109,8 @@ void EnemyManager::CreateEnemy() {
 			enemy->SetDropMoney(info->InfoData->money);
 			enemy->SetItem(info->InfoData->item, info->InfoData->armor, info->InfoData->weapon);
 			//カラーの設定
-			float* color = info->InfoData->color;
 			Color c;
-			c.Set(color[0], color[1], color[2], color[3]);
+			c.Set(info->InfoData->color.x, info->InfoData->color.y, info->InfoData->color.z, info->InfoData->color.w);
 			//カラーを設定するフラグの場合。
 			//@todo for debug
 			//いったん消します。
@@ -191,9 +190,8 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetDropMoney(enemy->InfoData->money);
 			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
 			//カラーを設定。
-			float* color = enemy->InfoData->color;
 			Color c;
-			c.Set(color[0], color[1], color[2], color[3]);
+			c.Set(enemy->InfoData->color.x, enemy->InfoData->color.y, enemy->InfoData->color.z, enemy->InfoData->color.w);
 			//カラーを設定するフラグの場合。
 			//@todo for debug
 			//いったん消します。

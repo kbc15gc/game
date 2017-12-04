@@ -238,13 +238,9 @@ public class CSVExportFunction : Editor
             }
             //カラー
             string colorflag = Convert.ToString(e._ColorFlag);
-            string[] color = new string[4];
-            color[0] = Convert.ToString(e._Color.r);
-            color[1] = Convert.ToString(e._Color.g);
-            color[2] = Convert.ToString(e._Color.b);
-            color[3] = Convert.ToString(e._Color.a);
+            string color = Vector4ToString(new Vector4(e._Color.r, e._Color.g, e._Color.b, e._Color.a));
 
-            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}/{12}/{13}/{14}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2], colorflag, color[0],color[1], color[2], color[3]);
+            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2], colorflag, color);
 
             //列書き出し
             sw.WriteLine(line);
@@ -267,6 +263,17 @@ public class CSVExportFunction : Editor
         //"x/y/z"の形で返す。
         
         return String.Format("{0}/{1}/{2}", val.x , val.y, val.z);
+    }
+
+    static public string Vector4ToString(Vector4 val)
+    {
+        //"x/y/z/w"の形で返す。
+        float x = val.x;
+        float y = val.y;
+        float z = val.z;
+        float w = val.w;
+        return String.Format("{0}/{1}/{2}/{3}", x.ToString("f6"), y.ToString("f6"), z.ToString("f6"), w.ToString("f6"));
+        //return String.Format("{0}/{1}/{2}/{3}", val.x, val.y, val.z, val.w);
     }
 
     static public string QuaternionToString(Quaternion val)
