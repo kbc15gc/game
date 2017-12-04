@@ -439,35 +439,33 @@ char * ShopS_Trade::_CalcColorCode(int diff)
 
 void ShopS_Trade::_Decision()
 {
-	//テキスト。
-	char msg[256];
-	//音声
-	char cv[256];
-	bool isCV = false;
+	
 	if (_IndexList.size() > 0)
 	{
+		//テキスト。
+		char msg[256];
 		sprintf(msg, "全部で %d$ になります。", _SumValue);
-		isCV = false;
 		//関数を設定。
 		if (_SaveState == Shop::ShopStateE::Buy)
 		{
 			//お金が足りているか？
 			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SumValue)
 			{
+				_Shop->SetDescriptionText(msg);
 				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
 				//購入確認画面を出す。
 				_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
 			}
 			else
 			{
-				//購入できない旨を表示。
-				sprintf(msg, "お金がたりませんよ。");
-				sprintf(cv, "Asset/Sound/NPC/SHOP/Mic1_50.wav");
-				isCV = true;
+				//お金が足りないときのメッセージ。
+				_Shop->SpeakMess(1);
 			}
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
 		{
+			//
+			_Shop->SetDescriptionText(msg);
 			_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this);
 			//販売確認画面を出す。
 			_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
@@ -475,15 +473,9 @@ void ShopS_Trade::_Decision()
 	}
 	else
 	{
-		sprintf(msg, "何も選択されていませんよ。");
-		sprintf(cv, "Asset/Sound/NPC/SHOP/Mic1_51.wav");
-		isCV = true;
+		//アイテムが何も選択されていないときのメッセージ。
+		_Shop->SpeakMess(5);
 	}
-
-	if (isCV)
-		_Shop->SetDescription(msg, cv);
-	else
-		_Shop->SetDescriptionText(msg);
 }
 
 void ShopS_Trade::BuyItem()
@@ -507,11 +499,13 @@ void ShopS_Trade::BuyItem()
 		{
 			//アイテムの値段分お金を払う。
 			_Shop->Pay((*_DisplayList)[idx]->GetInfo()->Value * _TradeNum[idx]);
-			_Shop->SetDescription("まいどあり。","Asset/Sound/NPC/SHOP/Mic1_53.wav");
+			//アイテムを購入したときのメッセージ。
+			_Shop->SpeakMess(3);
 		}
 		else
 		{
-			_Shop->SetDescription("インベントリが一杯ですね。", "Asset/Sound/NPC/SHOP/Mic1_54.wav");
+			//持ち物がいっぱいのときのメッセージ。
+			_Shop->SpeakMess(2);
 		}
 	}
 
@@ -535,7 +529,8 @@ void ShopS_Trade::SellItem()
 			}
 			//アイテムの値段分お金を貰う。
 			_Shop->Pay(-_SumValue);
-			_Shop->SetDescription("まいどあり。", "Asset/Sound/NPC/SHOP/Mic1_53.wav");
+			//アイテムを買い取ったときのメッセージ。
+			_Shop->SpeakMess(3);
 		}
 		else
 		{
@@ -544,14 +539,15 @@ void ShopS_Trade::SellItem()
 			{
 				//アイテムの値段分お金を貰う。
 				_Shop->Pay(-_SumValue);
-				_Shop->SetDescription("まいどあり。", "Asset/Sound/NPC/SHOP/Mic1_53.wav");
+				//アイテムを買い取ったときのメッセージ。
+				_Shop->SpeakMess(3);
 				erase = true;
 				offset++;
 			}
 			else
 			{
 				//装備している武具を売ろうとした。
-				_Shop->SetDescription("装備品を外してください。", "Asset/Sound/NPC/SHOP/Mic1_55.wav");
+				_Shop->SpeakMess(6);
 			}
 		}
 
