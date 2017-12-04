@@ -54,6 +54,8 @@
 #include "GameObject\Enemy\BossGolem.h"
 #include "GameObject\Enemy\CodeNameD.h"
 
+#include "fbEngine/_Object/_GameObject/Movie.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -78,6 +80,15 @@ namespace
 
 void GameScene::Start()
 {
+	//最初からならオープニング再生するよー。
+	if (IS_CONTINUE == false)
+	{
+		//オープニング動画。
+		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+		movie->Init(L"op.avi");
+		movie->Play();
+	}
+
 	INSTANCE(EventManager)->ReSet();
 
 	//ゲームライト生成
@@ -179,7 +190,7 @@ void GameScene::Start()
 	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
-	InitBGM(BGM::MAOU, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::MAOU, "Asset/Sound/LastDangion2.wav", 0.2f);
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
