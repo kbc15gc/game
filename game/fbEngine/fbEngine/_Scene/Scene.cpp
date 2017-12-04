@@ -2,12 +2,26 @@
 #include "Scene.h"
 #include "_Object\Vertex.h"
 #include "_Effect\EffectManager.h"
+using namespace fbScene;
 
 Vertex* Scene::_Vertex = nullptr;
 Effect* Scene::_Effect = nullptr;
 float Scene::_FadeAlpha = 0.0f;
 float Scene::_AddPerSecA = 0.0f;
-fbScene::FadeStateE Scene::_FadeState = fbScene::FadeStateE::WAIT;
+FadeStateE Scene::_FadeState = FadeStateE::End;
+
+namespace fbScene
+{
+	FadeStateE operator-(FadeStateE L, FadeStateE R) {
+		return static_cast<FadeStateE>(static_cast<uint64_t>(L) - static_cast<uint64_t>(R));
+	}
+	FadeStateE operator|(FadeStateE L, FadeStateE R) {
+		return static_cast<FadeStateE>(static_cast<uint64_t>(L) | static_cast<uint64_t>(R));
+	}
+	FadeStateE operator&(FadeStateE L, FadeStateE R) {
+		return static_cast<FadeStateE>(static_cast<uint64_t>(L) & static_cast<uint64_t>(R));
+	}
+}
 
 Scene::Scene()
 {
@@ -55,60 +69,31 @@ Scene::~Scene()
 
 void Scene::Fade()
 {
-	if (_FadeState == fbScene::FadeStateE::START)
-		_FadeState = fbScene::FadeStateE::RUNNING;
-
-	if (_FadeState == fbScene::FadeStateE::RUNNING)
+	if ((uint64_t)(_FadeState & FadeStateE::Fade) > 0)
 	{
 		//1フレーム当たりの加算量を計算
 		_FadeAlpha += _AddPerSecA * Time::DeltaTime();
 		//0.0f~1.0fの間に収める
 		_FadeAlpha = min(1.0f, max(0.0f, _FadeAlpha));
 
-		//フェードの板ポリゴン描画
-		_DrawFade();
-
-		//状態のチェック
-		if(0.0f < _FadeAlpha && _FadeAlpha < 1.0f)
+		//終了チェック。
+		if (_FadeAlpha <= 0.0f || 1.0f <= _FadeAlpha)
 		{
-			_FadeState = fbScene::FadeStateE::RUNNING;
-		}
-		else
-		{
-			//フェードインかアウトか？
-			if(0 < _AddPerSecA)
-			{
-				//IN
-				_FadeState = fbScene::FadeStateE::INEND;
-			}
-			else
-			{
-				//OUT
-				_FadeState = fbScene::FadeStateE::OUTEND;
-			}
+			_FadeState = _FadeState - FadeStateE::Fade;
+			_FadeState = _FadeState | FadeStateE::End;
 		}
 	}
-	else if(_FadeState > fbScene::FadeStateE::END)
-	{
-		//次のframeには待機状態に戻る。
-		_FadeState = fbScene::FadeStateE::WAIT;
-	}
 
-	if(_FadeState == fbScene::FadeStateE::WAIT)
-		_DrawFade();
+	//フェードの板ポリゴン描画
+	_DrawFade();
 }
 
-void Scene::StartFade(const bool & fade, const float & fadetime)
+void Scene::StartFade(bool fadein, float fadetime)
 {
-	//待機状態の時のみ開始できる
-	if (_FadeState == fbScene::FadeStateE::WAIT)
-	{
-		//正か負か？inは+、outは-
-		int NegaPosi = (fade) ? 1 : -1;
-		//1秒当たりの加算量
-		_AddPerSecA = (1.0f / fadetime) * NegaPosi;
-		_FadeState = fbScene::FadeStateE::START;
-	}
+	int NegaPosi = (fadein) ? 1 : -1;
+	//1秒当たりの加算量
+	_AddPerSecA = (1.0f / fadetime) * NegaPosi;
+	_FadeState = FadeStateE::Fade | ((fadein) ? FadeStateE::In : FadeStateE::Out);
 }
 
 void Scene::_DrawFade()

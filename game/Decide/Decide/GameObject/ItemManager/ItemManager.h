@@ -40,7 +40,7 @@ namespace Item {
 		{ "Value",Support::DataTypeE::INT, offsetof(struct ItemInfo,Value),	sizeof(int)},
 		{ "filePath",Support::DataTypeE::STRING, offsetof(struct ItemInfo,filePath),	sizeof(char) * 256 },
 		{ "type",Support::DataTypeE::INT, offsetof(struct ItemInfo,type),	sizeof(int) },
-		{ "effectValue",Support::DataTypeE::INTARRAY, offsetof(struct ItemInfo,effectValue),	sizeof(ItemInfo::effectValue) },
+		{ "effectValue",Support::DataTypeE::INT_ARRAY, offsetof(struct ItemInfo,effectValue),	sizeof(ItemInfo::effectValue) },
 		{ "rangeStrength",Support::DataTypeE::INT, offsetof(struct ItemInfo,rangeStrength),	sizeof(int) },
 		{ "time",Support::DataTypeE::FLOAT ,			offsetof(struct ItemInfo,time),		sizeof(float) },
 	};

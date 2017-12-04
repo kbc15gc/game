@@ -11,6 +11,7 @@ namespace
 		{ "Text",Support::DataTypeE::STRING, offsetof(struct MessageInfo,Text),sizeof(char) * 256 },
 		{ "NextID",Support::DataTypeE::INT , offsetof(struct MessageInfo,NextID),sizeof(int) },
 		{ "EventID",Support::DataTypeE::INT , offsetof(struct MessageInfo,EventID),sizeof(int) },
+		{ "EventNo",Support::DataTypeE::INT , offsetof(struct MessageInfo,EventNo),sizeof(int) },
 		{ "VoicePath",Support::DataTypeE::STRING, offsetof(struct MessageInfo,VoicePath),sizeof(char)*256 },
 	};
 }

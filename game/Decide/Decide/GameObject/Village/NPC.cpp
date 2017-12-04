@@ -54,7 +54,7 @@ void NPC::LateUpdate()
 void NPC::CreateNPC(const npc::NPCInfo* info)
 {
 	SetMesseage(info->MesseageID, info->ShowTitle);
-	_TextBox->id = info->ShopID;
+	_TextBox->SetEventNo(info->EventNo);
 	transform->SetLocalPosition(info->pos);
 	transform->SetRotation(info->ang);
 	transform->SetLocalScale(info->sca);

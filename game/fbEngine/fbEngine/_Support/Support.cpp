@@ -165,7 +165,7 @@ namespace Support
 		//整数部分
 		int integer = 0;
 		//長さを調べる
-		int intL = strlen(intS);
+		size_t intL = strlen(intS);
 		//整数部ループ
 		for (short i = 0; i < intL; i++)
 		{
@@ -196,7 +196,7 @@ namespace Support
 		//整数部分と小数部分
 		double integer = 0,decimal = 0.0f;
 		//長さを調べる
-		int intL = strlen(intS), decL = strlen(decS);
+		auto intL = strlen(intS), decL = strlen(decS);
 		//整数部ループ
 		for(short i = 0;i < intL;i++)
 		{
@@ -238,8 +238,8 @@ namespace Support
 
 			if(addres)
 			{
-				const int slen = strlen(sorce);
-				const int plen = strlen(place);
+				const auto slen = strlen(sorce);
+				const auto plen = strlen(place);
 				//退避用バッファ
 				char* buff = new char[slen];
 				strcpy(buff, addres);

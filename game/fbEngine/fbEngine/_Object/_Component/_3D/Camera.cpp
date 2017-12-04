@@ -31,10 +31,10 @@ void Camera::Update()
 
 void Camera::ViewMatrixUpdate()
 {
-	if (_Target)
+	if (_useTarget)
 	{
 		//注視点を使う
-		D3DXMatrixLookAtLH(&_View, (D3DXVECTOR3*)&transform->GetPosition(), (D3DXVECTOR3*)_Target, (D3DXVECTOR3*)&Vector3::up);
+		D3DXMatrixLookAtLH(&_View, (D3DXVECTOR3*)&transform->GetPosition(), (D3DXVECTOR3*)&_Target, (D3DXVECTOR3*)&Vector3::up);
 		//逆行列をワールド行列にする。
 		D3DXMATRIX world;
 		D3DXMatrixInverse(&world, NULL, &_View);
