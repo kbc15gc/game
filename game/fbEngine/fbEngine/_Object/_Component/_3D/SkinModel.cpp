@@ -32,8 +32,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_Light(nullptr),
 	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
-	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
-	_SkyBox(false),
+	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING | ModelEffectE::ZENABLE)),
 	_CullMode(D3DCULL_CCW),
 	_Culling(new CObjectFrustumCulling)
 {
@@ -234,7 +233,7 @@ void SkinModel::DrawMeshContainer(
 			{
 				_Effect->SetTechnique("InstancingRender");
 			}
-			else if (_SkyBox)
+			else if (_IsSky)
 			{
 				_Effect->SetTechnique("SkySphereRender");
 			}
@@ -342,13 +341,23 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetValue("g_atmosParam", &atmos, sizeof(AtmosphericScatteringParamS));
 		_Effect->SetInt("g_atmosFlag", _AtomosphereFunc);
 
-		if (_SkyBox)
+		if (_IsSky)
 		{
 			_Effect->SetTexture("g_NightTexture", INSTANCE(SceneManager)->GetSky()->GetNightTexture());
 		}
 	
-		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, _SkyBox ? FALSE : TRUE);
-		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _SkyBox ? FALSE : TRUE);
+		if ((_ModelEffect & ModelEffectE::ZENABLE) > 0)
+		{
+			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+		}
+		else
+		{
+			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
+		}
+
+
 		(*graphicsDevice()).SetRenderState(D3DRS_CULLMODE, _CullMode);
 		
 		//アルファブレンド.
@@ -619,7 +628,7 @@ void SkinModel::DrawMeshContainer(
 				//モデル描画
 				for (DWORD i = 0; i < MaterialNum; i++)
 				{
-					_Effect->SetInt("SkyBox", _SkyBox);
+					_Effect->SetInt("SkyBox", _IsSky);
 
 					//ディフューズカラー
 					D3DXVECTOR4* Diffuse = (D3DXVECTOR4*)&mtrl[i].MatD3D.Diffuse;
