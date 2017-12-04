@@ -50,7 +50,7 @@ private:
 	// ‹«ŠE” iAABBj‚É‚æ‚é“–‚½‚è”»’è
 	bool _IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, Vector3 vMax2);
 private:
-	vector<SoundSource*> _SoundBGM;
+	SoundSource* _SoundBGM[static_cast<int>(BGM::NUM)];
 	SoundSource* _GameBGM;
 	BGM _BGM;
 	Player* _Player;
