@@ -193,7 +193,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("type,hp,mp,atk,mat,def,mde,dex,crt,lv,dropexp,money,pos,Quaternion,sca,item,armor,weapon,colorflag,color");
+        sw.WriteLine("type,param,dropexp,money,pos,Quaternion,sca,item,armor,weapon,colorflag,color");
         foreach (Transform child in Children)
         {
             if (child.name == enemys.name)
@@ -202,15 +202,12 @@ public class CSVExportFunction : Editor
             ExportEnemy e = child.GetComponent<ExportEnemy>();
             string type = Convert.ToString(Convert.ToInt32(e._EnemyType));
 
-            string hp = Convert.ToString(e._HP);
-            string mp = Convert.ToString(e._MP);
-            string atk = Convert.ToString(e._ATK);
-            string mat = Convert.ToString(e._MAT);
-            string def = Convert.ToString(e._DEF);
-            string mde = Convert.ToString(e._MDE);
-            string dex = Convert.ToString(e._DEX);
-            string crt = Convert.ToString(e._CRT);
-            string lv = Convert.ToString(e._LV);
+            //パラメータ。
+            string param = "";
+            {
+                param = string.Format("[{0},{1},{2},{3},{4},{5},{6},{7},{8}]",
+                    e._HP, e._MP, e._ATK, e._MAT, e._DEF, e._MDE, e._DEX, e._CRT, e._LV);
+            }
             string dropexp = Convert.ToString(e._DROPEXP);
             string money = Convert.ToString(e._MONEY);
 
@@ -219,25 +216,31 @@ public class CSVExportFunction : Editor
             //string quaternion = string.Format("{0}/{1}/{2}/{3}", child.rotation.x, child.rotation.y, child.rotation.z, 1.0f);
             string sca = Vector3ToString(child.lossyScale);
 
-            string[] item = new string[5];
-            string[] armor = new string[5];
-            string[] weapon = new string[5];
-            for (int i = 0; i < 5; i++)
+            //アイテム、防具、武器。
+            string[] drop = { "", "", "" };
             {
-                item[i] = Convert.ToString(e._Item[i]);
-                armor[i] = Convert.ToString(e._Armor[i]);
-                weapon[i] = Convert.ToString(e._Weapon[i]);
+                drop[0] += '[';drop[1] += '[';drop[2] += '[';
+                bool next = false;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (next)
+                    {
+                        drop[0] += ',';
+                        drop[1] += ',';
+                        drop[2] += ',';
+                    }
+                    drop[0] += Convert.ToString(e._Item[i]);
+                    drop[1] += Convert.ToString(e._Armor[i]);
+                    drop[2] += Convert.ToString(e._Weapon[i]);
+                    next = true;
+                }
+                drop[0] += ']'; drop[1] += ']';drop[2] += ']';
             }
-
             //カラー
             string colorflag = Convert.ToString(e._ColorFlag);
-            string[] color = new string[4];
-            color[0] = Convert.ToString(e._Color.r);
-            color[1] = Convert.ToString(e._Color.g);
-            color[2] = Convert.ToString(e._Color.b);
-            color[3] = Convert.ToString(e._Color.a);
+            string color = Vector4ToString(new Vector4(e._Color.r, e._Color.g, e._Color.b, e._Color.a));
 
-            string line = string.Format("{0},{1}/{2}/{3}/{4}/{5}/{6}/{7}/{8}/{9},{10},{11},{12},{13},{14},{15}/{16}/{17}/{18}/{19},{20}/{21}/{22}/{23}/{24},{25}/{26}/{27}/{28}/{29},{30},{31}/{32}/{33}/{34}", type, hp, mp, atk, mat, def, mde, dex, crt, lv, dropexp, money, pos, quaternion, sca, item[0], item[1], item[2], item[3], item[4], armor[0], armor[1], armor[2], armor[3], armor[4], weapon[0], weapon[1], weapon[2], weapon[3], weapon[4], colorflag, color[0],color[1], color[2], color[3]);
+            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2], colorflag, color);
 
             //列書き出し
             sw.WriteLine(line);
@@ -260,6 +263,17 @@ public class CSVExportFunction : Editor
         //"x/y/z"の形で返す。
         
         return String.Format("{0}/{1}/{2}", val.x , val.y, val.z);
+    }
+
+    static public string Vector4ToString(Vector4 val)
+    {
+        //"x/y/z/w"の形で返す。
+        float x = val.x;
+        float y = val.y;
+        float z = val.z;
+        float w = val.w;
+        return String.Format("{0}/{1}/{2}/{3}", x.ToString("f6"), y.ToString("f6"), z.ToString("f6"), w.ToString("f6"));
+        //return String.Format("{0}/{1}/{2}/{3}", val.x, val.y, val.z, val.w);
     }
 
     static public string QuaternionToString(Quaternion val)
@@ -296,5 +310,58 @@ public class CSVExportFunction : Editor
             Debug.LogError(group.name + ":子に" + name + "が見つかりませんでした。");
         }
         return obj;
+    }
+
+    [MenuItem("Export/EventCameraInfo")]
+    static public void ExportEventCameraInfo()
+    {
+        //検索。
+        var name = "EventCamera";
+        var export = GameObject.Find(name);
+        if (export == null)
+        {
+            Debug.Log(name + "が見つからなかったのでエクスポートできませんでした。");
+            return;
+        }
+
+        string path = Application.dataPath + "/Export/EventCameraInfo.csv";
+
+        FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+        StreamWriter sw = new StreamWriter(fs);
+        sw.WriteLine("pos[],rot[],time[],size");
+
+        for (int idx = 0, num = export.transform.childCount; idx < num; idx++)
+        {
+            Transform No = export.transform.GetChild(idx);
+            //配列の要素数。
+            int size = No.transform.childCount;
+            string pos = "", rot = "", time = "";
+            bool conma = false;
+            for (int i = 0; i < size; i++)
+            {
+                if (conma)
+                {
+                    pos += ',';
+                    rot += ',';
+                    time += ',';
+                }
+
+                //カメラの情報とか持ってるやつ。
+                Transform child = No.transform.GetChild(i);
+                pos += Vector3ToString(child.position,true);
+                rot += QuaternionToString(child.rotation);
+                var info = child.gameObject.GetComponent<EventCameraInfo>();
+                time += info.time.ToString();
+
+                conma = true;
+            }
+            string line = string.Format("[{0}],[{1}],[{2}],{3}", pos, rot, time, size);
+            //列書き出し
+            sw.WriteLine(line);
+        }
+        sw.Close();
+        fs.Close();
+
+        Debug.Log("ExportEventCameraInfo");
     }
 }

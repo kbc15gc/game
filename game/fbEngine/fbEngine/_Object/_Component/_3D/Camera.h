@@ -71,11 +71,7 @@ public:
 	*/
 	const Vector3& GetTarget()
 	{
-		if (_Target == nullptr)
-		{
-			_Target = new Vector3();
-		}
-		return *_Target;
+		return _Target;
 	}
 
 	/**
@@ -83,14 +79,7 @@ public:
 	*/
 	void SetTarget(const Vector3& tar)
 	{
-		if(_Target == nullptr)
-		{
-			_Target = new Vector3(tar);
-		}
-		else
-		{
-			*_Target = tar;
-		}
+		_Target = tar;
 	}
 
 	/**
@@ -101,10 +90,16 @@ public:
 		return transform->GetPosition();
 	}
 
+	void SetUseTarget(bool f)
+	{
+		_useTarget = f;
+	}
+
 protected:
 
 	/** 注視点. */
-	Vector3* _Target = nullptr;
+	Vector3 _Target = Vector3::front;
+	bool _useTarget = true;
 
 	//ビュー行列
 	D3DXMATRIX _View;

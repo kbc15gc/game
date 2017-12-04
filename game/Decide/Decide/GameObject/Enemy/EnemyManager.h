@@ -25,7 +25,7 @@ namespace LoadEnemyInfo{
 		int armor[dropMax];
 		int weapon[dropMax];
 		int colorflag;
-		float color[ColorNum];
+		Vector4 color;
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -37,17 +37,17 @@ namespace LoadEnemyInfo{
 	const Support::DATARECORD EnemyInfoDecl[] =
 	{
 		{ "type",Support::DataTypeE::INT, offsetof(struct EnemyInfo,type),	sizeof(EnemyCharacter::EnemyType) },
-		{ "param",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,param),	sizeof(EnemyInfo::param) },
+		{ "param",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,param),	sizeof(EnemyInfo::param) },
 		{ "exp",	Support::DataTypeE::INT, offsetof(struct EnemyInfo,exp),	sizeof(int) },
 		{ "money",	Support::DataTypeE::INT, offsetof(struct EnemyInfo,money),	sizeof(int) },
 		{ "position",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,position),	sizeof(Vector3) },
 		{ "rotation",	Support::DataTypeE::QUATERNION, offsetof(struct EnemyInfo,rotation),	sizeof(Quaternion) },
 		{ "scale",	Support::DataTypeE::VECTOR3, offsetof(struct EnemyInfo,scale),	sizeof(Vector3) },
-		{ "item",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
-		{ "armor",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
-		{ "weapon",	Support::DataTypeE::INTARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
+		{ "item",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
+		{ "armor",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
+		{ "weapon",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
 		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
-		{ "color",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,color),	sizeof(EnemyInfo::color) },
+		{ "color",	Support::DataTypeE::VECTOR4, offsetof(struct EnemyInfo,color),	sizeof(Vector4) },
 	};
 }
 

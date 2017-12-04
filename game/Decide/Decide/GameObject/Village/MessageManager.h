@@ -7,8 +7,9 @@ struct MessageInfo :Noncopyable
 	char Title[256];	//タイトル
 	char Text[256];		//本文
 	int NextID;			//次のメッセージのID
-	int EventID;		//イベントのID
-	char VoicePath[256];		//ボイスのパス
+	int EventID;		//イベントの種類を識別するID。
+	int EventNo;		//実行するイベントの番号。
+	char VoicePath[256];//ボイスのパス
 };
 
 //メッセージを管理するクラス

@@ -47,8 +47,10 @@ public:
 	inline bool IsLastMessage()const {
 		return (_State == TextBoxStateE::CLOSING);
 	}
-
-	int id = -1;
+	void SetEventNo(int no)
+	{
+		_EventNo = no;
+	}
 private:
 	//メッセージボックスを開く。
 	void _OpenMessage();
@@ -88,6 +90,8 @@ private:
 	//スケール
 	float _AnimeTime;
 
+	//実行するイベントの番号。
+	int _EventNo = -1;
 	//再生するボイス。
 	SoundSource _Voice;
 };

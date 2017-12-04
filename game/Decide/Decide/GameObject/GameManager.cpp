@@ -49,13 +49,15 @@ void GameManager::Update()
 		}
 
 		_StatusWindow->SetActive(active, true);*/
-		INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
+		if (_Player->GetSpeakFlag() == false)
+			INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
 	}
 	else if (VPadInput->IsPush(fbEngine::VPad::ButtonStart)
 		&& !_StatusWindow->GetActive())
 	{
 		/*bool active = !_HistoryBook->GetActive();
 		_HistoryBook->SetActive(active, true);*/
-		INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
+		if (_Player->GetSpeakFlag() == false)
+			INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
 	}
 }
