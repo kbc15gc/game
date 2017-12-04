@@ -60,9 +60,11 @@ static const string ChipFileName[(int)ChipID::ChipNum] =
 */
 enum class LocationCodeE : int
 {
-	Begin,			//!< ‚Í‚¶‚Ü‚è‚ÌW—Ž.
+	None = -1,
+	Begin = 0,			//!< ‚Í‚¶‚Ü‚è‚ÌW—Ž.
 	Hunting,		//!< Žë—Â‚Ì‘º.
-	Prosperity,		//!< ”É‰h‚Ì’¬.
+	Prosperity,		//!< ”É‰h‚ÌŠX.
+	DevilKingdom,	//!< –‚‰¤‚Ì‘.	
 	Common,			//!< ‹¤’Ê‚ÌNPC.
 	LocationNum,	//!< êŠ‚Ì”.
 };
@@ -70,21 +72,23 @@ enum class LocationCodeE : int
 /** 
 * êŠ–¼. 
 */
-static const string LocationNameList[(int)LocationCodeE::LocationNum] =
+static const string LocationNameList[(int)LocationCodeE::Common] =
 {
 	"‚Í‚¶‚Ü‚è‚ÌW—Ž",
 	"Žë—Â‚Ì‘º",
-	"”É‰h‚Ì’¬",
+	"”É‰h‚ÌŠX",
+	"–‚‰¤‚Ì‘",
 };
 
 /**
-* êŠ‚ÌÀ•W.
+* ƒvƒŒƒCƒ„[‚ÌƒŠƒXƒ|[ƒ“’n“_‚ÌÀ•W.
 */
-static const Vector3 LocationPosition[(int)LocationCodeE::Prosperity + 1] =
+static const Vector3 LocationPosition[(int)LocationCodeE::Common] =
 {
 	Vector3(-387.3f,58.0f,-75.8f),
 	Vector3(-108.1f ,55.5f ,533.9f),
 	Vector3(212.88f, 67.0f, 6.92f),
+	Vector3(-114.23f, 183.0f, 184.95f),
 };
 
 /**

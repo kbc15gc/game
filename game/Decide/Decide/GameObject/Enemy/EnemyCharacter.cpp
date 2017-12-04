@@ -22,6 +22,7 @@
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject\Component\ParticleEffect.h"
 #include "GameObject\Component\BuffDebuffICon.h"
+#include "GameObject\History\HistoryManager.h"
 
 
 EnemyCharacter::NearEnemyInfo EnemyCharacter::nearEnemyInfo = NearEnemyInfo(FLT_MAX,nullptr);
@@ -38,6 +39,7 @@ EnemyCharacter::~EnemyCharacter()
 
 
 void EnemyCharacter::Awake() {
+	_locationCode = LocationCodeE::None;
 	_Type = vector<vector<int>>(static_cast<int>(Item::ItemCodeE::Max), vector<int>(LoadEnemyInfo::dropMax, -1));
 
 	// このクラスで使用するコンポーネントを追加。

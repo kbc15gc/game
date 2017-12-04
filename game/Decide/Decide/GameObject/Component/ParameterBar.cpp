@@ -108,6 +108,7 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 	// ※親子関係を作成すると勝手に更新されるため、ここでは親子関係のない絶対座標を渡す。
 	_CreateBarFrame(transform->GetPosition(), transform->GetScale(), isHud);
 
+
 	_isBackColor = isBackColor;
 
 	// バーの背景生成。

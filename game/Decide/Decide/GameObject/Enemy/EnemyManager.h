@@ -80,12 +80,11 @@ public:
 
 	// 初期化.
 	void Start();
-
-	// エネミーの位置データなどを外部ファイルから読み込んで保存。
-	void LoadEnemyOrigin();
 	
-	// 読み込んだエネミーをGameObjectManagerに追加。
-	void CreateEnemy();
+	// テーブルに登録されている情報をもとにエネミーを作成。
+	// 引数：	どの場所のエネミーを作成するか。
+	//			エネミー情報の配列。
+	void CreateEnemys(LocationCodeE location,vector<unique_ptr<LoadEnemyInfo::EnemyInfo>>& infos);
 
 	// エネミー死亡関数。
 	// ※スポナーコンポーネントがあれば自動でリスポーンする。
@@ -93,7 +92,9 @@ public:
 
 
 private:
-	vector<ManagingData*> _enemys;
+	vector<vector<unique_ptr<ManagingData>>> _enemys;	// エネミー。
+	//vector<ManagingData*> _commonEnemys;	// チップ情報に関係なく存在するエネミー。
+
 private:
 	static EnemyManager* _instance;
 };
