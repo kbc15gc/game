@@ -4,11 +4,11 @@
 
 static const string LocationNames[] =
 {
-	"ƒhƒ‰ƒŠƒAƒ“‚Ì±‚İˆ",
+	"–³–¼",
 	"‚Í‚¶‚Ü‚è‚ÌW—",
 	"ë—Â‚Ì‘º",
-	"”É‰h‚Ì’¬",
-	""
+	"”É‰h‚ÌŠX",
+	"‚»‚Æ"
 };
 
 void VillageName::Awake()

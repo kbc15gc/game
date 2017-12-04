@@ -6,7 +6,8 @@
 PlayerStateRun::PlayerStateRun(Player* player) :
 	PlayerState(player)
 {
-
+	_AutoRun = false;
+	_Dir = Vector3::zero;
 }
 
 PlayerStateRun::~PlayerStateRun()
@@ -47,6 +48,7 @@ void PlayerStateRun::Update()
 			{
 				_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
 				_Player->ChangeState(Player::State::Attack);
+				_AutoRun = false;
 				return;
 			}
 		}
@@ -81,33 +83,57 @@ void PlayerStateRun::Move()
 			_Player->_CharacterController->Jump(_JumpSpeed);
 		}
 	}
-
-	//ゲームパッドから取得した方向
+	//オートラン
+	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_Y))
+	{
+		_AutoRun = !_AutoRun;
+	}
+	//方向初期化。
 	Vector3 dir = Vector3::zero;
-	//コントローラー移動
-	dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
-	dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
-//#ifdef _DEBUG
-	//キーボード(デバッグ用)
-	if (KeyBoardInput->isPressed(DIK_W))
+	if (_AutoRun)
 	{
-		dir.z++;
+		//コントローラー移動
+		dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
+		dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
+		//入力があれば変更する。
+		if (dir.Length() > fabs(0.01f))
+		{
+			//保存
+			_Dir = dir;
+		}
+		//移動方向
+		dir = _Dir;
 	}
-	if (KeyBoardInput->isPressed(DIK_S))
+	else
 	{
-		dir.z--;
+		//ゲームパッドから取得した方向
+		//コントローラー移動
+		dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
+		dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
+		//#ifdef _DEBUG
+		//キーボード(デバッグ用)
+		if (KeyBoardInput->isPressed(DIK_W))
+		{
+			dir.z++;
+		}
+		if (KeyBoardInput->isPressed(DIK_S))
+		{
+			dir.z--;
+		}
+		if (KeyBoardInput->isPressed(DIK_A))
+		{
+			dir.x--;
+		}
+		if (KeyBoardInput->isPressed(DIK_D))
+		{
+			dir.x++;
+		}
+		//#endif
 	}
-	if (KeyBoardInput->isPressed(DIK_A))
-	{
-		dir.x--;
-	}
-	if (KeyBoardInput->isPressed(DIK_D))
-	{
-		dir.x++;
-	}
-//#endif
+	
+
 	//移動したか
-	if (dir.Length() != 0)
+	if (dir.Length() != 0.0f)
 	{
 		//カメラからみた向きに変換
 		Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
@@ -156,15 +182,20 @@ void PlayerStateRun::Move()
 		//回転
 		_Player->_Rotation->RotationToDirection_XZ(vec);
 	}
-	//移動していない
-	if (dir.Length() < 0.0001f)
-	{
-		_Player->ChangeState(Player::State::Idol);
-	}
-
+	
 	//キャラクターコントローラー更新
 	_Player->_CharacterController->SetMoveSpeed(movespeed);
 	_Player->_CharacterController->Execute();
+
+
+
+
+	//移動していない
+	//オートラン時はステート変更しない。
+	if (dir.Length() < 0.0001f && !_AutoRun)
+	{
+		_Player->ChangeState(Player::State::Idol);
+	}
 }
 
 void PlayerStateRun::DebugMove()

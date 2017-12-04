@@ -2,7 +2,7 @@
 #include "GameCamera.h"
 #include "GameObject\Player\Player.h"
 
-#if _DEBUG
+#ifdef _DEBUG
 //フリーカメラクラスの定義。
 class FreeCamera : public GameCamera
 {

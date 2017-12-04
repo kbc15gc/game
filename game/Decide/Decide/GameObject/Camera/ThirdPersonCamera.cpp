@@ -3,7 +3,7 @@
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "PlayerCamera.h"
 
-#if _DEBUG
+#ifdef _DEBUG
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
 {

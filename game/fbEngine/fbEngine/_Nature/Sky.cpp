@@ -48,7 +48,7 @@ void Sky::Awake()
 	_MoonPlate->SetBillboard(true);
 	_MoonPlate->SetActive(false);
 
-	_SunAngle = D3DXToRadian(270.0f);
+	_SunAngle = D3DXToRadian(80.0f);
 }
 
 /**
@@ -117,18 +117,16 @@ void Sky::Update()
 
 	}
 
-	transform->SetLocalPosition(camera->GetTarget());
-
-
+	transform->SetLocalPosition(camera->GetPosition());
 
 	Vector3 sunModelPos = _SunDir;
 	sunModelPos.Scale(2000.0f);
-	sunModelPos.Add(camera->GetTarget());
+	sunModelPos.Add(camera->GetPosition());
 	_SunPlate->transform->SetLocalPosition(sunModelPos);
 
 	Vector3 MoonPos = _SunDir * -1;
 	MoonPos.Scale(2000.0f);
-	MoonPos.Add(camera->GetTarget());
+	MoonPos.Add(camera->GetPosition());
 	_MoonPlate->transform->SetLocalPosition(MoonPos);
 
 	transform->UpdateTransform();

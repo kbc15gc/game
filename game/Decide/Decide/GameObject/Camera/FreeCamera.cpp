@@ -3,7 +3,7 @@
 #include "GameObject\Player\Player.h"
 #include "PlayerCamera.h"
 
-#if _DEBUG
+#ifdef _DEBUG
 //デストラクタ。
 FreeCamera::~FreeCamera()
 {
