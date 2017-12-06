@@ -34,11 +34,11 @@ void VillageName::Update()
 
 void VillageName::Excute(const int location)
 {
-	now = location;
 	if (now != location && location < ARRAY_SIZE(LocationNames))
 	{
 		//•\Ž¦–¼‚ðÝ’è.
 		_Text->SetText(LocationNames[location].c_str());
 		_Timer = 0.0f;
 	}
+	now = location;
 }

@@ -40,6 +40,7 @@ void EventCamera::UpdateSubClass()
 	}
 	else
 	{	
+		//イベントカメラ終了。
 		if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
 		{
 			EndEvent();
@@ -50,8 +51,6 @@ void EventCamera::UpdateSubClass()
 
 void EventCamera::Excute(int id)
 {
-	//フェード開始。
-	Scene::StartFade(true, FADE_TIME);
 	//実行フラグ設定。
 	_Runtime = true;
 	//タイマー初期化。
@@ -67,6 +66,9 @@ void EventCamera::Excute(int id)
 	_Info = *list[id].get();
 	transform->SetPosition(_Info.pos[0]);
 	transform->SetRotation(_Info.rot[0]);
+
+	//フェード開始。
+	Scene::StartFade(true, FADE_TIME);
 }
 
 void EventCamera::EndEvent()
