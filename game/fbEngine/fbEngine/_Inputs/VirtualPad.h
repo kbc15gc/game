@@ -39,6 +39,7 @@ public:
 	//
 	bool IsPush(fbEngine::VPad::ButtonE button);
 	bool IsPress(fbEngine::VPad::ButtonE button);
+	Vector2 GetAnalog(AnalogE analog);
 	bool KeyRepeat(fbEngine::VPad::ButtonE button, float interval);
 private:
 	XInput* _Pad;

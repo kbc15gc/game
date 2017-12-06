@@ -68,6 +68,9 @@ private:
 	//カメラをX軸に回転(縦)。
 	void _RotateVertical(float rotx);
 
+	//カメラ距離の伸縮。
+	void _UpdateDist();
+
 	//カメラ補助。
 	void _CameraSupport();
 

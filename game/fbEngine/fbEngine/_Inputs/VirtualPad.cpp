@@ -80,6 +80,11 @@ bool VirtualPad::IsPress(fbEngine::VPad::ButtonE button)
 	return (_Pad->IsPressButton(fbEngine::VPad::vPadToXPadTable[button].xButton) || _Key->isPressed(fbEngine::VPad::vPadToKeyboardTable[button].keyCoord));
 }
 
+Vector2 VirtualPad::GetAnalog(AnalogE analog)
+{
+	return _Pad->GetAnalog(analog);
+}
+
 bool VirtualPad::KeyRepeat(fbEngine::VPad::ButtonE button, float interval)
 {
 	return (_Pad->KeyRepeat(fbEngine::VPad::vPadToXPadTable[button].xButton, interval) || _Key->KeyRepeat(fbEngine::VPad::vPadToKeyboardTable[button].keyCoord, interval));
