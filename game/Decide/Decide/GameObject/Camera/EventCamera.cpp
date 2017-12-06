@@ -29,6 +29,7 @@ void EventCamera::UpdateSubClass()
 {
 	if(_Runtime)
 	{
+		//フェードするか？
 		if (_Info.fade[_Index])
 		{
 			if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeOut)
@@ -39,11 +40,14 @@ void EventCamera::UpdateSubClass()
 				ActiveCamera();
 				Scene::StartFade(false, FADE_TIME);
 			}
+		}else
+		{
+			_Move();
 		}
 	}
 	else
 	{	
-		if (_Info.fade[_Index - 1])
+		if (_Info.fade[_Index])
 		{
 			//イベントカメラ終了。
 			if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
@@ -122,11 +126,11 @@ void EventCamera::_Move()
 		{
 			//終了。
 			_Runtime = false;
-			if (_Info.fade[_Index-1])
-			{
-				//フェードイン。
-				Scene::StartFade(true, FADE_TIME);
-			}
+		}
+		if (_Info.fade[_Index])
+		{
+			//フェード開始。
+			Scene::StartFade(true, FADE_TIME);
 		}
 	}
 }
