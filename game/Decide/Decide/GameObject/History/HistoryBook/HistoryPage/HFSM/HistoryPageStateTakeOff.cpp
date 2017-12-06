@@ -42,6 +42,7 @@ void HistoryPageStateTakeOff::Update()
 	if (lerpRate >= 1.0f)
 	{
 		INSTANCE(HistoryManager)->AddPossessionChip(_HistoryPage->GetChipID());
+		INSTANCE(HistoryManager)->ChangeLocation(_HistoryPage->GetNowLocation());
 		INSTANCE(GameObjectManager)->AddRemoveList(_HistoryPage);
 	}
 }

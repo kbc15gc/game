@@ -74,7 +74,8 @@ void HistoryManager::Start()
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
-	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
+	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 10);
+	_MysteryLight->SetActive(false, true);
 
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
@@ -112,7 +113,64 @@ void HistoryManager::Start()
 			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, j);
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
-		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
+
+		LocationCodeE lCode = _LocationHistoryList.at(i)->_LocationID;
+		//チップの状態からグループを計算。
+		const int group = _CalcPattern(_LocationHistoryList[(int)lCode].get());
+		//どれかのグループに該当するのなら。
+		if (group >= 0)
+		{
+			if (_NowGroupIDList[(int)lCode] != group)
+			{
+				char path[128];
+				for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
+					//パス生成
+					sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)lCode, 'A' + _NowGroupIDList[(int)lCode], ObjectType[type]);
+					_CreateObject(lCode, path, static_cast<LoadObjectType>(type));
+					ZeroMemory(path, 128);
+				}
+			}
+		}
+	}
+}
+
+/**
+* 更新.
+*/
+void HistoryManager::Update()
+{
+	if (_IsEvolution)
+	{
+		static float LocalTime = 0.0f;
+		const float EvolutionTime = 1.0f;
+		if (LocalTime >= EvolutionTime)
+		{
+			char path[128];
+			for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
+				//パス生成
+				sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)_EvolutionLocation, 'A' + _NowGroupIDList[(int)_EvolutionLocation], ObjectType[type]);
+				_CreateObject(_EvolutionLocation, path, static_cast<LoadObjectType>(type));
+				ZeroMemory(path, 128);
+			}
+			if (_NowLocationCode == (int)_EvolutionLocation)
+			{
+				//_PlayerCamera->transform->SetParent(_Player->transform);
+				_Player->transform->SetLocalPosition(LocationPosition[(int)_EvolutionLocation]);
+				_PlayerCamera->LookAtTarget();
+				//_PlayerCamera->transform->SetParent(nullptr);
+
+				Camera* camera = _PlayerCamera->GetComponent<Camera>();
+				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
+				cameraFoward.Normalize();
+				cameraFoward.y -= 0.5f;
+				cameraFoward.Scale(0.8f);
+				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
+				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
+			}
+			_IsEvolution = false;
+			LocalTime = 0.0f;
+		}
+		LocalTime += Time::DeltaTime();
 	}
 }
 
@@ -130,7 +188,7 @@ bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip, int ind
 	_LocationHistoryList[(int)location]->SetData(_HistoryBook->GetLocationList(location));
 
 	//変更したので歴史を改変させる.
-	_ChangeLocation(location);
+	//_ChangeLocation(location);
 
 	//データを保存.
 	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
@@ -151,36 +209,12 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 	//どれかのグループに該当するのなら。
 	if (group >= 0)
 	{
-
 		if (_NowGroupIDList[(int)location] != group)
 		{
-			if (_NowLocationCode == (int)location)
-			{
-				//_PlayerCamera->transform->SetParent(_Player->transform);
-				_Player->transform->SetLocalPosition(LocationPosition[(int)location]);
-				_PlayerCamera->LookAtTarget();
-				//_PlayerCamera->transform->SetParent(nullptr);
-
-				Camera* camera = _PlayerCamera->GetComponent<Camera>();
-				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
-				cameraFoward.Normalize();
-				cameraFoward.y -= 0.5f;
-				cameraFoward.Scale(0.8f);
-				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
-				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
-				
-			}
 			_MysteryLight->SetActive(true, true);
 			_NowGroupIDList[(int)location] = group;
-		}
-
-		char path[128];
-
-		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
-			//パス生成
-			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)location, 'A' + group, ObjectType[type]);
-			_CreateObject(location, path, static_cast<LoadObjectType>(type));
-			ZeroMemory(path, 128);
+			_IsEvolution = true;
+			_EvolutionLocation = location;
 		}
 	}
 }
@@ -357,6 +391,15 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 	return Builds;
 }
 
+void HistoryManager::ChangeLocation(LocationCodeE value)
+{
+	_ChangeLocation(value);
+	if (!_IsEvolution)
+	{
+		_HistoryMenu->SetIsOperation(true);
+	}
+}
+
 void HistoryManager::_CreateNPC(LocationCodeE location, const char * path)
 {
 	//CSVからオブジェクトの情報読み込み
@@ -425,7 +468,7 @@ void HistoryManager::PutOutPage(LocationCodeE location,vector<HistoryPage*>& lis
 	_LocationHistoryList[(int)location]->SetData(list);
 
 	//変更したので歴史を改変させる.
-	_ChangeLocation(location);
+	//_ChangeLocation(location);
 
 	//データを保存.
 	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);

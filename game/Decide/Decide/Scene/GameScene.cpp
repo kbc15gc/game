@@ -151,7 +151,7 @@ void GameScene::Start()
 	//ƒƒjƒ…[
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//—ðŽj‘
-	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 10);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -296,6 +296,8 @@ void GameScene::Update()
 				_VillageName->Excute(i);
 		}
 	}
+
+	INSTANCE(HistoryManager)->Update();
 }
 
 void GameScene::_NewChip()
