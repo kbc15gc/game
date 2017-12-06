@@ -145,7 +145,9 @@ void PlayerCamera::_StandardBehavior()
 		}
 	}
 
-	
+	//カメラ距離の伸縮
+	_UpdateDist();
+
 	//移動先ポジションを取得。
 	_DestinationPos = _ClosetRay();
 
@@ -216,6 +218,22 @@ void PlayerCamera::_RotateVertical(float rotx)
 	if (notlimit)
 	{
 		_ToCameraDir = v;
+	}
+}
+
+void PlayerCamera::_UpdateDist()
+{
+	if (VPadInput->IsPress(fbEngine::VPad::ButtonRB3))
+	{
+		auto vir = (VPadInput->GetAnalog(AnalogE::L_STICK) / 32767.0f) * 10.0f * Time::DeltaTime();
+		_Dist += -vir.y;
+		//3.0~10.0の間に収める。
+		_Dist = min(15.0f, max(_Dist, 2.0f));
+		//_Player->PlayerStopEnable();
+	}
+	else
+	{
+		//_Player->PlayerStopDisable();
 	}
 }
 

@@ -85,7 +85,7 @@ void GameScene::Start()
 	{
 		//オープニング動画。
 		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
-		movie->Init(L"op.avi");
+		movie->Init(L"op.wmv");
 		movie->Play();
 	}
 
@@ -151,7 +151,7 @@ void GameScene::Start()
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 10);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
