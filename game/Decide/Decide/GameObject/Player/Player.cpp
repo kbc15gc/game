@@ -469,7 +469,7 @@ void Player::AnimationControl()
 		//アイドルアニメーション
 		else if (_State == State::Idol)
 		{
-			PlayAnimation(AnimationNo::AnimationIdol, 0.2f);
+			PlayAnimation(AnimationNo::AnimationIdol, 0.0f);
 		}
 		//プレイヤーストップならアイドルアニメーション
 		else if (_State == State::Stop)

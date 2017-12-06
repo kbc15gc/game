@@ -292,7 +292,7 @@ void EnemyCharacter::_BuildModelData() {
 
 	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 	_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
-	_MyComponent.Model->SetIsLuminance(false);
+	//_MyComponent.Model->SetIsLuminance(false);
 
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }

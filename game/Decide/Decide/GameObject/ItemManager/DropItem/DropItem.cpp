@@ -68,6 +68,9 @@ void DropItem::Awake() {
 	_Model->SetModelEffect(ModelEffectE::SPECULAR);
 	_Model->SetModelEffect(ModelEffectE::ALPHA);
 
+	_Model->SetModelEffect(ModelEffectE::ZENABLE, true);
+	_Model->SetModelEffect(ModelEffectE::DITHERING, true);
+
 	//キャラクターライトを設定。
 	_TreasureChestLight.SetDiffuseLightDirection(0, Vector3(1.0f, 0.0f, 0.0f));
 	_TreasureChestLight.SetDiffuseLightDirection(1, Vector3(0.0f, 1.0f, 0.0f));
@@ -225,9 +228,15 @@ void DropItem::Update() {
 	}
 
 	//フィールド上に出てから一定時間経ったら消す。
-	if (_AppearMaxTime < _TotalAppearTime) {
-		//オブジェクト関係を削除。
-		_Release();
+	if (_AppearMaxTime < _TotalAppearTime)
+	{
+		if (_DitheRocalTime >= _DitheTime)
+		{
+			//オブジェクト関係を削除。
+			_Release();
+		}
+		_DitheRocalTime += Time::DeltaTime();
+		_Model->SetDitherCoefficient((_DitheRocalTime / _DitheTime) * 65.0f);
 	}
 }
 
