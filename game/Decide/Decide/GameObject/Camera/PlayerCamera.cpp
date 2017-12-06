@@ -229,11 +229,11 @@ void PlayerCamera::_UpdateDist()
 		_Dist += -vir.y;
 		//3.0~10.0‚ÌŠÔ‚ÉŽû‚ß‚éB
 		_Dist = min(15.0f, max(_Dist, 2.0f));
-		_Player->PlayerStopEnable();
+		//_Player->PlayerStopEnable();
 	}
 	else
 	{
-		_Player->PlayerStopDisable();
+		//_Player->PlayerStopDisable();
 	}
 }
 
