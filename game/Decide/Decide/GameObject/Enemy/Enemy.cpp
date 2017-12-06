@@ -31,9 +31,11 @@ void Enemy::CreateAttackCollision() {
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
+	
 }
 
 void Enemy::_StartSubClass(){
+
 	// 視野角生成。
 	_ViewAngle = 90.0f;
 	_ViewRange = 10.0f;

@@ -64,12 +64,14 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			// 骨エネミー生成。
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<Enemy>("EnemyProt", 1);
 			barColor.push_back(BarColor::Red);
+			
 			break;
 		case EnemyCharacter::EnemyType::BossDrarian:
 			// ボスドラリアン生成。
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
+			
 			break;
 		case EnemyCharacter::EnemyType::Drarian:
 			// ドラリアン生成。
@@ -81,6 +83,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			//ゴーレム生成。
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);
 			barColor.push_back(BarColor::Red);
+			newData->Object->SetBarPos({ 0.0f,4.0f,0.0f });
 			break;
 		case EnemyCharacter::EnemyType::BossGolem:
 			//ボスゴーレム生成。
