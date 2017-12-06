@@ -10,7 +10,7 @@ namespace
 		Vector3 pos[MAX_ARRAY_NUM];			//座標。
 		Quaternion rot[MAX_ARRAY_NUM];	//回転。
 		float times[MAX_ARRAY_NUM];			//時間。
-		bool fade[MAX_ARRAY_NUM];			//フェードするかどうか？
+		int fade[MAX_ARRAY_NUM];			//フェードするかどうか？
 		int size;							//配列の要素数。
 	};
 
