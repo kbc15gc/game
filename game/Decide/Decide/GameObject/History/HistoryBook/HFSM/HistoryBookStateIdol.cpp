@@ -20,11 +20,11 @@ void HistoryBookStateIdol::Entry()
 {
 	if (_HistoryBook->GetIsOpenOrClose())
 	{
-		_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::OpenIdol, 0.1f);
+		_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::OpenIdol, 0.0f);
 	}
 	else
 	{
-		_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::CloseIdol, 0.1f);
+		_HistoryBook->PlayAnimation(HistoryBook::AnimationCodeE::CloseIdol, 0.0f);
 	}
 }
 
