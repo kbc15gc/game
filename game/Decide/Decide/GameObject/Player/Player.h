@@ -450,7 +450,7 @@ private:
 	//攻撃時のSE
 	SoundSource* _AttackSoound = nullptr;
 	//攻撃ボイス
-	vector<SoundSource*> _AttackBoiceSound;
+	SoundSource* _AttackBoiceSound[static_cast<int>(AttackBoice::End)];
 	//攻撃ボイスENUM
 	AttackBoice	_AttackBoice;
 
