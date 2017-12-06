@@ -70,6 +70,16 @@ void HistoryBook::Update()
 	_StateList[_NowState]->Update();
 }
 
+/**
+* •`‰æ.
+*/
+void HistoryBook::Render()
+{
+	(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+	(*graphicsDevice()).Clear(1, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+	(*graphicsDevice()).Clear(2, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+}
+
 void HistoryBook::SetActive(const bool & act, const bool & children)
 {
 	if (_IsOperation)

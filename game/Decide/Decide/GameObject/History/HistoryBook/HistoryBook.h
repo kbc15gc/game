@@ -83,6 +83,11 @@ public:
 	void Update()override;
 
 	/**
+	* •`‰æ.
+	*/
+	void Render()override;
+
+	/**
 	* Œ»Ý‚Ìó‘Ô‚ðŽæ“¾.
 	*/
 	int GetNowState() const
@@ -158,7 +163,7 @@ public:
 	*/
 	HistoryPage* PutInChip(ChipID chipID, LocationCodeE code, int index)
 	{
-		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",9);
+		HistoryPage* page = INSTANCE(GameObjectManager)->AddNew<HistoryPage>("HistoryPage",10);
 		page->SetHistoryBook(this);
 
 		_HistoryPageList[(int)code].insert(_HistoryPageList[(int)code].begin() + index, page);
