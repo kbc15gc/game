@@ -93,8 +93,6 @@ public:
 
 private:
 	vector<vector<unique_ptr<ManagingData>>> _enemys;	// エネミー。
-	//vector<ManagingData*> _commonEnemys;	// チップ情報に関係なく存在するエネミー。
-
 private:
 	static EnemyManager* _instance;
 };
