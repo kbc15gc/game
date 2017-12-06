@@ -18,17 +18,17 @@ public:
 	}
 
 	void Awake()override;
-	void Start()override;
-	void Update()override;
-	void Render()override;
+
+	void Init(const wstring& filename);
+	void Play();
 private:
 	//GraphBuilderインターフェース
-	IGraphBuilder* _GraphBuilder;
+	IGraphBuilder* _GraphBuilder = nullptr;
 	//レンダリングを担当するVMR9フィルタ
-	IBaseFilter* _BaseFilterVMR9;
+	IBaseFilter* _BaseFilterVMR9 = nullptr;
 	//メディアコントローラー
-	IMediaControl* _MediaControl;
+	IMediaControl* _MediaControl = nullptr;
 	//メディアイベント
-	IMediaEvent* _MediaEvent;
-	ICaptureGraphBuilder2* _CGB2 = NULL;
+	IMediaEvent* _MediaEvent = nullptr;
+	ICaptureGraphBuilder2* _CGB2 = nullptr;
 };

@@ -54,6 +54,8 @@
 #include "GameObject\Enemy\BossGolem.h"
 #include "GameObject\Enemy\CodeNameD.h"
 
+#include "fbEngine/_Object/_GameObject/Movie.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -78,6 +80,15 @@ namespace
 
 void GameScene::Start()
 {
+	//最初からならオープニング再生するよー。
+	if (IS_CONTINUE == false)
+	{
+		//オープニング動画。
+		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+		movie->Init(L"op.avi");
+		movie->Play();
+	}
+
 	INSTANCE(EventManager)->ReSet();
 
 	//ゲームライト生成
@@ -126,15 +137,8 @@ void GameScene::Start()
 
 	//@todo for debug
 	// テスト。
-	//ボスゴーレム作成。
-	//BossGolem* g = INSTANCE(GameObjectManager)->AddNew<BossGolem>("BossGolem", 1);
-	//ボスD作成。
-	//BossD* d = INSTANCE(GameObjectManager)->AddNew<BossD>("doragon", 1);
-
-	//@todo for debug
-	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -142,15 +146,12 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
-	//g->SetParamAll(Color, param);
-	//d->SetParamAll(Color, param);
-
-
+	//enemy->SetParamAll(Color, param);
+	
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 2);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -170,39 +171,19 @@ void GameScene::Start()
 #ifdef _NKMT_
 	INSTANCE(GameObjectManager)->AddNew<TestObject>("TestObject", 9);
 #endif // _NKMT_
-
-	//通常BGM
-	_WorldBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldSE", 9);
-	_WorldBGM->Init("Asset/Sound/Battle_BGM.wav");
-	_WorldBGM->SetVolume(0.2f);
-
-	//BOSSBGM
-	_BossBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BossBGM", 9);
-	_BossBGM->Init("Asset/Sound/boss1.wav");
-	_BossBGM->SetVolume(0.2f);
-
-	//街BGM
-	_MatiBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("MatiBGM", 9);
-	_MatiBGM->Init("Asset/Sound/mati1.wav");
-	_MatiBGM->SetVolume(0.2f);
-
-	//街2BGM
-	_Mati2BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati2BGM", 9);
-	_Mati2BGM->Init("Asset/Sound/mati2.wav");
-	_Mati2BGM->SetVolume(0.2f);
-
-	//街3BGM
-	_Mati3BGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Mati3BGM", 9);
-	_Mati3BGM->Init("Asset/Sound/mati3.wav");
-	_Mati3BGM->SetVolume(0.2f);
-
-	//死亡BGM
-	_DeadBGM = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DeadBGM", 9);
-	_DeadBGM->Init("Asset/Sound/dead.wav");
-	_DeadBGM->SetVolume(0.4f);
-
+	for (int i = 0; i < static_cast<int>(BGM::NUM); i++)
+	{
+		_SoundBGM[i] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("BGM", 9);
+	}
+	InitBGM(BGM::WORLD, "Asset/Sound/Battle_BGM.wav", 0.2f);
+	InitBGM(BGM::BOSS1, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
+	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
+	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
+	InitBGM(BGM::MAOU, "Asset/Sound/LastDangion2.wav", 1.0f);
+	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
-	_GameBGM = _WorldBGM;
+	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
 //#ifndef _NOBO_
 //	_GameBGM->Play(true);
 //#endif // !_NOBO_
@@ -373,34 +354,22 @@ void GameScene::_ChangeBGM(BGM bgm)
 {
 	if (_BGM != bgm)
 	{
+		//BGM変更
 		_BGM = bgm;
+		//現在のBMGストップ
 		_GameBGM->Stop();
-		switch (bgm)
-		{
-		case GameScene::BGM::WORLD:
-			_GameBGM = _WorldBGM;
-			break;
-		case GameScene::BGM::BOSS1:
-			_GameBGM = _BossBGM;
-			break;
-		case GameScene::BGM::MATI1:
-			_GameBGM = _MatiBGM;
-			break;
-		case GameScene::BGM::MATI2:
-			_GameBGM = _Mati2BGM;
-			break;
-		case GameScene::BGM::MATI3:
-			_GameBGM = _Mati3BGM;
-			break;
-		case GameScene::BGM::DEAD:
-			_GameBGM = _DeadBGM;
-			break;
-		default:
-			break;
-		}
+		//サウンドを設定。
+		_GameBGM = _SoundBGM[static_cast<int>(_BGM)];
+		//再生
 		_GameBGM->Play(true);
 
 	}
+}
+
+void GameScene::InitBGM(BGM bgm, char* name, float volume)
+{
+	_SoundBGM[static_cast<int>(bgm)]->Init(name);
+	_SoundBGM[static_cast<int>(bgm)]->SetVolume(volume);
 }
 
 

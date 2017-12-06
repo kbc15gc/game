@@ -20,6 +20,9 @@ enum class ChipID : int
 	Iron,		//!< 鉄のチップ.
 	Oil,		//!< 石油のチップ.
 	Medicine,	//!< 薬のチップ.
+	DevilTown,	//!< 魔王の街のチップ.
+	DevilCastel,//!< 魔王の城のチップ.
+	DevilThrone,//!< 魔王の玉座のチップ.
 	ChipNum,	//!< チップの数.
 };
 
@@ -53,6 +56,9 @@ static const string ChipFileName[(int)ChipID::ChipNum] =
 	"IronPage.png",
 	"OilPage.png",
 	"MedicinePage.png",
+	"None.png",
+	"None.png",
+	"None.png",
 };
 
 /**
@@ -137,6 +143,9 @@ namespace
 		{ "Slot[6]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[6]),	sizeof(int) },
 		{ "Slot[7]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[7]),	sizeof(int) },
 		{ "Slot[8]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[8]),	sizeof(int) },
+		{ "Slot[9]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[9]),	sizeof(int) },
+		{ "Slot[10]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[10]),	sizeof(int) },
+		{ "Slot[11]",	Support::DataTypeE::INT, offsetof(struct LocationHistoryInfo,_ChipSlot[11]),	sizeof(int) },
 	};
 
 	//オブジェクトの情報
@@ -161,6 +170,9 @@ namespace
 		{ "Slot[6]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[6]),sizeof(ChipID) },
 		{ "Slot[7]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[7]),sizeof(ChipID) },
 		{ "Slot[8]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[8]),sizeof(ChipID) },
+		{ "Slot[9]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[9]),sizeof(ChipID) },
+		{ "Slot[10]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[10]),sizeof(ChipID) },
+		{ "Slot[11]",Support::DataTypeE::INT, offsetof(struct VillageGroup,Slot[11]),sizeof(ChipID) },
 	};
 
 }

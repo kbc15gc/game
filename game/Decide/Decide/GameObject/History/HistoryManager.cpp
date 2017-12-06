@@ -262,14 +262,14 @@ void HistoryManager::_CreateObject(LocationCodeE location, const char * path, Hi
 		CreateBuilding(path, _GameObjectList[static_cast<int>(location)]);
 
 		//第3の村以降のみ。
-		if (location == LocationCodeE::Prosperity || location == LocationCodeE::DevilKingdom)
+		if (location == LocationCodeE::Prosperity)
 		{
 			for (auto obj : _GameObjectList[static_cast<int>(location)]) {
 				//X軸に180ど回転させる。
-				//Quaternion q = Quaternion::Identity;
-				//q.SetRotation(Vector3::axisX, PI);
-				//q.Multiply(obj->transform->GetRotation());
-				//obj->transform->SetRotation(q);
+				Quaternion q = Quaternion::Identity;
+				q.SetRotation(Vector3::axisX, PI);
+				q.Multiply(obj->transform->GetRotation());
+				obj->transform->SetRotation(q);
 			}
 		}
 	}
@@ -299,9 +299,10 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 	//情報からオブジェクト生成。
 	for (short i = 0; i < static_cast<int>(objInfo.size());)
 	{
-		//コリジョンかどうか？
 		if (strcmp(objInfo[i]->filename, "coll") != 0)
 		{
+			//コリジョンではない。
+
 			//オブジェクト生成
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
@@ -316,47 +317,40 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 			//配列に追加。
 			Builds.push_back(obj);
 
-			//次がコリジョンかどうか？
-			while (true)
+			if (objInfo[i]->coll)
 			{
-				ObjectInfo* info;
-				//範囲外チェック。
-				try {
-					info = objInfo.at(++i).get();
-				}
-				catch (std::out_of_range& ex) {
-					break;
-				}
-
-				//コリジョンを自分で作成している場合は作成する。
-				//名前チェック
-				if (strcmp(info->filename, "coll") == 0 && objInfo[i]->coll)
+				// ユニティーで設定したコライダーを使用してコリジョンを作成する。
+				while (++i < static_cast<int>(objInfo.size()) && strcmp(objInfo[i]->filename, "coll") == 0)
 				{
+					// 次の要素がコリジョン。
+
 					//コリジョンを生成してゲームオブジェクトにアタッチ。
 					BoxCollider* box = obj->AddComponent<BoxCollider>();
 					RigidBody* coll = obj->AddComponent<RigidBody>();
 
-					box->Create(Vector3(fabsf(info->sca.x), fabsf(info->sca.y), fabsf(info->sca.z)));
+					box->Create(Vector3(fabsf(objInfo[i]->sca.x), fabsf(objInfo[i]->sca.y), fabsf(objInfo[i]->sca.z)));
 					RigidBodyInfo Rinfo;
 					Rinfo.physicsType = Collision::PhysicsType::Static;
 					Rinfo.mass = 0.0f;
 					Rinfo.coll = box;
 					//カメラと当たらないコリジョンかどうか？
-					Rinfo.id = ((bool)info->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
-					Rinfo.offset = info->pos;
+					Rinfo.id = ((bool)objInfo[i]->hitcamera) ? Collision_ID::BUILDING : (Collision_ID::BUILDING | Collision_ID::NOTHITCAMERA);
+					Rinfo.offset = objInfo[i]->pos;
 					//Quaternion q;
 					//q.SetRotation(Vector3::up, PI / 2);
 					//q.Multiply(info->ang);
-					Rinfo.rotation = info->ang;
+					Rinfo.rotation = objInfo[i]->ang;
 					coll->Create(Rinfo, true);
 				}
-				else
-				{
-					break;
-				}
+			}
+			else {
+				i++;
 			}
 		}
-
+		else {
+			// 裸のコリジョンはとりあえず無視。
+			i++;
+		}
 	}
 	objInfo.clear();
 
