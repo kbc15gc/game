@@ -3,6 +3,7 @@
 #include "GameObject\ItemManager\ItemManager.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include"fbEngine\_Object\_Component\_3D\Light.h"
+#include "GameObject\TextImage\AttentionTextOnly.h"
 
 class SkinModel;
 class Player;
@@ -93,5 +94,7 @@ private:
 
 	float _DitheRocalTime = 0.0f;	//!< ディザローカルタイム.
 	float _DitheTime = 1.0f;		//!< ディザタイム.
+
+	AttentionTextOnly* _AttentionText = nullptr;
 
 };
