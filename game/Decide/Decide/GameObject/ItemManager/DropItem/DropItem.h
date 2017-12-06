@@ -90,4 +90,8 @@ private:
 	CharacterLight		  _TreasureChestLight;					//宝箱のライト。
 	Vector3				  _TextPos				= Vector3::zero;//テキストを出す場所。
 	float				  _TextFontSize			= 0.0f;			//テキストのサイズ。
+
+	float _DitheRocalTime = 0.0f;	//!< ディザローカルタイム.
+	float _DitheTime = 1.0f;		//!< ディザタイム.
+
 };
