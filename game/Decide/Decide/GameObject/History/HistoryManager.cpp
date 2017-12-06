@@ -342,6 +342,12 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 
+
+			// XŽ²‚Ì‰ñ“]‚ð”½“]B
+			objInfo[i]->ang.x * -1.0f;
+			// ZŽ²‚Ì‰ñ“]‚ð”½“]B
+			objInfo[i]->ang.z * -1.0f;
+
 			obj->transform->SetRotation(objInfo[i]->ang);
 
 			objInfo[i]->sca.y *= -1.0f;
