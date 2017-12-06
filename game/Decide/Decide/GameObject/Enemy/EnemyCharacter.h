@@ -291,7 +291,7 @@ public:
 	//			各種パラメーター。
 	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
 		_MyComponent.Parameter->ParamReset(param);
-		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),5,false, false);
+		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, _BarPos, Vector2(0.5f, 0.5f),5,false, false);
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 		
 	}
@@ -300,7 +300,7 @@ public:
 	//			各種パラメーター。
 	inline void SetParamAll(const vector<BarColor>& color, const vector<int>& param) const {
 		_MyComponent.Parameter->ParamReset(param);
-		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, Vector3(0.0f, 2.0f, 0.0f), Vector2(0.5f, 0.5f),5 ,false,false);
+		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, _BarPos, Vector2(0.5f, 0.5f),5 ,false,false);
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 	}
 
@@ -543,6 +543,9 @@ public:
 		return _locationCode;
 	}
 
+	inline void SetBarPos(const Vector3& pos) {
+		_BarPos = pos;
+	}
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。
@@ -677,7 +680,10 @@ private:
 	// ※継承先で実装。
 	virtual EnemyAttack* _AttackSelectSubClass() = 0;
 
+	
 protected:
+	
+
 	Components _MyComponent;	// このクラスで使用するコンポーネント。
 
 	vector<unique_ptr<EnemyState>> _MyState;	// このクラスが持つすべてのステートを登録。
@@ -727,6 +733,8 @@ private:
 	Vector3 _MoveSpeed;	// 最終的な移動量(最終的にキャラクターコントローラに渡される)。
 
 	LocationCodeE _locationCode;	// どの場所の歴史に属するか。
+
+	Vector3 _BarPos = Vector3(0.0f, 2.0f, 0.0f);
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };

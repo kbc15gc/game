@@ -39,6 +39,6 @@ void VillageName::Excute(const int location)
 		//•\Ž¦–¼‚ðÝ’è.
 		_Text->SetText(LocationNames[location].c_str());
 		_Timer = 0.0f;
-		now = location;
 	}
+	now = location;
 }
