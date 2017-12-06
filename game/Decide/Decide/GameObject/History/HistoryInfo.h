@@ -14,9 +14,9 @@ enum class ChipID : int
 	Fire,		//!< 火のチップ.
 	Tree,		//!< 木のチップ.
 	Stone,		//!< 石のチップ.
-	Hunt,		//!< 狩りのチップ.
-	Agriculture,//!< 農業のチップ
 	Copper,		//!< 銅のチップ.
+	Agriculture,//!< 農業のチップ
+	Hunt,		//!< 狩りのチップ.
 	Iron,		//!< 鉄のチップ.
 	Oil,		//!< 石油のチップ.
 	Medicine,	//!< 薬のチップ.

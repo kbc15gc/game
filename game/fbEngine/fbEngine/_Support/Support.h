@@ -131,7 +131,7 @@ namespace
 				int Array[999];	// とりあえず多めに取っておく。									
 				ZeroMemory(Array, sizeof(Array));//初期化。
 
-				for (int idx = 0; idx < max; idx++) {
+				for (int idx = 0;  idx < max, *(copy + offset) != '\0'; idx++) {
 					//数字の部分を取り出す。
 					char* num = strtok(copy + offset, ",");
 					//数字に変換する。
@@ -155,7 +155,6 @@ namespace
 					//オフセット量を増やす。
 					offset += strlen(num) + 1;
 				}
-
 				memcpy(addres, &Array, size);
 			}
 			else if (type == Support::DataTypeE::VECTOR3_ARRAY)

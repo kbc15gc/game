@@ -7,6 +7,12 @@
 #include "GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 #include "GameObject\Player\Player.h"
 
+namespace 
+{
+	//売却時のレート。
+	const float SELL_RATE = 0.8f;
+}
+
 
 ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 {
@@ -169,13 +175,16 @@ void ShopS_Trade::_UpdateTradeNum()
 void ShopS_Trade::_UpdateSelectItem()
 {
 	_SumValue = 0;
+	float rate = (_SaveState == Shop::ShopStateE::Buy) ? 1.0f : SELL_RATE;
 	_IndexList.clear();
 	FOR(i, _TradeNum.size())
 	{
 		if (_TradeNum[i] > 0)
 		{
 			_IndexList.push_back(i);
-			_SumValue += (*_DisplayList)[i]->GetInfo()->Value * _TradeNum[i];
+			//一つ当たりの値段。
+			auto val = (*_DisplayList)[i]->GetValue() * rate;
+			_SumValue += val * _TradeNum[i];
 		}
 	}
 	char sum[256];
@@ -304,18 +313,18 @@ void ShopS_Trade::_UpdateText()
 		{
 			auto Info = item->GetInfo();
 			//持っている個数　交換個数　値段。
-			sprintf(info, "%2d   %2d %5d$", Inventory::Instance()->GetHoldNum(Info->TypeID, Info->ID), _TradeNum[i], Info->Value);
+			sprintf(info, "%2d   %2d %5d$", Inventory::Instance()->GetHoldNum(Info->TypeID, Info->ID), _TradeNum[i], (*_DisplayList)[i]->GetValue());
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
 		{
 			if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 			{
 				//持っている個数　交換個数　値段。
-				sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], item->GetInfo()->Value);
+				sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], (*_DisplayList)[i]->GetValue());
 			}
 			else
 			{
-				sprintf(info, "%2d %5d$", _TradeNum[i], item->GetInfo()->Value);
+				sprintf(info, "%2d %5d$", _TradeNum[i], (*_DisplayList)[i]->GetValue());
 			}
 		}
 		
@@ -498,7 +507,7 @@ void ShopS_Trade::BuyItem()
 		if (add)
 		{
 			//アイテムの値段分お金を払う。
-			_Shop->Pay((*_DisplayList)[idx]->GetInfo()->Value * _TradeNum[idx]);
+			_Shop->Pay((*_DisplayList)[idx]->GetValue() * _TradeNum[idx]);
 			//アイテムを購入したときのメッセージ。
 			_Shop->SpeakMess(3);
 		}
@@ -528,7 +537,7 @@ void ShopS_Trade::SellItem()
 				offset++;
 			}
 			//アイテムの値段分お金を貰う。
-			_Shop->Pay(-_SumValue);
+			_Shop->Pay(-(*_DisplayList)[idx]->GetValue() * SELL_RATE);
 			//アイテムを買い取ったときのメッセージ。
 			_Shop->SpeakMess(3);
 		}
@@ -538,7 +547,7 @@ void ShopS_Trade::SellItem()
 			if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx - offset], _TradeNum[idx - offset]) == true)
 			{
 				//アイテムの値段分お金を貰う。
-				_Shop->Pay(-_SumValue);
+				_Shop->Pay(-(*_DisplayList)[idx]->GetValue() * SELL_RATE);
 				//アイテムを買い取ったときのメッセージ。
 				_Shop->SpeakMess(3);
 				erase = true;
