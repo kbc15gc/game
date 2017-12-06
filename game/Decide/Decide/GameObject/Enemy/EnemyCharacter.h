@@ -208,7 +208,7 @@ public:
 
 	// 音再生関数。
 	// 引数：	効果音テーブルの添え字。
-	inline void EnemyPlaySound(const SoundIndex idx) {
+	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx) {
 		if (_SoundData[static_cast<int>(idx)]->Source) {
 			// サウンドソースが作成されている。
 			_SoundData[static_cast<int>(idx)]->Source->Play(_SoundData[static_cast<int>(idx)]->IsLoop);
