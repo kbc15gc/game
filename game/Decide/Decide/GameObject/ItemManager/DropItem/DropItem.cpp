@@ -117,7 +117,7 @@ void DropItem::Awake() {
 	_CCharacterController->SetGravity(_Gravity);
 
 	//テキストを出す位置。
-	_TextPos = Vector3(600.0f, 260.0f, 0.0f);
+	_TextPos = Vector3(580.0f, 460.0f, 0.0f);
 
 	//テキストサイズ。
 	_TextFontSize = 33.0f;
