@@ -5,6 +5,7 @@
 #include"HistoryPageStatePutIn.h"
 
 #include"..\HistoryPage.h"
+#include"../../../HistoryManager.h"
 
 /**
 * ó‘Ô‚ÉØ‚è‘Ö‚¦‚½‚Æ‚«ŒÄ‚Î‚ê‚é.
@@ -40,6 +41,7 @@ void HistoryPageStatePutIn::Update()
 
 	if (_LerpRate >= 1.0f)
 	{
+		INSTANCE(HistoryManager)->ChangeLocation(_HistoryPage->GetNowLocation());
 		_HistoryPage->ChangeState(HistoryPage::StateCodeE::Turn);
 	}
 

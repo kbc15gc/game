@@ -55,6 +55,11 @@ public:
 	void Start();
 
 	/**
+	* 進化.
+	*/
+	void Evolution();
+
+	/**
 	* 歴史を変える.
 	* 
 	* @param location	場所ID.
@@ -117,6 +122,8 @@ public:
 	{
 		_NowLocationCode = loc;
 	}
+
+	void ChangeLocation(LocationCodeE value);
 
 private:
 	
@@ -194,5 +201,10 @@ private:
 	PlayerCamera* _PlayerCamera = nullptr;
 
 	int _NowLocationCode = -1;
+
+	/** 進化フラグ. */
+	bool _IsEvolution = false;
+	/** 進化場所. */
+	LocationCodeE _EvolutionLocation = LocationCodeE::None;
 
 };
