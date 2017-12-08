@@ -354,7 +354,8 @@ void EnemyCharacter::Drop() {
 		for (int i = 0; i < LoadEnemyInfo::dropMax; i++)
 		{
 			//落とすアイテムかをチェック。
-			if (_Type[idx][i] != -1)
+			if (_Type[idx][i] != -1 && 
+				(rand() % 100) < 50)
 			{
 				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。

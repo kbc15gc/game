@@ -1,4 +1,5 @@
-public enum ArmorCodeE{
+public enum ArmorCodeE
+{
     None =-1,
     ぼろぼろの服 = 0,
     布の服 = 1,

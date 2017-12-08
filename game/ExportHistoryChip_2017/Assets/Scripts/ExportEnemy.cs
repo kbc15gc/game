@@ -2,6 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CodeE
+{
+    ItemCodeE,
+    ArmorCodeE,
+    WeaponCodeE
+};
+
+[System.Serializable]
+public class DropItemData
+{
+    //アイテムコード。
+    public ItemCodeE code = ItemCodeE.None;
+    //確率
+    [Range(0.0f,100.0f)]
+    public float probability;
+}
+
+[System.Serializable]
+public class DropArmorData
+{
+    //アイテムコード。
+    public ArmorCodeE code = ArmorCodeE.None;
+    //確率
+    [Range(0.0f, 100.0f)]
+    public float probability;
+}
+
+[System.Serializable]
+public class DropWeaponData
+{
+    //アイテムコード。
+    public WeaponCodeE code = WeaponCodeE.None;
+    //確率
+    [Range(0.0f, 100.0f)]
+    public float probability;
+}
+
 public class ExportEnemy : MonoBehaviour {
 
     //エネミーのタイプ
@@ -32,9 +69,9 @@ public class ExportEnemy : MonoBehaviour {
 
     //落とすアイテムの種類。
     //落とすアイテムのID、落とさないアイテムは-1を入れる。
-    public ItemCodeE[] _Item = { ItemCodeE.None };
-    public ArmorCodeE[] _Armor = { ArmorCodeE.None};
-    public WeaponCodeE[] _Weapon= { WeaponCodeE.None};
+    public DropItemData[] _Item;
+    public DropArmorData[] _Armor;
+    public DropWeaponData[] _Weapon;
 
     //モンスターのカラー
     public int _ColorFlag = 0;

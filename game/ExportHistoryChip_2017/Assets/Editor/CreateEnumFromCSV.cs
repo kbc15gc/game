@@ -7,7 +7,7 @@ using System;
 
 public class CreateEnumFromCSV : EditorWindow
 {
-    string name = "";
+    CodeE code = CodeE.ItemCodeE;
     //! MenuItem("メニュー名/項目名") のフォーマットで記載してね
     [MenuItem("Create/CreateEnum")]
     static void ShowWindow()
@@ -21,19 +21,14 @@ public class CreateEnumFromCSV : EditorWindow
      */
     void OnGUI()
     {
-        name = EditorGUILayout.TextField(name);
+        
+        code = (CodeE)EditorGUILayout.EnumMaskField(code);
         if (GUILayout.Button("作成"))
         {
-            CreateEnum(name);
+            CreateEnum(name.ToString());
         }
     }
 
-    //Enumを定義したファイルを作成。
-    [MenuItem("Create/CreateItemCode")]
-    static public void CreateItemCode()
-    {
-        CreateEnum("ItemCodeE");
-    }
     static public void CreateEnum(string name)
     {
         //
