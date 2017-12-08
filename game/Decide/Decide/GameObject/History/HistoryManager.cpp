@@ -289,16 +289,16 @@ void HistoryManager::_CreateObject(LocationCodeE location, const char * path, Hi
 		CreateBuilding(path, _GameObjectList[static_cast<int>(location)]);
 
 		//ëÊ3ÇÃë∫à»ç~ÇÃÇ›ÅB
-		if (location == LocationCodeE::Prosperity)
-		{
-			for (auto obj : _GameObjectList[static_cast<int>(location)]) {
-				//Xé≤Ç…180Ç«âÒì]Ç≥ÇπÇÈÅB
-				Quaternion q = Quaternion::Identity;
-				q.SetRotation(Vector3::axisX, PI);
-				q.Multiply(obj->transform->GetRotation());
-				obj->transform->SetRotation(q);
-			}
-		}
+		//if (location == LocationCodeE::Prosperity)
+		//{
+		//	for (auto obj : _GameObjectList[static_cast<int>(location)]) {
+		//		//Xé≤Ç…180Ç«âÒì]Ç≥ÇπÇÈÅB
+		//		Quaternion q = Quaternion::Identity;
+		//		q.SetRotation(Vector3::axisX, PI);
+		//		q.Multiply(obj->transform->GetRotation());
+		//		obj->transform->SetRotation(q);
+		//	}
+		//}
 	}
 	else if (type == HistoryManager::LoadObjectType::NPC)
 	{

@@ -214,12 +214,12 @@ void Player::Awake()
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//UŒ‚ƒ{ƒCƒX‰Šú‰»
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
-	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack2.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack3.wav");
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack3)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0);
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)]->Init("Asset/Sound/Player/attack1.wav");
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)]->Init("Asset/Sound/Player/attack2.wav");
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack3)]->Init("Asset/Sound/Player/attack3.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -558,11 +558,10 @@ void Player::Releace()
 	_CurrentState = nullptr;
 	_HPBar = nullptr;
 	//_MPBar = nullptr;
-	for (auto &p : _AttackBoiceSound)
+	for (auto& p : _AttackBoiceSound)
 	{
 		p = nullptr;
 	}
-	_AttackBoiceSound.clear();
 	_DeathSound = nullptr;
 	//_AnimationEventPlayer = nullptr;
 }
