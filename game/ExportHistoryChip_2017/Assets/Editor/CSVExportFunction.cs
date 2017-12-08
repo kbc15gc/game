@@ -229,9 +229,9 @@ public class CSVExportFunction : Editor
                         drop[1] += ',';
                         drop[2] += ',';
                     }
-                    drop[0] += Convert.ToString(e._Item[i]);
-                    drop[1] += Convert.ToString(e._Armor[i]);
-                    drop[2] += Convert.ToString(e._Weapon[i]);
+                    drop[0] += Convert.ToString((int)e._Item[i]);
+                    drop[1] += Convert.ToString((int)e._Armor[i]);
+                    drop[2] += Convert.ToString((int)e._Weapon[i]);
                     next = true;
                 }
                 drop[0] += ']'; drop[1] += ']';drop[2] += ']';
