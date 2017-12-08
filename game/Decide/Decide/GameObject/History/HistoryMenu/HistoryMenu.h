@@ -85,6 +85,9 @@ public:
 
 	void SetLocationCode(LocationCodeE code);
 
+	void SetIsOperation(bool value);
+
+
 private:
 
 	/**

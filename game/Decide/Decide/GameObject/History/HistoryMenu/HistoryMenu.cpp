@@ -78,7 +78,7 @@ void HistoryMenu::Update()
 		}
 	}
 
-	if (!_IsOperation)
+	/*if (!_IsOperation)
 	{
 		const float OperationTime = 2.0f;
 		static float LocalTime = 0.0f;
@@ -89,8 +89,7 @@ void HistoryMenu::Update()
 			_HistoryBook->SetIsOperation(_IsOperation);
 			LocalTime = 0.0f;
 		}
-	}
-
+	}*/
 }
 
 /**
@@ -130,6 +129,12 @@ void HistoryMenu::SetLocationCode(LocationCodeE code)
 	_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
 	_NowLookPage = 0;
 	_SelectCode = (int)SelectCodeE::Page;
+}
+
+void HistoryMenu::SetIsOperation(bool value)
+{
+	_IsOperation = value;
+	_HistoryBook->SetIsOperation(_IsOperation);
 }
 
 /**
