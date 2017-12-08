@@ -61,10 +61,10 @@ void AttackValue2D::Init(Transform* t, int damagevalue, bool critical, float lif
 	_AttackText->transform->SetPosition(_ScreenPos.x, _ScreenPos.y, 0.0f);
 	//ダメージ量
 	char attack[6];
-	//限界ダメージは999
-	if (damagevalue > 999)
+	//限界ダメージは9999
+	if (damagevalue > 9999)
 	{
-		sprintf(attack, "%d", 999);
+		sprintf(attack, "%d", 9999);
 
 	}
 	else
