@@ -16,6 +16,8 @@ private:
 		Stand,
 		Max
 	};
+
+	enum class BornEnemySoundIndex{AttackBorn = static_cast<int>(EnemyCharacter::SoundIndex::Max)};
 public:
 	Enemy(const char* name);
 	~Enemy();

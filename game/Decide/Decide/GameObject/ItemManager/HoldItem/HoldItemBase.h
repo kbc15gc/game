@@ -25,6 +25,11 @@ public:
 		return _Info;
 	}
 
+	virtual int GetValue()
+	{
+		return _Info->Value;
+	}
+
 	//-50‚©‚ç100‚Ì’l‚ğƒ‰ƒ“ƒ_ƒ€‚Åæ“¾B
 	inline int GetRand_S50to100() {
 		return (rand() % 151) - 50;

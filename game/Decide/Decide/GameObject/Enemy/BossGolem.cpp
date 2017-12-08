@@ -47,10 +47,10 @@ void BossGolem::_StartSubClass() {
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//攻撃処理。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(4.5f, static_cast<int>(AnimationBossGolem::Hit));
+	_singleAttack->Init(4.5f, static_cast<int>(AnimationBossGolem::Hit),0.0f,0.4f);
 
 	_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
-	_singleAttackSecondPattern->Init(4.5f, static_cast<int>(AnimationBossGolem::Hit2));
+	_singleAttackSecondPattern->Init(4.5f, static_cast<int>(AnimationBossGolem::Hit2),0.0f,0.3f);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -135,9 +135,9 @@ void BossGolem::_ConfigCollision() {
 	{
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
-		_collisionInfo.radius = 2.0f;
+		_collisionInfo.radius = 1.0f;
 		_collisionInfo.height = 1.5f;
-		_collisionInfo.offset = Vector3(0.0f, 1.7f, 0.0f);
+		_collisionInfo.offset = Vector3(0.0f, 1.0f, 0.0f);
 		_collisionInfo.id = Collision_ID::BOSS;
 
 		// 重力設定。

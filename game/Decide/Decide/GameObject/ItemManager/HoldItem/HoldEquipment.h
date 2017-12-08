@@ -56,6 +56,8 @@ public:
 		else if (raito >= 0.9f && raito <= 1.0f) {
 			_Rank = Rank::SS;
 		}
+		//補正値格納。
+		_Revision = raito;
 	}
 
 	//装備の基準値と差分値の割合を算出。
@@ -93,6 +95,17 @@ public:
 		return _Rank;
 	}
 
+	//補正値を取得。
+	float GetRevision()
+	{
+		return _Revision / 0.5f;
+	}
+
+	//値段取得。
+	int GetValue()override
+	{
+		return _Info->Value * GetRevision();
+	}
 private:
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。
@@ -101,6 +114,8 @@ private:
 
 protected:
 	Rank _Rank;	//装備品のランク。
+	
+	float _Revision = 0.0f;		//補正値。
 	bool _IsEquip = false;		//装備されているかのフラグ(tureなら装備されている)。
 
 	bool _isLoad = false;	// CSVから読み込んだデータか。
