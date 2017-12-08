@@ -449,9 +449,9 @@ sampler_state
 PSOutput PSTerrain(VS_OUTPUT In)
 {
 	//スプラットマップのUV座標を求める。
-	float2 splatMapUV;
-	splatMapUV.x = (In._World.x - g_terrainRect.x) / (g_terrainRect.y - g_terrainRect.x);
-	splatMapUV.y = (In._World.z - g_terrainRect.z) / (g_terrainRect.w - g_terrainRect.z);
+	float2 splatMapUV = In._UV;
+	//splatMapUV.x = (In._World.x - g_terrainRect.x) / (g_terrainRect.y - g_terrainRect.x);
+	//splatMapUV.y = (In._World.z - g_terrainRect.z) / (g_terrainRect.w - g_terrainRect.z);
 	float4 splatMap = tex2D(g_splatMapSampler, splatMapUV);
 	//今回使う枚数は三枚なのでrgbまで使う
 	float t = splatMap.r + splatMap.g + splatMap.b /*+ splatMap.w*/;

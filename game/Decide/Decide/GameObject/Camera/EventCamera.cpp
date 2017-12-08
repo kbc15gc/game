@@ -77,6 +77,8 @@ void EventCamera::Excute(int id)
 	vector<unique_ptr<EventCameraInfo>> list;
 	Support::LoadCSVData<EventCameraInfo>("Asset/Data/EventCameraInfo.csv", EventCameraData, ARRAY_SIZE(EventCameraData), list);
 	_Info = *list[id].get();
+
+
 	transform->SetPosition(_Info.pos[_Index]);
 	transform->SetRotation(_Info.rot[_Index]);
 
@@ -109,9 +111,9 @@ void EventCamera::_Move()
 	if(_Timer <= _Info.times[_Index])
 	{
 		//ˆÚ“®
-		auto pos = Vector3::Lerp(_Info.pos[_Index], _Info.pos[_Index + 1], _Timer);
+		auto pos = Vector3::Lerp(_NowPos, _Info.pos[_Index + 1], _Timer);
 		transform->SetPosition(pos);
-		auto rot = Quaternion::Lerp(_Info.rot[_Index], _Info.rot[_Index + 1], _Timer);
+		auto rot = Quaternion::Lerp(_NowRot, _Info.rot[_Index + 1], _Timer);
 		transform->SetRotation(rot);
 	}
 	else
