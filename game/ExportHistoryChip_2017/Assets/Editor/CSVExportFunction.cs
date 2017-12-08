@@ -245,6 +245,7 @@ public class CSVExportFunction : Editor
                     if (next)
                         probability += ',';
                     probability += Convert.ToString(e._Item[i].probability);
+                    next = true;
                 }
                 for (int i = 0; i < 5; i++)
                 {

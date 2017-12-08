@@ -22,10 +22,10 @@ public class CreateEnumFromCSV : EditorWindow
     void OnGUI()
     {
         
-        code = (CodeE)EditorGUILayout.EnumMaskField(code);
+        code = (CodeE)EditorGUILayout.EnumPopup(code);
         if (GUILayout.Button("作成"))
         {
-            CreateEnum(name.ToString());
+            CreateEnum(code.ToString());
         }
     }
 

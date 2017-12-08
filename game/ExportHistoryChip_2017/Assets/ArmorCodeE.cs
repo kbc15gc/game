@@ -1,6 +1,5 @@
-public enum ArmorCodeE
-{
-    None =-1,
+public enum ArmorCodeE{
+    None = -1,
     ぼろぼろの服 = 0,
     布の服 = 1,
     皮の鎧 = 2,
@@ -14,5 +13,7 @@ public enum ArmorCodeE
     鋼の鎧 = 10,
     銀の鎧 = 11,
     金の鎧 = 12,
-    プラチナの鎧 = 13
+    プラチナの鎧 = 13,
+    錆びた鎧 = 100,
+    美しい肋骨 = 101
 }
