@@ -53,9 +53,9 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 51,旅人,ここはまだ発展途中だからね。\n良い街にしたいね。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 52,ここはどこだ。,ここは昔とちがうような。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 53,ありがとう。,あなたのおかげでかつての村に戻ったよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-54,この道を進むと。,違う村があったんだけどなぁ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+54,この道を進むと。,違う村があったんだけどなぁ。,-1,1,4,Asset/Sound/NPC/SHOP/Mic1_16.wav
 55,おっす。この道を進んだ先に。,小さな家がひとつあったんだ。そこでお世話になったんだ。,56,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-56,おっす。この道を進んだ先に。,そこも昔は村があったみたいだよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+56,おっす。この道を進んだ先に。,そこも昔は村があったみたいだよ。,-1,1,4,Asset/Sound/NPC/SHOP/Mic1_16.wav
 57,子供たちが遊んでる場所に。,なにかあったらしいわ。詳しくは子供に聞いてみて。\n大きな木の前にいるわ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 58,助かりました。,無事魔物から逃げることができました。,59,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 59,助かりました。,他の者も、感謝しています。\nよければ、他の者にも声をかけてあげてください。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
