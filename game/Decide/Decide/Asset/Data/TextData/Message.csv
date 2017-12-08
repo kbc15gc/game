@@ -21,9 +21,9 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 19,ようこそ。歴史を失った世界へ。,そして、奪われた歴史は魔王の手によって\n魔物とともに世界各地にばらまかれました。,20,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 20,ようこそ。歴史を失った世界へ。,文明をなくしたこの世界は、抵抗する力もなく\n魔物に制圧されようとしています。,21,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 21,ようこそ。歴史を失った世界へ。,お願いです。奪われた歴史を取り戻し\nこの世界をあなたの手で助けてください。,22,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-22,ようこそ。歴史を失った世界へ。,ああああああああああああ,23,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+22,ようこそ。歴史を失った世界へ。,この道の先の村を訪ねてみてください。,23,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 23,ようこそ。歴史を失った世界へ。,また、わたしの話を聞きたくなったら\nここへ来てください。,24,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-24,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+24,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,1,3,Asset/Sound/NPC/SHOP/Mic1_16.wav
 25,魔王,よくきたな。勇者よ。,26,-1,-1,Asset/Sound/MAOU/5.wav
 26,魔王,八つ裂きにしてやるぅぅぅぅぅ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 27,村人A,何もないとこだけど、ゆっくりしていって。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
@@ -53,9 +53,9 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 51,旅人,ここはまだ発展途中だからね。\n良い街にしたいね。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 52,ここはどこだ。,ここは昔とちがうような。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 53,ありがとう。,あなたのおかげでかつての村に戻ったよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-54,この道を進むと。,違う村があったんだけどなぁ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+54,この道を進むと。,違う村があったんだけどなぁ。,-1,1,4,Asset/Sound/NPC/SHOP/Mic1_16.wav
 55,おっす。この道を進んだ先に。,小さな家がひとつあったんだ。そこでお世話になったんだ。,56,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-56,おっす。この道を進んだ先に。,そこも昔は村があったみたいだよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+56,おっす。この道を進んだ先に。,そこも昔は村があったみたいだよ。,-1,1,4,Asset/Sound/NPC/SHOP/Mic1_16.wav
 57,子供たちが遊んでる場所に。,なにかあったらしいわ。詳しくは子供に聞いてみて。\n大きな木の前にいるわ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 58,助かりました。,無事魔物から逃げることができました。,59,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 59,助かりました。,他の者も、感謝しています。\nよければ、他の者にも声をかけてあげてください。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav

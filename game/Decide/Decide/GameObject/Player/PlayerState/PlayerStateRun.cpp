@@ -90,45 +90,38 @@ void PlayerStateRun::Move()
 	}
 	//方向初期化。
 	Vector3 dir = Vector3::zero;
+	//ゲームパッドから取得した方向
+	//コントローラー移動
+	dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
+	dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
+	//#ifdef _DEBUG
+	//キーボード(デバッグ用)
+	if (KeyBoardInput->isPressed(DIK_W))
+	{
+		dir.z++;
+	}
+	if (KeyBoardInput->isPressed(DIK_S))
+	{
+		dir.z--;
+	}
+	if (KeyBoardInput->isPressed(DIK_A))
+	{
+		dir.x--;
+	}
+	if (KeyBoardInput->isPressed(DIK_D))
+	{
+		dir.x++;
+	}
+	//#endif
 	if (_AutoRun)
 	{
-		//コントローラー移動
-		dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
-		dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
 		//入力があれば変更する。
-		if (dir.Length() > fabs(0.01f))
+		if (dir.Length() > fabs(0.1f))
 		{
-			//保存
 			_Dir = dir;
 		}
 		//移動方向
 		dir = _Dir;
-	}
-	else
-	{
-		//ゲームパッドから取得した方向
-		//コントローラー移動
-		dir.x += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).x / 32767.0f);
-		dir.z += (XboxInput(0)->GetAnalog(AnalogE::L_STICK).y / 32767.0f);
-		//#ifdef _DEBUG
-		//キーボード(デバッグ用)
-		if (KeyBoardInput->isPressed(DIK_W))
-		{
-			dir.z++;
-		}
-		if (KeyBoardInput->isPressed(DIK_S))
-		{
-			dir.z--;
-		}
-		if (KeyBoardInput->isPressed(DIK_A))
-		{
-			dir.x--;
-		}
-		if (KeyBoardInput->isPressed(DIK_D))
-		{
-			dir.x++;
-		}
-		//#endif
 	}
 	
 
@@ -192,8 +185,9 @@ void PlayerStateRun::Move()
 
 	//移動していない
 	//オートラン時はステート変更しない。
-	if (dir.Length() < 0.0001f && !_AutoRun)
+	if (dir.Length() < 0.0001f)
 	{
+		_AutoRun = false;
 		_Player->ChangeState(Player::State::Idol);
 	}
 }
