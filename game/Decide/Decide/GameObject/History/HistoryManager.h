@@ -55,9 +55,9 @@ public:
 	void Start();
 
 	/**
-	* XV.
+	* i‰».
 	*/
-	void Update();
+	void Evolution();
 
 	/**
 	* —ğj‚ğ•Ï‚¦‚é.

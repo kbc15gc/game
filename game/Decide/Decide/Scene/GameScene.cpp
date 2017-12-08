@@ -296,8 +296,6 @@ void GameScene::Update()
 				_VillageName->Excute(i);
 		}
 	}
-
-	INSTANCE(HistoryManager)->Update();
 }
 
 void GameScene::_NewChip()

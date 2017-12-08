@@ -137,40 +137,33 @@ void HistoryManager::Start()
 /**
 * 更新.
 */
-void HistoryManager::Update()
+void HistoryManager::Evolution()
 {
 	if (_IsEvolution)
 	{
-		static float LocalTime = 0.0f;
-		const float EvolutionTime = 1.0f;
-		if (LocalTime >= EvolutionTime)
-		{
-			char path[128];
-			for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
-				//パス生成
-				sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)_EvolutionLocation, 'A' + _NowGroupIDList[(int)_EvolutionLocation], ObjectType[type]);
-				_CreateObject(_EvolutionLocation, path, static_cast<LoadObjectType>(type));
-				ZeroMemory(path, 128);
-			}
-			if (_NowLocationCode == (int)_EvolutionLocation)
-			{
-				//_PlayerCamera->transform->SetParent(_Player->transform);
-				_Player->transform->SetLocalPosition(LocationPosition[(int)_EvolutionLocation]);
-				_PlayerCamera->LookAtTarget();
-				//_PlayerCamera->transform->SetParent(nullptr);
-
-				Camera* camera = _PlayerCamera->GetComponent<Camera>();
-				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
-				cameraFoward.Normalize();
-				cameraFoward.y -= 0.5f;
-				cameraFoward.Scale(0.8f);
-				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
-				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
-			}
-			_IsEvolution = false;
-			LocalTime = 0.0f;
+		char path[128];
+		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
+			//パス生成
+			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)_EvolutionLocation, 'A' + _NowGroupIDList[(int)_EvolutionLocation], ObjectType[type]);
+			_CreateObject(_EvolutionLocation, path, static_cast<LoadObjectType>(type));
+			ZeroMemory(path, 128);
 		}
-		LocalTime += Time::DeltaTime();
+		if (_NowLocationCode == (int)_EvolutionLocation)
+		{
+			//_PlayerCamera->transform->SetParent(_Player->transform);
+			_Player->transform->SetLocalPosition(LocationPosition[(int)_EvolutionLocation]);
+			_PlayerCamera->LookAtTarget();
+			//_PlayerCamera->transform->SetParent(nullptr);
+
+			Camera* camera = _PlayerCamera->GetComponent<Camera>();
+			Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
+			cameraFoward.Normalize();
+			cameraFoward.y -= 0.5f;
+			cameraFoward.Scale(0.8f);
+			_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
+			_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
+		}
+		_IsEvolution = false;
 	}
 }
 

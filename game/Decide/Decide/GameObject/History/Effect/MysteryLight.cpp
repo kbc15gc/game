@@ -5,6 +5,7 @@
 #include"MysteryLight.h"
 
 #include"fbEngine\_Object\_GameObject\ImageObject.h"
+#include"../HistoryManager.h"
 
 /**
 * ‰Šú‰».
@@ -14,6 +15,7 @@ void MysteryLight::Awake()
 	_LightPlate = INSTANCE(GameObjectManager)->AddNew<ImageObject>("LightImage", 10);
 	_LightPlate->SetTexture(LOADTEXTURE("UI/circle128.png"));
 	_LightPlate->transform->SetParent(transform);
+	_LightPlate->transform->SetLocalScale(Vector3::zero);
 
 	transform->SetLocalPosition(g_WindowSize / 2);
 
@@ -26,10 +28,10 @@ void MysteryLight::Awake()
 */
 void MysteryLight::Update()
 {
-
 	_LocalTime += Time::DeltaTime();
 	if (_LocalTime >= _LightTime)
 	{
+		INSTANCE(HistoryManager)->Evolution();
 		_Alpha -= 0.5f * Time::DeltaTime();
 		if (_Alpha <= 0.0f)
 		{
