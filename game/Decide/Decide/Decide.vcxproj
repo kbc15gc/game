@@ -330,6 +330,7 @@
     <ClInclude Include="GameObject\Village\VillageName.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SaveData\SaveDataManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\LastBossTestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
@@ -454,6 +455,7 @@
     <ClCompile Include="GameObject\Village\Shop\Shop.cpp" />
     <ClCompile Include="GameObject\Village\TextBox.cpp" />
     <ClCompile Include="GameObject\Village\VillageName.cpp" />
+    <ClCompile Include="SaveData\SaveDataManager.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\LastBossTestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />

@@ -50,7 +50,7 @@ void HistoryBookStateUnused::Exit()
 	Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
 	cameraFoward.Normalize();
 	cameraFoward.y -= 0.5f;
-	cameraFoward.Scale(0.8f);
+	cameraFoward.Scale(1.0f);
 	_HistoryBook->SetDestPos(_PlayerCamera->transform->GetPosition() + cameraFoward);
 	
 	_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());

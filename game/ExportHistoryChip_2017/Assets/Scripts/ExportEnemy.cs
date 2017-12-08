@@ -32,9 +32,9 @@ public class ExportEnemy : MonoBehaviour {
 
     //落とすアイテムの種類。
     //落とすアイテムのID、落とさないアイテムは-1を入れる。
-    public int[] _Item;
-    public int[] _Armor;
-    public int[] _Weapon;
+    public ItemCodeE[] _Item = { ItemCodeE.None };
+    public ArmorCodeE[] _Armor = { ArmorCodeE.None};
+    public WeaponCodeE[] _Weapon= { WeaponCodeE.None};
 
     //モンスターのカラー
     public int _ColorFlag = 0;

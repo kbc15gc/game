@@ -328,14 +328,14 @@ public class CSVExportFunction : Editor
 
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("pos[],rot[],time[],size");
+        sw.WriteLine("pos[],rot[],time[],fade[],size");
 
         for (int idx = 0, num = export.transform.childCount; idx < num; idx++)
         {
             Transform No = export.transform.GetChild(idx);
             //配列の要素数。
             int size = No.transform.childCount;
-            string pos = "", rot = "", time = "";
+            string pos = "", rot = "", time = "", fade = "";
             bool conma = false;
             for (int i = 0; i < size; i++)
             {
@@ -344,6 +344,7 @@ public class CSVExportFunction : Editor
                     pos += ',';
                     rot += ',';
                     time += ',';
+                    fade += ',';
                 }
 
                 //カメラの情報とか持ってるやつ。
@@ -352,10 +353,11 @@ public class CSVExportFunction : Editor
                 rot += QuaternionToString(child.rotation);
                 var info = child.gameObject.GetComponent<EventCameraInfo>();
                 time += info.time.ToString();
+                fade += Convert.ToInt16(info.fade).ToString();
 
                 conma = true;
             }
-            string line = string.Format("[{0}],[{1}],[{2}],{3}", pos, rot, time, size);
+            string line = string.Format("[{0}],[{1}],[{2}],[{3}],{4}", pos, rot, time, fade, size);
             //列書き出し
             sw.WriteLine(line);
         }

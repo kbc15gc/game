@@ -121,6 +121,8 @@ void DropItem::Awake() {
 
 	//テキストサイズ。
 	_TextFontSize = 33.0f;
+
+	_AttentionText = static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"));
 }
 
 //ドロップアイテムを作成。

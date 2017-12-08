@@ -24,16 +24,23 @@ void Enemy::CreateAttackCollision() {
 	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.5f, 1.5f), Quaternion::Identity, Vector3::one, AttackCollision::CollisionMaster::Enemy, 0.15f, AttackCollision::ReactionType::NotAction, transform);
 	attack->RemoveParent();
 
+	//@todo for RedMineticket
+	//ダメージの音ではだめです。
+	//攻撃のSE鳴らしてください。
 	// 攻撃音再生。
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn));
 }
 
 void Enemy::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("enemy_00.X");
+	
 }
 
 void Enemy::_StartSubClass(){
+
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn), "BAttack.wav");
+
 	// 視野角生成。
 	_ViewAngle = 90.0f;
 	_ViewRange = 10.0f;

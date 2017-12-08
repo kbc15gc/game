@@ -151,7 +151,7 @@ void GameScene::Start()
 	//ÉÅÉjÉÖÅ[
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//óéjèë
-	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 10);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -180,7 +180,8 @@ void GameScene::Start()
 	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
-	InitBGM(BGM::MAOU, "Asset/Sound/LastDangion2.wav", 1.0f);
+	//InitBGM(BGM::MAOU, "Asset/Sound/LastDangion2.wav", 1.0f);
+	InitBGM(BGM::MAOU, "Asset/Sound/LastDangion1.wav", 1.0f);
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//çƒê∂ópBGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];

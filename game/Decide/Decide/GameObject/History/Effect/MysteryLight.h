@@ -5,6 +5,7 @@
 
 #include"fbEngine\_Object\_GameObject\Plate.h"
 #include"GameObject\Camera\PlayerCamera.h"
+#include"../HistoryMenu/HistoryMenu.h"
 
 /**
 * 謎の光クラス.
@@ -40,16 +41,17 @@ public:
 
 	void SetActive(const bool& act, const bool& child = false)override;
 
-
 private:
 
 	float _LightTime = 2.5f;
 	float _LocalTime = 0.0f;
 
 	/** ライト用画像. */
-	Plate* _LightPlate = nullptr;
+	ImageObject* _LightPlate = nullptr;
 
 	PlayerCamera* _PlayerCamera = nullptr;
+
+	HistoryMenu* _HistoryMenu = nullptr;
 
 	float _Alpha = 1.0f;
 

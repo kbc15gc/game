@@ -10,6 +10,7 @@ namespace
 		Vector3 pos[MAX_ARRAY_NUM];			//座標。
 		Quaternion rot[MAX_ARRAY_NUM];	//回転。
 		float times[MAX_ARRAY_NUM];			//時間。
+		int fade[MAX_ARRAY_NUM];			//フェードするかどうか？
 		int size;							//配列の要素数。
 	};
 
@@ -18,6 +19,7 @@ namespace
 		{ "pos",Support::DataTypeE::VECTOR3_ARRAY ,offsetof(struct EventCameraInfo,pos),sizeof(Vector3) * MAX_ARRAY_NUM },
 		{ "rot",Support::DataTypeE::QUATERNION_ARRAY ,offsetof(struct EventCameraInfo,rot),sizeof(Quaternion) * MAX_ARRAY_NUM },
 		{ "times",Support::DataTypeE::FLOAT_ARRAY ,offsetof(struct EventCameraInfo,times),sizeof(float) * MAX_ARRAY_NUM },
+		{ "fade",Support::DataTypeE::INT_ARRAY ,offsetof(struct EventCameraInfo,fade),sizeof(int) * MAX_ARRAY_NUM },
 		{ "size",Support::DataTypeE::INT ,offsetof(struct EventCameraInfo,size),sizeof(int) },
 	};
 }

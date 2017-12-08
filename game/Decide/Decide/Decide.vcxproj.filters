@@ -357,6 +357,9 @@
     <ClCompile Include="GameObject\Camera\EventCamera.cpp">
       <Filter>GameObject\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="SaveData\SaveDataManager.cpp">
+      <Filter>SaveData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -732,6 +735,9 @@
     <ClInclude Include="GameObject\Camera\EventCamera.h">
       <Filter>GameObject\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="SaveData\SaveDataManager.h">
+      <Filter>SaveData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -827,6 +833,9 @@
     </Filter>
     <Filter Include="GameObject\Enemy\BossGolem">
       <UniqueIdentifier>{8df8b66e-857d-4a26-9c11-54a3982a0a6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SaveData">
+      <UniqueIdentifier>{1a4a70f4-e157-45f3-aedd-3b7302ce87c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

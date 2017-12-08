@@ -29,29 +29,41 @@ void EventCamera::UpdateSubClass()
 {
 	if(_Runtime)
 	{
-		if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeOut)
-			_Move();
-		else if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+		//フェードするか？
+		if (_Info.fade[_Index])
 		{
-			//イベントカメラに切り替える。
-			ActiveCamera();
-			Scene::StartFade(false, FADE_TIME);
+			if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeOut)
+				_Move();
+			else if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+			{
+				//イベントカメラに切り替える。
+				ActiveCamera();
+				Scene::StartFade(false, FADE_TIME);
+			}
+		}else
+		{
+			_Move();
 		}
 	}
 	else
 	{	
-		if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+		if (_Info.fade[_Index])
+		{
+			//イベントカメラ終了。
+			if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+			{
+				EndEvent();
+				Scene::StartFade(false, FADE_TIME);
+			}
+		}else
 		{
 			EndEvent();
-			Scene::StartFade(false, FADE_TIME);
 		}
 	}
 }
 
 void EventCamera::Excute(int id)
 {
-	//フェード開始。
-	Scene::StartFade(true, FADE_TIME);
 	//実行フラグ設定。
 	_Runtime = true;
 	//タイマー初期化。
@@ -65,8 +77,18 @@ void EventCamera::Excute(int id)
 	vector<unique_ptr<EventCameraInfo>> list;
 	Support::LoadCSVData<EventCameraInfo>("Asset/Data/EventCameraInfo.csv", EventCameraData, ARRAY_SIZE(EventCameraData), list);
 	_Info = *list[id].get();
-	transform->SetPosition(_Info.pos[0]);
-	transform->SetRotation(_Info.rot[0]);
+	transform->SetPosition(_Info.pos[_Index]);
+	transform->SetRotation(_Info.rot[_Index]);
+
+	if (_Info.fade[_Index])
+	{
+		//フェード開始。
+		Scene::StartFade(true, FADE_TIME);
+	}else
+	{
+		//イベントカメラに切り替える。
+		ActiveCamera();
+	}
 }
 
 void EventCamera::EndEvent()
@@ -104,7 +126,10 @@ void EventCamera::_Move()
 		{
 			//終了。
 			_Runtime = false;
-			//フェードイン。
+		}
+		if (_Info.fade[_Index])
+		{
+			//フェード開始。
 			Scene::StartFade(true, FADE_TIME);
 		}
 	}
