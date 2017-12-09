@@ -104,7 +104,7 @@ public:
 	//値段取得。
 	int GetValue()override
 	{
-		return _Info->Value * GetRevision();
+		return  _Info->Value + _Info->Value * GetRevision();
 	}
 private:
 	// 外部から読み込んだデータを設定。

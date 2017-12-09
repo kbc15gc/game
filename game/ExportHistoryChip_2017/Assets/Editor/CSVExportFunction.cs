@@ -374,7 +374,12 @@ public class CSVExportFunction : Editor
                 //カメラの情報とか持ってるやつ。
                 Transform child = No.transform.GetChild(i);
                 pos += Vector3ToString(child.position,true);
+                Vector3 eu = child.eulerAngles;
+                child.Rotate(child.up, 180,Space.World);
+                child.Rotate(child.right, eu.x*2, Space.World);
                 rot += QuaternionToString(child.rotation);
+                child.Rotate(child.right, -eu.x*2, Space.World);
+                child.Rotate(child.up, 180, Space.World);
                 var info = child.gameObject.GetComponent<EventCameraInfo>();
                 time += info.time.ToString();
                 fade += Convert.ToInt16(info.fade).ToString();

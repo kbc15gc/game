@@ -3,27 +3,23 @@
 
 namespace
 {
-	static const int MAX_ARRAY_NUM = 20;
+	static const int MAX_ARRAY_NUM = 21;
 	//イベントカメラを起動するのに必要な情報。
 	struct EventCameraInfo
 	{
 		Vector3 pos[MAX_ARRAY_NUM];			//座標。
 		Quaternion rot[MAX_ARRAY_NUM];		//回転。
-		float times[MAX_ARRAY_NUM];			//時間。
-		int fade[MAX_ARRAY_NUM];			//フェードするかどうか？
+		float time[MAX_ARRAY_NUM];			//時間。
+		float fade[MAX_ARRAY_NUM];			//フェードするかどうか？
 		int size;							//配列の要素数。
-	};
-	struct EventCameraArray
-	{
-
 	};
 
 	const Support::DATARECORD EventCameraData[] =
 	{
-		{ "pos",Support::DataTypeE::VECTOR3_ARRAY ,offsetof(struct EventCameraInfo,pos),sizeof(Vector3) * MAX_ARRAY_NUM },
-		{ "rot",Support::DataTypeE::QUATERNION_ARRAY ,offsetof(struct EventCameraInfo,rot),sizeof(Quaternion) * MAX_ARRAY_NUM },
-		{ "times",Support::DataTypeE::FLOAT_ARRAY ,offsetof(struct EventCameraInfo,times),sizeof(float) * MAX_ARRAY_NUM },
-		{ "fade",Support::DataTypeE::INT_ARRAY ,offsetof(struct EventCameraInfo,fade),sizeof(int) * MAX_ARRAY_NUM },
+		{ "pos",Support::DataTypeE::VECTOR3_ARRAY ,offsetof(struct EventCameraInfo,pos),sizeof(EventCameraInfo::pos) },
+		{ "rot",Support::DataTypeE::QUATERNION_ARRAY ,offsetof(struct EventCameraInfo,rot),sizeof(EventCameraInfo::rot) },
+		{ "time",Support::DataTypeE::FLOAT_ARRAY ,offsetof(struct EventCameraInfo,time),sizeof(EventCameraInfo::time) },
+		{ "fade",Support::DataTypeE::FLOAT_ARRAY ,offsetof(struct EventCameraInfo,fade),sizeof(EventCameraInfo::fade) },
 		{ "size",Support::DataTypeE::INT ,offsetof(struct EventCameraInfo,size),sizeof(int) },
 	};
 }
@@ -57,6 +53,10 @@ private:
 	float _Timer = 0.0f;
 	//イベントカメラの情報。
 	EventCameraInfo _Info;
+
+	//前のカメラ。
+	Transform* _BeforeCamera;
+	//現在の状況。
 	Vector3 _NowPos;
 	Quaternion _NowRot;
 };
