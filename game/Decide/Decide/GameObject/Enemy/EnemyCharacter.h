@@ -74,6 +74,12 @@ public:
 		void Play() {
 			if (Source) {
 				Source->SetVolume(volume);
+
+				//@todo for debug 
+				char text[256];
+				sprintf(text, "ChipNumber %f\n", volume);
+				OutputDebugString(text);
+
 				Source->Play(IsLoop);
 			}
 		}
@@ -84,7 +90,7 @@ public:
 			}
 		}
 		char Path[FILENAME_MAX];	// サウンド名(.wavも入れてね)。
-		float volume = 0.0f;
+		float volume = 1.0f;
 		bool Is3D = false;		// 3Dサウンドか。
 		bool IsLoop = false;	// ループ再生か。
 		SoundSource* Source = nullptr;	// サウンド再生オブジェクト。
@@ -208,9 +214,10 @@ public:
 
 	// 音再生関数。
 	// 引数：	効果音テーブルの添え字。
-	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx) {
+	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx, float volume = 1.0f) {
 		if (_SoundData[static_cast<int>(idx)]->Source) {
 			// サウンドソースが作成されている。
+			_SoundData[static_cast<int>(idx)]->Source->SetVolume(volume);
 			_SoundData[static_cast<int>(idx)]->Source->Play(_SoundData[static_cast<int>(idx)]->IsLoop);
 		}
 	}

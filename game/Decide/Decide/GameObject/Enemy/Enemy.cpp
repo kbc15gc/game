@@ -28,7 +28,7 @@ void Enemy::CreateAttackCollision() {
 	//ダメージの音ではだめです。
 	//攻撃のSE鳴らしてください。
 	// 攻撃音再生。
-	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn));
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn),0.3f);
 }
 
 void Enemy::_AwakeSubClass() {
