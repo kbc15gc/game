@@ -187,6 +187,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 				case EnemyCharacter::EnemyType::Golem:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Red);
+					enemy->Object->SetBarPos({ 0.0f,4.0f,0.0f });
 					break;
 				case EnemyCharacter::EnemyType::BossGolem:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);

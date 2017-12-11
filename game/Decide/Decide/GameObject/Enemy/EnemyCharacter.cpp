@@ -539,19 +539,19 @@ void EnemyCharacter::_BuildSoundTable() {
 
 }
 
-void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, float volume, bool is3D, bool isLoop ) {
 	if (idx >= SoundIndex::Max) {
 		// Œp³æ“Æ©‚ÌŒø‰Ê‰¹B
 
 		_SoundData.resize(static_cast<int>(idx) + 1);
 	}
-	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, is3D, isLoop));
+	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, volume,isLoop,is3D));
 }
 
 EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool isLoop, bool is3D) {
 	EnemyCharacter::SoundData* data = new EnemyCharacter::SoundData;
 	strcpy(data->Path, filePath);
-	data->volume = volume;
+	data->volume = 0.01f;
 	data->Is3D = is3D;
 	data->IsLoop = isLoop;
 	data->Source = INSTANCE(GameObjectManager)->AddNew<SoundSource>(filePath, 0);

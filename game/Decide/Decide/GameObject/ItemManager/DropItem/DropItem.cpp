@@ -335,7 +335,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 			_TextPos,
 			_TextFontSize,
 			Color::white,
-			AttentionTextOnly::MoveType::Down
+			AttentionTextOnly::MoveType::Up
 		);
 	}
 }

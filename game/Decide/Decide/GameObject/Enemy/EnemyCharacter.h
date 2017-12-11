@@ -84,7 +84,7 @@ public:
 			}
 		}
 		char Path[FILENAME_MAX];	// サウンド名(.wavも入れてね)。
-		float volume = 1.0f;
+		float volume = 0.0f;
 		bool Is3D = false;		// 3Dサウンドか。
 		bool IsLoop = false;	// ループ再生か。
 		SoundSource* Source = nullptr;	// サウンド再生オブジェクト。
@@ -583,7 +583,7 @@ protected:
 	//			waveファイルの名前(.wavまで含めて)。
 	//			3Dサウンドにするか。
 	//			ループ再生するか。
-	void _ConfigSoundData(SoundIndex idx, char* filePath, bool is3D = false, bool isLoop = false);
+	void _ConfigSoundData(SoundIndex idx, char* filePath, float volume = 1.0f, bool is3D = false, bool isLoop = false);
 
 	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
 	// 引数;	終了したステートのタイプ。

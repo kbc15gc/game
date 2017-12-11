@@ -39,8 +39,7 @@ void Enemy::_AwakeSubClass() {
 
 void Enemy::_StartSubClass(){
 
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn), "BAttack.wav");
-
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn), "BAttack.wav",0.1f);
 	// éãñÏäpê∂ê¨ÅB
 	_ViewAngle = 90.0f;
 	_ViewRange = 10.0f;
