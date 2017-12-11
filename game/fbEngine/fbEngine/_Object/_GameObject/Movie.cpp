@@ -49,14 +49,14 @@ void Movie::Init(const wstring& filename)
 	//出力するウィンドウ設定
 	IVMRWindowlessControl *pVMRWndCont = NULL;
 	_BaseFilterVMR9->QueryInterface(IID_IVMRWindowlessControl9, (void**)&pVMRWndCont);
-	pVMRWndCont->SetVideoClippingWindow(g_MainWindow);
+	HRESULT hr = pVMRWndCont->SetVideoClippingWindow(g_MainWindow);
 	//破棄
 	pVMRWndCont->Release();
 
 	wstring path = L"Asset/Movie/" + filename;
 	IBaseFilter *pSource = NULL;
 	//Source Filterを作成し、フィルタグラフに追加します
-	_GraphBuilder->AddSourceFilter(path.c_str(), L"FiltaName", &pSource);
+	hr = _GraphBuilder->AddSourceFilter(path.c_str(), L"FiltaName", &pSource);
 
 	//初期化
 	HRESULT hRes = _CGB2->SetFiltergraph(_GraphBuilder);
