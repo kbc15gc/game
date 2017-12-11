@@ -280,7 +280,7 @@ void Inventory::_LoadData() {
 	FOR(i, Item::ItemCodeE::Max) {
 		//ファイルパス
 		char filepath[256] = "";
-		sprintf(filepath, "Asset/Data/InventoryData/%s.csv", filename[i]);
+		sprintf(filepath, "C:\\KBCGame\\ReHistory\\SaveData\\%s.csv", filename[i]);
 
 		// データ格納用配列。
 		vector<unique_ptr<Hold::HoldInfo>> work;
@@ -330,7 +330,7 @@ void Inventory::_OutData(Item::ItemCodeE code) {
 
 	//ファイルパス。
 	char filepath[256] = "";
-	sprintf(filepath, "Asset/Data/InventoryData/%s.csv", filename[static_cast<int>(code)]);
+	sprintf(filepath, "C:\\KBCGame\\ReHistory\\SaveData\\%s.csv", filename[static_cast<int>(code)]);
 
 	for (int idx = 0; idx < _InventoryItemList[static_cast<int>(code)].size(); idx++) {
 		if (_InventoryItemList[static_cast<int>(code)][idx]) {

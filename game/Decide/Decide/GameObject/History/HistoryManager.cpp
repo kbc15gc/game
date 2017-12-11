@@ -8,6 +8,8 @@ namespace
 	//オブジェクトを識別するタイプ。
 	const char* ObjectType[3] = { "Obj","NPC","Enemy" };
 
+	string filePath = "C:\\KBCGame\\ReHistory\\SaveData\\LocationHistory.csv";
+
 	/**
 	* チップIDからビット値を求める.
 	*/
@@ -52,23 +54,25 @@ void HistoryManager::Start()
 	}*/
 	_LocationHistoryList.clear();
 
+
 	if (IS_CONTINUE)
 	{
 		//CSVから歴史情報読み取り。
-		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		Support::LoadCSVData<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 	else
 	{
 		//CSVから歴史情報読み取り。
-		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
-		FOR(i, _LocationHistoryList.size())
+		FOR(i, LocationCodeE::Common)
 		{
+			_LocationHistoryList.push_back(unique_ptr<LocationHistoryInfo>(new LocationHistoryInfo()));
+			_LocationHistoryList[i]->_LocationID = (LocationCodeE)i;
 			for (int j = 0; j < (int)ChipID::ChipNum; j++)
 			{
-				_LocationHistoryList.at(i)->_ChipSlot[j] = ChipID::None;
+				_LocationHistoryList[i]->_ChipSlot[j] = ChipID::None;
 			}
 		}
-		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		Support::OutputCSV<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
@@ -179,7 +183,7 @@ bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip, int ind
 	//_ChangeLocation(location);
 
 	//データを保存.
-	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	Support::OutputCSV<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 
 	return true;
 }
@@ -437,5 +441,5 @@ void HistoryManager::PutOutPage(LocationCodeE location,vector<HistoryPage*>& lis
 	//_ChangeLocation(location);
 
 	//データを保存.
-	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	Support::OutputCSV<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 }
