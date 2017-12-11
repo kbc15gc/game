@@ -8,6 +8,8 @@ class HoldEquipment :public HoldItemBase
 {
 public:
 	// コメントの数字は基準値からの加算率の幅。
+	//@todo for debug
+	//後で調整してね。
 	enum Rank
 	{
 		SS = 0, //91 ~ 100	神造級。

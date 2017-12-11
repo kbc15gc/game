@@ -352,9 +352,12 @@ void EnemyCharacter::Drop() {
 	{
 		for (int i = 0; i < LoadEnemyInfo::dropMax; i++)
 		{
+			//確率。100.00%
+			float pro = rand() % 10000;
+			pro /= 100.0f;
 			//落とすアイテムかをチェック。
 			if (_Type[idx][i] != -1 &&
-				(rand() % 100) < _Probability[idx * 5 + i])
+				pro <= _Probability[idx * 5 + i])
 			{
 				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。

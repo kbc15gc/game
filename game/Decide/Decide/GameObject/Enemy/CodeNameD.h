@@ -3,6 +3,7 @@
 #include "fbEngine\_Object\_GameObject\ParticleEmitter.h"
 #include "GameObject\Enemy\LaserBreath.h"
 #include "GameObject\History\Chip.h"
+#include "GameObject\History\HistoryManager.h"
 
 // 継承クラス。
 // ボスエネミー(ヒューマン型）
@@ -80,7 +81,12 @@ private:
 	
 
 	inline void _DropSubClass()override {
+		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Medicine))
+		{
+			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
+			chip->SetDropChipID(ChipID::Medicine, transform->GetPosition() + Vector3(0.0f, -0.5f, 0.0f));
 
+		}
 	}
 
 private:

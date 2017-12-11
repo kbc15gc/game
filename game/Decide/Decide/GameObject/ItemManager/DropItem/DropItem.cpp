@@ -245,7 +245,7 @@ void DropItem::Update() {
 //生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
 void DropItem::_EquipmentRankCheck_SelectSEAndEffect()
 {
-	if (_DropItemInfo->TypeID != Item::ItemCodeE::Item&& static_cast<HoldEquipment*>(_DropEquipment)->GetRank() <= HoldEquipment::Rank::B)
+	if (_DropItemInfo->TypeID != Item::ItemCodeE::Item&& static_cast<HoldEquipment*>(_DropEquipment)->GetRank() <= HoldEquipment::Rank::A)
 	{
 		//S以上ならレアドロップ用のエフェクトとSE開始。
 		_RareDropPE->RareDropEffect();
