@@ -117,6 +117,7 @@ void HistoryManager::Start()
 		LocationCodeE lCode = _LocationHistoryList.at(i)->_LocationID;
 		//チップの状態からグループを計算。
 		const int group = _CalcPattern(_LocationHistoryList[(int)lCode].get());
+		_NowGroupIDList[(int)lCode] = group;
 		//どれかのグループに該当するのなら。
 		char path[128];
 		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {

@@ -398,5 +398,6 @@ ParameterBar::~ParameterBar()
 void ParameterBar::Update() {
 	//バーの更新処理が呼ばれているのでアダプターをアクティブにする。
 	//ここバグってる.
-	_Object->SetActive(true);
+	if (_Object)
+		_Object->SetActive(true);
 }
