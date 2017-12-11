@@ -307,6 +307,16 @@ public:
 	{
 		return _IsSpeak;
 	}
+	void SetSpeakFlag(bool flag)
+	{
+		_IsSpeak = flag;
+	}
+	//地面についているかのフラグゲット。
+	bool GetIsGround()
+	{
+		return _CharacterController->IsOnGround();
+	}
+
 private:
 
 	//アニメーションイベント

@@ -92,18 +92,22 @@ void NPC::_Speak()
 			_TextBox->Speak();
 			if (_State != State::Speak && _IsAnimation)
 			{
+				_Player->SetSpeakFlag(true);
 				_State = State::Speak;
 				PlayAnimation(State::Speak, 0.2f);
 				_Rotation->RotationToObject_XZ(_Player);
 			}
 		}
 	}
-	else
+	
+
+	if(!_IsSpeak || _TextBox->IsLastMessage())
 	{
 		//—£‚ê‚½‚È‚ç•Â‚¶‚é
 		_TextBox->CloseMessage();
 		if (_State != State::Idol && _IsAnimation)
 		{
+			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
 			PlayAnimation(State::Idol, 0.2f);
 			transform->SetRotation(_Rot);
