@@ -138,7 +138,7 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -146,7 +146,7 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//enemy->SetParamAll(Color, param);
+	enemy->SetParamAll(Color, param);
 	
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -341,13 +341,6 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("OilChip", 2);
 		chip->SetChipID(ChipID::Oil);
-	}
-	//@todo for debug
-	//テスト用
-	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Medicine))
-	{
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("MedicineChip", 2);
-		chip->SetChipID(ChipID::Medicine);
 	}
 }
 
