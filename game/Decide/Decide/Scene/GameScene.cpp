@@ -85,8 +85,9 @@ void GameScene::Start()
 	{
 		//オープニング動画。
 		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
-		movie->Init(L"op.wmv");
-		movie->Play();
+		//movie->Init(L"op.wmv");
+		//movie->Play();
+		movie->test();
 	}
 
 	INSTANCE(EventManager)->ReSet();
