@@ -318,10 +318,10 @@ void GameScene::_NewChip()
 	}
 
 	//Žë
-	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Copper))
 	{
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("HuntChip", 2);
-		chip->SetChipID(ChipID::Hunt);
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("CopperChip", 2);
+		chip->SetChipID(ChipID::Copper);
 	}
 
 	//”_
