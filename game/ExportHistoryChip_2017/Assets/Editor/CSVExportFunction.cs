@@ -211,7 +211,7 @@ public class CSVExportFunction : Editor
             string dropexp = Convert.ToString(e._DROPEXP);
             string money = Convert.ToString(e._MONEY);
 
-            string pos = Vector3ToString(child.position,true);
+            string pos = Vector3ToString(child.position, true);
             string quaternion = QuaternionToString(child.rotation);
             //string quaternion = string.Format("{0}/{1}/{2}/{3}", child.rotation.x, child.rotation.y, child.rotation.z, 1.0f);
             string sca = Vector3ToString(child.lossyScale);
@@ -219,7 +219,7 @@ public class CSVExportFunction : Editor
             //アイテム、防具、武器。
             string[] drop = { "", "", "" };
             {
-                drop[0] += '[';drop[1] += '[';drop[2] += '[';
+                drop[0] += '['; drop[1] += '['; drop[2] += '[';
                 bool next = false;
                 for (int i = 0; i < 5; i++)
                 {
@@ -229,18 +229,42 @@ public class CSVExportFunction : Editor
                         drop[1] += ',';
                         drop[2] += ',';
                     }
-                    drop[0] += Convert.ToString((int)e._Item[i]);
-                    drop[1] += Convert.ToString((int)e._Armor[i]);
-                    drop[2] += Convert.ToString((int)e._Weapon[i]);
+                    drop[0] += Convert.ToString((int)e._Item[i].code);
+                    drop[1] += Convert.ToString((int)e._Armor[i].code);
+                    drop[2] += Convert.ToString((int)e._Weapon[i].code);
                     next = true;
                 }
-                drop[0] += ']'; drop[1] += ']';drop[2] += ']';
+                drop[0] += ']'; drop[1] += ']'; drop[2] += ']';
             }
+            //確率の出力
+            string probability = "[";
+            {
+                bool next = false;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (next)
+                        probability += ',';
+                    probability += Convert.ToString(e._Item[i].probability);
+                    next = true;
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    probability += ',';
+                    probability += Convert.ToString(e._Armor[i].probability);
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    probability += ',';
+                    probability += Convert.ToString(e._Weapon[i].probability);
+                }
+                probability += "]";
+            }
+
             //カラー
             string colorflag = Convert.ToString(e._ColorFlag);
             string color = Vector4ToString(new Vector4(e._Color.r, e._Color.g, e._Color.b, e._Color.a));
 
-            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2], colorflag, color);
+            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2],probability, colorflag, color);
 
             //列書き出し
             sw.WriteLine(line);
@@ -350,7 +374,12 @@ public class CSVExportFunction : Editor
                 //カメラの情報とか持ってるやつ。
                 Transform child = No.transform.GetChild(i);
                 pos += Vector3ToString(child.position,true);
+                Vector3 eu = child.eulerAngles;
+                child.Rotate(child.up, 180,Space.World);
+                child.Rotate(child.right, eu.x*2, Space.World);
                 rot += QuaternionToString(child.rotation);
+                child.Rotate(child.right, -eu.x*2, Space.World);
+                child.Rotate(child.up, 180, Space.World);
                 var info = child.gameObject.GetComponent<EventCameraInfo>();
                 time += info.time.ToString();
                 fade += Convert.ToInt16(info.fade).ToString();

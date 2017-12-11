@@ -223,17 +223,18 @@ namespace Support {
 			return fin.fail();
 		}
 
+		const int MAX_SIZE = 1028;
 		//ファイルからデータを受け取るバッファ
-		char line[512], copy[512];
+		char line[MAX_SIZE], copy[MAX_SIZE];
 
 		//スキップする処理(要改善)
-		fin.getline(line, 512);
+		fin.getline(line, MAX_SIZE);
 
 		while (true)
 		{
 			//初期化してから新しい行を読み込む
-			ZeroMemory(line, sizeof(char) * 512);
-			fin.getline(line, 512);
+			ZeroMemory(line, sizeof(line));
+			fin.getline(line, MAX_SIZE);
 
 			//ファイルの終端になったなら抜ける。
 			if (fin.eof())
@@ -245,7 +246,7 @@ namespace Support {
 
 			int idx = 0;		//何番目の要素か？
 			int offset = 0;		//先頭からのoffset量
-			memcpy(copy, line, sizeof(char) * 512);
+			memcpy(copy, line, sizeof(line));
 			//アドレス確保
 			T2* tmp = new T1();
 			

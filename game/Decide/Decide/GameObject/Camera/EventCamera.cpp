@@ -27,38 +27,33 @@ void EventCamera::Start()
 
 void EventCamera::UpdateSubClass()
 {
-	if(_Runtime)
+	if (_Runtime)
 	{
-		//フェードするか？
-		if (_Info.fade[_Index])
-		{
-			if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeOut)
-				_Move();
-			else if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
-			{
-				//イベントカメラに切り替える。
-				ActiveCamera();
-				Scene::StartFade(false, FADE_TIME);
-			}
-		}else
-		{
-			_Move();
-		}
+		_Move();
 	}
 	else
-	{	
-		if (_Info.fade[_Index])
-		{
-			//イベントカメラ終了。
-			if (Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
-			{
-				EndEvent();
-				Scene::StartFade(false, FADE_TIME);
-			}
-		}else
+	{
+		auto time = _Info.time[_Index];
+		_Timer += Time::DeltaTime();
+		//割合計算。
+		auto rate = (0.0f < time) ? _Timer / time : 1.0f;
+		//移動。
+		auto pos = Vector3::Lerp(_NowPos, _BeforeCamera->GetPosition(), rate);
+		//回転。
+		auto rot = Quaternion::Lerp(_NowRot, _BeforeCamera->GetRotation(), rate);
+		transform->SetPosition(pos);
+		transform->SetRotation(rot);
+
+		if(_Timer >= time)
 		{
 			EndEvent();
 		}
+	}
+
+	if(Scene::GetFadeState() == fbScene::FadeStateE::EndFadeIn)
+	{
+		//固定値(仮)
+		Scene::StartFade(false, FADE_TIME);
 	}
 }
 
@@ -77,18 +72,13 @@ void EventCamera::Excute(int id)
 	vector<unique_ptr<EventCameraInfo>> list;
 	Support::LoadCSVData<EventCameraInfo>("Asset/Data/EventCameraInfo.csv", EventCameraData, ARRAY_SIZE(EventCameraData), list);
 	_Info = *list[id].get();
-	transform->SetPosition(_Info.pos[_Index]);
-	transform->SetRotation(_Info.rot[_Index]);
+	_BeforeCamera = INSTANCE(GameObjectManager)->mainCamera->transform;
+	_NowPos = _BeforeCamera->GetPosition();
+	_NowRot = _BeforeCamera->GetRotation();
 
-	if (_Info.fade[_Index])
-	{
-		//フェード開始。
-		Scene::StartFade(true, FADE_TIME);
-	}else
-	{
-		//イベントカメラに切り替える。
-		ActiveCamera();
-	}
+
+	//イベントカメラに切り替える。
+	ActiveCamera();
 }
 
 void EventCamera::EndEvent()
@@ -106,31 +96,43 @@ void EventCamera::_Move()
 {
 	//時間加算。
 	_Timer += Time::DeltaTime();
-	if(_Timer <= _Info.times[_Index])
+	auto time = _Info.time[_Index];
+	//補完とか。
+	//割合計算。
+	auto rate = (0.0f < time) ? _Timer / time : 1.0f;
+	//移動。
+	auto pos = Vector3::Lerp(_NowPos, _Info.pos[_Index], rate);
+	//回転。
+	auto rot = Quaternion::Lerp(_NowRot, _Info.rot[_Index], rate);
+	transform->SetPosition(pos);
+	transform->SetRotation(rot);
+
+	if(_Timer <= time)
 	{
-		//移動
-		auto pos = Vector3::Lerp(_Info.pos[_Index], _Info.pos[_Index + 1], _Timer);
-		transform->SetPosition(pos);
-		auto rot = Quaternion::Lerp(_Info.rot[_Index], _Info.rot[_Index + 1], _Timer);
-		transform->SetRotation(rot);
+		auto fade = _Info.fade[_Index];
+		//フェードするか？
+		if (fade >= 0.0f &&
+			_Timer >= fade)
+		{
+			Scene::StartFade(true, time - fade);
+		}
 	}
 	else
 	{
+		_NowPos = _Info.pos[_Index];
+		_NowRot = _Info.rot[_Index];
 		//次があるか？
-		if (++_Index < _Info.size-1)
+		if (_Index < _Info.size - 2)
 		{
 			//一つ前の目標時間分を引く。
-			_Timer -= _Info.times[_Index - 1];
+			_Timer -= time;
 		}
 		else
 		{
 			//終了。
 			_Runtime = false;
+			_Timer = 0.0f;
 		}
-		if (_Info.fade[_Index])
-		{
-			//フェード開始。
-			Scene::StartFade(true, FADE_TIME);
-		}
+		_Index++;
 	}
 }
