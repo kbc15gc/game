@@ -82,7 +82,7 @@ private:
 		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
 		{
 			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
-			chip->SetDropChipID(ChipID::Hunt, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
+			chip->SetDropChipID(ChipID::Hunt, transform->GetPosition() + Vector3(0.0f, -0.5f, 0.0f));
 
 		}
 	}

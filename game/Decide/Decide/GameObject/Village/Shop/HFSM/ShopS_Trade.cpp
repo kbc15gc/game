@@ -10,7 +10,7 @@
 namespace 
 {
 	//売却時のレート。
-	const float SELL_RATE = 0.8f;
+	const float SELL_RATE = 0.1f;
 }
 
 
@@ -195,7 +195,7 @@ void ShopS_Trade::_UpdateSelectItem()
 void ShopS_Trade::_CreateMenu()
 {
 	//テキスト生成。
-	while (_MenuTexts.size() <= 30)
+	while (_MenuTexts.size() <= 50)
 	{
 		//インスタンス化。
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _TradeWindow->GetPriorty());
