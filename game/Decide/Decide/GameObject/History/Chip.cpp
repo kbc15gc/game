@@ -13,9 +13,9 @@ namespace
 		Vector3(-481.0f, 66.0f, 266.0f),		//火
 		Vector3(-453.0f, 58.0f, -295.0f),		//木
 		Vector3(-1060.0f, 69.0f, -1950.0f),				//石
-		Vector3(-125.0f,54.2f,443.0f),//!< 狩りのチップ.
+		Vector3(-118.829f,54.5f,443.0f),//!< 銅のチップ.
 		Vector3(-322.0f,68.8f,621.87f),//!< 農業のチップ
-		Vector3(275.0f,54.0f,621.0f),//!< 銅のチップ.
+		Vector3(275.0f,54.0f,621.0f),//!< 狩りのチップ.
 		Vector3(249.36f,65.0f,121.88f),//!< 鉄のチップ.
 		Vector3(410.5f,92.9f,217.27f),//!< 石油のチップ.
 		Vector3(484.71f, 72.0f, 90.86f),//!< 薬のチップ.
@@ -87,6 +87,11 @@ void Chip::SetChipID(ChipID chipID)
 { 
 	//外部からセットしたIDを設定。
 	_ChipID = chipID;
+
+	//@todo for debug 
+	char text[256];
+	sprintf(text, "ChipNumber %d\n", chipID);
+	OutputDebugString(text);
 
 	//設定されたIDのモデルをロード。
 	_Model = AddComponent<SkinModel>();
