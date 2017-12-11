@@ -2,6 +2,7 @@
 //
 #include"stdafx.h"
 #include"Decide.h"
+#include <direct.h>
 
 #define MAX_LOADSTRING 100
 //最初のスクリーンサイズ
@@ -19,20 +20,20 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void InitializeGame();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: ここにコードを挿入してください。
+	// TODO: ここにコードを挿入してください。
 
-    // グローバル文字列を初期化しています。
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_DECIDE, szWindowClass, MAX_LOADSTRING);
+	// グローバル文字列を初期化しています。
+	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_DECIDE, szWindowClass, MAX_LOADSTRING);
 
-    MyRegisterClass(hInstance,
+	MyRegisterClass(hInstance,
 		CS_HREDRAW | CS_VREDRAW,
 		WndProc,
 		0,
@@ -64,7 +65,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Diff.y = WindowSize.y - ClientSize.y;
 	//ゲームウィンドウの大きさ調整
 
-	g_StartWindowSize = Vector2(WindowW,WindowH);
+	g_StartWindowSize = Vector2(WindowW, WindowH);
 	g_WindowSize = Vector2(WindowW, WindowH);
 
 #ifdef RELEASE_LOW
@@ -75,15 +76,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	SetWindowPos(g_MainWindow, HWND_TOP, 0, 0, WindowW + Diff.x, WindowH + Diff.y, (SWP_NOZORDER));
 
-    // アプリケーションの初期化を実行します:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
+	// アプリケーションの初期化を実行します:
+	if (!InitInstance(hInstance, nCmdShow))
+	{
+		return FALSE;
+	}
+
+	//フォルダ作成.
+	_mkdir("C:\\KBCGame");
+	_mkdir("C:\\KBCGame\\ReHistory");
+	_mkdir("C:\\KBCGame\\ReHistory\\SaveData");
 
 	InitializeGame();
 
-    return GameStart(hInstance, nCmdShow, IDC_DECIDE);
+	return GameStart(hInstance, nCmdShow, IDC_DECIDE);
 }
 
 //

@@ -10,7 +10,7 @@
 namespace 
 {
 	//売却時のレート。
-	const float SELL_RATE = 0.8f;
+	const float SELL_RATE = 0.1f;
 }
 
 
@@ -183,7 +183,7 @@ void ShopS_Trade::_UpdateSelectItem()
 		{
 			_IndexList.push_back(i);
 			//一つ当たりの値段。
-			auto val = (*_DisplayList)[i]->GetValue() * rate;
+			int val = (*_DisplayList)[i]->GetValue() * rate;
 			_SumValue += val * _TradeNum[i];
 		}
 	}
@@ -195,7 +195,7 @@ void ShopS_Trade::_UpdateSelectItem()
 void ShopS_Trade::_CreateMenu()
 {
 	//テキスト生成。
-	while (_MenuTexts.size() <= 30)
+	while (_MenuTexts.size() <= 50)
 	{
 		//インスタンス化。
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _TradeWindow->GetPriorty());
@@ -317,14 +317,16 @@ void ShopS_Trade::_UpdateText()
 		}
 		else if (_SaveState == Shop::ShopStateE::Sell)
 		{
+			int value = (*_DisplayList)[i]->GetValue() * SELL_RATE;
 			if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 			{
 				//持っている個数　交換個数　値段。
-				sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i], (*_DisplayList)[i]->GetValue());
+				sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[i],value);
 			}
 			else
 			{
-				sprintf(info, "%2d %5d$", _TradeNum[i], (*_DisplayList)[i]->GetValue());
+				value = static_cast<HoldEquipment*>((*_DisplayList)[i])->GetValue() * SELL_RATE;
+				sprintf(info, "%2d %5d$", _TradeNum[i], value);
 			}
 		}
 		
@@ -527,27 +529,29 @@ void ShopS_Trade::SellItem()
 	int offset = 0;
 	for (int idx : _IndexList)
 	{
-
+		int value = 0;
 		//暫定処理、良い処理が思いついたら変更して。
 		if ((*_DisplayList)[idx - offset]->GetInfo()->TypeID==Item::ItemCodeE::Item) {
+			value = (*_DisplayList)[idx - offset]->GetValue() * SELL_RATE;
 			//インベントリから排除。
 			if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx - offset], _TradeNum[idx - offset])==true)
 			{
+				//アイテムの値段分お金を貰う。
+				_Shop->Pay(-value);
+				//アイテムを買い取ったときのメッセージ。
+				_Shop->SpeakMess(3);
 				erase = true;
 				offset++;
 			}
-			//アイテムの値段分お金を貰う。
-			_Shop->Pay(-(*_DisplayList)[idx - offset]->GetValue() * SELL_RATE);
-			//アイテムを買い取ったときのメッセージ。
-			_Shop->SpeakMess(3);
 		}
 		else
 		{
+			value = (*_DisplayList)[idx - offset]->GetValue() * SELL_RATE;
 			//インベントリから排除。
 			if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx - offset], _TradeNum[idx - offset]) == true)
 			{
 				//アイテムの値段分お金を貰う。
-				_Shop->Pay(-(*_DisplayList)[idx - offset]->GetValue() * SELL_RATE);
+				_Shop->Pay(-value);
 				//アイテムを買い取ったときのメッセージ。
 				_Shop->SpeakMess(3);
 				erase = true;
