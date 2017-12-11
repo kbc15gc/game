@@ -537,7 +537,7 @@ void ShopS_Trade::SellItem()
 				offset++;
 			}
 			//アイテムの値段分お金を貰う。
-			_Shop->Pay(-(*_DisplayList)[idx]->GetValue() * SELL_RATE);
+			_Shop->Pay(-(*_DisplayList)[idx - offset]->GetValue() * SELL_RATE);
 			//アイテムを買い取ったときのメッセージ。
 			_Shop->SpeakMess(3);
 		}
@@ -547,7 +547,7 @@ void ShopS_Trade::SellItem()
 			if (INSTANCE(Inventory)->SubHoldNum((*_DisplayList)[idx - offset], _TradeNum[idx - offset]) == true)
 			{
 				//アイテムの値段分お金を貰う。
-				_Shop->Pay(-(*_DisplayList)[idx]->GetValue() * SELL_RATE);
+				_Shop->Pay(-(*_DisplayList)[idx - offset]->GetValue() * SELL_RATE);
 				//アイテムを買い取ったときのメッセージ。
 				_Shop->SpeakMess(3);
 				erase = true;

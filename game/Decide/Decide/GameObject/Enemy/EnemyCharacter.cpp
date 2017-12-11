@@ -41,7 +41,6 @@ EnemyCharacter::~EnemyCharacter()
 void EnemyCharacter::Awake() {
 	_locationCode = LocationCodeE::None;
 	_Type = vector<vector<int>>(static_cast<int>(Item::ItemCodeE::Max), vector<int>(LoadEnemyInfo::dropMax, -1));
-
 	// このクラスで使用するコンポーネントを追加。
 	// ※下記の関数を継承先のクラスで上書きしている場合はそちらが呼ばれる。
 	_BuildMyComponents();
@@ -354,7 +353,8 @@ void EnemyCharacter::Drop() {
 		for (int i = 0; i < LoadEnemyInfo::dropMax; i++)
 		{
 			//落とすアイテムかをチェック。
-			if (_Type[idx][i] != -1)
+			if (_Type[idx][i] != -1 &&
+				(rand() % 100) < _Probability[idx * 5 + i])
 			{
 				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。

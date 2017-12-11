@@ -24,6 +24,7 @@ namespace LoadEnemyInfo{
 		int item[dropMax];
 		int armor[dropMax];
 		int weapon[dropMax];
+		float probability[dropMax * 3];	//ドロップ確率*3つ分。
 		int colorflag;
 		Vector4 color;
 	};
@@ -46,6 +47,7 @@ namespace LoadEnemyInfo{
 		{ "item",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,item),	sizeof(EnemyInfo::item) },
 		{ "armor",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,armor),	sizeof(EnemyInfo::armor) },
 		{ "weapon",	Support::DataTypeE::INT_ARRAY, offsetof(struct EnemyInfo,weapon),	sizeof(EnemyInfo::weapon) },
+		{ "probability",	Support::DataTypeE::FLOAT_ARRAY, offsetof(struct EnemyInfo,probability),	sizeof(EnemyInfo::probability) },
 		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
 		{ "color",	Support::DataTypeE::VECTOR4, offsetof(struct EnemyInfo,color),	sizeof(Vector4) },
 	};

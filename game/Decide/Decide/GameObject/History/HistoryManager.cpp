@@ -118,18 +118,12 @@ void HistoryManager::Start()
 		//チップの状態からグループを計算。
 		const int group = _CalcPattern(_LocationHistoryList[(int)lCode].get());
 		//どれかのグループに該当するのなら。
-		if (group >= 0)
-		{
-			if (_NowGroupIDList[(int)lCode] != group)
-			{
-				char path[128];
-				for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
-					//パス生成
-					sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)lCode, 'A' + _NowGroupIDList[(int)lCode], ObjectType[type]);
-					_CreateObject(lCode, path, static_cast<LoadObjectType>(type));
-					ZeroMemory(path, 128);
-				}
-			}
+		char path[128];
+		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
+			//パス生成
+			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)lCode, 'A' + _NowGroupIDList[(int)lCode], ObjectType[type]);
+			_CreateObject(lCode, path, static_cast<LoadObjectType>(type));
+			ZeroMemory(path, 128);
 		}
 	}
 }
@@ -200,15 +194,12 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
 
 	//どれかのグループに該当するのなら。
-	if (group >= 0)
+	if (_NowGroupIDList[(int)location] != group)
 	{
-		if (_NowGroupIDList[(int)location] != group)
-		{
-			_MysteryLight->SetActive(true, true);
-			_NowGroupIDList[(int)location] = group;
-			_IsEvolution = true;
-			_EvolutionLocation = location;
-		}
+		_MysteryLight->SetActive(true, true);
+		_NowGroupIDList[(int)location] = group;
+		_IsEvolution = true;
+		_EvolutionLocation = location;
 	}
 }
 
@@ -239,29 +230,10 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 			groupBit += ChipIDToBit(group->Slot[i]);
 		}
 
-		//bool isMatch = true;
-		//各スロットを比較
-		/*for (int i = 0; i < (int)ChipID::ChipNum; i++)
-		{
-			if (group->Slot[i] != info->_ChipSlot[i])
-			{
-				isMatch = false;
-			}
-		}*/
-
 		if (groupBit == infoBit)
 		{
 			return group->GroupID;
 		}
-
-		//if (!isMatch)
-		//{
-		//	//マッチングしていないので次へ.
-		//	continue;
-		//}
-
-		////パターン一致したのでID設定。
-		//return group->GroupID;
 	}
 
 	return 0;
