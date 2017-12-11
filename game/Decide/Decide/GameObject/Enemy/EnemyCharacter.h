@@ -406,6 +406,14 @@ public:
 		}
 	}
 
+	void SetProbability(float pro[])
+	{
+		FOR(i, 5 * 3)
+		{
+			_Probability[i] = pro[i];
+		}
+	}
+
 	//@todo for debug 
 	//Unityで設定したカラーを設定。
 	//仮設定なので後で修正してね。
@@ -721,6 +729,8 @@ protected:
 	EnemyAttack* _nowAttack = nullptr;
 
 	vector<vector<int>> _Type;//落とすアイテムのID。
+	//ドロップ確率。
+	float _Probability[5 * 3];
 
 	Player* _Player = nullptr;			//プレイヤー
 

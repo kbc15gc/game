@@ -307,44 +307,6 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
 
-
-			//// Unity‚©‚ç“f‚«o‚µ‚½‚Ü‚Ü‚Ì’l‚Å‚Í‰ñ“]‚ª‚¨‚©‚µ‚¢‚Ì‚ÅC³B
-			//{
-			//	// XŽ²‚Ì‰ñ“]‚ð”½“]B
-			//	//objInfo[i]->ang.x *= -1.0f;
-			//	// ZŽ²‚Ì‰ñ“]‚ð”½“]B
-			//	//objInfo[i]->ang.z *= -1.0f;
-
-			//	D3DXMATRIX identity;
-			//	D3DXMatrixIdentity(&identity);
-			//	D3DXMATRIX mat = objInfo[i]->ang.GetRotationMatrix();
-
-			//	Vector3 vec1, vec2;
-			//	vec1.x = identity.m[0][0];
-			//	vec1.y = identity.m[0][1];
-			//	vec1.z = identity.m[0][2];
-
-			//	vec2.x = mat.m[0][0];
-			//	vec2.y = 0.0f;	// YŽ²‰ñ“]‚Ì‚Ý‚ð‹‚ß‚½‚¢‚Ì‚Å‚‚³‚ÍÈ‚­B
-			//	vec2.z = mat.m[0][2];
-
-			//	Quaternion rotY, rotYInv;
-			//	rotY.CreateVector3ToVector3(vec1, vec2);
-			//	rotYInv = rotY;
-			//	rotYInv.Inverse();
-
-			//	// YŽ²‰ñ“]‚ðˆê’Uœ‚­B
-			//	objInfo[i]->ang.Multiply(rotYInv);
-
-			//	// XZ‚Ì‰ñ“]‚ð”½“]B
-			//	//objInfo[i]->ang.z *= -1.0f;
-			//	//objInfo[i]->ang.x *= -1.0f;
-			//	objInfo[i]->ang.w *= 1.0f;
-
-			//	// YŽ²‚Ì‰ñ“]‚Í³‚µ‚¢‚Ì‚Å‚»‚Ì‚Ü‚ÜB
-			//	objInfo[i]->ang.Multiply(rotY);
-			//}
-
 			obj->transform->SetRotation(objInfo[i]->ang);
 
 			objInfo[i]->sca.y *= -1.0f;

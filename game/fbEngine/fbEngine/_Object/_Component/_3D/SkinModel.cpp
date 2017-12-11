@@ -143,6 +143,7 @@ void SkinModel::Render()
 	{
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{
+			_Camera = INSTANCE(GameObjectManager)->mainCamera;
 			if (_Camera != nullptr)
 				//ƒJƒŠƒ“ƒO‚·‚é‚©‚Ç‚¤‚©”»’èB
 				_Culling->Execute(_ModelDate->GetAABB(), transform->GetWorldMatrix(), _Camera->GetViewMat(), _Camera->GetProjectionMat());

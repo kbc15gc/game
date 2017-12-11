@@ -56,15 +56,16 @@ void Movie::Init(const wstring& filename)
 	wstring path = L"Asset/Movie/" + filename;
 	IBaseFilter *pSource = NULL;
 	//Source Filterを作成し、フィルタグラフに追加します
-	_GraphBuilder->AddSourceFilter(path.c_str(), L"FiltaName", &pSource);
+	HRESULT hRes = _GraphBuilder->AddSourceFilter(path.c_str(), L"FiltaName", &pSource);
+	//pBuilder->SetOutputFileName(&MEDIASUBTYPE_Avi, L"C:\\Example.avi", &ppf, &pSink);
 
-	//初期化
-	HRESULT hRes = _CGB2->SetFiltergraph(_GraphBuilder);
+	//出力側？出力するグラフィックビルダー
+	_CGB2->SetFiltergraph(_GraphBuilder);
 
 	//ソースフィルタをVMR9に接続
-	_CGB2->RenderStream(0, 0, pSource, 0, _BaseFilterVMR9);
+	hRes = _CGB2->RenderStream(&PIN_CATEGORY_PREVIEW, &MEDIATYPE_Video, pSource, 0, _BaseFilterVMR9);
 	//デフォルトオーディオに接続
-	_CGB2->RenderStream(0, &MEDIATYPE_Audio, pSource, 0, 0);
+	hRes = _CGB2->RenderStream(&PIN_CATEGORY_PREVIEW, &MEDIATYPE_Audio, pSource, 0, 0);
 
 	// 描画領域の設定（接続後でないとエラーになる）
 	LONG W, H;

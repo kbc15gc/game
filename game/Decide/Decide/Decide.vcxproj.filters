@@ -466,9 +466,6 @@
     <ClInclude Include="GameObject\History\HistoryInfo.h">
       <Filter>GameObject\History</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\History\HistoryManager.h">
-      <Filter>GameObject\History</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\History\HistoryBook\HistoryBook.h">
       <Filter>GameObject\History\HistoryBook</Filter>
     </ClInclude>
@@ -737,6 +734,9 @@
     </ClInclude>
     <ClInclude Include="SaveData\SaveDataManager.h">
       <Filter>SaveData</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\History\HistoryManager.h">
+      <Filter>GameObject\History</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
