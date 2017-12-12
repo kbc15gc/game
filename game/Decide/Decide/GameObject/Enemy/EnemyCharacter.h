@@ -533,6 +533,8 @@ public:
 		Color c = _MyComponent.Model->GetAllBlend();
 		c.a = a;
 		_MyComponent.Model->SetAllBlend(c);
+		_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
+		_MyComponent.Model->SetDitherCoefficient((1.0f - a) * 65.0f);
 	}
 
 	inline float GetAlpha()const {
