@@ -563,6 +563,10 @@ public:
 	inline void SetBarPos(const Vector3& pos) {
 		_BarPos = pos;
 	}
+
+	inline void SetBigflag(bool f){
+		_Bigflag = f;
+	}
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。
@@ -754,6 +758,8 @@ private:
 	LocationCodeE _locationCode;	// どの場所の歴史に属するか。
 
 	Vector3 _BarPos = Vector3(0.0f, 2.0f, 0.0f);
+
+	bool _Bigflag = false;
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };
