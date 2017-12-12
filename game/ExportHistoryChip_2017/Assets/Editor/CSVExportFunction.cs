@@ -68,7 +68,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("name,pos,ang,sca,coll");
+        sw.WriteLine("name,pos,ang,sca,hitCamera,coll");
         //1つのオブジェクトを取り出して書き出す。
         for (int idx = 0; idx < objects.childCount; idx++) 
         {
