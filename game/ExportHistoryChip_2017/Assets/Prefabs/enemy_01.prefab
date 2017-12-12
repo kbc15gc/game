@@ -131,23 +131,23 @@ MonoBehaviour:
   - code: -1
     probability: 0
   _Armor:
-  - code: -1
-    probability: 0
-  - code: -1
-    probability: 0
-  - code: -1
-    probability: 0
+  - code: 103
+    probability: 15
+  - code: 104
+    probability: 10
+  - code: 105
+    probability: 0.1
   - code: -1
     probability: 0
   - code: -1
     probability: 0
   _Weapon:
-  - code: -1
-    probability: 0
-  - code: -1
-    probability: 0
-  - code: -1
-    probability: 0
+  - code: 103
+    probability: 15
+  - code: 104
+    probability: 10
+  - code: 105
+    probability: 0.1
   - code: -1
     probability: 0
   - code: -1

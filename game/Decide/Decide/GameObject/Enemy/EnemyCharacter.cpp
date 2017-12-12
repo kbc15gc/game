@@ -539,13 +539,13 @@ void EnemyCharacter::_BuildSoundTable() {
 
 }
 
-void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, float volume, bool is3D, bool isLoop) {
 	if (idx >= SoundIndex::Max) {
 		// Œp³æ“Æ©‚ÌŒø‰Ê‰¹B
 
 		_SoundData.resize(static_cast<int>(idx) + 1);
 	}
-	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, is3D, isLoop));
+	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, volume, is3D, isLoop));
 }
 
 EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool isLoop, bool is3D) {

@@ -321,7 +321,7 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 			//配列に追加。
 			Builds.push_back(obj);
 
-			if (objInfo[i]->coll)
+			if (objInfo[i]->coll >= 1)
 			{
 				// ユニティーで設定したコライダーを使用してコリジョンを作成する。
 				while (++i < static_cast<int>(objInfo.size()) && strcmp(objInfo[i]->filename, "coll") == 0)

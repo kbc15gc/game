@@ -21,6 +21,7 @@ public:
 
 	void Init(const wstring& filename);
 	void Play();
+	void test();
 private:
 	//GraphBuilderインターフェース
 	IGraphBuilder* _GraphBuilder = nullptr;
