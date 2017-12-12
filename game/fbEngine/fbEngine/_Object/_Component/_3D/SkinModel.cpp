@@ -32,7 +32,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_Light(nullptr),
 	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
-	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING | ModelEffectE::ZENABLE)),
+	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
 	_CullMode(D3DCULL_CCW),
 	_Culling(new CObjectFrustumCulling)
 {
@@ -345,17 +345,13 @@ void SkinModel::DrawMeshContainer(
 		if (_IsSky)
 		{
 			_Effect->SetTexture("g_NightTexture", INSTANCE(SceneManager)->GetSky()->GetNightTexture());
-		}
-	
-		if ((_ModelEffect & ModelEffectE::ZENABLE) > 0)
-		{
-			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
 		}
 		else
 		{
-			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 		}
 
 

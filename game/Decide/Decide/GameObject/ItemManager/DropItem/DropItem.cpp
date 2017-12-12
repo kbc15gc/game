@@ -68,7 +68,6 @@ void DropItem::Awake() {
 	_Model->SetModelEffect(ModelEffectE::SPECULAR);
 	_Model->SetModelEffect(ModelEffectE::ALPHA);
 
-	_Model->SetModelEffect(ModelEffectE::ZENABLE, true);
 	_Model->SetModelEffect(ModelEffectE::DITHERING, true);
 
 	//キャラクターライトを設定。
