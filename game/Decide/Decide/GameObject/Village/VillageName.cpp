@@ -4,7 +4,7 @@
 
 static const string LocationNames[] =
 {
-	"–³–¼",
+	"ƒhƒ‰ƒŠƒAƒ“‚ÌZˆ",
 	"‚Í‚¶‚Ü‚è‚ÌW—",
 	"ë—Â‚Ì‘º",
 	"”É‰h‚ÌŠX",

@@ -371,8 +371,10 @@ void ItemWindow::Input()
 				else if (_NowSelectItem >= itemCount)
 				{
 					//‘I‘ðˆÊ’u‚ðˆêŒÂ‰º‚°‚é.
-					_NowSelectItem = max(0, _Cursor->PrevMove(1).rangeIndex);
+					int index = _Cursor->PrevMove(1).rangeIndex;
+					_NowSelectItem = max(0, index);
 				}
+
 				if (itemCount <= 0)
 				{
 					_Cursor->transform->SetParent(nullptr);

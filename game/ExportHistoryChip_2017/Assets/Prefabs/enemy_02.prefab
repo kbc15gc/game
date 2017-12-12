@@ -118,7 +118,39 @@ MonoBehaviour:
   _CRT: 10
   _LV: 30
   _DROPEXP: 200
-  _MONEY: 500
-  _Item: 02000000ffffffffffffffffffffffffffffffff
-  _Armor: ffffffffffffffffffffffffffffffffffffffff
-  _Weapon: ffffffffffffffffffffffffffffffffffffffff
+  _MONEY: 300
+  _Item:
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  _Armor:
+  - code: 7
+    probability: 15
+  - code: 107
+    probability: 10
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  _Weapon:
+  - code: 7
+    probability: 15
+  - code: 107
+    probability: 10
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  _ColorFlag: 0
+  _Color: {r: 1, g: 1, b: 1, a: 1}

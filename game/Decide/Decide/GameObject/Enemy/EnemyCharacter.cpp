@@ -41,7 +41,6 @@ EnemyCharacter::~EnemyCharacter()
 void EnemyCharacter::Awake() {
 	_locationCode = LocationCodeE::None;
 	_Type = vector<vector<int>>(static_cast<int>(Item::ItemCodeE::Max), vector<int>(LoadEnemyInfo::dropMax, -1));
-
 	// このクラスで使用するコンポーネントを追加。
 	// ※下記の関数を継承先のクラスで上書きしている場合はそちらが呼ばれる。
 	_BuildMyComponents();
@@ -354,7 +353,8 @@ void EnemyCharacter::Drop() {
 		for (int i = 0; i < LoadEnemyInfo::dropMax; i++)
 		{
 			//落とすアイテムかをチェック。
-			if (_Type[idx][i] != -1)
+			if (_Type[idx][i] != -1 &&
+				(rand() % 100) < _Probability[idx * 5 + i])
 			{
 				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。
@@ -539,13 +539,13 @@ void EnemyCharacter::_BuildSoundTable() {
 
 }
 
-void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, bool is3D, bool isLoop) {
+void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, float volume, bool is3D, bool isLoop) {
 	if (idx >= SoundIndex::Max) {
 		// 継承先独自の効果音。
 
 		_SoundData.resize(static_cast<int>(idx) + 1);
 	}
-	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, is3D, isLoop));
+	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, volume, is3D, isLoop));
 }
 
 EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool isLoop, bool is3D) {

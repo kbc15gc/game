@@ -8,6 +8,8 @@ namespace
 	//オブジェクトを識別するタイプ。
 	const char* ObjectType[3] = { "Obj","NPC","Enemy" };
 
+	string filePath = "C:\\KBCGame\\ReHistory\\SaveData\\LocationHistory.csv";
+
 	/**
 	* チップIDからビット値を求める.
 	*/
@@ -52,29 +54,32 @@ void HistoryManager::Start()
 	}*/
 	_LocationHistoryList.clear();
 
+
 	if (IS_CONTINUE)
 	{
 		//CSVから歴史情報読み取り。
-		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		Support::LoadCSVData<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 	else
 	{
 		//CSVから歴史情報読み取り。
-		Support::LoadCSVData<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
-		FOR(i, _LocationHistoryList.size())
+		FOR(i, LocationCodeE::Common)
 		{
+			_LocationHistoryList.push_back(unique_ptr<LocationHistoryInfo>(new LocationHistoryInfo()));
+			_LocationHistoryList[i]->_LocationID = (LocationCodeE)i;
 			for (int j = 0; j < (int)ChipID::ChipNum; j++)
 			{
-				_LocationHistoryList.at(i)->_ChipSlot[j] = ChipID::None;
+				_LocationHistoryList[i]->_ChipSlot[j] = ChipID::None;
 			}
 		}
-		Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+		Support::OutputCSV<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 	}
 
 	_HistoryMenu = (HistoryMenu*)INSTANCE(GameObjectManager)->FindObject("HistoryMenu");
 	_HistoryBook = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 
-	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 9);
+	_MysteryLight = INSTANCE(GameObjectManager)->AddNew<MysteryLight>("MysteryLight", 10);
+	_MysteryLight->SetActive(false, true);
 
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
@@ -112,7 +117,52 @@ void HistoryManager::Start()
 			HistoryPage* page = _HistoryBook->PutInChip(_LocationHistoryList.at(i)->_ChipSlot[j], _LocationHistoryList.at(i)->_LocationID, j);
 			page->ChangeState(HistoryPage::StateCodeE::Close);
 		}
-		_ChangeLocation(_LocationHistoryList.at(i)->_LocationID);
+
+		LocationCodeE lCode = _LocationHistoryList.at(i)->_LocationID;
+		//チップの状態からグループを計算。
+		const int group = _CalcPattern(_LocationHistoryList[(int)lCode].get());
+		_NowGroupIDList[(int)lCode] = group;
+		//どれかのグループに該当するのなら。
+		char path[128];
+		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
+			//パス生成
+			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)lCode, 'A' + _NowGroupIDList[(int)lCode], ObjectType[type]);
+			_CreateObject(lCode, path, static_cast<LoadObjectType>(type));
+			ZeroMemory(path, 128);
+		}
+	}
+}
+
+/**
+* 更新.
+*/
+void HistoryManager::Evolution()
+{
+	if (_IsEvolution)
+	{
+		char path[128];
+		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
+			//パス生成
+			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)_EvolutionLocation, 'A' + _NowGroupIDList[(int)_EvolutionLocation], ObjectType[type]);
+			_CreateObject(_EvolutionLocation, path, static_cast<LoadObjectType>(type));
+			ZeroMemory(path, 128);
+		}
+		if (_NowLocationCode == (int)_EvolutionLocation)
+		{
+			//_PlayerCamera->transform->SetParent(_Player->transform);
+			_Player->transform->SetLocalPosition(LocationPosition[(int)_EvolutionLocation]);
+			_PlayerCamera->LookAtTarget();
+			//_PlayerCamera->transform->SetParent(nullptr);
+
+			Camera* camera = _PlayerCamera->GetComponent<Camera>();
+			Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
+			cameraFoward.Normalize();
+			cameraFoward.y -= 0.5f;
+			cameraFoward.Scale(0.8f);
+			_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
+			_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
+		}
+		_IsEvolution = false;
 	}
 }
 
@@ -130,10 +180,10 @@ bool HistoryManager::SetHistoryChip(LocationCodeE location, ChipID chip, int ind
 	_LocationHistoryList[(int)location]->SetData(_HistoryBook->GetLocationList(location));
 
 	//変更したので歴史を改変させる.
-	_ChangeLocation(location);
+	//_ChangeLocation(location);
 
 	//データを保存.
-	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	Support::OutputCSV<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 
 	return true;
 }
@@ -149,39 +199,12 @@ void HistoryManager::_ChangeLocation(LocationCodeE location)
 	const int group = _CalcPattern(_LocationHistoryList[(int)location].get());
 
 	//どれかのグループに該当するのなら。
-	if (group >= 0)
+	if (_NowGroupIDList[(int)location] != group)
 	{
-
-		if (_NowGroupIDList[(int)location] != group)
-		{
-			if (_NowLocationCode == (int)location)
-			{
-				//_PlayerCamera->transform->SetParent(_Player->transform);
-				_Player->transform->SetLocalPosition(LocationPosition[(int)location]);
-				_PlayerCamera->LookAtTarget();
-				//_PlayerCamera->transform->SetParent(nullptr);
-
-				Camera* camera = _PlayerCamera->GetComponent<Camera>();
-				Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
-				cameraFoward.Normalize();
-				cameraFoward.y -= 0.5f;
-				cameraFoward.Scale(0.8f);
-				_HistoryBook->transform->SetLocalPosition(_PlayerCamera->transform->GetPosition() + cameraFoward);
-				_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
-				
-			}
-			_MysteryLight->SetActive(true, true);
-			_NowGroupIDList[(int)location] = group;
-		}
-
-		char path[128];
-
-		for (int type = static_cast<int>(LoadObjectType::Object); type < static_cast<int>(LoadObjectType::Max); type++) {
-			//パス生成
-			sprintf(path, "Asset/Data/GroupData/Group%d%c%s.csv", (int)location, 'A' + group, ObjectType[type]);
-			_CreateObject(location, path, static_cast<LoadObjectType>(type));
-			ZeroMemory(path, 128);
-		}
+		_MysteryLight->SetActive(true, true);
+		_NowGroupIDList[(int)location] = group;
+		_IsEvolution = true;
+		_EvolutionLocation = location;
 	}
 }
 
@@ -212,29 +235,10 @@ int HistoryManager::_CalcPattern(const LocationHistoryInfo * info)
 			groupBit += ChipIDToBit(group->Slot[i]);
 		}
 
-		//bool isMatch = true;
-		//各スロットを比較
-		/*for (int i = 0; i < (int)ChipID::ChipNum; i++)
-		{
-			if (group->Slot[i] != info->_ChipSlot[i])
-			{
-				isMatch = false;
-			}
-		}*/
-
 		if (groupBit == infoBit)
 		{
 			return group->GroupID;
 		}
-
-		//if (!isMatch)
-		//{
-		//	//マッチングしていないので次へ.
-		//	continue;
-		//}
-
-		////パターン一致したのでID設定。
-		//return group->GroupID;
 	}
 
 	return 0;
@@ -262,16 +266,16 @@ void HistoryManager::_CreateObject(LocationCodeE location, const char * path, Hi
 		CreateBuilding(path, _GameObjectList[static_cast<int>(location)]);
 
 		//第3の村以降のみ。
-		if (location == LocationCodeE::Prosperity)
-		{
-			for (auto obj : _GameObjectList[static_cast<int>(location)]) {
-				//X軸に180ど回転させる。
-				Quaternion q = Quaternion::Identity;
-				q.SetRotation(Vector3::axisX, PI);
-				q.Multiply(obj->transform->GetRotation());
-				obj->transform->SetRotation(q);
-			}
-		}
+		//if (location == LocationCodeE::Prosperity)
+		//{
+		//	for (auto obj : _GameObjectList[static_cast<int>(location)]) {
+		//		//X軸に180ど回転させる。
+		//		Quaternion q = Quaternion::Identity;
+		//		q.SetRotation(Vector3::axisX, PI);
+		//		q.Multiply(obj->transform->GetRotation());
+		//		obj->transform->SetRotation(q);
+		//	}
+		//}
 	}
 	else if (type == HistoryManager::LoadObjectType::NPC)
 	{
@@ -307,44 +311,6 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 			ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>(objInfo[i]->filename, 2);
 
 			obj->transform->SetLocalPosition(objInfo[i]->pos);
-
-
-			//// Unityから吐き出したままの値では回転がおかしいので修正。
-			//{
-			//	// X軸の回転を反転。
-			//	//objInfo[i]->ang.x *= -1.0f;
-			//	// Z軸の回転を反転。
-			//	//objInfo[i]->ang.z *= -1.0f;
-
-			//	D3DXMATRIX identity;
-			//	D3DXMatrixIdentity(&identity);
-			//	D3DXMATRIX mat = objInfo[i]->ang.GetRotationMatrix();
-
-			//	Vector3 vec1, vec2;
-			//	vec1.x = identity.m[0][0];
-			//	vec1.y = identity.m[0][1];
-			//	vec1.z = identity.m[0][2];
-
-			//	vec2.x = mat.m[0][0];
-			//	vec2.y = 0.0f;	// Y軸回転のみを求めたいので高さは省く。
-			//	vec2.z = mat.m[0][2];
-
-			//	Quaternion rotY, rotYInv;
-			//	rotY.CreateVector3ToVector3(vec1, vec2);
-			//	rotYInv = rotY;
-			//	rotYInv.Inverse();
-
-			//	// Y軸回転を一旦除く。
-			//	objInfo[i]->ang.Multiply(rotYInv);
-
-			//	// XZの回転を反転。
-			//	//objInfo[i]->ang.z *= -1.0f;
-			//	//objInfo[i]->ang.x *= -1.0f;
-			//	objInfo[i]->ang.w *= 1.0f;
-
-			//	// Y軸の回転は正しいのでそのまま。
-			//	objInfo[i]->ang.Multiply(rotY);
-			//}
 
 			obj->transform->SetRotation(objInfo[i]->ang);
 
@@ -393,6 +359,15 @@ vector<GameObject*>& HistoryManager::CreateBuilding(const char* path, vector<Gam
 	objInfo.clear();
 
 	return Builds;
+}
+
+void HistoryManager::ChangeLocation(LocationCodeE value)
+{
+	_ChangeLocation(value);
+	if (!_IsEvolution)
+	{
+		_HistoryMenu->SetIsOperation(true);
+	}
 }
 
 void HistoryManager::_CreateNPC(LocationCodeE location, const char * path)
@@ -463,8 +438,8 @@ void HistoryManager::PutOutPage(LocationCodeE location,vector<HistoryPage*>& lis
 	_LocationHistoryList[(int)location]->SetData(list);
 
 	//変更したので歴史を改変させる.
-	_ChangeLocation(location);
+	//_ChangeLocation(location);
 
 	//データを保存.
-	Support::OutputCSV<LocationHistoryInfo>("Asset/Data/LocationHistory.csv", HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
+	Support::OutputCSV<LocationHistoryInfo>(filePath.c_str(), HistoryInfoData, ARRAY_SIZE(HistoryInfoData), _LocationHistoryList);
 }

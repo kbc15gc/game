@@ -119,6 +119,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			newData->Object->SetDropEXP(newData->InfoData->exp);
 			newData->Object->SetDropMoney(newData->InfoData->money);
 			newData->Object->SetItem(newData->InfoData->item, newData->InfoData->armor, newData->InfoData->weapon);
+			newData->Object->SetProbability(newData->InfoData->probability);
 			//カラーを設定するフラグの場合。
 			if (newData->InfoData->colorflag)
 			{
@@ -186,6 +187,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 				case EnemyCharacter::EnemyType::Golem:
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Red);
+					enemy->Object->SetBarPos({ 0.0f,4.0f,0.0f });
 					break;
 				case EnemyCharacter::EnemyType::BossGolem:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
@@ -208,6 +210,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetDropEXP(enemy->InfoData->exp);
 			enemy->Object->SetDropMoney(enemy->InfoData->money);
 			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
+			enemy->Object->SetProbability(enemy->InfoData->probability);
 			enemy->Object->SetLocationCode(code);
 			//カラーを設定。
 			Color c;

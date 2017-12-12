@@ -37,7 +37,7 @@ void EnemyGolem::_StartSubClass() {
 
 	// 攻撃処理を定義。
 	_SingleAttack.reset(new EnemySingleAttack(this));
-	_SingleAttack->Init(1.5f, static_cast<int>(EnemyGolemAnim::Attack01), 0.2f);
+	_SingleAttack->Init(1.5f, static_cast<int>(EnemyGolemAnim::Attack01), 0.0f,0.5f);
 
 	// 初期ステートに移行。
 	_initState = State::Wandering;

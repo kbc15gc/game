@@ -74,6 +74,12 @@ public:
 		void Play() {
 			if (Source) {
 				Source->SetVolume(volume);
+
+				//@todo for debug 
+				char text[256];
+				sprintf(text, "ChipNumber %f\n", volume);
+				OutputDebugString(text);
+
 				Source->Play(IsLoop);
 			}
 		}
@@ -208,9 +214,10 @@ public:
 
 	// 音再生関数。
 	// 引数：	効果音テーブルの添え字。
-	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx) {
+	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx, float volume = 1.0f) {
 		if (_SoundData[static_cast<int>(idx)]->Source) {
 			// サウンドソースが作成されている。
+			_SoundData[static_cast<int>(idx)]->Source->SetVolume(volume);
 			_SoundData[static_cast<int>(idx)]->Source->Play(_SoundData[static_cast<int>(idx)]->IsLoop);
 		}
 	}
@@ -406,6 +413,14 @@ public:
 		}
 	}
 
+	void SetProbability(float pro[])
+	{
+		FOR(i, 5 * 3)
+		{
+			_Probability[i] = pro[i];
+		}
+	}
+
 	//@todo for debug 
 	//Unityで設定したカラーを設定。
 	//仮設定なので後で修正してね。
@@ -575,7 +590,7 @@ protected:
 	//			waveファイルの名前(.wavまで含めて)。
 	//			3Dサウンドにするか。
 	//			ループ再生するか。
-	void _ConfigSoundData(SoundIndex idx, char* filePath, bool is3D = false, bool isLoop = false);
+	void _ConfigSoundData(SoundIndex idx, char* filePath, float volume = 1.0f, bool is3D = false, bool isLoop = false);
 
 	// 現在のステートの処理が終了したときに呼ばれるコールバック関数。
 	// 引数;	終了したステートのタイプ。
@@ -721,6 +736,8 @@ protected:
 	EnemyAttack* _nowAttack = nullptr;
 
 	vector<vector<int>> _Type;//落とすアイテムのID。
+	//ドロップ確率。
+	float _Probability[5 * 3];
 
 	Player* _Player = nullptr;			//プレイヤー
 

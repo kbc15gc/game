@@ -107,11 +107,10 @@ public:
 	//プレイヤー攻撃ボイス
 	enum class AttackBoice
 	{
-		Start = 0,
-		Attack1 = Start,
+		Attack1,
 		Attack2,
 		Attack3,
-		End = Attack3
+		Num,
 	};
 
 	Player(const char* name);
@@ -217,6 +216,7 @@ public:
 	}
 	//プレイヤーストップから戻す関数。
 	//ステートアイドルに戻ります。
+	//1度だけ呼んでください。
 	void PlayerStopDisable()
 	{
 		ChangeState(State::Idol);
@@ -307,6 +307,16 @@ public:
 	{
 		return _IsSpeak;
 	}
+	void SetSpeakFlag(bool flag)
+	{
+		_IsSpeak = flag;
+	}
+	//地面についているかのフラグゲット。
+	bool GetIsGround()
+	{
+		return _CharacterController->IsOnGround();
+	}
+
 private:
 
 	//アニメーションイベント
@@ -450,7 +460,7 @@ private:
 	//攻撃時のSE
 	SoundSource* _AttackSoound = nullptr;
 	//攻撃ボイス
-	vector<SoundSource*> _AttackBoiceSound;
+	SoundSource* _AttackBoiceSound[static_cast<int>(AttackBoice::Num)];
 	//攻撃ボイスENUM
 	AttackBoice	_AttackBoice;
 

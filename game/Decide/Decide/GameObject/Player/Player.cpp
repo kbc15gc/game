@@ -214,12 +214,12 @@ void Player::Awake()
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
 	//攻撃ボイス初期化
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0));
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0));
-	_AttackBoiceSound.push_back(INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0));
-	_AttackBoiceSound[(int)AttackBoice::Attack1]->Init("Asset/Sound/Player/attack1.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack2]->Init("Asset/Sound/Player/attack2.wav");
-	_AttackBoiceSound[(int)AttackBoice::Attack3]->Init("Asset/Sound/Player/attack3.wav");
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack3)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack3", 0);
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)]->Init("Asset/Sound/Player/attack1.wav");
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)]->Init("Asset/Sound/Player/attack2.wav");
+	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack3)]->Init("Asset/Sound/Player/attack3.wav");
 #ifdef _DEBUG
 	_outputData = AddComponent<OutputData>();
 #endif
@@ -383,6 +383,10 @@ void Player::Update()
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
 		TakeDrop(1000, 1000);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(0, 2, transform->GetPosition(), 2);
 	}
 #endif
 }
@@ -558,11 +562,10 @@ void Player::Releace()
 	_CurrentState = nullptr;
 	_HPBar = nullptr;
 	//_MPBar = nullptr;
-	for (auto &p : _AttackBoiceSound)
+	for (auto& p : _AttackBoiceSound)
 	{
 		p = nullptr;
 	}
-	_AttackBoiceSound.clear();
 	_DeathSound = nullptr;
 	//_AnimationEventPlayer = nullptr;
 }
@@ -848,8 +851,7 @@ void Player::Speak()
 					_HPBar->RenderDisable();
 					//_MPBar->RenderDisable();
 					//話すフラグセット
-					_IsSpeak = true;
-					npc->SetIsSpeak(_IsSpeak);
+					npc->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
 					//ジャンプしなくなる
 					_NoJump = true;
@@ -860,8 +862,7 @@ void Player::Speak()
 			else
 			{
 				//話すNPCがいないので
-				_IsSpeak = false;
-				npc->SetIsSpeak(_IsSpeak);
+				npc->SetIsSpeak(false);
 				//話し終わると
 				if (_NoJump)
 				{

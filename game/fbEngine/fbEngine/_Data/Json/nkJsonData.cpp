@@ -14,7 +14,7 @@
 bool JsonData::Load(string filename)
 {
 	ifstream file_in;
-	file_in.open("Asset/Data/SaveData/" + filename + ".json");
+	file_in.open("C:\\KBCGame\\ReHistory\\SaveData\\" + filename + ".json");
 
 	if (file_in.fail())
 	{
@@ -40,7 +40,7 @@ void JsonData::Save(string filename)
 	picojson::value DataValue(DataObject_);
 
 	ofstream file_out;
-	file_out.open("Asset/Data/SaveData/" + filename + ".json");
+	file_out.open("C:\\KBCGame\\ReHistory\\SaveData\\" + filename + ".json");
 
 	file_out << DataValue.serialize(true);
 }

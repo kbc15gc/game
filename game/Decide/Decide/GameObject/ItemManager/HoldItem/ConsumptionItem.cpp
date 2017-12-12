@@ -67,7 +67,12 @@ bool ConsumptionItem::UseItem() {
 
 		// デバフアイテム。
 		// 効果範囲内のエネミーを取得。
-		int attr = Collision_ID::ENEMY;
+
+		//@todo for debug
+		//とりあえず、ボスにもデバフ使えるように。
+		//これでいいかあとで見てください。
+
+		int attr = Collision_ID::ENEMY | Collision_ID::BOSS;
 		vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> hit;
 		fbPhysicsCallback::AllHitsContactResultCallback callback;
 		INSTANCE(PhysicsWorld)->AllHitsContactTest(_gost->GetAttachCollision(), &hit,&callback, attr);

@@ -85,8 +85,9 @@ void GameScene::Start()
 	{
 		//オープニング動画。
 		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
-		movie->Init(L"op.wmv");
-		movie->Play();
+		//movie->Init(L"op.wmv");
+		//movie->Play();
+		movie->test();
 	}
 
 	INSTANCE(EventManager)->ReSet();
@@ -138,7 +139,7 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	//LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -146,12 +147,12 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	//enemy->SetParamAll(Color, param);
+	enemy->SetParamAll(Color, param);
 	
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
-	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 10);
+	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -318,10 +319,10 @@ void GameScene::_NewChip()
 	}
 
 	//狩
-	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Hunt))
+	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Copper))
 	{
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("HuntChip", 2);
-		chip->SetChipID(ChipID::Hunt);
+		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("CopperChip", 2);
+		chip->SetChipID(ChipID::Copper);
 	}
 
 	//農
@@ -341,13 +342,6 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("OilChip", 2);
 		chip->SetChipID(ChipID::Oil);
-	}
-	//@todo for debug
-	//テスト用
-	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Medicine))
-	{
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("MedicineChip", 2);
-		chip->SetChipID(ChipID::Medicine);
 	}
 }
 

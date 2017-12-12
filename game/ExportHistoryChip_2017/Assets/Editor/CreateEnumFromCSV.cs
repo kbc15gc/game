@@ -5,35 +5,62 @@ using UnityEditor;
 using System.IO;
 using System;
 
-public class CreateEnumFromCSV : Editor
+public class CreateEnumFromCSV : EditorWindow
 {
-
-
-    //Enumを定義したファイルを作成。
+    CodeE code = CodeE.ItemCodeE;
+    //! MenuItem("メニュー名/項目名") のフォーマットで記載してね
     [MenuItem("Create/CreateEnum")]
-    static public void CreateEnum()
+    static void ShowWindow()
+    {
+        // ウィンドウを表示！
+        EditorWindow.GetWindow<CreateEnumFromCSV>();
+    }
+
+    /**
+     * ウィンドウの中身
+     */
+    void OnGUI()
+    {
+        
+        code = (CodeE)EditorGUILayout.EnumPopup(code);
+        if (GUILayout.Button("作成"))
+        {
+            CreateEnum(code.ToString());
+        }
+    }
+
+    static public void CreateEnum(string name)
     {
         //
         var fullpath = EditorUtility.OpenFilePanel("ファイルを指定してください。", "", "csv");
 
         //
         var idx = fullpath.IndexOf("Assets");
-        fullpath.Substring(idx);
+        //fullpath.Substring(idx);
 
         //読み込むファイル。
         FileStream resd = new FileStream(fullpath, FileMode.Open, FileAccess.Read);
         StreamReader rw = new StreamReader(resd);
 
         //書き込むファイル。
-        FileStream write = new FileStream("enum", FileMode.Create, FileAccess.Write);
+        FileStream write = new FileStream("Assets/" + name + ".cs", FileMode.Create, FileAccess.ReadWrite);
         StreamWriter sw = new StreamWriter(write);
 
-        sw.WriteLine("public enum" + "item" + "{");
+        rw.ReadLine();
+        sw.WriteLine("public enum " + name + "{");
+        sw.WriteLine("    None = -1,");
 
-        while (true)
+        while (!rw.EndOfStream)
         {
-            string output = string.Format("", "");
-            break;
+            string[] line = rw.ReadLine().Split(',');
+            string output = string.Format("    {0} = {1}", line[2], line[1]);
+            output = output.Replace(".", "");
+            output = output.Replace("・", "");
+            output = output.Replace("-", "");
+            output = output.Replace("！", "");
+            if (!rw.EndOfStream)
+                output += ',';
+            sw.WriteLine(output);
         }
 
         sw.WriteLine("}");
@@ -41,7 +68,9 @@ public class CreateEnumFromCSV : Editor
         resd.Close();
         rw.Close();
 
-        write.Close();
+        sw.Flush();
+
         sw.Close();
+        write.Close();
     }
 }

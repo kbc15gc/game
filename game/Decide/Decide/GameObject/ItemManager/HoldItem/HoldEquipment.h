@@ -8,6 +8,8 @@ class HoldEquipment :public HoldItemBase
 {
 public:
 	// コメントの数字は基準値からの加算率の幅。
+	//@todo for debug
+	//後で調整してね。
 	enum Rank
 	{
 		SS = 0, //91 ~ 100	神造級。
@@ -104,7 +106,7 @@ public:
 	//値段取得。
 	int GetValue()override
 	{
-		return _Info->Value * GetRevision();
+		return  _Info->Value + _Info->Value * GetRevision();
 	}
 private:
 	// 外部から読み込んだデータを設定。
