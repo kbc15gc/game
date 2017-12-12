@@ -21,7 +21,6 @@ enum ModelEffectE
 	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
 	ALPHA = BIT(8),				//!< アルファ.
 	DITHERING = BIT(9),			//!< ディザリング.
-	ZENABLE = BIT(10),			//!< Zテスト.
 };
 
 /**
@@ -99,7 +98,6 @@ public:
 	void SetSky()
 	{
 		_IsSky = true;
-		SetModelEffect(ModelEffectE::ZENABLE, false);
 		SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncSkyFromAtomosphere);
 	}
 	//void SetTextureBlend(const Color& c)

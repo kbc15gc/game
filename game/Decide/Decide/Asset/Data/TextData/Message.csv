@@ -39,7 +39,7 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 37,橋の向こうのモンスター。,こわくて、ろくに村からでれん。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 38,橋の向こうのモンスター。,誰か退治してくれないかなぁ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 39,モンスターについて。,そこの最近植えた小さい木の\n前の二人に聞きな。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-40,なにして遊ぼうかなぁ。,なにして遊ぼうかなぁ。,-1,-1,-1,Asset/Sound/NPC/NPC/anone.wav
+40,なにして遊ぼうかなぁ。,なにして遊ぼうかなぁ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_42.wav
 41,賑やかな。,最近あんたのおかげで賑やかになってきたよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 42,村の発展。,あんたのおかげだよ。ありがとう。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_45.wav
 43,この先は狩り場。,狩場として残しているよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
@@ -63,7 +63,7 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 61,なにかお探しですか。,村をでて階段があります。\nそこを上ると魔物がたくさんいます。,62,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 62,なにかお探しですか。,やつらは、魔王より授かったものを守っていると噂です。,63,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 63,なにかお探しですか。,石と木に囲まれた場所にあるとのことです。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-64,なにして遊ぼう。,へへへ。,-1,-1,-1,Asset/Sound/NPC/NPC/anone.wav
+64,なにして遊ぼう。,へへへ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_20.wav
 65,旅の方に。,さまざまな技術を学びました。\n家や生活がさらによくなりました！,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 66,新しい家だ。,これが新しい家か。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 67,新しい家。,これが。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
@@ -75,3 +75,16 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 73,魔王の手下について。,今では魔王の手下で一番強くなるほどに。,74,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 74,魔王の手下について。,やつは、橋を渡った先の階段を上り\nそこから見える、岩に囲まれた場所に\n兵士をつれているようです。,75,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 75,魔王の手下について。,十分に準備して臨んでください。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+76,良い街に。,良い街になりました。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+77,噴水だ。,わーい。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+78,ごきげんよう。,いいお天気ですね。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+79,路地裏に怪しい店。,怪しい店があったよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+80,路地裏の店。,珍しいものがおいてあったよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+81,路地裏の店,結構な値段だった。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+82,(*´σｰ｀)ｴﾍﾍ,えへへ,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_20.wav
+83,街だああ。,こんな街あこがれてたずら。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+84,今日も一日。,がんばるぞい。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+85,どこかの洞窟に。,珍しいモノを持った魔物がいるらしいわ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+86,色が変わった魔物。,普通の魔物より強いらしいわ。,87,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+87,色が変わった魔物。,気を付けてね。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+88,魔王の城へ。,魔王を倒してください。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
