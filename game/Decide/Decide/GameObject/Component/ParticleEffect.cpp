@@ -7,7 +7,8 @@ void ParticleEffect::Awake() {
 	_HeelHpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelHPParticleEffect", 10);
 	_HeelMpParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelMpParticleEffect", 10);
 	_HeelParticleAssistEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("HeelParticleEffectAssist", 10);
-
+	_BigMonsterDebuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("_BigMonsterDebuffParticleEmitter", 10);
+	
 	_LevelUPParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("LevelUPEffect", 10);
 
 	_RareDropEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("RareDropEffect", 10);
@@ -17,7 +18,7 @@ void ParticleEffect::Awake() {
 	_HeelParticleAssistParam.texturePath = "ItemEfectBase.png";
 	_HeelParticleAssistParam.alphaBlendMode = 1;
 	_HeelParticleAssistParam.addVelocityRandomMargih = Vector3::zero;
-	_HeelParticleAssistParam.brightness = 3.0f;
+	_HeelParticleAssistParam.brightness = 5.0f;
 	_HeelParticleAssistParam.fadeTime = 1.0f;
 	_HeelParticleAssistParam.gravity = 0.0f;
 	_HeelParticleAssistParam.initAlpha = 1.0f;
@@ -28,7 +29,7 @@ void ParticleEffect::Awake() {
 	_HeelParticleAssistParam.isBillboard = true;
 	_HeelParticleAssistParam.isFade = true;
 	_HeelParticleAssistParam.life = 0.1f;
-	_HeelParticleAssistParam.size = Vector2(0.03f, 0.03f);
+	_HeelParticleAssistParam.size = Vector2(0.05f, 0.03f);
 	_HeelParticleAssistParam.mulColor = Color::yellow;
 	_HeelParticleAssistParam.isParent = true;
 }
@@ -40,7 +41,7 @@ void ParticleEffect::HeelHpEffect() {
 	_HeelHpParticleParam.texturePath = "ItemEfectBase.png";
 	_HeelHpParticleParam.alphaBlendMode = 1;
 	_HeelHpParticleParam.addVelocityRandomMargih = Vector3::zero;
-	_HeelHpParticleParam.brightness = 4.0f;
+	_HeelHpParticleParam.brightness = 5.0f;
 	_HeelHpParticleParam.fadeTime = 1.0f;
 	_HeelHpParticleParam.gravity = 0.0f;
 	_HeelHpParticleParam.initAlpha = 1.0f;
@@ -76,7 +77,7 @@ void ParticleEffect::HeelMpEffect() {
 	_HeelMpParticleParam.texturePath = "ItemEfectBase.png";
 	_HeelMpParticleParam.alphaBlendMode = 1;
 	_HeelMpParticleParam.addVelocityRandomMargih = Vector3::zero;
-	_HeelMpParticleParam.brightness = 10.0f;
+	_HeelMpParticleParam.brightness = 5.0f;
 	_HeelMpParticleParam.fadeTime = 1.0f;
 	_HeelMpParticleParam.gravity = 0.0f;
 	_HeelMpParticleParam.initAlpha = 1.0f;
@@ -86,7 +87,7 @@ void ParticleEffect::HeelMpEffect() {
 	_HeelMpParticleParam.intervalTime = 0.1f;
 	_HeelMpParticleParam.isBillboard = true;
 	_HeelMpParticleParam.isFade = true;
-	_HeelMpParticleParam.life = 0.1f;
+	_HeelMpParticleParam.life = 0.f;
 	_HeelMpParticleParam.size = Vector2(0.05f, 0.05f);
 	_HeelMpParticleParam.mulColor = Color::blue * 0.7f;
 
@@ -117,11 +118,11 @@ void ParticleEffect::BuffEffect() {
 	_BuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
 	_BuffParticleParam.initVelocity = Vector3::up * 5.0f;
 	_BuffParticleParam.initVelocityVelocityRandomMargin = Vector3::up;
-	_BuffParticleParam.intervalTime = 0.07f;
+	_BuffParticleParam.intervalTime = 0.05f;
 	_BuffParticleParam.isBillboard = true;
 	_BuffParticleParam.isFade = true;
 	_BuffParticleParam.life = 0.1f;
-	_BuffParticleParam.size = Vector2(0.01f, 0.3f);
+	_BuffParticleParam.size = Vector2(0.02f, 0.3f);
 	_BuffParticleParam.mulColor = Color::red;
 	_BuffParticleParam.isParent = true;
 
@@ -144,11 +145,11 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
 	_DebuffParticleParam.initVelocity = Vector3::down * 5.0f;
 	_DebuffParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
-	_DebuffParticleParam.intervalTime = 0.07f;
+	_DebuffParticleParam.intervalTime = 0.05f;
 	_DebuffParticleParam.isBillboard = true;
 	_DebuffParticleParam.isFade = true;
-	_DebuffParticleParam.life = 0.01f;
-	_DebuffParticleParam.size = Vector2(0.01f, 0.3f);
+	_DebuffParticleParam.life = 0.1f;
+	_DebuffParticleParam.size = Vector2(0.03f, 0.3f);
 	_DebuffParticleParam.mulColor = Color::blue;
 	_DebuffParticleParam.isParent = true;
 
@@ -157,7 +158,33 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleEmitter->Init(_DebuffParticleParam);
 	SetDebuffEffectFlag(true);
 }
+void ParticleEffect::BigMonsterDeBuffEffect()
+{
+	//デバフに使用するパーティクルパラメーターを設定。
+	_BigMonsterDebuffParticleParam.Init();
+	_BigMonsterDebuffParticleParam.texturePath = "ItemEfectBase.png";
+	_BigMonsterDebuffParticleParam.alphaBlendMode = 1;
+	_BigMonsterDebuffParticleParam.addVelocityRandomMargih = Vector3::zero;
+	_BigMonsterDebuffParticleParam.brightness = 1.0f;
+	_BigMonsterDebuffParticleParam.fadeTime = 0.1f;
+	_BigMonsterDebuffParticleParam.gravity = 0.0f;
+	_BigMonsterDebuffParticleParam.initAlpha = 1.0f;
+	_BigMonsterDebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
+	_BigMonsterDebuffParticleParam.initVelocity = Vector3::down * 5.0f;
+	_BigMonsterDebuffParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
+	_BigMonsterDebuffParticleParam.intervalTime = 0.05f;
+	_BigMonsterDebuffParticleParam.isBillboard = true;
+	_BigMonsterDebuffParticleParam.isFade = true;
+	_BigMonsterDebuffParticleParam.life = 0.5f;
+	_BigMonsterDebuffParticleParam.size = Vector2(0.03f, 0.3f);
+	_BigMonsterDebuffParticleParam.mulColor = Color::blue;
+	_BigMonsterDebuffParticleParam.isParent = true;
 
+	_BigMonsterDebuffParticleEmitter->transform->SetParent(transform);
+	_BigMonsterDebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.8f, 0.0f));
+	_BigMonsterDebuffParticleEmitter->Init(_DebuffParticleParam);
+	SetDebuffEffectFlag(true);
+}
 void ParticleEffect::FireFly()
 {	
 	//水辺の蛍にどうぞ。
