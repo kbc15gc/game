@@ -292,21 +292,6 @@ void Player::Start()
 		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
 	}
 
-#ifdef _DEBUG
-#define Start1
-	//#define Start2
-	//#define Start3
-#ifdef Start1
-	SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
-#elif defined(Start2)
-	SetRespawnPos(Vector3(-118.0f, 58.0f, 547.0f));
-#elif defined(Start3)
-	SetRespawnPos(Vector3(250.0f, 70.0f, -31.0f));
-	//250.71/67.2/-31.7
-#endif // Start1
-#endif
-
-
 	//ポジション
 	transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
@@ -383,6 +368,10 @@ void Player::Update()
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
 		TakeDrop(1000, 1000);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
+		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
+		item->Create(0, 2, transform->GetPosition(), 2);
 	}
 #endif
 }
@@ -847,8 +836,7 @@ void Player::Speak()
 					_HPBar->RenderDisable();
 					//_MPBar->RenderDisable();
 					//話すフラグセット
-					_IsSpeak = true;
-					npc->SetIsSpeak(_IsSpeak);
+					npc->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
 					//ジャンプしなくなる
 					_NoJump = true;
@@ -859,8 +847,7 @@ void Player::Speak()
 			else
 			{
 				//話すNPCがいないので
-				_IsSpeak = false;
-				npc->SetIsSpeak(_IsSpeak);
+				npc->SetIsSpeak(false);
 				//話し終わると
 				if (_NoJump)
 				{

@@ -88,11 +88,6 @@ void Chip::SetChipID(ChipID chipID)
 	//外部からセットしたIDを設定。
 	_ChipID = chipID;
 
-	//@todo for debug 
-	char text[256];
-	sprintf(text, "ChipNumber %d\n", chipID);
-	OutputDebugString(text);
-
 	//設定されたIDのモデルをロード。
 	_Model = AddComponent<SkinModel>();
 	SkinModelData* modelData = new SkinModelData();

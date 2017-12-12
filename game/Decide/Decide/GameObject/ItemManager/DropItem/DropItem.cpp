@@ -68,7 +68,6 @@ void DropItem::Awake() {
 	_Model->SetModelEffect(ModelEffectE::SPECULAR);
 	_Model->SetModelEffect(ModelEffectE::ALPHA);
 
-	_Model->SetModelEffect(ModelEffectE::ZENABLE, true);
 	_Model->SetModelEffect(ModelEffectE::DITHERING, true);
 
 	//キャラクターライトを設定。
@@ -117,7 +116,7 @@ void DropItem::Awake() {
 	_CCharacterController->SetGravity(_Gravity);
 
 	//テキストを出す位置。
-	_TextPos = Vector3(600.0f, 260.0f, 0.0f);
+	_TextPos = Vector3(580.0f, 460.0f, 0.0f);
 
 	//テキストサイズ。
 	_TextFontSize = 33.0f;
@@ -245,7 +244,7 @@ void DropItem::Update() {
 //生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
 void DropItem::_EquipmentRankCheck_SelectSEAndEffect()
 {
-	if (_DropItemInfo->TypeID != Item::ItemCodeE::Item&& static_cast<HoldEquipment*>(_DropEquipment)->GetRank() <= HoldEquipment::Rank::B)
+	if (_DropItemInfo->TypeID != Item::ItemCodeE::Item&& static_cast<HoldEquipment*>(_DropEquipment)->GetRank() <= HoldEquipment::Rank::A)
 	{
 		//S以上ならレアドロップ用のエフェクトとSE開始。
 		_RareDropPE->RareDropEffect();
@@ -335,7 +334,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 			_TextPos,
 			_TextFontSize,
 			Color::white,
-			AttentionTextOnly::MoveType::Down
+			AttentionTextOnly::MoveType::Up
 		);
 	}
 }

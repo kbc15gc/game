@@ -196,7 +196,7 @@ void ItemWindow::LateUpdate()
 				if (item->GetIsEquip())
 				{
 					_EIconImage->SetActive(true, true);
-					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition());
+					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition() + Vector3(180.0f, 0.0f, 0.0f));
 					//_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
 				}
 			}
