@@ -235,10 +235,7 @@ PSOutput PSMain(VS_OUTPUT In)
 
     float3 ambient = g_ambientLight.rgb;
 	
-    if (g_CharaLightParam.x)
-    {
         ambient += g_CharaLight.Ambient.rgb;
-    }
 
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;
