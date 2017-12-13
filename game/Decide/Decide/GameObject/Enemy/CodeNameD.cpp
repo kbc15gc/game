@@ -103,19 +103,19 @@ EnemyAttack* BossD::_AttackSelectSubClass() {
 	}
 }
 void BossD::AnimationEvent_Attack(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 5.0f, 1.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.5f), Quaternion::Identity, Vector3(2.5f, 5.0f, 2.5f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_Kick(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(2.5f, 3.0f, 3.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_Kiriage(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.5f), Quaternion::Identity, Vector3(1.0f, 5.0f, 1.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.5f), Quaternion::Identity, Vector3(3.0f, 5.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_360Attack(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(5.0f, 1.0f, 1.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(5.0f, 3.0f, 2.5f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::_EndNowStateCallback(State EndStateType) {

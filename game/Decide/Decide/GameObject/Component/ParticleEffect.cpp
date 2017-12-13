@@ -116,7 +116,7 @@ void ParticleEffect::BuffEffect() {
 	_BuffParticleParam.gravity = 0.0f;
 	_BuffParticleParam.initAlpha = 1.0f;
 	_BuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
-	_BuffParticleParam.initVelocity = Vector3::up * 5.0f;
+	_BuffParticleParam.initVelocity = Vector3::up * 2.5f;
 	_BuffParticleParam.initVelocityVelocityRandomMargin = Vector3::up;
 	_BuffParticleParam.intervalTime = 0.05f;
 	_BuffParticleParam.isBillboard = true;
@@ -143,14 +143,14 @@ void ParticleEffect::DeBuffEffect() {
 	_DebuffParticleParam.gravity = 0.0f;
 	_DebuffParticleParam.initAlpha = 1.0f;
 	_DebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
-	_DebuffParticleParam.initVelocity = Vector3::down * 5.0f;
+	_DebuffParticleParam.initVelocity = Vector3::down * 2.5f;
 	_DebuffParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
 	_DebuffParticleParam.intervalTime = 0.05f;
 	_DebuffParticleParam.isBillboard = true;
 	_DebuffParticleParam.isFade = true;
 	_DebuffParticleParam.life = 0.1f;
 	_DebuffParticleParam.size = Vector2(0.03f, 0.3f);
-	_DebuffParticleParam.mulColor = Color::blue;
+	_DebuffParticleParam.mulColor = Color::bluepo;
 	_DebuffParticleParam.isParent = true;
 
 	_DebuffParticleEmitter->transform->SetParent(transform);
@@ -170,20 +170,21 @@ void ParticleEffect::BigMonsterDeBuffEffect()
 	_BigMonsterDebuffParticleParam.gravity = 0.0f;
 	_BigMonsterDebuffParticleParam.initAlpha = 1.0f;
 	_BigMonsterDebuffParticleParam.initPositionRandomMargin = Vector3(0.5f, 0.5f, 0.5f);
-	_BigMonsterDebuffParticleParam.initVelocity = Vector3::down * 5.0f;
+	_BigMonsterDebuffParticleParam.initVelocity = Vector3::down * 2.5f;
 	_BigMonsterDebuffParticleParam.initVelocityVelocityRandomMargin = Vector3::down;
 	_BigMonsterDebuffParticleParam.intervalTime = 0.05f;
 	_BigMonsterDebuffParticleParam.isBillboard = true;
 	_BigMonsterDebuffParticleParam.isFade = true;
 	_BigMonsterDebuffParticleParam.life = 0.5f;
 	_BigMonsterDebuffParticleParam.size = Vector2(0.03f, 0.3f);
-	_BigMonsterDebuffParticleParam.mulColor = Color::blue;
+	_BigMonsterDebuffParticleParam.mulColor = Color::bluepo;
 	_BigMonsterDebuffParticleParam.isParent = true;
 
 	_BigMonsterDebuffParticleEmitter->transform->SetParent(transform);
-	_BigMonsterDebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f, 1.8f, 0.0f));
-	_BigMonsterDebuffParticleEmitter->Init(_DebuffParticleParam);
-	SetDebuffEffectFlag(true);
+	_BigMonsterDebuffParticleEmitter->transform->SetLocalPosition(Vector3(0.0f,3.2f,0.0f));
+
+	_BigMonsterDebuffParticleEmitter->Init(_BigMonsterDebuffParticleParam);
+	SetBigMonsterDebuffEffectFlag(true);
 }
 void ParticleEffect::FireFly()
 {	

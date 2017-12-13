@@ -90,12 +90,12 @@ EnemyAttack* BossGolem::_AttackSelectSubClass() {
 	
 }
 void BossGolem::AnimationEvent_Kobushi() {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(3.0f, 3.0f, 4.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 
 void BossGolem::AnimationEvent_Zutuki() {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.5f), Quaternion::Identity, Vector3(2.0f, 2.0f, 3.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 

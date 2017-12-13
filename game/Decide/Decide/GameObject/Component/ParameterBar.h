@@ -79,6 +79,7 @@ namespace {
 class BarAdapter :public GameObject {
 public:
 	BarAdapter(char* name) : GameObject(name) {
+		//constNum++;
 	};
 	~BarAdapter();
 	// バー生成関数。
@@ -180,6 +181,9 @@ private:
 	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
 	bool _isRender = true;
 	bool _isBackColor = false;	// バーの背景を描画するか。
+
+	//static int destNum;
+	//static int constNum;
 };
 
 // バー。
@@ -190,12 +194,15 @@ class ParameterBar :
 	static const Vector2 CreateScale_DefaultArg;
 public:
 	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+		//constNum++;
 #ifdef _DEBUG
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 
 	};
-	~ParameterBar();
+	~ParameterBar() {};
+
+	void OnDestroy()override;
 
 	// バー生成関数。
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
@@ -265,4 +272,6 @@ public:
 
 private:
 	BarAdapter* _Object = nullptr;
+	//static int destNum;
+	//static int constNum;
 };

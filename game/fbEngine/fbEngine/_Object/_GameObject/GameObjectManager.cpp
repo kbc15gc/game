@@ -249,6 +249,11 @@ void GameObjectManager::Release()
 		}	
 	}
 	_RemoveObject();
+
+	//char text[256];
+	//sprintf(text, "ObjectManager::ReleaseEnd\n");
+	//OutputDebugString(text);
+
 	mainCamera = nullptr;
 	mainLight = nullptr;
 }
