@@ -1,8 +1,8 @@
 text,path
 なにか買っていくかい？\nそれとも買い取ろうか？,Asset/Sound/NPC/SHOP/Mic1_49.wav
 お金がたりませんよ。,Asset/Sound/NPC/SHOP/Mic1_50.wav
-インベントリが一杯ですね。,Asset/Sound/NPC/SHOP/Mic1_54.wav
+持ち物が一杯ですよ。,Asset/Sound/NPC/SHOP/Mic1_54.wav
 まいどあり。,Asset/Sound/NPC/SHOP/Mic1_53.wav
 まいどあり。,Asset/Sound/NPC/SHOP/Mic1_53.wav
 何も選択されていませんよ。,Asset/Sound/NPC/SHOP/Mic1_51.wav
-装備品を外してください。,Asset/Sound/NPC/SHOP/Mic1_55.wav
+装備品は売れませんよ。,Asset/Sound/NPC/SHOP/Mic1_55.wav

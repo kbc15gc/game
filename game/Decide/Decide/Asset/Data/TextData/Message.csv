@@ -87,4 +87,4 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 85,どこかの洞窟に。,珍しいモノを持った魔物がいるらしいわ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 86,色が変わった魔物。,普通の魔物より強いらしいわ。,87,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 87,色が変わった魔物。,気を付けてね。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-88,魔王の城へ。,魔王を倒してください。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+88,魔王の城へ。,魔王を倒してください。,-1,1,12,Asset/Sound/NPC/SHOP/Mic1_16.wav
