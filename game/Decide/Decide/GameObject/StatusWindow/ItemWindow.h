@@ -24,9 +24,9 @@ public:
 	enum class IconIndex {
 		LV = 0,		//!< レベル.
 		HP,			//!< 体力.
-		MP,			//!< 魔力.
+		//MP,			//!< 魔力.
 		ATK,		//!< 物理攻撃.
-		MAT,		//!< 魔法攻撃.
+		//MAT,		//!< 魔法攻撃.
 		DEF,		//!< 物理防御.
 		MDE,		//!< 魔法防御.
 		DEX,		//!< 器用度.
@@ -42,9 +42,9 @@ public:
 	{ 
 		LV = 0,		//!< レベル.
 		HP,			//!< 体力.
-		MP,			//!< 魔力.
+		//MP,			//!< 魔力.
 		ATK,		//!< 物理攻撃.
-		MAT,		//!< 魔法攻撃.
+		//MAT,		//!< 魔法攻撃.
 		DEF,		//!< 物理防御.
 		MDE,		//!< 魔法防御.
 		DEX,		//!< 器用度.
@@ -58,7 +58,7 @@ public:
 	{
 		RANK,		//!< ランク.
 		ATK,		//!< 物理攻撃.
-		MAT,		//!< 魔法攻撃.
+		//MAT,		//!< 魔法攻撃.
 		CRT,		//!< クリティカル率.
 		DEX,		//!< 器用度.
 		MAX			//!< 数.
@@ -131,6 +131,11 @@ public:
 		if (_Cursor)
 			_Cursor->SetActive(false, true);
 	}
+
+	/**
+	* アクティブ.
+	*/
+	void OnEnable()override;
 
 private:
 
@@ -216,7 +221,7 @@ private:
 	// ゲージ。
 	ParameterBar* _ExpBar = nullptr;
 	ParameterBar* _HpBar = nullptr;
-	ParameterBar* _MpBar = nullptr;
+	//ParameterBar* _MpBar = nullptr;
 
 	/** パラメーターリスト. */
 	vector<ParameterRender*> _ParameterRenderList;

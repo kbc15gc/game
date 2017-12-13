@@ -44,7 +44,7 @@ void MysteryLight::Update()
 	_LightPlate->SetBlendColor(Color(2.0f, 2.0f, 2.0f, _Alpha));
 }
 
-void MysteryLight::SetActive(const bool & act, const bool & child)
+void MysteryLight::SetActive(const bool act, const bool child)
 {
 	if (act)
 	{

@@ -46,6 +46,10 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	{
 		_Model->SetTree();
 	}
+	else if (string(filename) == "fence_a.X")
+	{
+		_Model->SetCullMode(D3DCULL::D3DCULL_NONE);
+	}
 	if (!coll)
 	{
 		//“–‚½‚è”»’è’Ç‰ÁB

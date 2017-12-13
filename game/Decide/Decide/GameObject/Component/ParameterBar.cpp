@@ -1,6 +1,15 @@
 #include "stdafx.h"
 #include "GameObject\Component\ParameterBar.h"
 
+
+//int BarAdapter::constNum = 0;
+//int BarAdapter::destNum = 0;
+//
+//int ParameterBar::constNum = 0;
+//int ParameterBar::destNum = 0;
+//
+
+
 // CBarElement。
 float BarElement::_Time = 0.1f;
 void BarElement::Create(BarColor color, float max,Transform* parent) {
@@ -85,6 +94,12 @@ void BarElement::_BarScaling() {
 
 // BarAdapter。
 BarAdapter::~BarAdapter() {
+	//destNum++;
+
+	//char text[256];
+	//sprintf(text, "~BarAdapter::~BarAdapter() , %p, コンストラクタ%d , デストラクタ%d\n", this, constNum,destNum);
+	//OutputDebugString(text);
+
 	_BarFrame->GetComponentManager().OnDestroy();// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	_BarBack->GetComponentManager().OnDestroy();
 	for (int idx = _BarElement.size() - 1; idx >= 0; idx--) {
@@ -170,14 +185,14 @@ void BarAdapter::Reset(float max, float value,bool isInterpolation) {
 }
 
 void BarAdapter::Update() {
-	if (_parentComponent) {
-		if (_parentComponent->gameObject) {
-			if (!_parentComponent->gameObject->GetActive()) {
-				// このバーを持つオブジェクトが非アクティブになっていればこのアダプターも非アクティブにする。
-				this->SetActive(false);
-			}
-		}
-	}
+	//if (_parentComponent) {
+	//	if (_parentComponent->gameObject) {
+	//		if (!_parentComponent->gameObject->GetActive()) {
+	//			// このバーを持つオブジェクトが非アクティブになっていればこのアダプターも非アクティブにする。
+	//			this->SetActive(false);
+	//		}
+	//	}
+	//}
 
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
@@ -390,13 +405,13 @@ void BarAdapter::_ToScreenPos() {
 const Vector3 ParameterBar::CreatePos_DefaultArg = Vector3(175.0f, 21.9f, 0.0f);
 const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
 
-ParameterBar::~ParameterBar()
+void ParameterBar::OnDestroy()
 {
-	INSTANCE(GameObjectManager)->AddRemoveList(_Object);
-}
+	//destNum++;
 
-void ParameterBar::Update() {
-	//バーの更新処理が呼ばれているのでアダプターをアクティブにする。
-	//ここバグってる.
-	_Object->SetActive(true);
+	//char text[256];
+	//sprintf(text, "ParameterBar::~ParameterBar() , %p,コンストラクタ%d , デストラクタ%d\n   ParameterBar::_Object , %p\n", this,constNum,destNum, destNum,_Object);
+	//OutputDebugString(text);
+
+	INSTANCE(GameObjectManager)->AddRemoveList(_Object);
 }

@@ -73,11 +73,14 @@ public:
 	*/
 	bool IsSetChip(ChipID id)
 	{
-		for (auto it : _Chip2DList)
+		for (auto list : _Chip2DList)
 		{
-			if (it->GetChipID() == id)
+			for (auto pChip : list)
 			{
-				return true;
+				if (pChip->GetChipID() == id)
+				{
+					return true;
+				}
 			}
 		}
 		return false;
@@ -86,7 +89,6 @@ public:
 	void SetLocationCode(LocationCodeE code);
 
 	void SetIsOperation(bool value);
-
 
 private:
 
@@ -123,9 +125,12 @@ private:
 	void SaveChip()
 	{
 		picojson::array chipList;
-		for (auto it : _Chip2DList)
+		for (auto& list : _Chip2DList)
 		{
-			chipList.push_back((picojson::value)(double)it->GetChipID());
+			for (auto pChip : list)
+			{
+				chipList.push_back((picojson::value)(double)pChip->GetChipID());
+			}
 		}
 		JsonData ChipData;
 		ChipData.SetDataObject("ChipID", chipList);
@@ -167,14 +172,16 @@ private:
 	HistoryBook* _HistoryBook = nullptr;
 
 	/** 所持チップを表示するクラスリスト. */
-	vector<Chip2D*> _Chip2DList;
+	vector<Chip2D*> _Chip2DList[(int)LocationCodeE::Common];
 
 	/** 現在選択している所持チップ. */
-	int _NowSelectChip = 0;
+	int _NowSelectChip[(int)LocationCodeE::Common] = { 0 };
 	/** 現在みているページ. */	
 	int _NowLookPage = 0;
 
 	/** 操作可能フラグ. */
 	bool _IsOperation = true;
+
+	bool _IsOpen = false;
 
 };

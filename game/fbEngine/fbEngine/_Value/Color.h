@@ -26,6 +26,9 @@ public:
 	//無
 	static const Color zero;
 
+	//あおっぴ
+	static const Color bluepo;
+
 	//ドカベンフォント用カラー
 	static const Color dokaben;
 public:

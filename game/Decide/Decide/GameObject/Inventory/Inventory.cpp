@@ -15,7 +15,6 @@ Inventory* Inventory::_InventoryInstance = nullptr;
 
 Inventory::Inventory()
 {
-	
 }
 
 Inventory::~Inventory(){
@@ -27,6 +26,7 @@ Inventory::~Inventory(){
 }
 
 void Inventory::Initialize() {
+	_InventoryItemList.clear();
 	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
 
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {

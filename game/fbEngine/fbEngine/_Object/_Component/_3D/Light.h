@@ -107,6 +107,12 @@ public:
 	*/
 	CharacterLight()
 	{
+		for (int i = 0; i < LIGHT_NUM; i++)
+		{
+			DiffuseLightDirection_[i] = Vector4(0, 0, 0, 0);
+			DiffuseLightColor_[i] = Vector4(0, 0, 0, 0);
+		}
+		AmbientLight_ = Vector4(0, 0, 0, 0);
 	}
 
 	/**

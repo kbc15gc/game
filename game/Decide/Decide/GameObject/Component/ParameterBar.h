@@ -79,6 +79,7 @@ namespace {
 class BarAdapter :public GameObject {
 public:
 	BarAdapter(char* name) : GameObject(name) {
+		//constNum++;
 	};
 	~BarAdapter();
 	// バー生成関数。
@@ -100,6 +101,17 @@ public:
 	// 引数：	最大値。
 	//			現在値。
 	void Reset(float max, float value, bool isInterpolation);
+
+	void SetActive(const bool act, const bool children = false)override
+	{
+		_BarFrame->SetActive(act);
+		// バー関連のオブジェクトを全部切り替え。
+		for (auto& element : _BarElement) {
+			element->SetActive(act);
+		}
+		_BarBack->SetActive(act);
+		GameObject::SetActive(act, children);
+	}
 
 private:
 	// バーの枠を生成する関数。
@@ -169,6 +181,9 @@ private:
 	ParameterBar* _parentComponent = nullptr;	// このアダプターを生成した親コンポーネント。
 	bool _isRender = true;
 	bool _isBackColor = false;	// バーの背景を描画するか。
+
+	//static int destNum;
+	//static int constNum;
 };
 
 // バー。
@@ -179,14 +194,15 @@ class ParameterBar :
 	static const Vector2 CreateScale_DefaultArg;
 public:
 	ParameterBar(GameObject* g, Transform* t) :Component(g, t, typeid(this).name()) {
+		//constNum++;
 #ifdef _DEBUG
 		mbstowcs_s(nullptr, name, typeid(*this).name(), strlen(typeid(*this).name()));
 #endif
 
 	};
-	~ParameterBar();
+	~ParameterBar() {};
 
-	void Update()override;
+	void OnDestroy()override;
 
 	// バー生成関数。
 	// 引数:	どの順番でどの色のゲージを表示するかを決めた配列(先に追加した色のゲージから更新)。
@@ -197,7 +213,7 @@ public:
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
-	//			更新優先度(デフォルトは8)。
+	//			更新優先度(デフォルトは5)。
 	//			バーの背景を使用するか(デフォルトはfalse)。
 	//			HUDとして使用するか(デフォルトはtrue)。
 	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 5, bool isBackColor = false,bool isHud = true) {
@@ -246,6 +262,16 @@ public:
 		_Object->SetIsRender(false);
 	}
 
+	void SetEnable(const bool flg)override
+	{
+		if (_Object) {
+			_Object->SetActive(flg);
+		}
+		Component::SetEnable(flg);
+	}
+
 private:
 	BarAdapter* _Object = nullptr;
+	//static int destNum;
+	//static int constNum;
 };

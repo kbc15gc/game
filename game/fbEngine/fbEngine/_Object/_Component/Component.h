@@ -36,7 +36,7 @@ public:
 
 	//有効フラグの設定。
 	//[in] フラグ。
-	void SetEnable(const bool& flg)
+	virtual void SetEnable(const bool flg)
 	{
 		//切り替わった時に呼び出す。。
 		if ((enable != flg) && enable)
