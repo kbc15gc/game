@@ -63,6 +63,11 @@ void HistoryMenu::Update()
 		//表示.
 		if (_IsOperation)
 		{
+			if (_IsOpen)
+			{
+				ChipMove();
+				_IsOpen = false;
+			}
 			EnableUpdate();
 		}
 	}
@@ -72,10 +77,15 @@ void HistoryMenu::Update()
 		_LocationNameRender->SetActive(false);
 		_CursorSpriteL->SetActive(false);
 		_CursorSpriteR->SetActive(false);
-		for (auto& it : _Chip2DList)
+		for (auto& list : _Chip2DList)
 		{
-			it->SetActive(false);
+			for (auto pChip : list)
+			{
+				pChip->SetActive(false);
+			}
 		}
+
+		_IsOpen = true;
 	}
 
 	/*if (!_IsOperation)
@@ -99,16 +109,42 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 {
 	Chip2D* chip2D = INSTANCE(GameObjectManager)->AddNew<Chip2D>("Chip2D", 9);
 	chip2D->Start(chipID);
-	_Chip2DList.push_back(chip2D);
 
-	_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
-	_NowSelectChip = max(0, _NowSelectChip);
+	int locID = 0;
+	switch (chipID)
+	{
+		case ChipID::Fire:
+		case ChipID::Tree:
+		case ChipID::Stone:
+			locID = 0;
+			break;
+		case ChipID::Copper:
+		case ChipID::Agriculture:
+		case ChipID::Hunt:
+			locID = 1;
+			break;
+		case ChipID::Iron:
+		case ChipID::Oil:
+		case ChipID::Medicine:
+			locID = 2;
+			break;
+		case ChipID::DevilTown:
+		case ChipID::DevilCastel:
+		case ChipID::DevilThrone:
+			locID = 3;
+			break;
+	}
+	_Chip2DList[locID].push_back(chip2D);
 
-	int len = _Chip2DList.size() - 1 - _NowSelectChip;
+	int size = _Chip2DList[locID].size();
+	_NowSelectChip[locID] = min(max(0, size - 1), _NowSelectChip[locID]);
+	_NowSelectChip[locID] = max(0, _NowSelectChip[locID]);
+
+	int len = size - 1 - _NowSelectChip[locID];
 	float offset = -150.0f;
 	Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
 	chip2D->transform->SetPosition(pos);
-	if (_Chip2DList.size() - 1 == _NowSelectChip)
+	if (size - 1 == _NowSelectChip[locID])
 	{
 		chip2D->SetSize(Chip2D::SizeCodeE::Select);
 	}
@@ -116,6 +152,8 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 	{
 		chip2D->SetSize(Chip2D::SizeCodeE::NoSelect);
 	}
+
+	ChipMove();
 
 	if (isSave)
 	{
@@ -217,8 +255,6 @@ void HistoryMenu::EnableUpdate()
 
 	//場所名描画.
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
-
-	ChipMove();
 }
 
 /**
@@ -298,6 +334,8 @@ void HistoryMenu::SelectLocationUpdate()
 		}
 
 		_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+
+		ChipMove();
 
 		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 		se->Init("Asset/Sound/UI/Menu.wav");
@@ -414,7 +452,7 @@ void HistoryMenu::SelectPageUpdate()
 */
 void HistoryMenu::SelectChipUpdate()
 {
-	int befSelectChip = _NowSelectChip;
+	int befSelectChip = _NowSelectChip[_NowSelectLocation];
 
 	static float ChangeTime = 0.5f;
 	static float LocalTime = 0.0f;
@@ -423,12 +461,12 @@ void HistoryMenu::SelectChipUpdate()
 	{
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonRB1))
 		{
-			_NowSelectChip = max(0, _NowSelectChip - 1);
+			_NowSelectChip[_NowSelectLocation] = max(0, _NowSelectChip[_NowSelectLocation] - 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectChip = max(0, _NowSelectChip - 1);
+			_NowSelectChip[_NowSelectLocation] = max(0, _NowSelectChip[_NowSelectLocation] - 1);
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -437,12 +475,12 @@ void HistoryMenu::SelectChipUpdate()
 	{
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
 		{
-			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
+			_NowSelectChip[_NowSelectLocation] = min(max(0, _Chip2DList[_NowSelectLocation].size() - 1), _NowSelectChip[_NowSelectLocation] + 1);
 		}
 		LocalTime += Time::DeltaTime();
 		if (LocalTime >= ChangeTime)
 		{
-			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip + 1);
+			_NowSelectChip[_NowSelectLocation] = min(max(0, _Chip2DList[_NowSelectLocation].size() - 1), _NowSelectChip[_NowSelectLocation] + 1);
 			LocalTime = 0.0f;
 			ChangeTime = 0.01f;
 		}
@@ -453,8 +491,10 @@ void HistoryMenu::SelectChipUpdate()
 		LocalTime = 0.0f;
 	}
 
-	if (befSelectChip != _NowSelectChip)
+	if (befSelectChip != _NowSelectChip[_NowSelectLocation])
 	{
+		ChipMove();
+
 		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 		se->Init("Asset/Sound/UI/Menu.wav");
 		se->SetDelete(true);
@@ -465,21 +505,23 @@ void HistoryMenu::SelectChipUpdate()
 	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
 	{
 		//存在していれば.
-		if (_Chip2DList.size() != 0 && _Chip2DList[_NowSelectChip] != nullptr)
+		if (_Chip2DList[_NowSelectLocation].size() != 0 && _Chip2DList[_NowSelectLocation][_NowSelectChip[_NowSelectLocation]] != nullptr)
 		{
 			//現在指定している場所にチップを設定.
-			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectChip]->GetChipID(), _NowLookPage);
+			INSTANCE(HistoryManager)->SetHistoryChip((LocationCodeE)_NowSelectLocation, _Chip2DList[_NowSelectLocation][_NowSelectChip[_NowSelectLocation]]->GetChipID(), _NowLookPage);
 
 			//搬入したチップを所持チップから削除.
-			auto it = _Chip2DList.begin();
-			it += _NowSelectChip;
+			auto it = _Chip2DList[_NowSelectLocation].begin();
+			it += _NowSelectChip[_NowSelectLocation];
 			INSTANCE(GameObjectManager)->AddRemoveList(*it);
-			_Chip2DList.erase(it);
+			_Chip2DList[_NowSelectLocation].erase(it);
 
 			SaveChip();
 
-			_NowSelectChip = min(max(0, _Chip2DList.size() - 1), _NowSelectChip);
-			_NowSelectChip = max(0, _NowSelectChip);
+			_NowSelectChip[_NowSelectLocation] = min(max(0, _Chip2DList[_NowSelectLocation].size() - 1), _NowSelectChip[_NowSelectLocation]);
+			_NowSelectChip[_NowSelectLocation] = max(0, _NowSelectChip[_NowSelectLocation]);
+
+			ChipMove();
 
 			_IsOperation = false;
 			_HistoryBook->SetIsOperation(_IsOperation);
@@ -490,22 +532,34 @@ void HistoryMenu::SelectChipUpdate()
 
 void HistoryMenu::ChipMove()
 {
-	for (int i = 0; i < _Chip2DList.size(); i++)
+	int loc = 0;
+	for (auto& list : _Chip2DList)
 	{
-		_Chip2DList[i]->SetActive(true);
-
-		int len = i - _NowSelectChip;
-		float offset = -150.0f;
-		Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
-
-		if (i == _NowSelectChip)
+		for (int i = 0; i < list.size(); i++)
 		{
-			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::Select, pos);
+			if (loc == _NowSelectLocation)
+			{
+				list[i]->SetActive(true, true);
+			}
+			else
+			{
+				list[i]->SetActive(false, true);
+			}
+
+			int len = i - _NowSelectChip[loc];
+			float offset = -150.0f;
+			Vector3 pos = Vector3((g_WindowSize.x / 2.0f) + (offset * len), g_WindowSize.y - 10.0f, 0.0f);
+
+			if (i == _NowSelectChip[loc])
+			{
+				list[i]->SetMove(Chip2D::SizeCodeE::Select, pos);
+			}
+			else
+			{
+				list[i]->SetMove(Chip2D::SizeCodeE::NoSelect, pos);
+			}
 		}
-		else
-		{
-			_Chip2DList[i]->SetMove(Chip2D::SizeCodeE::NoSelect, pos);
-		}
+		loc++;
 	}
 }
 
