@@ -269,10 +269,10 @@ void SkinModel::DrawMeshContainer(
 		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
 		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 
-		float isCharaLight = 0;
-		if (_CharaLight)
+		CharacterLight cl;
+		if (_CharaLight != nullptr)
 		{
-			CharacterLight cl = *_CharaLight;
+			cl = *_CharaLight;
 			for (int i = 0; i < cl.LIGHT_NUM; i++)
 			{
 				Vector4 dir4 = cl.GetDiffuseLightDirection(i);
@@ -280,10 +280,9 @@ void SkinModel::DrawMeshContainer(
 				dir.Transform(transform->GetRotateMatrix());
 				cl.SetDiffuseLightDirection(i, dir);
 			}
-			_Effect->SetValue("g_CharaLight", &cl, sizeof(CharacterLight));
-			isCharaLight = 1;
 		}
-		_Effect->SetVector("g_CharaLightParam", &D3DXVECTOR4(isCharaLight, 0, 0, 0));
+		_Effect->SetValue("g_CharaLight", &cl, sizeof(CharacterLight));
+
 
 		//カメラのポジションセット(スペキュラライト用)
 		Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();

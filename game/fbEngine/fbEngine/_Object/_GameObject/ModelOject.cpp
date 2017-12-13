@@ -13,7 +13,8 @@ void ModelObject::Update()
 
 void ModelObject::LoadModel(char * path)
 {
-	SkinModelData* modeldata = new SkinModelData();
+	SkinModelData* modeldata = nullptr;
+	modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel(path), _Anim);
 	_Model->SetModelData(modeldata);
 }

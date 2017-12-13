@@ -58,7 +58,6 @@ struct CharacterLightS
 };
 
 CharacterLightS g_CharaLight;
-float4 g_CharaLightParam; // x:有効.
 
 /*!
 * @brief	大気散乱パラメータ。
@@ -171,13 +170,10 @@ float3 CalcMoonLight(float3 normal, float3 worldPos, float2 uv)
 float3 CalcCharaLight(float3 normal)
 {
 	float3 color = 0.0f;
-	if (g_CharaLightParam.x)
+	for (int i = 0; i < g_CharaLight.LightCount; i++)
 	{
-		for (int i = 0; i < g_CharaLight.LightCount; i++)
-		{
-			float3 dir = g_CharaLight.DiffuseDir[i].xyz;
-			color.xyz += max(0.0f, -dot(normal, dir)) * g_CharaLight.DiffuseColor[i].xyz;
-		}
+		float3 dir = g_CharaLight.DiffuseDir[i].xyz;
+		color.xyz += max(0.0f, -dot(normal, dir)) * g_CharaLight.DiffuseColor[i].xyz;
 	}
 	return color;
 }

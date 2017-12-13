@@ -98,7 +98,7 @@ protected:
 	Player* _Player = nullptr;
 
 	//プレイヤーのポジションへの参照
-	const Vector3* _PlayerPos = &Vector3::zero;
+	const Vector3* _PlayerPos = nullptr;
 
 	//カメラの移動速度。
 	float _MoveSpeed = 0.0f;
