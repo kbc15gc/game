@@ -100,7 +100,7 @@ public:
 	//補正値を取得。
 	float GetRevision()
 	{
-		return _Revision / 0.5f;
+		return _Revision;
 	}
 
 	//値段取得。

@@ -11,7 +11,7 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 9,チップなし,火があれば何か出来そうなのに・・・。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 10,村人A,ようこそ、何もないけどゆっくりしていってね。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 11,村人A,ようこそ、新しく武器屋ができたよ。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
-12,万事屋,いらっしゃい。,-1,0,-1,Asset/Sound/NPC/SHOP/Mic1_47.wav
+12,万事屋,いらっしゃい。,-1,0,-1,Asset/Sound/NPC/SHOP/1st/Mic1_47.wav
 13,ここを道なりに行った\n高い山のふもとに・・・。,"""ページ""みたいなものがあったわ。\nなにかしら。",-1,1,0,Asset/Sound/NPC/NPC/Mic1_75.wav
 14,歴史の破片を手に入れたら・・・。,本に挟んでみよう。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
 15,向こうの島に・・・。,魔物が多くて困っています。\n助けてください。,-1,1,1,Asset/Sound/NPC/NPC/Mic1_78.wav
