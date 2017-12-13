@@ -214,12 +214,8 @@ public:
 
 	// 音再生関数。
 	// 引数：	効果音テーブルの添え字。
-	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx, float volume = 1.0f) {
-		if (_SoundData[static_cast<int>(idx)]->Source) {
-			// サウンドソースが作成されている。
-			_SoundData[static_cast<int>(idx)]->Source->SetVolume(volume);
-			_SoundData[static_cast<int>(idx)]->Source->Play(_SoundData[static_cast<int>(idx)]->IsLoop);
-		}
+	inline void EnemyPlaySound(const EnemyCharacter::SoundIndex idx) {
+		_SoundData[static_cast<int>(idx)]->Play();
 	}
 
 	// エネミーがアニメーションを再生しているか。
@@ -299,6 +295,7 @@ public:
 	inline void SetParamAll(const vector<BarColor>& color,int param[CharacterParameter::Param::MAX]) const{
 		_MyComponent.Parameter->ParamReset(param);
 		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, _BarPos, Vector2(0.5f, 0.5f),5,false, false);
+		_MyComponent.HPBar->RenderDisable();
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 		
 	}
@@ -308,6 +305,7 @@ public:
 	inline void SetParamAll(const vector<BarColor>& color, const vector<int>& param) const {
 		_MyComponent.Parameter->ParamReset(param);
 		_MyComponent.HPBar->Create(color, static_cast<float>(_MyComponent.Parameter->GetMaxHP()), static_cast<float>(_MyComponent.Parameter->GetParam(CharacterParameter::Param::HP)), true, false, transform, _BarPos, Vector2(0.5f, 0.5f),5 ,false,false);
+		_MyComponent.HPBar->RenderDisable();
 		_MyComponent.BuffDebuffICon->SetHpBarTransform(_MyComponent.HPBar->GetTransform());
 	}
 

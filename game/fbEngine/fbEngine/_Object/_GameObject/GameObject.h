@@ -67,7 +67,7 @@ public:
 	//オブジェクトのアクティブフラグを設定する　セッター
 	//[in] 設定するアクティブフラグ。
 	//[in] 子供にも反映させるか？
-	virtual void SetActive(const bool& act,const bool& children = false)
+	virtual void SetActive(const bool act,const bool children = false)
 	{
 		if(children)
 		{

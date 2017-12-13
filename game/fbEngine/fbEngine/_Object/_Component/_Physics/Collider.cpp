@@ -101,14 +101,18 @@ void Collider::UpdateTransform() {
 
 bool Collider::GetIsRender() {
 	if (_CollisionModel) {
-		return _CollisionModel->GetSkinModel()->GetEnable();
+		if (_CollisionModel->GetSkinModel()) {
+			return _CollisionModel->GetSkinModel()->GetEnable();
+		}
 	}
 	return false;
 }
 
 void Collider::RenderEnable() {
 	if (_CollisionModel) {
-		_CollisionModel->GetSkinModel()->SetEnable(true);
+		if (_CollisionModel->GetSkinModel()) {
+			_CollisionModel->GetSkinModel()->SetEnable(true);
+		}
 	}
 }
 

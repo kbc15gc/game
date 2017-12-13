@@ -9,6 +9,7 @@ class SkinModel;
 class Player;
 class ImageObject;
 class HoldItemBase;
+class HoldEquipment;
 class ParticleEffect;
 class CCharacterController;
 
@@ -78,7 +79,7 @@ private:
 	float				  _AppearMaxTime		= 0.0f;		    //フィールド上に存在できる最大時間。
 	float				  _TotalAppearTime	    = 0.0f;		    //フィールドに現れてから経った時間。
 	short int			  _DropNum			    = 1;		    //何個アイテムを落とすかの数(デフォルトは1つ)。
-	HoldItemBase*		  _DropEquipment		= nullptr;	    //落とした装備品。
+	HoldEquipment*		  _DropEquipment		= nullptr;	    //落とした装備品。
 	ParticleEffect*		  _RareDropPE		    = nullptr;	    //レアドロップアイテム用のエフェクト。
 	float				  _GetLength			= 5.0f;		    //ドロップアイテムが拾える距離。
 	float				  _ButtonIconPosOffSet  = 120.0f;	    //アイコンを出す位置を調整する用。

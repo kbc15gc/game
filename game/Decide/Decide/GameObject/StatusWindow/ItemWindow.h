@@ -24,9 +24,9 @@ public:
 	enum class IconIndex {
 		LV = 0,		//!< ƒŒƒxƒ‹.
 		HP,			//!< ‘Ì—Í.
-		MP,			//!< –‚—Í.
+		//MP,			//!< –‚—Í.
 		ATK,		//!< •¨—UŒ‚.
-		MAT,		//!< –‚–@UŒ‚.
+		//MAT,		//!< –‚–@UŒ‚.
 		DEF,		//!< •¨—–hŒä.
 		MDE,		//!< –‚–@–hŒä.
 		DEX,		//!< Ší—p“x.
@@ -42,9 +42,9 @@ public:
 	{ 
 		LV = 0,		//!< ƒŒƒxƒ‹.
 		HP,			//!< ‘Ì—Í.
-		MP,			//!< –‚—Í.
+		//MP,			//!< –‚—Í.
 		ATK,		//!< •¨—UŒ‚.
-		MAT,		//!< –‚–@UŒ‚.
+		//MAT,		//!< –‚–@UŒ‚.
 		DEF,		//!< •¨—–hŒä.
 		MDE,		//!< –‚–@–hŒä.
 		DEX,		//!< Ší—p“x.
@@ -58,7 +58,7 @@ public:
 	{
 		RANK,		//!< ƒ‰ƒ“ƒN.
 		ATK,		//!< •¨—UŒ‚.
-		MAT,		//!< –‚–@UŒ‚.
+		//MAT,		//!< –‚–@UŒ‚.
 		CRT,		//!< ƒNƒŠƒeƒBƒJƒ‹—¦.
 		DEX,		//!< Ší—p“x.
 		MAX			//!< ”.
@@ -221,7 +221,7 @@ private:
 	// ƒQ[ƒWB
 	ParameterBar* _ExpBar = nullptr;
 	ParameterBar* _HpBar = nullptr;
-	ParameterBar* _MpBar = nullptr;
+	//ParameterBar* _MpBar = nullptr;
 
 	/** ƒpƒ‰ƒ[ƒ^[ƒŠƒXƒg. */
 	vector<ParameterRender*> _ParameterRenderList;
