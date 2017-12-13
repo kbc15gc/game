@@ -269,6 +269,8 @@ void ItemWindow::Input()
 
 		if (!_Dialog->GetActive())
 		{
+			int bef = _StartLoadCount;
+
 			Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
 			LStick /= 32767.0f;
 			if (LStick.y >= 0.2f || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_DPAD_UP))
@@ -320,6 +322,14 @@ void ItemWindow::Input()
 			{
 				LocalTime = 0.0f;
 				ChangeTime = 0.5f;
+			}
+
+			if (bef != _StartLoadCount)
+			{
+				SoundSource* changeSE = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+				changeSE->Init("Asset/Sound/UI/Select.wav");
+				changeSE->SetDelete(true);
+				changeSE->Play(false);
 			}
 
 			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_A))
