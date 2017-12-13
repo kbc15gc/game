@@ -148,7 +148,6 @@ void BossDrarian::CreateAttackCollision_TailAttack2() {
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-60.0f));
 	AttackCollision* attack = CreateAttack(Vector3(3.0f, 0.0f, 0.0f), rot, Vector3(2.0f, 2.0f, 5.0f), 0.15f, transform, false, false, AttackCollision::ReactionType::Blown);
 	attack->RemoveParent();
-
 }
 
 void BossDrarian::CreateAttackCollision_TailAttack3() {
