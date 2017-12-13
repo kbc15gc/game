@@ -29,7 +29,8 @@ public:
 
 	//デバフのエフェクトを発生させる。
 	void DeBuffEffect();
-
+	//大型モンスター用のデバフのエフェクトを発生させる。
+	void BigMonsterDeBuffEffect();
 	//蛍っぽいエフェクトを発生させる。
 	void FireFly();
 
@@ -67,7 +68,9 @@ public:
 	void SetDebuffEffectFlag(bool flag) {
 		_DebuffParticleEmitter->SetEmitFlg(flag);
 	}
-
+	void SetBigMonsterDebuffEffectFlag(bool flag) {
+		_BigMonsterDebuffParticleEmitter->SetEmitFlg(flag);
+	}
 	//蛍を発生させるかどうかのフラグ。
 	//tureで発生。falseで発生させない。
 	void SetFireFlyEffectFlag(bool flag) {
@@ -91,6 +94,8 @@ private:
 	ParticleParameter	_BuffParticleParam;						//バフパーティクルパラメーター。
 	ParticleEmitter*	_DebuffParticleEmitter		= nullptr;	//デバフパーティクル発生元。
 	ParticleParameter	_DebuffParticleParam;					//デバフパーティクルパラメーター。
+	ParticleEmitter*	_BigMonsterDebuffParticleEmitter		= nullptr;	//大型モンスター用バフパーティクル発生元。
+	ParticleParameter	_BigMonsterDebuffParticleParam;						//大型モンスター用バフパーティクルパラメーター。
 	ParticleParameter	_HeelHpParticleParam;					//Hp回復パーティクルパラメーター。
 	ParticleEmitter*	_HeelHpParticleEmitter		= nullptr;	//Hp回復エフェクトパーティクルの発生元。
 	ParticleEmitter*	_HeelParticleAssistEmitter  = nullptr;	//回復エフェクトを補助するパーティクルの発生元。	

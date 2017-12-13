@@ -84,6 +84,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<EnemyGolem>("EnemyGolem", 1);
 			barColor.push_back(BarColor::Red);
 			newData->Object->SetBarPos({ 0.0f,4.0f,0.0f });
+			newData->Object->SetBigflag(true);
 			break;
 		case EnemyCharacter::EnemyType::BossGolem:
 			//ボスゴーレム生成。
@@ -149,6 +150,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 	if (pe) {
 		pe->SetBuffEffectFlag(false);
 		pe->SetDebuffEffectFlag(false);
+		pe->SetBigMonsterDebuffEffectFlag(false);
 	}
 
 	//死んだのですべてのバフデバフアイコンを削除。
@@ -188,6 +190,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Red);
 					enemy->Object->SetBarPos({ 0.0f,4.0f,0.0f });
+					enemy->Object->SetBigflag(true);
 					break;
 				case EnemyCharacter::EnemyType::BossGolem:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
