@@ -28,6 +28,16 @@ EnemyManager::~EnemyManager() {
 }
 
 void EnemyManager::Start() {
+	// ※消すな。
+	//エネミーリストを初期化。
+	// ※シーン切り替え時にいったん削除しないと不正なメモリをオブジェクトの削除リストに積む処理が走るため絶対必要。
+	 if (_enemys.size() > 0) {
+		 for (int idx = 0; idx < static_cast<int>(_enemys.size()); idx++) {
+			 if (_enemys[idx].size() > 0) {
+				 _enemys[idx].clear();
+			 }
+		 }
+	 }
 }
 
 

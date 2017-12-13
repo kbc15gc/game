@@ -46,12 +46,18 @@ HistoryManager::HistoryManager()
 */
 void HistoryManager::Start()
 {
+	// ※消すな。
 	//各オブジェクトリストを初期化。
-	/*for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
+	// ※シーン切り替え時にいったん削除しないと不正なメモリをオブジェクトの削除リストに積む処理が走るため絶対必要。
+	for (int i = 0; i < (int)LocationCodeE::LocationNum; i++)
 	{
-		_GameObjectList[i].clear();
-		_NPCList[i].clear();
-	}*/
+		if (_GameObjectList[i].size() > 0) {
+			_GameObjectList[i].clear();
+		}
+		if (_NPCList[i].size() > 0) {
+			_NPCList[i].clear();
+		}
+	}
 	_LocationHistoryList.clear();
 
 
