@@ -463,7 +463,14 @@ bool EnemyCharacter::BuffAndDebuff(int effectValue[CharacterParameter::Param::MA
 		else if (value < 0) {
 			// デバフ(デメリット)。
 			if (_MyComponent.ParticleEffect) {
-				_MyComponent.ParticleEffect->DeBuffEffect();
+				if (_Bigflag == true)
+				{
+					_MyComponent.ParticleEffect->BigMonsterDeBuffEffect();
+				}
+				else {
+					_MyComponent.ParticleEffect->DeBuffEffect();
+				}
+				
 			}
 #ifdef  _DEBUG
 			else {
@@ -660,7 +667,14 @@ void EnemyCharacter::EffectUpdate() {
 		}
 	}
 	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
-	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+	if (_Bigflag == true)
+	{
+		_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
+	}
+	else{
+		_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+	}
+	
 }
 
 

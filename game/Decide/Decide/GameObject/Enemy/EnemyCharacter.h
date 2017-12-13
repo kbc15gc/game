@@ -531,6 +531,8 @@ public:
 		Color c = _MyComponent.Model->GetAllBlend();
 		c.a = a;
 		_MyComponent.Model->SetAllBlend(c);
+		_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
+		_MyComponent.Model->SetDitherCoefficient((1.0f - a) * 65.0f);
 	}
 
 	inline float GetAlpha()const {
@@ -558,6 +560,10 @@ public:
 
 	inline void SetBarPos(const Vector3& pos) {
 		_BarPos = pos;
+	}
+
+	inline void SetBigflag(bool f){
+		_Bigflag = f;
 	}
 protected:
 	// ステート切り替え関数。
@@ -750,6 +756,8 @@ private:
 	LocationCodeE _locationCode;	// どの場所の歴史に属するか。
 
 	Vector3 _BarPos = Vector3(0.0f, 2.0f, 0.0f);
+
+	bool _Bigflag = false;
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };

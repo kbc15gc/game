@@ -75,12 +75,12 @@ struct VS_OUTPUT
 	float4	_Color	: COLOR0;
     float3 _Normal : NORMAL;
     float3 _Tangent : TANGENT;
-    float2 _UV : TEXCOORD1;
-	float4  _World	: TEXCOORD2;	//ワールド座標
-	float4  _WVP	: TEXCOORD3;	//カメラから見た行列
-	float4	_MieColor		: TEXCOORD4;	//ミー錯乱色。
-	float4	_RayColor		: TEXCOORD5;	//レイリー錯乱色。
-	float3  _PosToCameraDir	: TEXCOORD6;
+    float2 _UV : TEXCOORD0;
+	float4  _World	: TEXCOORD1;	//ワールド座標
+	float4  _WVP	: TEXCOORD2;	//カメラから見た行列
+	float4	_MieColor		: TEXCOORD3;	//ミー錯乱色。
+	float4	_RayColor		: TEXCOORD4;	//レイリー錯乱色。
+	float3  _PosToCameraDir	: TEXCOORD5;
 };
 
 VS_OUTPUT VSMain( VS_INPUT In )
@@ -200,10 +200,7 @@ PSOutput PSMain( VS_OUTPUT In )
 
     float3 ambient = g_ambientLight.rgb;
 	
-    if (g_CharaLightParam.x)
-    {
-        ambient += g_CharaLight.Ambient.rgb;
-    }
+    ambient += g_CharaLight.Ambient.rgb;
 
     //アンビエントライトを加算。
     color.rgb += diff.rgb * ambient;

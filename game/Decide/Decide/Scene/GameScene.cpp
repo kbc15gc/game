@@ -244,11 +244,6 @@ void GameScene::Update()
 	}
 	
 #endif
-	//
-	if (KeyBoardInput->isPush(DIK_P))
-	{
-		INSTANCE(EventManager)->Execute(Event::EventID::EventCameraF, 0);
-	}
 	//BGM•ÏX‚µ‚½‚¢
 	//êŠ‚É‚æ‚Á‚ÄBGM•ÏX
 	{

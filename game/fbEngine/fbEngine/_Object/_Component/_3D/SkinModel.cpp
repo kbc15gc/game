@@ -32,7 +32,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_Light(nullptr),
 	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
-	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING | ModelEffectE::ZENABLE)),
+	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
 	_CullMode(D3DCULL_CCW),
 	_Culling(new CObjectFrustumCulling)
 {
@@ -269,10 +269,10 @@ void SkinModel::DrawMeshContainer(
 		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
 		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 
-		float isCharaLight = 0;
-		if (_CharaLight)
+		CharacterLight cl;
+		if (_CharaLight != nullptr)
 		{
-			CharacterLight cl = *_CharaLight;
+			cl = *_CharaLight;
 			for (int i = 0; i < cl.LIGHT_NUM; i++)
 			{
 				Vector4 dir4 = cl.GetDiffuseLightDirection(i);
@@ -280,10 +280,9 @@ void SkinModel::DrawMeshContainer(
 				dir.Transform(transform->GetRotateMatrix());
 				cl.SetDiffuseLightDirection(i, dir);
 			}
-			_Effect->SetValue("g_CharaLight", &cl, sizeof(CharacterLight));
-			isCharaLight = 1;
 		}
-		_Effect->SetVector("g_CharaLightParam", &D3DXVECTOR4(isCharaLight, 0, 0, 0));
+		_Effect->SetValue("g_CharaLight", &cl, sizeof(CharacterLight));
+
 
 		//カメラのポジションセット(スペキュラライト用)
 		Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
@@ -345,17 +344,13 @@ void SkinModel::DrawMeshContainer(
 		if (_IsSky)
 		{
 			_Effect->SetTexture("g_NightTexture", INSTANCE(SceneManager)->GetSky()->GetNightTexture());
-		}
-	
-		if ((_ModelEffect & ModelEffectE::ZENABLE) > 0)
-		{
-			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
 		}
 		else
 		{
-			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+			(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 		}
 
 

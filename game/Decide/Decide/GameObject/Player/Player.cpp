@@ -292,21 +292,6 @@ void Player::Start()
 		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
 	}
 
-#ifdef _DEBUG
-#define Start1
-	//#define Start2
-	//#define Start3
-#ifdef Start1
-	SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
-#elif defined(Start2)
-	SetRespawnPos(Vector3(-118.0f, 58.0f, 547.0f));
-#elif defined(Start3)
-	SetRespawnPos(Vector3(250.0f, 70.0f, -31.0f));
-	//250.71/67.2/-31.7
-#endif // Start1
-#endif
-
-
 	//ポジション
 	transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
