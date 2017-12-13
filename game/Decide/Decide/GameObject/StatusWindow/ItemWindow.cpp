@@ -111,6 +111,34 @@ void ItemWindow::Init(Item::ItemCodeE code)
 	}
 }
 
+void ItemWindow::OnEnable()
+{
+	int itemCount = 0;
+	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
+	for (auto item : itemList)
+	{
+		if (item != nullptr)
+		{
+			itemCount += 1;
+		}
+	}
+	_Cursor->SetMax(itemCount);	// 要素数を更新。
+	if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
+	{
+		//表示位置を一個さげる.
+		_StartLoadCount = max(0, _StartLoadCount - 1);
+	}
+	else if (_NowSelectItem >= itemCount)
+	{
+		//選択位置を一個下げる.
+		int index = _Cursor->PrevMove(1).rangeIndex;
+		_NowSelectItem = max(0, index);
+	}
+
+	_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+	_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+}
+
 /**
 * アイテムの初期化.
 */
@@ -219,7 +247,7 @@ void ItemWindow::Input()
 {
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	int itemCount = 0;
-	for (auto& item : itemList)
+	for (auto item : itemList)
 	{
 		if (item != nullptr)
 		{
@@ -355,7 +383,7 @@ void ItemWindow::Input()
 			{
 
 				itemCount = 0;
-				for (auto& item : itemList)
+				for (auto item : itemList)
 				{
 					if (item != nullptr)
 					{

@@ -156,14 +156,14 @@ void GameScene::Start()
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
-	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
-	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
-
 	INSTANCE(HistoryManager)->Start();
 
 	INSTANCE(ItemManager)->LoadAllItemData();
 
 	INSTANCE(Inventory)->Initialize();
+
+	INSTANCE(GameObjectManager)->AddNew<StatusWindow>("StatusWindow", StatusWindow::WindowBackPriorty);
+	INSTANCE(GameObjectManager)->AddNew<GameManager>("GameManager", 0);
 
 	INSTANCE(GameObjectManager)->AddNew<BackWindowAndAttentionText>("BackWindowAndAttentionText", 10);
 
