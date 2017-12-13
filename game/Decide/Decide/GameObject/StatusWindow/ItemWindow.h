@@ -132,6 +132,11 @@ public:
 			_Cursor->SetActive(false, true);
 	}
 
+	/**
+	* アクティブ.
+	*/
+	void OnEnable()override;
+
 private:
 
 	/**
