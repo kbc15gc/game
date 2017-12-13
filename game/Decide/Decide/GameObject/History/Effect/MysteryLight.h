@@ -39,7 +39,7 @@ public:
 	*/
 	void Update()override;
 
-	void SetActive(const bool& act, const bool& child = false)override;
+	void SetActive(const bool act, const bool child = false)override;
 
 private:
 

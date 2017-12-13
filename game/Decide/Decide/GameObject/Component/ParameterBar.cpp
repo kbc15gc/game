@@ -170,14 +170,14 @@ void BarAdapter::Reset(float max, float value,bool isInterpolation) {
 }
 
 void BarAdapter::Update() {
-	if (_parentComponent) {
-		if (_parentComponent->gameObject) {
-			if (!_parentComponent->gameObject->GetActive()) {
-				// このバーを持つオブジェクトが非アクティブになっていればこのアダプターも非アクティブにする。
-				this->SetActive(false);
-			}
-		}
-	}
+	//if (_parentComponent) {
+	//	if (_parentComponent->gameObject) {
+	//		if (!_parentComponent->gameObject->GetActive()) {
+	//			// このバーを持つオブジェクトが非アクティブになっていればこのアダプターも非アクティブにする。
+	//			this->SetActive(false);
+	//		}
+	//	}
+	//}
 
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
@@ -393,10 +393,4 @@ const Vector2 ParameterBar::CreateScale_DefaultArg = Vector2(1.0f, 1.0f);
 ParameterBar::~ParameterBar()
 {
 	INSTANCE(GameObjectManager)->AddRemoveList(_Object);
-}
-
-void ParameterBar::Update() {
-	//バーの更新処理が呼ばれているのでアダプターをアクティブにする。
-	//ここバグってる.
-	_Object->SetActive(true);
 }

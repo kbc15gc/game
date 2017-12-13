@@ -95,7 +95,7 @@ public:
 		return _NowState;
 	}
 
-	void SetActive(const bool& act, const bool& children = false)override;
+	void SetActive(const bool act, const bool children = false)override;
 
 	void SetActiveGameObject(const bool& act, const bool& children = false)
 	{
@@ -305,7 +305,7 @@ private:
 	/**
 	* 歴史書を開いている判定フラグを変更.
 	*/
-	void _ChangeIsLookAtHistoryFlag();
+	//void _ChangeIsLookAtHistoryFlag();
 
 	/**
 	* ページの座標を計算する.

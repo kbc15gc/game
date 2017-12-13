@@ -11,6 +11,7 @@
 #include "fbEngine/CharacterController.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 #include "GameObject\ItemManager\ItemManager.h"
+#include "GameObject\ItemManager\HoldItem\HoldEquipment.h"
 
 //コンストラクタ。
 DropItem::DropItem(const char * name) :
@@ -138,7 +139,7 @@ void DropItem::Create(int id, int typeId, const Vector3& pos, int dropNum) {
 	//武具の場合。
 	{
 		//武具は一つしか落ちない。
-		_DropEquipment = HoldItemFactory::CreateItem(_DropItemInfo, true);
+		_DropEquipment = static_cast<HoldEquipment*>(HoldItemFactory::CreateItem(_DropItemInfo, true));
 	}
 
 	//落下場所を設定。
@@ -212,7 +213,7 @@ void DropItem::Update() {
 					}
 
 					//とりあえず取得が終わったのでプレイヤーのジャンプを出来るようにする。
-					_Player->PlayerJumpEnable();
+					_Player->PlayerJumpDisable();
 				}
 				else
 				{
@@ -227,6 +228,8 @@ void DropItem::Update() {
 	{
 		//範囲外ならアイコン非表示。
 		_ButtonIconImage->SetActive(false, false);
+		//プレイヤーのジャンプを出来るようにする。
+		_Player->PlayerJumpDisable();
 	}
 
 	//フィールド上に出てから一定時間経ったら消す。
@@ -236,6 +239,7 @@ void DropItem::Update() {
 		{
 			//オブジェクト関係を削除。
 			_Release();
+			_Player->PlayerJumpDisable();
 		}
 		_DitheRocalTime += Time::DeltaTime();
 		_Model->SetDitherCoefficient((_DitheRocalTime / _DitheTime) * 65.0f);
@@ -245,7 +249,7 @@ void DropItem::Update() {
 //生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
 void DropItem::_EquipmentRankCheck_SelectSEAndEffect()
 {
-	if (_DropItemInfo->TypeID != Item::ItemCodeE::Item&& static_cast<HoldEquipment*>(_DropEquipment)->GetRank() <= HoldEquipment::Rank::A)
+	if (_DropItemInfo->TypeID != Item::ItemCodeE::Item&& _DropEquipment->GetRank() <= HoldEquipment::Rank::A)
 	{
 		//S以上ならレアドロップ用のエフェクトとSE開始。
 		_RareDropPE->RareDropEffect();
@@ -365,7 +369,7 @@ bool DropItem::_AddInventory(Item::ItemCodeE code)
 		//武器。
 	case Item::ItemCodeE::Weapon:
 		//追加。
-		if (INSTANCE(Inventory)->AddEquipment(static_cast<HoldEquipment*>(_DropEquipment)) == false) {
+		if (INSTANCE(Inventory)->AddEquipment(_DropEquipment) == false) {
 			//取得失敗。
 			_SelectText(false);
 			return false;

@@ -298,7 +298,7 @@ void EnemyCharacter::_BuildModelData() {
 
 void EnemyCharacter::_BuildState() {
 	// 徘徊ステートを追加。
-	_MyState.push_back(unique_ptr<EnemyState>(new EnemyWanderingState(this)));
+	_MyState.push_back(unique_ptr<EnemyWanderingState>(new EnemyWanderingState(this)));
 	// 発見ステートを追加。
 	_MyState.push_back(unique_ptr<EnemyDiscoveryState>(new EnemyDiscoveryState(this)));
 	// 追跡ステートを追加。
