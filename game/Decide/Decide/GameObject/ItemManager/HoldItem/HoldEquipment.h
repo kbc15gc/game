@@ -55,7 +55,7 @@ public:
 		else if (raito >= 0.71f && raito <= 0.9f) {
 			_Rank = Rank::S;
 		}
-		else if (raito >= 0.9f && raito <= 1.0f) {
+		else if (raito >= 0.91f && raito <= 1.0f) {
 			_Rank = Rank::SS;
 		}
 		//補正値格納。
@@ -100,7 +100,7 @@ public:
 	//補正値を取得。
 	float GetRevision()
 	{
-		return _Revision / 0.5f;
+		return _Revision;
 	}
 
 	//値段取得。
