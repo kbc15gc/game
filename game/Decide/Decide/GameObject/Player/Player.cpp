@@ -439,9 +439,6 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
-		char text[256];
-		sprintf(text, "State = %d\n", (int)_State);
-		OutputDebugString(text);
 		PlayAnimation(AnimationNo::AnimationDeath, 0.0f, 0);
 		return;
 	}
@@ -517,9 +514,6 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		//ダメージを受けた状態に変更
 		if (_State != State::Death && _State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
 		{
-			char text[256];
-			sprintf(text, "State = %d\n", (int)_State);
-			OutputDebugString(text);
 			ChangeState(State::Impact);
 		}
 
@@ -844,7 +838,7 @@ void Player::Speak()
 	if (nearnpc)
 	{
 		//会話可能
-		if (len <= 3.0f)
+		if (len <= 3.0f && !eventflag)
 		{
 			//地面についていれば話しかけれる
 			//ショップイベントでないとき。
