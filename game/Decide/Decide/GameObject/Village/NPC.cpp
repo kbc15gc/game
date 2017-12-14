@@ -100,17 +100,21 @@ void NPC::_Speak()
 		}
 	}
 	
+	//ショップの場合。買い物中
+	bool eventflag = INSTANCE(EventManager)->ShopEvent();
 
-	if(!_IsSpeak || _TextBox->IsLastMessage())
+	if(!_IsSpeak)
 	{
-		//離れたなら閉じる
 		_TextBox->CloseMessage();
+		if (!eventflag)
+		{
+			transform->SetRotation(_Rot);
+		}
 		if (_State != State::Idol && _IsAnimation)
 		{
 			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
 			PlayAnimation(State::Idol, 0.2f);
-			transform->SetRotation(_Rot);
 		}
 	}
 }

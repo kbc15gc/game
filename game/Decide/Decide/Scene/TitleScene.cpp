@@ -111,12 +111,12 @@ void TitleScene::Update()
 	if (_AnyButton)
 	{
 		
-		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU) || KeyBoardInput->isPush(DIK_UP))
+		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKU) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_UP) ||KeyBoardInput->isPush(DIK_UP))
 		{
 			_Select = Select::NewGame;
 			_StartBar->transform->SetPosition(455, 405, 0);
 		}
-		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD) || KeyBoardInput->isPush(DIK_DOWN))
+		if (INSTANCE(InputManager)->GetXInput(0)->IsPressAnalog(AnalogE::L_STICKD) || XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_DPAD_DOWN) ||  KeyBoardInput->isPush(DIK_DOWN))
 		{
 			_Select = Select::Continue;
 			_StartBar->transform->SetPosition(455, 475, 0);
