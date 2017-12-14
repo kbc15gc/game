@@ -143,6 +143,9 @@ void SkinModel::Render()
 	{
 		if (_ModelEffect & ModelEffectE::FRUSTUM_CULLING)
 		{
+			if (strcmp("MaouSiro.X", gameObject->GetName()) == 0)
+				int a = 0;
+
 			_Camera = INSTANCE(GameObjectManager)->mainCamera;
 			if (_Camera != nullptr)
 				//ƒJƒŠƒ“ƒO‚·‚é‚©‚Ç‚¤‚©”»’èB

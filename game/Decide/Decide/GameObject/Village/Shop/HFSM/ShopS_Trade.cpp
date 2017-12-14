@@ -84,11 +84,11 @@ void ShopS_Trade::Update()
 		//数量決定
 		_UpdateTradeNum();
 		//アイテム選択
-		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.8f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.8f))
+		if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonUp, 0.6f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKU, 0.6f))
 		{
 			_SetIndex((_Select > 0) ? _Select - 1 : _DisplayItemNum - 1);
 		}
-		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.8f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.8f))
+		else if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonDown, 0.6f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKD, 0.6f))
 		{
 			_SetIndex((_Select + 1) % _DisplayItemNum);
 		}
@@ -154,13 +154,16 @@ void ShopS_Trade::_UpdateTradeNum()
 {
 	if (VPadInput->KeyRepeat(fbEngine::VPad::ButtonRight,0.4f) || XboxInput(0)->AnalogRepeat(AnalogE::L_STICKR, 0.4f))
 	{
-		int maxNum = 0;
-		//アイテムか消耗品かどうか？
-		if ((*_DisplayList)[_Select]->GetInfo()->TypeID == Item::ItemCodeE::Item)
-			//買うか売るか？
-			maxNum = (_SaveState == Shop::ShopStateE::Buy) ? 99 : ((ConsumptionItem*)_DisplayList->at(_Select))->GetHoldNum();
-		else
-			maxNum = 1;
+		int maxNum = 99;
+		if(_SaveState == Shop::ShopStateE::Sell)
+		{
+			//アイテムか消耗品かどうか？
+			if ((*_DisplayList)[_Select]->GetInfo()->TypeID == Item::ItemCodeE::Item)
+				//買うか売るか？
+				maxNum = ((ConsumptionItem*)_DisplayList->at(_Select))->GetHoldNum();
+			else
+				maxNum = 1;
+		}
 		
 		_TradeNum[_Select] = min(maxNum, _TradeNum[_Select] + 1);
 		_UpdateText();
@@ -274,7 +277,13 @@ void ShopS_Trade::_SetIndex(int idx)
 		_Cursor->SetActive(true);
 	}
 	else
+	{
 		_Cursor->SetActive(false);
+		//説明文を送信。
+		_Shop->SetDescriptionText("");
+		//パラメータを表示。
+		_ParmText->SetText("");
+	}
 	//カーソルをずらす。
 	float posx = -(_TradeWindow->GetSize().x / 2) + _Cursor->GetSize().x / 2;
 	int displayidx = _Select - _MinIdx + 1;
@@ -369,11 +378,11 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto& val = info->effectValue;
 			
 			string tmp = "";
-			const char* p[9] = { "HP: ","MP: ","ATK:","DEF:","INT:","RES:","DEX:","CRT:","LV: " };
-			FOR(idx,9)
+			const char* p[] = { "HP: ","MP: ","ATK:","DEF:","RES:","DEX:","CRT:","LV: " };
+			FOR(idx,ARRAY_SIZE(p))
 			{
 				char per = ' ';
-				if (1 < idx && idx < 8)
+				if (1 < idx && idx < 7)
 					per = '%';
 				sprintf(text, "%s%s%4d%c</color>\n", p[idx], _CalcColorCode(val[idx]), val[idx], per);
 				tmp += text;
@@ -388,13 +397,13 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto equipA = GetPlayer()->GetEquipment()->armor;
 			if (equipA == nullptr)
 			{
-				sprintf(text, "DEF %4d -> %s%4d</color>\nMDE %4d -> %s%4d</color>",
+				sprintf(text, "DEF %4d -> %s%4d</color>\nRES %4d -> %s%4d</color>",
 					player->GetParam(param::DEF), _CalcColorCode(armor->GetDef()), player->GetParam(param::DEF) + armor->GetDef(),
 					player->GetParam(param::MDE), _CalcColorCode(armor->GetMagicDef()), player->GetParam(param::MDE) + armor->GetMagicDef());
 			}
 			else
 			{
-				sprintf(text, "DEF %4d -> %s%4d</color>\nMDE %4d -> %s%4d</color>",
+				sprintf(text, "DEF %4d -> %s%4d</color>\nRES %4d -> %s%4d</color>",
 					player->GetParam(param::DEF) + equipA->GetDef(), _CalcColorCode(armor->GetDef() - equipA->GetDef()), player->GetParam(param::DEF) + armor->GetDef(),
 					player->GetParam(param::MDE) + equipA->GetMagicDef(), _CalcColorCode(armor->GetMagicDef() - equipA->GetMagicDef()), player->GetParam(param::MDE) + armor->GetMagicDef());
 			}
@@ -409,17 +418,15 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 
 			if (equipW == nullptr)
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+				sprintf(text, "ATK %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
 					player->GetParam(param::ATK), _CalcColorCode(weapon->GetAtk()), player->GetParam(param::ATK) + weapon->GetAtk(),
-					player->GetParam(param::MAT), _CalcColorCode(weapon->GetMagicAtk()), player->GetParam(param::MAT) + weapon->GetMagicAtk(),
 					player->GetParam(param::DEX), _CalcColorCode(weapon->GetDex()), player->GetParam(param::DEX) + weapon->GetDex(),
 					player->GetParam(param::CRT), _CalcColorCode(weapon->GetCrt()), player->GetParam(param::CRT) + weapon->GetCrt());
 			}
 			else
 			{
-				sprintf(text, "ATK %4d -> %s%4d</color>\nMAT %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
+				sprintf(text, "ATK %4d -> %s%4d</color>\nDEX %4d -> %s%4d</color>\nCRT %4d -> %s%4d</color>",
 					player->GetParam(param::ATK) + equipW->GetAtk(), _CalcColorCode(weapon->GetAtk() - equipW->GetAtk()), player->GetParam(param::ATK) + weapon->GetAtk(),
-					player->GetParam(param::MAT) + equipW->GetMagicAtk(), _CalcColorCode(weapon->GetMagicAtk() - equipW->GetMagicAtk()), player->GetParam(param::MAT) + weapon->GetMagicAtk(),
 					player->GetParam(param::DEX) + equipW->GetDex(), _CalcColorCode(weapon->GetDex() - equipW->GetDex()), player->GetParam(param::DEX) + weapon->GetDex(),
 					player->GetParam(param::CRT) + equipW->GetCrt(), _CalcColorCode(weapon->GetCrt() - equipW->GetCrt()), player->GetParam(param::CRT) + weapon->GetCrt());
 			}
@@ -491,35 +498,44 @@ void ShopS_Trade::_Decision()
 
 void ShopS_Trade::BuyItem()
 {
+	bool success = false;
 	for (int idx : _IndexList)
 	{
-		bool add = true;
 		//インベントリへ追加。
 		if ((*_DisplayList)[idx]->GetInfo()->TypeID == Item::ItemCodeE::Item)
 		{
 			//アイテムを追加。
-			add = INSTANCE(Inventory)->AddItem((Item::ItemInfo*)(*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]);
+			success = INSTANCE(Inventory)->AddItem((Item::ItemInfo*)(*_DisplayList)[idx]->GetInfo(), _TradeNum[idx]);
+			if (success)
+				//アイテムの値段分お金を払う。
+				_Shop->Pay((*_DisplayList)[idx]->GetValue() * _TradeNum[idx]);
 		}
 		else
 		{
-			//装備品を追加。
-			add = (INSTANCE(Inventory)->AddEquipment((*_DisplayList)[idx]->GetInfo(), false) != nullptr);
+			FOR(num, _TradeNum[idx])
+			{
+				//装備品を追加。
+				success = (INSTANCE(Inventory)->AddEquipment((*_DisplayList)[idx]->GetInfo(), false) != nullptr);
+				if (!success)
+					break;
+				//アイテムの値段分お金を払う。
+				_Shop->Pay((*_DisplayList)[idx]->GetValue());
+			}
 		}
-
-		if (add)
-		{
-			//アイテムの値段分お金を払う。
-			_Shop->Pay((*_DisplayList)[idx]->GetValue() * _TradeNum[idx]);
-			//アイテムを購入したときのメッセージ。
-			_Shop->SpeakMess(3);
-		}
-		else
-		{
-			//持ち物がいっぱいのときのメッセージ。
-			_Shop->SpeakMess(2);
-		}
+		if (!success)
+			break;
 	}
 
+	if (success)
+	{
+		//アイテムを購入したときのメッセージ。
+		_Shop->SpeakMess(3);
+	}
+	else
+	{
+		//持ち物がいっぱいのときのメッセージ。
+		_Shop->SpeakMess(2);
+	}
 	
 }
 
