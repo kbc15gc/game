@@ -580,6 +580,8 @@ void EnemyCharacter::HitAttackCollisionEnter(AttackCollision* hitCollision) {
 
 void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, AttackCollision::ReactionType reaction) {
 	int _damage;
+	AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+
 	if ((_NowState && _NowState->IsPossibleDamage()) || _NowState == nullptr) {
 		// ダメージを与えられるステートだった。
 
@@ -598,8 +600,8 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, Atta
 		{
 			c = Color::red;
 		}
-		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		attackvalue->Init(transform, _damage, info.isCritical,1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
+
+		attackvalue->Init(transform, _damage, info.isCritical, 1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
 
 		if (_isDamageMotion) {
 			// ダメージ時にモーションを再生するか。
@@ -630,6 +632,7 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, Atta
 	}
 	else {
 		_damage = 0;
+		attackvalue->Init(transform, -1, info.isCritical, 1.5f, Vector3(0.0f, 1.0f, 0.0f), Color::white,L"Miss",Vector2::zero,40.0f,Color::white * 0.7f);
 	}
 }
 
