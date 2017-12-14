@@ -55,7 +55,7 @@ public:
 		else if (raito >= 0.71f && raito <= 0.9f) {
 			_Rank = Rank::S;
 		}
-		else if (raito >= 0.9f && raito <= 1.0f) {
+		else if (raito >= 0.91f && raito <= 1.0f) {
 			_Rank = Rank::SS;
 		}
 		//•â³’lŠi”[B
