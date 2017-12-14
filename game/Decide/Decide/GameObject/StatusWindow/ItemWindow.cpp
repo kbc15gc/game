@@ -128,11 +128,11 @@ void ItemWindow::OnEnable()
 		//表示位置を一個さげる.
 		_StartLoadCount = max(0, _StartLoadCount - 1);
 	}
-	else if (_NowSelectItem >= itemCount)
+	if (_NowSelectItem >= itemCount)
 	{
 		//選択位置を一個下げる.
-		int index = _Cursor->PrevMove(1).rangeIndex;
-		_NowSelectItem = max(0, index);
+		_Cursor->SetRamgeIndex(itemCount - 1);
+		_NowSelectItem = max(0, itemCount - 1);
 	}
 
 	_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
