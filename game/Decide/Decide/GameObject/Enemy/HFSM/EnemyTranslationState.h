@@ -46,6 +46,7 @@ private:
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
 private:
+	bool _isStartTrans = true;	// 移動開始したフレームか。
 	Vector3 _Direction;	// 進む方向。
 	float _MoveLength;	// 移動量。
 	float _MoveSpeed;	// 移動するスピード(毎秒)。
@@ -53,4 +54,5 @@ private:
 	// 以下作業用。
 	Vector3 _InitPos;	// 初期位置。
 	bool _isWandering = false;	// 徘徊中の直進か。
+	float _upperPower = 5.0f;	// 坂道を上るスピード(とりあえず決め打ち)。
 };

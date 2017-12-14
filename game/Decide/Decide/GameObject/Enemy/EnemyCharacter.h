@@ -398,6 +398,14 @@ public:
 		return _dropMoney;
 	}
 
+	// キャラクターコントローラで衝突解決した結果を返却。
+	inline const Vector3& GetMoveSpeedExcute()const {
+		return _MyComponent.CharacterController->GetmoveSpeedExcute();
+	}
+	// 前回の衝突解決時に壁に衝突していたか。
+	inline bool GetIsOnWall()const {
+		return _MyComponent.CharacterController->IsOnWall();
+	}
 	// 落とすアイテムの種類を設定。
 
 	//@todo for debug

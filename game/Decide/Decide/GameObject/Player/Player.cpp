@@ -130,6 +130,9 @@ void Player::Awake()
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::SPACE);//空間コリジョンを削除。
+
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
 
@@ -306,8 +309,8 @@ void Player::Start()
 	//ゲーム開始時にインベントリから装備している武具を探し装備し直す。
 	Re_SetEquipment();
 
-	// 初期位置に移動。
-	_CharacterController->Execute();
+	//// 初期位置に移動。
+	//_CharacterController->Execute();
 }
 
 void Player::Update()

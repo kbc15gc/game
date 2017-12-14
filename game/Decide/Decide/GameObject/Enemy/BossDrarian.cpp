@@ -255,7 +255,7 @@ void BossDrarian::_ConfigCollision() {
 			info.rotation = Quaternion::Identity;
 			coll->Create(info, true);
 
-			_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
+			//_MyComponent.ExtrudeCollisions.push_back(coll);	// ついでに押し出しようコリジョンに追加しておく。
 		}
 	}
 
@@ -286,6 +286,7 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ENEMY);
 	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::DROPITEM);
+	_MyComponent.CharacterController->SubAttributeXZ(Collision_ID::ITEMRANGE);
 	// 衝突する属性を設定(縦)。
 	_MyComponent.CharacterController->AttributeY_AllOn();
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ATTACK);
@@ -293,7 +294,7 @@ void BossDrarian::_ConfigCharacterController() {
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::PLAYER);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::SPACE);
 	_MyComponent.CharacterController->SubAttributeY(Collision_ID::DROPITEM);
-
+	_MyComponent.CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);
 }
 
 void BossDrarian::_CreateExtrudeCollision() {

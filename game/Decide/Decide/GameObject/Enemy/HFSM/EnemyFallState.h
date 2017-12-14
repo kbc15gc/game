@@ -17,4 +17,18 @@ private:
 	void _ExitSubClass(EnemyCharacter::State next)override {};
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
+
+	// このステートから移行できるステートを選別する関数。
+	inline bool IsPossibleChangeState(EnemyCharacter::State next)override {
+		if (next == EnemyCharacter::State::Damage) {
+			return false;
+		}
+		return true;
+	}
+
+	// このステート中にダメージを与えられるか。
+	inline virtual bool IsPossibleDamage() {
+		return false;
+	}
+
 };

@@ -75,7 +75,7 @@ void EnemyCharacter::Start() {
 	_InitPos = transform->GetPosition();
 
 	// 継承先で初期位置が設定された可能性があるため更新。
-	_MyComponent.CharacterController->Execute();
+	//_MyComponent.CharacterController->Execute();
 	//_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
 	
 	//プレイヤー。
