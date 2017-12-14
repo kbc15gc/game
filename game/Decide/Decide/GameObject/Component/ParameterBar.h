@@ -272,6 +272,4 @@ public:
 
 private:
 	BarAdapter* _Object = nullptr;
-	//static int destNum;
-	//static int constNum;
 };
