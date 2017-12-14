@@ -97,8 +97,11 @@ public:
 	*/
 	void Stop()
 	{
-		m_sourceVoice->Stop();
-		m_isPlaying = false;
+		if (m_sourceVoice != nullptr)
+		{
+			m_sourceVoice->Stop();
+			m_isPlaying = false;
+		}
 	}
 	/*!
 	* @brief	Ä¶’†HB

@@ -16,7 +16,18 @@ namespace
 {
 	const char* ShopMessageList[] =
 	{
-		"First_1.csv"
+		"1st.csv",
+		"1st.csv",
+		"1st.csv",
+		"2nd.csv",
+		"2nd.csv",
+		"2nd.csv",
+		"3rd.csv",
+		"3rd.csv",
+		"3rd.csv",
+		"3rd.csv",
+		"3rd.csv",
+		"3rd.csv",
 	};
 }
 
@@ -150,7 +161,7 @@ void Shop::_LoadShopData(const unsigned int& shopID)
 
 	_MessageList.clear();
 	string mespath = "Asset/Data/TextData/";
-	mespath += ShopMessageList[0];
+	mespath += ShopMessageList[shopID];
 	//ショップのメッセージを読み込み
 	Support::LoadCSVData<ShopMessage>(mespath.c_str(), ShopMessageData, ARRAY_SIZE(ShopMessageData), _MessageList);
 
@@ -191,6 +202,7 @@ void Shop::SetDescriptionText(string text)
 
 void Shop::PlayVoice(string wavfilepath)
 {
+	_Voice.Stop();
 	_Voice.Init(wavfilepath.c_str(), false);
 	//音小さかったので。
 	_Voice.SetVolume(2.0f);

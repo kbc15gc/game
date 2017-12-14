@@ -442,7 +442,7 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
-		PlayAnimation(AnimationNo::AnimationDeath, 0.1f, 0);
+		PlayAnimation(AnimationNo::AnimationDeath, 0.0f, 0);
 		return;
 	}
 	//ジャンプアニメーション
@@ -456,7 +456,7 @@ void Player::AnimationControl()
 		//走るアニメーション
 		if (_State == State::Run)
 		{
-			PlayAnimation(AnimationNo::AnimationRun, 0.2f);
+			PlayAnimation(AnimationNo::AnimationRun, 0.1f);
 		}
 		//アイドルアニメーション
 		else if (_State == State::Idol)
@@ -471,7 +471,7 @@ void Player::AnimationControl()
 		//ダメージを受けたアニメーション
 		else if (_State == State::Impact)
 		{
-			PlayAnimation(AnimationNo::AnimationImpact, 0.2f, 0);
+			PlayAnimation(AnimationNo::AnimationImpact, 0.0f,0);
 		}
 		//アタックアニメーション
 		else if (_State == State::Attack)
@@ -491,7 +491,7 @@ void Player::AnimationControl()
 				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
 				//_Anim->AddAnimationQueue(info);
 				//アニメーションキューに追加。
-				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1));
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.05f, 0.7f, 1));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
@@ -515,7 +515,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		if (_State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
+		if (_State != State::Death && _State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
 		{
 			ChangeState(State::Impact);
 		}
@@ -801,11 +801,13 @@ void Player::Speak()
 	//NPCを取得
 	vector<vector<NPC*>> npc;
 	npc = INSTANCE(HistoryManager)->GetNPCList();
-
 	//ショップイベントフラグ取得。
 	bool eventflag = INSTANCE(EventManager)->IsEvent();
+	//NPC
+	float len = FLT_MAX;
+	static NPC* nearnpc = nullptr;
 
-	//村
+	//一番近い村人を探す。
 	for (auto village : npc)
 	{
 		//サイズが0ならコンティニュー
@@ -822,53 +824,120 @@ void Player::Speak()
 			}
 			//NPCからプレイヤーのベクトル
 			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-			float len = dir.Length();
-			//範囲内かどうか
-			//ショップイベント中でないとき
-			if (npc->GetRadius() >= len && !eventflag)
+			//現在一番近いモノより近いので。
+			if (len > dir.Length())
 			{
-				if (_CharacterController == nullptr)
+				//他に近い人がいるので、前の人とはばいばい。
+				if (nearnpc)
 				{
-					return;
+					nearnpc->SetIsSpeak(false);
 				}
-				//地面についていれば話しかけれる
-				//ショップイベントでないとき。
-				if (_CharacterController->IsOnGround())
-				{
-					//会話のためHPバーなどを消す。
-					_HPBar->RenderDisable();
-					//_MPBar->RenderDisable();
-					//話すフラグセット
-					npc->SetIsSpeak(true);
-					//プレイヤー話すフラグ設定
-					//ジャンプしなくなる
-					_NoJump = true;
-					//これ以上処理は続けない
-					break;
-				}
+				len = dir.Length();
+				nearnpc = npc;
 			}
-			else
-			{
-				//話すNPCがいないので
-				npc->SetIsSpeak(false);
-				//話し終わると
-				if (_NoJump)
-				{
-					if (_HPBar/* && _MPBar*/)
-					{
-						_HPBar->RenderEnable();
-						//_MPBar->RenderEnable();
-						_NoJump = false;
-					}
-				}
-			}
-		}
-		//話す状態ならもう回さない。
-		if (_NoJump)
-		{
-			break;
 		}
 	}
+	//近くのnpcがいる場合
+	if (nearnpc)
+	{
+		//会話可能
+		if (len <= 3.0f && !eventflag)
+		{
+			//地面についていれば話しかけれる
+			//ショップイベントでないとき。
+			if (_CharacterController->IsOnGround())
+			{
+				//会話のためHPバーなどを消す。
+				_HPBar->RenderDisable();
+				//_MPBar->RenderDisable();
+				//話すフラグセット
+				nearnpc->SetIsSpeak(true);
+				//プレイヤー話すフラグ設定
+				//ジャンプしなくなる
+				_NoJump = true;
+			}
+		}
+		else
+		{
+			//話すNPCがいないので
+			nearnpc->SetIsSpeak(false);
+			//話し終わると
+			if (_NoJump)
+			{
+				if (_HPBar/* && _MPBar*/)
+				{
+					_HPBar->RenderEnable();
+					//_MPBar->RenderEnable();
+					_NoJump = false;
+				}
+			}
+		}
+	}
+
+	//村
+	//for (auto village : npc)
+	//{
+	//	//サイズが0ならコンティニュー
+	//	if (village.size() == 0)
+	//	{
+	//		continue;
+	//	}
+	//	//NPC
+	//	for (auto npc : village)
+	//	{
+	//		if (npc == nullptr)
+	//		{
+	//			continue;
+	//		}
+	//		//NPCからプレイヤーのベクトル
+	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
+	//		float len = dir.Length();
+	//		//範囲内かどうか
+	//		//ショップイベント中でないとき
+	//		if (npc->GetRadius() >= len && !eventflag)
+	//		{
+	//			if (_CharacterController == nullptr)
+	//			{
+	//				return;
+	//			}
+	//			//地面についていれば話しかけれる
+	//			//ショップイベントでないとき。
+	//			if (_CharacterController->IsOnGround())
+	//			{
+	//				//会話のためHPバーなどを消す。
+	//				_HPBar->RenderDisable();
+	//				//_MPBar->RenderDisable();
+	//				//話すフラグセット
+	//				npc->SetIsSpeak(true);
+	//				//プレイヤー話すフラグ設定
+	//				//ジャンプしなくなる
+	//				_NoJump = true;
+	//				//これ以上処理は続けない
+	//				break;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			//話すNPCがいないので
+	//			npc->SetIsSpeak(false);
+	//			//話し終わると
+	//			if (_NoJump)
+	//			{
+	//				if (_HPBar/* && _MPBar*/)
+	//				{
+	//					_HPBar->RenderEnable();
+	//					//_MPBar->RenderEnable();
+	//					_NoJump = false;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	//話す状態ならもう回さない。
+	//	if (_NoJump)
+	//	{
+	//		break;
+	//	}
+	//}
 }
 
 #ifdef _DEBUG || LEVELDEBUG

@@ -220,7 +220,7 @@ void GameObjectManager::_RemoveObject()
 		removeIt = _RemoveList.erase(removeIt);
 	}
 
-	_RemoveList.clear();
+	//_RemoveList.clear();
 }
 
 void GameObjectManager::Release()
