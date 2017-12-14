@@ -211,12 +211,12 @@ public:
 	//			バーのスケーリングの際に補間処理を使用するか(デフォルトはtrue)。
 	//			バーの枠を描画するか(デフォルトはtrue)。
 	//			親のTransform情報(未設定かnull指定で設定しないようにできる)。
+	//			更新優先度(デフォルトは5)。
 	//			位置(ローカル座標、未設定で画面の左上に表示)。
 	//			拡縮(ワールド座標、未設定で画面の左上に表示)。
-	//			更新優先度(デフォルトは5)。
 	//			バーの背景を使用するか(デフォルトはfalse)。
 	//			HUDとして使用するか(デフォルトはtrue)。
-	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, int priorty = 5, bool isBackColor = false,bool isHud = true) {
+	inline void Create(const vector<BarColor>& colors, float max, float value,bool isInterpolation = true, bool isRenderFrame = true, Transform* tr = nullptr, int priorty = 5, const Vector3& pos = CreatePos_DefaultArg, const Vector2& scale = CreateScale_DefaultArg, bool isBackColor = false,bool isHud = true) {
 		if (_Object) {
 			INSTANCE(GameObjectManager)->AddRemoveList(_Object);
 		}

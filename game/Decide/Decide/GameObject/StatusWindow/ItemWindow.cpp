@@ -501,12 +501,12 @@ void ItemWindow::_CreateCIShowStatus()
 	_ExpBar = AddComponent<ParameterBar>();
 	vector<BarColor> barColor;
 	barColor.push_back(BarColor::Yellow);
-	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->transform, Vector3(25.0f, 46.0f, 0.0f), Vector2(1.16f,0.35f), 8,true);
+	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->transform,8, Vector3(25.0f, 46.0f, 0.0f), Vector2(1.16f,0.35f),true);
 
 	_HpBar = AddComponent<ParameterBar>();
 	barColor.clear();
 	barColor.push_back(BarColor::Green);
-	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform, Vector3(50.0f,18.0f, 0.0f), Vector2(1.0f,0.7f), 8, false);
+	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform,8, Vector3(50.0f,18.0f, 0.0f), Vector2(1.0f,0.7f), false);
 
 	//_MpBar = AddComponent<ParameterBar>();
 	//barColor.clear();
