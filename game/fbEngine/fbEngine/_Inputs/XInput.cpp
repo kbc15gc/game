@@ -90,7 +90,7 @@ bool XInput::KeyRepeat(int in, float interval)
 		_RepeatTimer[BUTTON][in] += Time::DeltaTime();
 		if (_RepeatTimer[BUTTON][in] >= _Interval[BUTTON][in])
 		{
-			_Interval[ANALOG][in] = 0.001f;
+			_Interval[BUTTON][in] = 0.001f;
 			_RepeatTimer[BUTTON][in] = 0.0f;
 			return true;
 		}
