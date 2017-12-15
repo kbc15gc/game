@@ -83,6 +83,13 @@ void Movie::LoadVideo(const wstring & filename)
 	// Graphを生成
 	hRes = _CaptureGraphBuilder2->RenderStream(0, 0, _Source, 0, _VMR9);
 
+	// 再生するファイルをSourceFilterとして用意
+	//hRes = _GraphBuilder->AddSourceFilter(filepath.c_str(), L"Source", &_Source);	
+	//hRes = _GraphBuilder->Connect(_VMR9, _Source);
+
+	// Graphを生成
+	//hRes = _CaptureGraphBuilder2->RenderStream(0, 0, _Source, 0, _VMR9);
+
 	//ウィンドウの設定。
 	{
 		IVideoWindow *pVideoWindow;
