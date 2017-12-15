@@ -16,6 +16,9 @@ public:
 	{
 		//インターフェースをリリース
 		//作ったときと逆順に解放
+		SAFE_RELEASE(_CaptureGraphBuilder2);
+		SAFE_RELEASE(_VMR9);
+		SAFE_RELEASE(_Source);
 		SAFE_RELEASE(_MediaEvent);
 		SAFE_RELEASE(_MediaControl);
 		SAFE_RELEASE(_GraphBuilder);
@@ -43,4 +46,10 @@ private:
 	IMediaControl* _MediaControl = nullptr;
 	//メディアイベント
 	IMediaEvent* _MediaEvent = nullptr;
+	//VMR-9
+	IBaseFilter *_VMR9 = NULL;
+	//再生するファイルをSourceFilterとして用意
+	IBaseFilter *_Source;
+	//キャプチャ用のグラフィックビルダー。
+	ICaptureGraphBuilder2 *_CaptureGraphBuilder2 = nullptr;
 };
