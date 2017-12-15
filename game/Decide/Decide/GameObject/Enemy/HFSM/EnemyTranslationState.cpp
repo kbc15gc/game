@@ -17,6 +17,7 @@ EnemyTranslationState::~EnemyTranslationState()
 
 void EnemyTranslationState::_EntrySubClass() {
 	_isWandering = false;
+	_isStartTrans = true;
 }
 
 void EnemyTranslationState::_StartSubClass() {
@@ -63,9 +64,21 @@ void EnemyTranslationState::_UpdateSubClass() {
 				return;
 			}
 		}
+
+		if (!_isStartTrans && _EnemyObject->GetMoveSpeedExcute().Length() <= 0.01f) {
+			// 移動し始めてから壁などに引っかかって移動していない。
+			if (_EnemyObject->GetIsOnWall()) {
+				// 壁に衝突している。
+
+				_EndState();
+			}
+		}
+
 		// 求めた移動量をエネミーの移動量に加算。
 		_EnemyObject->AddMoveSpeed(moveSpeed);
 	}
+
+	_isStartTrans = false;
 }
 
 

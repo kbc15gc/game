@@ -25,6 +25,20 @@ private:
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
+	// このステートから移行できるステートを選別する関数。
+	inline virtual bool IsPossibleChangeState(EnemyCharacter::State next) {
+		if (next == EnemyCharacter::State::Damage || next == EnemyCharacter::State::Death || next == EnemyCharacter::State::Fall) {
+			return false;
+		}
+		return true;
+	}
+
+	// このステート中にダメージを与えられるか。
+	inline virtual bool IsPossibleDamage() {
+		return false;
+	}
+
+
 private:
 	bool _isOutsideRange = false;	// 範囲外に出たか。
 	float _timeCounter;

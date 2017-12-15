@@ -360,44 +360,55 @@ namespace fbPhysicsCallback
 			}
 
 			//衝突点の法線を引っ張ってくる。
-			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
+			Vector3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
 			//// ワールド行列取得。
 			//D3DXMATRIX worldMat;
 			//worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
 			//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitNormalTmp), &hitNormalTmp, &worldMat);	// ワールド座標に変換。
-			D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
-
+			hitNormalTmp.Normalize();
 			//上方向と衝突点の法線のなす角度を求める。
-			float angle = fabsf(acosf(D3DXVec3Dot(&hitNormalTmp, &D3DXVECTOR3(0.0f, 1.0f, 0.0f))));
+			float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
 
-			if (((angle < D3DXToRadian(54.0f))		//地面の傾斜が54度より小さいので地面とみなす。
+			if ((angle < D3DXToRadian(54.0f)		//地面の傾斜が54度より小さいので地面とみなす。
 				&& (_attribute & convexResult.m_hitCollisionObject->getUserIndex()))
-				|| convexResult.m_hitCollisionObject->getUserIndex() == (int)fbCollisionAttributeE::GROUND
+				|| convexResult.m_hitCollisionObject->getUserIndex() == static_cast<int>(fbCollisionAttributeE::GROUND)
 				) {
 
 				//衝突している。
 				isHit = true;
 
-				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
-				//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitPosTmp), &hitPosTmp, &worldMat);	// ワールド座標に変換。			
+				Vector3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
 
 				//交点との距離を調べる。
 				Vector3 vDistTmp;
-				vDistTmp.Subtract(Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z), startPos);
-				//vDistTmp.y = 0.0f;
+				vDistTmp.Subtract(hitPosTmp, startPos);
 				float distTmp = vDistTmp.Length();
 				if (dist > distTmp) {
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
-					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
+					hitPos = hitPosTmp;
 					dist = distTmp;
-					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+					hitNormal = hitNormalTmp;
 					hitID = convexResult.m_hitCollisionObject->getUserIndex();
 					//if (angle >= D3DXToRadian(SlipAngle)) {
 					//	// 指定角度以上なので滑らせる。
 					//	isSlip = true;
 					//}
+
+					//if (strcmp(me->GetName(), "Player") == 0) {
+					//	char text[256];
+					//	sprintf(text, "HitGround!, angle = %f, nowPos = Vector3(%f,%f,%f), hitPos = Vector3(%f,%f,%f)\n", D3DXToDegree(angle), hitPosTmp.x, hitPosTmp.y, hitPosTmp.z, me->transform->GetPosition().x, me->transform->GetPosition().y, me->transform->GetPosition().z);
+					//	OutputDebugString(text);
+					//}
 				}
 			}
+			//else {
+			//	if (strcmp(me->GetName(), "Player") == 0) {
+			//		char text[256];
+			//		sprintf(text, "NonHitGround!, angle = %f, nowPos = Vector3(%f,%f,%f)\n", D3DXToDegree(angle), me->transform->GetPosition().x, me->transform->GetPosition().y, me->transform->GetPosition().z);
+			//		OutputDebugString(text);
+			//	}
+			//}
+
 
 			return 0.0f;
 		}
@@ -426,40 +437,48 @@ namespace fbPhysicsCallback
 			}
 
 			//衝突点の法線を引っ張ってくる。
-			D3DXVECTOR3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
-			//// ワールド行列取得。
-			//D3DXMATRIX worldMat;
-			//worldMat = static_cast<Collision*>(convexResult.m_hitCollisionObject->getUserPointer())->gameObject->transform->GetWorldMatrix();
-			//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitNormalTmp), &hitNormalTmp, &worldMat);	// ワールド座標に変換。
-			//D3DXVec3Normalize(&hitNormalTmp, &hitNormalTmp);
+			Vector3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
+
+			hitNormalTmp.Normalize();
+
 			//上方向と衝突点の法線のなす角度を求める。
-			float angle = fabsf(acosf(D3DXVec3Dot(&hitNormalTmp, &D3DXVECTOR3(0.0f, 1.0f, 0.0f))));
-			if (((angle >= D3DXToRadian(54.0f))
+			float angle = fabsf(acosf(hitNormalTmp.Dot(Vector3::up)));
+			if ((angle >= D3DXToRadian(54.0f)
 				&& (_attribute & convexResult.m_hitCollisionObject->getUserIndex()))		//傾斜が54度以上かつ衝突を取りたい属性なので壁とみなす。
-				|| convexResult.m_hitCollisionObject->getUserIndex() == static_cast<int>(fbCollisionAttributeE::GROUND)	// もしくは地面は抜けないようにする。
+				//|| convexResult.m_hitCollisionObject->getUserIndex() == static_cast<int>(fbCollisionAttributeE::GROUND)	// もしくは地面は抜けないようにする。
 				) {
 				isHit = true;
 
-				D3DXVECTOR3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
-				//D3DXVec3Transform(&static_cast<D3DXVECTOR4>(hitPosTmp), &hitPosTmp, &worldMat);	// ワールド座標に変換。			
+				Vector3 hitPosTmp(convexResult.m_hitPointLocal.x(), convexResult.m_hitPointLocal.y(), convexResult.m_hitPointLocal.z());
 
 
 				//交点との距離を調べる。
 				Vector3 vDistTmp;
 				vDistTmp.Subtract(Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z), startPos);
-				float distTmp = Vector3(vDistTmp.x, 0.0f, vDistTmp.z).Length();
-				if (distTmp < dist) {
-					if (convexResult.m_hitCollisionObject->getUserIndex() == BIT(3)) {
-						OutputDebugString("aaa");
-					}
+				vDistTmp.y = 0.0f;
 
+				float distTmp = vDistTmp.Length();
+				if (distTmp < dist) {
 					//この衝突点の方が近いので、最近傍の衝突点を更新する。
-					hitPos = Vector3(hitPosTmp.x, hitPosTmp.y, hitPosTmp.z);
+					hitPos = hitPosTmp;
 					dist = distTmp;
-					hitNormal = Vector3(hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+					hitNormal =hitNormalTmp;
 					hitID = convexResult.m_hitCollisionObject->getUserIndex();
+
+					//if (strcmp(me->GetName(), "Player") == 0) {
+						//char text[256];
+						//sprintf(text, "HitWall!, angle = %f, normal = Vector3(%f,%f,%f)\n", D3DXToDegree(angle), hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+						//OutputDebugString(text);
+					//}
 				}
 			}
+			//else {
+			//	if (strcmp(me->GetName(), "Player") == 0) {
+					//char text[256];
+					//sprintf(text, "NonHitWall!, angle = %f, normal = Vector3(%f,%f,%f)\n", D3DXToDegree(angle), hitNormalTmp.x, hitNormalTmp.y, hitNormalTmp.z);
+					//OutputDebugString(text);
+			//	}
+			//}
 
 			return 0.0f;
 		}
