@@ -65,8 +65,11 @@ public:
 		_IsSpeak = flag;
 	}
 
-	// 会話終了か取得。
+	// 会話終了か取得(中断した場合も含む)。
 	bool GetIsSpeakEnd()const;
+
+	// 会話終了か取得(話を最後まで聞き終わった場合のみ)。
+	bool GetisSpeakEndLastMessage()const;
 
 	float GetRadius()
 	{
@@ -113,7 +116,7 @@ protected:
 
 	//Playerと話しができるか
 	bool _IsSpeak;
-	
+
 	//回転
 	ObjectRotation* _Rotation = nullptr;
 	Quaternion _Rot;

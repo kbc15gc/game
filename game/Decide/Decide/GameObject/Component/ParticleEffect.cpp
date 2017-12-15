@@ -1,6 +1,37 @@
 #include "stdafx.h"
 #include "ParticleEffect.h"
 
+
+void ParticleEffect::OnDestroy() {
+	if (_BuffParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_BuffParticleEmitter);
+	}
+	if (_DebuffParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_DebuffParticleEmitter);
+	}
+	if (_BigMonsterDebuffParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_BigMonsterDebuffParticleEmitter);
+	}
+	if (_HeelHpParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_HeelHpParticleEmitter);
+	}
+	if (_HeelParticleAssistEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_HeelParticleAssistEmitter);
+	}
+	if (_HeelMpParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_HeelMpParticleEmitter);
+	}
+	if (_FireFlyParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_FireFlyParticleEmitter);
+	}
+	if (_RareDropEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_RareDropEmitter);
+	}
+	if (_LevelUPParticleEmitter) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_LevelUPParticleEmitter);
+	}
+}
+
 void ParticleEffect::Awake() {
 	_BuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("BuffParticleEffect", 10);
 	_DebuffParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("DebuffParticleEffect", 10);

@@ -27,6 +27,9 @@ public:
 	//初期化を行う純粋仮想関数
 	virtual void Start(){};
 
+	//更新の前に呼び出される関数。
+	virtual void PreUpdate() {};
+
 	//更新を行う純粋仮想関数
 	virtual void Update(){};
 
@@ -35,7 +38,7 @@ public:
 	virtual void LateUpdate(){};
 
 	//内包されたアップデート。
-	void ConnoteUpdate()
+	void ConnotePreUpdate()
 	{
 		//最初の一回ならStartを呼び出す。
 		if (_FirstUpdate)
@@ -44,7 +47,25 @@ public:
 			_FirstUpdate = false;
 		}
 		else
+			PreUpdate();
+	}
+
+	void ConnoteUpdate()
+	{
+		// Startが呼ばれるまでは無視。
+		if (!_FirstUpdate)
+		{
 			Update();
+		}
+	}
+
+	void ConnoteLateUpdate()
+	{
+		// Startが呼ばれるまでは無視。
+		if (!_FirstUpdate)
+		{
+			LateUpdate();
+		}
 	}
 
 #ifdef _DEBUG

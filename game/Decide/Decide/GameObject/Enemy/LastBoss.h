@@ -39,6 +39,7 @@ public:
 
 	void SordAttackEvent();
 	void SordAttackEvent2();
+	void FastSord();
 	void MagicAttackStart1();
 	void MagicAttackShot1();
 	void MagicAttackStart2();
@@ -115,11 +116,14 @@ private:
 private:
 	LastBossState _saveState;
 	unique_ptr<EnemySingleAttack> _sordAttack;	// 単攻撃処理。
+	unique_ptr<EnemySingleAttack> _sordAttack2;	// 単攻撃処理。
+	unique_ptr<EnemyWarpAttack> _warpAttack;
 	unique_ptr<EnemyBreathAttack> _magicAttack;
 	unique_ptr<EnemySingleAttack> _buffAttack;
 	unique_ptr<EnemySingleAttack> _debuffAttack;
 	unique_ptr<EnemySingleAttack> _commandAttack;
 	unique_ptr<EnemySingleAttack> _encourageBuffAttack;
+
 
 	LastBossMagic* _magicFire1 = nullptr;
 	LastBossMagic* _magicFire2 = nullptr;

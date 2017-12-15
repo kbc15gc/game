@@ -6,7 +6,17 @@ ComponentManager::~ComponentManager()
 	Release();
 }
 
-void ComponentManager::ConnoteUpdate() const
+void ComponentManager::PreUpdate()const {
+	for each (Component* c in _Components)
+	{
+		if (c->GetEnable())
+		{
+			c->ConnotePreUpdate();
+		}
+	}
+}
+
+void ComponentManager::Update() const
 {
 	for each (Component* c in _Components)
 	{
@@ -23,7 +33,7 @@ void ComponentManager::LateUpdate() const
 	{
 		if (c->GetEnable())
 		{
-			c->LateUpdate();
+			c->ConnoteLateUpdate();
 		}
 	}
 }

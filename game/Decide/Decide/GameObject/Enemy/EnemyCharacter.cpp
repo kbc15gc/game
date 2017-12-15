@@ -140,6 +140,10 @@ void EnemyCharacter::LateUpdate() {
 	// 継承先により変わる処理。
 	_LateUpdateSubClass();
 
+	if (_NowState) {
+		_NowState->LateUpdate();
+	}
+
 	_MoveSpeed = Vector3::zero;	// 使い終わったので初期化。
 
 	// 最短エネミーの情報をリセット。

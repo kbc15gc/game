@@ -11,12 +11,26 @@ GameObject* GameObjectManager::Add(GameObject* pAdd, int priority)
 	return pAdd;
 }
 
-void GameObjectManager::UpdateObject()
+void GameObjectManager::PreUpdateObject()
 {
 	//削除リストを削除
 	_RemoveObject();
 
+	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
+	{
+		for each (GameObject* obj in _GameObjects[priority])
+		{
+			if (obj->GetActive())
+			{
+				obj->ConnotePreUpdate();
+				obj->GetComponentManager().PreUpdate();
+			}
+		}
+	}
+}
 
+void GameObjectManager::UpdateObject()
+{
 	for (short priority = 0; priority <= System::MAX_PRIORITY; priority++)
 	{
 		for each (GameObject* obj in _GameObjects[priority])
@@ -26,7 +40,7 @@ void GameObjectManager::UpdateObject()
 				if (!(obj->GetIsStopUpdate())) {
 					// 更新ストップフラグがオフ。
 					obj->ConnoteUpdate();
-					obj->GetComponentManager().ConnoteUpdate();
+					obj->GetComponentManager().Update();
 				}
 			}
 		}
@@ -41,7 +55,7 @@ void GameObjectManager::LateUpdateObject()
 		{
 			if (obj->GetActive())
 			{
-				obj->LateUpdate();
+				obj->ConnoteLateUpdate();
 				obj->GetComponentManager().LateUpdate();
 			}
 		}
