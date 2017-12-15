@@ -163,6 +163,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 #include "Scene\TitleScene.h"
 #include "Scene\GameScene.h"
 #include "Scene\LastBossTestScene.h"
+#include "Scene\EndingScene.h"
 
 void InitializeGame()
 {
@@ -171,6 +172,7 @@ void InitializeGame()
 	INSTANCE(SceneManager)->Add<TitleScene>();
 	INSTANCE(SceneManager)->Add<GameScene>();
 	INSTANCE(SceneManager)->Add<LastBossTestScene>();
+	INSTANCE(SceneManager)->Add<EndingScene>();
 
 	INSTANCE(SceneManager)->ChangeScene("TitleScene");
 }

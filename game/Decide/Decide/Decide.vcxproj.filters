@@ -360,6 +360,9 @@
     <ClCompile Include="SaveData\SaveDataManager.cpp">
       <Filter>SaveData</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\EndingScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -737,6 +740,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\History\HistoryManager.h">
       <Filter>GameObject\History</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\EndingScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

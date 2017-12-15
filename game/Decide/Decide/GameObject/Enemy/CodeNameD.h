@@ -84,8 +84,8 @@ private:
 		if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Medicine))
 		{
 			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
-			chip->SetDropChipID(ChipID::Medicine, transform->GetPosition() + Vector3(0.0f, -0.5f, 0.0f));
-
+			chip->SetDropChipID(ChipID::Medicine, transform->GetPosition() + Vector3(0.0f, 1.0f, 0.0f));
+			chip->SetGetTime(ChipTimer);
 		}
 	}
 

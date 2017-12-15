@@ -2,6 +2,7 @@
 #include "fbEngine\_Scene\Scene.h"
 #include "fbEngine\_Object\_GameObject\SoundSource.h"
 #include "GameObject/Player/Player.h"
+#include "GameObject\Enemy\LastBoss.h"
 
 namespace 
 {
@@ -54,7 +55,9 @@ private:
 	SoundSource* _GameBGM;
 	BGM _BGM;
 	Player* _Player;
+	LastBoss* _LastBoss;
 	HistoryMenu* _HistoryMenu = nullptr;
 	HistoryBook* _HistoryBook = nullptr;
 	VillageName* _VillageName = nullptr;
+	bool _IsEnding;
 };

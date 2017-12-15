@@ -41,7 +41,7 @@
 
 #include"GameObject\GameManager.h"
 #include"GameObject\StatusWindow\StatusWindow.h"
-#include "GameObject\Enemy\LastBoss.h"
+
 
 #include"_Debug\TestObject.h"
 
@@ -138,7 +138,7 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	LastBoss* enemy = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	_LastBoss = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -146,7 +146,7 @@ void GameScene::Start()
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
 	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	enemy->SetParamAll(Color, param);
+	_LastBoss->SetParamAll(Color, param);
 	
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -205,6 +205,9 @@ void GameScene::Start()
 	//チップを作成
 	_NewChip();
 
+	//エンディングフラグ
+	_IsEnding = false;
+
 	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
 	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
 	//g_depth->SetPivot(Vector2(0, 0));
@@ -214,6 +217,12 @@ void GameScene::Start()
 
 void GameScene::Update()
 {
+	//エンディングへ。
+	if (_LastBoss->GetDeathFlag())
+	{
+		INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
+	}
+
 	//@todo for debug
 	//デバッグ機能だと思うのでデバッグ専用にしときます。
 	//必要な場合は変えてください。
@@ -303,6 +312,7 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("FireChip", 2);
 		chip->SetChipID(ChipID::Fire);
+		chip->SetGetTime(0.0f);
 	}
 
 	//木
@@ -310,6 +320,7 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("TreeChip", 2);
 		chip->SetChipID(ChipID::Tree);
+
 	}
 
 	//狩
@@ -317,6 +328,7 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("CopperChip", 2);
 		chip->SetChipID(ChipID::Copper);
+		chip->SetGetTime(0.0f);
 	}
 
 	//農
@@ -324,18 +336,21 @@ void GameScene::_NewChip()
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("AgricultureChip", 2);
 		chip->SetChipID(ChipID::Agriculture);
+		chip->SetGetTime(0.0f);
 	}
 	//鉄
 	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Iron))
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("IronChip", 2);
 		chip->SetChipID(ChipID::Iron);
+		chip->SetGetTime(0.0f);
 	}
 	//油
 	if (!INSTANCE(HistoryManager)->IsSetChip(ChipID::Oil))
 	{
 		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("OilChip", 2);
 		chip->SetChipID(ChipID::Oil);
+		chip->SetGetTime(0.0f);
 	}
 }
 
