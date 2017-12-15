@@ -59,6 +59,12 @@ public:
 		_saveState = state;
 	}
 
+	//Ž€–Sƒtƒ‰ƒOƒQƒbƒg
+	inline bool GetDeathFlag()
+	{
+		return _MyComponent.Parameter->GetDeathFlg();
+	}
+
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 

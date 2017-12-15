@@ -366,8 +366,8 @@ void Player::Update()
 
 	//@todo for DebugRelease
 	//リリース時のレベルアップ。
-#define LEVELDEBUG
-#ifdef LEVELDEBUG
+#define RELEASEEBUG
+#ifdef RELEASEEBUG
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
@@ -377,6 +377,26 @@ void Player::Update()
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		item->Create(0, 2, transform->GetPosition(), 2);
 	}
+
+	/*Vector3(-387.3f, 58.307f, -75.8f),
+		Vector3(-108.1f, 55.524f, 533.9f),
+		Vector3(218.88f, 67.0f, -0.92f),*/
+	//-145.69, 190.0f, 264.72f
+
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_U)) {
+		transform->SetLocalPosition(-387.3f, 58.307f, -75.8f);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_I)) {
+		transform->SetLocalPosition(-108.1f, 55.524f, 533.9f);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_O)) {
+		transform->SetLocalPosition(218.88f, 67.0f, -0.92f);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M)) {
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+	}
+
+
 #endif
 }
 
@@ -417,10 +437,6 @@ void Player::ChangeState(State nextstate)
 		//デフォルト
 		break;
 	}
-
-	char text[256];
-	sprintf(text, "PlayerState %d\n", _State);
-	OutputDebugString(text);
 
 	//次のステートに変更
 	_State = nextstate;
@@ -529,23 +545,23 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 
 		// ダメージを与える処理
-		//int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
-		//_HPBar->SubValue(static_cast<float>(damage));
-		//_DamageSound->Play(false);//ダメージを受けたときのSE
-		//AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		//Color c;
-		//if (damage == 0)
-		//{
-		//	//灰色に
-		//	c = Color::white * 0.3f;
-		//}
-		//else
-		//{
-		//	c = Color::blue;
-		//}
-		////ダメージ量を表示する。
-		//attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
-		//attackvalue->transform->SetParent(transform);
+		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
+		_HPBar->SubValue(static_cast<float>(damage));
+		_DamageSound->Play(false);//ダメージを受けたときのSE
+		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+		Color c;
+		if (damage == 0)
+		{
+			//灰色に
+			c = Color::white * 0.3f;
+		}
+		else
+		{
+			c = Color::blue;
+		}
+		//ダメージ量を表示する。
+		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
+		attackvalue->transform->SetParent(transform);
 	}
 }
 
