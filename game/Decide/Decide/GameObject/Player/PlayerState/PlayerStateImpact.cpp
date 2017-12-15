@@ -24,7 +24,6 @@ void PlayerStateImpact::Update()
 	if (_Player->_Anim->GetPlaying() != true)
 	{
 		_Player->ChangeState(Player::State::Idol);
-		return;
 	}
 	_Player->GetCharaCon().SetMoveSpeed(movespeed);
 	_Player->GetCharaCon().Execute();

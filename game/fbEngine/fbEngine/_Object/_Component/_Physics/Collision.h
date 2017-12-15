@@ -53,16 +53,16 @@ public:
 	shared_ptr<btCollisionObject> GetCollisionObj_shared()const {
 		return _CollisionObject;
 	}
-	//オフセットした先のポジション取得
+	//コリジョンの中心点の座標を取得。
 	inline const Vector3& GetOffsetPos()
 	{
 		_UpdateOffsetPos();
 		return _OffsetPos;
 	}
 
-	// 渡された位置からOffset分減算した値を返却。
+	// 渡された位置からOffset分減算した値(たぶんモデルの原点)を返却。
 	inline const Vector3& SubOffset(Vector3& pos){
-		_UpdateOffsetPos();
+		//_UpdateOffsetPos();
 		pos = pos - (transform->GetRight() * _Offset.x);
 		pos = pos - (transform->GetUp() * _Offset.y);
 		pos = pos - (transform->GetForward() * _Offset.z);

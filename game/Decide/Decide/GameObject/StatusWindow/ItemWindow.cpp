@@ -123,20 +123,15 @@ void ItemWindow::OnEnable()
 		}
 	}
 	_Cursor->SetMax(itemCount);	// 要素数を更新。
-	if (_StartLoadCount > 0 && ItemCellSize + _StartLoadCount > itemCount)
+	//アイテム数が減っていたらカーソルの位置を更新.
+	if (itemCount < _BefItemCount)
 	{
-		//表示位置を一個さげる.
-		_StartLoadCount = max(0, _StartLoadCount - 1);
+		_Cursor->SetIndex(0, 0, 0);
+		_NowSelectItem = 0;
+		_StartLoadCount = 0;
+		_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
+		_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 	}
-	if (_NowSelectItem >= itemCount)
-	{
-		//選択位置を一個下げる.
-		_Cursor->SetRamgeIndex(itemCount - 1);
-		_NowSelectItem = max(0, itemCount - 1);
-	}
-
-	_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
-	_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 }
 
 /**
@@ -145,25 +140,8 @@ void ItemWindow::OnEnable()
 void ItemWindow::ItemInit()
 {
 	_WindowName->SetText(L"アイテム一覧");
-
 	// ステータス表示作成。
 	_CreateCIShowStatus();
-
-	//Vector3 pos[4] =
-	//{
-	//	Vector3(-250.0f,140.0f,0.0f),	//上
-	//	Vector3(-250.0f,250.0f,0.0f),	//下
-	//	Vector3(-220.0f,195.0f,0.0f),	//右
-	//	Vector3(-280.0f,195.0f,0.0f),	//左
-	//};
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
-	//	holdItem->transform->SetParent(transform);
-	//	holdItem->transform->SetLocalPosition(pos[i]);
-	//	holdItem->Init((i % 2 == 1));
-	//	_HoldItem2DList.push_back(holdItem);
-	//}
 }
 
 /**
@@ -172,14 +150,7 @@ void ItemWindow::ItemInit()
 void ItemWindow::WeaponInit()
 {
 	_WindowName->SetText(L"武器一覧");
-
 	_CreateWIShowStatus();
-
-	//HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
-	//holdItem->transform->SetParent(transform);
-	//holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
-	//holdItem->Init();
-	//_HoldItem2DList.push_back(holdItem);
 }
 
 /**
@@ -188,14 +159,7 @@ void ItemWindow::WeaponInit()
 void ItemWindow::ArmorInit()
 {
 	_WindowName->SetText(L"防具一覧");
-
 	_CreateAIShowStatus();
-
-	//HoldItem2D* holdItem = INSTANCE(GameObjectManager)->AddNew<HoldItem2D>("", 9);
-	//holdItem->transform->SetParent(transform);
-	//holdItem->transform->SetLocalPosition(Vector3(-400.0f, 250.0f, 0.0f));
-	//holdItem->Init();
-	//_HoldItem2DList.push_back(holdItem);
 }
 
 /**
@@ -206,10 +170,6 @@ void ItemWindow::LateUpdate()
 	Input();
 
 	_EIconImage->SetActive(false, true);
-	/*for (auto it : _HoldItem2DList)
-	{
-		it->SetHoldItem(nullptr);
-	}*/
 
 	auto& itemList = INSTANCE(Inventory)->GetInventoryList(_ItemCode);
 	for (int i = 0; i < ItemCellSize; i++)
@@ -225,7 +185,6 @@ void ItemWindow::LateUpdate()
 				{
 					_EIconImage->SetActive(true, true);
 					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition() + Vector3(180.0f, 0.0f, 0.0f));
-					//_HoldItem2DList[0]->SetHoldItem(_Item2DList[i]->GetItemData());
 				}
 			}
 		}
@@ -428,6 +387,8 @@ void ItemWindow::Input()
 
 
 	}
+
+	_BefItemCount = itemCount;
 }
 
 void ItemWindow::ArrowUpdate()
@@ -501,12 +462,12 @@ void ItemWindow::_CreateCIShowStatus()
 	_ExpBar = AddComponent<ParameterBar>();
 	vector<BarColor> barColor;
 	barColor.push_back(BarColor::Yellow);
-	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->transform, Vector3(25.0f, 46.0f, 0.0f), Vector2(1.16f,0.35f), 8,true);
+	_ExpBar->Create(barColor, static_cast<float>(_Player->GetNextLevelExp()), static_cast<float>(_Player->GetExp()), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::LV)]->transform,8, Vector3(25.0f, 46.0f, 0.0f), Vector2(1.16f,0.35f),true);
 
 	_HpBar = AddComponent<ParameterBar>();
 	barColor.clear();
 	barColor.push_back(BarColor::Green);
-	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform, Vector3(50.0f,18.0f, 0.0f), Vector2(1.0f,0.7f), 8, false);
+	_HpBar->Create(barColor, static_cast<float>(_Player->GetMaxHP()), static_cast<float>(_Player->GetParam(CharacterParameter::Param::HP)), false, false, _ParameterRenderList[static_cast<int>(CIShowStatus::HP)]->transform,8, Vector3(50.0f,18.0f, 0.0f), Vector2(1.0f,0.7f), false);
 
 	//_MpBar = AddComponent<ParameterBar>();
 	//barColor.clear();

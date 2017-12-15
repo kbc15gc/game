@@ -73,8 +73,19 @@ public:
 	}
 
 	// 現在カーソルが指している要素(可動域内での番号)を変更。
-	inline void SetRamgeIndex(int idx) {
+	inline const CursorIndex& SetRamgeIndex(int idx) {
 		_Move(_indexInfo.rangeIndex - idx, _move, _maxNum, _range, _isLoop, _moveType, Vector2::zero);
+		return _indexInfo;
+	}
+
+	/**
+	* 値を設定.
+	*/
+	inline void SetIndex(int allRangeIndex, int rangeIndex,int offset)
+	{
+		_indexInfo.allRangeIndex = allRangeIndex;
+		_indexInfo.rangeIndex = rangeIndex;
+		_indexInfo.offset = offset;
 	}
 
 	// 全体要素の先頭と可動域の先頭の差分を設定

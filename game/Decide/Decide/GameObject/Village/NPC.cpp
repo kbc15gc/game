@@ -90,27 +90,32 @@ void NPC::_Speak()
 		{
 			//会話する。
 			_TextBox->Speak();
+			_Rotation->RotationToObject_XZ(_Player);
 			if (_State != State::Speak && _IsAnimation)
 			{
 				_Player->SetSpeakFlag(true);
 				_State = State::Speak;
 				PlayAnimation(State::Speak, 0.2f);
-				_Rotation->RotationToObject_XZ(_Player);
+				
 			}
 		}
 	}
 	
+	//ショップの場合。買い物中
+	bool eventflag = INSTANCE(EventManager)->ShopEvent();
 
-	if(!_IsSpeak || _TextBox->IsLastMessage())
+	if(!_IsSpeak || GetIsSpeakEnd())
 	{
-		//離れたなら閉じる
 		_TextBox->CloseMessage();
+		if (!eventflag)
+		{
+			transform->SetRotation(_Rot);
+		}
 		if (_State != State::Idol && _IsAnimation)
 		{
 			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
 			PlayAnimation(State::Idol, 0.2f);
-			transform->SetRotation(_Rot);
 		}
 	}
 }

@@ -18,10 +18,14 @@ private:
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);
 
-	inline virtual bool IsPossibleChangeState(EnemyCharacter::State next) {
+	inline bool IsPossibleChangeState(EnemyCharacter::State next)override {
 		if (next == EnemyCharacter::State::Chace || next == EnemyCharacter::State::Discovery) {
 			return true;
 		}
+		return false;
+	}
+
+	inline bool IsPossibleDamage()override {
 		return false;
 	}
 private:
