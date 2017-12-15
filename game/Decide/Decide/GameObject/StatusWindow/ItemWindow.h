@@ -202,6 +202,8 @@ private:
 	/** アイテムコード. */
 	Item::ItemCodeE _ItemCode;
 
+	/** 前回のアイテム数. */
+	int _BefItemCount = 0;
 	/** 現在選択中のアイテム. */
 	int _NowSelectItem = 0;
 	/** リストの初めの添え字. */

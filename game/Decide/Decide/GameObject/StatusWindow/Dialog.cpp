@@ -153,10 +153,6 @@ void Dialog::Enable(Item2D * item)
 			_CommandList[1]->SetActive(false);
 			_Cursor->SetMax(1);
 			_BackWindow->SetSize(Vector2(200.0f, 70.0f));
-			_NowSelect = 0;
-			_Cursor->SetRamgeIndex(_NowSelect);
-			_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
-			_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 		}
 		else
 		{
@@ -164,10 +160,11 @@ void Dialog::Enable(Item2D * item)
 			_CommandList[1]->SetActive(true);
 			_Cursor->SetMax(2);
 			_BackWindow->SetSize(Vector2(200.0f, 100.0f));
-			_NowSelect = 0;
-			_Cursor->SetRamgeIndex(_NowSelect);
-			_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
-			_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 		}
+
+		_Cursor->SetIndex(0, 0, 0);
+		_NowSelect = 0;
+		_Cursor->transform->SetParent(_CommandList[_NowSelect]->transform);
+		_Cursor->transform->SetLocalPosition(Vector3(-20.0f, 15.0f, 0.0f));
 	}
 }

@@ -13,7 +13,7 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 11,村人A,ようこそ、新しく武器屋ができたよ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 12,万事屋,いらっしゃい。,-1,0,-1,Asset/Sound/NPC/SHOP/1st/Mic1_47.wav
 13,ここを道なりに行った\n高い山のふもとに・・・。,"""ページ""みたいなものがあったわ。\nなにかしら。",-1,1,0,Asset/Sound/NPC/NPC/Mic1_75.wav
-14,歴史の破片を手に入れたら・・・。,本に挟んでみよう。,-1,-1,-1,Asset/Sound/NPC/SHOP/Mic1_16.wav
+14,歴史の破片を手に入れたら・・・。,本に挟んでみよう。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 15,向こうの島に・・・。,魔物が多くて困っています。\n助けてください。,-1,1,1,Asset/Sound/NPC/NPC/Mic1_78.wav
 16,この橋の先に・・・。,魔王の手下がいます。\nいつこちらを襲いにくるか・・・。\n魔王の手下を倒して私たちを救ってください！,-1,1,2,Asset/Sound/NPC/NPC/Mic1_82.wav
 17,助かりました。,ゆっくりしていってください。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav

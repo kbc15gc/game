@@ -128,11 +128,11 @@ void HistoryMenu::AddChip(ChipID chipID, bool isSave)
 		case ChipID::Medicine:
 			locID = 2;
 			break;
-		case ChipID::DevilTown:
+		/*case ChipID::DevilTown:
 		case ChipID::DevilCastel:
 		case ChipID::DevilThrone:
 			locID = 3;
-			break;
+			break;*/
 	}
 	_Chip2DList[locID].push_back(chip2D);
 
