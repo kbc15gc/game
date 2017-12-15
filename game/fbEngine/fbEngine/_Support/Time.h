@@ -17,7 +17,7 @@ public:
 	{
 		GetInstance()->_Update();
 	}
-	//デルタタイム取得
+	//デルタタイム取得(秒)。
 	static const float DeltaTime()
 	{
 		return GetInstance()->_GetDeltaTime();

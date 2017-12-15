@@ -1,20 +1,26 @@
 #include"stdafx.h"
 #include "ObjectRotation.h"
 
+
 void ObjectRotation::Update() {
-	if (_isInterpolate) {
+	if (_isFreeRotation) {
 		float delta = Time::DeltaTime();
-		_counter += delta;
 
-		if (_counter > _interval) {
-			// ‰ñ“]I—¹B
+		if (_isInterpolate) {
+			_counter += delta;
 
-			_isInterpolate = false;
+			if (_counter > _interval) {
+				// ‰ñ“]I—¹B
+
+				_isInterpolate = false;
+				_isFreeRotation = false;
+			}
 		}
-		else {
-			Quaternion work = transform->GetRotation();
-			work.Multiply((_rot * delta));
-		}
+		Quaternion work = transform->GetRotation();
+		Quaternion work2 = Quaternion::Identity;
+		work2.SetRotation(_axis, _angle * delta);
+		work.Multiply(work2);
+		transform->SetRotation(work);
 	}
 }
 
@@ -91,6 +97,50 @@ void ObjectRotation::RotationToObject_XZ(const GameObject* Object) {
 	}
 }
 
+void ObjectRotation::RotationToObjectInterpolate_XZ(const GameObject* Object, float time){
+	_interval = time;
+	_counter = 0.0f;
+	_isInterpolate = true;
+	_isFreeRotation = true;
+
+	Vector3 MyToObject = Object->transform->GetPosition() - gameObject->transform->GetPosition();
+	//MyToObject.y = 0.0f;
+	MyToObject.Normalize();
+
+	// Œü‚©‚¹‚½‚¢Œü‚«‚ÌX‚ÆZ‚©‚ç‰ñ“]Šp“x‚ğ‹‚ß‚éB
+	// ¦‹‚Ü‚é‚Ì‚Íâ‘ÎŠp“xB
+	float angle = atan2f(MyToObject.x, MyToObject.z);
+	if (fabsf(angle) > D3DXToRadian(180.0f)) {
+		// ‘å‚«‚¢‰ñ“]—Ê‚ğæ“¾‚µ‚½B
+
+		angle = (D3DXToRadian(360.0f) - angle);
+		angle *= -1.0f;
+	}
+
+	// Œ»İ‚ÌŠp“x‚ğ‹‚ß‚éB
+	float nowAngle = atan2f(transform->GetForward().x, transform->GetForward().z);
+	if (fabsf(nowAngle) > D3DXToRadian(180.0f)) {
+		// ‘å‚«‚¢‰ñ“]—Ê‚ğæ“¾‚µ‚½B
+
+		nowAngle = (D3DXToRadian(360.0f) - nowAngle);
+		nowAngle *= -1.0f;
+	}
+
+	// Œ»İ‚ÌŒX‚«‚©‚ç‚Ì‰ñ“]—Ê‚ğŒvZB
+	angle -= nowAngle;
+
+	if (fabsf(angle) > D3DXToRadian(180.0f)) {
+		// ‘å‚«‚¢‰ñ“]—Ê‚ğæ“¾‚µ‚½B
+
+		angle = (D3DXToRadian(360.0f) - angle);
+		angle *= -1.0f;
+	}
+
+	_angle = angle * (1.0f / time);
+	_axis = Vector3::up;
+	_axis.Normalize();
+}
+
 void ObjectRotation::RotationToDirection_XZ(const Vector3& dir) {
 	// Œü‚©‚¹‚½‚¢Œü‚«‚ÌX‚ÆZ‚©‚ç‰ñ“]Šp“x‚ğ‹‚ß‚éB
 	// ¦‹‚Ü‚é‚Ì‚Íâ‘ÎŠp“xB
@@ -104,14 +154,44 @@ void ObjectRotation::RotationToDirection_XZ(const Vector3& dir) {
 }
 
 void ObjectRotation::RotationToDirectionInterpolation_XZ(const Vector3& Dir, float time) {
-	Vector3 direction = Dir;
-	direction.Normalize();
+	//Vector3 direction = Dir;
+	//direction.Normalize();
 
 	_interval = time;
 	_counter = 0.0f;
 	_isInterpolate = true;
+	_isFreeRotation = true;
 
-	_rot.CreateVector3ToVector3(transform->GetForward(),direction);
+	_axis = Vector3::up;
+
+	float angle = atan2f(Dir.x, Dir.z);
+	if (fabsf(angle) > D3DXToRadian(180.0f)) {
+		// ‘å‚«‚¢‰ñ“]—Ê‚ğæ“¾‚µ‚½B
+
+		angle = (D3DXToRadian(360.0f) - angle);
+		angle *= -1.0f;
+	}
+
+	// Œ»İ‚ÌŠp“x‚ğ‹‚ß‚éB
+	float nowAngle = atan2f(transform->GetForward().x, transform->GetForward().z);
+	if (fabsf(nowAngle) > D3DXToRadian(180.0f)) {
+		// ‘å‚«‚¢‰ñ“]—Ê‚ğæ“¾‚µ‚½B
+
+		nowAngle = (D3DXToRadian(360.0f) - nowAngle);
+		nowAngle *= -1.0f;
+	}
+
+	// Œ»İ‚ÌŒX‚«‚©‚ç‚Ì‰ñ“]—Ê‚ğŒvZB
+	angle -= nowAngle;
+
+	if (fabsf(angle) > D3DXToRadian(180.0f)) {
+		// ‘å‚«‚¢‰ñ“]—Ê‚ğæ“¾‚µ‚½B
+
+		angle = (D3DXToRadian(360.0f) - angle);
+		angle *= -1.0f;
+	}
+
+	_angle = angle * (1.0f / time);	// w’è‚µ‚½ŠÔ‚Å‰ñ“]‚ªŠ®—¹‚·‚é‚æ‚¤’²®B
 }
 
 void ObjectRotation::RotationAxis(const Vector3& axis, float angle) {
@@ -127,7 +207,16 @@ void ObjectRotation::RotationAxisInterpolate(const Vector3& axis, float angle, f
 	_interval = time;
 	_counter = 0.0f;
 	_isInterpolate = true;
+	_isFreeRotation = true;
 
-	_rot = Quaternion::Identity;
-	_rot.SetRotation(axis, angle);
+	_angle = angle * (1.0f / time);
+	_axis = axis;
+	_axis.Normalize();
+}
+
+void ObjectRotation::StartFreeRotation(float rad, const Vector3 axis) {
+	_isInterpolate = false;
+	_isFreeRotation = true;
+	_axis = axis;
+	_angle = rad;
 }

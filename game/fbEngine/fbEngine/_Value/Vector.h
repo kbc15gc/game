@@ -435,6 +435,38 @@ public:
 		out.z = this->z / in;
 		return out;
 	}
+
+	// 受け取ったベクトルとの角度を求める(ラジアン)。
+	float ToRadian(const Vector3& vec) {
+		Vector3 dir = Vector3(x, y, z);
+		dir.Normalize();
+		Vector3 work = vec;
+		work.Normalize();
+		return acosf(dir.Dot(work));
+	}
+
+	// 受け取ったベクトルとの直交ベクトルを求める。
+	Vector3 ToCrossVec(const Vector3& vec) {
+		Vector3 work1 = Vector3(x,y,z);
+		work1.Normalize();
+		Vector3 work2 = vec;
+		work2.Normalize();
+		float rad = work1.Dot(work2);
+
+		if (fabsf(rad) == 1.0f) {
+			// 二つのベクトルが同じ向きか真逆を向いている。
+
+			if (fabsf(work1.Dot(Vector3::up)) == 1.0f) {
+				return work1.Cross(Vector3::right);
+			}
+			else {
+				return work1.Cross(Vector3::up);
+			}
+		}
+		else {
+			return work1.Cross(work2);
+		}
+	}
 };
 	
 //四次元ベクトル
@@ -731,8 +763,15 @@ public:
 		float pw, px, py, pz;
 		float qw, qx, qy, qz;
 
-		pw = w; px = x; py = y; pz = z;
-		qw = rot.w; qx = rot.x; qy = rot.y; qz = rot.z;
+		pw = w;
+		px = x;
+		py = y;
+		pz = z;
+
+		qw = rot.w;
+		qx = rot.x;
+		qy = rot.y;
+		qz = rot.z;
 
 		w = pw * qw - px * qx - py * qy - pz * qz;
 		x = pw * qx + px * qw + py * qz - pz * qy;

@@ -10,6 +10,7 @@
 #include "EnemySoldier.h"
 #include "BossGolem.h"
 #include "CodeNameD.h"
+#include "GameObject\Enemy\LastBoss.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -78,7 +79,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			break;
 		case EnemyCharacter::EnemyType::BossDrarian:
 			// ボスドラリアン生成。
-			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
+			//newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
 			
@@ -111,6 +112,15 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 		case EnemyCharacter::EnemyType::BossD:
 			//ボスD生成。
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+			barColor.push_back(BarColor::Green);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::BossLast:
+			//ラスボス生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+			barColor.push_back(BarColor::Blue);
+			barColor.push_back(BarColor::Green);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
 			break;
@@ -145,7 +155,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 		else {
 			// 生成失敗。
 			// EnemyTypeに新種を追加した？。
-			abort();
+			//abort();
 		}
 	}
 }
