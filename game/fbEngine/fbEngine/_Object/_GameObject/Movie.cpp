@@ -67,21 +67,14 @@ void Movie::LoadVideo(const wstring & filename)
 
 	BSTR bstr = const_cast<wchar_t*>(filepath.c_str());
 	//動画ファイル読み込み
-	/*if (FAILED(hRes = _GraphBuilder->RenderFile(bstr, NULL)))
+	if (FAILED(hRes = _GraphBuilder->RenderFile(bstr, NULL)))
 	{
 		char err[512];
 		sprintf(err, "FilePath:%s\nHRESULT:", filepath.c_str());
 
 		MessageBox(NULL, err, "動画読み込みエラー", MB_ICONERROR);
 		return;
-	}*/
-
-	// 再生するファイルをSourceFilterとして用意
-	hRes = _GraphBuilder->AddSourceFilter(filepath.c_str(), L"Source", &_Source);	
-	hRes = _GraphBuilder->Connect(_VMR9, _Source);
-
-	// Graphを生成
-	hRes = _CaptureGraphBuilder2->RenderStream(0, 0, _Source, 0, _VMR9);
+	}
 
 	// 再生するファイルをSourceFilterとして用意
 	//hRes = _GraphBuilder->AddSourceFilter(filepath.c_str(), L"Source", &_Source);	
@@ -111,12 +104,12 @@ void Movie::LoadVideo(const wstring & filename)
 
 void Movie::Play()
 {
-	HRESULT hRes;	
+	HRESULT hRes;
 
 	//動画の再生時間の取得(秒単位)
 	REFTIME length;
 	IMediaPosition *pMediaPosition;
-	hRes = _GraphBuilder->QueryInterface(IID_IMediaPosition,(LPVOID *)&pMediaPosition);
+	hRes = _GraphBuilder->QueryInterface(IID_IMediaPosition, (LPVOID *)&pMediaPosition);
 	hRes = pMediaPosition->get_Duration(&length);
 	SAFE_RELEASE(pMediaPosition);
 
