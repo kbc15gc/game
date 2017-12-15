@@ -31,6 +31,8 @@ HRESULT CGraphicsDevice::InitD3d(HWND hWnd)
 	d3dpp.EnableAutoDepthStencil = true;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 
+	//D3DCREATE_MULTITHREADED
+
 	if(FAILED(this->m_pD3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &this->m_pDevice)))
 	{
 		if(FAILED(this->m_pD3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &this->m_pDevice)))

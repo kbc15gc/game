@@ -90,6 +90,10 @@ public:
 	{
 		return m_isOnGround;
 	}
+
+	inline bool IsOnWall()const {
+		return _isOnWall;
+	}
 	/*!
 	* @brief	コライダーを取得。
 	*/
@@ -184,11 +188,13 @@ private:
 	Vector3					_moveSpeedExcute = Vector3::zero;				// 衝突解決終了後の実際に移動した量。
 	bool 					m_isJump = false;				//ジャンプ中？
 	bool					m_isOnGround = true;			//地面の上にいる？
+	bool					_isOnWall = false;				// 壁に衝突しているか。
 	Collider*				m_collider = nullptr;			//コライダー。
 	Vector3					_halfSize;						// コライダーのサイズ(実際のサイズの半分)。
 	RigidBody*				m_rigidBody = nullptr;			//剛体。
-	float					m_gravity = -9.8f;				//重力。
+	float					m_gravity = -9.8f;				//重力(マイナスの値を入力してね)。
 	float					_nowGravitySpeed;				//現在の重力による移動量。
 	int						m_attributeXZ;					// 衝突した際押し戻される属性(左右方向、設定した属性のコリジョンにキャラクターが押し戻される)。
 	int						m_attributeY;					// 衝突した際押し戻される属性(上下方向、設定した属性のコリジョンにキャラクターが押し戻される)。
+	bool					_isHillThrough = false;
 };

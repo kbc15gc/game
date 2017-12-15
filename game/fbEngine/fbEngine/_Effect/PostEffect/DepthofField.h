@@ -93,6 +93,14 @@ public:
 		_isEnable = value;
 	}
 
+	/**
+	* ブラー強度を設定.
+	*/
+	void SetBlurPower(float value)
+	{
+		_BlurBack.SetBlurPower(value);
+	}
+
 private:
 
 	/** 有効フラグ. */
