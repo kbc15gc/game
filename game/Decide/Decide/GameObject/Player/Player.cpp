@@ -18,6 +18,7 @@
 
 namespace
 {
+	float SlowAnimationSpeed = 0.7f;
 	float NormalAnimationSpeed = 1.0f;
 	float AttackAnimationSpeed = 1.3f;
 	float Oboreru = 1.0f;
@@ -416,6 +417,11 @@ void Player::ChangeState(State nextstate)
 		//デフォルト
 		break;
 	}
+
+	char text[256];
+	sprintf(text, "PlayerState %d\n", _State);
+	OutputDebugString(text);
+
 	//次のステートに変更
 	_State = nextstate;
 	//各ステートの入りに呼ばれる処理
@@ -442,6 +448,7 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
+		_Anim->PopAnimationQueue();
 		PlayAnimation(AnimationNo::AnimationDeath, 0.0f, 0);
 		return;
 	}
@@ -461,7 +468,7 @@ void Player::AnimationControl()
 		//アイドルアニメーション
 		else if (_State == State::Idol)
 		{
-			PlayAnimation(AnimationNo::AnimationIdol, 0.0f);
+			PlayAnimation(AnimationNo::AnimationIdol, 0.1f);
 		}
 		//プレイヤーストップならアイドルアニメーション
 		else if (_State == State::Stop)
@@ -471,6 +478,7 @@ void Player::AnimationControl()
 		//ダメージを受けたアニメーション
 		else if (_State == State::Impact)
 		{
+			_Anim->PopAnimationQueue();
 			PlayAnimation(AnimationNo::AnimationImpact, 0.0f,0);
 		}
 		//アタックアニメーション
@@ -481,7 +489,7 @@ void Player::AnimationControl()
 			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
 			{
 				//攻撃開始
-				PlayAnimation(_NextAttackAnimNo, 0.1f, 1);
+				PlayAnimation(_NextAttackAnimNo, 0.0f, 0);
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
@@ -491,7 +499,7 @@ void Player::AnimationControl()
 				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
 				//_Anim->AddAnimationQueue(info);
 				//アニメーションキューに追加。
-				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.05f, 0.7f, 1));
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.0f, 0.7f, 0));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
@@ -515,28 +523,29 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		if (_State != State::Death && _State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
+		if (_State != State::Death && _State != State::Stop && _State != State::Impact && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
 		{
 			ChangeState(State::Impact);
 		}
 
 		// ダメージを与える処理
-		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
-		_HPBar->SubValue(static_cast<float>(damage));
-		_DamageSound->Play(false);//ダメージを受けたときのSE
-		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
-		Color c;
-		if (damage == 0)
-		{
-			//灰色に
-			c = Color::white * 0.3f;
-		}
-		else
-		{
-			c = Color::blue;
-		}
-		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
-		attackvalue->transform->SetParent(transform);
+		//int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
+		//_HPBar->SubValue(static_cast<float>(damage));
+		//_DamageSound->Play(false);//ダメージを受けたときのSE
+		//AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
+		//Color c;
+		//if (damage == 0)
+		//{
+		//	//灰色に
+		//	c = Color::white * 0.3f;
+		//}
+		//else
+		//{
+		//	c = Color::blue;
+		//}
+		////ダメージ量を表示する。
+		//attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
+		//attackvalue->transform->SetParent(transform);
 	}
 }
 

@@ -78,6 +78,12 @@ public:
 	//キューにアニメーションの再生情報を追加。
 	//確保したアドレスはアニメーションないで解放される。
 	void AddAnimationQueue(PlayAnimInfo* info);
+
+	inline void PopAnimationQueue()
+	{
+		while (!_AnimationQueue.empty()) _AnimationQueue.pop();
+	}
+
 	/*!
 	*@brief	アニメーションセットの取得。
 	*/

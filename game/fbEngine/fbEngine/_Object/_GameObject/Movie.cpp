@@ -38,25 +38,25 @@ void Movie::Awake()
 	}
 
 	// VMR9フィルタを用意
-	CoCreateInstance(CLSID_VideoMixingRenderer9, NULL,
-		CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&_VMR9);
+	/*CoCreateInstance(CLSID_VideoMixingRenderer9, NULL,
+		CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&_VMR9);*/
 
 	// VMR9フィルタをGraphに追加
-	_GraphBuilder->AddFilter(_VMR9, L"VMR9");
+	//_GraphBuilder->AddFilter(_VMR9, L"VMR9");
 
 	// CaptureGraphBuilder2というキャプチャ用GraphBuilderを生成する
-	hRes = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC,
+	/*hRes = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC,
 		IID_ICaptureGraphBuilder2,
-		(LPVOID *)&_CaptureGraphBuilder2);
+		(LPVOID *)&_CaptureGraphBuilder2);*/
 
 	// FilterGraphをセットする
-	hRes = _CaptureGraphBuilder2->SetFiltergraph(_GraphBuilder);
+	//hRes = _CaptureGraphBuilder2->SetFiltergraph(_GraphBuilder);
 }
 
 void Movie::Render()
 {
-	_MediaControl->Pause();
-	_MediaControl->Run();
+	//_MediaControl->Pause();
+	//_MediaControl->Run();
 }
 
 void Movie::LoadVideo(const wstring & filename)
@@ -120,12 +120,12 @@ void Movie::Play()
 		return;
 	}
 
-	//// 待機時間の設定(ミリ秒)
-	//long pEvCode;
-	//hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
+	// 待機時間の設定(ミリ秒)
+	long pEvCode;
+	hRes = _MediaEvent->WaitForCompletion(length*(REFTIME)1000.0, &pEvCode);
 
-	////グラフフィルタ停止
-	//hRes = _MediaControl->Stop();
+	//グラフフィルタ停止
+	hRes = _MediaControl->Stop();
 }
 
 void Movie::Pause()
