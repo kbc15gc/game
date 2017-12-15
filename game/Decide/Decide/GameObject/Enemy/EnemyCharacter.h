@@ -162,10 +162,25 @@ public:
 		_MyComponent.RotationAction->RotationToDirection_XZ(dir);
 	}
 
+	// エネミーを指定した方向に向かせる処理(補間なし)。
+	// 引数：	向きベクトル。
+	//			補間時間。
+	inline void LookAtDirectionInterpolate(const Vector3& dir,float time) {
+		_MyComponent.RotationAction->RotationToDirectionInterpolation_XZ(dir,time);
+	}
+
 	// エネミーを指定した軸と角度を用いて回転する関数。
 	// 引数：	軸(単位ベクトル)。
 	//			回転角度(ラジアン)。
 	inline void RotationAxis(const Vector3& axis, float angle) {
+		_MyComponent.RotationAction->RotationAxis(axis, angle);
+	}
+
+	// エネミーを指定した軸と角度を用いて回転する関数。
+	// 引数：	軸(単位ベクトル)。
+	//			回転角度(ラジアン)。
+	//			補間時間。
+	inline void RotationAxisInterpolate(const Vector3& axis, float angle, float time) {
 		_MyComponent.RotationAction->RotationAxis(axis, angle);
 	}
 

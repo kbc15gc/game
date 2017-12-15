@@ -790,6 +790,10 @@ public:
 		return out;
 	}
 
+	Quaternion operator * (float in) {
+		return Quaternion(x * in, y * in, z * in, w * in);
+	}
+
 	static Quaternion Lerp(const Quaternion& a, const Quaternion& b, float per)
 	{
 		per = min(1.0f, max(0.0f, per));

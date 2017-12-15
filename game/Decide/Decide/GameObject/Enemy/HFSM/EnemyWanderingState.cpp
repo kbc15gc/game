@@ -23,7 +23,7 @@ void EnemyWanderingState::_EntrySubClass() {
 		Vector3 dir = _EnemyObject->transform->GetForward();
 		dir = dir * -1.0f;	// 向き反転。
 		// エネミーを回転させる。
-		_EnemyObject->LookAtDirection(dir);
+		_EnemyObject->LookAtDirectionInterpolate(dir,0.5f);
 
 		// フラグ初期化。
 		_isOutsideRange = false;
@@ -36,7 +36,7 @@ void EnemyWanderingState::_EntrySubClass() {
 		float rad = D3DXToRadian(360.0f);
 		int rnd = rand() % selectNum;
 		rad = rad / (rnd + 1);
-		_EnemyObject->RotationAxis(Vector3::up, rad);
+		_EnemyObject->RotationAxisInterpolate(Vector3::up, rad,0.5f);
 	}
 
 	// パラメータ設定。

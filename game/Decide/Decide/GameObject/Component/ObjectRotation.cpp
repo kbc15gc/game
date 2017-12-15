@@ -1,6 +1,23 @@
 #include"stdafx.h"
 #include "ObjectRotation.h"
 
+void ObjectRotation::Update() {
+	if (_isInterpolate) {
+		float delta = Time::DeltaTime();
+		_counter += delta;
+
+		if (_counter > _interval) {
+			// ‰ñ“]I—¹B
+
+			_isInterpolate = false;
+		}
+		else {
+			Quaternion work = transform->GetRotation();
+			work.Multiply((_rot * delta));
+		}
+	}
+}
+
 void ObjectRotation::RotationToObject_XZ(const GameObject* Object) {
 	Vector3 MyToObject = Object->transform->GetPosition() - gameObject->transform->GetPosition();
 	MyToObject.Normalize();
@@ -86,6 +103,17 @@ void ObjectRotation::RotationToDirection_XZ(const Vector3& dir) {
 	gameObject->transform->SetRotation(Rota);
 }
 
+void ObjectRotation::RotationToDirectionInterpolation_XZ(const Vector3& Dir, float time) {
+	Vector3 direction = Dir;
+	direction.Normalize();
+
+	_interval = time;
+	_counter = 0.0f;
+	_isInterpolate = true;
+
+	_rot.CreateVector3ToVector3(transform->GetForward(),direction);
+}
+
 void ObjectRotation::RotationAxis(const Vector3& axis, float angle) {
 	Quaternion quat;
 	quat = Quaternion::Identity;
@@ -93,4 +121,13 @@ void ObjectRotation::RotationAxis(const Vector3& axis, float angle) {
 	Quaternion rot = gameObject->transform->GetRotation();
 	rot.Multiply(quat);
 	gameObject->transform->SetLocalRotation(rot);
+}
+
+void ObjectRotation::RotationAxisInterpolate(const Vector3& axis, float angle, float time) {
+	_interval = time;
+	_counter = 0.0f;
+	_isInterpolate = true;
+
+	_rot = Quaternion::Identity;
+	_rot.SetRotation(axis, angle);
 }
