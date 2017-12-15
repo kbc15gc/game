@@ -72,7 +72,11 @@ void NPC::SetMesseage(const int & id, const bool show)
 }
 
 bool NPC::GetIsSpeakEnd()const {
-	return _TextBox->IsLastMessage();
+	return _TextBox->IsMessageEnd();
+}
+
+bool NPC::GetisSpeakEndLastMessage()const {
+	return _TextBox->IsLastMessageEnd();
 }
 
 void NPC::_Speak()
@@ -89,6 +93,7 @@ void NPC::_Speak()
 		if (VPadInput->IsPush(fbEngine::VPad::ButtonA))
 		{
 			//‰ï˜b‚·‚éB
+
 			_TextBox->Speak();
 			_Rotation->RotationToObject_XZ(_Player);
 			if (_State != State::Speak && _IsAnimation)

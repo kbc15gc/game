@@ -8,7 +8,8 @@ class ComponentManager :Noncopyable
 public:
 	~ComponentManager();
 
-	void ConnoteUpdate()const;
+	void PreUpdate()const;
+	void Update()const;
 	void LateUpdate()const;
 #ifdef _DEBUG
 	void Debug()const;

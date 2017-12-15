@@ -48,8 +48,16 @@ void TextBox::Awake()
 	transform->SetScale(Vector3::zero);
 }
 
+void TextBox::PreUpdate() {
+	// 再初期化。
+	if (_State == TextBoxStateE::CLOSE) {
+		_isEndMessage = false;
+	}
+}
+
 void TextBox::Update()
 {
+
 	//アニメーション。
 	_Animation();
 	//表示する文字数の増加。
@@ -88,6 +96,8 @@ void TextBox::Title(bool show)
 	{
 		if (_State == TextBoxStateE::CLOSE)
 		{
+			// 開く。
+
 			//ステート設定。
 			_State = TextBoxStateE::TITLE;
 			//テキスト設定。
@@ -167,7 +177,10 @@ void TextBox::_NextMessage()
 				INSTANCE(EventManager)->Execute(Event::EventID(_Message->EventID), eventNo);
 
 			//次のメッセージを再生
-			_SetMessage(_Message->NextID);
+			if (!_SetMessage(_Message->NextID)) {
+				// 次のメッセージがなかった。
+				_isEndMessage = true;
+			}
 		}
 	}
 }
@@ -194,7 +207,7 @@ void TextBox::_SetText(const char * text)
 	_Text->transform->SetLocalPosition(Vector3(0, -(textSize.y / 2 - space.y / 2), 0));
 }
 
-void TextBox::_SetMessage(const int & id)
+bool TextBox::_SetMessage(const int & id)
 {
 	if (id >= 0)
 	{
@@ -204,18 +217,22 @@ void TextBox::_SetMessage(const int & id)
 		{
 			//テキストとボックスをセットする。
 			_SetText(_Message->Text);
+			return true;
 		}
 		else
 		{
 			//メッセージが見つからなかったので閉じる。
 			CloseMessage();
+			return false;
 		}
 	}
 	//-1以下ならメッセージを閉じる
 	else
 	{
 		CloseMessage();
+		return false;
 	}
+	return false;
 }
 
 void TextBox::_Animation()

@@ -20,6 +20,8 @@ public:
 	// ※この関数は共通処理。
 	bool Update();
 
+	virtual void LateUpdate() {};
+
 	// 引数は次のステート。
 	// ※次のステートに移行する際に呼ばれる。
 	void Exit(EnemyCharacter::State next);
