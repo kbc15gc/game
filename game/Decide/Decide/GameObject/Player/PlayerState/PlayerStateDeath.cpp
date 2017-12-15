@@ -16,7 +16,7 @@ PlayerStateDeath::~PlayerStateDeath()
 
 void PlayerStateDeath::Update()
 {
-	if (_Player->_Anim->GetPlaying() != true)
+	if (_Player->_Anim->GetPlaying() == false)
 	{
 		//_Player->Releace();
 		INSTANCE(SceneManager)->ChangeScene("TitleScene", true);
