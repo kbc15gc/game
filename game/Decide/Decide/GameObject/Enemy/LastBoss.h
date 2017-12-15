@@ -59,10 +59,16 @@ public:
 		_saveState = state;
 	}
 
-	//€–Sƒtƒ‰ƒOƒQƒbƒg
-	inline bool GetDeathFlag()
+	bool GetDeathFlag()
 	{
-		return _MyComponent.Parameter->GetDeathFlg();
+		if (_MyComponent.Parameter->GetDeathFlg())
+		{
+			if (_MyComponent.Animation->GetPlaying() == false)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 protected:
