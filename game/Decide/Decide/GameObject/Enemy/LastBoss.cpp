@@ -228,6 +228,16 @@ void LastBoss::_UpdateSubClass() {
 	Debug();
 #endif // _DEBUG
 
+	//@todo for debug
+	//エンディングを流したい。
+	if (_MyComponent.Parameter->GetDeathFlg())
+	{
+		if (_MyComponent.Animation->GetPlaying() == false)
+		{
+			INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
+		}
+	}
+
 	// サウンドテスト。
 	//_voiceYokukitana->Play();
 }

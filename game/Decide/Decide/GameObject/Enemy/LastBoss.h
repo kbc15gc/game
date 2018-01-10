@@ -59,18 +59,6 @@ public:
 		_saveState = state;
 	}
 
-	bool GetDeathFlag()
-	{
-		if (_MyComponent.Parameter->GetDeathFlg())
-		{
-			if (_MyComponent.Animation->GetPlaying() == false)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 

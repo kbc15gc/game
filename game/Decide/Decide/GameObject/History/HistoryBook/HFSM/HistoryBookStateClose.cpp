@@ -22,6 +22,7 @@ HistoryBookStateClose::HistoryBookStateClose(HistoryBook * historybook) :
 	IHistoryBookState(historybook)
 {
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
+	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 }
 
 /**
@@ -48,7 +49,11 @@ void HistoryBookStateClose::Update()
 */
 void HistoryBookStateClose::Exit()
 {
-	_PlayerFoward = _Player->transform->GetForward();
-	Vector3 foward = _PlayerFoward + HISTORY_POINT;
-	_HistoryBook->SetDestPos(foward + _Player->transform->GetPosition());
+	Camera* camera = _PlayerCamera->GetComponent<Camera>();
+
+	Vector3 foward = _PlayerCamera->transform->GetPosition() - _Player->transform->GetPosition();
+	foward.y = 0.0f;
+	foward.Normalize();
+
+	_HistoryBook->SetDestPos(_Player->transform->GetPosition() + foward + Vector3(0.0f, 1.0f, 0.0f));
 }

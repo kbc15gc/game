@@ -135,18 +135,18 @@ void GameScene::Start()
 	// エネミーマネージャー初期化。
 	INSTANCE(EnemyManager)->Start();
 
-	//@todo for debug
-	// テスト。
-	// ラスボス作成。
-	_LastBoss = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
-	// パラメーター設定。
-	vector<BarColor> Color;
-	Color.push_back(BarColor::Blue);
-	Color.push_back(BarColor::Green);
-	Color.push_back(BarColor::Yellow);
-	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
-	_LastBoss->SetParamAll(Color, param);
+	////@todo for debug
+	//// テスト。
+	//// ラスボス作成。
+	//_LastBoss = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	//// パラメーター設定。
+	//vector<BarColor> Color;
+	//Color.push_back(BarColor::Blue);
+	//Color.push_back(BarColor::Green);
+	//Color.push_back(BarColor::Yellow);
+	//Color.push_back(BarColor::Red);
+	//vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	//_LastBoss->SetParamAll(Color, param);
 	
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
@@ -217,12 +217,6 @@ void GameScene::Start()
 
 void GameScene::Update()
 {
-	//エンディングへ。
-	if (_LastBoss->GetDeathFlag())
-	{
-		INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
-	}
-
 	//@todo for debug
 	//デバッグ機能だと思うのでデバッグ専用にしときます。
 	//必要な場合は変えてください。

@@ -79,7 +79,6 @@ void PlayerCamera::UpdateSubClass()
 	}
 
 	INSTANCE(SceneManager)->GetDepthofField().SetPint(Pint * 1000);
-	INSTANCE(SceneManager)->GetDepthofField().SetBlurPower(0.1f/*(4.0f - Pint) * 0.5f*/);
 	INSTANCE(SceneManager)->GetDepthofField().SetFParam(5.6f);
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 }
