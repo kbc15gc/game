@@ -77,8 +77,8 @@ void LastBossThroneState::_EntrySubClass() {
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);
 
 		param[CharacterParameter::Param::HP] = 8500;
-		param[CharacterParameter::Param::ATK] = 700;
-		param[CharacterParameter::Param::MAT] = 700;
+		param[CharacterParameter::Param::ATK] = 500;
+		param[CharacterParameter::Param::MAT] = 500;
 		param[CharacterParameter::Param::DEF] = 50;
 		param[CharacterParameter::Param::MDE] = 50;
 		param[CharacterParameter::Param::DEX] = 10;
