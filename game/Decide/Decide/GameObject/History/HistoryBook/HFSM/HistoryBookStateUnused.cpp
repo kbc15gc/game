@@ -39,19 +39,23 @@ void HistoryBookStateUnused::Update()
 */
 void HistoryBookStateUnused::Exit()
 {
-	
-	_PlayerFoward = _Player->transform->GetForward();
-	Vector3 foward = _PlayerFoward;
-	_HistoryBook->transform->SetLocalPosition(foward + _Player->transform->GetPosition());
-
-	_HistoryBook->transform->SetRotation(_Player->transform->GetRotation());
-
 	Camera* camera = _PlayerCamera->GetComponent<Camera>();
-	Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
-	cameraFoward.Normalize();
-	cameraFoward.y -= 0.5f;
-	cameraFoward.Scale(1.0f);
-	_HistoryBook->SetDestPos(_PlayerCamera->transform->GetPosition() + cameraFoward);
+
+
+	//プレイヤーからカメラへのベクトル.
+	Vector3 pToc = _PlayerCamera->transform->GetPosition() - _Player->transform->GetPosition();
+	pToc.y = 0.0f;
+	pToc.Normalize();
+
+	_HistoryBook->transform->SetLocalPosition(_Player->transform->GetPosition() + pToc + Vector3(0.0f, 1.0f, 0.0f));
+
+	//カメラの前方向.
+	Vector3 cForward = _PlayerCamera->transform->GetForward();
+	//カメラの下方向.
+	Vector3 cDown = _PlayerCamera->transform->GetUp() * -1;
+	cDown.Scale(0.4f);
+
+	_HistoryBook->SetDestPos(_PlayerCamera->transform->GetPosition() + cForward + cDown);
 	
 	_HistoryBook->transform->SetRotation(_PlayerCamera->transform->GetRotation());
 }
