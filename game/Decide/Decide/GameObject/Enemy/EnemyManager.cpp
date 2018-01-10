@@ -79,7 +79,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			break;
 		case EnemyCharacter::EnemyType::BossDrarian:
 			// ボスドラリアン生成。
-			//newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossDrarian>("EnemyDrarian", 1);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
 			
@@ -155,7 +155,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 		else {
 			// 生成失敗。
 			// EnemyTypeに新種を追加した？。
-			//abort();
+			abort();
 		}
 	}
 }

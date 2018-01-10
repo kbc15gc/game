@@ -23,6 +23,8 @@ void EnemyChaceState::_EntrySubClass() {
 }
 
 void EnemyChaceState::_StartSubClass() {
+	_EnemyObject->GetMyComponent().RotationAction->StopFreeRotation();
+
 	// プレイヤーのほうを全く向いていない場合は自由回転。
 	Vector3 EnemyToPlayer = _Player->transform->GetPosition() - _EnemyObject->transform->GetPosition();
 	float length = EnemyToPlayer.Length();
@@ -31,11 +33,14 @@ void EnemyChaceState::_StartSubClass() {
 	EnemyToPlayer.Normalize();
 	Vector3 vec = _EnemyObject->transform->GetForward();
 	vec.y = 0.0f;
-	float rad = fabsf(acosf(EnemyToPlayer.Dot(vec)));
-	if (rad >= D3DXToRadian(20.0f)) {
+	vec.Normalize();
+
+	ObjectRotation* OR = _EnemyObject->GetMyComponent().RotationAction;
+	float rad = fabsf(OR->Optimization(acosf(EnemyToPlayer.Dot(vec))));
+	if (rad >= D3DXToRadian(10.0f)) {
 		// 自由回転。
 		_isRotationinterpolate = false;
-		_EnemyObject->GetMyComponent().RotationAction->StartFreeRotation(D3DXToRadian(360.0f), Vector3::up);
+		OR->StartFreeRotation(D3DXToRadian(10.0f), Vector3::up);
 	}
 	else {
 		_isRotationinterpolate = true;
@@ -70,8 +75,9 @@ void EnemyChaceState::_UpdateSubClass() {
 			else {
 				Vector3 vec = _EnemyObject->transform->GetForward();
 				vec.y = 0.0f;
-				float rad = fabsf(acosf(EnemyToPlayer.Dot(vec)));
-				if (rad >= D3DXToRadian(20.0f)) {
+				vec.Normalize();
+				float rad = fabsf(_EnemyObject->GetMyComponent().RotationAction->Optimization(acosf(EnemyToPlayer.Dot(vec))));
+				if (rad >= D3DXToRadian(10.0f)) {
 					_isRotationinterpolate = true;
 					_EnemyObject->GetMyComponent().RotationAction->StopFreeRotation();
 				}
@@ -87,10 +93,14 @@ void EnemyChaceState::_UpdateSubClass() {
 
 				Vector3 work = _EnemyObject->transform->GetForward();
 				work.y = 0.0f;
-				float rad = fabsf(acosf(EnemyToPlayer.Dot(work)));
+				work.Normalize();
+				float dot = EnemyToPlayer.Dot(work);
+				float acos = _EnemyObject->GetMyComponent().RotationAction->Optimization(acosf(dot));
+				float rad = fabsf(acos);
 				if (/*fabsf(targetAngle)*/rad <= 0.1f){
 					// プレイヤーに向いている。
 
+					_EnemyObject->GetMyComponent().RotationAction->StopFreeRotation();
 					// ステート終了。
 					_EndState();
 					return;
@@ -113,6 +123,7 @@ void EnemyChaceState::_UpdateSubClass() {
 
 			// とりあえず初期位置まで戻る。
 			_ChangeLocalState(EnemyCharacter::State::Translation);
+			_NowLocalState->CustamParameter(_playAnimation, _interpolate, _loopNum, _eventNo, _playSpeed);
 			// パラメータ設定。
 			Vector3 NowToInitVec = _EnemyObject->GetInitPos() - _EnemyObject->transform->GetPosition();
 			NowToInitVec.y = 0.0f;
@@ -121,8 +132,18 @@ void EnemyChaceState::_UpdateSubClass() {
 			static_cast<EnemyTranslationState*>(_NowLocalState)->SetDir(NowToInitVec);
 			static_cast<EnemyTranslationState*>(_NowLocalState)->SetMoveSpeed(_Speed);
 
-			// エネミーを進む方向に向ける。
-			_EnemyObject->LookAtDirectionInterpolate(NowToInitVec,0.2f);
+			ObjectRotation* OR = _EnemyObject->GetMyComponent().RotationAction;
+			Vector3 vec = _EnemyObject->transform->GetForward();
+			vec.y = 0.0f;
+			vec.Normalize();
+			float rad = fabsf(OR->Optimization(acosf(NowToInitVec.Dot(vec))));
+			if (rad >= D3DXToRadian(90.0f)) {
+				// 補間時間を長めにする。
+				_EnemyObject->LookAtDirectionInterpolate(NowToInitVec, 0.6f);
+			}
+			else {
+				_EnemyObject->LookAtDirectionInterpolate(NowToInitVec, 0.5f);
+			}
 		}
 	}
 }

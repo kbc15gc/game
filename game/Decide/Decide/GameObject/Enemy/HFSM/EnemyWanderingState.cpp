@@ -98,4 +98,5 @@ void EnemyWanderingState::_TranslationPalam(const Vector3& dir, float length, fl
 	static_cast<EnemyTranslationState*>(_NowLocalState)->SetLength(length);
 	static_cast<EnemyTranslationState*>(_NowLocalState)->SetMoveSpeed(speed);
 	static_cast<EnemyTranslationState*>(_NowLocalState)->SetIsWandering(true);
+	static_cast<EnemyTranslationState*>(_NowLocalState)->CustamParameter(EnemyCharacter::AnimationType::Walk, _NowLocalState->GetInterpolate(), -1, _NowLocalState->GetEventNo(), 1.0f);
 }

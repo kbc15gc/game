@@ -259,7 +259,7 @@ public:
 	 */
 	float Dot(const Vector3& in)const
 	{
-		return x * in.x + y * in.y + z * in.z;
+		return min(1.0f,max(-1.0f,x * in.x + y * in.y + z * in.z));	// -1.0 ～ 1.0が正しい結果。わずかでも範囲外の値(1.0000002fなど)をacosf関数などに渡すとnanとなるため、対応しておく。
 	}
 	/*!
 	 * @brief	外積。

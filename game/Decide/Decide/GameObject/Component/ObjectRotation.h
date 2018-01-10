@@ -49,11 +49,25 @@ public:
 	inline void StopFreeRotation() {
 		_isFreeRotation = false;
 	}
+
+	// 半回転より大きい角度を半回転より小さい角度と方向に変換して返却。
+	float Optimization(float angle);
+
+	// マイナスありの角度(-179～180の角度)をマイナスのない値(0～360の角度)に変換して返却。
+	float ConvertAngle_From0Through360(float angle);
+
+	// マイナスなしの角度(0～360の角度)をマイナスのある値(-179～180の角度)に変換して返却。
+	float ConvertAngle_FromNegative179Through180(float angle);
+
 private:
-	float _counter = 0.0f;
-	float _interval = 0.0f;
+	void _EndRotation();
+private:
 	Vector3 _axis;
-	float _angle;
+	float _targetAngle;	// 目標角度。
+	float _angle;	// 現在の角度。
+	float _power;	// 1フレームでの回転量。
 	bool _isInterpolate = false;	// 補間中か。
 	bool _isFreeRotation = false;
+
+	bool _test = false;
 };
