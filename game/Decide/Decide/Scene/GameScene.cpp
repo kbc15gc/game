@@ -56,6 +56,8 @@
 
 #include "fbEngine/_Object/_GameObject/Movie.h"
 
+#include "GameObject\Enemy\LastBoss.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -138,7 +140,7 @@ void GameScene::Start()
 	//@todo for debug
 	// テスト。
 	// ラスボス作成。
-	_LastBoss = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+	LastBoss* _LastBoss = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
 	// パラメーター設定。
 	vector<BarColor> Color;
 	Color.push_back(BarColor::Blue);
@@ -225,11 +227,11 @@ void GameScene::Start()
 
 void GameScene::Update()
 {
-	//エンディングへ。
-	if (_LastBoss->GetDeathFlag())
-	{
-		INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
-	}
+	////エンディングへ。
+	//if (_LastBoss->GetDeathFlag())
+	//{
+	//	INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
+	//}
 
 	//@todo for debug
 	//デバッグ機能だと思うのでデバッグ専用にしときます。
