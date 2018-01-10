@@ -19,7 +19,7 @@ void Spawner::Create(GameObject* spawn, float wait, const Vector3& pos, const Qu
 		_spawnObject->transform->SetParent(parent);
 	}
 
-	_spawnObject->Start();	// 初期化。
+	_spawnObject->ConnotePreUpdate();	// 初期化。
 
 	if (_splitSpace) {
 		// 生成したオブジェクトを空間に登録。
