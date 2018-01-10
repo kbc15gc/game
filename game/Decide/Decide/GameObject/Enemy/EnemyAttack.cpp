@@ -33,7 +33,7 @@ EnemySingleAttack::EnemySingleAttack(EnemyCharacter* object) :EnemyAttack(object
 }
 void EnemySingleAttack::Entry(){
 	EnemyAttack::Entry();
-	_enemyObject->LookAtObject(_player);
+	//_enemyObject->LookAtObject(_player);
 };
 
 bool EnemySingleAttack::Update() {
@@ -47,7 +47,7 @@ EnemyBreathAttack::EnemyBreathAttack(EnemyCharacter* object) :EnemyAttack(object
 
 void EnemyBreathAttack::Entry(){
 	EnemyAttack::Entry();
-	_enemyObject->LookAtObject(_player);
+	//_enemyObject->LookAtObject(_player);
 }
 
 bool EnemyBreathAttack::Update() {

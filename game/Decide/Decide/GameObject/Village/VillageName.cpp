@@ -8,6 +8,8 @@ static const string LocationNames[] =
 	"‚Í‚¶‚Ü‚è‚ÌW—",
 	"ë—Â‚Ì‘º",
 	"”É‰h‚ÌŠX",
+	"–‚‰¤é",
+	"",
 	"‚»‚Æ"
 };
 

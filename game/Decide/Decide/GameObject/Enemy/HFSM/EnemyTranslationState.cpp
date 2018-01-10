@@ -28,10 +28,6 @@ void EnemyTranslationState::_StartSubClass() {
 
 void EnemyTranslationState::_UpdateSubClass() {
 
-	//if (!_isOutsideRange) {
-		// œpœj”ÍˆÍ‚©‚çŠO‚ê‚Ä‚È‚¢B
-
-
 	// ‰ŠúˆÊ’u‚©‚ç‚Ì‹——£‚ðŽZoB
 	Vector3 StartToNowVec = _EnemyObject->transform->GetPosition() - _InitPos;
 	StartToNowVec.y = 0.0f;

@@ -58,6 +58,8 @@ public:
 		return obj;
 	}
 
+	//毎フレームUpdateよりも前に呼び出される。
+	void PreUpdateObject();
 	//毎フレーム呼び出される。
 	void UpdateObject();
 	//毎フレームUpdateよりも後に呼び出される。

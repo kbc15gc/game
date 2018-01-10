@@ -21,7 +21,7 @@ void PlayerStateImpact::Update()
 	//ˆÚ“®‘¬“x
 	Vector3 movespeed = Vector3::zero;
 
-	if (_Player->_Anim->GetPlaying() != true)
+	if (_Player->_Anim->GetPlaying() == false)
 	{
 		_Player->ChangeState(Player::State::Idol);
 	}

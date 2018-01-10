@@ -17,13 +17,14 @@ void EnemyWanderingState::_EntrySubClass() {
 	// 最初のローカルステートに移行。
 	_ChangeLocalState(EnemyCharacter::State::Translation);	// 移動ステートに移行。
 
+	Vector3 dir = _EnemyObject->transform->GetForward();
+
 	if (_isOutsideRange) {
 		// 前の徘徊処理で範囲外に出た。
 
-		Vector3 dir = _EnemyObject->transform->GetForward();
 		dir = dir * -1.0f;	// 向き反転。
 		// エネミーを回転させる。
-		_EnemyObject->LookAtDirection(dir);
+		_EnemyObject->LookAtDirectionInterpolate(dir, 0.5f);
 
 		// フラグ初期化。
 		_isOutsideRange = false;
@@ -36,13 +37,27 @@ void EnemyWanderingState::_EntrySubClass() {
 		float rad = D3DXToRadian(360.0f);
 		int rnd = rand() % selectNum;
 		rad = rad / (rnd + 1);
-		_EnemyObject->RotationAxis(Vector3::up, rad);
+
+		// より少ない回転量で済む方向に変換。
+		rad -= D3DXToRadian(180.0f);
+		
+		float interpolate = 0.5f;
+		if (fabsf(rad) >= 180.0f) {
+			// 補間時間を長くする。
+			interpolate *= 2.0f;
+		}
+
+		_EnemyObject->RotationAxisInterpolate(Vector3::up, rad, interpolate);
+		Quaternion rot;
+		rot = Quaternion::Identity;
+		rot.SetRotation(Vector3::up, rad);
+		dir = rot.RotationVector3(dir);
 	}
 
 	// パラメータ設定。
 	float length = 5.0f;
 	float speed = _EnemyObject->GetWalkSpeed();
-	_TranslationPalam(_EnemyObject->transform->GetForward(), speed * 5.0f, speed);
+	_TranslationPalam(dir, speed * 5.0f, speed);
 }
 
 void EnemyWanderingState::_StartSubClass () {
@@ -83,4 +98,5 @@ void EnemyWanderingState::_TranslationPalam(const Vector3& dir, float length, fl
 	static_cast<EnemyTranslationState*>(_NowLocalState)->SetLength(length);
 	static_cast<EnemyTranslationState*>(_NowLocalState)->SetMoveSpeed(speed);
 	static_cast<EnemyTranslationState*>(_NowLocalState)->SetIsWandering(true);
+	static_cast<EnemyTranslationState*>(_NowLocalState)->CustamParameter(EnemyCharacter::AnimationType::Walk, _NowLocalState->GetInterpolate(), -1, _NowLocalState->GetEventNo(), 1.0f);
 }

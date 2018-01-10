@@ -26,7 +26,6 @@ namespace
 	const float atari = 1.5f;
 	//回転のスピード
 	const float rotation_speed = 2.0f;
-
 }
 
 /**
@@ -60,8 +59,9 @@ void Chip::Update()
 
 	//プレイヤーとの距離
 	float toLenght = (transform->GetLocalPosition() - _Player->transform->GetLocalPosition()).Length();
+	_GetTimer += Time::DeltaTime();
 	//一定の距離内だとオブジェクト削除
-	if (toLenght <= atari)
+	if (toLenght <= atari && _GetTime <= _GetTimer)
 	{
 		//チップ取得SE
 		_SE->Play(false);

@@ -45,7 +45,7 @@ public:
 
 	// 自分がどの種類のエネミーか。
 	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
-	enum class EnemyType{Born = 0,BossDrarian,Drarian,Golem,BossGolem,Soldier,BossD};
+	enum class EnemyType{Born = 0,BossDrarian,Drarian,Golem,BossGolem,Soldier,BossD,BossLast};
 
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
@@ -155,6 +155,12 @@ public:
 	inline void LookAtObject(const GameObject* Object) {
 		_MyComponent.RotationAction->RotationToObject_XZ(Object);
 	}
+	// エネミーを指定したオブジェクトに向かせる処理(補間)。
+	// 引数：	見たいオブジェクト。
+	//			補間時間。
+	inline void LookAtObjectInterpolate(const GameObject* Object,float time) {
+		_MyComponent.RotationAction->RotationToObjectInterpolate_XZ(Object,time);
+	}
 
 	// エネミーを指定した方向に向かせる処理(補間なし)。
 	// 引数：	向きベクトル。
@@ -162,11 +168,26 @@ public:
 		_MyComponent.RotationAction->RotationToDirection_XZ(dir);
 	}
 
+	// エネミーを指定した方向に向かせる処理(補間)。
+	// 引数：	向きベクトル。
+	//			補間時間。
+	inline void LookAtDirectionInterpolate(const Vector3& dir,float time) {
+		_MyComponent.RotationAction->RotationToDirectionInterpolation_XZ(dir,time);
+	}
+
 	// エネミーを指定した軸と角度を用いて回転する関数。
 	// 引数：	軸(単位ベクトル)。
 	//			回転角度(ラジアン)。
 	inline void RotationAxis(const Vector3& axis, float angle) {
 		_MyComponent.RotationAction->RotationAxis(axis, angle);
+	}
+
+	// エネミーを指定した軸と角度を用いて回転する関数。
+	// 引数：	軸(単位ベクトル)。
+	//			回転角度(ラジアン)。
+	//			補間時間。
+	inline void RotationAxisInterpolate(const Vector3& axis, float angle, float time) {
+		_MyComponent.RotationAction->RotationAxisInterpolate(axis, angle,time);
 	}
 
 	// 攻撃処理を決定する関数。
@@ -572,6 +593,10 @@ public:
 
 	inline void SetBigflag(bool f){
 		_Bigflag = f;
+	}
+
+	inline Components& GetMyComponent() {
+		return _MyComponent;
 	}
 protected:
 	// ステート切り替え関数。

@@ -105,8 +105,8 @@ private:
 	void _ConfigAnimationEvent()override;
 
 	inline void _DropSubClass()override {
-		Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
-		chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
+		//Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
+		//chip->SetDropChipID(ChipID::Oil, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
 	}
 
 private:

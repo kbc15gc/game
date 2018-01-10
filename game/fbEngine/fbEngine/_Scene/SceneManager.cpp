@@ -85,6 +85,7 @@ void SceneManager::UpdateScene()
 		_ChangeScene();
 
 	_Scenes[_NowScene]->Update();
+	INSTANCE(GameObjectManager)->PreUpdateObject();
 	INSTANCE(GameObjectManager)->UpdateObject();
 	PhysicsWorld::Instance()->Update();
 	INSTANCE(GameObjectManager)->LateUpdateObject();

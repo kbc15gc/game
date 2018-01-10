@@ -18,6 +18,7 @@
 
 namespace
 {
+	float SlowAnimationSpeed = 0.7f;
 	float NormalAnimationSpeed = 1.0f;
 	float AttackAnimationSpeed = 1.3f;
 	float Oboreru = 1.0f;
@@ -365,8 +366,8 @@ void Player::Update()
 
 	//@todo for DebugRelease
 	//リリース時のレベルアップ。
-#define LEVELDEBUG
-#ifdef LEVELDEBUG
+#define RELEASEEBUG
+#ifdef RELEASEEBUG
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
@@ -376,6 +377,26 @@ void Player::Update()
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 		item->Create(0, 2, transform->GetPosition(), 2);
 	}
+
+	/*Vector3(-387.3f, 58.307f, -75.8f),
+		Vector3(-108.1f, 55.524f, 533.9f),
+		Vector3(218.88f, 67.0f, -0.92f),*/
+	//-145.69, 190.0f, 264.72f
+
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_U)) {
+		transform->SetLocalPosition(-387.3f, 58.307f, -75.8f);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_I)) {
+		transform->SetLocalPosition(-108.1f, 55.524f, 533.9f);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_O)) {
+		transform->SetLocalPosition(218.88f, 67.0f, -0.92f);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M)) {
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+	}
+
+
 #endif
 }
 
@@ -416,6 +437,7 @@ void Player::ChangeState(State nextstate)
 		//デフォルト
 		break;
 	}
+
 	//次のステートに変更
 	_State = nextstate;
 	//各ステートの入りに呼ばれる処理
@@ -442,6 +464,7 @@ void Player::AnimationControl()
 	//死亡アニメーション
 	if (_State == State::Death)
 	{
+		_Anim->PopAnimationQueue();
 		PlayAnimation(AnimationNo::AnimationDeath, 0.0f, 0);
 		return;
 	}
@@ -461,7 +484,7 @@ void Player::AnimationControl()
 		//アイドルアニメーション
 		else if (_State == State::Idol)
 		{
-			PlayAnimation(AnimationNo::AnimationIdol, 0.0f);
+			PlayAnimation(AnimationNo::AnimationIdol, 0.1f);
 		}
 		//プレイヤーストップならアイドルアニメーション
 		else if (_State == State::Stop)
@@ -471,6 +494,7 @@ void Player::AnimationControl()
 		//ダメージを受けたアニメーション
 		else if (_State == State::Impact)
 		{
+			_Anim->PopAnimationQueue();
 			PlayAnimation(AnimationNo::AnimationImpact, 0.0f,0);
 		}
 		//アタックアニメーション
@@ -481,7 +505,7 @@ void Player::AnimationControl()
 			if (_NextAttackAnimNo == AnimationNo::AnimationAttackStart)
 			{
 				//攻撃開始
-				PlayAnimation(_NextAttackAnimNo, 0.1f, 1);
+				PlayAnimation(_NextAttackAnimNo, 0.0f, 0);
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
@@ -491,7 +515,7 @@ void Player::AnimationControl()
 				//Animation::PlayAnimInfo* info = new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.1f, 0.7f, 1);
 				//_Anim->AddAnimationQueue(info);
 				//アニメーションキューに追加。
-				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.05f, 0.7f, 1));
+				_Anim->AddAnimationQueue(new Animation::PlayAnimInfo((UINT)_NextAttackAnimNo, 0.0f, 0.7f, 0));
 				_NowAttackAnimNo = _NextAttackAnimNo;
 				_NextAttackAnimNo = AnimationNo::AnimationInvalid;
 			}
@@ -515,7 +539,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 #endif
 		//ダメージを受けた状態に変更
-		if (_State != State::Death && _State != State::Stop && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
+		if (_State != State::Death && _State != State::Stop && _State != State::Impact && hitCollision->GetReactionType() == AttackCollision::ReactionType::Leans)
 		{
 			ChangeState(State::Impact);
 		}
@@ -535,6 +559,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			c = Color::blue;
 		}
+		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
 		attackvalue->transform->SetParent(transform);
 	}

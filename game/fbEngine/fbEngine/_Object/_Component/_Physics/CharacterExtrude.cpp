@@ -9,6 +9,8 @@ void CharacterExtrude::Init(const vector<RigidBody*>& collisions, int attribute)
 	// 押し出したい属性を設定。
 	_attribute = attribute;
 
+	SubAttribute(static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST));
+
 	_collisions = collisions;
 
 	for (auto coll : _collisions) {
@@ -115,7 +117,7 @@ void CharacterExtrude::Extrude(const Vector3& speed) {
 			fbPhysicsCallback::AllHitsContactResultCallback callback;
 			vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> infoArray;
 			//衝突検出。
-			PhysicsWorld::Instance()->AllHitsContactTest(coll, &infoArray, &callback, _attribute);
+			INSTANCE(PhysicsWorld)->AllHitsContactTest(coll, &infoArray, &callback, _attribute);
 
 			for (int idx = 0; idx < static_cast<int>(infoArray.size()); idx++) {
 				Vector3 vT0, vT1;

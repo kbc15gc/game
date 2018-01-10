@@ -259,7 +259,7 @@ public:
 	 */
 	float Dot(const Vector3& in)const
 	{
-		return x * in.x + y * in.y + z * in.z;
+		return min(1.0f,max(-1.0f,x * in.x + y * in.y + z * in.z));	// -1.0 ～ 1.0が正しい結果。わずかでも範囲外の値(1.0000002fなど)をacosf関数などに渡すとnanとなるため、対応しておく。
 	}
 	/*!
 	 * @brief	外積。
@@ -434,6 +434,38 @@ public:
 		out.y = this->y / in;
 		out.z = this->z / in;
 		return out;
+	}
+
+	// 受け取ったベクトルとの角度を求める(ラジアン)。
+	float ToRadian(const Vector3& vec) {
+		Vector3 dir = Vector3(x, y, z);
+		dir.Normalize();
+		Vector3 work = vec;
+		work.Normalize();
+		return acosf(dir.Dot(work));
+	}
+
+	// 受け取ったベクトルとの直交ベクトルを求める。
+	Vector3 ToCrossVec(const Vector3& vec) {
+		Vector3 work1 = Vector3(x,y,z);
+		work1.Normalize();
+		Vector3 work2 = vec;
+		work2.Normalize();
+		float rad = work1.Dot(work2);
+
+		if (fabsf(rad) == 1.0f) {
+			// 二つのベクトルが同じ向きか真逆を向いている。
+
+			if (fabsf(work1.Dot(Vector3::up)) == 1.0f) {
+				return work1.Cross(Vector3::right);
+			}
+			else {
+				return work1.Cross(Vector3::up);
+			}
+		}
+		else {
+			return work1.Cross(work2);
+		}
 	}
 };
 	
@@ -731,8 +763,15 @@ public:
 		float pw, px, py, pz;
 		float qw, qx, qy, qz;
 
-		pw = w; px = x; py = y; pz = z;
-		qw = rot.w; qx = rot.x; qy = rot.y; qz = rot.z;
+		pw = w;
+		px = x;
+		py = y;
+		pz = z;
+
+		qw = rot.w;
+		qx = rot.x;
+		qy = rot.y;
+		qz = rot.z;
 
 		w = pw * qw - px * qx - py * qy - pz * qz;
 		x = pw * qx + px * qw + py * qz - pz * qy;
@@ -788,6 +827,10 @@ public:
 		out.y = pw * qy - px * qz + py * qw + pz * qx;
 		out.z = pw * qz + px * qy - py * qx + pz * qw;
 		return out;
+	}
+
+	Quaternion operator * (float in) {
+		return Quaternion(x * in, y * in, z * in, w * in);
 	}
 
 	static Quaternion Lerp(const Quaternion& a, const Quaternion& b, float per)

@@ -10,6 +10,7 @@
 #include "EnemySoldier.h"
 #include "BossGolem.h"
 #include "CodeNameD.h"
+#include "GameObject\Enemy\LastBoss.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -111,6 +112,15 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 		case EnemyCharacter::EnemyType::BossD:
 			//ボスD生成。
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
+			barColor.push_back(BarColor::Green);
+			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::BossLast:
+			//ラスボス生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<LastBoss>("LastBoss", 1);
+			barColor.push_back(BarColor::Blue);
+			barColor.push_back(BarColor::Green);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
 			break;

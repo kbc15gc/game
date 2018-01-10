@@ -45,7 +45,7 @@ void BarElement::Update() {
 	_BarScaling();
 
 	// コンポーネント群を更新(GameObjectManagerに登録していないので、自前で呼び出す)。
-	GetComponentManager().ConnoteUpdate();
+	GetComponentManager().PreUpdate();
 	// 継承元の更新処理を呼び出す。
 	ImageObject::Update();
 }
@@ -135,7 +135,7 @@ void BarAdapter::Create(const vector<BarColor>& BarColorArray, float max, float 
 	_BarBack->transform->SetLocalPosition(Vector3(-0.9f, 0.0f, 0.0f));
 	_BarBack->transform->SetLocalScale(Vector3(2.54f, 1.0f, 1.0f));
 
-	_BarBack->GetComponentManager().ConnoteUpdate();
+	_BarBack->GetComponentManager().PreUpdate();
 	_BarBack->SetTexture(LOADTEXTURE("hp_back.png"));
 
 
@@ -196,8 +196,8 @@ void BarAdapter::Update() {
 
 	// オブジェクトマネージャーに登録していないため、自前で呼ぶ。
 	{
-		_BarFrame->GetComponentManager().ConnoteUpdate();
-		_BarBack->GetComponentManager().ConnoteUpdate();
+		_BarFrame->GetComponentManager().PreUpdate();
+		_BarBack->GetComponentManager().PreUpdate();
 		// Transform情報は毎フレーム更新されるため、毎フレームスクリーン座標にして上書きする。
 		_ToScreenPos();
 
@@ -365,7 +365,7 @@ void BarAdapter::_CreateBarFrame(const Vector3& pos, const Vector3& scale, bool 
 	_BarFrame.reset(new ImageObject("BarFrame"));
 	_BarFrame->Awake();
 	_BarFrame->Start();
-	_BarFrame->GetComponentManager().ConnoteUpdate();
+	_BarFrame->GetComponentManager().PreUpdate();
 
 	_BarFrame->transform->SetPosition(pos);
 	_BarFrame->transform->SetScale(scale);

@@ -25,6 +25,7 @@ public:
 	TextBox(const char* name);
 	~TextBox();
 	void Awake()override;
+	void PreUpdate()override;
 	void Update()override;
 
 	//使用するメッセージ設定。
@@ -43,14 +44,24 @@ public:
 		_TextSpeed = speed;
 	}
 
-	// 最後のメッセージか取得。
-	inline bool IsLastMessage()const {
+	// メッセージが終了したか取得。
+	inline bool IsMessageEnd()const {
+		return (_State == TextBoxStateE::CLOSING);
+	}
+
+	// 最後のメッセージが終了したか取得。
+	inline bool IsLastMessageEnd()const {
+		return (_State == TextBoxStateE::CLOSE && _isEndMessage);
+	}
+
+	inline bool IsClose()const {
 		return (_State == TextBoxStateE::CLOSING);
 	}
 	void SetEventNo(int no)
 	{
 		_EventNo = no;
 	}
+
 private:
 	//メッセージボックスを開く。
 	void _OpenMessage();
@@ -59,7 +70,8 @@ private:
 	//テキストをコンポーネントに適用
 	void _SetText(const char* text);
 	//指定したIDのメッセージを設定
-	void _SetMessage(const int& id);
+	// 戻り値はメッセージを設定できたか。
+	bool _SetMessage(const int& id);
 	//ポップアップアニメーションとかする
 	void _Animation();
 	//表示させる文字数増加
@@ -94,4 +106,6 @@ private:
 	int _EventNo = -1;
 	//再生するボイス。
 	SoundSource _Voice;
+
+	bool _isEndMessage = false;	// 最後のメッセージを表示し終わったか(次回の更新処理の前に再初期化が行われるので、確実に判定を取りたい場合などはLateUpdateなどで行ってください)。
 };

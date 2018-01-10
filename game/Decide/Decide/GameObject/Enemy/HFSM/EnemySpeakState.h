@@ -14,6 +14,8 @@ private:
 
 	void _UpdateSubClass()override;
 
+	void LateUpdate()override;
+
 	void _ExitSubClass(EnemyCharacter::State next)override;
 
 	void _EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType);

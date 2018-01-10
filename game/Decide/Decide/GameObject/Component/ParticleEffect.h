@@ -14,6 +14,8 @@ public:
 	};
 	~ParticleEffect() {};
 public:
+	void OnDestroy()override;
+
 	void Awake()override;
 
 	void Update()override;

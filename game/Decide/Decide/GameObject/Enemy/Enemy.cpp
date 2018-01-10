@@ -39,30 +39,44 @@ void Enemy::_AwakeSubClass() {
 
 void Enemy::_StartSubClass(){
 
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn), "BAttack.wav", 0.3f);
-	// 視野角生成。
-	_ViewAngle = 90.0f;
-	_ViewRange = 10.0f;
+	// ステートの再生アニメーションをカスタム。
+	{
+		_MyState[static_cast<int>(State::Chace)]->CustamParameter(AnimationType::Dash, 0.2f, -1, 0, 2.0f);
+	}
 
-	// 徘徊範囲設定。
-	// ※暫定処理。
-	_WanderingRange = 10.0f;
+	// サウンドテーブルにこのクラス独自の音を追加。
+	{
+		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn), "BAttack.wav", 0.3f);
+	}
 
-	// 追跡範囲設定。
-	_discoveryRange = 10.0f;
+	// エネミーとしての活動に必要なパラメータを設定。
+	{
+		// 視野角生成。
+		_ViewAngle = 90.0f;
+		_ViewRange = 10.0f;
 
-	// 歩行速度設定。
-	_walkSpeed = 1.0f;
+		// 徘徊範囲設定。
+		// ※暫定処理。
+		_WanderingRange = 10.0f;
+
+		// 追跡範囲設定。
+		_discoveryRange = 10.0f;
+
+		// 歩行速度設定。
+		_walkSpeed = 1.0f;
+	}
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	// 攻撃処理を定義。
-	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(1.3f,static_cast<int>(AnimationProt::Attack),0.2f);
+	{
+		_singleAttack.reset(new EnemySingleAttack(this));
+		_singleAttack->Init(1.3f, static_cast<int>(AnimationProt::Attack), 0.2f);
+	}
+
 
 	// 初期ステートに移行。
-	// ※暫定処理。
 	_initState = State::Wandering;
 	_ChangeState(_initState);
 }

@@ -20,6 +20,8 @@ public:
 	// ※この関数は共通処理。
 	bool Update();
 
+	virtual void LateUpdate() {};
+
 	// 引数は次のステート。
 	// ※次のステートに移行する際に呼ばれる。
 	void Exit(EnemyCharacter::State next);
@@ -59,6 +61,25 @@ public:
 		_playSpeed = speed;
 	}
 
+	EnemyCharacter::AnimationType GetPlayAnimationType()const {
+		return _playAnimation;
+	}
+
+	float GetInterpolate()const {
+		return _interpolate;
+	}
+
+	int GetEventNo()const {
+		return _eventNo;
+	}
+
+	int GetLoopNum()const {
+		return _loopNum;
+	}
+
+	float GetPlaySpeed()const {
+		return _playSpeed;
+	}
 protected:
 	// ローカルステート切り替え関数。
 	void _ChangeLocalState(EnemyCharacter::State next);

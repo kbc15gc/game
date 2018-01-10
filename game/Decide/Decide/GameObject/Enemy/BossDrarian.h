@@ -89,6 +89,7 @@ private:
 		{
 			Chip* chip = INSTANCE(GameObjectManager)->AddNew<Chip>("Chip", 8);
 			chip->SetDropChipID(ChipID::Stone, transform->GetPosition() + Vector3(0.0f, -1.5f, 0.0f));
+			chip->SetGetTime(ChipTimer);
 		}
 	}
 

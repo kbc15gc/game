@@ -10,6 +10,8 @@
 class Player;
 class HistoryMenuSelect;
 
+static const float ChipTimer = 4.0f;
+
 /**
 * チップクラス.
 * 歴史のかけら.
@@ -63,6 +65,14 @@ public:
 	*/
 	void SetDropChipID(ChipID chipID, const Vector3& pos);
 
+
+	/**
+	* 取得できるまでの時間を設定.
+	*/
+	inline void SetGetTime(float time)
+	{
+		_GetTime = time;
+	}
 private:
 
 	/** チップID. */
@@ -78,5 +88,10 @@ private:
 	SkinModel* _Model = nullptr;
 	//マテリアル
 	Material* _Material = nullptr;
+
+	//取得できるようになるまでの時間
+	float _GetTime;
+	//取得できるようになるまでの時間を計測
+	float _GetTimer;
 
 };

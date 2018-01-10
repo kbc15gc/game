@@ -34,4 +34,5 @@ private:
 	float _Speed = 0.0f;	// 移動速度。
 	bool _isOutside = false;
 	float _endRange = 0.0f;	// 追跡終了距離。
+	bool _isRotationinterpolate = false;// 回転を補間するか。
 };

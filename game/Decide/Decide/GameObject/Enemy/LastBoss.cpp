@@ -63,6 +63,14 @@ void LastBoss::SordAttackEvent2() {
 	//_sordAttackLaser2->BreathEnd();
 }
 
+void LastBoss::FastSord() {
+	//攻撃コリジョン作成。
+	unsigned int priorty = 1;
+	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
+	attack->RemoveParent();
+}
+
 void LastBoss::MagicAttackStart1() {
 	_magicFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
@@ -154,6 +162,9 @@ void LastBoss::_AwakeSubClass() {
 	SetFileName("LastBoss.X");
 	//ポジション
 	_InitPos = Vector3(-145.69, 190.0f, 264.72f);
+
+	// デバッグ用。
+	//_InitPos = Vector3(218.88f, 67.0f, -0.92f);
 	transform->SetPosition(_InitPos);
 }
 
@@ -182,7 +193,13 @@ void LastBoss::_StartSubClass() {
 	// 攻撃処理を定義。
 	_sordAttack.reset(new EnemySingleAttack(this));
 	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
-	//_sordAttack
+	_sordAttack2.reset(new EnemySingleAttack(this));
+	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 3.0f, 1, 1);
+	_warpAttack.reset(new EnemyWarpAttack(this));
+	EnemyAttack* singleAttack = new EnemySingleAttack(this);
+	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 3.0f, 1, 1);
+	_warpAttack->Init(13.0f, singleAttack);
+
 	_magicAttack.reset(new EnemyBreathAttack(this));
 	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 	_buffAttack.reset(new EnemySingleAttack(this));
@@ -231,7 +248,7 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 		// 魔術師ステート。
 		// 確率で攻撃と魔王へのバフを行う。
 
-		rnd = rand() % 2;
+		rnd = rand() % 4;
 		////rnd = rand() % 4;
 
 		if (rnd == 0) {
@@ -243,6 +260,12 @@ EnemyAttack* LastBoss::_AttackSelectSubClass() {
 			// 魔法攻撃。
 
 			attack = _magicAttack.get();
+		}
+		else if (rnd == 2) {
+			attack = _sordAttack2.get();
+		}
+		else if (rnd == 3) {
+			attack = _warpAttack.get();
 		}
 		//else if(rnd == 2){
 		//// バフ。
@@ -409,9 +432,18 @@ void LastBoss::_ConfigAnimationEvent() {
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent));
 
-		eventFrame += 1.0f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
+		//eventFrame += 1.0f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
 
+	}
+
+	// 剣攻撃2(早業)。
+	{
+		eventFrame = 1.6f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord),1);
+
+		//eventFrame += 1.0f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
 	}
 
 	// 魔法攻撃。

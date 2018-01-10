@@ -15,13 +15,17 @@ EnemySpeakState::~EnemySpeakState()
 }
 
 void EnemySpeakState::_EntrySubClass() {
+	_EnemyObject->transform->SetPosition(_EnemyObject->GetInitPos());
 }
 
 void EnemySpeakState::_StartSubClass() {
 }
 
 void EnemySpeakState::_UpdateSubClass() {
-	if (_speakObject && _speakObject->GetIsSpeakEnd()) {
+}
+
+void EnemySpeakState::LateUpdate() {
+	if (_speakObject && _speakObject->GetisSpeakEndLastMessage()) {
 		// ‰ï˜bI—¹B
 
 		_EndState();
