@@ -49,7 +49,5 @@ private:
 
 	/** プレイヤークラスのポインタ. */
 	Player* _Player = nullptr;
-	/** プレイヤーの正面方向. */
-	Vector3 _PlayerFoward = Vector3::zero;
 
 };

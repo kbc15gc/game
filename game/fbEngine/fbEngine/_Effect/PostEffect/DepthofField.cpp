@@ -55,7 +55,7 @@ void DepthofField::Create()
 		_BlurForward.SetUseWeights(GaussianBlur::Weight_8);
 
 		_BlurBack.Create(size.x, size.y, D3DFMT_A16B16G16R16F);
-		_BlurBack.SetBlurPower(2.0f);
+		_BlurBack.SetBlurPower(1.0f);
 		_BlurBack.SetUseWeights(GaussianBlur::Weight_8);
 
 		_Effect = EffectManager::LoadEffect("DepthofField.fx");
