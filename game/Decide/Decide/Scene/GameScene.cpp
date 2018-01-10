@@ -145,7 +145,15 @@ void GameScene::Start()
 	Color.push_back(BarColor::Green);
 	Color.push_back(BarColor::Yellow);
 	Color.push_back(BarColor::Red);
-	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 10);
+	vector<int> param = vector<int>(static_cast<int>(CharacterParameter::Param::MAX), 0);
+	param[CharacterParameter::Param::HP] = 30000;
+	param[CharacterParameter::Param::ATK] = 2000;
+	param[CharacterParameter::Param::MAT] = 2000;
+	param[CharacterParameter::Param::DEF] = 250;
+	param[CharacterParameter::Param::MDE] = 250;
+	param[CharacterParameter::Param::DEX] = 20;
+	param[CharacterParameter::Param::CRT] = 10;
+
 	_LastBoss->SetParamAll(Color, param);
 	
 	//ƒƒjƒ…[
