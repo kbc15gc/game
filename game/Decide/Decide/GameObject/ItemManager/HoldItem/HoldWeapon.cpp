@@ -23,20 +23,21 @@ void HoldWeapon::CreateRandParam()
 	//ランダムパラメーターを設定。
 	
 	// 合計差分値を各パラメータに分散。
-	int max = 10;
-	int rnd = rand() % max;
-	float frnd = static_cast<float>(rnd) * 0.1f;
-	RndAtkMass(GetRevision() * frnd);
+	//int max = 10;
+	//int rnd = rand() % max;
+	//float frnd = static_cast<float>(rnd) * 0.1f;
+	RndAtkMass(GetRevision()/* * frnd*/);
 
 	//max -= rnd;
 	//rnd = rand() % max;
 	//frnd = static_cast<float>(rnd) * 0.1f;
 	//RndMAtkMass(GetRevision() * frnd);
 
-	max -= rnd;
-	frnd = static_cast<float>(max) * 0.1f;
-	RndDexMass(GetRevision() * frnd);
+	//max -= rnd;
+	//frnd = static_cast<float>(max) * 0.1f;
+	//RndDexMass(GetRevision() * frnd);
 
+	_Dex = static_cast<Item::WeaponInfo*>(_Info)->Dex;
 	_Crt = static_cast<Item::WeaponInfo*>(_Info)->CriticalDamage;	// クリティカル威力は固定。
 }
 
