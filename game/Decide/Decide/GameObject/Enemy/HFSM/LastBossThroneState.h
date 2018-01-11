@@ -44,6 +44,7 @@ private:
 	float _timeCounter;
 	float _interval = 10.0f;
 
+	bool _isFirstDestroyEntourage;	// ‰‚ß‚Ä‘¤‹ß‚ªˆê‘ÌŒ¸‚Á‚½B
 	bool _isDeathEntourage = false;
 	static const int _entourageNum;	// ‘¤‹ß‚Ì”B
 	vector<BossGhost*> _entourageEnemys;	// ‘¤‹ßB

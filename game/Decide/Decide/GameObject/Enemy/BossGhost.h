@@ -31,6 +31,7 @@ public:
 
 	// アニメーションイベント関連。
 	void CreateCollision();
+	void CreateCollision2();
 	void LaserStartSingle();
 	void LaserEndSingle();
 	void LaserStart();

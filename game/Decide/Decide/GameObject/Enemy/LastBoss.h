@@ -40,6 +40,7 @@ public:
 	void SordAttackEvent();
 	void SordAttackEvent2();
 	void FastSord();
+	void FastSord2();
 	void MagicAttackStart1();
 	void MagicAttackShot1();
 	void MagicAttackStart2();
@@ -59,6 +60,9 @@ public:
 		_saveState = state;
 	}
 
+	inline EnemySingleAttack* GetEncourageAttack()const {
+		return _encourageBuffAttack.get();
+	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 

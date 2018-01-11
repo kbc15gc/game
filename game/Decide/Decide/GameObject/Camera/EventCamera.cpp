@@ -76,6 +76,10 @@ void EventCamera::Excute(int id)
 	_NowPos = _BeforeCamera->GetPosition();
 	_NowRot = _BeforeCamera->GetRotation();
 
+	transform->SetPosition(_NowPos);
+	transform->SetRotation(_NowRot);
+	_Camera->Update();
+
 
 	//イベントカメラに切り替える。
 	ActiveCamera();

@@ -30,10 +30,19 @@ void BossGhost::CreateCollision() {
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
+void BossGhost::CreateCollision2() {
+	//攻撃コリジョン作成。
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction,85);
+	attack->RemoveParent();
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+}
+
 void BossGhost::LaserStartSingle()
 {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 30.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red);
+	laser->Create(this, Vector3::zero, 30.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,120);
 	_singleLaser->BreathStart(laser);
 }
 
@@ -43,7 +52,7 @@ void BossGhost::LaserEndSingle() {
 
 void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 30.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red);
+	laser->Create(this, Vector3::zero, 30.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
 	static_cast<EnemyBreathAttack*>(_laserComboAttack->GetOneAttack())->BreathStart(laser);
 }
 
@@ -74,7 +83,7 @@ void BossGhost::_StartSubClass() {
 	_discoveryRange = 30.0f;
 
 	// 何回に一回くらい怯むか設定。
-	_damageMotionRandNum = 20;
+	_damageMotionRandNum = 7;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
@@ -90,7 +99,7 @@ void BossGhost::_StartSubClass() {
 
 		_comboAttack.reset(new EnemyComboAttack(this));
 		EnemyAttack* singleAttack = new EnemySingleAttack(this);
-		singleAttack->Init(1.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f);
+		singleAttack->Init(1.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f,1.0f,1,3);
 		EnemyAttack* warpAttack = new EnemyWarpAttack(this);
 		static_cast<EnemyWarpAttack*>(warpAttack)->Init(13.0f, singleAttack);
 		_comboAttack->Init(13.0f, warpAttack);
@@ -283,10 +292,16 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 void BossGhost::_ConfigAnimationEvent() {
 	float eventFrame = 0.1f;
 	
-	// コンボ攻撃。
+	// パンチ攻撃。
 	{
 		eventFrame = 0.5f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::CreateCollision));
+	}
+
+	// 弱パンチ攻撃。
+	{
+		eventFrame = 0.5f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGhost::Attack), eventFrame, static_cast<AnimationEvent>(&BossGhost::CreateCollision2),3);
 	}
 
 	// レーザー攻撃(単発)。

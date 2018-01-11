@@ -29,7 +29,7 @@ void LaserBreath::Awake() {
 	_particleEmitter = p;
 }
 
-void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float power, float interval, const Vector3& axis, float deg, const char* fileName, const Vector2& size, const float brightness, Color mul){
+void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float power, float interval, const Vector3& axis, float deg, const char* fileName, const Vector2& size, const float brightness, Color mul,int atk){
 	BreathObject::Create(obj);
 	_particleEmitter->transform->SetParent(_enemyObject->transform);
 	_particleEmitter->transform->SetLocalPosition(emitPosLocal);
@@ -38,6 +38,7 @@ void LaserBreath::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, float
 	_axis = axis;
 	_mulColor = mul;
 	_power = power;
+	_atk = atk;
 
 	_initParticleParam.texturePath = fileName;
 	_initParticleParam.size = size;
@@ -94,7 +95,7 @@ void LaserBreath::_BreathStartSubClass(){
 	_particleEmitter->transform->SetParent(nullptr);
 
 	//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
-	AttackCollision* attack = _enemyObject->CreateAttack(Vector3::zero, Quaternion::Identity, Vector3::zero, -1.0f, _particleEmitter->transform/*_enemyObject->transform*/);
+	AttackCollision* attack = _enemyObject->CreateAttack(Vector3::zero, Quaternion::Identity, Vector3::zero, -1.0f, _particleEmitter->transform,false,false,AttackCollision::ReactionType::Leans,_atk);
 	attack->RemoveParent();
 	_attack.push_back(attack);
 }
