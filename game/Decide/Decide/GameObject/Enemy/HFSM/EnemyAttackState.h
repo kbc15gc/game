@@ -12,6 +12,10 @@ public:
 	inline bool IsPossibleChangeState(EnemyCharacter::State next)override {
 		return _attack->IsPossibleChangeState(next);
 	}
+
+	void SetAttack(EnemyAttack* attack) {
+		_attack = attack;
+	}
 private:
 	void _EntrySubClass()override;
 

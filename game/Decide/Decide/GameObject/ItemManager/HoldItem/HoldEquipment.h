@@ -12,15 +12,15 @@ public:
 	//後で調整してね。
 	enum Rank
 	{
-		SS = 0, //91 ~ 100	神造級。
-		S,		//71 ~ 90	宝物級。
-		A,		//51 ~ 70	高級。
-		B,		//31 ~ 50	良。
-		C,		//-20 ~ 30	平均。
-		D,		//-40 ~ -21	粗悪。
-		E,		//-50 ~ -41	超粗悪。
-		None,	//装備無し.
-		Max,	//数.
+		SS = 0, // 神造級。
+		S,		// 宝物級。
+		A,		// 高級。
+		B,		// 良。
+		C,		// 平均。
+		D,		// 粗悪。
+		E,		// 超粗悪。
+		None,	// 装備無し.
+		Max,	// 数.
 	};
 
 protected:
@@ -35,37 +35,96 @@ public:
 	// ※CSVから読み込んだランダムパラメータ情報や装備情報を使用する際はこの関数でパラメータを設定する。
 	virtual void ConfigLoadData(Hold::HoldInfo* info);
 
-	//武器または防具のランクを決定。
-	inline void RankSelect(float raito) {
-		if (raito >= -0.5f && raito <= -0.41f) {
-			_Rank = Rank::E;
-		}
-		else if (raito >= -0.4f && raito <= -0.21f) {
-			_Rank = Rank::D;
-		}
-		else if (raito >= -0.2f && raito <= 0.3f) {
-			_Rank = Rank::C;
-		}
-		else if (raito >= 0.31f && raito <= 0.5f) {
-			_Rank = Rank::B;
-		}
-		else if (raito >= 0.51f && raito <= 0.7f) {
-			_Rank = Rank::A;
-		}
-		else if (raito >= 0.71f && raito <= 0.9f) {
-			_Rank = Rank::S;
-		}
-		else if (raito >= 0.91f && raito <= 1.0f) {
+	//// 補正値から装備品のランクを決定する。
+	//// 引数：	補正値。
+	//inline void RankSelect(float ratio) {
+	//	if (ratio >= 0.26f && ratio <= 0.5f) {
+	//		// 26% ～ 50%。
+	//		_Rank = Rank::SS;
+	//	}
+	//	else if (ratio >= 0.16f && ratio <= 0.25f) {
+	//		// 16% ～ 25%。
+	//		_Rank = Rank::S;
+	//	}
+	//	else if (ratio >= 0.11f && ratio <= 0.15f) {
+	//		// 11% ～ 15%。
+	//		_Rank = Rank::A;
+	//	}
+	//	else if (ratio >= 0.06f && ratio <= 0.1f) {
+	//		// 6% ～ 10%。
+	//		_Rank = Rank::B;
+	//	}
+	//	else if (ratio >= -0.19f && ratio <= 0.05f) {
+	//		// -19% ～ 5%。
+	//		_Rank = Rank::C;
+	//	}
+	//	else if (ratio >= -0.34f && ratio <= -0.2f) {
+	//		// -34% ～ -20%。
+	//		_Rank = Rank::D;
+	//	}
+	//	else if (ratio >= -0.5f && ratio <= -0.35f) {
+	//		// -50% ～ -35%。
+	//		_Rank = Rank::E;
+	//	}
+	//	else {
+	//		_Rank = Rank::None;
+	//	}
+
+	//	//補正値格納。
+	//	_Revision = ratio;
+	//}
+
+	//武器または防具のランクを決定し、補正値を算出する。
+	inline void RankSelect() {
+		int rnd = rand() % 10000;	// 0.01%～100.00%の確率を計算。
+
+		if (rnd == 0) {
+			// 0.01%。
 			_Rank = Rank::SS;
+			_Revision = ParamRaitoMass(26, 50);
 		}
-		//補正値格納。
-		_Revision = raito;
+		else if (rnd >= 1 && rnd <= 299) {
+			// 2.99%。
+			_Rank = Rank::S;
+			_Revision = ParamRaitoMass(16,25);
+		}
+		else if (rnd >= 300 && rnd <= 1299) {
+			// 10.00%。
+			_Rank = Rank::A;
+			_Revision = ParamRaitoMass(11, 15);
+		}
+		else if (rnd >= 1300 && rnd <= 2999) {
+			// 17.00%。
+			_Rank = Rank::B;
+			_Revision = ParamRaitoMass(6, 10);
+		}
+		else if (rnd >= 3000 && rnd <= 4999) {
+			// 20.00%。
+			_Rank = Rank::C;
+			_Revision = ParamRaitoMass(-19, 5);
+		}
+		else if (rnd >= 5000 && rnd <= 6999) {
+			// 20.00%。
+			_Rank = Rank::D;
+			_Revision = ParamRaitoMass(-34, -20);
+		}
+		else if (rnd >= 7000 && rnd <= 9999) {
+			// 30.00%。
+			_Rank = Rank::E;
+			_Revision = ParamRaitoMass(-50, -35);
+		}
 	}
 
-	//装備の基準値と差分値の割合を算出。
-	virtual inline float ParamRaitoMass() {
-		return 0.0f;
+	//引数１から引数２の間で装備の差分値の割合を算出。
+	// 引数：	下限(%)。
+	//			上限(%)。
+	inline float ParamRaitoMass(int min,int max) {
+		int rnd;
+		rnd = rand() % ((max - min) + 1) + min;
+		return static_cast<float>(rnd) * 0.01f;
 	}
+
+	virtual inline float SumRaitoMass() { return 0.0f; };
 
 	//武器、防具のパラメーターをランダムで算出。
 	virtual void CreateRandParam() {

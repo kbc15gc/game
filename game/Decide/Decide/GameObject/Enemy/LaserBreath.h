@@ -23,7 +23,8 @@ public:
 	//			どの軸で回すか。
 	//			回転量(キャラクターの正面から何度回すか)。
 	//			乗算カラー。
-	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,float power,float interval, const Vector3& axis,float deg,const char* fileName = "t1.png",const Vector2& size = Vector2(0.5f, 0.5f), const float brightness = 2.0f,Color mul = Color::white);
+	//			攻撃倍率。
+	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,float power,float interval, const Vector3& axis,float deg,const char* fileName = "t1.png",const Vector2& size = Vector2(0.5f, 0.5f), const float brightness = 2.0f,Color mul = Color::white,int atk = 100);
 
 	void Awake()override;
 
@@ -56,4 +57,5 @@ private:
 	Vector3 _axis;	// どの軸を中心に回したか。
 	Color _mulColor = Color::white;
 	float _power;
+	int _atk;
 };
