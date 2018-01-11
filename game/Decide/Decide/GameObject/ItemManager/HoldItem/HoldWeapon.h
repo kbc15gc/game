@@ -52,46 +52,43 @@ public:
 		return _Crt;
 	}
 
-	//武器の基準値と差分値の割合を算出。
-	inline float ParamRaitoMass()override {
-		float offset = static_cast<float>(_AtkRnd + _MAtkRnd + _DexRnd);
-		float sum = static_cast<float>(_Atk + _MagicAtk + _Dex);
-		float par = offset / sum;
-		return par;
-	}
+	////武器の基準値と差分値の割合を算出。
+	//inline float SumRaitoMass()override {
+	//	float offset = static_cast<float>(_AtkRnd + _MAtkRnd + _DexRnd);
+	//	float sum = static_cast<float>(_Atk + _MagicAtk + _Dex);
+	//	float par = offset / (sum - offset);
+	//	return par;
+	//}
 
 	//ランクを考慮したランダム物理攻撃力の計算。
-	inline void RndAtkMass() {
+	// 引数：	差分率。
+	inline void RndAtkMass(float offset) {
 		//物理攻撃力のランダム差分算出。
 		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->Atk;
-		int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
-		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な物理攻撃力を算出。
-		_AtkRnd = static_cast<int>(baseParam * raito);
+		_AtkRnd = static_cast<int>(baseParam * offset);
 		_Atk = baseParam + _AtkRnd;
 	}
 
 	//ランクを考慮したランダム魔法攻撃力の計算。
-	inline void RndMAtkMass() {
+	// 引数：	差分率。
+	inline void RndMAtkMass(float offset) {
 		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->MagicAtk;
-		int rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
-		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な魔法攻撃力を算出。
-		_MAtkRnd = static_cast<int>(baseParam * raito);
+		_MAtkRnd = static_cast<int>(baseParam * offset);
 		_MagicAtk = baseParam + _MAtkRnd;
 	}
 
 	//ランクを考慮したランダムクリティカル率の計算。
-	inline void RndDexMass() {
+	// 引数：	差分率。
+	inline void RndDexMass(float offset) {
 		//最終的なクリティカルのランダム差分算出。
 		int baseParam = static_cast<Item::WeaponInfo*>(_Info)->Dex;
-		int rnd = GetRand_S50to100();
-		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的なクリティカル率を算出。
-		_DexRnd = static_cast<int>(baseParam * raito);
+		_DexRnd = static_cast<int>(baseParam * offset);
 		_Dex = baseParam + _DexRnd;
 	}
 
@@ -105,9 +102,9 @@ private:
 	void _ConfigLoadDataSubClass(Hold::HoldEquipInfo* info)override;
 
 private:
-	int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-	int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け、単位はパーセント)。
-	int _DexRnd;		//クリティカル率の乱数差分(この値でランク付け、単位はパーセント)。
+	int _AtkRnd;		//攻撃力の乱数差分(この値でランク付け)。
+	int _MAtkRnd;		//魔法攻撃力の乱数差分(この値でランク付け)。
+	int _DexRnd;		//クリティカル率の乱数差分(この値でランク付け)。
 	int	_Atk;			//ランクを考慮した物理攻撃力。
 	int	_MagicAtk;		//ランクを考慮した魔法攻撃力。
 	int _Dex;			//ランクを考慮したクリティカル率。

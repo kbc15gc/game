@@ -16,12 +16,20 @@ HoldArmor::~HoldArmor()
 //防具のパラメーターをランダムで算出。
 void HoldArmor::CreateRandParam() 
 {
-	//ランダムパラメーターを算出。
-	RndDefMass();
-	RndMDef();
-
 	//防具のランクを算出。
-	RankSelect(ParamRaitoMass());
+	RankSelect();
+
+	//ランダムパラメーターを設定。
+
+	// 合計差分値を各パラメータに分散。
+	int max = 10;
+	int rnd = rand() % max;
+	float frnd = static_cast<float>(rnd) * 0.1f;
+	RndDefMass(GetRevision() * frnd);
+
+	max -= rnd;
+	frnd = static_cast<float>(max) * 0.1f;
+	RndMDef(GetRevision() * frnd);
 }
 
 //防具のパラメーターを基準値で設定。
@@ -30,8 +38,12 @@ void HoldArmor::CreateOriginParam() {
 	_Def = static_cast<Item::ArmorInfo*>(_Info)->Def;
 	_MagicDef = static_cast<Item::ArmorInfo*>(_Info)->MagicDef;
 
-	//防具のランクを算出。
-	RankSelect(ParamRaitoMass());
+	_DefRnd = 0;
+	_MDefRnd = 0;
+
+	//防具のランクを設定。
+	_Rank = Rank::C;
+	_Revision = 0.0f;
 }
 
 void HoldArmor::_ConfigLoadDataSubClass(Hold::HoldEquipInfo* info) {

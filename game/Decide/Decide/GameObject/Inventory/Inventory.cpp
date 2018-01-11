@@ -222,8 +222,10 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 	bool isDeleteList = false;
 
 	//装備しているなら減らさない。
-	if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
-		return isDeleteList;
+	if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor || item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
+		if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
+			return isDeleteList;
+		}
 	}
 
 	//配列サイズ分検索。

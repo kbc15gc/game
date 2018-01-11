@@ -1053,12 +1053,40 @@ void Player::_DebugPlayer()
 		_nowEXP = 0;
 		_DebugLevel(39);
 	}
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M)) {
-		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_C)) {
+		// 魔王城周辺適正。
+		transform->SetLocalPosition(-157.8, 121.8, 79.48);
 		_nowEXP = 0;
 		_DebugLevel(52);
 	}
-
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_V)) {
+		// 魔王城1層適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(54);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_B)) {
+		// 魔王城2層適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(62);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_N)) {
+		// 魔王城3層適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(65);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M)) {
+		// 魔王適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(74);
+	}
+	char text[256];
+	sprintf(text, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	OutputDebugString(text);
 }
 void Player::_DebugLevel(int lv)
 {
@@ -1189,7 +1217,7 @@ void Player::Attack1()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1203,7 +1231,7 @@ void Player::Attack2()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1217,7 +1245,7 @@ void Player::Attack3()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1231,7 +1259,7 @@ void Player::Attack4()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
