@@ -33,6 +33,10 @@ class ParticleEffect;
 class BuffDebuffICon;
 class HistoryManager;
 
+//@todo for RELEASEDEBUG
+//これ製品版の場合をこれをoffにしてください。
+#define RELEASEEBUG
+
 namespace
 {
 	const int MAXLV = 100;
@@ -354,7 +358,7 @@ private:
 		LevelData.Save("Player");
 	}
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(RELEASEEBUG)
 	//デバッグ機能
 	void _DebugPlayer();
 	//デバッグレベル

@@ -45,11 +45,20 @@ void LastBossThroneState::EncourageBuff() {
 	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
 		value[idx] = 0;
 	}
+	if (_entourageEnemys.size() == _entourageNum) {
+		// 側近が一体も減っていない。
 
-	value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
-	value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
-	value[static_cast<int>(CharacterParameter::Param::DEF)] = 30;
-	value[static_cast<int>(CharacterParameter::Param::MDE)] = 30;
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = 10;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = 10;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 30;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 30;
+	}
+	else {
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 60;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 60;
+	}
 
 	for (auto enemy : _entourageEnemys) {
 		enemy->BuffAndDebuff(value,30.0f);
@@ -66,12 +75,14 @@ void LastBossThroneState::_EntrySubClass() {
 		vector<BarColor> color;
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);
-		param[static_cast<int>(CharacterParameter::Param::HP)] = _EnemyObject->GetMaxHP() / 4;
-		param[static_cast<int>(CharacterParameter::Param::MP)] = _EnemyObject->GetMaxMP()/ 4;
 
-		for (int i = CharacterParameter::Param::ATK; i < CharacterParameter::Param::MAX;i++) {
-			param[i] = _EnemyObject->GetPigmentParam(static_cast<CharacterParameter::Param>(i)) / 4;
-		}
+		param[CharacterParameter::Param::HP] = 8500;
+		param[CharacterParameter::Param::ATK] = 700;
+		param[CharacterParameter::Param::MAT] = 700;
+		param[CharacterParameter::Param::DEF] = 50;
+		param[CharacterParameter::Param::MDE] = 50;
+		param[CharacterParameter::Param::DEX] = 10;
+		param[CharacterParameter::Param::CRT] = 10;
 
 		// テスト。
 		//param[static_cast<int>(CharacterParameter::Param::HP)] = 10;
