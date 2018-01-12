@@ -198,7 +198,7 @@ void ShopS_Trade::_UpdateSelectItem()
 void ShopS_Trade::_CreateMenu()
 {
 	//テキスト生成。
-	while (_MenuTexts.size() <= 50)
+	while (_MenuTexts.size() <= 100)
 	{
 		//インスタンス化。
 		TextObject* text = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", _TradeWindow->GetPriorty());
