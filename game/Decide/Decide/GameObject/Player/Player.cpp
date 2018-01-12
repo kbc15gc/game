@@ -989,17 +989,31 @@ void Player::_DebugPlayer()
 
 
 
+	
+	int level = _PlayerParam->GetParam(CharacterParameter::LV) - 1;
 	//経験値を増やす。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
 	{
-		TakeDrop(100, 100);
-	}
-	int level = _PlayerParam->GetParam(CharacterParameter::LV);
-	//レベルを上げる。
-	if (level <= 95)
-	{
-		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_2))
+		if (level < 99)
 		{
+			_nowEXP = 0;
+			_DebugLevel(++level);
+		}
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_2))
+	{
+		if (level > 0)
+		{
+			_nowEXP = 0;
+			_DebugLevel(--level);
+		}
+	}
+	//レベルを上げる。
+	if (level < 95)
+	{
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_3))
+		{
+			_nowEXP = 0;
 			level += 5;
 			_DebugLevel(level);
 		}
@@ -1007,8 +1021,9 @@ void Player::_DebugPlayer()
 	if (level >= 6)
 	{
 		//レベル下げる。
-		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_3))
+		if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_4))
 		{
+			_nowEXP = 0;
 			level -= 5;
 			_DebugLevel(level);
 		}
@@ -1085,9 +1100,6 @@ void Player::_DebugPlayer()
 		_nowEXP = 0;
 		_DebugLevel(74);
 	}
-	char text[256];
-	sprintf(text, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	OutputDebugString(text);
 }
 void Player::_DebugLevel(int lv)
 {
