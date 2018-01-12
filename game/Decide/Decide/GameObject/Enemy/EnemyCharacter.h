@@ -599,6 +599,20 @@ public:
 	inline Components& GetMyComponent() {
 		return _MyComponent;
 	}
+
+	inline void SetViewRange(float range) {
+		_ViewRange = range;
+	}
+
+	inline void SetWanderingRange(float range) {
+		_WanderingRange = range;
+	}
+
+	inline void SetDiscoveryRange(float range){
+		_discoveryRange = range;
+	}
+
+
 protected:
 	// ステート切り替え関数。
 	// ※Noneを渡すとステートがオフになる。

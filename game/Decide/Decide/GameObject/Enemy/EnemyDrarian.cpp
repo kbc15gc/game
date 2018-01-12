@@ -27,14 +27,14 @@ void EnemyDrarian::_StartSubClass() {
 
 	// 視野角生成。
 	_ViewAngle = 100.0f;
-	_ViewRange = 30.0f;
+	//_ViewRange = 30.0f;
 
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
-	_WanderingRange = 130.0f;
+	//_WanderingRange = 130.0f;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
