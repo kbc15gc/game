@@ -77,4 +77,13 @@ public class ExportEnemy : MonoBehaviour {
     //モンスターのカラー
     public int _ColorFlag = 0;
     public Color _Color = Color.white;
+
+    //見える距離
+    public float _ViewRange = 10.0f;
+    // 徘徊範囲設定。
+    public float _WanderingRange = 10.0f;
+    // 追跡範囲設定。
+    public float _DiscoveryRange = 10.0f;
+    //リスポーン時間
+    public float _RespawnTime = 60.0f;
 }

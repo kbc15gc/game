@@ -193,7 +193,7 @@ public class CSVExportFunction : Editor
         //ファイルを開く準備
         FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
         StreamWriter sw = new StreamWriter(fs);
-        sw.WriteLine("type,param,dropexp,money,pos,Quaternion,sca,item,armor,weapon,colorflag,color");
+        sw.WriteLine("type,param,dropexp,money,pos,Quaternion,sca,item,armor,weapon,colorflag,color,viewrange,wanderingrange,discoveryrange,respawntime");
         foreach (Transform child in Children)
         {
             if (child.name == enemys.name)
@@ -264,7 +264,16 @@ public class CSVExportFunction : Editor
             string colorflag = Convert.ToString(e._ColorFlag);
             string color = Vector4ToString(new Vector4(e._Color.r, e._Color.g, e._Color.b, e._Color.a));
 
-            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2],probability, colorflag, color);
+            //見える距離
+            string viewrange = Convert.ToString(e._ViewRange);
+            // 徘徊範囲
+            string wanderingrange = Convert.ToString(e._WanderingRange);
+            // 追跡範囲
+            string discoveryrange = Convert.ToString(e._DiscoveryRange);
+            //リスポーン時間
+            string respawntime = Convert.ToString(e._RespawnTime);
+
+            string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}", type, param, dropexp, money, pos, quaternion, sca, drop[0], drop[1], drop[2],probability, colorflag, color, viewrange, wanderingrange, discoveryrange, respawntime);
 
             //列書き出し
             sw.WriteLine(line);
