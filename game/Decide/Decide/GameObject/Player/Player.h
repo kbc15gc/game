@@ -35,7 +35,7 @@ class HistoryManager;
 
 //@todo for RELEASEDEBUG
 //これ製品版の場合をこれをoffにしてください。
-#define RELEASEEBUG
+#define RELEASEDEBUG
 
 namespace
 {
@@ -358,7 +358,7 @@ private:
 		LevelData.Save("Player");
 	}
 
-#if defined(_DEBUG) || defined(RELEASEEBUG)
+#if defined(_DEBUG) || defined(RELEASEDEBUG)
 	//デバッグ機能
 	void _DebugPlayer();
 	//デバッグレベル

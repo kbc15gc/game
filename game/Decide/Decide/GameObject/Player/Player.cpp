@@ -345,7 +345,7 @@ void Player::Update()
 
 		//@todo for debug
 		//@todo for releasedebug
-#if defined(_DEBUG) || defined(RELEASEEBUG)
+#if defined(_DEBUG) || defined(RELEASEDEBUG)
 		_DebugPlayer();
 #endif // _DEBUG
 	}
@@ -931,7 +931,7 @@ void Player::Speak()
 	//}
 }
 
-#if defined(_DEBUG) || defined(RELEASEEBUG)
+#if defined(_DEBUG) || defined(RELEASEDEBUG)
 void Player::_DebugPlayer()
 {
 	//Ç®ã‡ëùÇ¶ÇÈ

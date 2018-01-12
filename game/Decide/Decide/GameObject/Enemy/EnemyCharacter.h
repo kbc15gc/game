@@ -364,11 +364,6 @@ public:
 		_ViewAngle = angle;
 	}
 
-	// Œ©‚¦‚é‹——£İ’èB
-	inline void SetViewRange(float range) {
-		_ViewRange = range;
-	}
-
 	// œpœj”ÍˆÍ•Ô‹pB
 	inline float GetWanderingRange()const {
 		return _WanderingRange;

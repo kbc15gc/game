@@ -3259,6 +3259,11 @@ Prefab:
       propertyPath: _MAT
       value: 900
       objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
   m_IsPrefabParent: 0
@@ -3585,6 +3590,11 @@ Prefab:
         type: 2}
       propertyPath: _MONEY
       value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 600
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13, type: 2}
@@ -5463,6 +5473,16 @@ Prefab:
       propertyPath: _Armor.Array.data[1].probability
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114953447750073988, guid: ffc23d3e6eff04142a3547b7ba5fd248,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114953447750073988, guid: ffc23d3e6eff04142a3547b7ba5fd248,
+        type: 2}
+      propertyPath: _DiscoveryRange
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ffc23d3e6eff04142a3547b7ba5fd248, type: 2}
   m_IsPrefabParent: 0
@@ -6927,6 +6947,11 @@ Prefab:
       propertyPath: _DEX
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
   m_IsPrefabParent: 0
@@ -7038,6 +7063,16 @@ Prefab:
         type: 2}
       propertyPath: _Color.b
       value: 0.641171
+      objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _DiscoveryRange
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
@@ -7386,6 +7421,10 @@ MonoBehaviour:
     probability: 0
   _ColorFlag: 0
   _Color: {r: 1, g: 1, b: 1, a: 1}
+  _ViewRange: 50
+  _WanderingRange: 0
+  _DiscoveryRange: 100
+  _RespawnTime: 600
 --- !u!23 &595590597
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11276,6 +11315,11 @@ Prefab:
       propertyPath: _MDE
       value: 170
       objectReference: {fileID: 0}
+    - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13, type: 2}
   m_IsPrefabParent: 0
@@ -11476,6 +11520,16 @@ Prefab:
         type: 2}
       propertyPath: _DEX
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
+        type: 2}
+      propertyPath: _DiscoveryRange
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13, type: 2}
@@ -12492,6 +12546,11 @@ Prefab:
       propertyPath: _Item.Array.data[1].probability
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 114953447750073988, guid: ffc23d3e6eff04142a3547b7ba5fd248,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ffc23d3e6eff04142a3547b7ba5fd248, type: 2}
   m_IsPrefabParent: 0
@@ -13325,17 +13384,17 @@ Prefab:
     - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
         type: 2}
       propertyPath: _Color.r
-      value: 0.21323532
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
         type: 2}
       propertyPath: _Color.g
-      value: 0.21637113
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
         type: 2}
       propertyPath: _Color.b
-      value: 0.21637113
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1778261719053326, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13, type: 2}
       propertyPath: m_Name
@@ -13380,6 +13439,16 @@ Prefab:
         type: 2}
       propertyPath: _DROPEXP
       value: 650
+      objectReference: {fileID: 0}
+    - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114747351923146784, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13,
+        type: 2}
+      propertyPath: _DiscoveryRange
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26f6ab1ab34c1f7469a7e44afdb4bd13, type: 2}
@@ -14240,6 +14309,11 @@ Prefab:
         type: 2}
       propertyPath: _MAT
       value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
@@ -17225,6 +17299,11 @@ Prefab:
       propertyPath: _CRT
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
   m_IsPrefabParent: 0
@@ -17365,6 +17444,11 @@ Prefab:
         type: 2}
       propertyPath: _MAT
       value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
@@ -23624,6 +23708,11 @@ Prefab:
         type: 2}
       propertyPath: _MAT
       value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 114277083072053428, guid: a9b5382a707597d45bb9355db7f968f8,
+        type: 2}
+      propertyPath: _RespawnTime
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9b5382a707597d45bb9355db7f968f8, type: 2}
