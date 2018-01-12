@@ -79,7 +79,7 @@ void LastBossThroneState::_EntrySubClass() {
 
 		param[CharacterParameter::Param::HP] = 2500;
 		param[CharacterParameter::Param::ATK] = 800;
-		param[CharacterParameter::Param::DEF] = 50;
+		param[CharacterParameter::Param::DEF] = 75;
 		if (idx == 0) {
 			//_entourageEnemys[idx]->SetColor(Color::blue);
 			param[CharacterParameter::Param::HP] += 7500;
@@ -90,7 +90,6 @@ void LastBossThroneState::_EntrySubClass() {
 			param[CharacterParameter::Param::ATK] += 100;
 		}
 		param[CharacterParameter::Param::MAT] = 900;
-		param[CharacterParameter::Param::DEF] = 50;
 		param[CharacterParameter::Param::MDE] = 50;
 		param[CharacterParameter::Param::DEX] = 10;
 		param[CharacterParameter::Param::CRT] = 10;
@@ -98,6 +97,17 @@ void LastBossThroneState::_EntrySubClass() {
 		_entourageEnemys[idx]->SetParamAll(color, param);
 		_entourageEnemys[idx]->transform->SetPosition(_EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir));
 		_entourageEnemys[idx]->SetIntervalStartPairAttack(startAttackOffset);
+
+		// 視野の距離設定。
+		_entourageEnemys[idx]->SetViewRange(10.0f);
+
+		// 徘徊範囲設定。
+		// ※暫定処理。
+		_entourageEnemys[idx]->SetWanderingRange(20.0f);
+
+		// 追跡範囲設定。
+		_entourageEnemys[idx]->SetDiscoveryRange(30.0f);
+
 		startAttackOffset += 0.97f;
 		if (idx >= 1) {
 			// 側近を二体とも生成した。

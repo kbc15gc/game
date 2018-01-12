@@ -1072,25 +1072,25 @@ void Player::_DebugPlayer()
 
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_C)) {
 		// 魔王城周辺適正。
-		transform->SetLocalPosition(-157.8, 121.8, 79.48);
+		transform->SetLocalPosition(-157.8f, 121.8f, 79.48f);
 		_nowEXP = 0;
 		_DebugLevel(52);
 	}
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_V)) {
 		// 魔王城1層適正。
-		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		transform->SetLocalPosition(-142.4f, 121.8f, 175.9f);
 		_nowEXP = 0;
 		_DebugLevel(54);
 	}
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_B)) {
 		// 魔王城2層適正。
-		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		transform->SetLocalPosition(-164.7f, 147.2f, 128.6f);
 		_nowEXP = 0;
 		_DebugLevel(62);
 	}
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_N)) {
 		// 魔王城3層適正。
-		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		transform->SetLocalPosition(-140.9f, 169.3f, 246.8f);
 		_nowEXP = 0;
 		_DebugLevel(65);
 	}

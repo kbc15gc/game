@@ -343,14 +343,12 @@
     <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp">
       <Filter>GameObject\MeshObject</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp" />
     <ClCompile Include="GameObject\Enemy\BossGolem.cpp">
       <Filter>GameObject\Enemy\BossGolem</Filter>
     </ClCompile>
     <ClCompile Include="GameObject\Enemy\CodeNameD.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\HFSM\EnemyBackStepState.cpp" />
     <ClCompile Include="GameObject\Village\VillageName.cpp">
       <Filter>GameObject\Village</Filter>
     </ClCompile>
@@ -362,6 +360,12 @@
     </ClCompile>
     <ClCompile Include="Scene\EndingScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\GhostPairAttackState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Enemy\HFSM\EnemyBackStepState.cpp">
+      <Filter>GameObject\Enemy\HFSN</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -721,14 +725,12 @@
     <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h">
       <Filter>GameObject\MeshObject</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h" />
     <ClInclude Include="GameObject\Enemy\BossGolem.h">
       <Filter>GameObject\Enemy\BossGolem</Filter>
     </ClInclude>
     <ClInclude Include="GameObject\Enemy\CodeNameD.h">
       <Filter>GameObject\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Enemy\HFSM\EnemyBackStepState.h" />
     <ClInclude Include="GameObject\Village\VillageName.h">
       <Filter>GameObject\Village</Filter>
     </ClInclude>
@@ -743,6 +745,12 @@
     </ClInclude>
     <ClInclude Include="Scene\EndingScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\GhostPairAttackState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Enemy\HFSM\EnemyBackStepState.h">
+      <Filter>GameObject\Enemy\HFSN</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

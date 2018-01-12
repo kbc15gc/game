@@ -53,14 +53,14 @@ void Enemy::_StartSubClass(){
 	{
 		// 視野角生成。
 		_ViewAngle = 90.0f;
-		_ViewRange = 10.0f;
+		//_ViewRange = 10.0f;
 
 		// 徘徊範囲設定。
 		// ※暫定処理。
-		_WanderingRange = 10.0f;
+		//_WanderingRange = 10.0f;
 
 		// 追跡範囲設定。
-		_discoveryRange = 10.0f;
+		//_discoveryRange = 10.0f;
 
 		// 歩行速度設定。
 		_walkSpeed = 1.0f;

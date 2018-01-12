@@ -28,17 +28,17 @@ void BossGolem::_StartSubClass() {
 
 	// 視野角生成。
 	_ViewAngle = 100.0f;
-	_ViewRange = 30.0f;
+	//_ViewRange = 30.0f;
 
 	// 歩行速度設定。
 	_walkSpeed = 2.5f;
 
 	// 徘徊範囲設定。
 	// ※暫定処理。
-	_WanderingRange = 20.0f;
+	//_WanderingRange = 20.0f;
 
 	// 追跡範囲設定。
-	_discoveryRange = 30.0f;
+	//_discoveryRange = 30.0f;
 
 	// 何回に一回くらい怯むか設定。
 	_damageMotionRandNum = 30;
