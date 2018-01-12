@@ -29,10 +29,12 @@ LastBoss::~LastBoss()
 
 void LastBoss::SordAttackEvent() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
-	attack->RemoveParent();
+
+	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, true, AttackCollision::ReactionType::Leans,110);
+	//unsigned int priorty = 1;
+	//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+	//attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.5f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
+	//attack->RemoveParent();
 
 	_sordAttackShot0 = INSTANCE(GameObjectManager)->AddNew<SordShock>("sordShock", 8);
 	_sordAttackShot0->Create(this, Vector3(0.0f, -1.0f, 2.0f),transform->GetForward() * 25.0f,15.0f);
@@ -65,17 +67,29 @@ void LastBoss::SordAttackEvent2() {
 
 void LastBoss::FastSord() {
 	//攻撃コリジョン作成。
-	unsigned int priorty = 1;
-	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
-	attack->RemoveParent();
+	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 80);
+
+	//unsigned int priorty = 1;
+	//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+	//attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.5f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
+	//attack->RemoveParent();
+}
+
+void LastBoss::FastSord2() {
+	//攻撃コリジョン作成。
+	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 70);
+
+	//unsigned int priorty = 1;
+	//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
+	//attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.5f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
+	//attack->RemoveParent();
 }
 
 void LastBoss::MagicAttackStart1() {
 	_magicFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(20.0f));
-	_magicFire1->Create(this, Vector3(2.0f, 0.0f, 4.0f), rot,20.0f);
+	_magicFire1->Create(this, Vector3(2.0f, -0.5f, 2.0f), rot,20.0f);
 
 	_magicAttack->BreathStart(_magicFire1);
 }
@@ -89,7 +103,7 @@ void LastBoss::MagicAttackStart2() {
 	_magicFire2 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-20.0f));
-	_magicFire2->Create(this, Vector3(-2.0f, 0.0f, 4.0f), rot,20.0f);
+	_magicFire2->Create(this, Vector3(-2.0f, -0.5f, 2.0f), rot,20.0f);
 
 	_magicAttack->BreathStart(_magicFire2);
 }
@@ -101,7 +115,7 @@ void LastBoss::MagicAttackShot2() {
 
 void LastBoss::MagicAttackStart3() {
 	_magicFire3 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
-	_magicFire3->Create(this, Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity,20.0f);
+	_magicFire3->Create(this, Vector3(0.0f, -0.5f, 2.0f), Quaternion::Identity,20.0f);
 
 	_magicAttack->BreathStart(_magicFire3);
 	_magicAttack->BreathEnd();
@@ -119,11 +133,11 @@ void LastBoss::BuffEvent() {
 	}
 
 	// 自身にバフ。
-	value[static_cast<int>(CharacterParameter::Param::ATK)] = 20;
-	value[static_cast<int>(CharacterParameter::Param::MAT)] = 20;
-	value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
-	value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
-	BuffAndDebuff(value, 30.0f);
+	value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
+	value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
+	//value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
+	//value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
+	BuffAndDebuff(value, 10.0f);
 }
 
 void LastBoss::DebuffEvent() {
@@ -185,7 +199,7 @@ void LastBoss::_StartSubClass() {
 	_walkSpeed = 5.0f;
 
 	// 何回に一回くらい怯むか設定。
-	_damageMotionRandNum = 1;
+	_damageMotionRandNum = 10;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
@@ -197,7 +211,7 @@ void LastBoss::_StartSubClass() {
 	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 3.0f, 1, 1);
 	_warpAttack.reset(new EnemyWarpAttack(this));
 	EnemyAttack* singleAttack = new EnemySingleAttack(this);
-	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 3.0f, 1, 1);
+	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 3.0f, 1, 2);
 	_warpAttack->Init(13.0f, singleAttack);
 
 	_magicAttack.reset(new EnemyBreathAttack(this));
@@ -227,6 +241,16 @@ void LastBoss::_UpdateSubClass() {
 #ifdef _DEBUG
 	Debug();
 #endif // _DEBUG
+
+	//@todo for debug
+	//エンディングを流したい。
+	if (_MyComponent.Parameter->GetDeathFlg())
+	{
+		if (_MyComponent.Animation->GetPlaying() == false)
+		{
+			INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
+		}
+	}
 
 	// サウンドテスト。
 	//_voiceYokukitana->Play();
@@ -446,6 +470,12 @@ void LastBoss::_ConfigAnimationEvent() {
 		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
 	}
 
+	// 剣攻撃(ワープ)。
+	{
+		eventFrame = 1.6f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord2), 2);
+	}
+
 	// 魔法攻撃。
 	{
 		eventFrame = 1.0f;
@@ -468,8 +498,8 @@ void LastBoss::_ConfigAnimationEvent() {
 
 	// バフ。
 	{
-		//eventFrame = 1.0f;
-		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::BuffEvent));
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Damage), eventFrame, static_cast<AnimationEvent>(&LastBoss::BuffEvent));
 	}
 
 	// デバフ。

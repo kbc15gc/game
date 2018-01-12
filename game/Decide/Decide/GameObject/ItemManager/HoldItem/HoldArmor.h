@@ -36,35 +36,32 @@ public:
 		return _MagicDef;
 	}
 
-	//防具の基準値と差分値の割合を算出。
-	inline float ParamRaitoMass()override {
-		float offset = static_cast<float>(_DefRnd + _MDefRnd);
-		float sum = static_cast<float>(_Def + _MagicDef);
-		float par = offset / sum;
-		return par;
-	}
+	////防具の基準値と差分値の割合を算出。
+	//inline float SumRaitoMass()override {
+	//	float offset = static_cast<float>(_DefRnd + _MDefRnd);
+	//	float sum = static_cast<float>(static_cast<Item::ArmorInfo*>(_Info)->Def + static_cast<Item::ArmorInfo*>(_Info)->MagicDef);
+	//	float par = offset / sum;
+	//	return par;
+	//}
 
 	//ランクを考慮した物理防御力を計算。
-	inline void RndDefMass() {
+	// 引数：	差分率。
+	inline void RndDefMass(float offset) {
 		// 物理防御力のランダム差分算出。
 		int baseParam = static_cast<Item::ArmorInfo*>(_Info)->Def;
-		int rnd = GetRand_S50to100();// -50から100の値をランダムで取得。
-		float raito = static_cast<float>(rnd) * 0.01f;
 
 		//最終的な物理防御力を算出。
-		_DefRnd = static_cast<int>(baseParam * raito);
+		_DefRnd = static_cast<int>(baseParam * offset);
 		_Def = baseParam + _DefRnd;
 	}
 
 	//ランクを考慮した魔法防御力を計算。
-	inline void RndMDef() {
+	// 引数：	差分率。
+	inline void RndMDef(float offset) {
 		// 魔法防御力のランダム差分算出。
 		int baseParam = static_cast<Item::ArmorInfo*>(_Info)->MagicDef;
-		int rnd = GetRand_S50to100();	// -50から100の値をランダムで取得。
-		float raito = static_cast<float>(rnd) * 0.01f;
-
 		//最終的な魔法防御力。
-		_MDefRnd = static_cast<int>(baseParam * raito);
+		_MDefRnd = static_cast<int>(baseParam * offset);
 		_MagicDef = baseParam + _MDefRnd;
 	}
 

@@ -10,12 +10,6 @@
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
-//各村の設定。
-//各村によってスタート位置・レベルが変わります。
-//#define Village1
-//#define Village2
-#define Village3
-
 namespace
 {
 	float SlowAnimationSpeed = 0.7f;
@@ -339,7 +333,8 @@ void Player::Update()
 	{	
 		//レベルアップするか。
 		if (_EXPTable.size() > 0 &&
-			_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1])
+			_nowEXP >= _EXPTable[_PlayerParam->GetParam(CharacterParameter::LV) - 1]
+			&& _PlayerParam->GetParam(CharacterParameter::LV) < 100)
 		{
 			_LevelUP();
 		}
@@ -347,8 +342,10 @@ void Player::Update()
 		_Damage();
 		//エフェクト
 		EffectUpdate();
+
 		//@todo for debug
-#ifdef _DEBUG
+		//@todo for releasedebug
+#if defined(_DEBUG) || defined(RELEASEEBUG)
 		_DebugPlayer();
 #endif // _DEBUG
 	}
@@ -366,38 +363,7 @@ void Player::Update()
 
 	//@todo for DebugRelease
 	//リリース時のレベルアップ。
-#define RELEASEEBUG
-#ifdef RELEASEEBUG
-	//経験値を増やす。
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_1))
-	{
-		TakeDrop(1000, 1000);
-	}
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
-		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0, 2, transform->GetPosition(), 2);
-	}
 
-	/*Vector3(-387.3f, 58.307f, -75.8f),
-		Vector3(-108.1f, 55.524f, 533.9f),
-		Vector3(218.88f, 67.0f, -0.92f),*/
-	//-145.69, 190.0f, 264.72f
-
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_U)) {
-		transform->SetLocalPosition(-387.3f, 58.307f, -75.8f);
-	}
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_I)) {
-		transform->SetLocalPosition(-108.1f, 55.524f, 533.9f);
-	}
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_O)) {
-		transform->SetLocalPosition(218.88f, 67.0f, -0.92f);
-	}
-	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M)) {
-		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
-	}
-
-
-#endif
 }
 
 void Player::ChangeState(State nextstate)
@@ -965,7 +931,7 @@ void Player::Speak()
 	//}
 }
 
-#ifdef _DEBUG || LEVELDEBUG
+#if defined(_DEBUG) || defined(RELEASEEBUG)
 void Player::_DebugPlayer()
 {
 	//お金増える
@@ -993,7 +959,7 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_4))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
 	}
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_5))
 	{
@@ -1003,8 +969,24 @@ void Player::_DebugPlayer()
 	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_6))
 	{
 		//所持リストに追加.
-		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Copper);
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Hunt);
 	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_7))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Iron);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_8))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Oil);
+	}
+	if (KeyBoardInput->isPressed(DIK_K) && KeyBoardInput->isPush(DIK_9))
+	{
+		//所持リストに追加.
+		INSTANCE(HistoryManager)->AddPossessionChip(ChipID::Medicine);
+	}
+
 
 
 	//経験値を増やす。
@@ -1055,6 +1037,57 @@ void Player::_DebugPlayer()
 	{
 		_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP)))));
 	}
+
+	//移動
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_U)) {
+		transform->SetLocalPosition(-387.3f, 58.307f, -75.8f);
+		_nowEXP = 0;
+		_DebugLevel(5);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_I)) {
+		transform->SetLocalPosition(-108.1f, 55.524f, 533.9f);
+		_nowEXP = 0;
+		_DebugLevel(14);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_O)) {
+		transform->SetLocalPosition(218.88f, 67.0f, -0.92f);
+		_nowEXP = 0;
+		_DebugLevel(39);
+	}
+
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_C)) {
+		// 魔王城周辺適正。
+		transform->SetLocalPosition(-157.8, 121.8, 79.48);
+		_nowEXP = 0;
+		_DebugLevel(52);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_V)) {
+		// 魔王城1層適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(54);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_B)) {
+		// 魔王城2層適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(62);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_N)) {
+		// 魔王城3層適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(65);
+	}
+	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_M)) {
+		// 魔王適正。
+		transform->SetLocalPosition(-145.69, 190.0f, 264.72f);
+		_nowEXP = 0;
+		_DebugLevel(74);
+	}
+	char text[256];
+	sprintf(text, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	OutputDebugString(text);
 }
 void Player::_DebugLevel(int lv)
 {
@@ -1185,7 +1218,7 @@ void Player::Attack1()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1199,7 +1232,7 @@ void Player::Attack2()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1213,7 +1246,7 @@ void Player::Attack3()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1227,7 +1260,7 @@ void Player::Attack4()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }

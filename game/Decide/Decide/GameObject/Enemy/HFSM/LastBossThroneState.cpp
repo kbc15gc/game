@@ -9,6 +9,7 @@
 #include "GameObject\Player\Player.h"
 #include "GameObject\Enemy\HFSM\EnemyBackStepState.h"
 #include "GameObject\Enemy\LastBoss.h"
+#include "GameObject\Enemy\HFSM\EnemyAttackState.h"
 
 //const int LastBossThroneState::_entourageNum = 2;
 
@@ -45,11 +46,20 @@ void LastBossThroneState::EncourageBuff() {
 	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
 		value[idx] = 0;
 	}
+	if (_entourageEnemys.size() == _entourageNum) {
+		// 側近が一体も減っていない。
 
-	value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
-	value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
-	value[static_cast<int>(CharacterParameter::Param::DEF)] = 30;
-	value[static_cast<int>(CharacterParameter::Param::MDE)] = 30;
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = 10;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = 10;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 30;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 30;
+	}
+	else {
+		value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
+		value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 60;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 60;
+	}
 
 	for (auto enemy : _entourageEnemys) {
 		enemy->BuffAndDebuff(value,30.0f);
@@ -66,15 +76,24 @@ void LastBossThroneState::_EntrySubClass() {
 		vector<BarColor> color;
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);
-		param[static_cast<int>(CharacterParameter::Param::HP)] = _EnemyObject->GetMaxHP() / 4;
-		param[static_cast<int>(CharacterParameter::Param::MP)] = _EnemyObject->GetMaxMP()/ 4;
 
-		for (int i = CharacterParameter::Param::ATK; i < CharacterParameter::Param::MAX;i++) {
-			param[i] = _EnemyObject->GetPigmentParam(static_cast<CharacterParameter::Param>(i)) / 4;
+		param[CharacterParameter::Param::HP] = 2500;
+		param[CharacterParameter::Param::ATK] = 800;
+		param[CharacterParameter::Param::DEF] = 50;
+		if (idx == 0) {
+			//_entourageEnemys[idx]->SetColor(Color::blue);
+			param[CharacterParameter::Param::HP] += 7500;
+			param[CharacterParameter::Param::DEF] += 10;
 		}
-
-		// テスト。
-		//param[static_cast<int>(CharacterParameter::Param::HP)] = 10;
+		else {
+			_entourageEnemys[idx]->SetColor(Color::red);
+			param[CharacterParameter::Param::ATK] += 100;
+		}
+		param[CharacterParameter::Param::MAT] = 900;
+		param[CharacterParameter::Param::DEF] = 50;
+		param[CharacterParameter::Param::MDE] = 50;
+		param[CharacterParameter::Param::DEX] = 10;
+		param[CharacterParameter::Param::CRT] = 10;
 
 		_entourageEnemys[idx]->SetParamAll(color, param);
 		_entourageEnemys[idx]->transform->SetPosition(_EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir));
@@ -90,6 +109,7 @@ void LastBossThroneState::_EntrySubClass() {
 		dir *= -1.0f;
 	}
 
+	_isFirstDestroyEntourage = true;
 	_isDeathEntourage = false;
 	_timeCounter = 0.0f;
 }
@@ -134,6 +154,18 @@ void LastBossThroneState::_UpdateSubClass() {
 			_EnemyObject->PlayAnimation_OriginIndex(static_cast<int>(LastBoss::AnimationLastBoss::ThroneEnd), 0.3f, 1, 0);
 			return;
 		}
+		else {
+			if (_isFirstDestroyEntourage) {
+				if(_entourageEnemys.size() < _entourageNum){
+					// 初めて側近が減った。
+					_ChangeLocalState(EnemyCharacter::State::Attack);
+					static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetEncourageAttack());
+
+					_timeCounter = 0.0f;
+					_isFirstDestroyEntourage = false;
+				}
+			}
+		}
 
 		_timeCounter += Time::DeltaTime();
 
@@ -146,7 +178,7 @@ void LastBossThroneState::_UpdateSubClass() {
 			_timeCounter = 0.0f;
 		}
 
-		if (_NowLocalStateIdx != EnemyCharacter::State::StartAttack) {
+		if (_NowLocalStateIdx == EnemyCharacter::State::None) {
 			// 何もアクションをしていない。
 
 			// 常にプレイヤーと一定の距離を取る。
@@ -157,7 +189,6 @@ void LastBossThroneState::_UpdateSubClass() {
 			float length = enemyToPlayer.Length();
 			if (length >= minRange && length <= maxRange) {
 				// プレイヤーとの距離が一定範囲内。
-
 
 				if (_NowLocalStateIdx == EnemyCharacter::State::BackStep) {
 					_ChangeLocalState(EnemyCharacter::State::None);

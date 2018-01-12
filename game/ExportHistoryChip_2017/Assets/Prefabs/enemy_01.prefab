@@ -52,7 +52,6 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -68,7 +67,6 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -120,34 +118,34 @@ MonoBehaviour:
   _DROPEXP: 50
   _MONEY: 100
   _Item:
-  - code: 205
-    probability: 35
-  - code: 206
-    probability: 15
-  - code: 207
-    probability: 15
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
   - code: -1
     probability: 0
   - code: -1
     probability: 0
   _Armor:
-  - code: 103
-    probability: 15
-  - code: 104
-    probability: 10
-  - code: 105
-    probability: 0.1
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
   - code: -1
     probability: 0
   - code: -1
     probability: 0
   _Weapon:
-  - code: 103
-    probability: 15
-  - code: 104
-    probability: 10
-  - code: 105
-    probability: 0.1
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
+  - code: -1
+    probability: 0
   - code: -1
     probability: 0
   - code: -1
