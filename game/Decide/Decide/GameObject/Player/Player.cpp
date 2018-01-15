@@ -107,6 +107,9 @@ void Player::Awake()
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
+	//@todo for MOVIE
+	//_Model->SetEnable(false);
+
 	//アニメーションイベント追加
 	_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	_AnimationEventPlayer->Init((int)AnimationNo::AnimationNum);
@@ -347,7 +350,7 @@ void Player::Update()
 		//@todo for releasedebug
 #if defined(_DEBUG) || defined(RELEASEDEBUG)
 		_DebugPlayer();
-#endif // _DEBUG
+#endif // _DEBUG // RELEASEDEBUG
 	}
 	
 	//アニメーションコントロール
@@ -358,12 +361,8 @@ void Player::Update()
 		////トランスフォーム更新
 		//transform->UpdateTransform();
 
-	//NPCと話すか
+	//NPCと話す
 	Speak();
-
-	//@todo for DebugRelease
-	//リリース時のレベルアップ。
-
 }
 
 void Player::ChangeState(State nextstate)
