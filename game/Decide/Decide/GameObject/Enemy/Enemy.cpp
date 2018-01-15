@@ -52,7 +52,7 @@ void Enemy::_StartSubClass(){
 	// エネミーとしての活動に必要なパラメータを設定。
 	{
 		// 視野角生成。
-		_ViewAngle = 90.0f;
+		_ViewAngle = 100.0f;
 		//_ViewRange = 10.0f;
 
 		// 徘徊範囲設定。

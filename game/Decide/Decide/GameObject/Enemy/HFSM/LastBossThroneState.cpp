@@ -57,12 +57,12 @@ void LastBossThroneState::EncourageBuff() {
 	else {
 		value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
 		value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
-		value[static_cast<int>(CharacterParameter::Param::DEF)] = 60;
-		value[static_cast<int>(CharacterParameter::Param::MDE)] = 60;
+		value[static_cast<int>(CharacterParameter::Param::DEF)] = 50;
+		value[static_cast<int>(CharacterParameter::Param::MDE)] = 50;
 	}
 
 	for (auto enemy : _entourageEnemys) {
-		enemy->BuffAndDebuff(value,30.0f);
+		enemy->BuffAndDebuff(value,15.0f);
 	}
 }
 
@@ -79,18 +79,21 @@ void LastBossThroneState::_EntrySubClass() {
 
 		param[CharacterParameter::Param::HP] = 2500;
 		param[CharacterParameter::Param::ATK] = 800;
-		param[CharacterParameter::Param::DEF] = 75;
+		param[CharacterParameter::Param::DEF] = 200;
+		param[CharacterParameter::Param::MAT] = 800;
+		param[CharacterParameter::Param::MDE] = 200;
 		if (idx == 0) {
 			//_entourageEnemys[idx]->SetColor(Color::blue);
 			param[CharacterParameter::Param::HP] += 7500;
-			param[CharacterParameter::Param::DEF] += 10;
+			param[CharacterParameter::Param::DEF] += 200;
+			param[CharacterParameter::Param::MDE] += 200;
+
 		}
 		else {
 			_entourageEnemys[idx]->SetColor(Color::red);
-			param[CharacterParameter::Param::ATK] += 100;
+			param[CharacterParameter::Param::ATK] += 350;
+			param[CharacterParameter::Param::MAT] += 350;
 		}
-		param[CharacterParameter::Param::MAT] = 900;
-		param[CharacterParameter::Param::MDE] = 50;
 		param[CharacterParameter::Param::DEX] = 10;
 		param[CharacterParameter::Param::CRT] = 10;
 
@@ -99,7 +102,7 @@ void LastBossThroneState::_EntrySubClass() {
 		_entourageEnemys[idx]->SetIntervalStartPairAttack(startAttackOffset);
 
 		// ‹–ì‚Ì‹——£İ’èB
-		_entourageEnemys[idx]->SetViewRange(10.0f);
+		_entourageEnemys[idx]->SetViewRange(0.0f);
 
 		// œpœj”ÍˆÍİ’èB
 		// ¦b’èˆ—B
@@ -122,6 +125,9 @@ void LastBossThroneState::_EntrySubClass() {
 	_isFirstDestroyEntourage = true;
 	_isDeathEntourage = false;
 	_timeCounter = 0.0f;
+
+	_ChangeLocalState(EnemyCharacter::State::Attack);
+	static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetEncourageBuffAttack());
 }
 
 void LastBossThroneState::_StartSubClass() {
@@ -169,7 +175,7 @@ void LastBossThroneState::_UpdateSubClass() {
 				if(_entourageEnemys.size() < _entourageNum){
 					// ‰‚ß‚Ä‘¤‹ß‚ªŒ¸‚Á‚½B
 					_ChangeLocalState(EnemyCharacter::State::Attack);
-					static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetEncourageAttack());
+					static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetSpecialAttack());
 
 					_timeCounter = 0.0f;
 					_isFirstDestroyEntourage = false;
