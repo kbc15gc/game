@@ -94,7 +94,7 @@ void Player::Awake()
 	//スキンモデル作成
 	SkinModelData* modeldata = new SkinModelData();
 	//モデルデータ作成
-	//modeldata->CloneModelData(SkinModelManager::LoadModel("Player.X"), _Anim);
+	modeldata->CloneModelData(SkinModelManager::LoadModel("Player.X"), _Anim);
 	//モデル設定
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
