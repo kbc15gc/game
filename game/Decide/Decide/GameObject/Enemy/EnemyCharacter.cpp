@@ -206,7 +206,7 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 
 void EnemyCharacter::_BarRenderUpdate() {
 	if (_MyComponent.HPBar) {
-		float distance = 60.0f;
+		float distance = 30.0f;
 		if (!INSTANCE(EventManager)->IsEvent() && Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length() <= distance) {
 			// イベント中じゃない。
 			// かつプレイヤーとの距離が一定範囲内。

@@ -809,7 +809,7 @@ void Player::Speak()
 		//NPC
 		for (auto npc : village)
 		{
-			if (npc == nullptr)
+			if (npc == nullptr || !npc->GetActive())
 			{
 				continue;
 			}
