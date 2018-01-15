@@ -6,7 +6,6 @@
 PlayerStateRun::PlayerStateRun(Player* player) :
 	PlayerState(player)
 {
-	_AutoRun = false;
 	_Dir = Vector3::zero;
 }
 
@@ -48,7 +47,6 @@ void PlayerStateRun::Update()
 			{
 				_Player->_NextAttackAnimNo = Player::AnimationNo::AnimationAttack01;
 				_Player->ChangeState(Player::State::Attack);
-				_AutoRun = false;
 				return;
 			}
 		}
@@ -83,11 +81,6 @@ void PlayerStateRun::Move()
 			_Player->_CharacterController->Jump(_JumpSpeed);
 		}
 	}
-	//オートラン
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_Y))
-	{
-		_AutoRun = !_AutoRun;
-	}
 	//方向初期化。
 	Vector3 dir = Vector3::zero;
 	//ゲームパッドから取得した方向
@@ -113,16 +106,6 @@ void PlayerStateRun::Move()
 		dir.x++;
 	}
 	//#endif
-	if (_AutoRun)
-	{
-		//入力があれば変更する。
-		if (dir.Length() > fabs(0.1f))
-		{
-			_Dir = dir;
-		}
-		//移動方向
-		dir = _Dir;
-	}
 	
 
 	//移動したか
@@ -187,7 +170,6 @@ void PlayerStateRun::Move()
 	//オートラン時はステート変更しない。
 	if (dir.Length() < 0.0001f)
 	{
-		_AutoRun = false;
 		_Player->ChangeState(Player::State::Idol);
 	}
 }

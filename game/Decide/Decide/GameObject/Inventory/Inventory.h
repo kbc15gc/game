@@ -10,7 +10,7 @@ class ConsumptionItem;
 class ImageObject;
 class TextObject;
 
-const int INVENTORYLISTNUM = 20;
+const int INVENTORYLISTNUM = 40;
 
 
 
