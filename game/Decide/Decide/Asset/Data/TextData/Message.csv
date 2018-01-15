@@ -90,3 +90,5 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 88,魔王の城へ。,魔王を倒してください。,-1,1,12,Asset/Sound/NPC/NPC/Mic1_16.wav
 89,万事屋,いらっしゃい！,-1,0,-1,Asset/Sound/NPC/SHOP/2nd/Mic2_04.wav
 90,万事屋,い・・・いらっしゃいませ。,-1,0,-1,Asset/Sound/NPC/SHOP/3rd/Mic1_09.wav
+91,珍しい魔物。,世界のどこかに、倒すと強くなれる魔物がいるらしいわ。,92,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+92,珍しい魔物。,金色で目立つから、すぐわかると思うわ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
