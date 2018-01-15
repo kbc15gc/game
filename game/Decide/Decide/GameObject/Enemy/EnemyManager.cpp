@@ -11,6 +11,7 @@
 #include "BossGolem.h"
 #include "CodeNameD.h"
 #include "GameObject\Enemy\LastBoss.h"
+#include "GameObject\Enemy\BossGhost.h"
 
 EnemyManager* EnemyManager::_instance = nullptr;
 
@@ -114,6 +115,11 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossD>("BossD", 1);
 			barColor.push_back(BarColor::Green);
 			barColor.push_back(BarColor::Yellow);
+			barColor.push_back(BarColor::Red);
+			break;
+		case EnemyCharacter::EnemyType::Ghost:
+			//ゴースト生成。
+			newData->Object = INSTANCE(GameObjectManager)->AddNew<BossGhost>("LastBoss", 1);
 			barColor.push_back(BarColor::Red);
 			break;
 		case EnemyCharacter::EnemyType::BossLast:
@@ -229,6 +235,19 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					break;
 				case EnemyCharacter::EnemyType::BossD:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					barColor.push_back(BarColor::Yellow);
+					barColor.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::Ghost:
+					//ゴースト生成。
+					enemy->Object = Spawner->DeathAndRespawnObject<BossGhost>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					barColor.push_back(BarColor::Red);
+					break;
+				case EnemyCharacter::EnemyType::BossLast:
+					//ラスボス生成。
+					enemy->Object = Spawner->DeathAndRespawnObject<LastBoss>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					barColor.push_back(BarColor::Blue);
+					barColor.push_back(BarColor::Green);
 					barColor.push_back(BarColor::Yellow);
 					barColor.push_back(BarColor::Red);
 					break;

@@ -111,6 +111,10 @@ void LastBossThroneState::_EntrySubClass() {
 		// ’ÇÕ”ÍˆÍÝ’èB
 		_entourageEnemys[idx]->SetDiscoveryRange(30.0f);
 
+
+		// ‘¤‹ß‚ÉÝ’èB
+		_entourageEnemys[idx]->SetIsEntourage(true);
+
 		startAttackOffset += 0.97f;
 		if (idx >= 1) {
 			// ‘¤‹ß‚ð“ñ‘Ì‚Æ‚à¶¬‚µ‚½B

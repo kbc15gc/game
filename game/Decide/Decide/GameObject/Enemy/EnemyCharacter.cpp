@@ -206,7 +206,7 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 
 void EnemyCharacter::_BarRenderUpdate() {
 	if (_MyComponent.HPBar) {
-		float distance = 30.0f;
+		float distance = 15.0f;
 		if (!INSTANCE(EventManager)->IsEvent() && Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length() <= distance) {
 			// イベント中じゃない。
 			// かつプレイヤーとの距離が一定範囲内。
@@ -366,7 +366,7 @@ void EnemyCharacter::Drop() {
 			{
 				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。
-				item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
+				item->Create(_Type[idx][i], idx, transform->GetPosition(), 1);
 			}
 		}
 	}

@@ -210,11 +210,24 @@ void BossGhost::_EndNowStateCallback(State EndStateType) {
 	else if (EndStateType == State::StartAttack) {
 		// 一度攻撃が終了した。
 
-		// もう一度攻撃開始。
-		_ChangeState(State::Wait);
-		static_cast<EnemyWaitState*>(_NowState)->SetInterval(3.0f);
+		if (!_isEntourage) {
+			// もう一度攻撃開始。
+			_ChangeState(State::StartAttack);
+		}
+		else {
+			_ChangeState(State::Wait);
+			static_cast<EnemyWaitState*>(_NowState)->SetInterval(3.0f);
+		}
 	}
 	else if (EndStateType == State::Wait) {
+		if (_isEntourage) {
+			_ChangeState(State::StartAttack);
+		}
+		else {
+			_ChangeState(State::Wait);
+		}
+	}
+	else if (EndStateType == State::Threat && !_isEntourage) {
 		_ChangeState(State::StartAttack);
 	}
 }

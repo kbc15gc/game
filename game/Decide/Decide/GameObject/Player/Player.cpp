@@ -1086,7 +1086,7 @@ void Player::_DebugPlayer()
 		// 魔王城2層適正。
 		transform->SetLocalPosition(-164.7f, 147.2f, 128.6f);
 		_nowEXP = 0;
-		_DebugLevel(62);
+		_DebugLevel(56);
 	}
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_N)) {
 		// 魔王城3層適正。
