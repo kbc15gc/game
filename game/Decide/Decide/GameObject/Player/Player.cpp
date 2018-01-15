@@ -107,6 +107,9 @@ void Player::Awake()
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
+	//@todo for MOVIE
+	//_Model->SetEnable(false);
+
 	//アニメーションイベント追加
 	_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	_AnimationEventPlayer->Init((int)AnimationNo::AnimationNum);
