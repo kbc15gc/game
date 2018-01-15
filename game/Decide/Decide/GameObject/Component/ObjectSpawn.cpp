@@ -19,13 +19,6 @@ void Spawner::Create(GameObject* spawn, float wait, const Vector3& pos, const Qu
 		_spawnObject->transform->SetParent(parent);
 	}
 
-	_spawnObject->ConnotePreUpdate();	// 初期化。
-
-	if (_splitSpace) {
-		// 生成したオブジェクトを空間に登録。
-		_splitSpace->AddObjectHitSpace(*_spawnObject);
-	}
-
 	_waitTime = wait;
 	_timeCounter = 0.0f;
 }
@@ -47,7 +40,16 @@ bool Spawner::_ClosedUpdate() {
 	if (_spawnObject) {
 		if (_timeCounter >= _waitTime) {
 			// 指定した時間が経過した。
- 			_spawnObject->SetActive(true);	// アクティブ化する。
+
+			_spawnObject->SetActive(true);	// アクティブ化する。
+
+			_spawnObject->ConnotePreUpdate();	// 初期化。
+
+			if (_splitSpace) {
+				// 生成したオブジェクトを空間に登録。
+				_splitSpace->AddObjectHitSpace(*_spawnObject);
+			}
+
 
 			// 発生させたので自分を削除する。
 			INSTANCE(GameObjectManager)->AddRemoveList(this);

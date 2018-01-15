@@ -151,7 +151,7 @@ void LastBoss::DebuffEvent() {
 	value[static_cast<int>(CharacterParameter::Param::MAT)] = -50;
 	value[static_cast<int>(CharacterParameter::Param::DEF)] = -30;
 	value[static_cast<int>(CharacterParameter::Param::MDE)] = -30;
-	PlayerBuffAndDebuff(value, 30.0f);
+	PlayerBuffAndDebuff(value, 10.0f);
 }
 
 void LastBoss::EntourageCommand() {
@@ -160,7 +160,6 @@ void LastBoss::EntourageCommand() {
 			// 側近が片方減っている。
 
 			EncourageBuff();
-			DebuffEvent();
 		}
 	}
 }
@@ -169,6 +168,11 @@ void LastBoss::EncourageBuff() {
 	if (_NowStateIdx == static_cast<State>(LastBossState::LastBossThrone)) {
 		static_cast<LastBossThroneState*>(_NowState)->EncourageBuff();
 	}
+}
+
+void LastBoss::Special() {
+	EncourageBuff();
+	DebuffEvent();
 }
 
 void LastBoss::_AwakeSubClass() {
@@ -199,7 +203,7 @@ void LastBoss::_StartSubClass() {
 	_walkSpeed = 5.0f;
 
 	// 何回に一回くらい怯むか設定。
-	_damageMotionRandNum = 10;
+	_damageMotionRandNum = 20;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
@@ -224,6 +228,8 @@ void LastBoss::_StartSubClass() {
 	_commandAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::MagicThrone), 0.2f, 1.0f, 1, 1);
 	_encourageBuffAttack.reset(new EnemySingleAttack(this));
 	_encourageBuffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::MagicThrone), 0.2f, 1.0f, 1, 2);
+	_specialAttack.reset(new EnemySingleAttack(this));
+	_specialAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::MagicThrone), 0.2f, 1.0f, 1, 3);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -508,7 +514,7 @@ void LastBoss::_ConfigAnimationEvent() {
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::DebuffEvent));
 	}
 
-	// 側近命令(側近が一体になった場合はプレイヤーへのデバフと側近へのバフ)。
+	// 側近命令(側近が一体になった場合は側近へのバフ)。
 	{
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::EntourageCommand),1);
@@ -518,6 +524,12 @@ void LastBoss::_ConfigAnimationEvent() {
 	{
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::EncourageBuff), 2);
+	}
+
+	// プレイヤーへのデバフと側近へのバフ。
+	{
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::Special), 3);
 	}
 }
 

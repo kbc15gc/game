@@ -51,6 +51,7 @@ public:
 	void DebuffEvent();
 	void EntourageCommand();
 	void EncourageBuff();
+	void Special();
 
 #ifdef _DEBUG
 	void Debug()override;
@@ -60,7 +61,11 @@ public:
 		_saveState = state;
 	}
 
-	inline EnemySingleAttack* GetEncourageAttack()const {
+	inline EnemySingleAttack* GetSpecialAttack()const {
+		return _specialAttack.get();
+	}
+
+	inline EnemySingleAttack*GetEncourageBuffAttack()const {
 		return _encourageBuffAttack.get();
 	}
 protected:
@@ -127,6 +132,7 @@ private:
 	unique_ptr<EnemySingleAttack> _debuffAttack;
 	unique_ptr<EnemySingleAttack> _commandAttack;
 	unique_ptr<EnemySingleAttack> _encourageBuffAttack;
+	unique_ptr<EnemySingleAttack> _specialAttack;
 
 
 	LastBossMagic* _magicFire1 = nullptr;
