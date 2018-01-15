@@ -19,13 +19,13 @@ void EnemyGolem::_AwakeSubClass() {
 void EnemyGolem::_StartSubClass() {
 	//視野角生成。
 	_ViewAngle = 100.0f;
-	_ViewRange = 20.0f;
+	//_ViewRange = 20.0f;
 
 	//徘徊範囲設定。
-	_WanderingRange = 10.0f;
+	//_WanderingRange = 10.0f;
 
 	//追跡範囲設定。
-	_discoveryRange = 10.0f;
+	//_discoveryRange = 10.0f;
 
 	//歩行速度設定。
 	_walkSpeed = 1.5f;
@@ -77,10 +77,11 @@ void EnemyGolem::_ConfigCollision()
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
 	_collisionInfo.radius = 0.6f;
-	_collisionInfo.height = 0.3f;
-	_collisionInfo.offset = Vector3(0.0f, 0.66f, 0.0f);
+	_collisionInfo.height = 2.5f;
+	_collisionInfo.offset = Vector3(0.0f, 1.85f, 0.0f);
 	_collisionInfo.id = Collision_ID::ENEMY;
 
+	//_Gravity = -0.54f;
 	// コンポーネントにカプセルコライダーを追加。
 	_MyComponent.Collider = AddComponent<CCapsuleCollider>();
 	// カプセルコライダーを作成。

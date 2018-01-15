@@ -27,6 +27,10 @@ namespace LoadEnemyInfo{
 		float probability[dropMax * 3];	//ドロップ確率*3つ分。
 		int colorflag;
 		Vector4 color;
+		float viewRange;
+		float wanderingRange;
+		float discoveryRange;
+		float respawnTime;
 	};
 
 	//EnemyInfo構造体の構成フォーマット(メンバ変数)。
@@ -50,6 +54,11 @@ namespace LoadEnemyInfo{
 		{ "probability",	Support::DataTypeE::FLOAT_ARRAY, offsetof(struct EnemyInfo,probability),	sizeof(EnemyInfo::probability) },
 		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
 		{ "color",	Support::DataTypeE::VECTOR4, offsetof(struct EnemyInfo,color),	sizeof(Vector4) },
+		{ "viewRange",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,viewRange),	sizeof(EnemyInfo::viewRange) },
+		{ "wanderingRange",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,wanderingRange),	sizeof(EnemyInfo::wanderingRange) },
+		{ "discoveryRange",Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,discoveryRange),	sizeof(EnemyInfo::discoveryRange) },
+		{ "respawnTime",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,respawnTime),	sizeof(EnemyInfo::respawnTime) },
+
 	};
 }
 

@@ -149,6 +149,12 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 				c.Set(newData->InfoData->color.x, newData->InfoData->color.y, newData->InfoData->color.z, newData->InfoData->color.w);
 				newData->Object->SetColor(c);
 			}
+			// 視野の距離設定。
+			newData->Object->SetViewRange(newData->InfoData->viewRange);
+			// 徘徊範囲設定。
+			newData->Object->SetWanderingRange(newData->InfoData->wanderingRange);
+			// 追跡範囲設定。
+			newData->Object->SetDiscoveryRange(newData->InfoData->discoveryRange);
 
 			_enemys[static_cast<int>(location)].push_back(move(newData));
 		}
@@ -195,11 +201,11 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			if (Spawner) {
 				switch (static_cast<EnemyCharacter::EnemyType>(enemy->InfoData->type)) {
 				case EnemyCharacter::EnemyType::Born:
-					enemy->Object = Spawner->DeathAndRespawnObject<Enemy>(nullptr, 0.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					enemy->Object = Spawner->DeathAndRespawnObject<Enemy>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::BossDrarian:
-					enemy->Object = Spawner->DeathAndRespawnObject<BossDrarian>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					enemy->Object = Spawner->DeathAndRespawnObject<BossDrarian>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Yellow);
 					barColor.push_back(BarColor::Red);
 					break;
@@ -207,22 +213,22 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					// まだ何もしない。
 					break;
 				case EnemyCharacter::EnemyType::Golem:
-					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					enemy->Object = Spawner->DeathAndRespawnObject<EnemyGolem>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Red);
 					enemy->Object->SetBarPos({ 0.0f,4.0f,0.0f });
 					enemy->Object->SetBigflag(true);
 					break;
 				case EnemyCharacter::EnemyType::BossGolem:
-					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					enemy->Object = Spawner->DeathAndRespawnObject<BossGolem>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Yellow);
 					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::Soldier:
-					enemy->Object = Spawner->DeathAndRespawnObject<EnemySoldier>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					enemy->Object = Spawner->DeathAndRespawnObject<EnemySoldier>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Red);
 					break;
 				case EnemyCharacter::EnemyType::BossD:
-					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, 60.0f, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
 					barColor.push_back(BarColor::Yellow);
 					barColor.push_back(BarColor::Red);
 					break;
@@ -235,6 +241,13 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetItem(enemy->InfoData->item, enemy->InfoData->armor, enemy->InfoData->weapon);
 			enemy->Object->SetProbability(enemy->InfoData->probability);
 			enemy->Object->SetLocationCode(code);
+			// 視野の距離設定。
+			enemy->Object->SetViewRange(enemy->InfoData->viewRange);
+			// 徘徊範囲設定。
+			enemy->Object->SetWanderingRange(enemy->InfoData->wanderingRange);
+			// 追跡範囲設定。
+			enemy->Object->SetDiscoveryRange(enemy->InfoData->discoveryRange);
+
 			//カラーを設定。
 			Color c;
 			c.Set(enemy->InfoData->color.x, enemy->InfoData->color.y, enemy->InfoData->color.z, enemy->InfoData->color.w);
