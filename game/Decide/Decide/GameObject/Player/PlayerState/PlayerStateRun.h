@@ -12,6 +12,5 @@ public:
 	void Move();
 	void DebugMove();
 private:
-	bool _AutoRun;
 	Vector3 _Dir;
 };

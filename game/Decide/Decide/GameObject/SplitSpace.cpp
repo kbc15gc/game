@@ -207,6 +207,14 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Trans
 
 	// 求めた最小位置と最大位置からボックスのサイズを定義。
 	size = Vector3(maxX - minX,maxY - minY,maxZ - minZ);
+
+	char test[256];
+	sprintf(test, "Y = %f\n", maxY - minY);
+	OutputDebugString(test);
+	////テスト。
+	//// ※魔王城がはみ出るので高さは決め打ち。
+	//size = Vector3(maxX - minX, maxY - minY, maxZ - minZ);
+
 	return size;
 }
 
