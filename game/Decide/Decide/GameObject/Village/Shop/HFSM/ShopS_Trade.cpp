@@ -558,6 +558,9 @@ void ShopS_Trade::SellItem()
 				_Shop->SpeakMess(3);
 				erase = true;
 				offset++;
+			}else
+			{
+				erase = false;
 			}
 		}
 		else

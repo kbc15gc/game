@@ -366,7 +366,7 @@ void EnemyCharacter::Drop() {
 			{
 				DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
 				//落とすアイテムのidとコードを指定。
-				item->Create(_Type[idx][i], idx, transform->GetPosition(), 2);
+				item->Create(_Type[idx][i], idx, transform->GetPosition(), 1);
 			}
 		}
 	}
