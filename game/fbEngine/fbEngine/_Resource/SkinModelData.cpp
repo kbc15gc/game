@@ -969,7 +969,7 @@ void SkinModelData::DeleteCloneSkeleton(LPD3DXFRAME frame)
 	}
 	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)(frame->pMeshContainer);
 	if (pMeshContainer) {
-		SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
+		//SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
 		SAFE_DELETE(pMeshContainer);
 	}
 	SAFE_DELETE_ARRAY(frame->Name);
