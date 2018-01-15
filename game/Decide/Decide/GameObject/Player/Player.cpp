@@ -94,7 +94,7 @@ void Player::Awake()
 	//スキンモデル作成
 	SkinModelData* modeldata = new SkinModelData();
 	//モデルデータ作成
-	modeldata->CloneModelData(SkinModelManager::LoadModel("Player.X"), _Anim);
+	//modeldata->CloneModelData(SkinModelManager::LoadModel("Player.X"), _Anim);
 	//モデル設定
 	_Model->SetModelData(modeldata);
 	_Model->SetModelEffect(ModelEffectE::SPECULAR, true);
@@ -306,8 +306,6 @@ void Player::Start()
 
 	//// 初期位置に移動。
 	//_CharacterController->Execute();
-
-	//@todo 
 }
 
 void Player::Update()
@@ -349,7 +347,7 @@ void Player::Update()
 		//@todo for releasedebug
 #if defined(_DEBUG) || defined(RELEASEDEBUG)
 		_DebugPlayer();
-#endif // _DEBUG
+#endif // _DEBUG // RELEASEDEBUG
 	}
 	
 	//アニメーションコントロール
@@ -360,12 +358,8 @@ void Player::Update()
 		////トランスフォーム更新
 		//transform->UpdateTransform();
 
-	//NPCと話すか
+	//NPCと話す
 	Speak();
-
-	//@todo for DebugRelease
-	//リリース時のレベルアップ。
-
 }
 
 void Player::ChangeState(State nextstate)
