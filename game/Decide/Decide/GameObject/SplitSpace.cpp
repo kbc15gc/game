@@ -211,9 +211,9 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Trans
 	char test[256];
 	sprintf(test, "Y = %f\n", maxY - minY);
 	OutputDebugString(test);
-	////テスト。
-	//// ※魔王城がはみ出るので高さは決め打ち。
-	//size = Vector3(maxX - minX, maxY - minY, maxZ - minZ);
+	//テスト。
+	// ※魔王城がはみ出るので高さは決め打ち。
+	size = Vector3(maxX - minX,500.0f, maxZ - minZ);
 
 	return size;
 }

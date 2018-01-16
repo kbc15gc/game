@@ -62,6 +62,10 @@ public:
 	inline EnemyAttack* GetNowPairAttack() {
 		return _pairAttackArray[_selectNowPairAttack];
 	}
+
+	inline void SetIsEntourage(bool flg) {
+		_isEntourage = flg;
+	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
@@ -116,6 +120,8 @@ private:
 	unique_ptr<EnemyComboAttack> _laserComboAttack;
 	unique_ptr<EnemySingleAttack> _singleAttack;
 	unique_ptr<EnemyBreathAttack> _singleLaser;
+
+	bool _isEntourage = false;	// ë§ãﬂÇ©ÅB
 
 	bool _isCommand = false;
 

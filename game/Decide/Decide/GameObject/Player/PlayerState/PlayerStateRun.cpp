@@ -16,7 +16,7 @@ PlayerStateRun::~PlayerStateRun()
 
 void PlayerStateRun::Update()
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(RELEASEDEBUG)
 	//keyboard0でデバッグ移動
 	//		  9で上昇
 	//		  8で下降

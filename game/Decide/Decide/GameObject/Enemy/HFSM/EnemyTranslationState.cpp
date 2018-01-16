@@ -63,11 +63,11 @@ void EnemyTranslationState::_UpdateSubClass() {
 
 		if (!_isStartTrans && _EnemyObject->GetMoveSpeedExcute().Length() <= 0.01f) {
 			// 移動し始めてから壁などに突っ込んでいる引っかかって移動していない。
-			if (_EnemyObject->GetIsOnWall()) {
-				// 壁に衝突している。
+			//if (_EnemyObject->GetIsOnWall()) {
+			//	// 壁に衝突している。
 
 				_EndState();
-			}
+			//}
 		}
 
 		// 求めた移動量をエネミーの移動量に加算。

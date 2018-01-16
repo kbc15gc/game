@@ -140,7 +140,7 @@ unique_ptr<CharacterParameter::DamageInfo> CharacterParameter::GiveDamageMass(bo
 				// 武器のクリティカル威力を加算。
 				crt += weapon->GetCrt();
 			}
-			damage += static_cast<int>(damage * static_cast<float>(crt) * 0.01f);
+			damage += static_cast<int>(damage * (static_cast<float>(crt) * 0.01f));
 		}
 	}
 
