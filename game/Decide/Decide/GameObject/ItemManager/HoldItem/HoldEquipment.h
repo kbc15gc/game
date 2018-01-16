@@ -17,8 +17,6 @@ public:
 		A,		// 高級。
 		B,		// 良。
 		C,		// 平均。
-		D,		// 粗悪。
-		E,		// 超粗悪。
 		None,	// 装備無し.
 		Max,	// 数.
 	};
@@ -78,40 +76,25 @@ public:
 	inline void RankSelect() {
 		int rnd = rand() % 10000;	// 0.01%～100.00%の確率を計算。
 
-		if (rnd == 0) {
-			// 0.01%。
+		if (rnd >= 0 && rnd <= 999) {
+			// 10.00%。
 			_Rank = Rank::SS;
 			_Revision = ParamRaitoMass(26, 50);
 		}
-		else if (rnd >= 1 && rnd <= 299) {
-			// 2.99%。
+		else if (rnd >= 1000 && rnd <= 2999) {
+			// 20.00%。
 			_Rank = Rank::S;
 			_Revision = ParamRaitoMass(16,25);
 		}
-		else if (rnd >= 300 && rnd <= 1299) {
-			// 10.00%。
+		else if (rnd >= 3000 && rnd <= 7999) {
+			// 50.00%。
 			_Rank = Rank::A;
 			_Revision = ParamRaitoMass(11, 15);
 		}
-		else if (rnd >= 1300 && rnd <= 2999) {
-			// 17.00%。
+		else if (rnd >= 8000 && rnd <= 9999) {
+			// 20.00%。
 			_Rank = Rank::B;
 			_Revision = ParamRaitoMass(6, 10);
-		}
-		else if (rnd >= 3000 && rnd <= 4999) {
-			// 20.00%。
-			_Rank = Rank::C;
-			_Revision = ParamRaitoMass(-19, 5);
-		}
-		else if (rnd >= 5000 && rnd <= 6999) {
-			// 20.00%。
-			_Rank = Rank::D;
-			_Revision = ParamRaitoMass(-34, -20);
-		}
-		else if (rnd >= 7000 && rnd <= 9999) {
-			// 30.00%。
-			_Rank = Rank::E;
-			_Revision = ParamRaitoMass(-50, -35);
 		}
 	}
 
@@ -189,7 +172,5 @@ static char* RankText[HoldEquipment::Rank::Max] =
 	"A",
 	"B",
 	"C",
-	"D",
-	"E",
 	"None",
 };

@@ -788,6 +788,7 @@ protected:
 
 	Player* _Player = nullptr;			//プレイヤー
 
+	float _playerDist;
 private:
 	int _dropExp;	// 落とす経験値。
 	int _dropMoney; // 落とす金額。
