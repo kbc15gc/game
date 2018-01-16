@@ -35,7 +35,7 @@ class HistoryManager;
 
 //@todo for RELEASEDEBUG
 //‚±‚ê»•i”Å‚Ìê‡‚ğ‚±‚ê‚ğoff‚É‚µ‚Ä‚­‚¾‚³‚¢B
-//#define RELEASEDEBUG
+#define RELEASEDEBUG
 
 namespace
 {

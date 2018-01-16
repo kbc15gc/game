@@ -51,6 +51,7 @@ public class ExportEnemy : MonoBehaviour {
         BossGolem,  //第2のボスゴーレム
         Soldier,    //兵士
         BossD,      //第3のボス
+        Ghost,      //ゴースト。
         LasstBoss,  //ﾗｽﾎﾞｽ
     }
     //エネミーのタイプ指定。

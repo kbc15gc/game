@@ -45,7 +45,7 @@ public:
 
 	// 自分がどの種類のエネミーか。
 	// ※このクラスを継承して新種エネミーを作成したらここに種別を追加すること。
-	enum class EnemyType{Born = 0,BossDrarian,Drarian,Golem,BossGolem,Soldier,BossD,BossLast};
+	enum class EnemyType{Born = 0,BossDrarian,Drarian,Golem,BossGolem,Soldier,BossD,Ghost,BossLast};
 
 	// ステート配列の添え字を列挙。
 	// ※継承先で使用するものも含めてすべてのステートをここに列挙する。
@@ -788,6 +788,7 @@ protected:
 
 	Player* _Player = nullptr;			//プレイヤー
 
+	float _playerDist;
 private:
 	int _dropExp;	// 落とす経験値。
 	int _dropMoney; // 落とす金額。

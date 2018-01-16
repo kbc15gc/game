@@ -187,7 +187,7 @@ private:
 	Vector3					_outsideSpeed = Vector3::zero;	//キャラクターが外的要因で移動する量。 
 	Vector3					_moveSpeedExcute = Vector3::zero;				// 衝突解決終了後の実際に移動した量。
 	bool 					m_isJump = false;				//ジャンプ中？
-	bool					m_isOnGround = true;			//地面の上にいる？
+	bool					m_isOnGround = false;			//地面の上にいる？
 	bool					_isOnWall = false;				// 壁に衝突しているか。
 	Collider*				m_collider = nullptr;			//コライダー。
 	Vector3					_halfSize;						// コライダーのサイズ(実際のサイズの半分)。
