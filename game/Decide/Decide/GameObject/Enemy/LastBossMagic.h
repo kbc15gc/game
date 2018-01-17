@@ -37,6 +37,11 @@ public:
 		_attack[0]->SetIsHit(false);
 	}
 
+
+	void BreathStop()override;
+
+	void BreathPlay()override;
+
 private:
 
 	ParticleEmitter* _particleEmitter = nullptr;

@@ -20,6 +20,8 @@ public:
 	~BreathObject() {
 	}
 
+	void LateUpdate()override;
+
 	void OnDestroy()override {
 		if (_isStart) {
 			BreathEnd();
@@ -31,12 +33,14 @@ public:
 	// ブレス発射開始。
 	inline void BreathStart() {
 		_isStart = true;
+		_isCreateBreathEnd = false;
 		_BreathStartSubClass();
 	}
 
 	// ブレス発射終了。
 	inline void BreathEnd() {
 		_isStart = false;
+		_isCreateBreathEnd = true;
 		_BreathEndSubClass();
 	}
 
@@ -61,6 +65,16 @@ public:
 		return _isStart;
 	}
 
+
+	virtual void BreathStop() {
+		SetIsStopUpdate(true);
+	};
+
+	virtual void BreathPlay() {
+		SetIsStopUpdate(false);
+	};
+
+
 protected:
 	// 初期化。
 	void Create(EnemyCharacter* enemy) {
@@ -80,4 +94,5 @@ protected:
 	vector<AttackCollision*> _attack;
 	EnemyCharacter* _enemyObject = nullptr;
 	bool _isStart = false;
+	bool _isCreateBreathEnd = false;	// ブレスの生成が終了しているか。
 };

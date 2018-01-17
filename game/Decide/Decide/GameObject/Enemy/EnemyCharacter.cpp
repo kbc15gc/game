@@ -85,12 +85,6 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	_playerDist = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).LengthSq();
-	if (_playerDist > 10000.0f && _MyComponent.CharacterController->IsOnGround()) {
-		// 遠方のエネミーは更新停止。
-		return;
-	}
-
 	if (_MyComponent.Parameter->GetDeathFlg())
 	{
 		if (_NowStateIdx != State::Death) {
@@ -108,8 +102,6 @@ void EnemyCharacter::Update() {
 			nearEnemyInfo.object = this;
 		}
 	}
-
-	_BarRenderUpdate();
 
 	// 継承先により変わる処理。
 	_UpdateSubClass();
@@ -143,9 +135,16 @@ void EnemyCharacter::Update() {
 }
 
 void EnemyCharacter::LateUpdate() {
+	_playerDist = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).LengthSq();
+
 	if (_playerDist > 10000.0f && _MyComponent.CharacterController->IsOnGround()) {
 		// 遠方のエネミーは更新停止。
+
+		SetIsStopUpdate(true);
 		return;
+	}
+	else {
+		SetIsStopUpdate(false);
 	}
 
 	if (INSTANCE(EventManager)->IsEvent())
@@ -157,6 +156,8 @@ void EnemyCharacter::LateUpdate() {
 	{
 		SetIsStopUpdate(false);
 	}
+
+	_BarRenderUpdate();
 
 	// 継承先により変わる処理。
 	_LateUpdateSubClass();

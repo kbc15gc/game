@@ -100,6 +100,23 @@ void LaserBreath::_BreathStartSubClass(){
 	_attack.push_back(attack);
 }
 
+void LaserBreath::BreathStop() {
+	if (_particleEmitter) {
+		_particleEmitter->SetActive(false);
+	}
+	BreathObject::BreathStop();
+};
+
+void LaserBreath::BreathPlay() {
+	if (!_isCreateBreathEnd) {
+		if (_particleEmitter) {
+			_particleEmitter->SetActive(true);
+		}
+	}
+	BreathObject::BreathPlay();
+};
+
+
 void LaserBreath::_UpdateCollision() {
 	if (_attack.size() >= 1) {
 		GostCollision* Gost = _attack[0]->GetGostCollision();
@@ -142,14 +159,23 @@ void LaserBreath::_UpdateCollision() {
 					pos -= dir * (sizeZ * 0.5f);
 					Gost->transform->SetPosition(pos);
 				}
-
-				if (_isCreateBreathEnd && start->transform->GetLocalScale().y <= 0.0f) {
-					// レーザーが消滅している。
-
-					INSTANCE(GameObjectManager)->AddRemoveList(this);
-				}
-
 			}
 		}
+	}
+
+	if (/*_isCreateBreathEnd && */_start && _start->transform->GetLocalScale().y <= 0.0f) {
+		// レーザーが消滅している。
+		if (!_isCreateBreathEnd) {
+			char test[256];
+			if (testBreathEnd) {
+				sprintf(test, "ブレス生成終了？ = true");
+			}
+			else {
+				sprintf(test, "ブレス生成終了？ = false");
+			}
+			OutputDebugString(test);
+			OutputDebugString("isCreateBreathEnd = false\n");
+		}
+		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 }

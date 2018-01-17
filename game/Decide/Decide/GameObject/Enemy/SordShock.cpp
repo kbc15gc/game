@@ -122,3 +122,25 @@ void SordShock::_BreathStartSubClass() {
 
 	_timeCounter = 0.0f;
 }
+
+void SordShock::BreathStop() {
+	if (_shockParticleEmitter) {
+		_shockParticleEmitter->SetActive(false);
+	}
+	if (_tirotiroEmitter) {
+		_tirotiroEmitter->SetActive(false);
+	}
+
+	BreathObject::BreathStop();
+};
+
+void SordShock::BreathPlay() {
+	if (_shockParticleEmitter) {
+		_shockParticleEmitter->SetActive(true);
+	}
+	if (_tirotiroEmitter) {
+		_tirotiroEmitter->SetActive(true);
+	}
+
+	BreathObject::BreathPlay();
+};

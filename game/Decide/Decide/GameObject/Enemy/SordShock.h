@@ -38,6 +38,11 @@ public:
 	inline void _BreathEndSubClass()override {
 	}
 
+
+	void BreathStop()override;
+
+	void BreathPlay()override;
+
 private:
 
 	ParticleEmitter* _shockParticleEmitter = nullptr;
