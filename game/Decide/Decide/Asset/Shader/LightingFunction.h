@@ -138,6 +138,45 @@ float4 DiffuseLight( float3 normal)
 }
 
 /**
+* 太陽光の計算.
+*/
+float3 CalcSunLight(float3 normal, float3 worldPos, float2 uv)
+{
+	float3 color = 0.0f;
+
+	//ディフューズライトの計算.
+	color += max(0.0f, -dot(normal, g_diffuseLightDirection[0])) * g_diffuseLightColor[0];
+
+	//スペキュラライトの計算.
+	if (g_MapFlg.y)
+	{
+		float3 spec = 0.0f;
+		float specPow = tex2D(g_speculerMapSampler, uv);
+
+		float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
+		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
+
+		//スペキュラ成分を計算する。
+		//反射ベクトルを計算。
+		float3 L = -g_diffuseLightDirection[0].xyz;
+		spec += g_diffuseLightColor[0] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[0].w;	//スペキュラ強度。
+
+		color += spec * specPow;
+	}
+
+	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+	{
+		//大気錯乱が設定されている場合は0番目のライトを太陽光とする。
+		float t = max(0.0f, dot(float3(0.0f, -1.0f, 0.0f), g_diffuseLightDirection[0]));
+		t *= 2.0f;
+		t = min(1.0f, pow(t, 2.0f));
+		color.xyz *= t;
+	}
+
+	return color;
+}
+
+/**
 * 月明りの計算.
 */
 float3 CalcMoonLight(float3 normal, float3 worldPos, float2 uv)
