@@ -148,6 +148,16 @@ void EnemyCharacter::LateUpdate() {
 		return;
 	}
 
+	if (INSTANCE(EventManager)->IsEvent())
+	{
+		//イベントが実行中なら更新停止.
+		SetIsStopUpdate(true);
+	}
+	else
+	{
+		SetIsStopUpdate(false);
+	}
+
 	// 継承先により変わる処理。
 	_LateUpdateSubClass();
 
