@@ -35,11 +35,17 @@ public:
 
 	// ブレス発射終了。
 	inline void _BreathEndSubClass()override {
+		testBreathEnd = true;
 		_isCreateBreathEnd = true;
 		_particleEmitter->SetEmitFlg(false);
 		_particleEmitter->AchievedCreateParticleEnd();
 		_particleEmitter->SetActive(false);
 	}
+
+	void BreathStop()override;
+
+	void BreathPlay()override;
+
 
 private:
 	// 衝突判定コリジョンの更新。
@@ -59,6 +65,7 @@ private:
 	Color _mulColor = Color::white;
 	float _power;
 	int _atk;
-
-	bool _isCreateBreathEnd = false;	// ブレスの生成が終了しているか。	
+	
+public:
+	bool testBreathEnd = false;
 };

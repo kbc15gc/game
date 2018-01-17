@@ -93,3 +93,17 @@ void LastBossMagic::_BreathStartSubClass() {
 
 	_timeCounter = 0.0f;
 }
+
+void LastBossMagic::BreathStop() {
+	if (_particleEmitter) {
+		_particleEmitter->SetActive(false);
+	}
+	BreathObject::BreathStop();
+};
+
+void LastBossMagic::BreathPlay() {
+	if (_particleEmitter) {
+		_particleEmitter->SetActive(true);
+	}
+	BreathObject::BreathPlay();
+};

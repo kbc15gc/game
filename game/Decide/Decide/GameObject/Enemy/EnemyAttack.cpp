@@ -138,6 +138,10 @@ bool EnemyWarpAttack::Update() {
 			if (_attack->Update()) {
 				// UŒ‚I—¹B
 
+				if (_attack->warptest) {
+					OutputDebugString("warpLaser\n");
+				}
+				_attack->Exit();
 				_isAttackEnd = true;
 			}
 		}
@@ -168,6 +172,8 @@ bool EnemyComboAttack::Update() {
 	if (_isStartAttack) {
 		if (_oneCombo->Update()) {
 			// UŒ‚ˆê‰ñI—¹B
+
+			_oneCombo->Exit();
 
 			_comboCount++;
 			if (_comboCount >= _attackNum) {
