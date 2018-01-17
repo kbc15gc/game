@@ -54,6 +54,15 @@ bool EnemyBreathAttack::Update() {
 	return !_enemyObject->GetIsPlaying();
 }
 
+void EnemyBreathAttack::BreathStart(BreathObject* obj) {
+	if (warptest) {
+		OutputDebugString("warptest\n");
+	}
+	_breath = obj;
+	_breath->SetActive(true);
+	_breath->BreathStart();
+}
+
 void EnemyWarpAttack::Entry() {
 	//_oneCombo->Init(1.0f, _animType, _interpolate, 1, _playEventNo);
 	_nowWarpState = WarpState::Through;

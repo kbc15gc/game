@@ -367,9 +367,6 @@
     <ClCompile Include="GameObject\Enemy\HFSM\EnemyBackStepState.cpp">
       <Filter>GameObject\Enemy\HFSN</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Enemy\BreathObject.cpp">
-      <Filter>GameObject\Enemy</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />

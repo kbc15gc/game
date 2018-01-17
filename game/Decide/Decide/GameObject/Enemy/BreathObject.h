@@ -20,7 +20,7 @@ public:
 	~BreathObject() {
 	}
 
-	void LateUpdate()override;
+	void LateUpdate()override {};
 
 	void OnDestroy()override {
 		if (_isStart) {

@@ -111,14 +111,7 @@ public:
 	// 一回の攻撃に使用するブレスオブジェクト追加。
 	// ブレス攻撃のたびに毎回1から追加する。
 	// 引数：	使用するブレスオブジェクト。
-	inline void BreathStart(BreathObject* obj) {
-		if (warptest) {
-			OutputDebugString("warptest\n");
-		}
-		_breath = obj;
-		_breath->SetActive(true);
-		_breath->BreathStart();
-	}
+	void BreathStart(BreathObject* obj);
 
 	// ブレス終了。
 	inline void BreathEnd() {
