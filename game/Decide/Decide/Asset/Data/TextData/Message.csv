@@ -26,9 +26,9 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 24,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,1,3,Asset/Sound/NPC/NPC/Mic1_16.wav
 25,魔王,よくきたな。勇者よ。,26,-1,-1,Asset/Sound/MAOU/5.wav
 26,魔王,八つ裂きにしてやるぅぅぅぅぅ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-27,ようこそ。,何もないとこだけど、ゆっくりしていって。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
+27,ようこそ。,何もないけど、ゆっくりしていってね。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
 28,いってらっしゃい,たまには休んでいってね。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_84.wav
-29,やぁ。,ここも昔はもっと活気があったんだけどね……。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_117.wav
+29,……。,やあ、ここも昔は活気があったんだけどね……。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_117.wav
 30,ありがとう。,助かったよ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_86.wav
 31,モンスターが……,この道を進んだ先に\nモンスターがたくさんいて\n困ってるんだ。,-1,1,8,Asset/Sound/NPC/NPC/Mic1_87.wav
 32,ページみたいなものが落ちてたよ。,モンスターがその周りにいて詳しくは\n確かめれなかったよ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_88.wav
@@ -90,8 +90,8 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 88,魔王の城へ……,魔王を倒してください。,-1,1,12,Asset/Sound/NPC/NPC/Mic1_16.wav
 89,万事屋,いらっしゃい！,-1,0,-1,Asset/Sound/NPC/SHOP/2nd/Mic2_04.wav
 90,万事屋,い・・・いらっしゃいませ。,-1,0,-1,Asset/Sound/NPC/SHOP/3rd/Mic1_09.wav
-91,金色の魔物……,世界のどこかに、倒すと強くなれる魔物がいるらしいわ。,92,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-92,金色の魔物……,金色で目立つから、すぐわかると思うわ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+91,噂ですが……,世界のどこかに、倒すと強くなれる魔物がいるらしいわ。,92,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+92,噂ですが……,金色で目立つから、すぐわかると思うわ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 93,そこの階段が……,魔王様の神殿につながっています。\n魔王様はお忙しいので、謁見はお控えください。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 94,この先は……,居住区です。お店もあるので\n立ち寄っていくことをおすすめします。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 95,おお、旅人さん……,すぐそこに万屋があるんだ。あんた強そうだし\nいっちょ武器でも買って最近噂になっている勇者とやらを倒しておくれよ！,-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_09.wav

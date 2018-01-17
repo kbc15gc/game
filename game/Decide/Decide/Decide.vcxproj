@@ -358,6 +358,7 @@
     <ClCompile Include="GameObject\Enemy\BossDrarian.cpp" />
     <ClCompile Include="GameObject\Enemy\BossGhost.cpp" />
     <ClCompile Include="GameObject\Enemy\BossGolem.cpp" />
+    <ClCompile Include="GameObject\Enemy\BreathObject.cpp" />
     <ClCompile Include="GameObject\Enemy\CodeNameD.cpp" />
     <ClCompile Include="GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="GameObject\Enemy\EnemyAttack.cpp" />

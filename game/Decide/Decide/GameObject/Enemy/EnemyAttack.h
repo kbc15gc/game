@@ -66,10 +66,6 @@ protected:
 	bool _isPlaying = false;	// アニメーション再生中かのフラグ(更新処理時に攻撃ステートから設定される)。
 	float _AttackRange = 0.0f;	// 攻撃可能範囲。
 	EnemyCharacter* _enemyObject = nullptr;
-
-public:
-	bool warptest = false;
-
 };
 
 // ※単攻撃(攻撃モーション一回分攻撃)。
@@ -116,13 +112,6 @@ public:
 	// ブレス終了。
 	inline void BreathEnd() {
 		if (_breath) {
-			if (warptest) {
-				OutputDebugString("warptest\n");
-				test = _breath;
-				char testc[256];
-				sprintf(testc, "test = %p\n", test);
-				OutputDebugString(testc);
-			}
 			_breath->BreathEnd();
 			_breath = nullptr;
 		}
@@ -135,8 +124,6 @@ public:
 private:
 	GameObject* _player = nullptr;
 	BreathObject* _breath = nullptr;	// ブレスオブジェクト(ブレス発射処理が終わった後もブレスの挙動を管理できるようにするためにクラス化した)。
-public:
-	BreathObject* test = nullptr;
 };
 
 class EnemyWarpAttack : public EnemyAttack {
@@ -167,6 +154,9 @@ public:
 		_isAttackEnd = false;
 	}
 
+	inline EnemyAttack* GetAttack() {
+		return _attack.get();
+	}
 private:
 	void Init(float attackRange, int animType = -1, float interpolate = 0.0f, float playSpeed = 1.0f, int animLoopNum = 1, int playEventNo = 0)override {
 		//EnemyAttack::Init(attackRange, animType, interpolate, playSpeed, animLoopNum, playEventNo);

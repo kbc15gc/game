@@ -163,19 +163,19 @@ void LaserBreath::_UpdateCollision() {
 		}
 	}
 
-	if (/*_isCreateBreathEnd && */_start && _start->transform->GetLocalScale().y <= 0.0f) {
+	if (_isCreateBreathEnd && _start && _start->transform->GetLocalScale().y <= 0.0f) {
 		// レーザーが消滅している。
-		if (!_isCreateBreathEnd) {
-			char test[256];
-			if (testBreathEnd) {
-				sprintf(test, "ブレス生成終了？ = true");
-			}
-			else {
-				sprintf(test, "ブレス生成終了？ = false");
-			}
-			OutputDebugString(test);
-			OutputDebugString("isCreateBreathEnd = false\n");
-		}
+		//if (!_isCreateBreathEnd) {
+		//	char test[256];
+		//	if (testBreathEnd) {
+		//		sprintf(test, "ブレス生成終了？ = true");
+		//	}
+		//	else {
+		//		sprintf(test, "ブレス生成終了？ = false");
+		//	}
+		//	OutputDebugString(test);
+		//	OutputDebugString("isCreateBreathEnd = false\n");
+		//}
 		INSTANCE(GameObjectManager)->AddRemoveList(this);
 	}
 }

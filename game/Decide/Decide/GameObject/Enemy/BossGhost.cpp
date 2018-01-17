@@ -53,11 +53,11 @@ void BossGhost::LaserEndSingle() {
 void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
 	laser->Create(this, Vector3::zero, 30.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
-	static_cast<EnemyBreathAttack*>(_laserComboAttack->GetOneAttack())->BreathStart(laser);
+	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathStart(laser);
 }
 
 void BossGhost::LaserEnd() {
-	static_cast<EnemyBreathAttack*>(_laserComboAttack->GetOneAttack())->BreathEnd();
+	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathEnd();
 }
 
 
@@ -108,7 +108,6 @@ void BossGhost::_StartSubClass() {
 		_laserComboAttack.reset(new EnemyComboAttack(this));
 		EnemyAttack* singleAttack2 = new EnemyBreathAttack(this);
 		singleAttack2->Init(7.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 1.0f, 1, 1);
-		singleAttack2->warptest = true;
 		EnemyAttack* warpAttack2 = new EnemyWarpAttack(this);
 		static_cast<EnemyWarpAttack*>(warpAttack2)->Init(13.0f, singleAttack2);
 		_laserComboAttack->Init(13.0f, warpAttack2);

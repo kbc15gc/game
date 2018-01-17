@@ -55,9 +55,6 @@ bool EnemyBreathAttack::Update() {
 }
 
 void EnemyBreathAttack::BreathStart(BreathObject* obj) {
-	if (warptest) {
-		OutputDebugString("warptest\n");
-	}
 	_breath = obj;
 	_breath->SetActive(true);
 	_breath->BreathStart();
@@ -147,9 +144,6 @@ bool EnemyWarpAttack::Update() {
 			if (_attack->Update()) {
 				// UŒ‚I—¹B
 
-				if (_attack->warptest) {
-					OutputDebugString("warpLaser\n");
-				}
 				_attack->Exit();
 				_isAttackEnd = true;
 			}

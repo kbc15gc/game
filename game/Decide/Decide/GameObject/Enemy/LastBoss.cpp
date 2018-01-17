@@ -215,11 +215,11 @@ void LastBoss::_StartSubClass() {
 	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 3.0f, 1, 1);
 	_warpAttack.reset(new EnemyWarpAttack(this));
 	EnemyAttack* singleAttack = new EnemySingleAttack(this);
-	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 3.0f, 1, 2);
+	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 2.5f, 1, 2);
 	_warpAttack->Init(13.0f, singleAttack);
 
 	_magicAttack.reset(new EnemyBreathAttack(this));
-	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
+	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f,1.5f);
 	_buffAttack.reset(new EnemySingleAttack(this));
 	_buffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
 	_debuffAttack.reset(new EnemySingleAttack(this));
