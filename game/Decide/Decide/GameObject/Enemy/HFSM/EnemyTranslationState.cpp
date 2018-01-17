@@ -61,7 +61,7 @@ void EnemyTranslationState::_UpdateSubClass() {
 			}
 		}
 
-		if (!_isStartTrans && _EnemyObject->GetMoveSpeedExcute().Length() <= 0.01f) {
+		if (!_isStartTrans && _EnemyObject->GetMoveSpeedExcute().Length() <= 0.1f) {
 			// ˆÚ“®‚µn‚ß‚Ä‚©‚ç•Ç‚È‚Ç‚É“Ë‚Á‚ñ‚Å‚¢‚éˆø‚Á‚©‚©‚Á‚ÄˆÚ“®‚µ‚Ä‚¢‚È‚¢B
 			//if (_EnemyObject->GetIsOnWall()) {
 			//	// •Ç‚ÉÕ“Ë‚µ‚Ä‚¢‚éB

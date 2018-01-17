@@ -85,8 +85,8 @@ void EnemyCharacter::Start() {
 
 void EnemyCharacter::Update() {
 
-	_playerDist = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).Length();
-	if (_playerDist > 75.0f && _MyComponent.CharacterController->IsOnGround()) {
+	_playerDist = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).LengthSq();
+	if (_playerDist > 10000.0f && _MyComponent.CharacterController->IsOnGround()) {
 		// 遠方のエネミーは更新停止。
 		return;
 	}
@@ -143,7 +143,7 @@ void EnemyCharacter::Update() {
 }
 
 void EnemyCharacter::LateUpdate() {
-	if (_playerDist > 75.0f && _MyComponent.CharacterController->IsOnGround()) {
+	if (_playerDist > 10000.0f && _MyComponent.CharacterController->IsOnGround()) {
 		// 遠方のエネミーは更新停止。
 		return;
 	}
@@ -227,7 +227,7 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 
 void EnemyCharacter::_BarRenderUpdate() {
 	if (_MyComponent.HPBar) {
-		float distance = 15.0f;
+		float distance = 225.0f;
 		if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
 			// イベント中じゃない。
 			// かつプレイヤーとの距離が一定範囲内。
