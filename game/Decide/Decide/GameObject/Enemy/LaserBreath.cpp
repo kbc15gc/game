@@ -143,7 +143,7 @@ void LaserBreath::_UpdateCollision() {
 					Gost->transform->SetPosition(pos);
 				}
 
-				if (start->transform->GetLocalScale().y <= 0.0f) {
+				if (_isCreateBreathEnd && start->transform->GetLocalScale().y <= 0.0f) {
 					// レーザーが消滅している。
 
 					INSTANCE(GameObjectManager)->AddRemoveList(this);
