@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 2.5f;
+	const float CAMERA_SPEED = 1.5f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -163,8 +163,10 @@ void PlayerCamera::_StandardBehavior()
 void PlayerCamera::_LookAtTarget()
 {
 	auto trg = _GetPlayerPos();
+	//バネの伸び具合。
 	static float spring = 85.0f;
-	static float damping = 12.0f;
+	//バネの縮まる強さ。
+	static float damping = 20.0f;
 	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, spring, damping, Time::DeltaTime(),CAMERA_SPEED);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
