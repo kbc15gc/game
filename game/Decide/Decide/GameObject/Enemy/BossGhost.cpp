@@ -44,6 +44,8 @@ void BossGhost::LaserStartSingle()
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
 	laser->Create(this, Vector3::zero, 20.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,120);
 	_singleLaser->BreathStart(laser);
+
+	_MyComponent.Animation->SetAnimeSpeed(0.2f);
 }
 
 void BossGhost::LaserEndSingle() {
@@ -54,10 +56,17 @@ void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
 	laser->Create(this, Vector3::zero, 20.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
 	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathStart(laser);
+
+	_MyComponent.Animation->SetAnimeSpeed(0.2f);
 }
 
 void BossGhost::LaserEnd() {
 	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathEnd();
+}
+
+void BossGhost::LaserSpeed()
+{
+	_MyComponent.Animation->SetAnimeSpeed(0.2f);
 }
 
 
@@ -96,7 +105,7 @@ void BossGhost::_StartSubClass() {
 		_singleAttack->Init(1.25f, static_cast<int>(AnimationBossGhost::Attack), 0.2f,0.7f);
 
 		_singleLaser.reset(new EnemyBreathAttack(this));
-		_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 0.2f, 1, 2);
+		_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 0.7f, 1, 2);
 
 		_comboAttack.reset(new EnemyComboAttack(this));
 		EnemyAttack* singleAttack = new EnemySingleAttack(this);

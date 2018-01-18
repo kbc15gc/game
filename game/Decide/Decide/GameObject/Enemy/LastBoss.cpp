@@ -56,48 +56,38 @@ void LastBoss::SordAttackEvent() {
 
 
 	// 攻撃音再生。
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void LastBoss::SordAttackEvent2() {
 	_MyComponent.Animation->SetAnimeSpeed(0.7f);
-	//_sordAttackLaser0->BreathEnd();
-	//_sordAttackLaser1->BreathEnd();
-	//_sordAttackLaser2->BreathEnd();
 }
 
 void LastBoss::SordAttackEvent3() {
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);
-	//_sordAttackLaser0->BreathEnd();
-	//_sordAttackLaser1->BreathEnd();
-	//_sordAttackLaser2->BreathEnd();
 }
 
 void LastBoss::SordAttackEvent4() {
 	_MyComponent.Animation->SetAnimeSpeed(2.7f);
-	//_sordAttackLaser0->BreathEnd();
-	//_sordAttackLaser1->BreathEnd();
-	//_sordAttackLaser2->BreathEnd();
 }
 
 void LastBoss::FastSord() {
 	//攻撃コリジョン作成。
 	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 80);
 
-	//unsigned int priorty = 1;
-	//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	//attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.5f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
-	//attack->RemoveParent();
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void LastBoss::FastSord2() {
 	//攻撃コリジョン作成。
 	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 70);
 
-	//unsigned int priorty = 1;
-	//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	//attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.5f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
-	//attack->RemoveParent();
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
+}
+
+void LastBoss::MagicAttackSpeed1() {
+	//_MyComponent.Animation->SetAnimeSpeed(0.7f);
+	_MyComponent.Animation->SetAnimeSpeed(0.65f);
 }
 
 void LastBoss::MagicAttackStart1() {
@@ -107,11 +97,16 @@ void LastBoss::MagicAttackStart1() {
 	_magicFire1->Create(this, Vector3(2.0f, -0.5f, 2.0f), rot,20.0f);
 
 	_magicAttack->BreathStart(_magicFire1);
+
+	// 攻撃音再生。
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
 }
 
 void LastBoss::MagicAttackShot1() {
 	_magicFire1->Shot();
 	_magicAttack->BreathEnd();
+	// 攻撃音再生。
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot1));
 }
 
 void LastBoss::MagicAttackStart2() {
@@ -121,11 +116,17 @@ void LastBoss::MagicAttackStart2() {
 	_magicFire2->Create(this, Vector3(-2.0f, -0.5f, 2.0f), rot,20.0f);
 
 	_magicAttack->BreathStart(_magicFire2);
+
+	// 攻撃音再生。
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire2));
 }
 
 void LastBoss::MagicAttackShot2() {
 	_magicFire2->Shot();
 	_magicAttack->BreathEnd();
+	// 攻撃音再生。
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2));
+
 }
 
 void LastBoss::MagicAttackStart3() {
@@ -134,11 +135,17 @@ void LastBoss::MagicAttackStart3() {
 
 	_magicAttack->BreathStart(_magicFire3);
 	_magicAttack->BreathEnd();
+
+	// 攻撃音再生。
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire3));
 }
 
 void LastBoss::MagicAttackShot3() {
 	_magicFire3->Shot();
 	_magicAttack->BreathEnd();
+	// 攻撃音再生。
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3));
+
 }
 
 void LastBoss::BuffEvent() {
@@ -224,6 +231,15 @@ void LastBoss::_StartSubClass() {
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
+	// クラス特有の音設定。
+	// 重ねて鳴らしたい音は別のデータで作成。
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire2), "Fire3.wav", 1.0f);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire3), "Fire3.wav", 1.0f);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot1), "Fire.wav", 0.5f);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f);
+
+
 	// 攻撃処理を定義。
 	_sordAttack.reset(new EnemySingleAttack(this));
 	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
@@ -234,7 +250,7 @@ void LastBoss::_StartSubClass() {
 	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 2.0f, 1, 2);
 	_warpAttack->Init(13.0f, singleAttack);
 	_magicAttack.reset(new EnemyBreathAttack(this));
-	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f,0.7f);
+	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f,1.5f);
 
 	_buffAttack.reset(new EnemySingleAttack(this));
 	_buffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
@@ -488,7 +504,9 @@ void LastBoss::_ConfigAnimationEvent() {
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord),1);
 
-		eventFrame += 0.4f;
+		//eventFrame += 0.4f;
+		eventFrame += 0.35f;
+
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent3),1);
 		eventFrame = 2.05f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2), 1);
@@ -502,12 +520,15 @@ void LastBoss::_ConfigAnimationEvent() {
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord2), 2);
 		eventFrame = 2.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent3), 2);
-		eventFrame = 2.05f;
+		eventFrame = 2.07f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2),2);
 	}
 
 	// 魔法攻撃。
 	{
+		eventFrame = 0.65f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackSpeed1));
+
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart1));
 

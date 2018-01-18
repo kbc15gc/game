@@ -564,6 +564,8 @@ void EnemyCharacter::_BuildSoundTable() {
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f);
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Buoon, "Buoonn.wav",1.0f);
 	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackGolem, "EnemyGolemAttack01.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackSord, "BAttack.wav", 0.3f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Fire, "Fire3.wav", 1.0f);
 
 	// éÄÇÒÇæéûÇÃê∫ìoò^ÅB
 	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav",1.0f);
