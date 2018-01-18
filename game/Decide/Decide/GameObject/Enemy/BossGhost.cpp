@@ -96,7 +96,7 @@ void BossGhost::_StartSubClass() {
 		_singleAttack->Init(1.25f, static_cast<int>(AnimationBossGhost::Attack), 0.2f,0.7f);
 
 		_singleLaser.reset(new EnemyBreathAttack(this));
-		_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 0.7f, 1, 2);
+		_singleLaser->Init(3.0f, static_cast<int>(AnimationBossGhost::Attack), 0.2f, 0.2f, 1, 2);
 
 		_comboAttack.reset(new EnemyComboAttack(this));
 		EnemyAttack* singleAttack = new EnemySingleAttack(this);

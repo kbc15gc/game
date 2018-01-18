@@ -98,7 +98,8 @@ void LastBossThroneState::_EntrySubClass() {
 		param[CharacterParameter::Param::CRT] = 10;
 
 		_entourageEnemys[idx]->SetParamAll(color, param);
-		_entourageEnemys[idx]->transform->SetPosition(_EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir));
+		Vector3 pos = _EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir);
+		_entourageEnemys[idx]->transform->SetPosition(pos - Vector3(0.0f,0.5f,0.0f));
 		_entourageEnemys[idx]->SetIntervalStartPairAttack(startAttackOffset);
 
 		// ‹–ì‚Ì‹——£İ’èB

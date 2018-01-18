@@ -60,7 +60,21 @@ void LastBoss::SordAttackEvent() {
 }
 
 void LastBoss::SordAttackEvent2() {
-	_MyComponent.Animation->SetAnimeSpeed(1.0f);
+	_MyComponent.Animation->SetAnimeSpeed(0.7f);
+	//_sordAttackLaser0->BreathEnd();
+	//_sordAttackLaser1->BreathEnd();
+	//_sordAttackLaser2->BreathEnd();
+}
+
+void LastBoss::SordAttackEvent3() {
+	_MyComponent.Animation->SetAnimeSpeed(0.2f);
+	//_sordAttackLaser0->BreathEnd();
+	//_sordAttackLaser1->BreathEnd();
+	//_sordAttackLaser2->BreathEnd();
+}
+
+void LastBoss::SordAttackEvent4() {
+	_MyComponent.Animation->SetAnimeSpeed(2.7f);
 	//_sordAttackLaser0->BreathEnd();
 	//_sordAttackLaser1->BreathEnd();
 	//_sordAttackLaser2->BreathEnd();
@@ -214,10 +228,10 @@ void LastBoss::_StartSubClass() {
 	_sordAttack.reset(new EnemySingleAttack(this));
 	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
 	_sordAttack2.reset(new EnemySingleAttack(this));
-	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 2.7f, 1, 1);
+	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 3.0f, 1, 1);
 	_warpAttack.reset(new EnemyWarpAttack(this));
 	EnemyAttack* singleAttack = new EnemySingleAttack(this);
-	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 2.7f, 1, 2);
+	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 2.0f, 1, 2);
 	_warpAttack->Init(13.0f, singleAttack);
 	_magicAttack.reset(new EnemyBreathAttack(this));
 	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f,0.7f);
@@ -474,16 +488,22 @@ void LastBoss::_ConfigAnimationEvent() {
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord),1);
 
-		eventFrame += 1.0f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
+		eventFrame += 0.4f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent3),1);
+		eventFrame = 2.05f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2), 1);
 	}
 
 	// 剣攻撃(ワープ)。
 	{
+		eventFrame = 0.5f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent4), 2);
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord2), 2);
-		eventFrame += 1.0f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2));
+		eventFrame = 2.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent3), 2);
+		eventFrame = 2.05f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2),2);
 	}
 
 	// 魔法攻撃。

@@ -39,6 +39,8 @@ public:
 
 	void SordAttackEvent();
 	void SordAttackEvent2();
+	void SordAttackEvent3();
+	void SordAttackEvent4();
 	void FastSord();
 	void FastSord2();
 	void MagicAttackStart1();
