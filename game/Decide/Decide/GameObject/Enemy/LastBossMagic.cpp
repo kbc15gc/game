@@ -39,9 +39,11 @@ void LastBossMagic::Update() {
 			_initParticleParam = ParticleParamTable::Params[ParticleParamTable::Type::BombViolet];
 
 			//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
-			AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _particleEmitter->transform, true,false,AttackCollision::ReactionType::Blown);
-			attack->RemoveParent();
-			_attack.push_back(attack);
+			if (_enemyObject) {
+				AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _particleEmitter->transform, true, false, AttackCollision::ReactionType::Blown);
+				attack->RemoveParent();
+				_attack.push_back(attack);
+			}
 		}
 		else {
 			_margin -= _margin * 0.5f * Time::DeltaTime();

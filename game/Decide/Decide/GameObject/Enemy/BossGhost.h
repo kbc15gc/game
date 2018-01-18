@@ -36,6 +36,7 @@ public:
 	void LaserEndSingle();
 	void LaserStart();
 	void LaserEnd();
+	void LaserSpeed();
 
 
 	static void SelectPairAttack() {

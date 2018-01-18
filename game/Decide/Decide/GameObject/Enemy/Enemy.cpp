@@ -28,7 +28,7 @@ void Enemy::CreateAttackCollision() {
 	//ダメージの音ではだめです。
 	//攻撃のSE鳴らしてください。
 	// 攻撃音再生。
-	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn));
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void Enemy::_AwakeSubClass() {
@@ -46,7 +46,6 @@ void Enemy::_StartSubClass(){
 
 	// サウンドテーブルにこのクラス独自の音を追加。
 	{
-		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(BornEnemySoundIndex::AttackBorn), "BAttack.wav", 0.3f);
 	}
 
 	// エネミーとしての活動に必要なパラメータを設定。
