@@ -14685,7 +14685,7 @@ MonoBehaviour:
   _Color: {r: 1, g: 1, b: 1, a: 1}
   _ViewRange: 50
   _WanderingRange: 0
-  _DiscoveryRange: 20
+  _DiscoveryRange: 25
   _RespawnTime: 600
 --- !u!23 &595590597
 MeshRenderer:

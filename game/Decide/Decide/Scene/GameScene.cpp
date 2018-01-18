@@ -65,18 +65,17 @@ ImageObject* g_depth;
 
 namespace
 {
-	//ボス
-	float BOSS_RADIUS = 35.0f;
-	Vector3 BOSS_POS = { -686.0f,61.9f,68.0f };
-	//街
-	float MATI_RADIUS = 35.0f;
-
 	SCollisionInfo soundcollisition[]
 	{
 		#include "Asset\Collisition\ExportSoundCollisition.h"
 	};
 
 	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
+
+	//信仰の国の座標
+	Vector3 Sinkou = Vector3(-142.4f, 121.8f, 175.9f);
+	//神殿の座標
+	Vector3 Sinden = Vector3(-140.9f, 169.3f, 246.8f);
 }
 
 
@@ -190,8 +189,9 @@ void GameScene::Start()
 	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
-	//InitBGM(BGM::MAOU, "Asset/Sound/LastDangion2.wav", 1.0f);
-	InitBGM(BGM::MAOU, "Asset/Sound/LastDangion1.wav", 1.0f);
+	InitBGM(BGM::MAOU1, "Asset/Sound/LastDangion1.wav", 1.0f);
+	InitBGM(BGM::MAOU2, "Asset/Sound/LastDangion2.wav", 1.0f);
+	InitBGM(BGM::MAOU3, "Asset/Sound/LastDangion2.wav", 1.0f);
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
@@ -297,6 +297,12 @@ void GameScene::Update()
 							_Player->SetRespawnPos(LocationPosition[location]);
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
+							break;
+						case BGM::MAOU1:
+							_Player->SetRespawnPos(Sinkou);
+							break;
+						case BGM::MAOU3:
+							_Player->SetRespawnPos(Sinden);
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
