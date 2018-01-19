@@ -88,18 +88,33 @@ void SpaceCollisionObject::_SetActives(bool flg) {
 		Collision* coll = static_cast<Collision*>((*itr)->getUserPointer());
 		if (coll) {
 			// コリジョン削除されてない。
+
 			if (coll->gameObject) {
 				// ゲームオブジェクトがある。
 				coll->gameObject->SetActive(flg);
 				if (flg) {
 					// コリジョンをアクティブ化。
+
 					//coll->Activate();
-					coll->AddWorld();
+
+					//coll->AddWorld();
+
+					if (coll->GetCollisionType == Collision::CollisionObjectType::Rigid) {
+						// 剛体アクティブ。
+						static_cast<btRigidBody*>(coll->GetCollisionObj())->wantsSleeping();
+					}
 				}
 				else {
 					// コリジョンをスリープ化。
+
 					//coll->Sleep();
-					coll->RemoveWorld();
+
+					//coll->RemoveWorld();
+
+					if (coll->GetCollisionType == Collision::CollisionObjectType::Rigid) {
+						// 剛体スリープ。
+						static_cast<btRigidBody*>(coll->GetCollisionObj())->wantsSleeping();
+					}
 				}
 				itr++;
 				continue;
