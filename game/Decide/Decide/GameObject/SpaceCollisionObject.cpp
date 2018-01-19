@@ -99,7 +99,7 @@ void SpaceCollisionObject::_SetActives(bool flg) {
 
 					//coll->AddWorld();
 
-					if (coll->GetCollisionType == Collision::CollisionObjectType::Rigid) {
+					if (coll->GetCollisionType() == Collision::CollisionObjectType::Rigid) {
 						// 剛体アクティブ。
 						static_cast<btRigidBody*>(coll->GetCollisionObj())->wantsSleeping();
 					}
@@ -111,7 +111,7 @@ void SpaceCollisionObject::_SetActives(bool flg) {
 
 					//coll->RemoveWorld();
 
-					if (coll->GetCollisionType == Collision::CollisionObjectType::Rigid) {
+					if (coll->GetCollisionType() == Collision::CollisionObjectType::Rigid) {
 						// 剛体スリープ。
 						static_cast<btRigidBody*>(coll->GetCollisionObj())->wantsSleeping();
 					}
