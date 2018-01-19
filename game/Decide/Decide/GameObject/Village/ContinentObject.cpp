@@ -23,7 +23,7 @@ void ContinentObject::Start() {
 	if (strcmp(GetName(), "MaouSiro.X") == 0) {
 		// 魔王城を空間分割。
 		int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK) & ~(Collision_ID::GROUND);
-		static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace_MaouSiro"))->Split(_Model->GetModelData(),transform,1,10,1, attr);
+		static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace_MaouSiro"))->Split(_Model->GetModelData(),transform,5,10,5, attr);
 	}
 
 	// Transformが更新されるのでここで追加。
