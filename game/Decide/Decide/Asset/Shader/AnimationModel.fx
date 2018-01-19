@@ -165,20 +165,15 @@ PSOutput PSMain( VS_OUTPUT In )
 	}
 	diff *= g_blendcolor;
 	
-    float4 color = diff; //最終的に出力するカラー
+    float4 color = 0; //最終的に出力するカラー
 	
-    float4 light = DiffuseLight(normal);
+    float3 light = 0;
 
-    light.xyz += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
+	//太陽光.
+	light += CalcSunLight(normal, In._World.xyz, In._UV);
 
-    if (Spec)
-    {
-        light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
-    }
-
+	//影
     float shadowPower = 1.0f;
-    //影
     if (ReceiveShadow)
     {
 		//影になっている.
@@ -186,24 +181,23 @@ PSOutput PSMain( VS_OUTPUT In )
         shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
         light.xyz *= min(1.0f, shadowPower);
     }
+	color.xyz += diff.xyz * light.xyz;
 
-    color.xyz *= light.xyz;
+	//大気散乱.
+	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+	{
+		color.xyz = In._RayColor + color.xyz * In._MieColor;
+	}
 
-    //大気散乱.
-    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-    {
-        color.xyz = In._RayColor + color.xyz * In._MieColor;
-    }
-
-    color.xyz += diff.xyz * CalcMoonLight(normal, (float3) In._World, In._UV) * shadowPower;
-
-
-    float3 ambient = g_ambientLight.rgb;
-	
-    ambient += g_CharaLight.Ambient.rgb;
+	light = 0;
+	light += CalcDiffuseLight(normal, In._World.xyz, In._UV);
+	light += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
+	light += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
+	light += CalcMoonLight(normal, (float3) In._World, In._UV) * shadowPower;
+	color.xyz += diff.xyz * light;
 
     //アンビエントライトを加算。
-    color.rgb += diff.rgb * ambient;
+    color.xyz += diff.xyz * (g_ambientLight.xyz + g_CharaLight.Ambient.xyz);
 
 	//フォグを計算.
 	color.xyz = CalcFog(In._World.xyz, color.xyz);

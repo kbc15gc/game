@@ -113,6 +113,25 @@ float3 CalcNormal(float3 InNormal, float3 InTangent, float2 InUV)
 	return retNormal;
 }
 
+/**
+* スペキュラライトを計算.
+*/
+float3 CalcSpecLight(float3 normal, float3 worldPos, float2 uv, float3 lightDir, float4 color, float power)
+{
+	float3 spec = 0.0f;
+	if (g_MapFlg.y)
+	{
+		float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
+		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
+		//反射ベクトルを計算。
+		float3 L = -lightDir;
+		spec += color.xyz * pow(max(0.0f, dot(L, R)), 2) * color.w;	//スペキュラ強度。
+		//スペキュラマップの強さをかける.
+		spec *= power;
+	}
+	return spec;
+}
+
 //ディフューズライトを計算。	
 float4 DiffuseLight( float3 normal)
 {
@@ -143,27 +162,15 @@ float4 DiffuseLight( float3 normal)
 float3 CalcSunLight(float3 normal, float3 worldPos, float2 uv)
 {
 	float3 color = 0.0f;
-
 	//ディフューズライトの計算.
 	color += max(0.0f, -dot(normal, g_diffuseLightDirection[0])) * g_diffuseLightColor[0];
-
-	//スペキュラライトの計算.
+	//スペキュラマップ有効.
 	if (g_MapFlg.y)
 	{
-		float3 spec = 0.0f;
 		float specPow = tex2D(g_speculerMapSampler, uv);
-
-		float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
-		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
-
-		//スペキュラ成分を計算する。
-		//反射ベクトルを計算。
-		float3 L = -g_diffuseLightDirection[0].xyz;
-		spec += g_diffuseLightColor[0] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[0].w;	//スペキュラ強度。
-
-		color += spec * specPow;
+		color += CalcSpecLight(normal, worldPos, uv, g_diffuseLightDirection[0], g_diffuseLightColor[0], specPow);
 	}
-
+	//待機錯乱の計算.
 	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
 	{
 		//大気錯乱が設定されている場合は0番目のライトを太陽光とする。
@@ -183,23 +190,40 @@ float3 CalcMoonLight(float3 normal, float3 worldPos, float2 uv)
 {
 	float3 color = 0.0f;
 	color += max(0.0f, -dot(normal, g_diffuseLightDirection[1])) * g_diffuseLightColor[1];
-
+	//スペキュラマップ有効.
 	if (g_MapFlg.y)
 	{
-		float3 spec = 0.0f;
 		float specPow = tex2D(g_speculerMapSampler, uv);
-
-		float3 toEyeDir = normalize(g_cameraPos.xyz - worldPos);
-		float3 R = -toEyeDir + 2.0f * dot(normal, toEyeDir) * normal;
-
-		//スペキュラ成分を計算する。
-		//反射ベクトルを計算。
-		float3 L = -g_diffuseLightDirection[1].xyz;
-		spec += g_diffuseLightColor[1] * pow(max(0.0f, dot(L, R)), 2) * g_diffuseLightColor[1].w;	//スペキュラ強度。
-
-		color += spec * specPow;
+		color += CalcSpecLight(normal, worldPos, uv, g_diffuseLightDirection[1], g_diffuseLightColor[1], specPow);
 	}
+	return color;
+}
 
+/**
+* ディフューズライトの計算.
+*/
+float3 CalcDiffuseLight(float3 normal, float3 worldPos, float2 uv)
+{
+	float3 color = 0.0f;
+
+	//スペキュラマップ有効.
+	if (g_MapFlg.y)
+	{
+		float specPow = tex2D(g_speculerMapSampler, uv);
+		for (int i = 2; i < g_LightNum; i++)
+		{
+			color += max(0.0f, -dot(normal, g_diffuseLightDirection[i])) * g_diffuseLightColor[i];
+			color += CalcSpecLight(normal, worldPos, uv, g_diffuseLightDirection[i], g_diffuseLightColor[i], specPow);
+		}
+	}
+	//スペキュラマップ無効.
+	else
+	{
+		for (int i = 2; i < g_LightNum; i++)
+		{
+			color += max(0.0f, -dot(normal, g_diffuseLightDirection[i])) * g_diffuseLightColor[i];
+		}
+	}
 	return color;
 }
 
@@ -211,8 +235,7 @@ float3 CalcCharaLight(float3 normal)
 	float3 color = 0.0f;
 	for (int i = 0; i < g_CharaLight.LightCount; i++)
 	{
-		float3 dir = g_CharaLight.DiffuseDir[i].xyz;
-		color.xyz += max(0.0f, -dot(normal, dir)) * g_CharaLight.DiffuseColor[i].xyz;
+		color.xyz += max(0.0f, -dot(normal, g_CharaLight.DiffuseDir[i].xyz)) * g_CharaLight.DiffuseColor[i].xyz;
 	}
 	return color;
 }
@@ -228,6 +251,8 @@ float3 CalcLimLight( float3 normal, float3 lightDir, float3 limColor)
 	lim = pow(lim, 1.5f);
 	return limColor * lim;
 }
+
+
 /*!
  *@brief	スペキュラライトを計算。
  */

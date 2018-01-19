@@ -10,7 +10,6 @@ int Texflg;							//テクスチャ
 int Spec; //スペキュラ
 int ReceiveShadow; //影を写す
 
-
 int SkyBox;
 
 /** 環境マップフラグ. */
@@ -87,7 +86,7 @@ struct VS_OUTPUT
 	float4	_Pos			: POSITION;
 	float4	_Color			: COLOR0;
 	float3	_Normal			: NORMAL;
-    float3 _Tangent : TANGENT;
+    float3	_Tangent		: TANGENT;
 	float2	_UV				: TEXCOORD0;
 	float4  _World			: TEXCOORD1;	//xyzにワールド座標。wには射影空間でのdepthが格納される。
 	float4  _WVP			: TEXCOORD2;	//カメラから見た行列
@@ -110,9 +109,7 @@ VS_OUTPUT VSMain(VS_INPUT In)
 
 	//スカイボックスはビュー行列をかけない。
 	//if (!SkyBox || g_isEnvironmentMap > 0.0f)
-	{
-		pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
-	}
+	pos = mul(pos, g_viewMatrix);			//ワールド空間からビュー空間に変換。
 	pos = mul(pos, g_projectionMatrix );	//ビュー空間から射影空間に変換。
 
 	Out._Pos = Out._WVP = pos;
@@ -197,48 +194,44 @@ PSOutput PSMain(VS_OUTPUT In)
 
 	clip(diff.a - g_Alpha);
 
-    float4 color = diff; //最終的に出力するカラー
+    float4 color = 0; //最終的に出力するカラー
 
-    float4 light = 0.0f;
-    
-    //法線計算.
-    float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
+	//法線計算.
+	float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
 
-    light.xyz += DiffuseLight(normal);
-    light.xyz += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor.xyz);
-    
-    if (Spec)
-    {
-        light.xyz += SpecLight(normal, In._World.xyz, In._UV);
-        light.xyz += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
-    }
+    float3 light = 0.0f;
 
-    float shadowPower = 1.0f;
+	//太陽光.
+	light += CalcSunLight(normal, In._World.xyz, In._UV);
 
-    if (g_EffectFlg.x)
-    {
+	//影.
+	float shadowPower = 1.0f;
+	if (g_EffectFlg.x)
+	{
 		//影になっている.
-        shadowPower = CalcShadow(In._World.xyz);
-        shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
-        light.xyz *= min(1.0f, shadowPower);
-    }
+		shadowPower = CalcShadow(In._World.xyz);
+		shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
+		light *= min(1.0f, shadowPower);
+	}
 
-    color.xyz *= light.xyz;
+	color.xyz += diff.xyz * light;
 
-    //大気散乱.
-    if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
-    {
-        color.xyz = In._RayColor + color * In._MieColor;
-    }
+	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
+	{
+		color.xyz = In._RayColor + color * In._MieColor;
+	}
 
-    color.xyz += diff.xyz * CalcMoonLight(normal, (float3) In._World, In._UV) * shadowPower;
+	light = 0;
+	//ディフューズライト.
+	light += CalcDiffuseLight(normal, In._World.xyz, In._UV);
+	light += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor.xyz);
+	light += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
+	//ムーンライト.
+	light += CalcMoonLight(normal, In._World.xyz, In._UV) * shadowPower;
+	color.xyz += diff.xyz * light;
 
-    float3 ambient = g_ambientLight.rgb;
-	
-        ambient += g_CharaLight.Ambient.rgb;
-
-    //アンビエントライトを加算。
-    color.rgb += diff.rgb * ambient;
+	//アンビエントライトを加算。
+    color.xyz += diff.xyz * (g_ambientLight.xyz + g_CharaLight.Ambient.xyz);
 
 	//フォグを計算.
 	color.xyz = CalcFog(In._World.xyz, color.xyz);
@@ -283,10 +276,6 @@ technique InstancingRender
 
 PSOutput PSSkySphere(VS_OUTPUT In)
 {
-
-	//法線計算.
-	//float3 normal = CalcNormal(In._Normal, In._Tangent, In._UV);
-
 	//反転しているので-1をかけて法線をもどす
 	float4 diffColor = texCUBE(g_cubeSampler, In._Normal * -1.0f);
 
@@ -462,23 +451,25 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	diffuseColor += tex2D(g_terrainTexSampler[1], uv * 300.0f) * weights.y;
 	diffuseColor += tex2D(g_terrainTexSampler[2], uv * 100.0f) * weights.z;
 	//diffuseColor += tex2D(g_terrainTexSampler[3], uv) * weights.w;
-	float4 color = diffuseColor;
+	float4 color = 0;
 
     float3 normal = normalize(In._Normal);
 	//ディフューズライト
-    float4 light = DiffuseLight(normal);
+    float3 light = 0;
+
+	//太陽光.
+	light += CalcSunLight(normal, In._World.xyz, In._UV);
 
     float shadowPower = 1.0f;
-    
     if (g_EffectFlg.x)
     {
 		//影になっている.
         shadowPower = CalcShadow(In._World.xyz);
         shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
-        light.xyz *= min(1.0f, shadowPower);
+        light *= min(1.0f, shadowPower);
     }
 
-    color *= light;
+    color.xyz += diffuseColor.xyz * light;
 
     //大気散乱.
     if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
@@ -486,12 +477,15 @@ PSOutput PSTerrain(VS_OUTPUT In)
         color.xyz = In._RayColor + color * In._MieColor;
     }
 
-    color.xyz += diffuseColor.xyz * CalcMoonLight(normal, (float3) In._World, In._UV) * shadowPower;
+	light = 0;
+	//ディフューズライト.
+	light += CalcDiffuseLight(normal, In._World.xyz, In._UV);
+	//ムーンライト.
+	light += CalcMoonLight(normal, In._World.xyz, In._UV) * shadowPower;
+	color.xyz += diffuseColor.xyz * light;
 
-    float3 ambient = g_ambientLight.rgb;
-	
     //アンビエントライトを加算。
-    color.rgb += diffuseColor.rgb * ambient;
+    color.xyz += diffuseColor.xyz * g_ambientLight.xyz;
 
 	//フォグを計算.
 	color.xyz = CalcFog(In._World.xyz, color.xyz);

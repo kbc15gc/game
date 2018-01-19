@@ -336,7 +336,7 @@ void SkinModel::DrawMeshContainer(
 		_Effect->SetValue("g_EffectFlg", &flg, sizeof(Vector4));
 
 		//スペキュラフラグセット
-		_Effect->SetInt("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
+		//_Effect->SetInt("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
 
 		_Effect->SetVector("g_blendcolor", (D3DXVECTOR4*)&_AllBlend);
 
@@ -599,7 +599,6 @@ void SkinModel::DrawMeshContainer(
 																									//ワールド行列を頂点バッファにコピー。
 					CopyWorldMatrixToVertexBuffer(matrixBuffer, Stack);
 
-
 					//インデックスバッファ設定。
 					(*graphicsDevice()).SetIndices(ib);
 					//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
@@ -611,7 +610,7 @@ void SkinModel::DrawMeshContainer(
 						0,
 						Mesh->GetNumVertices(),
 						0,
-						Mesh->GetNumFaces());
+						Mesh->GetNumFaces());	
 
 					// 後始末
 					(*graphicsDevice()).SetStreamSourceFreq(0, 1);
