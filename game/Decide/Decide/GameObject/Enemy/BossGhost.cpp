@@ -131,7 +131,7 @@ void BossGhost::_StartSubClass() {
 	// ¦b’èˆ—B
 	_initState = State::Wait;
 	_ChangeState(_initState);
-	static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
+	static_cast<EnemyWaitState*>(_NowState)->CustamParameter(EnemyCharacter::AnimationType::Idle,0.2f,2,0,1.5f)/*->SetInterval(5.0f)*/;
 }
 
 void BossGhost::_UpdateSubClass() {

@@ -239,6 +239,12 @@ public:
 		_SoundData[static_cast<int>(idx)]->Play();
 	}
 
+	// 音停止関数。
+	// 引数：	効果音テーブルの添え字。
+	inline void EnemyStopSound(const EnemyCharacter::SoundIndex idx) {
+		_SoundData[static_cast<int>(idx)]->Stop();
+	}
+
 	// エネミーがアニメーションを再生しているか。
 	inline bool GetIsPlaying() {
 		return _MyComponent.Animation->GetPlaying();
@@ -635,6 +641,7 @@ protected:
 	// 引数のパラメータをもとにサウンドテーブルを作成する関数。
 	// 引数：	登録するサウンドのタイプ(列挙子)。
 	//			waveファイルの名前(.wavまで含めて)。
+	//			ボリューム。
 	//			3Dサウンドにするか。
 	//			ループ再生するか。
 	void _ConfigSoundData(SoundIndex idx, char* filePath, float volume = 1.0f, bool is3D = false, bool isLoop = false);

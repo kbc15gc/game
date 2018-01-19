@@ -133,6 +133,8 @@ void LastBossThroneState::_EntrySubClass() {
 
 	_ChangeLocalState(EnemyCharacter::State::Attack);
 	static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetEncourageBuffAttack());
+
+	_EnemyObject->EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
 }
 
 void LastBossThroneState::_StartSubClass() {
@@ -150,6 +152,10 @@ void LastBossThroneState::_UpdateSubClass() {
 	if (_isDeathEntourage) {
 		if (!_EnemyObject->GetIsPlaying()) {
 			// 玉座を消したらステート終了。
+
+			_EnemyObject->EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
+			_EnemyObject->EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle2));
+
 			_EndState();
 		}
 	}
