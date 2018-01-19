@@ -17,7 +17,6 @@ void ContinentObject::Awake()
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
 
 	_Model->SetAlpha(true, 0.9f);
-
 }
 
 void ContinentObject::Start() {
@@ -56,6 +55,8 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	{
 		_Model->SetCullMode(D3DCULL::D3DCULL_NONE);
 	}
+
+
 	if (!coll)
 	{
 		//“–‚½‚è”»’è’Ç‰ÁB

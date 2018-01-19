@@ -63,7 +63,7 @@ void Sky::Update()
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
 
 		//100•b‚Åˆê“ú.
-		_SunAngle += PI * Time::DeltaTime() * TMP;
+		_SunAngle += PI * Time::DeltaTime() * TMP * 100.0f;
 
 		//XŽ²‰ñ“].
 		_SunPosition.Set(0.0f, sinf(_SunAngle), cosf(_SunAngle));

@@ -123,6 +123,14 @@ public:
 		_NowLocationCode = loc;
 	}
 
+	/**
+	* Œ»İ‚ÌƒƒP[ƒVƒ‡ƒ“‚ğæ“¾.
+	*/
+	int GetNowLocation()
+	{
+		return _NowLocationCode;
+	}
+
 	void ChangeLocation(LocationCodeE value);
 
 private:

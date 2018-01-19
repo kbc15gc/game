@@ -54,7 +54,6 @@ void Ground::Start() {
 	//static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace"))->Split(GetComponent<SkinModel>()->GetModelData(), transform, 5, 1, 5, attr, Vector3(0.0f, 100.0f, 0.0f));
 	static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace"))->Split(GetComponent<SkinModel>()->GetModelData(), transform, 7, 7, 7, attr, Vector3(0.0f, 100.0f, 0.0f));
 	//static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace"))->Split(GetComponent<SkinModel>()->GetModelData(), transform, 7, 20, 7, attr, Vector3(0.0f, 100.0f, 0.0f));
-
 #endif
 }
 
