@@ -107,7 +107,38 @@ void EnemyCharacter::Update() {
 	_UpdateSubClass();
 
 	// エネミーのエフェクト更新。
-	EffectUpdate();
+	//EffectUpdate();
+	{
+		bool isBuffEffect = false;
+		bool isDeBuffEffect = false;
+		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+
+			if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+			{
+				isBuffEffect = true;
+			}
+			else
+			{
+				_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
+			}
+			if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+			{
+				isDeBuffEffect = true;
+			}
+			else
+			{
+				_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
+			}
+		}
+		_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+		if (_Bigflag == true)
+		{
+			_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
+		}
+		else {
+			_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+		}
+	}
 
 	if (_NowState) {
 		// 現在のステートを更新。
@@ -130,8 +161,8 @@ void EnemyCharacter::Update() {
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
 	_MyComponent.CharacterController->Execute();
-	// 移動した結果、指定した属性のものが衝突していれば押し出す。
-	_MyComponent.CharacterExtrude->Extrude(_MyComponent.CharacterController->GetmoveSpeedExcute());
+	//// 移動した結果、指定した属性のものが衝突していれば押し出す。
+	//_MyComponent.CharacterExtrude->Extrude(_MyComponent.CharacterController->GetmoveSpeedExcute());
 }
 
 void EnemyCharacter::LateUpdate() {
@@ -157,7 +188,27 @@ void EnemyCharacter::LateUpdate() {
 		SetIsStopUpdate(false);
 	}
 
-	_BarRenderUpdate();
+	// バーの描画状態更新。
+	//_BarRenderUpdate();
+	{
+		if (_MyComponent.HPBar) {
+			float distance = 225.0f;
+			if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
+				// イベント中じゃない。
+				// かつプレイヤーとの距離が一定範囲内。
+
+				// アクティブ化。
+				_MyComponent.HPBar->RenderEnable();
+				_MyComponent.BuffDebuffICon->RenderEnable();
+			}
+			else {
+				_MyComponent.HPBar->RenderDisable();
+				_MyComponent.BuffDebuffICon->RenderDisable();
+
+			}
+		}
+
+	}
 
 	// 継承先により変わる処理。
 	_LateUpdateSubClass();
@@ -227,22 +278,22 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 
 
 void EnemyCharacter::_BarRenderUpdate() {
-	if (_MyComponent.HPBar) {
-		float distance = 225.0f;
-		if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
-			// イベント中じゃない。
-			// かつプレイヤーとの距離が一定範囲内。
+	//if (_MyComponent.HPBar) {
+	//	float distance = 225.0f;
+	//	if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
+	//		// イベント中じゃない。
+	//		// かつプレイヤーとの距離が一定範囲内。
 
-			// アクティブ化。
-			_MyComponent.HPBar->RenderEnable();
-			_MyComponent.BuffDebuffICon->RenderEnable();
-		}
-		else {
-			_MyComponent.HPBar->RenderDisable();
-			_MyComponent.BuffDebuffICon->RenderDisable();
+	//		// アクティブ化。
+	//		_MyComponent.HPBar->RenderEnable();
+	//		_MyComponent.BuffDebuffICon->RenderEnable();
+	//	}
+	//	else {
+	//		_MyComponent.HPBar->RenderDisable();
+	//		_MyComponent.BuffDebuffICon->RenderDisable();
 
-		}
-	}
+	//	}
+	//}
 }
 
 void EnemyCharacter::_BuildMyComponents() {
@@ -680,35 +731,35 @@ float EnemyCharacter::GetNowSelectAttackRange()const {
 * エフェクト用更新.
 */
 void EnemyCharacter::EffectUpdate() {
-	bool isBuffEffect = false;
-	bool isDeBuffEffect = false;
-	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+	//bool isBuffEffect = false;
+	//bool isDeBuffEffect = false;
+	//for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
 
-		if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
-		{
-			isBuffEffect = true;
-		}
-		else
-		{
-			_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
-		}
-		if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
-		{
-			isDeBuffEffect = true;
-		}
-		else
-		{
-			_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
-		}
-	}
-	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
-	if (_Bigflag == true)
-	{
-		_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
-	}
-	else{
-		_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
-	}
+	//	if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+	//	{
+	//		isBuffEffect = true;
+	//	}
+	//	else
+	//	{
+	//		_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
+	//	}
+	//	if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+	//	{
+	//		isDeBuffEffect = true;
+	//	}
+	//	else
+	//	{
+	//		_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
+	//	}
+	//}
+	//_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+	//if (_Bigflag == true)
+	//{
+	//	_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
+	//}
+	//else{
+	//	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+	//}
 	
 }
 

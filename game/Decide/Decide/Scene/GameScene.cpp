@@ -121,8 +121,20 @@ void GameScene::Start()
 	// 空間分割生成。
 	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
 
+	// 魔王城用の空間分割生成。
+	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace_MaouSiro", System::MAX_PRIORITY);
+
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
+
+	//// 魔王城生成。
+	//ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("MaouSiro", 1);
+	//obj->transform->SetPosition(Vector3(146.0f,150.4f,-205.8f));
+
+	//obj->transform->SetRotation(Quaternion::Identity);
+
+	//obj->transform->SetLocalScale(Vector3(1.0f,-1.0f,1.0f));
+	//obj->LoadModel("MaouSiro.X", true);
 
 	//メッシュコライダーオブジェクトを生成
 	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
