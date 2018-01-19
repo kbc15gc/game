@@ -66,6 +66,9 @@ Player::~Player()
 
 void Player::Awake()
 {
+	
+	_NearNPCLen = FLT_MAX;
+
 	//モデル
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
@@ -788,50 +791,50 @@ void Player::_LevelUP()
 
 void Player::Speak()
 {
-	//NPCを取得
-	vector<vector<NPC*>> npc;
-	npc = INSTANCE(HistoryManager)->GetNPCList();
 	//ショップイベントフラグ取得。
 	bool eventflag = INSTANCE(EventManager)->IsEvent();
-	//NPC
-	float len = FLT_MAX;
-	static NPC* nearnpc = nullptr;
-
-	//一番近い村人を探す。
-	for (auto village : npc)
-	{
-		//サイズが0ならコンティニュー
-		if (village.size() == 0)
-		{
-			continue;
-		}
-		//NPC
-		for (auto npc : village)
-		{
-			if (npc == nullptr || !npc->GetActive())
-			{
-				continue;
-			}
-			//NPCからプレイヤーのベクトル
-			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-			//現在一番近いモノより近いので。
-			if (len > dir.Length())
-			{
-				//他に近い人がいるので、前の人とはばいばい。
-				if (nearnpc)
-				{
-					nearnpc->SetIsSpeak(false);
-				}
-				len = dir.Length();
-				nearnpc = npc;
-			}
-		}
-	}
+	////NPCを取得
+	//vector<vector<NPC*>> npc;
+	//npc = INSTANCE(HistoryManager)->GetNPCList();
+	////NPC
+	//float len = FLT_MAX;
+	//
+	////一番近い村人を探す。
+	//for (auto village : npc)
+	//{
+	//	//サイズが0ならコンティニュー
+	//	if (village.size() == 0)
+	//	{
+	//		continue;
+	//	}
+	//	//NPC
+	//	for (auto npc : village)
+	//	{
+	//		if (npc == nullptr || !npc->GetActive())
+	//		{
+	//			continue;
+	//		}
+	//		//NPCからプレイヤーのベクトル
+	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
+	//		//現在一番近いモノより近いので。
+	//		if (len > dir.Length())
+	//		{
+	//			//他に近い人がいるので、前の人とはばいばい。
+	//			if (nearnpc)
+	//			{
+	//				nearnpc->SetIsSpeak(false);
+	//			}
+	//			len = dir.Length();
+	//			nearnpc = npc;
+	//		}
+	//	}
+	//}
 	//近くのnpcがいる場合
-	if (nearnpc)
+	if (_NearNPC)
 	{
+		_NearNPCLen = (_NearNPC->transform->GetPosition() - transform->GetPosition()).Length();
 		//会話可能
-		if (len <= 3.0f && !eventflag)
+		if (_NearNPCLen <= 3.0f && !eventflag)
 		{
 			//地面についていれば話しかけれる
 			//ショップイベントでないとき。
@@ -841,7 +844,7 @@ void Player::Speak()
 				_HPBar->RenderDisable();
 				//_MPBar->RenderDisable();
 				//話すフラグセット
-				nearnpc->SetIsSpeak(true);
+				_NearNPC->SetIsSpeak(true);
 				//プレイヤー話すフラグ設定
 				//ジャンプしなくなる
 				_NoJump = true;
@@ -850,7 +853,7 @@ void Player::Speak()
 		else
 		{
 			//話すNPCがいないので
-			nearnpc->SetIsSpeak(false);
+			_NearNPC->SetIsSpeak(false);
 			//話し終わると
 			if (_NoJump)
 			{
@@ -1185,6 +1188,19 @@ void Player::Re_SetEquipment() {
 	}
 }
 
+
+void Player::SetNPC(NPC * npc)
+{
+	if (!_NearNPC)
+	{
+		_NearNPC = npc;
+	}
+	else
+	{
+		_NearNPC->SetIsSpeak(false);
+		_NearNPC = npc;
+	}
+}
 
 void Player::AnimationEventControl()
 {

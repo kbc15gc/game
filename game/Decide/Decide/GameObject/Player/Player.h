@@ -320,7 +320,13 @@ public:
 	{
 		return _CharacterController->IsOnGround();
 	}
-
+	//NPCから申告してもらう。
+	void SetNPC(NPC* npc);
+	//一番近いNPCの距離
+	float GetNearNPCLen()
+	{
+		return _NearNPCLen;
+	}
 private:
 
 	//アニメーションイベント
@@ -473,5 +479,10 @@ private:
 
 	/** キャラクターライト. */
 	CharacterLight _CharaLight;
+
+	//近いNPC
+	NPC* _NearNPC = nullptr;
+	//近いNPCとの距離
+	float _NearNPCLen;
 
 };

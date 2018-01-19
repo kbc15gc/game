@@ -81,6 +81,11 @@ bool NPC::GetisSpeakEndLastMessage()const {
 
 void NPC::_Speak()
 {
+	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
+	if (_Player->GetNearNPCLen() > len)
+	{
+		_Player->SetNPC(this);
+	}
 	//‰ï˜b‰Â”\‚È‹——£‚©H
 	if (_IsSpeak)
 	{
