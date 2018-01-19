@@ -32,6 +32,16 @@ void PlayerStateRun::Update()
 
 	if (_Player->_Debug == true)
 	{
+		if (KeyBoardInput->isPressed(DIK_9))
+		{
+			Vector3 pos = Vector3(_Player->transform->GetLocalPosition().x, _Player->transform->GetLocalPosition().y + 1.0f, _Player->transform->GetLocalPosition().z);
+			_Player->transform->SetLocalPosition(pos);
+		}
+		else if (KeyBoardInput->isPressed(DIK_8))
+		{
+			Vector3 pos = Vector3(_Player->transform->GetLocalPosition().x, _Player->transform->GetLocalPosition().y - 1.0f, _Player->transform->GetLocalPosition().z);
+			_Player->transform->SetLocalPosition(pos);
+		}
 		//デバッグ時の移動
 		DebugMove();
 	}
