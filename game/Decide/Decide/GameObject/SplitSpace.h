@@ -49,6 +49,14 @@ public:
 			return nullptr;
 		}
 	}
+
+	// 全空間に登録されたオブジェクトを非アクティブ化する。
+	void DisableAll();
+
+	// 全空間に登録されたオブジェクトをアクティブ化する。
+	void EnableAll();
+
+
 private:
 	enum Space { Right = 0, Left, Up, Down, Front, Back, RightUp, RightDown,RightFront,RightBack, LeftUp, LeftDown,LeftFront,LeftBack, UpFront, UpBack, DownFront, DownBack, RightUpFront, RightDownFront, RightUpBack, RightDownBack, LeftUpFront, LeftDownFront,LeftUpBack, LeftDownBack, Max };
 

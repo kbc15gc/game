@@ -58,6 +58,15 @@ public:
 		}
 	}
 
+	// この空間に属するオブジェクトをアクティブ化。
+	inline void EnableObjects() {
+		if (!_isActive) {
+			// まだアクティブ化されてない。
+			_SetActives(true);
+		}
+	}
+
+
 	void SetSplitSpace(SplitSpace* split) {
 		_splitSpace = split;
 	}
@@ -69,13 +78,6 @@ public:
 	}
 private:
 
-	// この空間に属するオブジェクトをアクティブ化。
-	inline void EnableObjects() {
-		if (!_isActive) {
-			// まだアクティブ化されてない。
-			_SetActives(true);
-		}
-	}
 
 	// 隣接する空間オブジェクトに属するオブジェクトをすべてアクティブ化。
 	void EnableObjectsAdjacent();

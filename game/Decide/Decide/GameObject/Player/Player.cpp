@@ -250,6 +250,26 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	
 	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player_Pos"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			_RespawnPos.x = player["RespawnPos_X"].get<double>();
+			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
+			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+		}
+	}
+	else
+	{
+		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+	}
+
+	//ポジション
+	transform->SetLocalPosition(_RespawnPos);
+
 }
 
 void Player::Start()
@@ -280,24 +300,24 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 
-	if (IS_CONTINUE)
-	{
-		JsonData PlayerData;
-		if (PlayerData.Load("Player_Pos"))
-		{
-			picojson::object player = PlayerData.GetDataObject("Player");
-			_RespawnPos.x = player["RespawnPos_X"].get<double>();
-			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
-			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
-		}
-	}
-	else
-	{
-		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
-	}
+	//if (IS_CONTINUE)
+	//{
+	//	JsonData PlayerData;
+	//	if (PlayerData.Load("Player_Pos"))
+	//	{
+	//		picojson::object player = PlayerData.GetDataObject("Player");
+	//		_RespawnPos.x = player["RespawnPos_X"].get<double>();
+	//		_RespawnPos.y = player["RespawnPos_Y"].get<double>();
+	//		_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+	//	}
+	//}
+	//else
+	//{
+	//	SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+	//}
 
-	//ポジション
-	transform->SetLocalPosition(_RespawnPos);
+	////ポジション
+	//transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//攻撃アニメーションステートの初期化

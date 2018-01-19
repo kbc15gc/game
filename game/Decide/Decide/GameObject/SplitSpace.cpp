@@ -284,6 +284,27 @@ void SplitSpace::AddObjectHitSpace(const GameObject& object) {
 	}
 }
 
+void SplitSpace::DisableAll() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				z->DisableObjects();
+			}
+		}
+	}
+}
+
+void SplitSpace::EnableAll() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				z->EnableObjects();
+			}
+		}
+	}
+}
+
+
 void SplitSpace::RegistrationObject() {
 	for (auto& x : _SpaceCollisions) {
 		for (auto& y : x) {

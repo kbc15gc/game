@@ -14,6 +14,7 @@ namespace
 	};
 }
 
+class SplitSpace;
 class HistoryMenu;
 class HistoryBook;
 class VillageName;
@@ -23,6 +24,7 @@ class GameScene : public Scene
 public:
 	enum class BGM
 	{
+		NONE = -1,
 		BOSS1 = 0,
 		MATI1,
 		MATI2,
@@ -54,10 +56,15 @@ private:
 private:
 	SoundSource* _SoundBGM[static_cast<int>(BGM::NUM)];
 	SoundSource* _GameBGM;
-	BGM _BGM;
+	BGM _BGM = BGM::NONE;
 	Player* _Player;
 	HistoryMenu* _HistoryMenu = nullptr;
 	HistoryBook* _HistoryBook = nullptr;
 	VillageName* _VillageName = nullptr;
 	bool _IsEnding;
+
+	SplitSpace* _splitWorld = nullptr;
+	SplitSpace* _splitMaouzyou = nullptr;
+	bool _isMaouzyou = false;	// ñÇâ§èÈÇ…Ç¢ÇÈÇ©ÅB
+	bool _isFirstFrame = true;
 };

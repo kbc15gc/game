@@ -58,6 +58,8 @@
 
 #include "GameObject\Enemy\LastBoss.h"
 
+#include "GameObject\SplitSpace.h"
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -110,7 +112,7 @@ void GameScene::Start()
 	playerCamera->SetNextCamera(thirdPersonCamera);
 
 	//フリーカメラの生成。
-	GameCamera* freeCamera =INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
+	GameCamera* freeCamera = INSTANCE(GameObjectManager)->AddNew<FreeCamera>("FreeCamera", 8);
 	//ふかんカメラの次のカメラはフリーカメラを指定。
 	thirdPersonCamera->SetNextCamera(freeCamera);
 
@@ -119,10 +121,10 @@ void GameScene::Start()
 #endif
 
 	// 空間分割生成。
-	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
+	_splitWorld = INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
 
 	// 魔王城用の空間分割生成。
-	INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace_MaouSiro", System::MAX_PRIORITY);
+	_splitMaouzyou = INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace_MaouSiro", System::MAX_PRIORITY);
 
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
@@ -168,7 +170,7 @@ void GameScene::Start()
 	//param[CharacterParameter::Param::CRT] = 10;
 
 	//_LastBoss->SetParamAll(Color, param);
-	
+
 	//メニュー
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
@@ -207,10 +209,10 @@ void GameScene::Start()
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
-//#ifndef _NOBO_
-//	_GameBGM->Play(true);
-//#endif // !_NOBO_
-	//シャドウマップ有効.
+	//#ifndef _NOBO_
+	//	_GameBGM->Play(true);
+	//#endif // !_NOBO_
+		//シャドウマップ有効.
 	_isShadowMap = true;
 	//環境マップ有効.
 	_isEnvironmentMap = true;
@@ -235,6 +237,35 @@ void GameScene::Start()
 	//g_depth->SetPivot(Vector2(0, 0));
 	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
 	//g_depth->SetActive(true);
+
+	_isFirstFrame = true;	// 作業用。くそコード。
+
+	// 空間分割で最初にどちらを使用するかに必要。
+	{
+		_isMaouzyou = true;
+		int location = -1;
+		//各場所のコリジョンに当たっているか。
+		int i = 0, size = sizeof(soundcollisition) / sizeof(soundcollisition[0]);
+		for (i = 0; i < size; i++)
+		{
+			if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
+			{
+				switch ((BGM)i)
+				{
+				case BGM::MAOU1:
+					_isMaouzyou = false;
+					break;
+				case BGM::MAOU2:
+					_isMaouzyou = false;
+					break;
+				case BGM::MAOU3:
+					_isMaouzyou = false;
+					break;
+				}
+				break;
+			}
+		}
+	}
 }
 
 void GameScene::Update()
@@ -313,6 +344,8 @@ void GameScene::Update()
 						case BGM::MAOU1:
 							_Player->SetRespawnPos(Sinkou);
 							break;
+						case BGM::MAOU2:
+							break;
 						case BGM::MAOU3:
 							_Player->SetRespawnPos(Sinden);
 							break;
@@ -327,8 +360,12 @@ void GameScene::Update()
 
 			if (i == size - 1)
 				_VillageName->Excute(i);
+
+			_isFirstFrame = false;
+
 		}
 	}
+
 }
 
 void GameScene::_NewChip()
@@ -384,8 +421,41 @@ void GameScene::_NewChip()
 
 void GameScene::_ChangeBGM(BGM bgm)
 {
+	if (!_isFirstFrame) {
+		if (!_isMaouzyou) {
+			if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
+				// 魔王城に侵入。
+
+				_splitWorld->DisableAll();
+				_splitWorld->SetActive(false);
+				_splitMaouzyou->SetActive(true);
+				_isMaouzyou = true;
+			}
+		}
+		else {
+			if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
+				// 魔王城からでた。
+				_splitMaouzyou->DisableAll();
+				_splitMaouzyou->SetActive(false);
+				_splitWorld->SetActive(true);
+				_isMaouzyou = false;
+			}
+		}
+	}
+
 	if (_BGM != bgm)
 	{
+		if (_BGM != BGM::MAOU1 && _BGM != BGM::MAOU2 && _BGM != BGM::MAOU3) {
+			if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
+				// 魔王城に侵入。
+				_splitWorld->DisableAll();
+				_splitWorld->SetActive(false);
+				_splitMaouzyou->SetActive(true);
+			}
+		}
+		else {
+		}
+
 		//BGM変更
 		_BGM = bgm;
 		//現在のBMGストップ
@@ -394,7 +464,6 @@ void GameScene::_ChangeBGM(BGM bgm)
 		_GameBGM = _SoundBGM[static_cast<int>(_BGM)];
 		//再生
 		_GameBGM->Play(true);
-
 	}
 }
 
