@@ -129,15 +129,6 @@ void GameScene::Start()
 	//地面生成
 	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 
-	//// 魔王城生成。
-	//ContinentObject* obj = INSTANCE(GameObjectManager)->AddNew<ContinentObject>("MaouSiro", 1);
-	//obj->transform->SetPosition(Vector3(146.0f,150.4f,-205.8f));
-
-	//obj->transform->SetRotation(Quaternion::Identity);
-
-	//obj->transform->SetLocalScale(Vector3(1.0f,-1.0f,1.0f));
-	//obj->LoadModel("MaouSiro.X", true);
-
 	//メッシュコライダーオブジェクトを生成
 	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
 	//ダンジョン生成
@@ -203,9 +194,9 @@ void GameScene::Start()
 	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
-	InitBGM(BGM::MAOU1, "Asset/Sound/LastDangion1.wav", 0.3f);
-	InitBGM(BGM::MAOU2, "Asset/Sound/LastDangion2.wav", 0.3f);
-	InitBGM(BGM::MAOU3, "Asset/Sound/LastDangion3.wav", 0.5f);
+	InitBGM(BGM::MAOU1, "Asset/Sound/LastDangion1.wav", 0.5f);
+	InitBGM(BGM::MAOU2, "Asset/Sound/LastDangion2.wav", 0.5f);
+	InitBGM(BGM::MAOU3, "Asset/Sound/LastDangion3.wav", 0.8f);
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	//再生用BGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
@@ -426,7 +417,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 			if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
 				// 魔王城に侵入。
 
-				_splitWorld->DisableAll();
+				_splitWorld->TargetLost();
 				_splitWorld->SetActive(false);
 				_splitMaouzyou->SetActive(true);
 				_isMaouzyou = true;
@@ -435,7 +426,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 		else {
 			if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
 				// 魔王城からでた。
-				_splitMaouzyou->DisableAll();
+				_splitMaouzyou->TargetLost();
 				_splitMaouzyou->SetActive(false);
 				_splitWorld->SetActive(true);
 				_isMaouzyou = false;

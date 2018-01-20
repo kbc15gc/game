@@ -46,12 +46,15 @@ void BossGolem::_StartSubClass() {
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//攻撃処理。
-	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(4.5f, static_cast<int>(AnimationBossGolem::Hit),0.0f,0.4f);
+	{
+		// 頭突き。
+		_singleAttack.reset(new EnemySingleAttack(this));
+		_singleAttack->Init(1.5f, static_cast<int>(AnimationBossGolem::Hit), 0.0f, 0.4f);
 
-	_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
-	_singleAttackSecondPattern->Init(4.5f, static_cast<int>(AnimationBossGolem::Hit2),0.0f,0.3f);
-
+		// 拳。
+		_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
+		_singleAttackSecondPattern->Init(1.5f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f, 0.3f);
+	}
 	// 初期ステートに移行。
 	// ※暫定処理。
 	_initState = State::Wandering;
@@ -87,16 +90,51 @@ EnemyAttack* BossGolem::_AttackSelectSubClass() {
 	else {
 		return _singleAttackSecondPattern.get();
 	}
-	
 }
+
 void BossGolem::AnimationEvent_Kobushi() {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 3.5f), Quaternion::Identity, Vector3(3.0f, 3.0f, 4.0f), 0.25f, transform);
-	attack->RemoveParent();
+	Quaternion rot = Quaternion::Identity;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(-45.0f));
+	//_kobusi = CreateAttack(Vector3(-1.1f, 0.25f, 0.7f), rot, Vector3(1.0f, 3.0f, 2.0f), -1.0f, transform);
+	//attack->RemoveParent();
+	_kobusi = CreateAttack(Vector3(-1.1f, 0.25f, 0.5f), rot, Vector3(1.0f, 3.0f, 2.0f), -1.0f, transform);
+
+}
+
+void BossGolem::AnimationEvent_Kobushi2() {
+	if (_kobusi) {
+		_kobusi->transform->SetLocalPosition(Vector3(-1.0f, 0.25f, 1.5f));
+		Quaternion rot = _kobusi->transform->GetLocalRotation();
+		Quaternion work = Quaternion::Identity;
+		work.SetRotation(Vector3::axisY, D3DXToRadian(45.0f));
+		rot.Multiply(work);
+		_kobusi->transform->SetLocalRotation(rot);
+	}
+}
+
+void BossGolem::AnimationEvent_Kobushi3(){
+	if (_kobusi) {
+		_kobusi->transform->SetLocalPosition(Vector3(0.0f, 0.25f, 1.5f));
+		//Quaternion rot = _kobusi->transform->GetLocalRotation();
+		//Quaternion work = Quaternion::Identity;
+		//work.SetRotation(Vector3::axisY, D3DXToRadian(45.0f));
+		//rot.Multiply(work);
+		//_kobusi->transform->SetLocalRotation(rot);
+	}
+
+	//if (_kobusi) {
+	//	_kobusi->transform->SetLocalPosition(Vector3());
+	//}
+}
+
+void BossGolem::AnimationEvent_Kobushi4() {
+	INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
+	_kobusi = nullptr;
 }
 
 void BossGolem::AnimationEvent_Zutuki() {
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.5f), Quaternion::Identity, Vector3(2.0f, 2.0f, 3.0f), 0.25f, transform);
-	attack->RemoveParent();
+	_zutuki = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.35f), 0.25f, transform);
+	//attack->RemoveParent();
 }
 
 void BossGolem::_EndNowStateCallback(State EndStateType) {
@@ -197,15 +235,21 @@ void BossGolem::_BuildAnimationSubClass(vector<double>& datas) {
 }
 
 void BossGolem::_ConfigAnimationEvent() {
-	//頭突き
-	{
-		float eventFrame = 0.3f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Zutuki));
-	}
 	//拳
 	{
-		float eventFrame = 0.3f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi));
+		float eventFrame = 0.17f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi));
+		eventFrame = 0.2f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi2));
+		eventFrame= 0.25f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi3));
+		eventFrame = 0.3f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi4));
+	}
+	//頭突き
+	{
+		float eventFrame = 0.25f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Zutuki));
 	}
 }
 

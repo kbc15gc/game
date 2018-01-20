@@ -36,6 +36,10 @@ public:
 
 	// アニメーションイベント関連。
 	void AnimationEvent_Kobushi();
+	void AnimationEvent_Kobushi2();
+	void AnimationEvent_Kobushi3();
+	void AnimationEvent_Kobushi4();
+
 	void AnimationEvent_Zutuki();
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -91,4 +95,7 @@ private:
 	State _saveState;
 	unique_ptr<EnemySingleAttack> _singleAttack;	// 単攻撃処理(1つのクラスがエネミーの種別なので、静的メンバでオッケーだけどエラーはいたから後回し)。
 	unique_ptr<EnemySingleAttack> _singleAttackSecondPattern;
+
+	AttackCollision* _kobusi = nullptr;
+	AttackCollision* _zutuki = nullptr;
 };

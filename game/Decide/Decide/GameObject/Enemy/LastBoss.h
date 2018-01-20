@@ -1,6 +1,7 @@
 #pragma once
 #include "EnemyCharacter.h"
 #include "GameObject\Enemy\LaserBreath.h"
+#include "Scene\GameScene.h"
 
 class LastBossMagic;
 class SordShock;
@@ -72,6 +73,24 @@ public:
 
 	inline EnemySingleAttack*GetEncourageBuffAttack()const {
 		return _encourageBuffAttack.get();
+	}
+
+	void SetActive(const bool act, const bool children = false)override
+	{
+		if (!act) {
+			if (_isStartBattle) {
+				EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
+				EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle2));
+				static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->ResetBGMIndex();
+				_ChangeState(_initState);
+				_isStartBattle = false;
+			}
+		}
+		EnemyCharacter::SetActive(act,children);
+	}
+
+	void SetIsStartBattle(bool flg) {
+		_isStartBattle = flg;
 	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -147,4 +166,6 @@ private:
 	SordShock* _sordAttackShot0 = nullptr;
 	SordShock* _sordAttackShot1 = nullptr;
 	SordShock* _sordAttackShot2 = nullptr;
+
+	bool _isStartBattle = false;
 };

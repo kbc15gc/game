@@ -56,7 +56,12 @@ public:
 	// 全空間に登録されたオブジェクトをアクティブ化する。
 	void EnableAll();
 
-
+	// ターゲットをロストさせる。
+	// ※この処理を呼ぶとターゲットがいる空間を見失うため、全空間から再探索が行われます。
+	void TargetLost() {
+		DisableAll();
+		_nowHitSpace = nullptr;
+	}
 private:
 	enum Space { Right = 0, Left, Up, Down, Front, Back, RightUp, RightDown,RightFront,RightBack, LeftUp, LeftDown,LeftFront,LeftBack, UpFront, UpBack, DownFront, DownBack, RightUpFront, RightDownFront, RightUpBack, RightDownBack, LeftUpFront, LeftDownFront,LeftUpBack, LeftDownBack, Max };
 

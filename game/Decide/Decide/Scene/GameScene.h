@@ -39,6 +39,18 @@ public:
 	GameScene() {};
 	void Start()override;
 	void Update()override;
+
+	// ボス戦などでフィールドBGMを止めた後、もういちどフィールドBGMを再生するために使用。
+	void ResetBGMIndex() {
+		_BGM = BGM::NONE;
+	}
+
+	// ボス戦などでフィールドBGMを止めたいときに使用。
+	void StopFieldBGM() {
+		if (_GameBGM) {
+			_GameBGM->Stop();
+		}
+	}
 private:
 	//チップを作成する
 	void _NewChip();

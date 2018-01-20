@@ -233,14 +233,16 @@ void LastBoss::_StartSubClass() {
 
 	// クラス特有の音設定。
 	// 重ねて鳴らしたい音は別のデータで作成。
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire2), "Fire3.wav", 1.0f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire3), "Fire3.wav", 1.0f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot1), "Fire.wav", 0.5f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.7f,false,true);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire2), "Fire3.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire3), "Fire3.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot1), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.45f,false,true);
+	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 0.9f, false, true);
+
 
 
 	// 攻撃処理を定義。
@@ -366,6 +368,7 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 	if (EndStateType == State::Speak) {
 		// 会話終了。
 		
+		_isStartBattle = true;
 		// 玉座ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossThrone));
 	}
@@ -418,8 +421,8 @@ void LastBoss::_ConfigCollision() {
 
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
-	_collisionInfo.radius = 0.5f;
-	_collisionInfo.height = 3.6f;
+	_collisionInfo.radius = 1.0f;
+	_collisionInfo.height = 2.6f;
 	_collisionInfo.offset = Vector3(0.0f, 0.46f, 0.0f);
 	_collisionInfo.id = Collision_ID::BOSS;
 

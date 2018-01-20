@@ -73,6 +73,7 @@ void EnemyCharacter::Start() {
 
 	// 初期位置設定。
 	_InitPos = transform->GetPosition();
+	_InitRptation = transform->GetRotation();
 
 	// 継承先で初期位置が設定された可能性があるため更新。
 	//_MyComponent.CharacterController->Execute();
@@ -225,8 +226,8 @@ void EnemyCharacter::LateUpdate() {
 
 
 bool EnemyCharacter::IsOutsideDiscovery() {
-	Vector3 work = _InitPos - transform->GetPosition();
-	work.y = 0.0f;
+	Vector3 work = _InitPos - _Player->transform->GetPosition();
+	//work.y = 0.0f;
 	float NowRange = work.Length();
 	if (NowRange > _discoveryRange) {
 		// 追跡範囲外に出た。
@@ -612,20 +613,20 @@ void EnemyCharacter::_BuildSoundTable() {
 	//_SoundData = vector<unique_ptr<SoundData>>(static_cast<int>(SoundIndex::Max));
 
 	// 攻撃音登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Buoon, "Buoonn.wav",1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackGolem, "EnemyGolemAttack01.wav", 1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackSord, "BAttack.wav", 0.3f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Fire, "Fire3.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f,true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Buoon, "Buoonn.wav",1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackGolem, "EnemyGolemAttack01.wav", 1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackSord, "BAttack.wav", 0.3f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Fire, "Fire3.wav", 1.0f, true);
 
 	// 死んだ時の声登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav",1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav",1.0f, true);
 
 	// ダメージを受けた時の声登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::DamageGolem, "EnemyGolemDamage.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::DamageGolem, "EnemyGolemDamage.wav", 1.0f, true);
 
-	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusUp, "Player/statusup.wav", 1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusDown, "Player/statusdown.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusUp, "Player/statusup.wav", 1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusDown, "Player/statusdown.wav", 1.0f, true);
 
 }
 
@@ -638,7 +639,7 @@ void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, float volu
 	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, volume, is3D, isLoop));
 }
 
-EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool isLoop, bool is3D) {
+EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool is3D,bool isLoop) {
 	EnemyCharacter::SoundData* data = new EnemyCharacter::SoundData;
 	strcpy(data->Path, filePath);
 	data->volume = volume;

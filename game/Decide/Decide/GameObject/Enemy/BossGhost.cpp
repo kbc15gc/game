@@ -249,7 +249,7 @@ void BossGhost::_ConfigCollision() {
 		_collisionInfo.radius = 0.3f;
 		_collisionInfo.height = 0.5f;
 		_collisionInfo.offset = Vector3(0.0f, 0.0f, 0.0f);
-		_collisionInfo.id = Collision_ID::BOSS;
+		_collisionInfo.id = Collision_ID::ENEMY;
 
 		// èdóÕê›íËÅB
 		_Gravity = 0.0f;

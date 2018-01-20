@@ -392,6 +392,11 @@ public:
 		return _InitPos;
 	}
 
+	// 初期回転取得。
+	inline const Quaternion& GetInitRotation()const {
+		return _InitRptation;
+	}
+
 	// 現在のステートを取得。
 	inline EnemyState* GetNowState()const {
 		return _NowState;
@@ -613,6 +618,12 @@ public:
 		_discoveryRange = range;
 	}
 
+	void SetActive(const bool act, const bool children = false)override {
+		if (!act) {
+			_MyComponent.HPBar->RenderDisable();
+		}
+		GameObject::SetActive(act, children);
+	}
 
 protected:
 	// ステート切り替え関数。
@@ -667,9 +678,9 @@ private:
 	// 引数のパラメータをもとにサウンドデータを作成する関数。
 	// 引数：	waveファイルの名前(.wavまで含めて)。
 	//			音量。
-	//			ループ再生するか。
 	//			3Dサウンドにするか。
-	SoundData* _CreateSoundData(char* filePath, float volume = 1.0f, bool isLoop = false, bool is3D = false);
+	//			ループ再生するか。
+	SoundData* _CreateSoundData(char* filePath, float volume = 1.0f, bool is3D = false, bool isLoop = false);
 
 	// HPバーの描画状態更新処理。
 	void _BarRenderUpdate();
@@ -749,7 +760,6 @@ private:
 	// ※継承先で実装。
 	virtual EnemyAttack* _AttackSelectSubClass() = 0;
 
-	
 protected:
 	
 
@@ -770,6 +780,7 @@ protected:
 	float _Gravity = -0.98f;	// 重力。
 
 	Vector3 _InitPos;	// 初期位置。
+	Quaternion _InitRptation;	// 初期回転。
 
 	SearchViewAngle _SearchView;	// 視野角判定。
 	float _ViewAngle = 0.0f;		// 視野角(度)。
