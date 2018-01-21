@@ -78,7 +78,7 @@ void LastBossThroneState::_EntrySubClass() {
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);
 
-		param[CharacterParameter::Param::HP] = 2500;
+		param[CharacterParameter::Param::HP] = 5000;
 		param[CharacterParameter::Param::ATK] = 800;
 		param[CharacterParameter::Param::DEF] = 200;
 		param[CharacterParameter::Param::MAT] = 800;

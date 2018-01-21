@@ -195,11 +195,11 @@ void GameScene::Start()
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
 	InitBGM(BGM::MAOU1, "Asset/Sound/LastDangion1.wav", 0.5f);
-	InitBGM(BGM::MAOU2, "Asset/Sound/LastDangion2.wav", 0.5f);
+	InitBGM(BGM::MAOU2, "Asset/Sound/LastDangion2.wav", 0.6f);
 	InitBGM(BGM::MAOU3, "Asset/Sound/LastDangion3.wav", 0.8f);
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
-	InitBGM(BGM::BOSS, "Asset/Sound/LastBattle1.wav", 0.45f);
-	InitBGM(BGM::LASTBOSS, "Asset/Sound/LastBattle2.wav", 0.9f);
+	InitBGM(BGM::BOSS, "Asset/Sound/LastBattle1.wav", 0.5f);
+	InitBGM(BGM::LASTBOSS, "Asset/Sound/LastBattle2.wav", 1.0f);
 
 	//çƒê∂ópBGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
