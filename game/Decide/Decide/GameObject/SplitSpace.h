@@ -10,11 +10,16 @@ class SpaceCollisionObject;
 class SplitSpace :public GameObject{
 public:
 	SplitSpace(const char* name):GameObject(name) {
-		Spawner::_splitSpace = this;
+		Spawner::_splitSpace.push_back(this);
 	};
 	~SplitSpace() {
 		_ReleaseSpaceCollisions();
-		Spawner::_splitSpace = nullptr;
+		for (auto itr = Spawner::_splitSpace.begin(); itr != Spawner::_splitSpace.end();itr++) {
+			if ((*itr) == this) {
+				Spawner::_splitSpace.erase(itr);
+				break;
+			}
+		}
 	};
 
 	void OnDestroy()override;

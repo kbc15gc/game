@@ -14,7 +14,7 @@ class LastBoss :
 public:
 	enum class LastBossState { LastBossThrone = static_cast<int>(State::Death) + 1, LastBossMagician, LastBossHistory, LastBossDown };
 
-	enum class LastBossSoundIndex { Fire2 = static_cast<int>(EnemyCharacter::SoundIndex::Max),Fire3,Shot1, Shot2,Shot3,Battle1,Battle2};
+	enum class LastBossSoundIndex { Fire2 = static_cast<int>(EnemyCharacter::SoundIndex::Max),Fire3,Shot1, Shot2,Shot3/*,Battle1,Battle2*/};
 
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
@@ -75,16 +75,19 @@ public:
 		return _encourageBuffAttack.get();
 	}
 
+	// バトル終了。
+	void BattleEnd() {
+		if (_isStartBattle) {
+			static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->ResetBGMIndex();
+			_ChangeState(_initState);
+			_isStartBattle = false;
+		}
+	}
+
 	void SetActive(const bool act, const bool children = false)override
 	{
 		if (!act) {
-			if (_isStartBattle) {
-				EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
-				EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle2));
-				static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->ResetBGMIndex();
-				_ChangeState(_initState);
-				_isStartBattle = false;
-			}
+			BattleEnd();
 		}
 		EnemyCharacter::SetActive(act,children);
 	}
@@ -168,4 +171,6 @@ private:
 	SordShock* _sordAttackShot2 = nullptr;
 
 	bool _isStartBattle = false;
+
+	GameScene* _scene = nullptr;
 };

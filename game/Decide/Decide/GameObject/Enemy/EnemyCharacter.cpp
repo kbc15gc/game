@@ -68,12 +68,13 @@ void EnemyCharacter::Start() {
 
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
-	// 継承先により変わる処理。
-	_StartSubClass();
-
 	// 初期位置設定。
 	_InitPos = transform->GetPosition();
 	_InitRptation = transform->GetRotation();
+
+	// 継承先により変わる処理。
+	_StartSubClass();
+
 
 	// 継承先で初期位置が設定された可能性があるため更新。
 	//_MyComponent.CharacterController->Execute();

@@ -20,7 +20,6 @@ void LastBossMagicianState::_EntrySubClass() {
 
 	_ChangeLocalState(EnemyCharacter::State::StartAttack);
 	_timeCounter = 0.0f;
-	_EnemyObject->EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle2));
 }
 
 void LastBossMagicianState::_StartSubClass() {
@@ -32,10 +31,7 @@ void LastBossMagicianState::_StartSubClass() {
 void LastBossMagicianState::_UpdateSubClass() {
 	// 常にプレイヤーと距離判定し、バトル範囲外に出たら初期ステートに戻す。
 	if (_EnemyObject->IsOutsideDiscovery()) {
-		_EnemyObject->EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle2));
-		static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->ResetBGMIndex();
-		_EnemyObject->ChangeStateRequest(_EnemyObject->GetInitState());
-		static_cast<LastBoss*>(_EnemyObject)->SetIsStartBattle(false);
+		static_cast<LastBoss*>(_EnemyObject)->BattleEnd();
 		return;
 	}
 

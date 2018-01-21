@@ -135,8 +135,6 @@ void LastBossThroneState::_EntrySubClass() {
 	_ChangeLocalState(EnemyCharacter::State::Attack);
 	static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetEncourageBuffAttack());
 
-	static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->StopFieldBGM();
-	_EnemyObject->EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
 }
 
 void LastBossThroneState::_StartSubClass() {
@@ -148,10 +146,7 @@ void LastBossThroneState::_UpdateSubClass() {
 
 	// 常にプレイヤーと距離判定し、バトル範囲外に出たら初期ステートに戻す。
 	if (_EnemyObject->IsOutsideDiscovery()) {
-		_EnemyObject->EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
-		static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->ResetBGMIndex();
-		_EnemyObject->ChangeStateRequest(_EnemyObject->GetInitState());
-		static_cast<LastBoss*>(_EnemyObject)->SetIsStartBattle(false);
+		static_cast<LastBoss*>(_EnemyObject)->BattleEnd();
 		return;
 	}
 
@@ -159,7 +154,6 @@ void LastBossThroneState::_UpdateSubClass() {
 		if (!_EnemyObject->GetIsPlaying()) {
 			// 玉座を消したらステート終了。
 
-			_EnemyObject->EnemyStopSound(static_cast<EnemyCharacter::SoundIndex>(LastBoss::LastBossSoundIndex::Battle1));
 			_EndState();
 		}
 	}

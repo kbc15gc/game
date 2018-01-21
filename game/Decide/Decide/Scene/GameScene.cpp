@@ -75,9 +75,9 @@ namespace
 	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
 
 	//信仰の国の座標
-	Vector3 Sinkou = Vector3(-142.4f, 121.8f, 175.9f);
+	Vector3 Sinkou = Vector3(-82.6f, 121.8f, 145.3f);
 	//神殿の座標
-	Vector3 Sinden = Vector3(-140.9f, 169.3f, 246.8f);
+	Vector3 Sinden = Vector3(-145.6f, 188.5f, 239.24f);
 }
 
 
@@ -198,6 +198,9 @@ void GameScene::Start()
 	InitBGM(BGM::MAOU2, "Asset/Sound/LastDangion2.wav", 0.5f);
 	InitBGM(BGM::MAOU3, "Asset/Sound/LastDangion3.wav", 0.8f);
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
+	InitBGM(BGM::BOSS, "Asset/Sound/LastBattle1.wav", 0.45f);
+	InitBGM(BGM::LASTBOSS, "Asset/Sound/LastBattle2.wav", 0.9f);
+
 	//再生用BGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
 	//#ifndef _NOBO_
@@ -305,6 +308,7 @@ void GameScene::Update()
 		}
 		else
 		{
+			bool isHit = false;
 			int location = -1;
 			//各場所のコリジョンに当たっているか。
 			int i = 0,size = sizeof(soundcollisition) / sizeof(soundcollisition[0]);
@@ -312,6 +316,8 @@ void GameScene::Update()
 			{
 				if (_IsCollideBoxAABB(soundcollisition[i].pos - soundcollisition[i].scale / 2, soundcollisition[i].pos + soundcollisition[i].scale / 2, _Player->transform->GetPosition() - PlayerScale / 2, _Player->transform->GetPosition() + PlayerScale / 2))
 				{
+					isHit = true;
+
 					switch ((BGM)i)
 					{
 						case BGM::MATI1:
@@ -345,6 +351,11 @@ void GameScene::Update()
 					_VillageName->Excute(i);
 					break;
 				}
+			}
+
+			if (!isHit) {
+				// どのBGMコリジョンにもあたっていないのでフィールドBGMを再生。
+				_ChangeBGM(BGM::WORLD);
 			}
 
 			INSTANCE(HistoryManager)->SetNowLocation(location);
@@ -412,49 +423,57 @@ void GameScene::_NewChip()
 
 void GameScene::_ChangeBGM(BGM bgm)
 {
-	if (!_isFirstFrame) {
-		if (!_isMaouzyou) {
-			if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
-				// 魔王城に侵入。
+	if (bgm < BGM::BOSS) {
+		if (!_isFirstFrame) {
+			if (!_isMaouzyou) {
+				if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
+					// 魔王城に侵入。
 
-				_splitWorld->TargetLost();
-				_splitWorld->SetActive(false);
-				_splitMaouzyou->SetActive(true);
-				_isMaouzyou = true;
+					_splitWorld->TargetLost();
+					_splitWorld->SetActive(false);
+					_splitMaouzyou->TargetLost();
+					_splitMaouzyou->SetActive(true);
+					_isMaouzyou = true;
+				}
 			}
-		}
-		else {
-			if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
-				// 魔王城からでた。
-				_splitMaouzyou->TargetLost();
-				_splitMaouzyou->SetActive(false);
-				_splitWorld->SetActive(true);
-				_isMaouzyou = false;
+			else {
+				if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
+					// 魔王城からでた。
+					_splitMaouzyou->TargetLost();
+					_splitMaouzyou->SetActive(false);
+					_splitWorld->TargetLost();
+					_splitWorld->SetActive(true);
+					_isMaouzyou = false;
+				}
 			}
 		}
 	}
 
 	if (_BGM != bgm)
 	{
-		if (_BGM != BGM::MAOU1 && _BGM != BGM::MAOU2 && _BGM != BGM::MAOU3) {
-			if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
-				// 魔王城に侵入。
-				_splitWorld->DisableAll();
-				_splitWorld->SetActive(false);
-				_splitMaouzyou->SetActive(true);
-			}
-		}
-		else {
-		}
+		//if (_BGM != BGM::MAOU1 && _BGM != BGM::MAOU2 && _BGM != BGM::MAOU3) {
+		//	if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
+		//		// 魔王城に侵入。
+		//		_splitWorld->DisableAll();
+		//		_splitWorld->SetActive(false);
+		//		_splitMaouzyou->SetActive(true);
+		//	}
+		//}
+		//else {
+		//}
+		if (_BGM < BGM::BOSS || bgm >= BGM::BOSS) {
+			// 魔王戦の時は外部から指示があるまで変更しない。
+			// ただし死亡時や別のボスBGMの場合は変更する。
 
-		//BGM変更
-		_BGM = bgm;
-		//現在のBMGストップ
-		_GameBGM->Stop();
-		//サウンドを設定。
-		_GameBGM = _SoundBGM[static_cast<int>(_BGM)];
-		//再生
-		_GameBGM->Play(true);
+			//BGM変更
+			_BGM = bgm;
+			//現在のBMGストップ
+			_GameBGM->Stop();
+			//サウンドを設定。
+			_GameBGM = _SoundBGM[static_cast<int>(_BGM)];
+			//再生
+			_GameBGM->Play(true);
+		}
 	}
 }
 

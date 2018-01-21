@@ -390,9 +390,9 @@ void Player::Update()
 	//NPC‚Æ˜b‚·
 	Speak();
 
-	char test[256];
-	sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	OutputDebugString(test);
+	//char test[256];
+	//sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test);
 }
 
 void Player::ChangeState(State nextstate)

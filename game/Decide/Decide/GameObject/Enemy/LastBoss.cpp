@@ -239,9 +239,9 @@ void LastBoss::_StartSubClass() {
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f, true);
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.45f,false,true);
-	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 0.9f, false, true);
+	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.45f,false,true);
+	////_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
+	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 0.9f, false, true);
 
 
 
@@ -274,8 +274,7 @@ void LastBoss::_StartSubClass() {
 	//_initState = static_cast<State>(LastBossState::LastBossHistory);
 	_initState = State::Speak;
 
-	//_voiceYokukitana.reset(_CreateSoundData("LastBoss_YOKUKITANA1.wav",35.0f,true));
-	//_voiceYokukitana.reset(_CreateSoundData("maou_test.wav", 4.0f, true));
+	_scene = static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene());
 
 	_ChangeState(_initState);
 }
@@ -369,6 +368,7 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 		// 会話終了。
 		
 		_isStartBattle = true;
+		_scene->PlayBossBGM(GameScene::BGM::BOSS);
 		// 玉座ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossThrone));
 	}
@@ -380,6 +380,8 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 		_ConfigAnimationType(AnimationType::Walk, static_cast<int>(AnimationLastBoss::Move));
 		_ConfigAnimationType(AnimationType::Dash, static_cast<int>(AnimationLastBoss::Move));
 		_ConfigAnimationType(AnimationType::BackStep, static_cast<int>(AnimationLastBoss::Move));
+
+		_scene->PlayBossBGM(GameScene::BGM::LASTBOSS);
 
 		// 魔術師ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossMagician));
