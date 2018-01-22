@@ -88,6 +88,18 @@ void HistoryMenu::Update()
 		_IsOpen = true;
 	}
 
+	if (_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Idol ||
+		_HistoryBook->GetNowState() == (int)HistoryBook::StateCodeE::Open)
+	{
+		if (_IsOperation)
+		{
+			//Bボタンで戻る.
+			if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
+			{
+				INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
+			}
+		}
+	}
 	/*if (!_IsOperation)
 	{
 		const float OperationTime = 2.0f;
@@ -417,33 +429,33 @@ void HistoryMenu::SelectPageUpdate()
 	}
 
 	//AボタンもしくはJkeyが押されたら。
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
-	{
-		//歴史書からリストを取得。
-		vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
-		//取得したリストサイズが0以上なら削除処理を行う。
-		if (pagelist.size() > 0 && 0 <= _NowLookPage  && _NowLookPage < pagelist.size())
-		{
-			HistoryPage* page = pagelist[_NowLookPage];
+	//if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
+	//{
+	//	//歴史書からリストを取得。
+	//	vector<HistoryPage*> pagelist = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
+	//	//取得したリストサイズが0以上なら削除処理を行う。
+	//	if (pagelist.size() > 0 && 0 <= _NowLookPage  && _NowLookPage < pagelist.size())
+	//	{
+	//		HistoryPage* page = pagelist[_NowLookPage];
 
-			if (page != nullptr)
-			{
-				_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
+	//		if (page != nullptr)
+	//		{
+	//			_HistoryBook->PutOutPage((LocationCodeE)_NowSelectLocation, page);
 
-				INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
+	//			INSTANCE(HistoryManager)->PutOutPage((LocationCodeE)_NowSelectLocation, _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation));
 
-				SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
-				se->Init("Asset/Sound/UI/paper-tear1.wav");
-				se->SetDelete(true);
-				se->Play(false);
+	//			SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+	//			se->Init("Asset/Sound/UI/paper-tear1.wav");
+	//			se->SetDelete(true);
+	//			se->Play(false);
 
-				PageMove();
+	//			PageMove();
 
-				_IsOperation = false;
-				_HistoryBook->SetIsOperation(_IsOperation);
-			}
-		}
-	}
+	//			_IsOperation = false;
+	//			_HistoryBook->SetIsOperation(_IsOperation);
+	//		}
+	//	}
+	//}
 
 }
 

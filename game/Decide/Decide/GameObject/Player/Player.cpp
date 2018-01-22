@@ -90,7 +90,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.2f;
+	_Radius = 0.6f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 
@@ -894,6 +894,11 @@ void Player::Speak()
 			}
 		}
 	}
+	//NPCなし
+	else
+	{
+		_NearNPCLen = FLT_MAX;
+	}
 
 	//村
 	//for (auto village : npc)
@@ -1219,7 +1224,8 @@ void Player::Re_SetEquipment() {
 
 void Player::SetNPC(NPC * npc)
 {
-	if (!_NearNPC)
+	//そのまま設定
+	if ((_NearNPC == nullptr) || (npc == nullptr))
 	{
 		_NearNPC = npc;
 	}

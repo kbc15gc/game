@@ -94,6 +94,13 @@ public:
 		_Rot = q;
 	}
 
+private:
+
+	/**
+	* ‘«Œ³‚ğ’n–Ê‚É‡‚í‚¹‚é.
+	*/
+	void _FitGround();
+
 protected:
 	//˜b‚·
 	void _Speak();

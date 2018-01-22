@@ -63,6 +63,9 @@ void NPC::CreateNPC(const npc::NPCInfo* info)
 	_Rot = info->ang;
 
 	LoadModel(info->filename, false);
+
+	//足元を地面に合わせる.
+	_FitGround();
 }
 
 void NPC::SetMesseage(const int & id, const bool show)
@@ -79,8 +82,46 @@ bool NPC::GetisSpeakEndLastMessage()const {
 	return _TextBox->IsLastMessageEnd();
 }
 
+/**
+* 足元を地面に合わせる.
+*/
+void NPC::_FitGround()
+{
+	//レイを作成する.
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+
+	//開始位置と足元の差分.
+	float startOffset = 2;
+
+	Vector3 pos = transform->GetPosition();
+	Quaternion rot = transform->GetRotation();
+	//開始地点を設定.
+	start.setOrigin(btVector3(pos.x, pos.y + startOffset, pos.z));
+
+	//終了地点を設定.
+	//2メートル下を見る.
+	end.setOrigin(start.getOrigin() - btVector3(0, startOffset + 2, 0));
+
+	fbPhysicsCallback::SweepResultGround callback;
+	callback.me = this;
+	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
+	callback._attribute = Collision_ID::GROUND || Collision_ID::BUILDING;
+
+	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)GetComponent<MeshCollider>()->GetBody(), start, end, callback);
+
+	if (callback.isHit)
+	{
+		pos = callback.hitPos; 
+		pos.y += (startOffset + _Model->GetModelData()->GetAABBSize().y) * transform->GetScale().y;
+		transform->SetLocalPosition(pos);
+	}
+}
+
 void NPC::_Speak()
 {
+	//プレイヤーとの距離を計算。
 	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
 	if (_Player->GetNearNPCLen() > len)
 	{

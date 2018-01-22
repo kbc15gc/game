@@ -22,20 +22,23 @@ class VillageName;
 class GameScene : public Scene
 {
 public:
+	//BGMの種類
 	enum class BGM
 	{
 		NONE = -1,
-		BOSS1 = 0,
-		MATI1,
-		MATI2,
-		MATI3,
-		MAOU1,
-		MAOU2,
-		MAOU3,
-		WORLD,
-		DEAD,
-		BOSS,
-		LASTBOSS,
+		BOSS1 = 0,		//ドラリアン
+		BOSS2,			//ボスゴーレム
+		BOSS3,			//コードネームD
+		MATI1,			//始まりの村
+		MATI2,			//狩猟の村
+		MATI3,			//発展の街	
+		MAOU1,			//魔王城1層
+		MAOU2,			//魔王城2層
+		MAOU3,			//魔王城3層
+		WORLD,			//世界	
+		DEAD,			//死亡
+		BOSS,			//？
+		LASTBOSS,		//ﾗｽﾎﾞｽ
 		NUM,
 	};
 	GameScene() {};

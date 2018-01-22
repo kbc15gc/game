@@ -38,19 +38,13 @@ void StatusWindow::Awake()
 	for (int i = 0; i < _WindowCount; i++)
 	{
 		ItemWindow* iw = INSTANCE(GameObjectManager)->AddNew<ItemWindow>("ItemWindow", WindowBackPriorty + 3);
-		iw->transform->SetParent(transform);
-		iw->transform->SetLocalPosition(Vector3::zero);
-		iw->SetActive(false, true);
+		//iw->transform->SetParent(transform);
+		iw->transform->SetLocalPosition(Vector3(g_WindowSize.x / 2, g_WindowSize.y / 2, 0.0f));
 		_ItemWindowList.push_back(iw);
 	}
 	_ItemWindowList[0]->Init(Item::ItemCodeE::Item);
 	_ItemWindowList[1]->Init(Item::ItemCodeE::Weapon);
 	_ItemWindowList[2]->Init(Item::ItemCodeE::Armor);
-
-	for (int i = 0; i < _WindowCount; i++)
-	{
-		_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
-	}
 
 	// お金の表示作成。
 	_MoneyFrame = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MoneyFrame", WindowBackPriorty + 2);
@@ -62,7 +56,6 @@ void StatusWindow::Awake()
 	_MoneyRender->transform->SetParent(_MoneyFrame->transform);
 	_MoneyRender->transform->SetLocalPosition(Vector3(60.0f,-13.0f,0.0f));
 	_MoneyRender->SetParamTextPos(_MoneyRender->GetParamTextPos() + Vector3(-130.0f,0.0f,0.0f));
-
 
 	//始めは非表示.
 	this->SetActive(false, true);
@@ -174,4 +167,30 @@ void StatusWindow::Execute()
 	//再生後に自動で削除するようにする。
 	se->SetDelete(true);
 	se->Play(false);
+}
+
+/**
+* 有効化.
+*/
+void StatusWindow::OnEnable()
+{
+	Update();
+	_MoneyRender->LateUpdate();
+	for (int i = 0; i < _WindowCount; i++)
+	{
+		_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
+	}
+}
+
+/**
+* 無効化.
+*/
+void StatusWindow::OnDisable()
+{
+	for (int i = 0; i < _WindowCount; i++)
+	{
+		_ItemWindowList[i]->SetActive(false, true);
+	}
+	INSTANCE(EventManager)->NotifyEndEvent();
+	static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->DeleteList();
 }

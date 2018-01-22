@@ -5,6 +5,8 @@
 static const string LocationNames[] =
 {
 	"ドラリアンの住処",
+	"グレムリンの洞窟",
+	"Dの祠",
 	"はじまりの集落",
 	"狩猟の村",
 	"繁栄の街",
