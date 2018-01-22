@@ -34,11 +34,32 @@ public:
 		MAOU3,
 		WORLD,
 		DEAD,
+		BOSS,
+		LASTBOSS,
 		NUM,
 	};
 	GameScene() {};
 	void Start()override;
 	void Update()override;
+
+	// ボス戦などでフィールドBGMを止めた後、もういちどフィールドBGMを再生するために使用。
+	void ResetBGMIndex() {
+		_BGM = BGM::NONE;
+	}
+
+	// ボス戦で流したいBGMを指定して再生する。
+	void PlayBossBGM(BGM bgm) {
+		if (bgm >= BGM::BOSS) {
+			_ChangeBGM(bgm);
+		}
+	}
+
+	// ボス戦などでフィールドBGMを止めたいときに使用。
+	void StopFieldBGM() {
+		if (_GameBGM) {
+			_GameBGM->Stop();
+		}
+	}
 private:
 	//チップを作成する
 	void _NewChip();

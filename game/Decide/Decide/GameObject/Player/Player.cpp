@@ -125,10 +125,13 @@ void Player::Awake()
 	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
+	_CharacterController->SubAttributeY(Collision_ID::BOSS);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
@@ -386,6 +389,10 @@ void Player::Update()
 
 	//NPCと話す
 	Speak();
+
+	//char test[256];
+	//sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test);
 }
 
 void Player::ChangeState(State nextstate)
@@ -1211,7 +1218,8 @@ void Player::Re_SetEquipment() {
 
 void Player::SetNPC(NPC * npc)
 {
-	if (!_NearNPC)
+	//そのまま設定
+	if ((_NearNPC == nullptr) || (npc = nullptr))
 	{
 		_NearNPC = npc;
 	}

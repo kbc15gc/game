@@ -65,6 +65,8 @@ void SordShock::Update() {
 			_isBomb = true;
 			_initShockParticleParam = ParticleParamTable::Params[ParticleParamTable::Type::BombViolet];
 			_shockParticleEmitter->SetParam(_initShockParticleParam);
+			INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
+
 			//攻撃コリジョン作成。
 			_enemyObject->CreateAttack(Vector3(0.0f, 1.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _shockParticleEmitter->transform, false, false, AttackCollision::ReactionType::Blown)->RemoveParent();
 		}
@@ -77,7 +79,7 @@ void SordShock::Update() {
 			_shockParticleEmitter->SetParam(_initShockParticleParam);
 
 			// 光の柱のコリジョン作成。
-			INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
+			//INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
 			_attack[0] = _enemyObject->CreateAttack(Vector3(0.0f, 2.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 4.0f, 1.0f), -1.0f, _shockParticleEmitter->transform, false, true, AttackCollision::ReactionType::NotAction,10);
 		}
 

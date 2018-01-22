@@ -59,6 +59,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 		for (auto& obj : _enemys[static_cast<int>(location)]) {
 			if (obj->Object) {
 				INSTANCE(GameObjectManager)->AddRemoveList(obj->Object);
+				INSTANCE(GameObjectManager)->AddRemoveList(obj->Respawner);
 			}
 		}
 		_enemys[static_cast<int>(location)].clear();
@@ -252,6 +253,10 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					barColor.push_back(BarColor::Red);
 					break;
 				}
+
+				// リスポナーを確保。
+				// ※歴史切り替えで復活予告していたエネミーが消えた場合にリスポナーを削除するため。
+				enemy->Respawner = Spawner->GetReSpawner();
 			}
 			// パラメーター設定。
 			enemy->Object->SetParamAll(barColor,enemy->InfoData->param);

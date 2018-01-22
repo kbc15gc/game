@@ -10,6 +10,7 @@
 #include "GameObject\Enemy\HFSM\EnemyBackStepState.h"
 #include "GameObject\Enemy\LastBoss.h"
 #include "GameObject\Enemy\HFSM\EnemyAttackState.h"
+#include "Scene\GameScene.h"
 
 //const int LastBossThroneState::_entourageNum = 2;
 
@@ -77,7 +78,7 @@ void LastBossThroneState::_EntrySubClass() {
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);
 
-		param[CharacterParameter::Param::HP] = 2500;
+		param[CharacterParameter::Param::HP] = 5000;
 		param[CharacterParameter::Param::ATK] = 800;
 		param[CharacterParameter::Param::DEF] = 200;
 		param[CharacterParameter::Param::MAT] = 800;
@@ -133,6 +134,7 @@ void LastBossThroneState::_EntrySubClass() {
 
 	_ChangeLocalState(EnemyCharacter::State::Attack);
 	static_cast<EnemyAttackState*>(_NowLocalState)->SetAttack(static_cast<LastBoss*>(_EnemyObject)->GetEncourageBuffAttack());
+
 }
 
 void LastBossThroneState::_StartSubClass() {
@@ -144,12 +146,14 @@ void LastBossThroneState::_UpdateSubClass() {
 
 	// 常にプレイヤーと距離判定し、バトル範囲外に出たら初期ステートに戻す。
 	if (_EnemyObject->IsOutsideDiscovery()) {
-		_EnemyObject->ChangeStateRequest(_EnemyObject->GetInitState());
+		static_cast<LastBoss*>(_EnemyObject)->BattleEnd();
+		return;
 	}
 
 	if (_isDeathEntourage) {
 		if (!_EnemyObject->GetIsPlaying()) {
 			// 玉座を消したらステート終了。
+
 			_EndState();
 		}
 	}

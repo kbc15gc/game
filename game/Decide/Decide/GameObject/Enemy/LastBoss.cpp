@@ -30,7 +30,7 @@ LastBoss::~LastBoss()
 void LastBoss::SordAttackEvent() {
 	//攻撃コリジョン作成。
 
-	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, true, AttackCollision::ReactionType::Leans,110);
+	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, true, AttackCollision::ReactionType::Leans,60);
 	//unsigned int priorty = 1;
 	//AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
 	//attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f,3.0f,2.5f), AttackCollision::CollisionMaster::Enemy, 0.25f, AttackCollision::ReactionType::Leans, transform);
@@ -60,15 +60,15 @@ void LastBoss::SordAttackEvent() {
 }
 
 void LastBoss::SordAttackEvent2() {
-	_MyComponent.Animation->SetAnimeSpeed(0.7f);
+	_MyComponent.Animation->SetAnimeSpeed(0.6f);
 }
 
 void LastBoss::SordAttackEvent3() {
-	_MyComponent.Animation->SetAnimeSpeed(0.2f);
+	_MyComponent.Animation->SetAnimeSpeed(0.1f);
 }
 
 void LastBoss::SordAttackEvent4() {
-	_MyComponent.Animation->SetAnimeSpeed(2.7f);
+	_MyComponent.Animation->SetAnimeSpeed(2.6f);
 }
 
 void LastBoss::FastSord() {
@@ -87,7 +87,7 @@ void LastBoss::FastSord2() {
 
 void LastBoss::MagicAttackSpeed1() {
 	//_MyComponent.Animation->SetAnimeSpeed(0.7f);
-	_MyComponent.Animation->SetAnimeSpeed(0.65f);
+	_MyComponent.Animation->SetAnimeSpeed(0.55f);
 }
 
 void LastBoss::MagicAttackStart1() {
@@ -157,9 +157,9 @@ void LastBoss::BuffEvent() {
 	// 自身にバフ。
 	value[static_cast<int>(CharacterParameter::Param::ATK)] = 50;
 	value[static_cast<int>(CharacterParameter::Param::MAT)] = 50;
-	//value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
-	//value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
-	BuffAndDebuff(value, 10.0f);
+	value[static_cast<int>(CharacterParameter::Param::DEF)] = 20;
+	value[static_cast<int>(CharacterParameter::Param::MDE)] = 20;
+	BuffAndDebuff(value, 20.0f);
 }
 
 void LastBoss::DebuffEvent() {
@@ -233,24 +233,29 @@ void LastBoss::_StartSubClass() {
 
 	// クラス特有の音設定。
 	// 重ねて鳴らしたい音は別のデータで作成。
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire2), "Fire3.wav", 1.0f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire3), "Fire3.wav", 1.0f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot1), "Fire.wav", 0.5f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f);
-	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire2), "Fire3.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Fire3), "Fire3.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot1), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
+	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.45f,false,true);
+	////_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
+	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 0.9f, false, true);
+
 
 
 	// 攻撃処理を定義。
 	_sordAttack.reset(new EnemySingleAttack(this));
-	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f);
+	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f,0.9f);
 	_sordAttack2.reset(new EnemySingleAttack(this));
-	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 3.0f, 1, 1);
+	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 2.9f, 1, 1);
 	_warpAttack.reset(new EnemyWarpAttack(this));
 	EnemyAttack* singleAttack = new EnemySingleAttack(this);
-	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 2.0f, 1, 2);
+	singleAttack->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.2f, 1.9f, 1, 2);
 	_warpAttack->Init(13.0f, singleAttack);
 	_magicAttack.reset(new EnemyBreathAttack(this));
-	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f,1.5f);
+	_magicAttack->Init(7.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f,1.4f);
 
 	_buffAttack.reset(new EnemySingleAttack(this));
 	_buffAttack->Init(10.0f, static_cast<int>(AnimationLastBoss::Magic), 0.2f);
@@ -269,8 +274,7 @@ void LastBoss::_StartSubClass() {
 	//_initState = static_cast<State>(LastBossState::LastBossHistory);
 	_initState = State::Speak;
 
-	//_voiceYokukitana.reset(_CreateSoundData("LastBoss_YOKUKITANA1.wav",35.0f,true));
-	//_voiceYokukitana.reset(_CreateSoundData("maou_test.wav", 4.0f, true));
+	_scene = static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene());
 
 	_ChangeState(_initState);
 }
@@ -363,6 +367,8 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 	if (EndStateType == State::Speak) {
 		// 会話終了。
 		
+		_isStartBattle = true;
+		_scene->PlayBossBGM(GameScene::BGM::BOSS);
 		// 玉座ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossThrone));
 	}
@@ -374,6 +380,8 @@ void LastBoss::_EndNowStateCallback(State EndStateType) {
 		_ConfigAnimationType(AnimationType::Walk, static_cast<int>(AnimationLastBoss::Move));
 		_ConfigAnimationType(AnimationType::Dash, static_cast<int>(AnimationLastBoss::Move));
 		_ConfigAnimationType(AnimationType::BackStep, static_cast<int>(AnimationLastBoss::Move));
+
+		_scene->PlayBossBGM(GameScene::BGM::LASTBOSS);
 
 		// 魔術師ステートに移行。
 		_ChangeState(static_cast<State>(LastBossState::LastBossMagician));
@@ -415,8 +423,8 @@ void LastBoss::_ConfigCollision() {
 
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
-	_collisionInfo.radius = 0.5f;
-	_collisionInfo.height = 3.6f;
+	_collisionInfo.radius = 1.0f;
+	_collisionInfo.height = 2.6f;
 	_collisionInfo.offset = Vector3(0.0f, 0.46f, 0.0f);
 	_collisionInfo.id = Collision_ID::BOSS;
 
@@ -518,9 +526,9 @@ void LastBoss::_ConfigAnimationEvent() {
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent4), 2);
 		eventFrame = 1.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::FastSord2), 2);
-		eventFrame = 2.0f;
+		eventFrame = 1.95f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent3), 2);
-		eventFrame = 2.07f;
+		eventFrame = 2.03f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent2),2);
 	}
 

@@ -16,6 +16,7 @@ EnemySpeakState::~EnemySpeakState()
 
 void EnemySpeakState::_EntrySubClass() {
 	_EnemyObject->transform->SetPosition(_EnemyObject->GetInitPos());
+	_EnemyObject->transform->SetRotation(_EnemyObject->GetInitRotation());
 }
 
 void EnemySpeakState::_StartSubClass() {

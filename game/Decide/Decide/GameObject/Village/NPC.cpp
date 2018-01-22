@@ -81,6 +81,7 @@ bool NPC::GetisSpeakEndLastMessage()const {
 
 void NPC::_Speak()
 {
+	//プレイヤーとの距離を計算。
 	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
 	if (_Player->GetNearNPCLen() > len)
 	{

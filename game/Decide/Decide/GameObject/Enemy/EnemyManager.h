@@ -73,6 +73,7 @@ private:
 		//}
 		EnemyCharacter* Object = nullptr;	// InfoDataをもとに生成されたオブジェクトデータ。
 		unique_ptr<LoadEnemyInfo::EnemyInfo> InfoData;	// CSVファイルから読み込んだ設定データ。
+		Spawner* Respawner = nullptr;	// エネミーを復活させるためのスポナー。
 	};
 private:
 	EnemyManager();
