@@ -697,7 +697,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		DWORD numVert = pMeshContainer->MeshData.pMesh->GetNumVertices();
 		hr = pMeshContainer->MeshData.pMesh->CloneMesh(
 			pMeshContainer->MeshData.pMesh->GetOptions(),
-			NonAnimDecl,
+			AnimDecl,
 			pd3dDevice, &pOutMesh);
 		DWORD numAttributeTable;
 		pMeshContainer->MeshData.pMesh->GetAttributeTable(NULL, &numAttributeTable);
