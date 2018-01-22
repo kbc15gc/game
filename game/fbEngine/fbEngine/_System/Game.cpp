@@ -1,6 +1,6 @@
 #include"fbstdafx.h"
 #include "Game.h"
-
+#include "_Support\StopWatch.h"
 CGraphicsDevice g_graphicsDevice;
 HINSTANCE hInst;                                // 現在のインターフェイス
 HWND g_MainWindow;
@@ -9,6 +9,9 @@ HWND g_MainWindow;
 Vector2 g_WindowSize;
 /** 内部解像度. */
 Vector2 g_FrameSize;
+
+//ストップウォッチ。
+CStopWatch StopWatch;
 
 
 //コールバック関数
@@ -192,15 +195,8 @@ void Initialize()
 
 void Update() 
 {
-	Time::Update();
-
-	auto t = Time::DeltaTime();
-	if (t < 1.0f / 30.0f) {
-		//30fpsに間に合っているなら眠る。
-		DWORD sleepTime = static_cast<DWORD>(max(0.0, (1.0 / 30.0)*1000.0 - t*1000.0));
-		Sleep(sleepTime);
-		Time::SetDeltaTime((1.0f / 30.0f)*1000);
-	}
+	//時間計測開始。
+	StopWatch.Start();
 
 	INSTANCE(SoundEngine)->Update();
 	INSTANCE(InputManager)->Update();
@@ -225,4 +221,17 @@ void Draw()
 		(*graphicsDevice()).EndScene();
 	}
 	(*graphicsDevice()).Present(NULL, NULL, NULL, NULL);
+
+	StopWatch.Stop();
+
+	Time::Update();
+
+	//経過した時間を取得。
+	auto t = StopWatch.GetElapsed();
+	if (t < 1.0f / 30.0f) {
+		//30fpsに間に合っているなら眠る。
+		DWORD sleepTime = static_cast<DWORD>(max(0.0, (1.0 / 30.0)*1000.0 - t*1000.0));
+		Sleep(sleepTime);
+		Time::SetDeltaTime((1.0f / 30.0f)*1000.0f);
+	}
 }
