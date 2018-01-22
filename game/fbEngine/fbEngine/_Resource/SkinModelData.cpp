@@ -12,7 +12,7 @@
 //UINT                        g_NumBoneMatricesMax = 0;
 //D3DXMATRIXA16*              g_pBoneMatrices = NULL;
 //インスタンシングで描画可能な最大数。
-const int MAX_INSTANCING_NUM = 1000;
+const int MAX_INSTANCING_NUM = 100;
 
 namespace
 {
@@ -596,13 +596,24 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 	pMeshContainer->pOrigMesh = pMesh;
 	pMesh->AddRef();
 
-	D3DVERTEXELEMENT9 decl[] = {
+	D3DVERTEXELEMENT9 AnimDecl[] = {
 		{ 0, 0 ,	D3DDECLTYPE_FLOAT4		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION		, 0 },
 		{ 0, 16,    D3DDECLTYPE_FLOAT4		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT	, 0 },
 		{ 0, 32,    D3DDECLTYPE_FLOAT4		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES	, 0 },
 		{ 0, 48,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL		, 0 },
 		{ 0, 60,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT		, 0 },
 		{ 0, 72,	D3DDECLTYPE_FLOAT2		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD		, 0 },
+		D3DDECL_END()
+	};
+
+	int offset = 0;
+
+	D3DVERTEXELEMENT9 NonAnimDecl[] = {
+		{ 0, 0 ,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION		, 0 },
+		{ 0, 12,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL		, 0 },
+		{ 0, 24,	D3DDECLTYPE_FLOAT3		, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT		, 0 },
+		{ 0, 36,	D3DDECLTYPE_FLOAT2		, D3DDECLMETHOD_UV, D3DDECLUSAGE_TEXCOORD		, 0 },
+		{ 0, 44,	D3DDECLTYPE_D3DCOLOR	, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR			, 0 },
 		D3DDECL_END()
 	};
 
@@ -637,7 +648,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		LPD3DXMESH pOutMesh, pTmpMesh;
 		hr = pMeshContainer->MeshData.pMesh->CloneMesh(
 			pMeshContainer->MeshData.pMesh->GetOptions(),
-			decl,
+			AnimDecl,
 			pd3dDevice, &pOutMesh);
 
 		if (FAILED(hr))
@@ -686,7 +697,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		DWORD numVert = pMeshContainer->MeshData.pMesh->GetNumVertices();
 		hr = pMeshContainer->MeshData.pMesh->CloneMesh(
 			pMeshContainer->MeshData.pMesh->GetOptions(),
-			decl,
+			NonAnimDecl,
 			pd3dDevice, &pOutMesh);
 		DWORD numAttributeTable;
 		pMeshContainer->MeshData.pMesh->GetAttributeTable(NULL, &numAttributeTable);

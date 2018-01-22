@@ -594,7 +594,7 @@ void SkinModel::DrawMeshContainer(
 					(*graphicsDevice()).SetVertexDeclaration(pMeshContainer->vertexDecl);
 
 					auto matrixBuffer = pMeshContainer->worldMatrixBuffer;
-					(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);							//頂点バッファをストリーム0番目に設定
+					(*graphicsDevice()).SetStreamSource(0, vb, 0,48);							//頂点バッファをストリーム0番目に設定
 					(*graphicsDevice()).SetStreamSource(1, matrixBuffer, 0, sizeof(D3DXMATRIX));	//ワールド行列用のバッファをストリーム1番目に設定。
 																									//ワールド行列を頂点バッファにコピー。
 					CopyWorldMatrixToVertexBuffer(matrixBuffer, Stack);
