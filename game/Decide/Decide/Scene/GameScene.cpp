@@ -218,11 +218,11 @@ void GameScene::Start()
 	//エンディングフラグ
 	_IsEnding = false;
 
-	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
-	//g_depth->SetPivot(Vector2(0, 0));
-	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	//g_depth->SetActive(true);
+	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetDepthRT()->texture);
+	g_depth->SetPivot(Vector2(0, 0));
+	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	g_depth->SetActive(true);*/
 }
 
 void GameScene::Update()

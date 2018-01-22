@@ -31,16 +31,24 @@ SceneManager::SceneManager():
 	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
 	_Sprite->SetPivot(Vector2(0.0f, 0.0f));
 
+	//16bit。
+	_DepthRT.Create(g_FrameSize, D3DFMT_R16F);
+
+
 #ifdef RELEASE_LOW
 	_AntiAliasing.SetEnable(false);
 	_DepthofField.SetEnable(false);
 	_Bloom.SetEnable(true);
+	_SSAO.SetEnable(false);
 #else
 	_AntiAliasing.SetEnable(true);
 	_DepthofField.SetEnable(true);
 	_Bloom.SetEnable(true);
+	_SSAO.SetEnable(false);
 #endif
 
+	//SSAOの作成.
+	_SSAO.Create();
 	//アンチエイリアスの作成.
 	_AntiAliasing.Create();
 	//被写界深度の作成
@@ -132,7 +140,7 @@ void SceneManager::DrawScene()
 		D3DCOLOR_RGBA(0, 0, 0, 1),
 		1.0f,
 		0);
-	(*graphicsDevice()).SetRenderTarget(1, _DepthofField.GetDepthRenderTarget()->buffer);
+	(*graphicsDevice()).SetRenderTarget(1, _DepthRT.buffer);
 	(*graphicsDevice()).Clear(
 		1,
 		NULL,
@@ -141,12 +149,19 @@ void SceneManager::DrawScene()
 		1.0f,
 		0);
 	(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
-	(*graphicsDevice()).Clear(2,NULL,D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,D3DCOLOR_RGBA(0, 0, 0, 1),1.0f,0);
+	(*graphicsDevice()).Clear(2, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+
+	(*graphicsDevice()).SetRenderTarget(3, _SSAO.GetNormalRenderTarget()->buffer);
+	(*graphicsDevice()).Clear(3, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 	INSTANCE(GameObjectManager)->RenderObject();
 
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 	(*graphicsDevice()).SetRenderTarget(2, nullptr);
+	(*graphicsDevice()).SetRenderTarget(3, nullptr);
+
+	//SSAOの描画.
+	_SSAO.Render();
 
 	//ブルームの描画.
 	_Bloom.Render();
