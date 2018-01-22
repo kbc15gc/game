@@ -893,6 +893,11 @@ void Player::Speak()
 			}
 		}
 	}
+	//NPCÇ»Çµ
+	else
+	{
+		_NearNPCLen = FLT_MAX;
+	}
 
 	//ë∫
 	//for (auto village : npc)
@@ -1219,7 +1224,7 @@ void Player::Re_SetEquipment() {
 void Player::SetNPC(NPC * npc)
 {
 	//ÇªÇÃÇ‹Ç‹ê›íË
-	if ((_NearNPC == nullptr) || (npc = nullptr))
+	if ((_NearNPC == nullptr) || (npc == nullptr))
 	{
 		_NearNPC = npc;
 	}
