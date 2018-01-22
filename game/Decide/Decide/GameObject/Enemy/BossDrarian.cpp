@@ -113,6 +113,16 @@ void BossDrarian::AnimationEvent_Kamituki() {
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
 }
 
+void BossDrarian::AnimationEvent_KamitukiSub1()
+{
+	_MyComponent.Animation->SetAnimeSpeed(0.1f);
+}
+
+void BossDrarian::AnimationEvent_KamitukiSub2()
+{
+	_MyComponent.Animation->SetAnimeSpeed(1.0f);
+}
+
 void BossDrarian::CreateAttackCollision_TailAttackSub1() 
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.15f, transform,false,true,AttackCollision::ReactionType::NotAction,15);
@@ -174,7 +184,7 @@ void BossDrarian::CreateAttackCollision_TailAttack() {
 	//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
 	Quaternion rot = Quaternion::Identity;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-40.0f));
-	AttackCollision* attack = CreateAttack(Vector3(4.0f, 0.0f, 2.0f), rot, Vector3(10.0f,3.0f,15.0f), 0.15f, transform, false, false, AttackCollision::ReactionType::Leans,150);
+	AttackCollision* attack = CreateAttack(Vector3(3.75f, 0.0f, 1.5f), rot, Vector3(9.5f,3.0f,14.0f), 0.15f, transform, false, false, AttackCollision::ReactionType::Leans,150);
 	attack->RemoveParent();
 
 	// UŒ‚‰¹Ä¶B
@@ -340,7 +350,11 @@ void BossDrarian::_BuildAnimationSubClass(vector<double>& datas) {
 void BossDrarian::_ConfigAnimationEvent() {
 	// ‚©‚İ‚Â‚«UŒ‚B
 	{
-		float eventFrame = 0.3f;
+		float eventFrame = 0.05f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_KamitukiSub1));
+		eventFrame = 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_KamitukiSub2));
+		eventFrame = 0.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Attack), eventFrame, static_cast<AnimationEvent>(&BossDrarian::AnimationEvent_Kamituki));
 	}
 	// ‚µ‚Á‚ÛUŒ‚B

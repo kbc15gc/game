@@ -30,6 +30,8 @@ public:
 
 	// アニメーションイベント関連。
 	void AnimationEvent_Kamituki();
+	void AnimationEvent_KamitukiSub1();				//噛みつきのアニメーションスピード調整のため。
+	void AnimationEvent_KamitukiSub2();				//噛みつきのアニメーションスピード調整のため。
 	void CreateAttackCollision_TailAttackSub1();	// 足の動きで弱ダメージ。
 	void CreateAttackCollision_TailAttackSub2();	// 足の動きで弱ダメージ。
 	void CreateAttackCollision_TailAttackSub3();	// 足の動きで弱ダメージ。
