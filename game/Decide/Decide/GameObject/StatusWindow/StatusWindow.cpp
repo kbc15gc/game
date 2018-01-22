@@ -174,7 +174,8 @@ void StatusWindow::Execute()
 */
 void StatusWindow::OnEnable()
 {
-	_MoneyRender->SetParam("", "UI/coins.png", INSTANCE(Inventory)->GetPlayerMoney(), fbText::TextAnchorE::UpperRight);
+	Update();
+	_MoneyRender->LateUpdate();
 	for (int i = 0; i < _WindowCount; i++)
 	{
 		_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
