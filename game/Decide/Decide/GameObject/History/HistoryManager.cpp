@@ -156,6 +156,8 @@ void HistoryManager::Evolution()
 		if (_NowLocationCode == (int)_EvolutionLocation)
 		{
 			//_PlayerCamera->transform->SetParent(_Player->transform);
+			//‹ß‚­‚É‚¢‚éNPC‚ð‰Šú‰»B
+			_Player->SetNPC(nullptr);
 			_Player->transform->SetLocalPosition(LocationPosition[(int)_EvolutionLocation]);
 			_PlayerCamera->LookAtTarget();
 			//_PlayerCamera->transform->SetParent(nullptr);

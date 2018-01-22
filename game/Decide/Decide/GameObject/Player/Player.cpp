@@ -1218,7 +1218,8 @@ void Player::Re_SetEquipment() {
 
 void Player::SetNPC(NPC * npc)
 {
-	if (!_NearNPC)
+	//ÇªÇÃÇ‹Ç‹ê›íË
+	if ((_NearNPC == nullptr) || (npc = nullptr))
 	{
 		_NearNPC = npc;
 	}
