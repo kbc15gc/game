@@ -3,6 +3,7 @@
 #include"_Effect\PostEffect\AntiAliasing.h"
 #include "_Effect\PostEffect\Bloom.h"
 #include"_Effect\PostEffect\DepthofField.h"
+#include"_Effect\PostEffect\SSAO.h"
 /** シャドウマップクラス. */
 #include"_Effect\PreRender\ShadowMap.h"
 #include"_Effect\PreRender\EnvironmentMap.h"
@@ -89,11 +90,27 @@ public:
 	}
 
 	/**
+	* 深度書き込み用レンダリングターゲットの取得.
+	*/
+	RenderTarget* GetDepthRT()
+	{
+		return &_DepthRT;
+	}
+
+	/**
 	* 被写界深度クラスの取得.
 	*/
 	DepthofField& GetDepthofField()
 	{
 		return _DepthofField;
+	}
+
+	/**
+	* SSAOクラスを取得.
+	*/
+	SSAO& GetSSAO()
+	{
+		return _SSAO;
 	}
 
 	/**
@@ -135,11 +152,15 @@ private:
 	/** 現在使用されているメインレンダーターゲット. */
 	unsigned char CurrentMainRT_ = 0;
 
+	/** 深度書き込み用レンダリングターゲット. */
+	RenderTarget _DepthRT;
+
 	static SceneManager* _Instance;
 
 	AntiAliasing _AntiAliasing;
 	DepthofField _DepthofField;
 	Bloom _Bloom;
+	SSAO _SSAO;
 	ShadowMap  _ShadowMap;
 
 	/** 環境マップ. */

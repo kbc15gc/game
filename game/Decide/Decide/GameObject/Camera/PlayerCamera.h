@@ -80,6 +80,10 @@ private:
 	//カメラを移動させる処理。
 	void _Move()override;
 
+	/**
+	* 追尾カメラ.
+	*/
+	void _Tracking();
 	
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
@@ -114,4 +118,8 @@ private:
 	bool _Reset = false;
 	float _Timer = 0.0f;
 	Vector3 tmp = Vector3::zero;
+
+	Vector3 _PurposePos = Vector3::zero;
+	Vector3 _PurposeTarget = Vector3::zero;
+
 };

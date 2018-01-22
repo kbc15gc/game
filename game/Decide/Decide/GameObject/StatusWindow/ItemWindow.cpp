@@ -111,6 +111,28 @@ void ItemWindow::Init(Item::ItemCodeE code)
 	}
 }
 
+/**
+* –³Œø‰».
+*/
+void ItemWindow::OnDisable()
+{
+	if (_EIconImage)
+	{
+		_EIconImage->SetActive(false, true);
+	}
+	if (_Dialog)
+	{
+		_Dialog->SetActive(false, true);
+	}
+	if (_Cursor)
+	{
+		_Cursor->SetActive(false, true);
+	}
+}
+
+/**
+* —LŒø‰».
+*/
 void ItemWindow::OnEnable()
 {
 	int itemCount = 0;
@@ -131,6 +153,13 @@ void ItemWindow::OnEnable()
 		_StartLoadCount = 0;
 		_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 		_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+	}
+
+	LateUpdate();
+
+	for (auto bar : _ParameterRenderList)
+	{
+		bar->LateUpdate();
 	}
 }
 

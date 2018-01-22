@@ -291,6 +291,9 @@
     <ClCompile Include="MeshColliderManager.cpp" />
     <ClCompile Include="_Data\Json\nkJsonData.cpp" />
     <ClCompile Include="_Object\_Component\_2D\BitmapFont.cpp" />
+    <ClCompile Include="_Effect\PostEffect\SSAO.cpp">
+      <Filter>Effect\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Inputs\InputManager.h">
@@ -573,6 +576,9 @@
     <ClInclude Include="_Data\Json\picojson.h" />
     <ClInclude Include="_Object\_Component\_2D\BitmapFont.h">
       <Filter>Object\Component\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="_Effect\PostEffect\SSAO.h">
+      <Filter>Effect\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

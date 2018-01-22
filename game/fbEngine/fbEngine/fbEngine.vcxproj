@@ -45,6 +45,7 @@
     <ClCompile Include="_Effect\PostEffect\AntiAliasing.cpp" />
     <ClCompile Include="_Effect\PostEffect\Bloom.cpp" />
     <ClCompile Include="_Effect\PostEffect\DepthofField.cpp" />
+    <ClCompile Include="_Effect\PostEffect\SSAO.cpp" />
     <ClCompile Include="_Effect\PreRender\EnvironmentMap.cpp" />
     <ClCompile Include="_Effect\PreRender\ShadowMap.cpp" />
     <ClCompile Include="_Inputs\InputManager.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="_Effect\PostEffect\AntiAliasing.h" />
     <ClInclude Include="_Effect\PostEffect\Bloom.h" />
     <ClInclude Include="_Effect\PostEffect\DepthofField.h" />
+    <ClInclude Include="_Effect\PostEffect\SSAO.h" />
     <ClInclude Include="_Effect\PreRender\EnvironmentMap.h" />
     <ClInclude Include="_Effect\PreRender\ShadowMap.h" />
     <ClInclude Include="_Include\CollisionInclude.h" />

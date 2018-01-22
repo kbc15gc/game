@@ -47,9 +47,6 @@ void DepthofField::Create()
 
 		Vector2 size = g_FrameSize;
 
-		//16bit。
-		_DepthRT.Create(size, D3DFMT_R16F);
-
 		_BlurForward.Create(size.x, size.y, D3DFMT_A16B16G16R16F);
 		_BlurForward.SetBlurPower(20.0f);
 		_BlurForward.SetUseWeights(GaussianBlur::Weight_8);
@@ -100,6 +97,8 @@ void DepthofField::Render()
 			_BlurBack.Render();
 		}
 
+		TEXTURE* DepthTextrue = INSTANCE(SceneManager)->GetDepthRT()->texture;
+
 		//手前ボケと奥ボケを合成。
 		{
 			INSTANCE(RenderTargetManager)->ReSetRT(0, &_CombineRenderTarget);
@@ -109,14 +108,14 @@ void DepthofField::Render()
 			_Effect->BeginPass(0);
 
 			_Effect->SetValue("g_DofParam", dofParam, sizeof(dofParam));
-			_Effect->SetTexture("g_Depth", _DepthRT.texture->pTexture);
+			_Effect->SetTexture("g_Depth", DepthTextrue->pTexture);
 			_Effect->SetTexture("g_BlurBack", _BlurBack.GetTexture()->pTexture);
 			_Effect->SetTexture("g_BlurForward", _BlurForward.GetTexture()->pTexture);
 
 			float texSize[] =
 			{
-				(float)_DepthRT.texture->Size.x,
-				(float)_DepthRT.texture->Size.y,
+				(float)DepthTextrue->Size.x,
+				(float)DepthTextrue->Size.y,
 			};
 
 			_Effect->SetValue("g_SceneTexSize", texSize, sizeof(texSize));
