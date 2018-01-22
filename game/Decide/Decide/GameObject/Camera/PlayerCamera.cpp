@@ -93,9 +93,6 @@ Vector3 PlayerCamera::_GetPlayerPos()
 */
 void PlayerCamera::_StandardBehavior()
 {
-	//ターゲットを追いかける。
-	_LookAtTarget();
-
 	//入力されたかどうか？
 	bool input = false;
 	//右回転
@@ -151,10 +148,19 @@ void PlayerCamera::_StandardBehavior()
 	//移動先ポジションを取得。
 	_DestinationPos = _ClosetRay();
 
+	//追尾カメラ.
+	//_Tracking();
+
+	_PurposePos = _DestinationPos;
+	_PurposeTarget = _GetPlayerPos();
+
 	//カメラを移動させる。
 	static float sp = 70.0f;
 	static float dp = 1.0f;
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime(),CAMERA_SPEED));
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _PurposePos, sp, dp, Time::DeltaTime(),CAMERA_SPEED));
+	//ターゲットを追いかける。
+	_LookAtTarget();
+
 	/*auto pos = transform->GetPosition();
 	pos.Lerp(_DestinationPos, 0.8f);
 	transform->SetPosition(pos);*/
@@ -162,12 +168,11 @@ void PlayerCamera::_StandardBehavior()
 
 void PlayerCamera::_LookAtTarget()
 {
-	auto trg = _GetPlayerPos();
 	//バネの伸び具合。
 	static float spring = 85.0f;
 	//バネの縮まる強さ。
 	static float damping = 20.0f;
-	auto next = _SpringChaseMove(_Camera->GetTarget(), trg, spring, damping, Time::DeltaTime(),CAMERA_SPEED);
+	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, Time::DeltaTime(),CAMERA_SPEED);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
 }
@@ -279,6 +284,46 @@ Vector3 PlayerCamera::_ClosetRay()
 void PlayerCamera::_Move()
 {
 	
+}
+
+/**
+* 追尾カメラ.
+*/
+void PlayerCamera::_Tracking()
+{
+	//注視点から視点までのベクトル
+	Vector3 toCameraPosXZ = _DestinationPos - _Camera->GetTarget();
+	//視点へのY方向の高さ.
+	float height = toCameraPosXZ.y;
+	//XZ平面にするので、Yは0にする.
+	toCameraPosXZ.y = 0.0f;
+	//XZ平面上での視点と注視点の距離を求める.
+	float toCameraPosXZLen = toCameraPosXZ.Length();
+	//正規化.
+	toCameraPosXZ.Normalize();
+
+	//新しい注視点をアクターの座標から決める.
+	Vector3 target = _GetPlayerPos();
+
+	//新しい注視点からカメラの始点へ向かうベクトルを求める.
+	Vector3 toNewCameraPos = _DestinationPos - target;
+	//XZ平面にするので、Yは0にする.
+	toNewCameraPos.y = 0.0f;
+	//正規化.
+	toNewCameraPos.Normalize();
+
+	//このウェイトの値は0.0～1.0の値をとる。1.0に近づくほど追尾が強くなる.
+	float weight = 0.7f;
+
+	toNewCameraPos = toNewCameraPos * weight + toCameraPosXZ * (1.0f - weight);
+	toNewCameraPos.Normalize();
+	toNewCameraPos.Scale(toCameraPosXZLen);
+	toNewCameraPos.y = height;
+
+	Vector3 pos = target + toNewCameraPos;
+
+	_PurposePos = pos;
+	_PurposeTarget = target;
 }
 
 void PlayerCamera::CameraReset()

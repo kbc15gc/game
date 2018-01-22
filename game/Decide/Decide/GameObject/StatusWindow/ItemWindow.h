@@ -76,6 +76,7 @@ public:
 		DEX,		//!< 器用度.
 		MAX			//!< 数.
 	};
+
 public:
 
 	/**
@@ -122,15 +123,7 @@ public:
 	/**
 	* 非アクティブ.
 	*/
-	void OnDisable()override
-	{
-		if (_EIconImage)
-			_EIconImage->SetActive(false, true);
-		if (_Dialog)
-			_Dialog->SetActive(false, true);
-		if (_Cursor)
-			_Cursor->SetActive(false, true);
-	}
+	void OnDisable()override;
 
 	/**
 	* アクティブ.

@@ -44,14 +44,6 @@ public:
 	*/
 	void Release();
 
-	/**
-	* 深度書き込み用レンダリングターゲットの取得.
-	*/
-	RenderTarget* GetDepthRenderTarget()
-	{
-		return &_DepthRT;
-	}
-
 	TEXTURE* GetBlurForward()
 	{
 		return _BlurForward.GetTexture();
@@ -105,9 +97,6 @@ private:
 
 	/** 有効フラグ. */
 	bool _isEnable = true;
-
-	/** 深度書き込み用レンダリングターゲット. */
-	RenderTarget _DepthRT;
 
 	Vertex* _Vertex = nullptr;
 
