@@ -28,7 +28,7 @@ void EnemyGolem::_StartSubClass() {
 	//_discoveryRange = 10.0f;
 
 	//歩行速度設定。
-	_walkSpeed = 1.5f;
+	_walkSpeed = 1.0f;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
