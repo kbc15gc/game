@@ -3,7 +3,7 @@
 #include "fbEngine\_Support\Time.h"
 #include "GameObject\SplitSpace.h"
 
-SplitSpace* Spawner::_splitSpace = nullptr;
+vector<SplitSpace*> Spawner::_splitSpace;
 
 // 発生装置。
 void Spawner::Create(GameObject* spawn, float wait, const Vector3& pos, const Quaternion& rot, const Vector3& scale, Transform* parent) {
@@ -45,9 +45,11 @@ bool Spawner::_ClosedUpdate() {
 
 			_spawnObject->ConnotePreUpdate();	// 初期化。
 
-			if (_splitSpace) {
-				// 生成したオブジェクトを空間に登録。
-				_splitSpace->AddObjectHitSpace(*_spawnObject);
+			if (_splitSpace.size() > 0) {
+				for (auto split : _splitSpace) {
+					// 生成したオブジェクトを空間に登録。
+					split->AddObjectHitSpace(*_spawnObject);
+				}
 			}
 
 

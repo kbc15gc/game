@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include "ContinentObject.h"
+#include "GameObject\SplitSpace.h"
 
 ContinentObject::ContinentObject(const char * name):
 	GameObject(name)
@@ -16,10 +17,15 @@ void ContinentObject::Awake()
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
 
 	_Model->SetAlpha(true, 0.9f);
-
 }
 
 void ContinentObject::Start() {
+	if (strcmp(GetName(), "MaouSiro.X") == 0) {
+		// 魔王城を空間分割。
+		int attr = static_cast<int>(fbCollisionAttributeE::ALL) & ~(Collision_ID::PLAYER) & ~(Collision_ID::SPACE) & ~(Collision_ID::ATTACK) & ~(Collision_ID::GROUND);
+		SplitSpace* split = static_cast<SplitSpace*>(INSTANCE(GameObjectManager)->FindObject("SplitSpace_MaouSiro"));
+		split->Split(_Model->GetModelData(), transform, 1, 10, 1, attr);
+	}
 
 	// Transformが更新されるのでここで追加。
 	unique_ptr<vector<RigidBody*>> rigidArray = GetComponents<RigidBody>();
@@ -50,6 +56,8 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	{
 		_Model->SetCullMode(D3DCULL::D3DCULL_NONE);
 	}
+
+
 	if (!coll)
 	{
 		//当たり判定追加。

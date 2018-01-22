@@ -256,10 +256,14 @@ public:
 	}
 
 	inline void RenderEnable() {
-		_Object->SetIsRender(true);
+		if (_Object) {
+			_Object->SetIsRender(true);
+		}
 	}
 	inline void RenderDisable() {
-		_Object->SetIsRender(false);
+		if (_Object) {
+			_Object->SetIsRender(false);
+		}
 	}
 
 	void SetEnable(const bool flg)override

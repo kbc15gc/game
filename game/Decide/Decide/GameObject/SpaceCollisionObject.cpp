@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "GameObject\SpaceCollisionObject.h"
 #include "fbEngine\_Object\_Component\_Physics\Collision.h"
+#include "SplitSpace.h"
 
-void SpaceCollisionObject::Create(const Vector3& pos, const Quaternion& rot, const Vector3& size, int id,Transform* parent,int attr,const Vector3& myNumber) {
+void SpaceCollisionObject::Create(const Vector3& pos, const Quaternion& rot, const Vector3& size, int id,Transform* parent,int attr,const Int3& myNumber) {
 	if (parent) {
 		transform->SetParent(parent);
 	}
@@ -77,7 +78,7 @@ void SpaceCollisionObject::RegistrationObject()
 
 void SpaceCollisionObject::AddObjectHitSpace(GameObject& object) {
 	Collision* coll = object.GetAttachCollision();
-	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), coll,_attribute)) {
+	if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), coll, _attribute)) {
 		// 衝突していたので追加。
 		_HitCollisions.push_back(coll->GetCollisionObj_shared());
 	}
@@ -91,6 +92,14 @@ void SpaceCollisionObject::_SetActives(bool flg) {
 
 			if (coll->gameObject) {
 				// ゲームオブジェクトがある。
+
+				if (strcmp(coll->gameObject->GetName(), "MaouSiro.X") == 0) {
+					// 魔王城は無視。
+
+					itr = _HitCollisions.erase(itr);
+					continue;
+				}
+
 				coll->gameObject->SetActive(flg);
 				if (flg) {
 					// コリジョンをアクティブ化。
@@ -133,14 +142,25 @@ void SpaceCollisionObject::EnableObjectsAdjacent() {
 
 void SpaceCollisionObject::DisableNotAdjacent(const SpaceCollisionObject* Obj) {
 	if (Obj) {
+		Int3 move = Obj->GetMyNumber() - GetMyNumber();	// この空間から渡された空間までの移動量を算出。
 		if (!IsAdjacent(Obj->GetMyNumber())) {
 			// この空間は隣接していない。
 			DisableObjects();
 		}
 		for (auto Adjacent : _adjacentSpaceObjects) {
+			// この空間と隣接する空間から新しい空間とも隣接していない空間を探索。
 			if (!Adjacent->IsAdjacent(Obj->GetMyNumber())) {
 				// この空間は隣接していない。
 				Adjacent->DisableObjects();
+
+				// 二つの空間にまたがるオブジェクトを非アクティブにした場合を考えて、アクティブ化した空間をもう一度探索できるように設定。
+				Int3 work = Adjacent->GetMyNumber() + move;
+				if (_splitSpace) {
+					SpaceCollisionObject* space = _splitSpace->GetSpaceObject(work);
+					if (space) {
+						space->SetIsActive(false);
+					}
+				}
 			}
 		}
 	}

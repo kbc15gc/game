@@ -14,6 +14,7 @@ namespace
 	};
 }
 
+class SplitSpace;
 class HistoryMenu;
 class HistoryBook;
 class VillageName;
@@ -23,6 +24,7 @@ class GameScene : public Scene
 public:
 	enum class BGM
 	{
+		NONE = -1,
 		BOSS1 = 0,
 		MATI1,
 		MATI2,
@@ -32,11 +34,32 @@ public:
 		MAOU3,
 		WORLD,
 		DEAD,
+		BOSS,
+		LASTBOSS,
 		NUM,
 	};
 	GameScene() {};
 	void Start()override;
 	void Update()override;
+
+	// ボス戦などでフィールドBGMを止めた後、もういちどフィールドBGMを再生するために使用。
+	void ResetBGMIndex() {
+		_BGM = BGM::NONE;
+	}
+
+	// ボス戦で流したいBGMを指定して再生する。
+	void PlayBossBGM(BGM bgm) {
+		if (bgm >= BGM::BOSS) {
+			_ChangeBGM(bgm);
+		}
+	}
+
+	// ボス戦などでフィールドBGMを止めたいときに使用。
+	void StopFieldBGM() {
+		if (_GameBGM) {
+			_GameBGM->Stop();
+		}
+	}
 private:
 	//チップを作成する
 	void _NewChip();
@@ -54,10 +77,15 @@ private:
 private:
 	SoundSource* _SoundBGM[static_cast<int>(BGM::NUM)];
 	SoundSource* _GameBGM;
-	BGM _BGM;
+	BGM _BGM = BGM::NONE;
 	Player* _Player;
 	HistoryMenu* _HistoryMenu = nullptr;
 	HistoryBook* _HistoryBook = nullptr;
 	VillageName* _VillageName = nullptr;
 	bool _IsEnding;
+
+	SplitSpace* _splitWorld = nullptr;
+	SplitSpace* _splitMaouzyou = nullptr;
+	bool _isMaouzyou = false;	// 魔王城にいるか。
+	bool _isFirstFrame = true;
 };

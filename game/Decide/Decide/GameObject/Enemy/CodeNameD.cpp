@@ -45,18 +45,23 @@ void BossD::_StartSubClass() {
 
 	//ƒ‚ƒfƒ‹‚Éƒ‰ƒCƒgÝ’èB
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
+
 	//UŒ‚ˆ—B
+	// ŽaŒ‚B
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(6.5f, static_cast<int>(AnimationBossD::Attack), 0.2f);
+	_singleAttack->Init(1.5f, static_cast<int>(AnimationBossD::Attack), 0.2f);
 
+	// R‚èB
 	_kick.reset(new EnemySingleAttack(this));
-	_kick->Init(6.5f, static_cast<int>(AnimationBossD::Kick), 0.2f);
+	_kick->Init(1.5f, static_cast<int>(AnimationBossD::Kick), 0.2f);
 
+	// Ža‚èã‚°B
 	_kiriage.reset(new EnemySingleAttack(this));
-	_kiriage->Init(6.5f, static_cast<int>(AnimationBossD::Kiriage), 0.2f);
+	_kiriage->Init(1.5f, static_cast<int>(AnimationBossD::Kiriage), 0.2f);
 
+	// ‰ñ“]Ža‚èB
 	_360Attack.reset(new EnemySingleAttack(this));
-	_360Attack->Init(6.5f, static_cast<int>(AnimationBossD::Attack360), 0.2f);
+	_360Attack->Init(1.5f, static_cast<int>(AnimationBossD::Attack360), 0.2f);
 
 	// ‰ŠúƒXƒe[ƒg‚ÉˆÚsB
 	// ¦Žb’èˆ—B
@@ -102,20 +107,21 @@ EnemyAttack* BossD::_AttackSelectSubClass() {
 		return _kick.get();
 	}
 }
+
 void BossD::AnimationEvent_Attack(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.5f), Quaternion::Identity, Vector3(2.5f, 5.0f, 2.5f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 5.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_Kick(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(2.5f, 3.0f, 3.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_Kiriage(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.5f), Quaternion::Identity, Vector3(3.0f, 5.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_360Attack(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(5.0f, 3.0f, 2.5f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(2.0f, 3.0f, 2.0f), 0.25f, transform);
 	attack->RemoveParent();
 }
 void BossD::_EndNowStateCallback(State EndStateType) {
@@ -219,12 +225,12 @@ void BossD::_BuildAnimationSubClass(vector<double>& datas) {
 void BossD::_ConfigAnimationEvent() {
 	//ŽaŒ‚
 	{
-		float eventFrame = 0.9f;
+		float eventFrame = 0.8f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Attack), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Attack));
 	}
 	//ƒLƒbƒN
 	{
-		float eventFrame = 0.9f;
+		float eventFrame = 0.6f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kick), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_Kick));
 	}
 	//Ža‚èã‚°
@@ -234,7 +240,7 @@ void BossD::_ConfigAnimationEvent() {
 	}
 	//‰ñ“]Ža‚è
 	{
-		float eventFrame = 0.9f;
+		float eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Attack360), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_360Attack));
 	}
 }

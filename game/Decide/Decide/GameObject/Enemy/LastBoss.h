@@ -1,6 +1,7 @@
 #pragma once
 #include "EnemyCharacter.h"
 #include "GameObject\Enemy\LaserBreath.h"
+#include "Scene\GameScene.h"
 
 class LastBossMagic;
 class SordShock;
@@ -13,7 +14,7 @@ class LastBoss :
 public:
 	enum class LastBossState { LastBossThrone = static_cast<int>(State::Death) + 1, LastBossMagician, LastBossHistory, LastBossDown };
 
-	enum class LastBossSoundIndex { Fire2 = static_cast<int>(EnemyCharacter::SoundIndex::Max),Fire3,Shot1, Shot2,Shot3};
+	enum class LastBossSoundIndex { Fire2 = static_cast<int>(EnemyCharacter::SoundIndex::Max),Fire3,Shot1, Shot2,Shot3/*,Battle1,Battle2*/};
 
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
@@ -72,6 +73,27 @@ public:
 
 	inline EnemySingleAttack*GetEncourageBuffAttack()const {
 		return _encourageBuffAttack.get();
+	}
+
+	// バトル終了。
+	void BattleEnd() {
+		if (_isStartBattle) {
+			static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->ResetBGMIndex();
+			_ChangeState(_initState);
+			_isStartBattle = false;
+		}
+	}
+
+	void SetActive(const bool act, const bool children = false)override
+	{
+		if (!act) {
+			BattleEnd();
+		}
+		EnemyCharacter::SetActive(act,children);
+	}
+
+	void SetIsStartBattle(bool flg) {
+		_isStartBattle = flg;
 	}
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -147,4 +169,8 @@ private:
 	SordShock* _sordAttackShot0 = nullptr;
 	SordShock* _sordAttackShot1 = nullptr;
 	SordShock* _sordAttackShot2 = nullptr;
+
+	bool _isStartBattle = false;
+
+	GameScene* _scene = nullptr;
 };

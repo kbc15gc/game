@@ -42,7 +42,7 @@ void BossGhost::CreateCollision2() {
 void BossGhost::LaserStartSingle()
 {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 20.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,120);
+	laser->Create(this, Vector3::zero, 18.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,120);
 	_singleLaser->BreathStart(laser);
 
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);
@@ -54,7 +54,7 @@ void BossGhost::LaserEndSingle() {
 
 void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 20.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
+	laser->Create(this, Vector3::zero, 18.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
 	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathStart(laser);
 
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);
@@ -90,7 +90,7 @@ void BossGhost::_StartSubClass() {
 	//_discoveryRange = 30.0f;
 
 	// 歩行速度設定。
-	_walkSpeed = 3.0f;
+	_walkSpeed = 2.5f;
 
 	// 何回に一回くらい怯むか設定。
 	_damageMotionRandNum = 7;
@@ -131,7 +131,7 @@ void BossGhost::_StartSubClass() {
 	// ※暫定処理。
 	_initState = State::Wait;
 	_ChangeState(_initState);
-	static_cast<EnemyWaitState*>(_NowState)->SetInterval(5.0f);
+	static_cast<EnemyWaitState*>(_NowState)->CustamParameter(EnemyCharacter::AnimationType::Idle,0.2f,2,0,1.5f)/*->SetInterval(5.0f)*/;
 }
 
 void BossGhost::_UpdateSubClass() {
@@ -225,7 +225,12 @@ void BossGhost::_EndNowStateCallback(State EndStateType) {
 		}
 		else {
 			_ChangeState(State::Wait);
-			static_cast<EnemyWaitState*>(_NowState)->SetInterval(3.0f);
+			if (_pairGhost) {
+				static_cast<EnemyWaitState*>(_NowState)->CustamParameter(EnemyCharacter::AnimationType::Idle, 0.2f, 4, 0, 1.5f);
+			}
+			else {
+				static_cast<EnemyWaitState*>(_NowState)->CustamParameter(EnemyCharacter::AnimationType::Idle, 0.2f, 2, 0, 1.5f);
+			}
 		}
 	}
 	else if (EndStateType == State::Wait) {
@@ -249,7 +254,7 @@ void BossGhost::_ConfigCollision() {
 		_collisionInfo.radius = 0.3f;
 		_collisionInfo.height = 0.5f;
 		_collisionInfo.offset = Vector3(0.0f, 0.0f, 0.0f);
-		_collisionInfo.id = Collision_ID::BOSS;
+		_collisionInfo.id = Collision_ID::ENEMY;
 
 		// 重力設定。
 		_Gravity = 0.0f;
