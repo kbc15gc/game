@@ -2,6 +2,7 @@
 
 #include "fbEngine\fbstdafx.h"
 #include "GameObject\Component\ObjectSpawn.h"
+#include "SupportData.h"
 
 class SpaceCollisionObject;
 
@@ -9,12 +10,19 @@ class SpaceCollisionObject;
 class SplitSpace :public GameObject{
 public:
 	SplitSpace(const char* name):GameObject(name) {
-		Spawner::_splitSpace = this;
+		Spawner::_splitSpace.push_back(this);
 	};
 	~SplitSpace() {
 		_ReleaseSpaceCollisions();
-		Spawner::_splitSpace = nullptr;
+		for (auto itr = Spawner::_splitSpace.begin(); itr != Spawner::_splitSpace.end();itr++) {
+			if ((*itr) == this) {
+				Spawner::_splitSpace.erase(itr);
+				break;
+			}
+		}
 	};
+
+	void OnDestroy()override;
 
 	void Awake()override;
 	void Update()override;
@@ -36,6 +44,29 @@ public:
 
 	// 各空間コリジョンに衝突しているオブジェクトを登録する。
 	void RegistrationObject();
+
+	// 指定した添え字の空間を取得。
+	SpaceCollisionObject* GetSpaceObject(Int3 num) {
+		if (num.x < _splitX && num.y < _splitY && num.z < _splitZ && num.x >= 0 && num.y >= 0 && num.z >= 0) {
+			return _SpaceCollisions[num.x][num.y][num.z];
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	// 全空間に登録されたオブジェクトを非アクティブ化する。
+	void DisableAll();
+
+	// 全空間に登録されたオブジェクトをアクティブ化する。
+	void EnableAll();
+
+	// ターゲットをロストさせる。
+	// ※この処理を呼ぶとターゲットがいる空間を見失うため、全空間から再探索が行われます。
+	void TargetLost() {
+		DisableAll();
+		_nowHitSpace = nullptr;
+	}
 private:
 	enum Space { Right = 0, Left, Up, Down, Front, Back, RightUp, RightDown,RightFront,RightBack, LeftUp, LeftDown,LeftFront,LeftBack, UpFront, UpBack, DownFront, DownBack, RightUpFront, RightDownFront, RightUpBack, RightDownBack, LeftUpFront, LeftDownFront,LeftUpBack, LeftDownBack, Max };
 
@@ -69,7 +100,7 @@ private:
 	Vector3 _unSplitSpaceSize;	// 分割前の空間サイズ。
 	Vector3 _splitSpaceSize;	// 分割後のボックス一つ当たりの空間サイズ。
 	vector<vector<vector<SpaceCollisionObject*>>> _SpaceCollisions;	// 分割したそれぞれの空間コリジョン。
-	Vector3 _AdjacentIndex[Space::Max];	// 各添え字に加算する値。
+	Int3 _AdjacentIndex[Space::Max];	// 各添え字に加算する値。
 	int _splitX = 1;	// 分割数(横)。
 	int _splitY = 1;	// 分割数(縦)。
 	int _splitZ = 1;	// 分割数(奥行)。

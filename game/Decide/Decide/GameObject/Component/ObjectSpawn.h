@@ -47,7 +47,7 @@ private:
 	float _timeCounter = 0.0f;	// カウンター。
 	bool _isRemoveComponent = false;	// このクラスのインスタンスを保持しているコンポーネントが削除されたか。
 public:
-	static SplitSpace* _splitSpace;	// 空間分割(復活したエネミーを登録するために保持)。
+	static vector<SplitSpace*> _splitSpace;	// 空間分割(復活したエネミーを登録するために保持)。
 };
 
 // このコンポーネントをアタッチすると指定した位置に指定したタイミングでゲームオブジェクトを発生させる。
@@ -115,6 +115,9 @@ public:
 		return static_cast<T*>(work);
 	}
 
+	Spawner* GetReSpawner() {
+		return _respawner;
+	}
 private:
 	// オブジェクト発生装置を生成する関数。
 	// テンプレート引数：	発生させたいオブジェクトのクラス名。

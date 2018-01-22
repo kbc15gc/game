@@ -336,6 +336,7 @@
     <ClInclude Include="Scene\LastBossTestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SupportData.h" />
     <ClInclude Include="_Debug\TestObject.h" />
   </ItemGroup>
   <ItemGroup>

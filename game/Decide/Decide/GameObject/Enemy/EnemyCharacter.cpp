@@ -68,11 +68,13 @@ void EnemyCharacter::Start() {
 
 	_MoveSpeed = Vector3::zero;	// 初期化。
 	
+	// 初期位置設定。
+	_InitPos = transform->GetPosition();
+	_InitRptation = transform->GetRotation();
+
 	// 継承先により変わる処理。
 	_StartSubClass();
 
-	// 初期位置設定。
-	_InitPos = transform->GetPosition();
 
 	// 継承先で初期位置が設定された可能性があるため更新。
 	//_MyComponent.CharacterController->Execute();
@@ -107,7 +109,38 @@ void EnemyCharacter::Update() {
 	_UpdateSubClass();
 
 	// エネミーのエフェクト更新。
-	EffectUpdate();
+	//EffectUpdate();
+	{
+		bool isBuffEffect = false;
+		bool isDeBuffEffect = false;
+		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+
+			if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+			{
+				isBuffEffect = true;
+			}
+			else
+			{
+				_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
+			}
+			if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+			{
+				isDeBuffEffect = true;
+			}
+			else
+			{
+				_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
+			}
+		}
+		_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+		if (_Bigflag == true)
+		{
+			_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
+		}
+		else {
+			_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+		}
+	}
 
 	if (_NowState) {
 		// 現在のステートを更新。
@@ -130,8 +163,8 @@ void EnemyCharacter::Update() {
 	_MyComponent.CharacterController->SetMoveSpeed(_MoveSpeed);
 	// キャラクターコントローラで実際にキャラクターを制御。
 	_MyComponent.CharacterController->Execute();
-	// 移動した結果、指定した属性のものが衝突していれば押し出す。
-	_MyComponent.CharacterExtrude->Extrude(_MyComponent.CharacterController->GetmoveSpeedExcute());
+	//// 移動した結果、指定した属性のものが衝突していれば押し出す。
+	//_MyComponent.CharacterExtrude->Extrude(_MyComponent.CharacterController->GetmoveSpeedExcute());
 }
 
 void EnemyCharacter::LateUpdate() {
@@ -157,7 +190,27 @@ void EnemyCharacter::LateUpdate() {
 		SetIsStopUpdate(false);
 	}
 
-	_BarRenderUpdate();
+	// バーの描画状態更新。
+	//_BarRenderUpdate();
+	{
+		if (_MyComponent.HPBar) {
+			float distance = 225.0f;
+			if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
+				// イベント中じゃない。
+				// かつプレイヤーとの距離が一定範囲内。
+
+				// アクティブ化。
+				_MyComponent.HPBar->RenderEnable();
+				_MyComponent.BuffDebuffICon->RenderEnable();
+			}
+			else {
+				_MyComponent.HPBar->RenderDisable();
+				_MyComponent.BuffDebuffICon->RenderDisable();
+
+			}
+		}
+
+	}
 
 	// 継承先により変わる処理。
 	_LateUpdateSubClass();
@@ -174,8 +227,8 @@ void EnemyCharacter::LateUpdate() {
 
 
 bool EnemyCharacter::IsOutsideDiscovery() {
-	Vector3 work = _InitPos - transform->GetPosition();
-	work.y = 0.0f;
+	Vector3 work = _InitPos - _Player->transform->GetPosition();
+	//work.y = 0.0f;
 	float NowRange = work.Length();
 	if (NowRange > _discoveryRange) {
 		// 追跡範囲外に出た。
@@ -227,22 +280,22 @@ void EnemyCharacter::ConfigDamageReaction(bool isMotion, unsigned short probabil
 
 
 void EnemyCharacter::_BarRenderUpdate() {
-	if (_MyComponent.HPBar) {
-		float distance = 225.0f;
-		if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
-			// イベント中じゃない。
-			// かつプレイヤーとの距離が一定範囲内。
+	//if (_MyComponent.HPBar) {
+	//	float distance = 225.0f;
+	//	if (!INSTANCE(EventManager)->IsEvent() && _playerDist <= distance) {
+	//		// イベント中じゃない。
+	//		// かつプレイヤーとの距離が一定範囲内。
 
-			// アクティブ化。
-			_MyComponent.HPBar->RenderEnable();
-			_MyComponent.BuffDebuffICon->RenderEnable();
-		}
-		else {
-			_MyComponent.HPBar->RenderDisable();
-			_MyComponent.BuffDebuffICon->RenderDisable();
+	//		// アクティブ化。
+	//		_MyComponent.HPBar->RenderEnable();
+	//		_MyComponent.BuffDebuffICon->RenderEnable();
+	//	}
+	//	else {
+	//		_MyComponent.HPBar->RenderDisable();
+	//		_MyComponent.BuffDebuffICon->RenderDisable();
 
-		}
-	}
+	//	}
+	//}
 }
 
 void EnemyCharacter::_BuildMyComponents() {
@@ -561,20 +614,20 @@ void EnemyCharacter::_BuildSoundTable() {
 	//_SoundData = vector<unique_ptr<SoundData>>(static_cast<int>(SoundIndex::Max));
 
 	// 攻撃音登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Buoon, "Buoonn.wav",1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackGolem, "EnemyGolemAttack01.wav", 1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackSord, "BAttack.wav", 0.3f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Fire, "Fire3.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Damage, "Damage_01.wav", 1.0f,true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Buoon, "Buoonn.wav",1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackGolem, "EnemyGolemAttack01.wav", 1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::AttackSord, "BAttack.wav", 0.3f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Fire, "Fire3.wav", 1.0f, true);
 
 	// 死んだ時の声登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav",1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Death, "EnemyGolemDie.wav",1.0f, true);
 
 	// ダメージを受けた時の声登録。
-	_ConfigSoundData(EnemyCharacter::SoundIndex::DamageGolem, "EnemyGolemDamage.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::DamageGolem, "EnemyGolemDamage.wav", 1.0f, true);
 
-	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusUp, "Player/statusup.wav", 1.0f);
-	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusDown, "Player/statusdown.wav", 1.0f);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusUp, "Player/statusup.wav", 1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusDown, "Player/statusdown.wav", 1.0f, true);
 
 }
 
@@ -587,7 +640,7 @@ void EnemyCharacter::_ConfigSoundData(SoundIndex idx, char* filePath, float volu
 	_SoundData[static_cast<int>(idx)].reset(_CreateSoundData(filePath, volume, is3D, isLoop));
 }
 
-EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool isLoop, bool is3D) {
+EnemyCharacter::SoundData* EnemyCharacter::_CreateSoundData(char* filePath, float volume, bool is3D,bool isLoop) {
 	EnemyCharacter::SoundData* data = new EnemyCharacter::SoundData;
 	strcpy(data->Path, filePath);
 	data->volume = volume;
@@ -680,35 +733,35 @@ float EnemyCharacter::GetNowSelectAttackRange()const {
 * エフェクト用更新.
 */
 void EnemyCharacter::EffectUpdate() {
-	bool isBuffEffect = false;
-	bool isDeBuffEffect = false;
-	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+	//bool isBuffEffect = false;
+	//bool isDeBuffEffect = false;
+	//for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
 
-		if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
-		{
-			isBuffEffect = true;
-		}
-		else
-		{
-			_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
-		}
-		if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
-		{
-			isDeBuffEffect = true;
-		}
-		else
-		{
-			_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
-		}
-	}
-	_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
-	if (_Bigflag == true)
-	{
-		_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
-	}
-	else{
-		_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
-	}
+	//	if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+	//	{
+	//		isBuffEffect = true;
+	//	}
+	//	else
+	//	{
+	//		_MyComponent.BuffDebuffICon->DeleteBuffIcon((CharacterParameter::Param)idx);
+	//	}
+	//	if (_MyComponent.Parameter->GetDebuffParam_Percentage((CharacterParameter::Param)idx) > 0)
+	//	{
+	//		isDeBuffEffect = true;
+	//	}
+	//	else
+	//	{
+	//		_MyComponent.BuffDebuffICon->DeleteDebuffIcon((CharacterParameter::Param)idx);
+	//	}
+	//}
+	//_MyComponent.ParticleEffect->SetBuffEffectFlag(isBuffEffect);
+	//if (_Bigflag == true)
+	//{
+	//	_MyComponent.ParticleEffect->SetBigMonsterDebuffEffectFlag(isDeBuffEffect);
+	//}
+	//else{
+	//	_MyComponent.ParticleEffect->SetDebuffEffectFlag(isDeBuffEffect);
+	//}
 	
 }
 

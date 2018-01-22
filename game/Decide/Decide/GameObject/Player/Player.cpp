@@ -66,6 +66,9 @@ Player::~Player()
 
 void Player::Awake()
 {
+	
+	_NearNPCLen = FLT_MAX;
+
 	//モデル
 	_Model = AddComponent<SkinModel>();
 	//アニメーション
@@ -87,7 +90,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.7f;
+	_Radius = 0.6f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 
@@ -122,10 +125,13 @@ void Player::Awake()
 	_CharacterController->AttributeXZ_AllOff();	// 全衝突無視。
 	_CharacterController->AddAttributeXZ(Collision_ID::GROUND);		// 地面コリジョンを追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
+	_CharacterController->SubAttributeY(Collision_ID::BOSS);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
@@ -247,6 +253,26 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	
 	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+
+	if (IS_CONTINUE)
+	{
+		JsonData PlayerData;
+		if (PlayerData.Load("Player_Pos"))
+		{
+			picojson::object player = PlayerData.GetDataObject("Player");
+			_RespawnPos.x = player["RespawnPos_X"].get<double>();
+			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
+			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+		}
+	}
+	else
+	{
+		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+	}
+
+	//ポジション
+	transform->SetLocalPosition(_RespawnPos);
+
 }
 
 void Player::Start()
@@ -277,24 +303,24 @@ void Player::Start()
 	//初期ステート設定
 	ChangeState(State::Idol);
 
-	if (IS_CONTINUE)
-	{
-		JsonData PlayerData;
-		if (PlayerData.Load("Player_Pos"))
-		{
-			picojson::object player = PlayerData.GetDataObject("Player");
-			_RespawnPos.x = player["RespawnPos_X"].get<double>();
-			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
-			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
-		}
-	}
-	else
-	{
-		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
-	}
+	//if (IS_CONTINUE)
+	//{
+	//	JsonData PlayerData;
+	//	if (PlayerData.Load("Player_Pos"))
+	//	{
+	//		picojson::object player = PlayerData.GetDataObject("Player");
+	//		_RespawnPos.x = player["RespawnPos_X"].get<double>();
+	//		_RespawnPos.y = player["RespawnPos_Y"].get<double>();
+	//		_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+	//	}
+	//}
+	//else
+	//{
+	//	SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+	//}
 
-	//ポジション
-	transform->SetLocalPosition(_RespawnPos);
+	////ポジション
+	//transform->SetLocalPosition(_RespawnPos);
 	//移動速度初期化
 	_MoveSpeed = Vector3::zero;
 	//攻撃アニメーションステートの初期化
@@ -363,6 +389,10 @@ void Player::Update()
 
 	//NPCと話す
 	Speak();
+
+	//char test[256];
+	//sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test);
 }
 
 void Player::ChangeState(State nextstate)
@@ -788,50 +818,50 @@ void Player::_LevelUP()
 
 void Player::Speak()
 {
-	//NPCを取得
-	vector<vector<NPC*>> npc;
-	npc = INSTANCE(HistoryManager)->GetNPCList();
 	//ショップイベントフラグ取得。
 	bool eventflag = INSTANCE(EventManager)->IsEvent();
-	//NPC
-	float len = FLT_MAX;
-	static NPC* nearnpc = nullptr;
-
-	//一番近い村人を探す。
-	for (auto village : npc)
-	{
-		//サイズが0ならコンティニュー
-		if (village.size() == 0)
-		{
-			continue;
-		}
-		//NPC
-		for (auto npc : village)
-		{
-			if (npc == nullptr || !npc->GetActive())
-			{
-				continue;
-			}
-			//NPCからプレイヤーのベクトル
-			Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-			//現在一番近いモノより近いので。
-			if (len > dir.Length())
-			{
-				//他に近い人がいるので、前の人とはばいばい。
-				if (nearnpc)
-				{
-					nearnpc->SetIsSpeak(false);
-				}
-				len = dir.Length();
-				nearnpc = npc;
-			}
-		}
-	}
+	////NPCを取得
+	//vector<vector<NPC*>> npc;
+	//npc = INSTANCE(HistoryManager)->GetNPCList();
+	////NPC
+	//float len = FLT_MAX;
+	//
+	////一番近い村人を探す。
+	//for (auto village : npc)
+	//{
+	//	//サイズが0ならコンティニュー
+	//	if (village.size() == 0)
+	//	{
+	//		continue;
+	//	}
+	//	//NPC
+	//	for (auto npc : village)
+	//	{
+	//		if (npc == nullptr || !npc->GetActive())
+	//		{
+	//			continue;
+	//		}
+	//		//NPCからプレイヤーのベクトル
+	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
+	//		//現在一番近いモノより近いので。
+	//		if (len > dir.Length())
+	//		{
+	//			//他に近い人がいるので、前の人とはばいばい。
+	//			if (nearnpc)
+	//			{
+	//				nearnpc->SetIsSpeak(false);
+	//			}
+	//			len = dir.Length();
+	//			nearnpc = npc;
+	//		}
+	//	}
+	//}
 	//近くのnpcがいる場合
-	if (nearnpc)
+	if (_NearNPC)
 	{
+		_NearNPCLen = (_NearNPC->transform->GetPosition() - transform->GetPosition()).Length();
 		//会話可能
-		if (len <= 3.0f && !eventflag)
+		if (_NearNPCLen <= 3.0f && !eventflag)
 		{
 			//地面についていれば話しかけれる
 			//ショップイベントでないとき。
@@ -841,7 +871,7 @@ void Player::Speak()
 				_HPBar->RenderDisable();
 				//_MPBar->RenderDisable();
 				//話すフラグセット
-				nearnpc->SetIsSpeak(true);
+				_NearNPC->SetIsSpeak(true);
 				//プレイヤー話すフラグ設定
 				//ジャンプしなくなる
 				_NoJump = true;
@@ -850,7 +880,7 @@ void Player::Speak()
 		else
 		{
 			//話すNPCがいないので
-			nearnpc->SetIsSpeak(false);
+			_NearNPC->SetIsSpeak(false);
 			//話し終わると
 			if (_NoJump)
 			{
@@ -862,6 +892,11 @@ void Player::Speak()
 				}
 			}
 		}
+	}
+	//NPCなし
+	else
+	{
+		_NearNPCLen = FLT_MAX;
 	}
 
 	//村
@@ -1185,6 +1220,20 @@ void Player::Re_SetEquipment() {
 	}
 }
 
+
+void Player::SetNPC(NPC * npc)
+{
+	//そのまま設定
+	if ((_NearNPC == nullptr) || (npc == nullptr))
+	{
+		_NearNPC = npc;
+	}
+	else
+	{
+		_NearNPC->SetIsSpeak(false);
+		_NearNPC = npc;
+	}
+}
 
 void Player::AnimationEventControl()
 {

@@ -121,6 +121,12 @@ void NPC::_FitGround()
 
 void NPC::_Speak()
 {
+	//プレイヤーとの距離を計算。
+	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
+	if (_Player->GetNearNPCLen() > len)
+	{
+		_Player->SetNPC(this);
+	}
 	//会話可能な距離か？
 	if (_IsSpeak)
 	{

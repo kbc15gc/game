@@ -10,7 +10,7 @@ void BreathObject::LateUpdate() {
 			_enemyObject = nullptr;
 		}
 		else {
-			if (_enemyObject->GetIsStopUpdate()) {
+			if (_enemyObject->GetIsStopUpdate() || !_enemyObject->GetActive()) {
 				BreathStop();
 			}
 			else {

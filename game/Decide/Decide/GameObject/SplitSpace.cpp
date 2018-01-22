@@ -9,42 +9,51 @@ const int SplitSpace::_defaultAttr = static_cast<int>(fbCollisionAttributeE::ALL
 
 void SplitSpace::Awake() {
 	// 隣接要素を列挙。
-	_AdjacentIndex[Space::Up] = Vector3::up;
-	_AdjacentIndex[Space::Down] = Vector3::down;
-	_AdjacentIndex[Space::Right] = Vector3::right;
-	_AdjacentIndex[Space::Left] = Vector3::left;
-	_AdjacentIndex[Space::Front] = Vector3::front;
-	_AdjacentIndex[Space::Back] = Vector3::back;
+	_AdjacentIndex[Space::Up] = Int3(0, 1, 0);
+	_AdjacentIndex[Space::Down] = Int3(0, -1, 0);
+	_AdjacentIndex[Space::Right] = Int3(1, 0, 0);
+	_AdjacentIndex[Space::Left] = Int3(-1, 0, 0);
+	_AdjacentIndex[Space::Front] = Int3(0, 0, 1);
+	_AdjacentIndex[Space::Back] = Int3(0, 0, -1);
 
-	_AdjacentIndex[Space::RightUp] = Vector3::up + Vector3::right;
-	_AdjacentIndex[Space::RightDown] = Vector3::down + Vector3::right;
-	_AdjacentIndex[Space::RightFront] = Vector3::right + Vector3::front;
-	_AdjacentIndex[Space::RightBack] = Vector3::right + Vector3::back;
+	_AdjacentIndex[Space::RightUp] = _AdjacentIndex[Space::Up] + _AdjacentIndex[Space::Right];
+	_AdjacentIndex[Space::RightDown] = _AdjacentIndex[Space::Down] + _AdjacentIndex[Space::Right];
+	_AdjacentIndex[Space::RightFront] = _AdjacentIndex[Space::Right] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::RightBack] = _AdjacentIndex[Space::Right] + _AdjacentIndex[Space::Back];
 
-	_AdjacentIndex[Space::LeftUp] = Vector3::up + Vector3::left;
-	_AdjacentIndex[Space::LeftDown] = Vector3::down + Vector3::left;
-	_AdjacentIndex[Space::LeftFront] = Vector3::left + Vector3::front;
-	_AdjacentIndex[Space::LeftBack] = Vector3::left + Vector3::back;
+	_AdjacentIndex[Space::LeftUp] = _AdjacentIndex[Space::Up] + _AdjacentIndex[Space::Left];
+	_AdjacentIndex[Space::LeftDown] = _AdjacentIndex[Space::Down] + _AdjacentIndex[Space::Left];
+	_AdjacentIndex[Space::LeftFront] = _AdjacentIndex[Space::Left] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::LeftBack] = _AdjacentIndex[Space::Left] + _AdjacentIndex[Space::Back];
 
-	_AdjacentIndex[Space::UpFront] = Vector3::up + Vector3::front;
-	_AdjacentIndex[Space::UpBack] = Vector3::up + Vector3::back;
-	_AdjacentIndex[Space::DownFront] = Vector3::down + Vector3::front;
-	_AdjacentIndex[Space::DownBack] = Vector3::down + Vector3::back;
+	_AdjacentIndex[Space::UpFront] = _AdjacentIndex[Space::Up] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::UpBack] = _AdjacentIndex[Space::Up] + _AdjacentIndex[Space::Back];
+	_AdjacentIndex[Space::DownFront] = _AdjacentIndex[Space::Down] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::DownBack] = _AdjacentIndex[Space::Down] + _AdjacentIndex[Space::Back];
 
-	_AdjacentIndex[Space::RightUpFront] = _AdjacentIndex[Space::RightUp] + Vector3::front;
-	_AdjacentIndex[Space::RightDownFront] = _AdjacentIndex[Space::RightDown] + Vector3::front;
-	_AdjacentIndex[Space::LeftUpFront] = _AdjacentIndex[Space::LeftUp] + Vector3::front;
-	_AdjacentIndex[Space::LeftDownFront] = _AdjacentIndex[Space::LeftDown] + Vector3::front;
-	_AdjacentIndex[Space::RightUpBack] = _AdjacentIndex[Space::RightUp] + Vector3::back;
-	_AdjacentIndex[Space::RightDownBack] = _AdjacentIndex[Space::RightDown] + Vector3::back;
-	_AdjacentIndex[Space::LeftUpBack] = _AdjacentIndex[Space::LeftUp] + Vector3::back;
-	_AdjacentIndex[Space::LeftDownBack] = _AdjacentIndex[Space::LeftDown] + Vector3::back;
+	_AdjacentIndex[Space::RightUpFront] = _AdjacentIndex[Space::RightUp] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::RightDownFront] = _AdjacentIndex[Space::RightDown] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::LeftUpFront] = _AdjacentIndex[Space::LeftUp] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::LeftDownFront] = _AdjacentIndex[Space::LeftDown] + _AdjacentIndex[Space::Front];
+	_AdjacentIndex[Space::RightUpBack] = _AdjacentIndex[Space::RightUp] + _AdjacentIndex[Space::Back];
+	_AdjacentIndex[Space::RightDownBack] = _AdjacentIndex[Space::RightDown] + _AdjacentIndex[Space::Back];
+	_AdjacentIndex[Space::LeftUpBack] = _AdjacentIndex[Space::LeftUp] + _AdjacentIndex[Space::Back];
+	_AdjacentIndex[Space::LeftDownBack] = _AdjacentIndex[Space::LeftDown] + _AdjacentIndex[Space::Back];
+}
+
+void SplitSpace::OnDestroy() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				z->SetSplitSpace(nullptr);
+			}
+		}
+	}
 }
 
 void SplitSpace::Update() {
 	if (_nowHitSpace == nullptr) {
 		// プレイヤーがどの空間にもあたっていない。
-
 		// すべての空間から探索。
 		ChangeActivateSpace(IsHitPlayerToAll());
 	}
@@ -206,7 +215,8 @@ const Vector3& SplitSpace::CreateSpaceBox(const SkinModelData& data, const Trans
 	}
 
 	// 求めた最小位置と最大位置からボックスのサイズを定義。
-	size = Vector3(maxX - minX,maxY - minY,maxZ - minZ);
+	// 高さは余裕を持たせるため拡張。
+	size = Vector3(maxX - minX,maxY - minY + 20.0f,maxZ - minZ);
 
 	return size;
 }
@@ -234,7 +244,8 @@ void SplitSpace::CreateSplitBox(const Vector3& size, Transform* transform, int x
 				pos.y = (pos.y - (size.y * 0.5f)) + (idxY * _splitSpaceSize.y) + (_splitSpaceSize.y * 0.5f) + offset.y;
 				pos.z = (pos.z - (size.z * 0.5f)) + (idxZ * _splitSpaceSize.z) + (_splitSpaceSize.z * 0.5f) + offset.z;
 
-				box->Create(pos, Quaternion::Identity, _splitSpaceSize, Collision_ID::SPACE, transform, attr,Vector3(static_cast<float>(idxX), static_cast<float>(idxY), static_cast<float>(idxZ)));
+				box->SetSplitSpace(this);
+				box->Create(pos, Quaternion::Identity, _splitSpaceSize, Collision_ID::SPACE, transform, attr,Int3(idxX, idxY, idxZ));
 				_SpaceCollisions[idxX][idxY][idxZ] = box;
 			}
 		}
@@ -273,6 +284,27 @@ void SplitSpace::AddObjectHitSpace(const GameObject& object) {
 	}
 }
 
+void SplitSpace::DisableAll() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				z->DisableObjects();
+			}
+		}
+	}
+}
+
+void SplitSpace::EnableAll() {
+	for (auto& x : _SpaceCollisions) {
+		for (auto& y : x) {
+			for (auto z : y) {
+				z->EnableObjects();
+			}
+		}
+	}
+}
+
+
 void SplitSpace::RegistrationObject() {
 	for (auto& x : _SpaceCollisions) {
 		for (auto& y : x) {
@@ -302,7 +334,7 @@ void SplitSpace::ChangeActivateSpace(SpaceCollisionObject* Obj) {
 		if (_nowHitSpace) {
 			// 以前のアクティブ空間の中で、新しい衝突空間と隣接していない空間を非アクティブ化。
 			_nowHitSpace->DisableNotAdjacent(Obj);
-		}
+		}	
 
 		// 新しい衝突空間と隣接空間に属するオブジェクトをアクティブ化。
 		Obj->EhableThisAndAdjacent();

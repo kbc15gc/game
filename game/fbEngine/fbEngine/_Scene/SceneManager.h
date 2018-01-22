@@ -134,6 +134,10 @@ public:
 		return _Bloom;
 	}
 
+	// 現在のシーンを取得。
+	Scene* GetNowScene() {
+		return _Scenes[_NowScene];
+	}
 private:
 	//シーン切り替え。
 	void _ChangeScene();
