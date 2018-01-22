@@ -93,11 +93,8 @@ void Time::_CalcFPS(const double& delta)
 
 const double Time::_GetDeltaTime()
 {
-	if (_DeltaTime > (1.0 / 30.0))
-	{
 		return (1.0 / 30.0);
-	}
-	return _DeltaTime;
+	//return _DeltaTime;
 }
 
 const float& Time::_GetFPS()
