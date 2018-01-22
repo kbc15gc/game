@@ -191,6 +191,8 @@ void GameScene::Start()
 	}
 	InitBGM(BGM::WORLD, "Asset/Sound/Battle_BGM.wav", 0.2f);
 	InitBGM(BGM::BOSS1, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::BOSS2, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::BOSS3, "Asset/Sound/boss1.wav", 0.2f);
 	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
