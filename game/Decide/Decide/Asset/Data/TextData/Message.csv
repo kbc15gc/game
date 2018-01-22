@@ -100,3 +100,5 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 98,魔王城への道,信仰の国の神殿に魔王はいます。,-1,-1,-1,Asset/Sound/NPC/NPC/npc3.wav
 99,魔王城への道,魔王は信仰の国を占拠しました。,-1,-1,-1,Asset/Sound/NPC/NPC/npc5.wav
 100,魔王城への道,信仰の国は世界の中央にあります。,-1,-1,-1,Asset/Sound/NPC/NPC/npc6.wav
+101,魔王の城へ……,魔王を倒してください。,-1,1,13,Asset/Sound/NPC/NPC/n19.wav
+102,魔王の城へ……,魔王を倒してください。,-1,1,14,Asset/Sound/NPC/NPC/n19.wav
