@@ -40,6 +40,8 @@ public:
 	void AnimationEvent_Kobushi3();
 	void AnimationEvent_Kobushi4();
 
+	void AnimationEvent_ZutukiSpeed();
+	void AnimationEvent_ZutukiSpeed2();
 	void AnimationEvent_Zutuki();
 protected:
 	void _EndNowStateCallback(State EndStateType)override;

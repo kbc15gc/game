@@ -110,7 +110,7 @@ void BossDrarian::AnimationEvent_Kamituki() {
 	attack->RemoveParent();
 
 	// çUåÇâπçƒê∂ÅB
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub1() 
@@ -232,7 +232,7 @@ void BossDrarian::_ConfigCollision() {
 			RigidBodyInfo info;
 			info.coll = AddComponent<BoxCollider>();
 			static_cast<BoxCollider*>(info.coll)->Create(Vector3(3.0f, 3.0f,1.0f));
-			info.id = Collision_ID::BOSS;
+			info.id = Collision_ID::DRARIAN;
 			info.mass = 0.0f;
 			info.physicsType = Collision::PhysicsType::Kinematick;
 			info.offset = Vector3(0.0f,0.0f,2.0f);
@@ -248,7 +248,7 @@ void BossDrarian::_ConfigCollision() {
 			RigidBodyInfo info;
 			info.coll = AddComponent<CCapsuleColliderZ>();
 			static_cast<CCapsuleColliderZ*>(info.coll)->Create(0.75f, 8.1f);
-			info.id = Collision_ID::BOSS;
+			info.id = Collision_ID::DRARIAN;
 			info.mass = 0.0f;
 			info.physicsType = Collision::PhysicsType::Kinematick;
 			info.offset = Vector3(0.0f,1.0f,0.0f);

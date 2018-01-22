@@ -43,7 +43,7 @@ void AttackCollision::LateUpdate()
 void AttackCollision::DetectionCollision() {
 	// 衝突しているコリジョンをすべて取得する。
 	vector<unique_ptr<fbPhysicsCallback::AllHitsContactResultCallback::hitInfo>> hit;
-	int attr = Collision_ID::ENEMY | Collision_ID::BOSS | Collision_ID::PLAYER | Collision_ID::GROUND | Collision_ID::BUILDING;
+	int attr = Collision_ID::ENEMY | Collision_ID::BOSS | Collision_ID::PLAYER | Collision_ID::GROUND | Collision_ID::BUILDING | Collision_ID::DRARIAN;
 	fbPhysicsCallback::AllHitsContactResultCallback callback;
 	INSTANCE(PhysicsWorld)->AllHitsContactTest(_Gost, &hit, &callback, attr);
 
@@ -158,7 +158,7 @@ void AttackCollision::_CallBackEnter(btCollisionObject* coll) {
 		switch (_master) {
 		case CollisionMaster::Player:
 			// プレイヤーが生成した攻撃。
-			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS) {
+			if (coll->getUserIndex() == Collision_ID::ENEMY || coll->getUserIndex() == Collision_ID::BOSS || coll->getUserIndex() == Collision_ID::DRARIAN) {
 				// 敵と衝突した。
 				// ゲームオブジェクトがある。
 				static_cast<EnemyCharacter*>(obj)->HitAttackCollisionEnter(this);

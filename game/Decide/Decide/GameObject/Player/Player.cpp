@@ -132,6 +132,7 @@ void Player::Awake()
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::BOSS);	// エネミーを削除。
+	_CharacterController->SubAttributeY(Collision_ID::DRARIAN);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
