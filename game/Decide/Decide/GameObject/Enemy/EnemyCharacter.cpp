@@ -431,6 +431,7 @@ void EnemyCharacter::_BuildAnimation() {
 
 void EnemyCharacter::Drop() {
 	_DropSubClass();
+
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++)
 	{
 		for (int i = 0; i < LoadEnemyInfo::dropMax; i++)

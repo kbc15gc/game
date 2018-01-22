@@ -116,8 +116,6 @@ void DropItem::Awake() {
 	
 	_CCharacterController->SetGravity(_Gravity);
 
-	//テキストを出す位置。
-	_TextPos = Vector3(580.0f, 460.0f, 0.0f);
 
 	//テキストサイズ。
 	_TextFontSize = 33.0f;
@@ -153,6 +151,9 @@ void DropItem::Create(int id, int typeId, const Vector3& pos, int dropNum) {
 	_ButtonIconImage->transform->SetPosition(Vector3::zero);
 
 	_ModelColor = Color::white;
+
+	//テキストを出す位置。
+	_TextPos = Vector3(580.0f, 460.0f, 0.0f);
 
 	//生成した武具のランクをチェックし、ランクに適したSEとエフェクトを選択。
 	_EquipmentRankCheck_SelectSEAndEffect();
@@ -322,7 +323,8 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 {
 	if (flag == false) {
 		//AttentionText作成。
-		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
+		/*static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))*/
+		_AttentionText->CreateText(
 			string,
 			_TextPos,
 			_TextFontSize,
@@ -333,7 +335,7 @@ void DropItem::_SetText(const wchar_t* string, bool flag)
 	else
 	{
 		//AttentionText作成。
-		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->CreateText(
+		_AttentionText->CreateText(
 			string,
 			_TextPos,
 			_TextFontSize,
