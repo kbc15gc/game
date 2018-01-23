@@ -28,6 +28,10 @@ private:
 
 	void CreateAttackCollsion();
 
+	//攻撃１のアニメーション速度設定用。
+	void Attack1Sub1();
+	void Attack1Sub2();
+
 	//コリジョン定義関数。
 	//コリジョンの形状やパラメータを設定する関数。
 	void _ConfigCollision()override;
