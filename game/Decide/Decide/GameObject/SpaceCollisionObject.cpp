@@ -33,7 +33,7 @@ void SpaceCollisionObject::UpdateActiveSpace() {
 bool SpaceCollisionObject::isHitPlayer() {
 
 	//使うオブジェクトを切り替える。
-	auto Target = (INSTANCE(EventManager)->IsEvent()) ? GetEventCamera() : _player;
+	auto Target = (INSTANCE(EventManager)->GetEventID() == Event::EventID::EventCameraF) ? GetEventCamera() : _player;
 	if (GetCollision()) {
 		if (GetCollision()->GetCollisionObj()) {
 			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), Target->GetAttachCollision())) {
