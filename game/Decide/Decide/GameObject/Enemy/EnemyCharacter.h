@@ -144,11 +144,7 @@ public:
 	// ※継承先独自の実装は、privateにある_LateUpdateSubClass関数を継承して実装すること。
 	void LateUpdate()override;
 	
-	void OnDestroy()override {
-		for (auto& data : _SoundData) {
-			data.reset(nullptr);
-		}
-	}
+	void OnDestroy()override;
 
 	// エネミーを指定したオブジェクトに向かせる処理(補間なし)。
 	// 引数：	見たいオブジェクト。

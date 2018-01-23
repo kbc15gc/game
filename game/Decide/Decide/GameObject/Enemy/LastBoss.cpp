@@ -247,7 +247,7 @@ void LastBoss::_StartSubClass() {
 
 	// UŒ‚ˆ—‚ð’è‹`B
 	_sordAttack.reset(new EnemySingleAttack(this));
-	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f,0.9f);
+	_sordAttack->Init(3.0f,static_cast<int>(AnimationLastBoss::SordAttack), 0.2f,1.5f);
 	_sordAttack2.reset(new EnemySingleAttack(this));
 	_sordAttack2->Init(3.0f, static_cast<int>(AnimationLastBoss::SordAttack), 0.1f, 2.9f, 1, 1);
 	_warpAttack.reset(new EnemyWarpAttack(this));
