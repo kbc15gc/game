@@ -179,6 +179,11 @@ void ItemWindow::OnEnable()
 		}
 	}
 
+	if (_Dialog)
+	{
+		_Dialog->SetActive(false, true);
+	}
+
 	ArrowUpdate();
 
 	_ConfigParamRender();
@@ -222,6 +227,7 @@ void ItemWindow::ArmorInit()
 */
 void ItemWindow::LateUpdate()
 {
+	_IsDialog = _Dialog->GetActive();
 	Input();
 
 	_EIconImage->SetActive(false, true);
@@ -253,8 +259,7 @@ void ItemWindow::LateUpdate()
 
 	_ConfigParamRender();
 
-	if (XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B) &&
-		!_Dialog->GetActive())
+	if (!_IsDialog && XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
 	{
 		//Bボタンでステータス画面を閉じる.
 		INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);

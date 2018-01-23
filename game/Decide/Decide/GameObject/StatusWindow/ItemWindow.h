@@ -227,5 +227,7 @@ private:
 	/** ダイアログ. */
 	Dialog* _Dialog = nullptr;
 
+	bool _IsDialog = false;
+
 	static const char* IconTextureNameList[static_cast<int>(IconIndex::MAX)];
 };
