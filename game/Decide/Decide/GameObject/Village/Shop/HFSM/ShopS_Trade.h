@@ -29,10 +29,14 @@ public:
 private:
 	//タブの切り替え。
 	void _SwitchTab();
+	//選択している添え字を設定。
+	void _SetIndex(int idx);
 	//売買個数変更。
 	void _UpdateTradeNum();
-	//
-	void _UpdateSelectItem();
+	//売買個数加算。
+	void AddTradeNum(int max);
+	//売買個数減算。
+	void SubTradeNum();
 
 	//メニュー作成。
 	void _CreateMenu();
@@ -41,12 +45,14 @@ private:
 
 	//表示する項目を更新。
 	void _UpdateList();
-	//選択している添え字を設定。
-	void _SetIndex(int idx);
 	//
 	void _SetMinIndex(int min);
 	//テキスト更新。
 	void _UpdateText();
+	//アイテム名のテキストを更新。
+	void _UpdateNameText(int idx);
+	//金額のテキストの更新。
+	void _UpdateMoneyText(int idx);
 	//アイテムリストを移動させる。
 	void _ScrollDisplayItem();
 
@@ -80,8 +86,8 @@ private:
 	int _DisplayType = static_cast<int>(Item::ItemCodeE::Item);
 	//表示するアイテムの一覧。
 	const vector<HoldItemBase*>* _DisplayList;
-	//アイテムの数。
-	int _DisplayItemNum = 0;
+	//売買するアイテムの数。
+	int _TradeItemNum = 0;
 
 	//現在選択している項目
 	int _Select = 0;
@@ -91,8 +97,8 @@ private:
 	const int DISPLAY_ITEM_NUM = 5;
 	//売買する個数。
 	vector<int> _TradeNum;
-	//選択しているアイテム。
-	vector<int> _IndexList;
+	//売買するアイテムの添え字。
+	vector<int> _TradeList;
 	//合計金額
 	int _SumValue = 0;
 
@@ -105,7 +111,7 @@ private:
 	//各項目の名称説明。
 	TextObject* _TopText;
 	//アイテム一覧を視覚化したテキストのリスト。
-	vector<TextObject*> _MenuTexts,_MoneyTexts;
+	vector<TextObject*> _NameTexts,_MoneyTexts;
 	//メニューの一項目の縦幅。
 	float _MenuListHeight;
 	//パラメータウィンドウ。
