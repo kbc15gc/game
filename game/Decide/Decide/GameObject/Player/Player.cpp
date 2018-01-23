@@ -561,6 +561,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 		else
 		{
+			//水色
 			c = { 0.0f,0.6f,1.0f,1.0f };
 		}
 		//ダメージ量を表示する。
