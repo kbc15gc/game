@@ -40,6 +40,7 @@ public:
 	~LastBoss();
 
 
+	void ChargeSordSpeed();
 	void SordAttackEvent();
 	void SordAttackEvent2();
 	void SordAttackEvent3();

@@ -53,10 +53,10 @@ private:
 		_SumTime -= _FrameList.back();
 		//_SumTime += _PopFrame;
 
-		_DeltaTime = delta;
+		_DeltaTime = delta/1000.0f;
 		_FrameList.pop_back();
-		_FrameList.push_back(_DeltaTime);
-		_CalcFPS(_DeltaTime + _PopFrame);
+		_FrameList.push_back(delta);
+		_CalcFPS(delta + _PopFrame);
 		// ‹¤’Ê‰ÁZ•”•ª‚ÌXV
 		_SumTime += delta;
 	}

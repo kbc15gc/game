@@ -49,7 +49,7 @@ void BossGolem::_StartSubClass() {
 	{
 		// “ª“Ë‚«B
 		_singleAttack.reset(new EnemySingleAttack(this));
-		_singleAttack->Init(1.5f, static_cast<int>(AnimationBossGolem::Hit), 0.0f, 0.4f);
+		_singleAttack->Init(1.5f, static_cast<int>(AnimationBossGolem::Hit), 0.0f,0.3f /*0.4f*/);
 
 		// ŒB
 		_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
@@ -130,6 +130,15 @@ void BossGolem::AnimationEvent_Kobushi3(){
 void BossGolem::AnimationEvent_Kobushi4() {
 	INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
 	_kobusi = nullptr;
+}
+
+
+void BossGolem::AnimationEvent_ZutukiSpeed() {
+	_MyComponent.Animation->SetAnimeSpeed(0.01f);
+}
+
+void BossGolem::AnimationEvent_ZutukiSpeed2() {
+	_MyComponent.Animation->SetAnimeSpeed(0.1f);
 }
 
 void BossGolem::AnimationEvent_Zutuki() {
@@ -248,7 +257,13 @@ void BossGolem::_ConfigAnimationEvent() {
 	}
 	//“ª“Ë‚«
 	{
-		float eventFrame = 0.25f;
+		float eventFrame = 0.19f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed));
+		
+		eventFrame = 0.2f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed2));
+
+		eventFrame = 0.25f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Zutuki));
 	}
 }

@@ -29,6 +29,10 @@ public:
 	BossGhost(const char* name);
 	~BossGhost();
 
+	//void OnDestroy()override {
+
+	//}
+
 	// アニメーションイベント関連。
 	void CreateCollision();
 	void CreateCollision2();

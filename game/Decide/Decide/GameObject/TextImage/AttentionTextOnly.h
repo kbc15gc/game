@@ -42,6 +42,7 @@ private:
 		TextObject* _Text;	//テキスト。
 		Color		_Color;	//テキストのカラー。
 		Vector3		_Dir;	//移動する方向。
+		float		_FontSize;
 	};
 private:
 	//テキストリスト。

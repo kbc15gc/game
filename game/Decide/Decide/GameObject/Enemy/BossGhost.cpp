@@ -27,7 +27,7 @@ void BossGhost::CreateCollision() {
 	attack->RemoveParent();
 
 	// UŒ‚‰¹Ä¶B
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void BossGhost::CreateCollision2() {
@@ -36,7 +36,7 @@ void BossGhost::CreateCollision2() {
 	attack->RemoveParent();
 
 	// UŒ‚‰¹Ä¶B
-	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void BossGhost::LaserStartSingle()

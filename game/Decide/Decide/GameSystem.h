@@ -24,6 +24,7 @@ enum Collision_ID
 	ITEMRANGE = BIT(9),
 	DROPITEM=BIT(10),	//ドロップアイテム用のコリジョンID(地面意外と当たり判定を行わない)。
 	BOSS = BIT(11),
+	DRARIAN = BIT(12),
 };
 
 

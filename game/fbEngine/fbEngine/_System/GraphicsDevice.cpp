@@ -22,6 +22,8 @@ HRESULT CGraphicsDevice::InitD3d(HWND hWnd)
 	D3DPRESENT_PARAMETERS d3dpp;	//プレゼンテーションパラメータ
 	ZeroMemory( &d3dpp, sizeof(d3dpp));	//プレゼンテーションパラメータ初期化
 
+	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_TWO;
+
 	//バックバッファフォーマットを未定義にセット
 	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
 	d3dpp.BackBufferCount = 1;	//バックバッファ数をセット

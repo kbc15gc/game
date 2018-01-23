@@ -111,6 +111,28 @@ void ItemWindow::Init(Item::ItemCodeE code)
 	}
 }
 
+/**
+* 無効化.
+*/
+void ItemWindow::OnDisable()
+{
+	if (_EIconImage)
+	{
+		_EIconImage->SetActive(false, true);
+	}
+	if (_Dialog)
+	{
+		_Dialog->SetActive(false, true);
+	}
+	if (_Cursor)
+	{
+		_Cursor->SetActive(false, true);
+	}
+}
+
+/**
+* 有効化.
+*/
 void ItemWindow::OnEnable()
 {
 	int itemCount = 0;
@@ -131,6 +153,44 @@ void ItemWindow::OnEnable()
 		_StartLoadCount = 0;
 		_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 		_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
+	}
+
+	_EIconImage->SetActive(false, true);
+
+	for (int i = 0; i < ItemCellSize; i++)
+	{
+		if (itemList.size() > i + _StartLoadCount && itemList[i + _StartLoadCount] != nullptr)
+		{
+			_Item2DList[i]->SetItemData(itemList[i + _StartLoadCount]);
+
+			if (_ItemCode != Item::ItemCodeE::Item)
+			{
+				HoldEquipment* item = (HoldEquipment*)itemList[i + _StartLoadCount];
+				if (item->GetIsEquip())
+				{
+					_EIconImage->SetActive(true, true);
+					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition() + Vector3(180.0f, 0.0f, 0.0f));
+				}
+			}
+		}
+		else
+		{
+			_Item2DList[i]->SetItemData(nullptr);
+		}
+	}
+
+	if (_Dialog)
+	{
+		_Dialog->SetActive(false, true);
+	}
+
+	ArrowUpdate();
+
+	_ConfigParamRender();
+
+	for (auto bar : _ParameterRenderList)
+	{
+		bar->LateUpdate();
 	}
 }
 
@@ -167,6 +227,7 @@ void ItemWindow::ArmorInit()
 */
 void ItemWindow::LateUpdate()
 {
+	_IsDialog = _Dialog->GetActive();
 	Input();
 
 	_EIconImage->SetActive(false, true);
@@ -197,6 +258,12 @@ void ItemWindow::LateUpdate()
 	ArrowUpdate();
 
 	_ConfigParamRender();
+
+	if (!_IsDialog && XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
+	{
+		//Bボタンでステータス画面を閉じる.
+		INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
+	}
 }
 
 /**
@@ -295,7 +362,6 @@ void ItemWindow::Input()
 			{
 				_Dialog->Enable(_Item2DList[_NowSelectItem]);
 			}
-
 		}
 		else
 		{

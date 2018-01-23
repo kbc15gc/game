@@ -47,19 +47,15 @@ public:
 	*/
 	void Execute();
 
-	void OnEnable()override
-	{
-		for (int i = 0; i < _WindowCount; i++)
-		{
-			_ItemWindowList[i]->SetActive((i == _NowSelectWindow), true);
-		}
-	}
+	/**
+	* —LŒø‰».
+	*/
+	void OnEnable()override;
 
-	void OnDisable()override
-	{
-		INSTANCE(EventManager)->NotifyEndEvent();
-		static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"))->DeleteList();
-	}
+	/**
+	* –³Œø‰».
+	*/
+	void OnDisable()override;
 
 private:
 

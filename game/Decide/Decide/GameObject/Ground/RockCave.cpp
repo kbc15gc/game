@@ -23,6 +23,11 @@ void RockCave::Awake()
 	//モデル設定
 	modeldata->CloneModelData(SkinModelManager::LoadModel("RockCave.X"));
 	model->SetModelData(modeldata);
+	//ライト設定。
+	MyLight_.SetAmbientLight(Vector4(0.5, 0.5, 0.5, 1));
+
+
+	model->SetCharacterLight(&MyLight_);
 
 	//model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);

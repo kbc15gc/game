@@ -90,7 +90,7 @@ void Player::Awake()
 	//高さ設定
 	_Height = 1.3f;
 	//半径設定
-	_Radius = 0.2f;
+	_Radius = 0.6f;
 	//カプセルコライダー作成
 	coll->Create(_Radius, _Height);
 
@@ -132,6 +132,7 @@ void Player::Awake()
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
 	_CharacterController->SubAttributeY(Collision_ID::ENEMY);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::BOSS);	// エネミーを削除。
+	_CharacterController->SubAttributeY(Collision_ID::DRARIAN);	// エネミーを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
@@ -263,15 +264,20 @@ void Player::Awake()
 			_RespawnPos.x = player["RespawnPos_X"].get<double>();
 			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
 			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+			_RespawnRot.x = player["RespawnRot_X"].get<double>();
+			_RespawnRot.y = player["RespawnRot_Y"].get<double>();
+			_RespawnRot.z = player["RespawnRot_Z"].get<double>();
+			_RespawnRot.w = player["RespawnRot_W"].get<double>();
 		}
 	}
 	else
 	{
-		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f),Quaternion(-0.000000000, -0.988134980, -0.000000000, 0.153588027));
 	}
 
 	//ポジション
 	transform->SetLocalPosition(_RespawnPos);
+	transform->SetLocalRotation(_RespawnRot);
 
 }
 
@@ -867,14 +873,25 @@ void Player::Speak()
 			//ショップイベントでないとき。
 			if (_CharacterController->IsOnGround())
 			{
-				//会話のためHPバーなどを消す。
-				_HPBar->RenderDisable();
-				//_MPBar->RenderDisable();
-				//話すフラグセット
-				_NearNPC->SetIsSpeak(true);
-				//プレイヤー話すフラグ設定
-				//ジャンプしなくなる
-				_NoJump = true;
+				if (_NearNPC->GetActive()) {
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderDisable();
+					//_MPBar->RenderDisable();
+					//話すフラグセット
+					_NearNPC->SetIsSpeak(true);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_NoJump = true;
+				}
+				else {
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderEnable();
+					//話すフラグセット
+					_NearNPC->SetIsSpeak(false);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_NoJump = false;
+				}
 			}
 		}
 		else
@@ -892,6 +909,11 @@ void Player::Speak()
 				}
 			}
 		}
+	}
+	//NPCなし
+	else
+	{
+		_NearNPCLen = FLT_MAX;
 	}
 
 	//村
@@ -1219,7 +1241,7 @@ void Player::Re_SetEquipment() {
 void Player::SetNPC(NPC * npc)
 {
 	//そのまま設定
-	if ((_NearNPC == nullptr) || (npc = nullptr))
+	if ((_NearNPC == nullptr) || (npc == nullptr))
 	{
 		_NearNPC = npc;
 	}

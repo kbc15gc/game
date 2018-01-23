@@ -82,7 +82,7 @@ void EventManager::AddEvent()
 	//ショップ。
 	Shop* shop = INSTANCE(GameObjectManager)->AddNew<Shop>("Shop", 0);
 	//イベントカメラ。
-	auto Ecamera = INSTANCE(GameObjectManager)->AddNew<EventCamera>("ThirdPersonCamera", 8);
+	auto Ecamera = INSTANCE(GameObjectManager)->AddNew<EventCamera>("EventCamera", 8);
 	Ecamera->SetNextCamera(GetCamera());
 	
 	StatusWindow* status = (StatusWindow*)INSTANCE(GameObjectManager)->FindObject("StatusWindow");

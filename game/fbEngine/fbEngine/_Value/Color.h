@@ -32,6 +32,7 @@ public:
 	//ドカベンフォント用カラー
 	static const Color dokaben;
 public:
+	operator Vector4() { return Vector4(r, g, b, a); }
 	operator D3DXCOLOR() { return static_cast<D3DXCOLOR>(*this); }
 	operator LPVOID() { return static_cast<LPVOID>(this); }
 

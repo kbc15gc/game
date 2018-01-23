@@ -2,6 +2,7 @@
 #include "GameObject\SpaceCollisionObject.h"
 #include "fbEngine\_Object\_Component\_Physics\Collision.h"
 #include "SplitSpace.h"
+#include "Village\EventManager.h"
 
 void SpaceCollisionObject::Create(const Vector3& pos, const Quaternion& rot, const Vector3& size, int id,Transform* parent,int attr,const Int3& myNumber) {
 	if (parent) {
@@ -18,6 +19,7 @@ void SpaceCollisionObject::Create(const Vector3& pos, const Quaternion& rot, con
 
 void SpaceCollisionObject::Start() {
 	_player = INSTANCE(GameObjectManager)->FindObject("Player");
+	
 	RegistrationObject();
 	// 最初はすべて非アクティブにする。
 	DisableObjects();
@@ -29,9 +31,12 @@ void SpaceCollisionObject::UpdateActiveSpace() {
 }
 
 bool SpaceCollisionObject::isHitPlayer() {
+
+	//使うオブジェクトを切り替える。
+	auto Target = (INSTANCE(EventManager)->GetEventID() == Event::EventID::EventCameraF) ? GetEventCamera() : _player;
 	if (GetCollision()) {
 		if (GetCollision()->GetCollisionObj()) {
-			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), _player->GetAttachCollision())) {
+			if (INSTANCE(PhysicsWorld)->ContactPairTest(GetCollision(), Target->GetAttachCollision())) {
 				// プレイヤーと衝突している。
 				_isHitPlayer = true;
 				return true;
