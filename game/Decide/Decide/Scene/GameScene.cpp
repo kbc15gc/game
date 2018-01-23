@@ -324,29 +324,29 @@ void GameScene::Update()
 					{
 						case BGM::MATI1:
 							location = 0;
-							_Player->SetRespawnPos(LocationPosition[location]);
+							_Player->SetRespawnPos(LocationPosition[location],Quaternion());
 							if(!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Begin);
 							break;
 						case BGM::MATI2:
 							location = 1;
-							_Player->SetRespawnPos(LocationPosition[location]);
+							_Player->SetRespawnPos(LocationPosition[location], Quaternion());
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Hunting);
 							break;
 						case BGM::MATI3:
 							location = 2;
-							_Player->SetRespawnPos(LocationPosition[location]);
+							_Player->SetRespawnPos(LocationPosition[location], Quaternion());
 							if (!_HistoryBook->GetActive())
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
 						case BGM::MAOU1:
-							_Player->SetRespawnPos(Sinkou);
+							_Player->SetRespawnPos(Sinkou,Quaternion());
 							break;
 						case BGM::MAOU2:
 							break;
 						case BGM::MAOU3:
-							_Player->SetRespawnPos(Sinden);
+							_Player->SetRespawnPos(Sinden,Quaternion());
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));

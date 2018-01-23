@@ -90,6 +90,14 @@ private:
 		return ((abs(static_cast<int>(_myNumber.x) - static_cast<int>(num.x)) <= 1) && (abs(static_cast<int>(_myNumber.y) - static_cast<int>(num.y)) <= 1) && (abs(static_cast<int>(_myNumber.z) - static_cast<int>(num.z)) <= 1));
 	}
 
+	//イベントカメラを取得。
+	GameObject* GetEventCamera()
+	{
+		if (_EventCamera == nullptr)
+			_EventCamera = INSTANCE(GameObjectManager)->FindObject("EventCamera");
+		return _EventCamera;
+	}
+
 public:
 	// プレイヤーと衝突しているか取得。
 	inline bool GetisHitPlayer()const {
@@ -110,6 +118,8 @@ private:
 
 	vector<SpaceCollisionObject*> _adjacentSpaceObjects;		// 隣接する空間オブジェクト。
 	GameObject* _player = nullptr;
+	//イベントカメラへのポインタ。
+	GameObject* _EventCamera = nullptr;
 	bool _isHitPlayer;	// このコリジョンオブジェクトがプレイヤーと衝突しているか。
 	int _attribute;	// この空間に登録するオブジェクトのコリジョン属性。
 	bool _isActive = true;	// この空間に属するオブジェクトがアクティブ化しているか。

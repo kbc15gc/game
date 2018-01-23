@@ -79,6 +79,8 @@ public class ExportEnemy : MonoBehaviour {
     public int _ColorFlag = 0;
     public Color _Color = Color.white;
 
+    //視野角
+    public float _ViewAngle = 100.0f;
     //見える距離
     public float _ViewRange = 10.0f;
     // 徘徊範囲設定。

@@ -32,4 +32,6 @@ private:
 	}
 private:
 	NPC* _speakObject = nullptr;
+
+	Player* _Player = nullptr;
 };

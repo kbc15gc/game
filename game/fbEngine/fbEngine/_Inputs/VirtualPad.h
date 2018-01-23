@@ -14,8 +14,8 @@ namespace fbEngine
 			ButtonRight,	//右。
 			ButtonA,		//Aボタン。
 			ButtonB,		//Bボタン。
-			ButtonX,		//Xボタン。
-			ButtonY,		//Yボタン。
+			ButtonY,		//Xボタン。
+			ButtonX,		//Yボタン。
 			ButtonSelect,	//セレクトボタン。
 			ButtonStart,	//スタートボタン。
 			ButtonRB1,		//RB1ボタン。

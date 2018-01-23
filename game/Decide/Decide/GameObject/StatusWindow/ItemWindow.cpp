@@ -155,7 +155,38 @@ void ItemWindow::OnEnable()
 		_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
 	}
 
-	LateUpdate();
+	_EIconImage->SetActive(false, true);
+
+	for (int i = 0; i < ItemCellSize; i++)
+	{
+		if (itemList.size() > i + _StartLoadCount && itemList[i + _StartLoadCount] != nullptr)
+		{
+			_Item2DList[i]->SetItemData(itemList[i + _StartLoadCount]);
+
+			if (_ItemCode != Item::ItemCodeE::Item)
+			{
+				HoldEquipment* item = (HoldEquipment*)itemList[i + _StartLoadCount];
+				if (item->GetIsEquip())
+				{
+					_EIconImage->SetActive(true, true);
+					_EIconImage->transform->SetLocalPosition(_Item2DList[i]->transform->GetPosition() + Vector3(180.0f, 0.0f, 0.0f));
+				}
+			}
+		}
+		else
+		{
+			_Item2DList[i]->SetItemData(nullptr);
+		}
+	}
+
+	if (_Dialog)
+	{
+		_Dialog->SetActive(false, true);
+	}
+
+	ArrowUpdate();
+
+	_ConfigParamRender();
 
 	for (auto bar : _ParameterRenderList)
 	{
@@ -196,6 +227,7 @@ void ItemWindow::ArmorInit()
 */
 void ItemWindow::LateUpdate()
 {
+	_IsDialog = _Dialog->GetActive();
 	Input();
 
 	_EIconImage->SetActive(false, true);
@@ -226,6 +258,12 @@ void ItemWindow::LateUpdate()
 	ArrowUpdate();
 
 	_ConfigParamRender();
+
+	if (!_IsDialog && XboxInput(0)->IsPushButton(XINPUT_GAMEPAD_B))
+	{
+		//Bボタンでステータス画面を閉じる.
+		INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
+	}
 }
 
 /**
@@ -324,7 +362,6 @@ void ItemWindow::Input()
 			{
 				_Dialog->Enable(_Item2DList[_NowSelectItem]);
 			}
-
 		}
 		else
 		{
