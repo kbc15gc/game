@@ -231,6 +231,14 @@ void EnemyCharacter::LateUpdate() {
 	nearEnemyInfo = NearEnemyInfo(FLT_MAX, nullptr);
 }
 
+void EnemyCharacter::OnDestroy(){
+	if (_NowState) {
+		_NowState->Exit(EnemyCharacter::State::None);
+	}
+	for (auto& data : _SoundData) {
+		data.reset(nullptr);
+	}
+}
 
 bool EnemyCharacter::IsOutsideDiscovery() {
 	Vector3 work = _InitPos - _Player->transform->GetPosition();
