@@ -34,7 +34,12 @@ public:
 	void AnimationEvent_Attack();
 	void AnimationEvent_Kick();
 	void AnimationEvent_Kiriage();
+	void AnimationEvent_KiriageTame();
+	void AnimationEvent_KiriageTame2();
+	void AnimationEventPlay360();	// 回転攻撃にシフト。
 	void AnimationEvent_360Attack();
+	void AniamtionEvent_360AttackCombo();
+	void AniamtionEvent_KiriageCombo();
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
@@ -95,4 +100,6 @@ private:
 	unique_ptr<EnemySingleAttack> _kick;
 	unique_ptr<EnemySingleAttack> _kiriage;
 	unique_ptr<EnemySingleAttack> _360Attack;
+	unique_ptr<EnemySingleAttack> _combo;
+	unique_ptr<EnemySingleAttack> _3combo;
 };

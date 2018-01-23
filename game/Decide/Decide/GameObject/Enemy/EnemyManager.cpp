@@ -158,6 +158,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			}
 			// ‹–ì‚Ì‹——£İ’èB
 			newData->Object->SetViewRange(newData->InfoData->viewRange);
+			newData->Object->SetViewAngle(newData->InfoData->viewAngle);
 			// œpœj”ÍˆÍİ’èB
 			newData->Object->SetWanderingRange(newData->InfoData->wanderingRange);
 			// ’ÇÕ”ÍˆÍİ’èB
@@ -267,6 +268,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetLocationCode(code);
 			// ‹–ì‚Ì‹——£İ’èB
 			enemy->Object->SetViewRange(enemy->InfoData->viewRange);
+			enemy->Object->SetViewAngle(enemy->InfoData->viewAngle);
 			// œpœj”ÍˆÍİ’èB
 			enemy->Object->SetWanderingRange(enemy->InfoData->wanderingRange);
 			// ’ÇÕ”ÍˆÍİ’èB
