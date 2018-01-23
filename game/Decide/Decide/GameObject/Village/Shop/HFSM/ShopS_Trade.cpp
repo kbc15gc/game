@@ -415,11 +415,13 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto& val = info->effectValue;
 			
 			string tmp = "";
-			const char* p[] = { "HP: ","ATK:","DEF:","MDE:","DEX:","CRT:","LV: " };
+			const char* p[] = { "HP: ","MP","ATK:","DEF:","MDE:","DEX:","CRT:","LV: " };
 			FOR(idx,ARRAY_SIZE(p))
 			{
+				if (idx == 1)
+					continue;
 				char per = ' ';
-				if (0 < idx && idx < 6)
+				if (0 < idx && idx < 7)
 					per = '%';
 				sprintf(text, "%s%s%4d%c</color>\n", p[idx], _CalcColorCode(val[idx]), val[idx], per);
 				tmp += text;
