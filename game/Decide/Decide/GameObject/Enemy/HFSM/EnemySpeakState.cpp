@@ -7,6 +7,8 @@ EnemySpeakState::EnemySpeakState(EnemyCharacter* Object) : EnemyState(Object)
 	_playAnimation = EnemyCharacter::AnimationType::Idle;
 	_interpolate = 0.2f;
 	_loopNum = -1;
+
+	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 }
 
 
@@ -52,7 +54,11 @@ void EnemySpeakState::LateUpdate() {
 }
 
 void EnemySpeakState::_ExitSubClass(EnemyCharacter::State next) {
-	_speakObject->SetActive(false);
+	if (_speakObject != nullptr)
+	{
+		_speakObject->SetActive(false);
+	}
+
 }
 
 void EnemySpeakState::_EndNowLocalState_CallBack(EnemyCharacter::State EndLocalStateType) {
