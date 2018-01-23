@@ -873,14 +873,25 @@ void Player::Speak()
 			//ショップイベントでないとき。
 			if (_CharacterController->IsOnGround())
 			{
-				//会話のためHPバーなどを消す。
-				_HPBar->RenderDisable();
-				//_MPBar->RenderDisable();
-				//話すフラグセット
-				_NearNPC->SetIsSpeak(true);
-				//プレイヤー話すフラグ設定
-				//ジャンプしなくなる
-				_NoJump = true;
+				if (_NearNPC->GetActive()) {
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderDisable();
+					//_MPBar->RenderDisable();
+					//話すフラグセット
+					_NearNPC->SetIsSpeak(true);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_NoJump = true;
+				}
+				else {
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderEnable();
+					//話すフラグセット
+					_NearNPC->SetIsSpeak(false);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_NoJump = false;
+				}
 			}
 		}
 		else
