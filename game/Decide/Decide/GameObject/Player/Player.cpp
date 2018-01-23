@@ -394,8 +394,11 @@ void Player::Update()
 		//transform->UpdateTransform();
 
 	//NPC‚Æ˜b‚·
-	Speak();
-
+	if (_State != State::Death)
+	{
+		Speak();
+	}
+	
 	//char test[256];
 	//sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
 	//OutputDebugString(test);
