@@ -55,6 +55,11 @@ public:
 	{
 		return (_ActiveEvent != Event::EventID::None);
 	}
+	//現在のイベントを返却。
+	Event::EventID GetEventID()
+	{
+		return _ActiveEvent;
+	}
 private:
 	Player* GetPlayer()
 	{
