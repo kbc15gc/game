@@ -264,15 +264,20 @@ void Player::Awake()
 			_RespawnPos.x = player["RespawnPos_X"].get<double>();
 			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
 			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+			_RespawnRot.x = player["RespawnRot_X"].get<double>();
+			_RespawnRot.y = player["RespawnRot_Y"].get<double>();
+			_RespawnRot.z = player["RespawnRot_Z"].get<double>();
+			_RespawnRot.w = player["RespawnRot_W"].get<double>();
 		}
 	}
 	else
 	{
-		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f),Quaternion(-0.000000000, -0.988134980, -0.000000000, 0.153588027));
 	}
 
 	//ƒ|ƒWƒVƒ‡ƒ“
 	transform->SetLocalPosition(_RespawnPos);
+	transform->SetLocalRotation(_RespawnRot);
 
 }
 
