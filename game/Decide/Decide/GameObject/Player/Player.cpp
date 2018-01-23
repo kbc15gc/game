@@ -561,7 +561,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 		else
 		{
-			c = Color::blue;
+			c = { 0.0f,0.6f,1.0f,1.0f };
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
