@@ -172,6 +172,8 @@ private:
 	unique_ptr<EnemySingleAttack> _sordAttack2;	// ’PUŒ‚ˆ—B
 	unique_ptr<EnemyWarpAttack> _warpAttack;
 	unique_ptr<EnemyBreathAttack> _magicAttack;
+	unique_ptr<EnemyBreathAttack> _highMagicAttack;
+
 	unique_ptr<EnemySingleAttack> _buffAttack;
 	unique_ptr<EnemySingleAttack> _debuffAttack;
 	unique_ptr<EnemySingleAttack> _commandAttack;

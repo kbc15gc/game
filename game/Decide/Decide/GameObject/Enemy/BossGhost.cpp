@@ -23,7 +23,7 @@ BossGhost::~BossGhost()
 
 void BossGhost::CreateCollision() {
 	//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction);
 	attack->RemoveParent();
 
 	// UŒ‚‰¹Ä¶B
@@ -32,7 +32,7 @@ void BossGhost::CreateCollision() {
 
 void BossGhost::CreateCollision2() {
 	//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction,85);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction);
 	attack->RemoveParent();
 
 	// UŒ‚‰¹Ä¶B
@@ -42,7 +42,7 @@ void BossGhost::CreateCollision2() {
 void BossGhost::LaserStartSingle()
 {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 18.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,120);
+	laser->Create(this, Vector3::zero, 18.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,130);
 	_singleLaser->BreathStart(laser);
 
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);
@@ -54,7 +54,7 @@ void BossGhost::LaserEndSingle() {
 
 void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 18.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
+	laser->Create(this, Vector3::zero, 18.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,130);
 	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathStart(laser);
 
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);

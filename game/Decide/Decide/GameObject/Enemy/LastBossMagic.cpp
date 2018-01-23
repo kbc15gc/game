@@ -16,11 +16,13 @@ void LastBossMagic::Awake() {
 	_particleEmitter = p;
 }
 
-void LastBossMagic::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, const Quaternion& rot, const float speed) {
+void LastBossMagic::Create(EnemyCharacter* obj, const Vector3& emitPosLocal, const Quaternion& rot, const float speed, int firePower, int bombPower) {
 	BreathObject::Create(obj);
 	_initEmitPos = emitPosLocal;
 	_speed = speed;
 	_rotation = rot;
+	_firePower = firePower;
+	_bombPower = bombPower;
 }
 
 void LastBossMagic::Update() {
@@ -40,7 +42,7 @@ void LastBossMagic::Update() {
 
 			//攻撃コリジョン作成。
 			if (_enemyObject) {
-				AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _particleEmitter->transform, true, false, AttackCollision::ReactionType::Blown);
+				AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _particleEmitter->transform, true, false, AttackCollision::ReactionType::Leans,_bombPower);
 				attack->RemoveParent();
 				_attack.push_back(attack);
 			}
@@ -90,7 +92,7 @@ void LastBossMagic::_BreathStartSubClass() {
 	_particleEmitter->SetEmitFlg(true);
 
 	//攻撃コリジョン作成。
-	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 1.5f, 1.0f), -1.0f, _particleEmitter->transform,true);
+	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 1.5f, 1.0f), -1.0f, _particleEmitter->transform,true,false,AttackCollision::ReactionType::Leans, _firePower);
 	_attack.push_back(attack);
 
 	_timeCounter = 0.0f;
