@@ -16,13 +16,19 @@ void EventCamera::Awake()
 	_Camera->SetNear(0.1f);
 	_Camera->SetFar(1500.0f);
 	_Camera->SetUseTarget(false);
+
+	auto sphere = AddComponent<SphereCollider>();
+	sphere->Create(1.0f);
+
+	auto coll = AddComponent<GostCollision>();
+	coll->Create(sphere, Collision_ID::NOTHITCAMERA, false);
 	
 	UnActivateFlg();
 }
 
 void EventCamera::Start()
 {
-
+	
 }
 
 void EventCamera::UpdateSubClass()

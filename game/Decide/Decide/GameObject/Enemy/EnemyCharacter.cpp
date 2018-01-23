@@ -168,9 +168,14 @@ void EnemyCharacter::Update() {
 }
 
 void EnemyCharacter::LateUpdate() {
-	_playerDist = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).LengthSq();
+	//現在イベント中であるか？
+	bool isEvent = INSTANCE(EventManager)->IsEvent();
+	//使うオブジェクトを切り替える。
+	GameObject* Target = (isEvent) ? GetEventCamera() : _Player;
+	float dist = (isEvent) ? 30000.0f : 10000.0f;
+	_playerDist = Vector3(Target->transform->GetPosition() - transform->GetPosition()).LengthSq();
 
-	if (_playerDist > 10000.0f && _MyComponent.CharacterController->IsOnGround()) {
+	if (_playerDist > dist && _MyComponent.CharacterController->IsOnGround()) {
 		// 遠方のエネミーは更新停止。
 
 		SetIsStopUpdate(true);
@@ -180,10 +185,11 @@ void EnemyCharacter::LateUpdate() {
 		SetIsStopUpdate(false);
 	}
 
-	if (INSTANCE(EventManager)->IsEvent())
+	if (isEvent)
 	{
-		//イベントが実行中なら更新停止.
-		SetIsStopUpdate(true);
+		//カメライベント以外なら停止。
+		if (INSTANCE(EventManager)->GetEventID() != Event::EventID::EventCameraF)
+			SetIsStopUpdate(true);
 	}
 	else
 	{
