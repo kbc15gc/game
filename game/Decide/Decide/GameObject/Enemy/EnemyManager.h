@@ -27,6 +27,7 @@ namespace LoadEnemyInfo{
 		float probability[dropMax * 3];	//ドロップ確率*3つ分。
 		int colorflag;
 		Vector4 color;
+		float viewAngle;
 		float viewRange;
 		float wanderingRange;
 		float discoveryRange;
@@ -54,6 +55,7 @@ namespace LoadEnemyInfo{
 		{ "probability",	Support::DataTypeE::FLOAT_ARRAY, offsetof(struct EnemyInfo,probability),	sizeof(EnemyInfo::probability) },
 		{ "colorflag",Support::DataTypeE::INT, offsetof(struct EnemyInfo,colorflag),	sizeof(EnemyInfo::colorflag) },
 		{ "color",	Support::DataTypeE::VECTOR4, offsetof(struct EnemyInfo,color),	sizeof(Vector4) },
+		{ "viewAngle",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,viewAngle),	sizeof(EnemyInfo::viewAngle) },
 		{ "viewRange",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,viewRange),	sizeof(EnemyInfo::viewRange) },
 		{ "wanderingRange",	Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,wanderingRange),	sizeof(EnemyInfo::wanderingRange) },
 		{ "discoveryRange",Support::DataTypeE::FLOAT, offsetof(struct EnemyInfo,discoveryRange),	sizeof(EnemyInfo::discoveryRange) },

@@ -78,7 +78,7 @@ void BossGhost::_AwakeSubClass() {
 void BossGhost::_StartSubClass() {
 
 	// éãñÏäpê∂ê¨ÅB
-	_ViewAngle = 120.0f;
+	//_ViewAngle = 120.0f;
 	//_ViewRange = 10.0f;
 
 

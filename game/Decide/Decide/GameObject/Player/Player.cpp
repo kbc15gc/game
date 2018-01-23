@@ -869,8 +869,9 @@ void Player::Speak()
 	if (_NearNPC)
 	{
 		_NearNPCLen = (_NearNPC->transform->GetPosition() - transform->GetPosition()).Length();
+		float lenLimit = (strcmp(_NearNPC->GetName(), "LastBoss.X") == 0) ? 10.0f : 3.0f;
 		//会話可能
-		if (_NearNPCLen <= 3.0f && !eventflag)
+		if (_NearNPCLen <= lenLimit && !eventflag)
 		{
 			//地面についていれば話しかけれる
 			//ショップイベントでないとき。

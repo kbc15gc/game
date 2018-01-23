@@ -26,7 +26,7 @@ void BossDrarian::_AwakeSubClass() {
 void BossDrarian::_StartSubClass() {
 
 	// 視野角生成。
-	_ViewAngle = 360.0f;
+	//_ViewAngle = 360.0f;
 	//_ViewRange = 30.0f;
 
 	// 歩行速度設定。

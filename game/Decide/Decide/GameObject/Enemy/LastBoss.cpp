@@ -152,6 +152,109 @@ void LastBoss::MagicAttackShot3() {
 
 }
 
+void LastBoss::HighMagicAttackStart1() {
+	_magicBigFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(0.0f));
+	_magicBigFire1->Create(this, Vector3(1.0f, -0.5f, 2.0f), rot, 20.0f);
+
+	_magicAttack->BreathStart(_magicBigFire1);
+
+	// çUåÇâπçƒê∂ÅB
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
+}
+
+void LastBoss::HighMagicAttackShot1() {
+
+}
+
+void LastBoss::HighMagicAttackStart2() {
+	_magicBigFire2 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(60.0f));
+	_magicBigFire2->Create(this, Vector3(-2.0f, -0.5f, 1.0f), rot, 20.0f);
+
+	_magicAttack->BreathStart(_magicBigFire2);
+
+	// çUåÇâπçƒê∂ÅB
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
+
+}
+
+void LastBoss::HighMagicAttackShot2() {
+
+}
+
+void LastBoss::HighMagicAttackStart3() {
+	_magicBigFire3 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(120.0f));
+	_magicBigFire3->Create(this, Vector3(-2.0f, -0.5f, -1.0f), rot, 20.0f);
+
+	_magicAttack->BreathStart(_magicBigFire3);
+
+	// çUåÇâπçƒê∂ÅB
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
+
+}
+
+void LastBoss::HighMagicAttackShot3() {
+
+}
+
+void LastBoss::HighMagicAttackStart4() {
+	_magicBigFire4 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(180.0f));
+	_magicBigFire4->Create(this, Vector3(0.0f, -0.5f, -2.0f), rot, 20.0f);
+
+	_magicAttack->BreathStart(_magicBigFire4);
+
+	// çUåÇâπçƒê∂ÅB
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
+
+}
+
+void LastBoss::HighMagicAttackShot4() {
+
+}
+
+void LastBoss::HighMagicAttackStart5() {
+	_magicBigFire5 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(240.0f));
+	_magicBigFire5->Create(this, Vector3(2.0f, -0.5f, -2.0f), rot, 20.0f);
+
+	_magicAttack->BreathStart(_magicBigFire5);
+
+	// çUåÇâπçƒê∂ÅB
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
+
+}
+
+void LastBoss::HighMagicAttackShot5() {
+
+}
+
+void LastBoss::HighMagicAttackStart6() {
+	_magicBigFire6 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
+	Quaternion rot;
+	rot.SetRotation(Vector3::axisY, D3DXToRadian(300.0f));
+	_magicBigFire6->Create(this, Vector3(2.0f, -0.5f, -1.0f), rot, 20.0f);
+
+	_magicAttack->BreathStart(_magicBigFire6);
+
+	// çUåÇâπçƒê∂ÅB
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Fire);
+
+}
+
+void LastBoss::HighMagicAttackShot6() {
+
+}
+
+
+
 void LastBoss::BuffEvent() {
 	int value[CharacterParameter::Param::MAX];
 	for (int idx = 0; idx < static_cast<int>(CharacterParameter::Param::MAX); idx++) {
@@ -215,7 +318,7 @@ void LastBoss::_AwakeSubClass() {
 void LastBoss::_StartSubClass() {
 
 	// éãñÏäpê∂ê¨ÅB
-	_ViewAngle = 360.0f;
+	//_ViewAngle = 360.0f;
 	//_ViewRange = 50.0f;
 
 	// úpújîÕàÕê›íËÅB
@@ -561,6 +664,30 @@ void LastBoss::_ConfigAnimationEvent() {
 		eventFrame += 0.1f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot3));
 	}
+
+	// ëÂñÇñ@çUåÇÅB
+	{
+		eventFrame = 0.65f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackSpeed1));
+
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart1));
+
+		eventFrame += 0.3f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart2));
+
+		eventFrame += 0.3f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackStart3));
+
+
+		eventFrame = 2.01f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot1));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot2));
+		eventFrame += 0.1f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackShot3));
+	}
+
 
 	// ÉoÉtÅB
 	{
