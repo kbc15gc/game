@@ -252,6 +252,15 @@ float3 CalcLimLight( float3 normal, float3 lightDir, float3 limColor)
 	return limColor * lim;
 }
 
+/**
+* フレネル反射を計算.
+*/
+float3 CalcFresnel(float3 normal,float3 limColor,float limPower)
+{
+	float lim = 1.0f - abs(dot(normal, g_cameraDir));
+	lim = pow(lim, limPower);
+	return limColor * lim;
+}
 
 /*!
  *@brief	スペキュラライトを計算。
