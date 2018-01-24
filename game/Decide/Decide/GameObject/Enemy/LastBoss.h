@@ -54,6 +54,22 @@ public:
 	void MagicAttackShot2();
 	void MagicAttackStart3();
 	void MagicAttackShot3();
+
+	void HighMagicAttackStart1();
+	void HighMagicAttackShot1();
+	void HighMagicAttackStart2();
+	void HighMagicAttackShot2();
+	void HighMagicAttackStart3();
+	void HighMagicAttackShot3();
+	void HighMagicAttackStart4();
+	void HighMagicAttackShot4();
+	void HighMagicAttackStart5();
+	void HighMagicAttackShot5();
+	void HighMagicAttackStart6();
+	void HighMagicAttackShot6();
+
+
+
 	void BuffEvent();
 	void DebuffEvent();
 	void EntourageCommand();
@@ -156,6 +172,8 @@ private:
 	unique_ptr<EnemySingleAttack> _sordAttack2;	// íPçUåÇèàóùÅB
 	unique_ptr<EnemyWarpAttack> _warpAttack;
 	unique_ptr<EnemyBreathAttack> _magicAttack;
+	unique_ptr<EnemyBreathAttack> _highMagicAttack;
+
 	unique_ptr<EnemySingleAttack> _buffAttack;
 	unique_ptr<EnemySingleAttack> _debuffAttack;
 	unique_ptr<EnemySingleAttack> _commandAttack;
@@ -166,6 +184,13 @@ private:
 	LastBossMagic* _magicFire1 = nullptr;
 	LastBossMagic* _magicFire2 = nullptr;
 	LastBossMagic* _magicFire3 = nullptr;
+
+	LastBossMagic* _magicBigFire1 = nullptr;
+	LastBossMagic* _magicBigFire2 = nullptr;
+	LastBossMagic* _magicBigFire3 = nullptr;
+	LastBossMagic* _magicBigFire4 = nullptr;
+	LastBossMagic* _magicBigFire5 = nullptr;
+	LastBossMagic* _magicBigFire6 = nullptr;
 
 	SordShock* _sordAttackShot0 = nullptr;
 	SordShock* _sordAttackShot1 = nullptr;

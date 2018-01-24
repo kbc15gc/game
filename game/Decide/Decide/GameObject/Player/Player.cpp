@@ -561,7 +561,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 		else
 		{
-			c = Color::blue;
+			//水色
+			c = { 0.0f,0.6f,1.0f,1.0f };
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
@@ -869,8 +870,9 @@ void Player::Speak()
 	if (_NearNPC)
 	{
 		_NearNPCLen = (_NearNPC->transform->GetPosition() - transform->GetPosition()).Length();
+		float lenLimit = (strcmp(_NearNPC->GetName(), "LastBoss.X") == 0) ? 10.0f : 3.0f;
 		//会話可能
-		if (_NearNPCLen <= 3.0f && !eventflag)
+		if (_NearNPCLen <= lenLimit && !eventflag)
 		{
 			//地面についていれば話しかけれる
 			//ショップイベントでないとき。

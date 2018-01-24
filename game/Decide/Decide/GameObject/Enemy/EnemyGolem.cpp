@@ -18,7 +18,7 @@ void EnemyGolem::_AwakeSubClass() {
 
 void EnemyGolem::_StartSubClass() {
 	//‹–ìŠp¶¬B
-	_ViewAngle = 100.0f;
+	//_ViewAngle = 100.0f;
 	//_ViewRange = 20.0f;
 
 	//œpœj”ÍˆÍİ’èB
