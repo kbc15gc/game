@@ -59,6 +59,7 @@
 #include "GameObject\Enemy\LastBoss.h"
 
 #include "GameObject\SplitSpace.h"
+#include "fbEngine\_Nature\Sky.h"
 
 ImageObject* g_depth;
 
@@ -432,7 +433,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 					// 魔王城に侵入。
 
 					// 魔王城用の空に変更。
-					INSTANCE(SceneManager)->GetSky();
+					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Stop,270.0f);
 
 					_splitWorld->TargetLost();
 					_splitWorld->SetActive(false);
@@ -446,7 +447,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 					// 魔王城からでた。
 
 					// 通常の空に戻す。
-					INSTANCE(SceneManager)->GetSky();
+					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Move, 90.0f);
 
 					_splitMaouzyou->TargetLost();
 					_splitMaouzyou->SetActive(false);

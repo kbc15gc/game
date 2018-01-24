@@ -156,7 +156,7 @@ public:
 	void SetSunMode(SunMode mode, float angle = 0)
 	{
 		_SunMode = mode;
-		_SunAngle = angle;
+		_SunAngle = D3DXToRadian(angle);
 	}
 
 private:
