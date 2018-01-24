@@ -200,6 +200,9 @@ PSOutput PSMain( VS_OUTPUT In )
     //アンビエントライトを加算。
     color.xyz += diff.xyz * (g_ambientLight.xyz + g_CharaLight.Ambient.xyz);
 
+	//フレネル反射.
+	color.xyz += CalcFresnel(normal, float4(1.0f, 1.0f, 1.0f, 3.0f));
+	
 	//フォグを計算.
 	color.xyz = CalcFog(In._World.xyz, color.xyz);
 

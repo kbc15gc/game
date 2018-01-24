@@ -255,11 +255,11 @@ float3 CalcLimLight( float3 normal, float3 lightDir, float3 limColor)
 /**
 * ƒtƒŒƒlƒ‹”½ŽË‚ðŒvŽZ.
 */
-float3 CalcFresnel(float3 normal,float3 limColor,float limPower)
+float3 CalcFresnel(float3 normal,float4 limColorPower)
 {
 	float lim = 1.0f - abs(dot(normal, g_cameraDir));
-	lim = pow(lim, limPower);
-	return limColor * lim;
+	lim = pow(lim, limColorPower.w);
+	return limColorPower.xyz * lim;
 }
 
 /*!
