@@ -93,7 +93,7 @@ static const Vector3 LocationPosition[(int)LocationCodeE::Common] =
 {
 	Vector3(-387.3f,58.307f,-75.8f),
 	Vector3(-108.1f ,55.524f ,533.9f),
-	Vector3(218.88f, 67.0f, -0.92f),
+	Vector3(218.88f, 65.793f, -0.92f),
 	//Vector3(-114.23f, 183.0f, 184.95f),
 };
 

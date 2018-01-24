@@ -62,4 +62,17 @@ void GameManager::Update()
 		if (_Player->GetSpeakFlag() == false && (_Player->GetState() != Player::State::Death))
 			INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
 	}
+
+	if (_Player->GetState() == Player::State::Death)
+	{
+		switch (INSTANCE(EventManager)->GetEventID())
+		{
+			case Event::EventID::StatusWindowA:
+				INSTANCE(EventManager)->Execute(Event::EventID::StatusWindowA);
+				break;
+			case Event::EventID::HistoryBookA:
+				INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
+				break;
+		}
+	}
 }
