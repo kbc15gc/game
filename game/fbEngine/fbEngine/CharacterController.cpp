@@ -446,3 +446,43 @@ const Vector3& CCharacterController::Execute()
 
 	return _moveSpeedExcute;
 }
+
+/**
+* 足元を地面に合わせる.
+*/
+void CCharacterController::FitGround()
+{
+	//レイを作成する.
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+
+	//開始位置と足元の差分.
+	float startOffset = 2;
+
+	Vector3 pos = transform->GetPosition();
+	//開始地点を設定.
+	start.setOrigin(btVector3(pos.x, pos.y + startOffset, pos.z));
+
+	//終了地点を設定.
+	//2メートル下を見る.
+	end.setOrigin(start.getOrigin() - btVector3(0, startOffset + 2, 0));
+
+	fbPhysicsCallback::SweepResultGround callback;
+	callback.me = gameObject;
+	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
+	callback._attribute = m_attributeY;
+
+	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)m_collider->GetBody(), start, end, callback);
+
+	if (callback.isHit)
+	{
+		pos = callback.hitPos;
+		pos.y += (startOffset + m_rigidBody->GetShape()->GetHalfSize().y) * transform->GetScale().y;	// 足元の位置に設定していたのでコリジョンの中心に戻す。
+																	//移動確定。
+		m_rigidBody->SubOffset(pos);	// コリジョンの中心座標なのでモデルの原点まで差分の分減算。
+
+		transform->SetPosition(pos);
+		m_rigidBody->Update();	// transformを更新したのでコリジョンのTransformも更新する。
+	}
+}

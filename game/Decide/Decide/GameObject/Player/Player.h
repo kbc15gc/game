@@ -332,6 +332,15 @@ public:
 	{
 		return _NearNPCLen;
 	}
+
+	/**
+	* 足元と地面を密着！！！
+	*/
+	void FitGround()
+	{
+		_CharacterController->FitGround();
+	}
+
 private:
 
 	//アニメーションイベント
