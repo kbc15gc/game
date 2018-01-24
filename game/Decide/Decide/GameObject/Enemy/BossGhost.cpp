@@ -303,6 +303,7 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 	{
 		// 待機状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossGhost::Wait));
+		//_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossGhost::Dance));
 		// 歩行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossGhost::Walk));
 		// 走行状態。

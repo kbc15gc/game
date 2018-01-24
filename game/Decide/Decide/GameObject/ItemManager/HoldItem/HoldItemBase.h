@@ -25,7 +25,7 @@ public:
 		return _Info;
 	}
 
-	virtual int GetValue()
+	int GetValue()
 	{
 		return _Info->Value;
 	}

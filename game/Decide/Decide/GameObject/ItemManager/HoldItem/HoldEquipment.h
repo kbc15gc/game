@@ -146,10 +146,10 @@ public:
 	}
 
 	//値段取得。
-	int GetValue()override
+	/*int GetValue()override
 	{
 		return  _Info->Value + _Info->Value * GetRevision();
-	}
+	}*/
 private:
 	// 外部から読み込んだデータを設定。
 	// 引数：	CSV読み書き用の所持装備品構造体へのポインタ。

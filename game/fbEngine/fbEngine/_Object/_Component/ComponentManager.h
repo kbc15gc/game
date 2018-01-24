@@ -62,6 +62,7 @@ public:
 		{
 			if (strcmp((*it)->GetName(), name) == 0)
 			{
+				//ƒƒ‚ƒŠ‰ğ•úB
 				SAFE_DELETE(*it);
 				_Components.erase(it);
 				return;

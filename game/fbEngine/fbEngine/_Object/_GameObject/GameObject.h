@@ -34,6 +34,12 @@ public:
 	{
 		return _Components.AddComponent(c);
 	}
+	//コンポーネント削除
+	template<class T>
+	void RemoveComponent()
+	{
+		_Components.RemoveComponent<T>();
+	}
 	//名前からコンポーネント取得
 	Component* GetComponent(const char* name)
 	{
