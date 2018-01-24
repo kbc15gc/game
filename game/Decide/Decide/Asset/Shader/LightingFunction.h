@@ -28,9 +28,9 @@ sampler_state
 };
 
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
-float4 g_EffectFlg;	//xは投影、yはスペキュラ
+float4 g_EffectFlg;	//xは投影、yはスペキュラ,z:フレネル,w:リム.
 
-
+float4 g_FresnelParam;//xyz:フレネルカラー,w:フレネルPow.
 
 int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。

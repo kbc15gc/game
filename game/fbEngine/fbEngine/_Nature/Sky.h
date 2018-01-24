@@ -172,8 +172,8 @@ private:
 	/** 大気散乱用パラメータ. */
 	AtmosphericScatteringParamS _AtomosphereParam;
 
-	SunMode _SunMode;
-	SunMode _NextSunMode;
+	SunMode _SunMode = SunMode::Move;
+	SunMode _NextSunMode = SunMode::Move;
 	float _NextSunAngle = 0.0f;
 	float _BefSunAngle = 0.0f;
 	float _TransitionRate = 0.0f;
