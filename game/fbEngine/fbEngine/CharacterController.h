@@ -182,6 +182,11 @@ public:
 		m_attributeY = mask;
 	}
 
+	/**
+	* 足元を地面に合わせる.
+	*/
+	void FitGround();
+
 private:
 	Vector3 				m_moveSpeed = Vector3::zero;	//キャラクターが自発的に移動する量。
 	Vector3					_outsideSpeed = Vector3::zero;	//キャラクターが外的要因で移動する量。 

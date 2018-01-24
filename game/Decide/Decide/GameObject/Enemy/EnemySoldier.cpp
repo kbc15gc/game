@@ -52,11 +52,21 @@ void EnemySoldier::CreateAttackCollsion()
 	//UŒ‚ƒRƒŠƒWƒ‡ƒ“ì¬B
 	unsigned int priorty = 1;
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attackCollision", priorty);
-	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 1.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), AttackCollision::CollisionMaster::Enemy, 0.15f, AttackCollision::ReactionType::NotAction, transform);
+	attack->Create(_MyComponent.Parameter->GiveDamageMass(false, false), Vector3(0.0f, 0.0f, 1.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.05f), AttackCollision::CollisionMaster::Enemy, 0.15f, AttackCollision::ReactionType::NotAction, transform);
 	attack->RemoveParent();
 
 	// UŒ‚‰¹Ä¶B
 	EnemyPlaySound(EnemyCharacter::SoundIndex::Damage);
+}
+
+void EnemySoldier::Attack1Sub1()
+{
+	_MyComponent.Animation->SetAnimeSpeed(0.5f);
+}
+
+void EnemySoldier::Attack1Sub2()
+{
+	_MyComponent.Animation->SetAnimeSpeed(1.0f);
 }
 
 void EnemySoldier::_UpdateSubClass()
@@ -139,8 +149,11 @@ void EnemySoldier::_BuildAnimationSubClass(vector<double>& datas)
 
 void EnemySoldier::_ConfigAnimationEvent()
 {
-	float eventFrame = 0.2f;
-
+	float eventFrame = 0.0f;
+	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemySoldierAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemySoldier::Attack1Sub1));
+	//eventFrame = 0.1f;
+	//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemySoldierAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemySoldier::Attack1Sub2));
+	eventFrame = 0.2f;
 	_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(EnemySoldierAnim::Attack01), eventFrame, static_cast<AnimationEvent>(&EnemySoldier::CreateAttackCollsion));
 }
 
