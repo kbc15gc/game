@@ -194,7 +194,7 @@ void DropItem::Update() {
 		_Player->PlayerJumpEnable();
 
 		//”ÍˆÍ“à‚ÅAƒ{ƒ^ƒ“‚ð‰Ÿ‚³‚ê‚½‚çŽæ“¾B
-		if (VPadInput->IsPush(fbEngine::VPad::ButtonA)) {
+		if (VPadInput->IsPush(fbEngine::VPad::ButtonA) && _Player->GetState() != Player::State::Death) {
 
 			StatusWindow* status = (StatusWindow*)INSTANCE(GameObjectManager)->FindObject("StatusWindow");
 			HistoryBook* book = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");

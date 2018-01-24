@@ -121,6 +121,11 @@ void NPC::_FitGround()
 
 void NPC::_Speak()
 {
+	//死亡時は話せない。
+	if (_Player->GetState() == Player::State::Death)
+	{
+		return;
+	}
 	//プレイヤーとの距離を計算。
 	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
 	if (_Player->GetNearNPCLen() > len)

@@ -62,6 +62,12 @@ class Sky : public GameObject
 {
 public:
 
+	enum class SunMode
+	{
+		Move,
+		Stop,
+	};
+
 	/**
 	* コンストラクタ
 	*/
@@ -144,6 +150,15 @@ public:
 		return _NightTexture;
 	}
 
+	/**
+	* モードを設定.
+	*/
+	void SetSunMode(SunMode mode, float angle = 0)
+	{
+		_SunMode = mode;
+		_SunAngle = D3DXToRadian(angle);
+	}
+
 private:
 
 	/** 空モデル. */
@@ -154,6 +169,8 @@ private:
 
 	/** 大気散乱用パラメータ. */
 	AtmosphericScatteringParamS _AtomosphereParam;
+
+	SunMode _SunMode;
 
 	/** 太陽の座標. */
 	Vector3 _SunPosition = Vector3::zero;
