@@ -66,6 +66,7 @@ public:
 	{
 		Move,
 		Stop,
+		Transition,
 	};
 
 	/**
@@ -152,12 +153,13 @@ public:
 
 	/**
 	* モードを設定.
+	*
+	* param	mode	変化モード.
+	* param	next	変化後モード.
+	* param	angle	変化後アングル.
+	* param	speed	変化速度.
 	*/
-	void SetSunMode(SunMode mode, float angle = 0)
-	{
-		_SunMode = mode;
-		_SunAngle = D3DXToRadian(angle);
-	}
+	void SetSunMode(SunMode mode,SunMode next,float angle = 0,float speed = 10);
 
 private:
 
@@ -171,6 +173,11 @@ private:
 	AtmosphericScatteringParamS _AtomosphereParam;
 
 	SunMode _SunMode;
+	SunMode _NextSunMode;
+	float _NextSunAngle = 0.0f;
+	float _BefSunAngle = 0.0f;
+	float _TransitionRate = 0.0f;
+	float _TransitionSpeed = 10.0f;
 
 	/** 太陽の座標. */
 	Vector3 _SunPosition = Vector3::zero;

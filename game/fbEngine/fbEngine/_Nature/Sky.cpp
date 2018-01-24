@@ -59,14 +59,33 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
+		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
+		const float TMP = 0.01f / 6.0f;
 
 		if (_SunMode == SunMode::Move)
 		{
-			const float TMP = 0.01f / 6.0f;
-			//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
-
 			//100•b‚Åˆê“ú.
 			_SunAngle += PI * Time::DeltaTime() * TMP;
+		}
+		else if (_SunMode == SunMode::Transition)
+		{
+			_TransitionRate += Time::DeltaTime() * _TransitionSpeed * (abs(_BefSunAngle - _NextSunAngle) / (PI * 2));
+			_TransitionRate = min(1.0f, _TransitionRate);
+
+			_SunAngle = (_TransitionRate * _NextSunAngle) + ((1.0f - _TransitionRate) * _BefSunAngle);
+			if (_TransitionRate >= 1.0f)
+			{
+				_SunMode = _NextSunMode;
+			}
+		}
+
+		if (_SunAngle >= PI * 2)
+		{
+			_SunAngle -= PI * 2;
+		}
+		else if (_SunAngle <= 0.0f)
+		{
+			_SunAngle = (PI * 2) - _SunAngle;
 		}
 
 		//XŽ²‰ñ“].
@@ -142,6 +161,23 @@ void Sky::Update()
 void Sky::Render()
 {
 
+}
+
+void Sky::SetSunMode(SunMode mode,  SunMode next, float angle, float speed)
+{
+	_SunMode = mode;
+	_NextSunMode = next;
+	_TransitionSpeed = speed;
+	_BefSunAngle = _SunAngle;
+	_TransitionRate = 0.0f;
+	if (mode == SunMode::Stop)
+	{
+		_SunAngle = _NextSunAngle = D3DXToRadian(angle);
+	}
+	else
+	{
+		_NextSunAngle = D3DXToRadian(angle);
+	}
 }
 
 AtmosphericScatteringParamS::AtmosphericScatteringParamS()
