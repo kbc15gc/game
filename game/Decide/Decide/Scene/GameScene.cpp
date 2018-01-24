@@ -431,6 +431,9 @@ void GameScene::_ChangeBGM(BGM bgm)
 				if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
 					// 魔王城に侵入。
 
+					// 魔王城用の空に変更。
+					INSTANCE(SceneManager)->GetSky();
+
 					_splitWorld->TargetLost();
 					_splitWorld->SetActive(false);
 					_splitMaouzyou->TargetLost();
@@ -441,6 +444,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 			else {
 				if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
 					// 魔王城からでた。
+
+					// 通常の空に戻す。
+					INSTANCE(SceneManager)->GetSky();
+
 					_splitMaouzyou->TargetLost();
 					_splitMaouzyou->SetActive(false);
 					_splitWorld->TargetLost();
