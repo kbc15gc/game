@@ -45,6 +45,8 @@ void CCharacterController::Init(Vector3 off, int type, Collider* coll, float gra
 
 const Vector3& CCharacterController::Execute()
 {
+	if (GetEnable() == false)
+		return Vector3::zero;
 	// ゴーストは当たらないように設定。
 	SubAttributeXZ(static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST));
 	SubAttributeY(static_cast<int>(fbCollisionAttributeE::CHARACTER_GHOST));

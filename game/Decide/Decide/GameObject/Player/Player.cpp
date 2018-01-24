@@ -675,6 +675,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
 	bool ret = false;
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+		//魔法攻撃を無視。
+		if (idx == CharacterParameter::Param::MAT)
+			continue;
 		int value = effectValue[idx];
 		if (value > 0) {
 			// バフ。

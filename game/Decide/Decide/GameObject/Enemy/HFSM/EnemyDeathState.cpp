@@ -40,7 +40,12 @@ void EnemyDeathState::_UpdateSubClass() {
 		}
 		_timeCounter += Time::DeltaTime();
 		float dc = 65.0f * (_timeCounter / max(0.1f, _waitTime));
+		//エネミーが死んだのでディザリングで消滅させる演出。
 		_EnemyObject->GetComponent<SkinModel>()->SetDitherCoefficient(dc);
+		//消え始めたら当たり判定を消す。
+		_EnemyObject->GetComponent<RigidBody>()->SetEnable(false);
+		
+		_EnemyObject->GetComponent<CCharacterController>()->SetEnable(false);
 	}
 }
 
