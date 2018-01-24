@@ -332,9 +332,13 @@ void SkinModel::DrawMeshContainer(
 		//フラグ設定
 		Vector4 flg;
 		flg.x = (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0;
+		flg.z = _IsFresnel;
 
 		_Effect->SetValue("g_EffectFlg", &flg, sizeof(Vector4));
 
+		//フレネル反射のパラメータを設定.
+		_Effect->SetVector("g_FresnelParam", (D3DXVECTOR4*)&_FresnelParam);
+		
 		//スペキュラフラグセット
 		//_Effect->SetInt("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
 

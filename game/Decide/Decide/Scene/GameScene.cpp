@@ -273,6 +273,8 @@ void GameScene::Update()
 	//	INSTANCE(SceneManager)->ChangeScene("EndingScene", true);
 	//}
 
+	_BefBGM = _BGM;
+
 	//@todo for debug
 	//デバッグ機能だと思うのでデバッグ専用にしときます。
 	//必要な場合は変えてください。
@@ -433,7 +435,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 					// 魔王城に侵入。
 
 					// 魔王城用の空に変更。
-					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Stop,270.0f);
+					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, 225.0f, 2.0f);
 
 					_splitWorld->TargetLost();
 					_splitWorld->SetActive(false);
@@ -446,9 +448,11 @@ void GameScene::_ChangeBGM(BGM bgm)
 				if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
 					// 魔王城からでた。
 
-					// 通常の空に戻す。
-					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Move, 90.0f);
-
+					if (_BefBGM == BGM::MAOU1 || _BefBGM == BGM::MAOU2 || _BefBGM == BGM::MAOU3)
+					{
+						// 通常の空に戻す。
+						INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Move, 20.0f, 2.0f);
+					}
 					_splitMaouzyou->TargetLost();
 					_splitMaouzyou->SetActive(false);
 					_splitWorld->TargetLost();
