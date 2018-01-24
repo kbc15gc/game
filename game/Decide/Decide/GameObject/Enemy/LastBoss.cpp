@@ -77,14 +77,14 @@ void LastBoss::SordAttackEvent4() {
 
 void LastBoss::FastSord() {
 	//攻撃コリジョン作成。
-	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 80);
+	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 90);
 
 	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
 
 void LastBoss::FastSord2() {
 	//攻撃コリジョン作成。
-	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 70);
+	CreateAttack(Vector3(0.0f, 0.0f, 2.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.7f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans);
 
 	EnemyPlaySound(EnemyCharacter::SoundIndex::AttackSord);
 }
@@ -156,7 +156,7 @@ void LastBoss::HighMagicAttackStart1() {
 	_magicBigFire1 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(0.0f));
-	_magicBigFire1->Create(this, Vector3(0.0f, -0.5f, 2.0f), rot, 20.0f,70,80);
+	_magicBigFire1->Create(this, Vector3(0.0f, -0.5f, 2.0f), rot, 20.0f, 80, 70);
 
 	_magicAttack->BreathStart(_magicBigFire1);
 
@@ -176,7 +176,7 @@ void LastBoss::HighMagicAttackStart2() {
 	_magicBigFire2 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(60.0f));
-	_magicBigFire2->Create(this, Vector3(2.0f, -0.5f, 1.0f), rot, 20.0f, 70, 80);
+	_magicBigFire2->Create(this, Vector3(2.0f, -0.5f, 1.0f), rot, 20.0f, 80, 70);
 
 	_magicAttack->BreathStart(_magicBigFire2);
 
@@ -197,7 +197,7 @@ void LastBoss::HighMagicAttackStart3() {
 	_magicBigFire3 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(120.0f));
-	_magicBigFire3->Create(this, Vector3(2.0f, -0.5f, -1.0f), rot, 20.0f, 70, 80);
+	_magicBigFire3->Create(this, Vector3(2.0f, -0.5f, -1.0f), rot, 20.0f, 80, 70);
 
 	_magicAttack->BreathStart(_magicBigFire3);
 
@@ -218,7 +218,7 @@ void LastBoss::HighMagicAttackStart4() {
 	_magicBigFire4 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(180.0f));
-	_magicBigFire4->Create(this, Vector3(0.0f, -0.5f, -2.0f), rot, 20.0f, 70, 80);
+	_magicBigFire4->Create(this, Vector3(0.0f, -0.5f, -2.0f), rot, 20.0f, 80, 70);
 
 	_magicAttack->BreathStart(_magicBigFire4);
 
@@ -239,7 +239,7 @@ void LastBoss::HighMagicAttackStart5() {
 	_magicBigFire5 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(240.0f));
-	_magicBigFire5->Create(this, Vector3(-2.0f, -0.5f, -1.0f), rot, 20.0f, 70, 80);
+	_magicBigFire5->Create(this, Vector3(-2.0f, -0.5f, -1.0f), rot, 20.0f, 80, 70);
 
 	_magicAttack->BreathStart(_magicBigFire5);
 
@@ -260,7 +260,7 @@ void LastBoss::HighMagicAttackStart6() {
 	_magicBigFire6 = INSTANCE(GameObjectManager)->AddNew<LastBossMagic>("breath", 8);
 	Quaternion rot;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(300.0f));
-	_magicBigFire6->Create(this, Vector3(-2.0f, -0.5f, 1.0f), rot, 20.0f, 70, 80);
+	_magicBigFire6->Create(this, Vector3(-2.0f, -0.5f, 1.0f), rot, 20.0f, 80, 70);
 
 	_magicAttack->BreathStart(_magicBigFire6);
 
