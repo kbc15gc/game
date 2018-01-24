@@ -204,7 +204,8 @@ PSOutput PSMain( VS_OUTPUT In )
 	{
 		//フレネル反射.
 		//color.xyz += CalcFresnel(normal, g_FresnelParam);
-		color.xyz += CalcFresnel(normal, float4(1.0f, 1.0f, 1.0f, 1.5f));
+//		color.xyz += CalcFresnel(normal, float4(1.0f, 1.0f, 1.0f, 1.5f));
+		color.xyz += CalcFresnel(normal, float4(0.9f, 0.9f, 0.6f, 2.0f));
 	}
 
 	//フォグを計算.
