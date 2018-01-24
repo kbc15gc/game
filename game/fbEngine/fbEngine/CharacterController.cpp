@@ -478,7 +478,7 @@ void CCharacterController::FitGround()
 	if (callback.isHit)
 	{
 		pos = callback.hitPos;
-		pos.y += (startOffset + m_rigidBody->GetShape()->GetHalfSize().y) * transform->GetScale().y;	// 足元の位置に設定していたのでコリジョンの中心に戻す。
+		pos.y += (m_rigidBody->GetShape()->GetHalfSize().y) * transform->GetScale().y;	// 足元の位置に設定していたのでコリジョンの中心に戻す。
 																	//移動確定。
 		m_rigidBody->SubOffset(pos);	// コリジョンの中心座標なのでモデルの原点まで差分の分減算。
 

@@ -159,7 +159,7 @@ void HistoryManager::Evolution()
 			//‹ß‚­‚É‚¢‚éNPC‚ð‰Šú‰»B
 			_Player->SetNPC(nullptr);
 			_Player->transform->SetLocalPosition(LocationPosition[(int)_EvolutionLocation]);
-			_Player->FitGround();
+			//_Player->FitGround();
 			_PlayerCamera->LookAtTarget();
 			//_PlayerCamera->transform->SetParent(nullptr);
 
