@@ -37,6 +37,14 @@ void HoldWeapon::CreateRandParam()
 	//frnd = static_cast<float>(max) * 0.1f;
 	//RndDexMass(GetRevision() * frnd);
 
+	//基本性能と同じパラメータならRankをCにする。
+	if (_Atk == static_cast<Item::WeaponInfo*>(_Info)->Atk)
+	{
+		_AtkRnd = 0;
+		_Revision = 0;
+		_Rank = Rank::C;
+	}
+
 	_Dex = static_cast<Item::WeaponInfo*>(_Info)->Dex;
 	_Crt = static_cast<Item::WeaponInfo*>(_Info)->CriticalDamage;	// クリティカル威力は固定。
 }

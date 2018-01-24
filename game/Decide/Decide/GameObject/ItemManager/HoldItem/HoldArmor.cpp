@@ -30,6 +30,15 @@ void HoldArmor::CreateRandParam()
 	max -= rnd;
 	frnd = static_cast<float>(max) * 0.1f;
 	RndMDef(GetRevision() * frnd);
+
+	//基本性能と同じパラメータならRankをCにする。
+	if (_Def == static_cast<Item::ArmorInfo*>(_Info)->Def &&
+		_MagicDef == static_cast<Item::ArmorInfo*>(_Info)->MagicDef)
+	{
+		_DefRnd = _MagicDef = 0;
+		_Revision = 0;
+		_Rank = Rank::C;
+	}
 }
 
 //防具のパラメーターを基準値で設定。
