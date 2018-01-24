@@ -57,6 +57,14 @@ void RigidBody::LateUpdate()
 #endif
 	}
 }
+void RigidBody::OnEnable()
+{
+	_AddWorldSubClass();
+}
+void RigidBody::OnDisable()
+{
+	_RemoveWorldSubClass();
+}
 void RigidBody::Create(RigidBodyInfo& rbInfo, bool isAddWorld)
 {
 	//‘O‰ñ‚Ì“à—e‰ð•ú

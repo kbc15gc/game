@@ -39,7 +39,7 @@ public:
 	virtual void SetEnable(const bool flg)
 	{
 		//Ø‚è‘Ö‚í‚Á‚½‚ÉŒÄ‚Ño‚·BB
-		if ((enable != flg) && enable)
+		if ((enable != flg) && flg)
 			OnEnable();
 		else
 			OnDisable();
