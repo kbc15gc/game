@@ -81,6 +81,8 @@ private:
 	SoundSource* _SoundBGM[static_cast<int>(BGM::NUM)];
 	SoundSource* _GameBGM;
 	BGM _BGM = BGM::NONE;
+	BGM _BefBGM = BGM::NONE;
+
 	Player* _Player;
 	HistoryMenu* _HistoryMenu = nullptr;
 	HistoryBook* _HistoryBook = nullptr;

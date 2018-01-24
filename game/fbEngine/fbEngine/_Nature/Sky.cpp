@@ -48,7 +48,7 @@ void Sky::Awake()
 	_MoonPlate->SetBillboard(true);
 	_MoonPlate->SetActive(false);
 
-	_SunAngle = D3DXToRadian(10.0f);
+	_SunAngle = D3DXToRadian(80.0f);
 }
 
 /**
