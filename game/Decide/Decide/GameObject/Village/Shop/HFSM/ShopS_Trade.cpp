@@ -51,13 +51,13 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 
 	_TopText = INSTANCE(GameObjectManager)->AddNew<TextObject>("TopText", _TradeWindow->GetPriorty());
 	_TopText->transform->SetParent(_TradeWindow->transform);
-	_TopText->transform->SetLocalPosition(Vector3(-370, 25, 0));
+	_TopText->transform->SetLocalPosition(Vector3(-370, 30, 0));
 	_TopText->Initialize(L"名称                 所持数 売買個数    値段", 35);
 	_TopText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	
 	_ValueText = INSTANCE(GameObjectManager)->AddNew<TextObject>("ValueText", _TradeWindow->GetPriorty());
 	_ValueText->transform->SetParent(_TradeWindow->transform);
-	_ValueText->transform->SetLocalPosition(Vector3(372, 330, 0));
+	_ValueText->transform->SetLocalPosition(Vector3(372, 320, 0));
 	_ValueText->Initialize(L"合計金額      0$", 50);
 	_ValueText->SetAnchor(fbText::TextAnchorE::UpperRight);
 	_ValueText->SetKerning(false);
@@ -230,8 +230,9 @@ void ShopS_Trade::AddTradeNum(int max)
 		//売買個数テキストを更新。
 		_UpdateMoneyText(_Select);
 
+		auto rate = (_SaveState == Shop::ShopStateE::Sell) ? SELL_RATE : 1.0f;
 		//合計金額を更新。
-		_SumValue += _DisplayList->at(_Select)->GetValue();
+		_SumValue += _DisplayList->at(_Select)->GetValue() * rate;
 		char sum[256];
 		sprintf(sum, "合計金額      %4d$", _SumValue);
 		_ValueText->SetText(sum);
@@ -253,8 +254,9 @@ void ShopS_Trade::SubTradeNum()
 		//売買個数テキストを更新。
 		_UpdateMoneyText(_Select);
 
+		auto rate = (_SaveState == Shop::ShopStateE::Sell) ? SELL_RATE : 1.0f;
 		//合計金額を更新。
-		_SumValue -= _DisplayList->at(_Select)->GetValue();
+		_SumValue += _DisplayList->at(_Select)->GetValue() * rate;
 		char sum[256];
 		sprintf(sum, "合計金額      %4d$", _SumValue);
 		_ValueText->SetText(sum);
@@ -372,11 +374,12 @@ void ShopS_Trade::_UpdateMoneyText(int idx)
 	}
 	else if (_SaveState == Shop::ShopStateE::Sell)
 	{
+		int value = item->GetValue() * SELL_RATE;
 		if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
 			//持っている個数　交換個数　値段。
-			sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[idx], item->GetValue());
+			sprintf(info, "%2d   %2d %5d$", ((ConsumptionItem*)item)->GetHoldNum(), _TradeNum[idx], value);
 		else
-			sprintf(info, "%2d %5d$", _TradeNum[idx], item->GetValue());
+			sprintf(info, "%2d %5d$", _TradeNum[idx], value);
 	}
 	//金額を設定。
 	_MoneyTexts[idx]->SetText(info);
@@ -415,13 +418,14 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto& val = info->effectValue;
 			
 			string tmp = "";
-			const char* p[] = { "HP: ","MP","ATK:","DEF:","MDE:","DEX:","CRT:","LV: " };
-			FOR(idx,ARRAY_SIZE(p))
+			const char* p[] = { "HP: ","MP","ATK:","DEF:","MAT","MDE:","DEX:","CRT:","LV: " };
+			auto max_idx = ARRAY_SIZE(p);
+			FOR(idx, max_idx)
 			{
 				if (idx == 1)
 					continue;
 				char per = ' ';
-				if (0 < idx && idx < 7)
+				if (0 < idx && idx < max_idx - 1)
 					per = '%';
 				sprintf(text, "%s%s%4d%c</color>\n", p[idx], _CalcColorCode(val[idx]), val[idx], per);
 				tmp += text;
@@ -496,42 +500,58 @@ char * ShopS_Trade::_CalcColorCode(int diff)
 
 void ShopS_Trade::_Decision()
 {
-	
+	//テキスト。
+	char msg[256];
 	if (_TradeList.size() > 0)
 	{
-		//テキスト。
-		char msg[256];
 		sprintf(msg, "全部で %d$ になります。", _SumValue);
-		//関数を設定。
-		if (_SaveState == Shop::ShopStateE::Buy)
-		{
-			//お金が足りているか？
-			if (INSTANCE(Inventory)->GetPlayerMoney() >= _SumValue)
-			{
-				_Shop->SetDescriptionText(msg);
-				_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
-				//購入確認画面を出す。
-				_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
-			}
-			else
-			{
-				//お金が足りないときのメッセージ。
-				_Shop->SpeakMess(1);
-			}
-		}
-		else if (_SaveState == Shop::ShopStateE::Sell)
-		{
-			//
-			_Shop->SetDescriptionText(msg);
-			_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this);
-			//販売確認画面を出す。
-			_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
-		}
 	}
 	else
 	{
+		//現在選択しているアイテムを売買。
+		auto item = (*_DisplayList)[_Select];
+		int maxNum = 99;
+		if (_SaveState == Shop::ShopStateE::Sell)
+		{
+			//アイテムか消耗品かどうか？
+			if (item->GetInfo()->TypeID == Item::ItemCodeE::Item)
+				maxNum = ((ConsumptionItem*)item)->GetHoldNum();
+			else
+				maxNum = 1;
+		}
+
+		//加算。
+		AddTradeNum(maxNum);
+		sprintf(msg, "%sですね。 %d$ になります。", item->GetInfo()->Name, _SumValue);
+
 		//アイテムが何も選択されていないときのメッセージ。
-		_Shop->SpeakMess(5);
+		//_Shop->SpeakMess(5);
+	}
+
+	//関数を設定。
+	if (_SaveState == Shop::ShopStateE::Buy)
+	{
+		//お金が足りているか？
+		if (INSTANCE(Inventory)->GetPlayerMoney() >= _SumValue)
+		{
+			_Shop->SetDescriptionText(msg);
+			_Shop->_ShopFunc = std::bind(&ShopS_Trade::BuyItem, this);
+			//購入確認画面を出す。
+			_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
+		}
+		else
+		{
+			//お金が足りないときのメッセージ。
+			_Shop->SpeakMess(1);
+		}
+	}
+	else if (_SaveState == Shop::ShopStateE::Sell)
+	{
+		//
+		_Shop->SetDescriptionText(msg);
+		_Shop->_ShopFunc = std::bind(&ShopS_Trade::SellItem, this);
+		//販売確認画面を出す。
+		_Shop->_ChangeState(Shop::ShopStateE::Confirmation);
 	}
 }
 

@@ -61,7 +61,7 @@ void Shop::Awake()
 	//説明文のテキスト。
 	_DescriptionText = INSTANCE(GameObjectManager)->AddNew<TextObject>("shopItem", 8);
 	_DescriptionText->transform->SetParent(_DescriptionWindow->transform);
-	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 10, 0));
+	_DescriptionText->transform->SetLocalPosition(Vector3(-_DescriptionWindow->GetSize().x / 2 + 30, -_DescriptionWindow->GetSize().y / 2 + 20, 0));
 	_DescriptionText->Initialize(L"TEST", 40);
 	_DescriptionText->SetAnchor(fbText::TextAnchorE::UpperLeft);
 	
