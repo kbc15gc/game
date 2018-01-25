@@ -256,7 +256,7 @@ void ShopS_Trade::SubTradeNum()
 
 		auto rate = (_SaveState == Shop::ShopStateE::Sell) ? SELL_RATE : 1.0f;
 		//合計金額を更新。
-		_SumValue += _DisplayList->at(_Select)->GetValue() * rate;
+		_SumValue -= _DisplayList->at(_Select)->GetValue() * rate;
 		char sum[256];
 		sprintf(sum, "合計金額      %4d$", _SumValue);
 		_ValueText->SetText(sum);
