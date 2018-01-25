@@ -21,6 +21,7 @@ enum ModelEffectE
 	FRUSTUM_CULLING = BIT(7),	//フラスタムカリングを行うかどうか？
 	ALPHA = BIT(8),				//!< アルファ.
 	DITHERING = BIT(9),			//!< ディザリング.
+	RECEIVE_POINTLIGHT = BIT(10),	//ポイントライトを落とす.
 };
 
 /**

@@ -4,8 +4,8 @@
 
 void GameLight::Awake()
 {
-	Light* light = AddComponent<Light>();
-	INSTANCE(GameObjectManager)->mainLight = light;
+	_Light = AddComponent<Light>();
+	INSTANCE(GameObjectManager)->mainLight = _Light;
 
 	int num = 4;
 	DirectionalLight* Dl[4];
@@ -26,8 +26,10 @@ void GameLight::Awake()
 
 	FOR(i, num)
 	{
-		light->AddLight(Dl[i]);
+		_Light->AddLight(Dl[i]);
 	}
+
+	_Light->SetPointLightParam(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	shadow->SetNear(1.0f);
@@ -47,6 +49,8 @@ void GameLight::Start()
 
 void GameLight::Update()
 {
+	_Light->SetPointLightPosition(_Player->transform->GetPosition() + Vector3(0, 1, 0));
+
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	
 	Vector3 lightPos = INSTANCE(SceneManager)->GetSky()->GetShadowLightPosition();

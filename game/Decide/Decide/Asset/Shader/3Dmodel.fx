@@ -229,6 +229,8 @@ PSOutput PSMain(VS_OUTPUT In)
 	light += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
 	//ムーンライト.
 	light += CalcMoonLight(normal, In._World.xyz, In._UV) * shadowPower;
+	light += CalcPointLight(normal, In._World.xyz);
+
 	color.xyz += diff.xyz * light;
 
 	//アンビエントライトを加算。
@@ -492,6 +494,8 @@ PSOutput PSTerrain(VS_OUTPUT In)
 	light += CalcDiffuseLight(normal, In._World.xyz, In._UV);
 	//ムーンライト.
 	light += CalcMoonLight(normal, In._World.xyz, In._UV) * shadowPower;
+	light += CalcPointLight(normal, In._World.xyz);
+
 	color.xyz += diffuseColor.xyz * light;
 
     //アンビエントライトを加算。

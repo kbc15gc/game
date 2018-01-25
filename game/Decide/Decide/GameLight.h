@@ -22,4 +22,7 @@ private:
 	/** プレイヤーのポインタ. */
 	Player* _Player = nullptr;
 
+	/** ライト. */
+	Light* _Light = nullptr;
+
 };

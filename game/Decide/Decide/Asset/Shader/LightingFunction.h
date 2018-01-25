@@ -28,7 +28,7 @@ sampler_state
 };
 
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
-float4 g_EffectFlg;	//xは投影、yはスペキュラ,z:フレネル,w:リム.
+float4 g_EffectFlg;	//xは投影、yはポイントライト,z:フレネル,w:リム.
 
 float4 g_FresnelParam;//xyz:フレネルカラー,w:フレネルPow.
 
@@ -38,6 +38,9 @@ int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。
 float4	g_diffuseLightColor[NUM_DIFFUSE_LIGHT];		//ディフューズライトのカラー。
 float4	g_ambientLight;								//環境光。
+
+float4 g_PointLightParam;
+float4 g_PointLightPos;
 
 float4	g_cameraPos;	//!<カメラの座標。
 float3	g_cameraDir;	//!<カメラ方向。
@@ -319,17 +322,20 @@ float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv)
 /*!
  * @brief	ポイントライトを計算。
  */
-//float3 PointLight( float3 normal, float3 worldPos, int lim )
-//{
-//	float3 lightDir = worldPos - g_light.pointLightPosition.xyz;
-//	float len = length(lightDir) / g_light.pointLightColor.w;
-//	lightDir = normalize(lightDir);
-//	float3 color = max( 0.0f, -dot(normal, lightDir)) * g_light.pointLightColor.xyz;
-//	//距離に反比例して減衰
-//	color /= max( 1.0f, (len*len) );
-//
-//	return color;
-//}
+float3 CalcPointLight( float3 normal, float3 worldPos)
+{
+	float3 color = 0.0;
+	if (g_EffectFlg.y)
+	{
+		float3 lightDir = worldPos - g_PointLightPos.xyz;
+		float len = length(lightDir) / g_PointLightParam.w;
+		lightDir = normalize(lightDir);
+		color = max(0.0f, -dot(normal, lightDir)) * g_PointLightParam.xyz;
+		//距離に反比例して減衰
+		color /= max(1.0f, (len * len));
+	}
+	return color;
+}
 /*!
  * @brief	アルファに埋め込む輝度を計算。
  */
