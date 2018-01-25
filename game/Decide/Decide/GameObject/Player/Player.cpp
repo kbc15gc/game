@@ -873,7 +873,7 @@ void Player::Speak()
 	if (_NearNPC)
 	{
 		_NearNPCLen = (_NearNPC->transform->GetPosition() - transform->GetPosition()).Length();
-		float lenLimit = (strcmp(_NearNPC->GetName(), "LastBoss.X") == 0) ? 10.0f : 3.0f;
+		float lenLimit = (strcmp(_NearNPC->GetName(), "LastBoss.X") == 0) ? 15.0f : 3.0f;
 		//‰ï˜b‰Â”\
 		if (_NearNPCLen <= lenLimit && !eventflag)
 		{
