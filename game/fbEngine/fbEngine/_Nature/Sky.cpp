@@ -170,7 +170,7 @@ void Sky::SetSunMode(SunMode mode,  SunMode next, float angle, float speed)
 	_TransitionSpeed = speed;
 	_BefSunAngle = _SunAngle;
 	_TransitionRate = 0.0f;
-	if (mode == SunMode::Stop)
+	if (mode == SunMode::Stop || mode == SunMode::Move)
 	{
 		_SunAngle = _NextSunAngle = D3DXToRadian(angle);
 	}
