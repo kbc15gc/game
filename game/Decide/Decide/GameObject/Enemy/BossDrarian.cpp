@@ -46,6 +46,9 @@ void BossDrarian::_StartSubClass() {
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 	//_MyComponent.Model->SetDitherCoefficient(1.0f);
 
+	//どらリアンのフレネル反射の計算ここ.
+	_MyComponent.Model->SetFresnelParam(true, Vector4(1.3f, 1.3f, 1.3f, 3.0f));
+
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));
 	_singleAttack->Init(6.5f,static_cast<int>(AnimationBossDrarian::Attack), 0.2f);
