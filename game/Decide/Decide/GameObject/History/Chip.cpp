@@ -25,7 +25,7 @@ namespace
 	//あたり判定の距離。
 	const float atari = 1.5f;
 	//回転のスピード
-	const float rotation_speed = 2.0f;
+	const float rotation_speed = 1.0f;
 }
 
 /**
@@ -85,7 +85,7 @@ void Chip::Render()
 */
 void Chip::SetChipID(ChipID chipID)
 { 
-	//外部からセットしたIDを設定。
+	//外部からセットしたIDを設定
 	_ChipID = chipID;
 
 	//設定されたIDのモデルをロード。
@@ -96,8 +96,9 @@ void Chip::SetChipID(ChipID chipID)
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
 
-	_Model->SetFresnelParam(true, Vector4(1.0f, 1.0f, 1.0f, 1.5f));
-
+	_Model->SetFresnelParam(true, Vector4(5.0f, 5.0f, 5.0f, 3.0f));
+	_Model->SetIsLuminance(true);
+	
 	//model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	//model->SetAllBlend(Color::white * 13);
 	//設定されたIDのモデルの位置と大きさを設定。
