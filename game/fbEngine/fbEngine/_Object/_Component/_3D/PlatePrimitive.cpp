@@ -240,3 +240,8 @@ void PlatePrimitive::SetBlendColor(const Color& c)
 {
 	_BlendColor = c;
 }
+
+const Color& PlatePrimitive::GetBlendColor() const
+{
+	return _BlendColor;
+}

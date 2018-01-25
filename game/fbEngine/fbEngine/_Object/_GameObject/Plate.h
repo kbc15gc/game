@@ -16,6 +16,7 @@ public:
 	void SetPivot(float x, float y);
 	void SetUV(const Vector4& uv);
 	void SetBlendColor(const Color& c);
+	const Color& GetBlendColor() const;
 protected:
 	PlatePrimitive* _Primitive;
 };
