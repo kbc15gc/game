@@ -32,7 +32,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_Light(nullptr),
 	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
-	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING | ModelEffectE::RECEIVE_POINTLIGHT)),
+	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
 	_CullMode(D3DCULL_CCW),
 	_Culling(new CObjectFrustumCulling)
 {

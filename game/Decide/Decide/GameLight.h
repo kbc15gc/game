@@ -17,7 +17,15 @@ public:
 
 	void Update()override;
 
+	void SetIsPointLight(bool is)
+	{
+		_IsPointLight = is;
+	}
+
 private:
+
+	/** ポイントライトフラグ. */
+	bool _IsPointLight = false;
 
 	/** プレイヤーのポインタ. */
 	Player* _Player = nullptr;

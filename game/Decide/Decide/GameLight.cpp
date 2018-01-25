@@ -29,7 +29,6 @@ void GameLight::Awake()
 		_Light->AddLight(Dl[i]);
 	}
 
-	_Light->SetPointLightParam(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	shadow->SetNear(1.0f);
@@ -49,6 +48,12 @@ void GameLight::Start()
 
 void GameLight::Update()
 {
+	float pointLightLen = 1.0f;
+	if (!_IsPointLight)
+	{
+		pointLightLen = 0.0f;
+	}
+	_Light->SetPointLightParam(Vector4(1.0f, 1.0f, 1.0f, pointLightLen));
 	_Light->SetPointLightPosition(_Player->transform->GetPosition() + Vector3(0, 1, 0));
 
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
