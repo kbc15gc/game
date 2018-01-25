@@ -75,7 +75,7 @@ void EnemyCharacter::Start() {
 	// 継承先により変わる処理。
 	_StartSubClass();
 
-
+	_MyComponent.Model->SetFresnelParam(true, Vector4(1.0f, 1.0f, 1.0f, 1.5f));
 	// 継承先で初期位置が設定された可能性があるため更新。
 	//_MyComponent.CharacterController->Execute();
 	//_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
@@ -389,7 +389,6 @@ void EnemyCharacter::_BuildModelData() {
 	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 	_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
 	//_MyComponent.Model->SetIsLuminance(false);
-
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 

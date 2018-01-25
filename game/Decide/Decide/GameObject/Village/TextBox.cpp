@@ -24,13 +24,16 @@ void TextBox::Awake()
 {
 	_BoxImage[0] = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BoxImage",_Priority);
 	_BoxImage[1] = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BoxImage", _Priority);
+	_AButton = INSTANCE(GameObjectManager)->AddNew<ImageObject>("AButton", _Priority);
 	_Text = INSTANCE(GameObjectManager)->AddNew<TextObject>("Text", _Priority);
 
-	//カーソル
+	//カーソル。
 	_BoxImage[0]->SetTexture(LOADTEXTURE("cursor.png"));
 	_BoxImage[0]->SetPivot(0.5, 1.0);
-	//本体
+	//本体。
 	_BoxImage[1]->SetTexture(LOADTEXTURE("window.png"));
+	//Aボタン。
+	_AButton->SetTexture(LOADTEXTURE("UI/Button_A.png"));
 	
 	_Text->Initialize(L"", 25.0f);
 	_Text->SetAnchor(fbText::TextAnchorE::UpperCenter);
@@ -39,6 +42,7 @@ void TextBox::Awake()
 	_BoxImage[0]->transform->SetParent(transform);
 	_BoxImage[1]->transform->SetParent(_BoxImage[0]->transform);
 	_Text->transform->SetParent(_BoxImage[1]->transform);
+	_AButton->transform->SetParent(_Text->transform);
 
 	//オブジェクトを非表示にする
 	for each (Transform* child in transform->GetChildren())
@@ -57,11 +61,17 @@ void TextBox::PreUpdate() {
 
 void TextBox::Update()
 {
-
 	//アニメーション。
 	_Animation();
 	//表示する文字数の増加。
 	_IncreaseChar();
+
+	if ((_State & TextBoxStateE::OPEN) > 0)
+		_AButton->SetActive(_CharNum >= _Text->GetMaxCharNum());
+	static float alpha = 0.0f;
+	alpha += Time::DeltaTime()*0.1f;
+	_AButton->SetBlendColor(Color(1, 1, 1, sin(alpha)));
+
 	//
 	_Voice.Update();
 }
@@ -108,6 +118,7 @@ void TextBox::Title(bool show)
 			{
 				child->gameObject->SetActive(true, true);
 			}
+			_AButton->SetActive(false);
 			transform->SetScale(Vector3::one);
 		}
 	}
@@ -150,6 +161,9 @@ void TextBox::CloseMessage()
 		//テキストを閉じる。
 		_Text->SetText("");
 		_Text->SetActive(false);
+		_AButton->SetActive(false);
+		//ボイスを止める。
+		_Voice.Stop();
 
 		_AnimeTime = 0.0f;
 	}
@@ -203,6 +217,7 @@ void TextBox::_SetText(const char * text)
 	float halfHeight = textSize.y / 2;
 	//カーソルの上にくるように移動。
 	_BoxImage[1]->transform->SetLocalPosition(Vector3(0, -(halfHeight + _BoxImage[0]->GetTexture()->Size.y), 0));
+	_AButton->transform->SetLocalPosition(Vector3(textSize.x / 2.0f, halfHeight+5, 0));
 
 	_Text->transform->SetLocalPosition(Vector3(0, -(textSize.y / 2 - space.y / 2), 0));
 }
@@ -217,6 +232,8 @@ bool TextBox::_SetMessage(const int & id)
 		{
 			//テキストとボックスをセットする。
 			_SetText(_Message->Text);
+			//ボイス再生。
+			_PlayVoice(_Message->VoicePath);
 			return true;
 		}
 		else

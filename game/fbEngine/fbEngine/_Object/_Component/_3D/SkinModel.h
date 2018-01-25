@@ -221,6 +221,15 @@ public:
 		_LuminanceColor = lumColor;
 	}
 
+	/**
+	* フレネル反射のパラメータを設定.
+	*/
+	void SetFresnelParam(bool is, const Vector4& param = Vector4(1.0f, 1.0f, 1.0f, 1.5f))
+	{
+		_IsFresnel = is;
+		_FresnelParam = param;
+	}
+
 private:
 	//子とか兄弟も一括で描画するための再帰関数
 	void DrawFrame(LPD3DXFRAME pFrame);
@@ -288,5 +297,10 @@ private:
 
 	/** 溢れ輝度を書き込むかフラグ. */
 	bool _IsLuminance = true;
+
+	/** フレネル反射を行うフラグ. */
+	bool _IsFresnel = false;
+	/** フレネル反射のパラメータ. */
+	Vector4 _FresnelParam = Vector4(1.0f, 1.0f, 1.0f, 1.5f);
 
 };

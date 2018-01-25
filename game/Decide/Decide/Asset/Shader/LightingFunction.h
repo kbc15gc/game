@@ -28,9 +28,9 @@ sampler_state
 };
 
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
-float4 g_EffectFlg;	//xは投影、yはスペキュラ
+float4 g_EffectFlg;	//xは投影、yはスペキュラ,z:フレネル,w:リム.
 
-
+float4 g_FresnelParam;//xyz:フレネルカラー,w:フレネルPow.
 
 int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。
@@ -252,6 +252,19 @@ float3 CalcLimLight( float3 normal, float3 lightDir, float3 limColor)
 	return limColor * lim;
 }
 
+/**
+* フレネル反射を計算.
+*/
+float3 CalcFresnel(float3 normal,float4 limColorPower)
+{
+	float lim = 1.0f - abs(dot(normal, g_cameraDir));
+	if(lim > 0.8f){
+		return limColorPower.xyz;
+	}
+	lim /= 0.8f;
+	lim = pow(lim, limColorPower.w);
+	return limColorPower.xyz * lim;
+}
 
 /*!
  *@brief	スペキュラライトを計算。

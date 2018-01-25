@@ -80,12 +80,15 @@ private:
 	//ボイスの再生。
 	void _PlayVoice(string filepath)
 	{
+		_Voice.Stop();
 		_Voice.Init(filepath.c_str(), false);
 		_Voice.Play(false);
 	}
 private:
 	//テキストボックスの背景□とカーソル▼
 	ImageObject* _BoxImage[2];
+	//Aボタンのイメージ画像。
+	ImageObject* _AButton;
 	//テキスト
 	TextObject* _Text;
 	//読み始めるテキストのID
