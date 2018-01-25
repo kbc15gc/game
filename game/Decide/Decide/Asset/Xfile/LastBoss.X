@@ -22336,7 +22336,7 @@ Frame obj1 {
     0.762000;0.762000;0.762000;;
 
     TextureFilename Diffuse {
-     "RBOS.png";
+     "LastBoss.png";
     }
    }
   }
@@ -23283,7 +23283,7 @@ Frame obj2 {
     0.762000;0.762000;0.762000;;
 
     TextureFilename Diffuse {
-     "RBOS.png";
+     "LastBoss.png";
     }
    }
   }

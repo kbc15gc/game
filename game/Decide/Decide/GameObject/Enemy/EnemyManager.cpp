@@ -117,6 +117,8 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			barColor.push_back(BarColor::Green);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
+			newData->Object->SetBarPos({ 0.0f,2.7f,0.0f });
+			newData->Object->SetBigflag(true);
 			break;
 		case EnemyCharacter::EnemyType::Ghost:
 			//ゴースト生成。
@@ -237,8 +239,11 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					break;
 				case EnemyCharacter::EnemyType::BossD:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					barColor.push_back(BarColor::Green);
 					barColor.push_back(BarColor::Yellow);
 					barColor.push_back(BarColor::Red);
+					enemy->Object->SetBarPos({ 0.0f,2.7f,0.0f });
+					enemy->Object->SetBigflag(true);
 					break;
 				case EnemyCharacter::EnemyType::Ghost:
 					//ゴースト生成。

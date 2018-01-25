@@ -32,6 +32,7 @@ public:
 	void SetPivot(float x, float y);
 	void SetUV(const Vector4& uv);
 	void SetBlendColor(const Color& c);
+	const Color& GetBlendColor() const;
 
 	/**
 	* ˆì‚ê‹P“x‚ğ‘‚«‚Ş‚©‚Ìƒtƒ‰ƒO.
