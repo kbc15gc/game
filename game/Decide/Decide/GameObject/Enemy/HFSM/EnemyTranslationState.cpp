@@ -35,14 +35,14 @@ void EnemyTranslationState::_UpdateSubClass() {
 	float Length = StartToNowVec.Length();
 
 	//デルタタイムを加算.
-	//_NowLimitTime += Time::DeltaTime();
-	//if (_NowLimitTime >= _LimitTime)
-	//{
-	//	//リミットを迎えた.
-	//	// このステートの処理を終了する。
-	//	_EndState();
-	//	return;
-	//}
+	_NowLimitTime += Time::DeltaTime();
+	if (_NowLimitTime >= _LimitTime)
+	{
+		//リミットを迎えた.
+		// このステートの処理を終了する。
+		_EndState();
+		return;
+	}
 
 	if (Length >= _MoveLength) {
 		// 指定されていた移動量を超えた。
