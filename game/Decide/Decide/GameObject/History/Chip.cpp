@@ -95,6 +95,9 @@ void Chip::SetChipID(ChipID chipID)
 	_Material = modelData->FindMaterial("HuntingPage.png");
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+
+	_Model->SetFresnelParam(true, Vector4(1.0f, 1.0f, 1.0f, 1.5f));
+
 	//model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	//model->SetAllBlend(Color::white * 13);
 	//Ý’è‚³‚ê‚½ID‚Ìƒ‚ƒfƒ‹‚ÌˆÊ’u‚Æ‘å‚«‚³‚ðÝ’èB
