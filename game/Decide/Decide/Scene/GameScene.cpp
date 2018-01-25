@@ -263,6 +263,11 @@ void GameScene::Start()
 			}
 		}
 	}
+
+	if (!_isMaouzyou) {
+		// 最初から魔王城にいるので補間なしで夜にする。
+
+	}
 }
 
 void GameScene::Update()
@@ -435,7 +440,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 					// 魔王城に侵入。
 
 					// 魔王城用の空に変更。
-					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, 225.0f, 2.0f);
+					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, 225.0f, 1.0f);
 
 					_splitWorld->TargetLost();
 					_splitWorld->SetActive(false);
