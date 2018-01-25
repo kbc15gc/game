@@ -53,7 +53,7 @@ void BossGolem::_StartSubClass() {
 
 		// 拳。
 		_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
-		_singleAttackSecondPattern->Init(1.6f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f, 0.4f);
+		_singleAttackSecondPattern->Init(1.6f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f,0.7f/*, 0.4f*/);
 	}
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -146,11 +146,11 @@ void BossGolem::AnimationEvent_ZutukiSpeed() {
 }
 
 void BossGolem::AnimationEvent_ZutukiSpeed2() {
-	_MyComponent.Animation->SetAnimeSpeed(0.1f);
+	_MyComponent.Animation->SetAnimeSpeed(/*0.1f*/0.5f);
 }
 
 void BossGolem::AnimationEvent_ZutukiSpeed3() {
-	_MyComponent.Animation->SetAnimeSpeed(0.35f);
+	_MyComponent.Animation->SetAnimeSpeed(/*0.35f*/0.5f);
 }
 
 void BossGolem::AnimationEvent_Zutuki() {
@@ -279,7 +279,7 @@ void BossGolem::_ConfigAnimationEvent() {
 		float eventFrame = 0.19f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed));
 		
-		eventFrame = 0.215f;
+		eventFrame = 0.2f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed2));
 
 		eventFrame = 0.24f;

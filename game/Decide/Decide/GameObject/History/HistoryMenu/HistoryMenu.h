@@ -100,7 +100,7 @@ private:
 	/**
 	* 場所選択中の更新.
 	*/
-	void SelectLocationUpdate();
+	//void SelectLocationUpdate();
 
 	/**
 	* ページ選択中の更新.
@@ -154,11 +154,11 @@ private:
 private:
 
 	/** カーソル表示クラス. */
-	ImageObject* _CursorSpriteL = nullptr;
-	ImageObject* _CursorSpriteR = nullptr;
+	//ImageObject* _CursorSpriteL = nullptr;
+	//ImageObject* _CursorSpriteR = nullptr;
 
 	/** 選択されているもの. */
-	int _SelectCode = (int)SelectCodeE::Location;
+	//int _SelectCode = (int)SelectCodeE::Location;
 
 	/** 場所名表示オブジェクト. */
 	TextObject* _LocationNameRender = nullptr;

@@ -57,10 +57,14 @@ public:
 	{
 		_BlendColor = c;
 	}
+	const Color& GetBlendColor()const {
+		return _BlendColor;
+	}
 	void SetClipColor(const Color& c)
 	{
 		_ClipColor = c;
 	}
+
 	//そのままセット
 	void SetEffectFlg(const DWORD& e);
 	//trueなら足す、falseなら引く

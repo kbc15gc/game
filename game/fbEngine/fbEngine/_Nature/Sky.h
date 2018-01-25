@@ -161,6 +161,11 @@ public:
 	*/
 	void SetSunMode(SunMode mode,SunMode next,float angle = 0,float speed = 10);
 
+	// 月のインスタンス取得。
+	Plate* GetMoon() {
+		return _MoonPlate;
+	}
+
 private:
 
 	/** 空モデル. */

@@ -237,6 +237,8 @@ void GameScene::Start()
 
 	_isFirstFrame = true;	// 作業用。くそコード。
 
+	_targetMoonColor = _defaultColor = INSTANCE(SceneManager)->GetSky()->GetMoon()->GetBlendColor();
+
 	// 空間分割で最初にどちらを使用するかに必要。
 	{
 		_isMaouzyou = true;
@@ -263,6 +265,12 @@ void GameScene::Start()
 			}
 		}
 	}
+
+	if (!_isMaouzyou) {
+		// 最初から魔王城にいるので補間なしで夜にする。
+		INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Stop, Sky::SunMode::Stop, 225.0f);
+	}
+
 }
 
 void GameScene::Update()
@@ -373,6 +381,7 @@ void GameScene::Update()
 		}
 	}
 
+	_MoveMoonColor();
 }
 
 void GameScene::_NewChip()
@@ -430,12 +439,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 {
 	if (bgm < BGM::BOSS) {
 		if (!_isFirstFrame) {
+			// 空間分割切り替え。
 			if (!_isMaouzyou) {
 				if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
 					// 魔王城に侵入。
-
-					// 魔王城用の空に変更。
-					INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, 225.0f, 2.0f);
 
 					_splitWorld->TargetLost();
 					_splitWorld->SetActive(false);
@@ -452,6 +459,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 					{
 						// 通常の空に戻す。
 						INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Move, 20.0f, 2.0f);
+						_StartMoveMoonColor(_defaultColor,0.5f);
 					}
 					_splitMaouzyou->TargetLost();
 					_splitMaouzyou->SetActive(false);
@@ -459,6 +467,27 @@ void GameScene::_ChangeBGM(BGM bgm)
 					_splitWorld->SetActive(true);
 					_isMaouzyou = false;
 				}
+			}
+		}
+
+		// 空の切り替え。
+		{
+			if (bgm == BGM::MAOU1) {
+				// 魔王城用の空に変更。
+				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/225.0f/*205.0f*/, 10.0f);
+				_StartMoveMoonColor(_defaultColor, 0.5f);
+
+			}
+			else if (bgm == BGM::MAOU2) {
+				// 魔王城用の空に変更。
+				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/215.0f/*205.0f*/, 10.0f);
+				_StartMoveMoonColor(_defaultColor, 0.5f);
+
+			}
+			else if (bgm == BGM::MAOU3) {
+				// 魔王城用の空に変更。
+				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/195.0f/*205.0f*/, 10.0f);
+				_StartMoveMoonColor(Color(2.4f, 1.0f, 1.0f), 0.5f);
 			}
 		}
 	}
@@ -508,3 +537,39 @@ bool GameScene::_IsCollideBoxAABB(Vector3 vMin1, Vector3 vMax1, Vector3 vMin2, V
 	}
 	return false;
 };
+
+void GameScene::_MoveMoonColor() {
+	Plate* Moon = INSTANCE(SceneManager)->GetSky()->GetMoon();
+	Color c = Moon->GetBlendColor();
+	float deltaTime = Time::DeltaTime();
+
+
+	if (fabsf(c.r - _targetMoonColor.r) <= 0.0001f) {
+		c.r = _targetMoonColor.r;
+	}
+	else {
+		c.r += (_colorOffset.r * _colorMoveSpeed * deltaTime);
+	}
+
+	if (fabsf(c.g - _targetMoonColor.g) <= 0.0001f) {
+		c.g = _targetMoonColor.g;
+	}
+	else {
+		c.g += (_colorOffset.g * _colorMoveSpeed * deltaTime);
+	}
+
+	if (fabsf(c.b - _targetMoonColor.b) <= 0.0001f) {
+		c.b = _targetMoonColor.b;
+	}
+	else {
+		c.b += (_colorOffset.b * _colorMoveSpeed * deltaTime);
+	}
+
+	Moon->SetBlendColor(c);
+}
+
+void GameScene::_StartMoveMoonColor(const Color& target, float time) {
+	_targetMoonColor = target;	// 月の色目標値。
+	_colorOffset = _targetMoonColor - INSTANCE(SceneManager)->GetSky()->GetMoon()->GetBlendColor();	// 目標の色までの差分。
+	_colorMoveSpeed = time;				// 色が変化する速さ。
+}

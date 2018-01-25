@@ -95,4 +95,13 @@ public:
 		out.b = this->b * f;
 		return out;
 	}
+
+	Color operator - (Color c) const
+	{
+		Color out = *this;
+		out.r = this->r - c.r;
+		out.g = this->g - c.g;
+		out.b = this->b - c.b;
+		return out;
+	}
 };

@@ -63,6 +63,14 @@ public:
 			_GameBGM->Stop();
 		}
 	}
+
+private:
+	// 月の色を補間しながら変更。
+	void _MoveMoonColor();
+
+	// 変更開始。
+	void _StartMoveMoonColor(const Color& target,float time);
+
 private:
 	//チップを作成する
 	void _NewChip();
@@ -93,4 +101,11 @@ private:
 	SplitSpace* _splitMaouzyou = nullptr;
 	bool _isMaouzyou = false;	// 魔王城にいるか。
 	bool _isFirstFrame = true;
+
+	Color _defaultColor;
+
+	//Color _saveMoonColor;	// 月の色を保存。
+	Color _targetMoonColor;	// 月の色目標値。
+	Color _colorOffset = Color::black;	// 目標の色までの差分。
+	float _colorMoveSpeed;				// 色が変化する速さ。
 };
