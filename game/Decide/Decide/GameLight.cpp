@@ -46,11 +46,11 @@ void GameLight::Start()
 	INSTANCE(SceneManager)->GetSky()->SetNightAmbientLight(Vector3(0.3f, 0.3f, 0.3f));
 }
 
-Vector4 pointLightColor = Vector4(0.8f, 0.8f, 0.8f, 3.0f);
-Vector3 pointLightOffset = Vector3(0, 2, 0);
+Vector4 pointLightColor = Vector4(1.0f, 1.0f, 1.0f, 6.0f);
+Vector3 pointLightOffset = Vector3(0, 1, 0);
 void GameLight::Update()
 {
-	pointLightColor.w = 3.0f;
+	pointLightColor.w = 50.0f;
 	if (!_IsPointLight)
 	{
 		pointLightColor.w = 0.0f;
