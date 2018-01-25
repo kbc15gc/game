@@ -18,6 +18,7 @@ EnemyTranslationState::~EnemyTranslationState()
 void EnemyTranslationState::_EntrySubClass() {
 	_isWandering = false;
 	_isStartTrans = true;
+	_NowLimitTime = 0.0f;
 }
 
 void EnemyTranslationState::_StartSubClass() {
@@ -32,6 +33,16 @@ void EnemyTranslationState::_UpdateSubClass() {
 	Vector3 StartToNowVec = _EnemyObject->transform->GetPosition() - _InitPos;
 	StartToNowVec.y = 0.0f;
 	float Length = StartToNowVec.Length();
+
+	//デルタタイムを加算.
+	//_NowLimitTime += Time::DeltaTime();
+	//if (_NowLimitTime >= _LimitTime)
+	//{
+	//	//リミットを迎えた.
+	//	// このステートの処理を終了する。
+	//	_EndState();
+	//	return;
+	//}
 
 	if (Length >= _MoveLength) {
 		// 指定されていた移動量を超えた。
