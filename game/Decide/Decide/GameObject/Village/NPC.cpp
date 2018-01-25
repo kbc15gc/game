@@ -65,6 +65,7 @@ void NPC::CreateNPC(const npc::NPCInfo* info)
 	LoadModel(info->filename, false);
 
 	_Model->SetFresnelParam(true, Vector4(1.3f, 1.3f, 1.3f, 3.0f));
+	_Model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, false);
 
 	//‘«Œ³‚ğ’n–Ê‚É‡‚í‚¹‚é.
 	_FitGround();

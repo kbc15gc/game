@@ -18,6 +18,7 @@ class SplitSpace;
 class HistoryMenu;
 class HistoryBook;
 class VillageName;
+class GameLight;
 
 class GameScene : public Scene
 {
@@ -90,6 +91,8 @@ private:
 	SoundSource* _GameBGM;
 	BGM _BGM = BGM::NONE;
 	BGM _BefBGM = BGM::NONE;
+
+	GameLight* _GameLight = nullptr;
 
 	Player* _Player;
 	HistoryMenu* _HistoryMenu = nullptr;
