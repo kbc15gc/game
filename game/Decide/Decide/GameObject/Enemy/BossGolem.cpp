@@ -53,7 +53,7 @@ void BossGolem::_StartSubClass() {
 
 		// 拳。
 		_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
-		_singleAttackSecondPattern->Init(1.6f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f,0.7f/*, 0.4f*/);
+		_singleAttackSecondPattern->Init(1.6f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f,0.65f/*, 0.4f*/);
 	}
 	// 初期ステートに移行。
 	// ※暫定処理。
