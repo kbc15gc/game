@@ -61,7 +61,7 @@ void Chip::Update()
 	float toLenght = (transform->GetLocalPosition() - _Player->transform->GetLocalPosition()).Length();
 	_GetTimer += Time::DeltaTime();
 	//一定の距離内だとオブジェクト削除
-	if (toLenght <= atari && _GetTime <= _GetTimer)
+	if (toLenght <= atari && _GetTime <= _GetTimer && !INSTANCE(HistoryManager)->IsSetChip(_ChipID))
 	{
 		//チップ取得SE
 		_SE->Play(false);
