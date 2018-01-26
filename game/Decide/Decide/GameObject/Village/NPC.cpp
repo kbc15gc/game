@@ -31,8 +31,6 @@ void NPC::Awake()
 	_TextBox->SetTextSpeed(12.0f);
 	_IsSpeak = false;
 	_State = State::Idol;
-
-	PlayAnimation(State::Idol, 0.2f);
 }
 
 /**
@@ -42,6 +40,18 @@ void NPC::Start()
 {
 	//‘«Œ³‚ð’n–Ê‚É‡‚í‚¹‚é.
 	_FitGround();
+	
+	if (!strcmp(_Model->GetName(),"villager1.X"))
+	{
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Idol, -1.0f);
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Speak, -1.0f);
+	}
+	else
+	{
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Idol, -1.0f);
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Speak, -1.0f);
+	}
+	PlayAnimation(AnimationCodeE::Idol, 0.2f);
 }
 
 void NPC::Update()
@@ -160,7 +170,7 @@ void NPC::_Speak()
 			{
 				_Player->SetSpeakFlag(true);
 				_State = State::Speak;
-				PlayAnimation(State::Speak, 0.2f);
+				PlayAnimation(AnimationCodeE::Speak, 0.2f);
 				
 			}
 		}
@@ -180,7 +190,7 @@ void NPC::_Speak()
 		{
 			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
-			PlayAnimation(State::Idol, 0.2f);
+			PlayAnimation(AnimationCodeE::Idol, 0.2f);
 		}
 	}
 }
