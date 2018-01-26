@@ -286,7 +286,7 @@ public:
 	// ダメージのけぞり設定関数。
 	// 引数：	のけぞるか。
 	//			何回に一回のけぞるか(デフォルトは1)。
-	void ConfigDamageReaction(bool isMotion, unsigned short probability = 1);
+	void ConfigDamageReaction(bool isMotion, unsigned short probability = 100);
 
 	// エネミーにダメージを与える処理。
 	// 引数：	ダメージ情報。
@@ -796,11 +796,11 @@ protected:
 
 	float _walkSpeed = 0.0f;		// 歩行速度。
 
-	short _damageMotionRandNum = 2;	// 怯む確率(攻撃時以外)。
+	short _damageMotionRandNum = /*2*/50;	// 怯む確率(攻撃時以外)。
 
 	bool _isDamageMotion = true;			// のけぞりモーションを再生するか。
 	bool _isDamageMotionRandom = true;		// のけぞりモーションをランダムで再生するか(ランダムにしない場合は必ずのけぞる)。
-	unsigned short _damageMotionProbability = 2;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
+	unsigned short _damageMotionProbability = 50;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
 
 	EnemyAttack* _nowAttack = nullptr;
 

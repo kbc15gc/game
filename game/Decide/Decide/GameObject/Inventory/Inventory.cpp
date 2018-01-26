@@ -193,14 +193,10 @@ HoldItemBase* Inventory::FindItem(Item::ItemCodeE code, const unsigned int& id) 
 void Inventory::_DeleteFromList(HoldItemBase* item) {
 
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].begin() ; itr != _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].end();)
+	for (int idx = 0;idx < _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].size();idx++)
 	{
 		//中身が無いまたは不一致。
-		if (item != *itr) {
-			itr++;
-		}
-		else
-		{
+		if (_InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)][idx] && item == _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)][idx]) {
 			//武具を捨てようとしている。
 			if (item->GetInfo()->TypeID==Item::ItemCodeE::Armor || item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
 				//装備している武具を捨てようとしている。
@@ -209,8 +205,8 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 				}
 			}
 			//一致したので中身を削除。
-			INSTANCE(GameObjectManager)->AddRemoveList(*itr);
-			_InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)][itr - _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].begin()] = nullptr;
+			INSTANCE(GameObjectManager)->AddRemoveList(_InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)][idx]);
+			_InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)][idx] = nullptr;
 			return;
 		}
 	}
@@ -252,6 +248,7 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 				isDeleteList = true;
 				break;
 			}
+
 			if (isDeleteList) {
 				//リストから削除されたので他のアイテムを詰める。
 				ArrangementInventory();
