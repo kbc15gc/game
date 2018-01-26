@@ -129,7 +129,7 @@ void GameScene::Start()
 	_splitMaouzyou = INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace_MaouSiro", System::MAX_PRIORITY);
 
 	//地面生成
-	INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
+	_Ground = INSTANCE(GameObjectManager)->AddNew<Ground>("Ground", 0); //@todo 草の描画テストのために描画優先を1から0に変更している。
 
 	//メッシュコライダーオブジェクトを生成
 	//INSTANCE(GameObjectManager)->AddNew<MeshObjectChipManager>("MeshObjectManager", 1);
@@ -272,6 +272,7 @@ void GameScene::Start()
 		// 最初から魔王城にいるので補間なしで夜にする。
 		INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Stop, Sky::SunMode::Stop, 225.0f);
 		_GameLight->SetIsPointLight(true);
+		_Ground->SetIsDL(false);
 	}
 
 }
@@ -464,6 +465,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 						INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Move, 20.0f, 2.0f);
 						_StartMoveMoonColor(_defaultColor,0.5f);
 						_GameLight->SetIsPointLight(false);
+						_Ground->SetIsDL(true);
 					}
 					_splitMaouzyou->TargetLost();
 					_splitMaouzyou->SetActive(false);
@@ -481,18 +483,21 @@ void GameScene::_ChangeBGM(BGM bgm)
 				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/225.0f/*205.0f*/, 10.0f);
 				_StartMoveMoonColor(_defaultColor, 0.5f);
 				_GameLight->SetIsPointLight(true);
+				_Ground->SetIsDL(false);
 			}
 			else if (bgm == BGM::MAOU2) {
 				// 魔王城用の空に変更。
 				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/215.0f/*205.0f*/, 10.0f);
 				_StartMoveMoonColor(_defaultColor, 0.5f);
 				_GameLight->SetIsPointLight(true);
+				_Ground->SetIsDL(false);
 			}
 			else if (bgm == BGM::MAOU3) {
 				// 魔王城用の空に変更。
 				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/195.0f/*205.0f*/, 10.0f);
 				_StartMoveMoonColor(Color(2.4f, 1.0f, 1.0f), 0.5f);
 				_GameLight->SetIsPointLight(true);
+				_Ground->SetIsDL(false);
 			}
 		}
 	}

@@ -22,6 +22,7 @@ enum ModelEffectE
 	ALPHA = BIT(8),				//!< アルファ.
 	DITHERING = BIT(9),			//!< ディザリング.
 	RECEIVE_POINTLIGHT = BIT(10),	//ポイントライトを落とす.
+	RECEIVE_DirectionalLight = BIT(11),	//ディフューズライト.
 };
 
 /**
