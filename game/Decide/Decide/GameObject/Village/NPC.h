@@ -53,6 +53,12 @@ public:
 	NPC(const char* name);
 	~NPC();
 	void Awake()override;
+
+	/**
+	* ‰Šú‰».
+	*/
+	void Start()override;
+
 	void Update()override;
 	void LateUpdate()override;
 

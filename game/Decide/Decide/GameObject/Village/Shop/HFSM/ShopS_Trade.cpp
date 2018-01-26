@@ -335,7 +335,7 @@ void ShopS_Trade::_SetMinIndex(int minidx)
 
 void ShopS_Trade::_UpdateText()
 {
-	_MenuListHeight = 0.0f;
+	_MenuListHeight = 50.0f;
 
 	//テキスト設定。
 	FOR(i, _TradeItemNum)
@@ -418,7 +418,7 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto& val = info->effectValue;
 			
 			string tmp = "";
-			const char* p[] = { "HP: ","MP","ATK:","DEF:","MAT","MDE:","DEX:","CRT:","LV: " };
+			const char* p[] = { "HP: ","MP","ATK:","DEF:","MAT:","MDE:","DEX:","CRT:","LV: " };
 			auto max_idx = ARRAY_SIZE(p);
 			FOR(idx, max_idx)
 			{

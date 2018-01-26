@@ -19,6 +19,7 @@ class HistoryMenu;
 class HistoryBook;
 class VillageName;
 class GameLight;
+class Ground;
 
 class GameScene : public Scene
 {
@@ -93,6 +94,7 @@ private:
 	BGM _BefBGM = BGM::NONE;
 
 	GameLight* _GameLight = nullptr;
+	Ground* _Ground = nullptr;
 
 	Player* _Player;
 	HistoryMenu* _HistoryMenu = nullptr;

@@ -32,7 +32,7 @@ SkinModel::SkinModel(GameObject * g, Transform * t) :
 	_Light(nullptr),
 	//_TextureBlend(Color::white),
 	_AllBlend(Color::white),
-	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING)),
+	_ModelEffect(ModelEffectE(ModelEffectE::CAST_SHADOW | ModelEffectE::RECEIVE_SHADOW | ModelEffectE::FRUSTUM_CULLING | ModelEffectE::RECEIVE_DirectionalLight)),
 	_CullMode(D3DCULL_CCW),
 	_Culling(new CObjectFrustumCulling)
 {
@@ -255,13 +255,16 @@ void SkinModel::DrawMeshContainer(
 		Vector4 dir[System::MAX_LIGHTNUM];
 		Color color[System::MAX_LIGHTNUM];
 		ZeroMemory(dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
-		const vector<DirectionalLight*>& vec = INSTANCE(GameObjectManager)->mainLight->GetLight();
-		FOR(i, num)
+
+		if ((_ModelEffect & ModelEffectE::RECEIVE_DirectionalLight) > 0)
 		{
-			dir[i] = vec[i]->Direction();
-			color[i] = vec[i]->GetColor();
+			const vector<DirectionalLight*>& vec = INSTANCE(GameObjectManager)->mainLight->GetLight();
+			FOR(i, num)
+			{
+				dir[i] = vec[i]->Direction();
+				color[i] = vec[i]->GetColor();
+			}
 		}
-		
 		//ライトの向きを転送。
 		_Effect->SetValue("g_diffuseLightDirection", &dir, sizeof(Vector4)*System::MAX_LIGHTNUM);
 		//ライトのカラーを転送。
