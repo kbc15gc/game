@@ -105,10 +105,10 @@ void Chip::SetChipID(ChipID chipID)
 	transform->SetLocalPosition(pos[(int)_ChipID]);
 	transform->SetLocalScale(Vector3::one * 5.0f);
 
+	//_FitGround();
 }
 
 void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
-
 {
 	//外部からセットしたIDを設定。
 	_ChipID = chipID;
@@ -125,4 +125,50 @@ void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 	//設定されたIDのモデルの位置と大きさを設定。
 	transform->SetLocalPosition(pos);
 	transform->SetLocalScale(Vector3::one * 5.0f);
+}
+
+/**
+* 足元を地面に合わせる.
+*/
+void Chip::_FitGround()
+{
+	//レイを作成する.
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+
+	//開始位置と足元の差分.
+	float startOffset = 2;
+
+	Vector3 pos = transform->GetPosition();
+	Quaternion rot = transform->GetRotation();
+	//開始地点を設定.
+	start.setOrigin(btVector3(pos.x, pos.y + startOffset, pos.z));
+
+	//終了地点を設定.
+	//2メートル下を見る.
+	end.setOrigin(start.getOrigin() - btVector3(0, startOffset + 2, 0));
+
+	BoxCollider bc(this, transform);
+	bc.Create(Vector3(1, 1, 1));
+	RigidBodyInfo info;
+	info.mass = 0;
+	info.coll = &bc;
+	info.id = Collision_ID::DROPITEM;
+	RigidBody rb(this, transform);
+	rb.Create(info, false);
+
+	fbPhysicsCallback::SweepResultGround callback;
+	callback.me = this;
+	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
+	callback._attribute = Collision_ID::GROUND || Collision_ID::BUILDING;
+
+	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)bc.GetBody(), start, end, callback);
+
+	if (callback.isHit)
+	{
+		pos = callback.hitPos;
+		pos.y += (startOffset + _Model->GetModelData()->GetAABBSize().y) * transform->GetScale().y;
+		transform->SetLocalPosition(pos);
+	}
 }
