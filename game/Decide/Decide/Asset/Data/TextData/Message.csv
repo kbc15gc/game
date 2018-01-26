@@ -92,7 +92,7 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 90,万事屋,い・・・いらっしゃいませ。,-1,0,-1,Asset/Sound/NPC/SHOP/3rd/Mic1_09.wav
 91,噂ですが……,世界のどこかに、倒すと強くなれる魔物がいるらしいわ。,92,-1,-1,Asset/Sound/NPC/NPC/npc10.wav
 92,噂ですが……,金色で目立つから、すぐわかると思うわ。,-1,-1,-1,Asset/Sound/NPC/NPC/npc11.wav
-93,そこの階段が……,魔王様の神殿につながっています。\n魔王様はお忙しいので、謁見はお控えください。,-1,-1,-1,Asset/Sound/NPC/NPC/n5.wav
+93,そこの階段が……,魔王様の神殿につながっています。\n魔王様はお忙しいので、謁見はお控えください。,-1,-1,-1,Asset/Sound/NPC/NPC/npc7.wav
 94,この先は……,居住区です。お店もあるので\n立ち寄っていくことをおすすめします。,-1,-1,-1,Asset/Sound/NPC/NPC/npc8.wav
 95,おお、旅人さん……,すぐそこに万屋があるんだ。あんた強そうだし\nいっちょ武器でも買って最近噂になっている勇者とやらを倒しておくれよ！,-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_09.wav
 96,ヒッヒッヒ……,ヒッヒッヒ……。どうやら愚かな人間がこの城に忍び込んだらしい。\nおや？ ところであんた、魔物にしてはうまそうな肌をしてるねぇ？,-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_13.wav
