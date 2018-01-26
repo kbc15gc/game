@@ -35,6 +35,15 @@ void NPC::Awake()
 	PlayAnimation(State::Idol, 0.2f);
 }
 
+/**
+* 初期化.
+*/
+void NPC::Start()
+{
+	//足元を地面に合わせる.
+	_FitGround();
+}
+
 void NPC::Update()
 {
 	//話す。
@@ -66,9 +75,6 @@ void NPC::CreateNPC(const npc::NPCInfo* info)
 
 	_Model->SetFresnelParam(true, Vector4(1.3f, 1.3f, 1.3f, 3.0f));
 	_Model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, false);
-
-	//足元を地面に合わせる.
-	_FitGround();
 }
 
 void NPC::SetMesseage(const int & id, const bool show)
@@ -110,7 +116,7 @@ void NPC::_FitGround()
 	fbPhysicsCallback::SweepResultGround callback;
 	callback.me = this;
 	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
-	callback._attribute = Collision_ID::GROUND || Collision_ID::BUILDING;
+	callback._attribute = Collision_ID::GROUND | Collision_ID::BUILDING;
 
 	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)GetComponent<MeshCollider>()->GetBody(), start, end, callback);
 
