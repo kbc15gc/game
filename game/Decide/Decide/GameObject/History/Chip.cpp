@@ -167,7 +167,7 @@ void Chip::_FitGround()
 	fbPhysicsCallback::SweepResultGround callback;
 	callback.me = this;
 	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
-	callback._attribute = Collision_ID::GROUND || Collision_ID::BUILDING;
+	callback._attribute = Collision_ID::GROUND | Collision_ID::BUILDING;
 
 	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)bc.GetBody(), start, end, callback);
 

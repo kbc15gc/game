@@ -12,7 +12,7 @@ GameObject(name)
 
 void Ground::Awake()
 {
-	SkinModel* model = AddComponent<SkinModel>();
+	_Model = AddComponent<SkinModel>();
 	SkinModelData* modeldata = new SkinModelData();
 	modeldata->CloneModelData(SkinModelManager::LoadModel("Ground.X"));
 	//マテリアル取得
@@ -22,20 +22,20 @@ void Ground::Awake()
 	material->SetTexture(Material::TextureHandleE::TerrainTex0, TextureManager::LoadBaseTexture("Xfile/IWA.png"));				//赤	
 	material->SetTexture(Material::TextureHandleE::TerrainTex1, TextureManager::LoadBaseTexture("Xfile/Ground.png"));			//緑	
 	material->SetTexture(Material::TextureHandleE::TerrainTex2, TextureManager::LoadBaseTexture("Xfile/YUKI.jpg"));			//青	
-	model->SetModelData(modeldata);
-	model->terain = true;
-	//model->SetModelEffect(ModelEffectE::SPECULAR, false);
-	model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
-	//model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
-	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
+	_Model->SetModelData(modeldata);
+	_Model->terain = true;
+	//_Model->SetModelEffect(ModelEffectE::SPECULAR, false);
+	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, false);
+	//_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, false);
+	_Model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 	//カリング処理をしないようにする。
-	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
-	model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, true);
+	_Model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
+	_Model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, true);
 
 
-	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
-	model->SetFogParam(FogFunc::FogFuncDist, 350.0f, 600.0f, Vector4(0, 0, 0, 1), true);
+	_Model->SetFogParam(FogFunc::FogFuncDist, 350.0f, 600.0f, Vector4(0, 0, 0, 1), true);
 
 	RigidBody* rigid = AddComponent<RigidBody>();
 	MeshCollider* mesh = AddComponent<MeshCollider>();

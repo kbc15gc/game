@@ -8,5 +8,14 @@ public:
 	void Awake()override;
 	void Start()override;
 	void Update()override;
+
+	void SetIsDL(bool is)
+	{
+		_Model->SetModelEffect(ModelEffectE::RECEIVE_DirectionalLight, is);
+	}
+
 private:
+
+	SkinModel* _Model = nullptr;
+
 };

@@ -335,7 +335,7 @@ void ShopS_Trade::_SetMinIndex(int minidx)
 
 void ShopS_Trade::_UpdateText()
 {
-	_MenuListHeight = 0.0f;
+	_MenuListHeight = 50.0f;
 
 	//テキスト設定。
 	FOR(i, _TradeItemNum)
