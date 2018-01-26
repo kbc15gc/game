@@ -40,6 +40,7 @@ void Sky::Awake()
 	_SunPlate->SetBillboard(true);
 	_SunPlate->SetActive(false);
 
+	// ŒŽì¬B
 	_MoonPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
 	_MoonPlate->SetTexture(LOADTEXTURE("moon0015.png"));
 	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 1.3f);
@@ -59,11 +60,34 @@ void Sky::Update()
 	Camera* camera = INSTANCE(GameObjectManager)->mainCamera;
 	if (camera != nullptr)
 	{
-		const float TMP = 0.01f / 6.0f;
 		//‘¾—z‚ÌŠp“x‚ð‰ÁŽZ.
+		const float TMP = 0.01f / 6.0f;
 
-		//100•b‚Åˆê“ú.
-		_SunAngle += PI * Time::DeltaTime() * TMP;
+		if (_SunMode == SunMode::Move)
+		{
+			//100•b‚Åˆê“ú.
+			_SunAngle += PI * Time::DeltaTime() * TMP;
+		}
+		else if (_SunMode == SunMode::Transition)
+		{
+			_TransitionRate += Time::DeltaTime() * _TransitionSpeed * (abs(_BefSunAngle - _NextSunAngle) / (PI * 2));
+			_TransitionRate = min(1.0f, _TransitionRate);
+
+			_SunAngle = (_TransitionRate * _NextSunAngle) + ((1.0f - _TransitionRate) * _BefSunAngle);
+			if (_TransitionRate >= 1.0f)
+			{
+				_SunMode = _NextSunMode;
+			}
+		}
+
+		if (_SunAngle >= PI * 2)
+		{
+			_SunAngle -= PI * 2;
+		}
+		else if (_SunAngle <= 0.0f)
+		{
+			_SunAngle = (PI * 2) - _SunAngle;
+		}
 
 		//XŽ²‰ñ“].
 		_SunPosition.Set(0.0f, sinf(_SunAngle), cosf(_SunAngle));
@@ -138,6 +162,23 @@ void Sky::Update()
 void Sky::Render()
 {
 
+}
+
+void Sky::SetSunMode(SunMode mode,  SunMode next, float angle, float speed)
+{
+	_SunMode = mode;
+	_NextSunMode = next;
+	_TransitionSpeed = speed;
+	_BefSunAngle = _SunAngle;
+	_TransitionRate = 0.0f;
+	if (mode == SunMode::Stop || mode == SunMode::Move)
+	{
+		_SunAngle = _NextSunAngle = D3DXToRadian(angle);
+	}
+	else
+	{
+		_NextSunAngle = D3DXToRadian(angle);
+	}
 }
 
 AtmosphericScatteringParamS::AtmosphericScatteringParamS()

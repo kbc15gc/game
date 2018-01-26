@@ -64,6 +64,9 @@ void NPC::CreateNPC(const npc::NPCInfo* info)
 
 	LoadModel(info->filename, false);
 
+	_Model->SetFresnelParam(true, Vector4(1.3f, 1.3f, 1.3f, 3.0f));
+	_Model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, false);
+
 	//足元を地面に合わせる.
 	_FitGround();
 }
@@ -121,6 +124,11 @@ void NPC::_FitGround()
 
 void NPC::_Speak()
 {
+	//死亡時は話せない。
+	if (_Player->GetState() == Player::State::Death)
+	{
+		return;
+	}
 	//プレイヤーとの距離を計算。
 	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
 	if (_Player->GetNearNPCLen() > len)

@@ -117,6 +117,8 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			barColor.push_back(BarColor::Green);
 			barColor.push_back(BarColor::Yellow);
 			barColor.push_back(BarColor::Red);
+			newData->Object->SetBarPos({ 0.0f,2.7f,0.0f });
+			newData->Object->SetBigflag(true);
 			break;
 		case EnemyCharacter::EnemyType::Ghost:
 			//ゴースト生成。
@@ -158,6 +160,7 @@ void EnemyManager::CreateEnemys(LocationCodeE location, vector<unique_ptr<LoadEn
 			}
 			// 視野の距離設定。
 			newData->Object->SetViewRange(newData->InfoData->viewRange);
+			newData->Object->SetViewAngle(newData->InfoData->viewAngle);
 			// 徘徊範囲設定。
 			newData->Object->SetWanderingRange(newData->InfoData->wanderingRange);
 			// 追跡範囲設定。
@@ -236,8 +239,11 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 					break;
 				case EnemyCharacter::EnemyType::BossD:
 					enemy->Object = Spawner->DeathAndRespawnObject<BossD>(nullptr, enemy->InfoData->respawnTime, enemy->InfoData->position, enemy->InfoData->rotation, enemy->InfoData->scale, nullptr);
+					barColor.push_back(BarColor::Green);
 					barColor.push_back(BarColor::Yellow);
 					barColor.push_back(BarColor::Red);
+					enemy->Object->SetBarPos({ 0.0f,2.7f,0.0f });
+					enemy->Object->SetBigflag(true);
 					break;
 				case EnemyCharacter::EnemyType::Ghost:
 					//ゴースト生成。
@@ -267,6 +273,7 @@ void EnemyManager::DeathEnemy(EnemyCharacter* object) {
 			enemy->Object->SetLocationCode(code);
 			// 視野の距離設定。
 			enemy->Object->SetViewRange(enemy->InfoData->viewRange);
+			enemy->Object->SetViewAngle(enemy->InfoData->viewAngle);
 			// 徘徊範囲設定。
 			enemy->Object->SetWanderingRange(enemy->InfoData->wanderingRange);
 			// 追跡範囲設定。

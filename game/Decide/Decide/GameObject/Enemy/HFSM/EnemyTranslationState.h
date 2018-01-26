@@ -55,4 +55,9 @@ private:
 	Vector3 _InitPos;	// 初期位置。
 	bool _isWandering = false;	// 徘徊中の直進か。
 	float _upperPower = 5.0f;	// 坂道を上るスピード(とりあえず決め打ち)。
+
+	//直進するリミットタイム.
+	float _LimitTime = 30.0f;
+	//現在の直進するリミットタイム.
+	float _NowLimitTime = 0;
 };

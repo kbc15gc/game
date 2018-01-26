@@ -144,11 +144,7 @@ public:
 	// ※継承先独自の実装は、privateにある_LateUpdateSubClass関数を継承して実装すること。
 	void LateUpdate()override;
 	
-	void OnDestroy()override {
-		for (auto& data : _SoundData) {
-			data.reset(nullptr);
-		}
-	}
+	void OnDestroy()override;
 
 	// エネミーを指定したオブジェクトに向かせる処理(補間なし)。
 	// 引数：	見たいオブジェクト。
@@ -760,6 +756,14 @@ private:
 	// ※継承先で実装。
 	virtual EnemyAttack* _AttackSelectSubClass() = 0;
 
+	//イベントカメラを取得。
+	GameObject* GetEventCamera()
+	{
+		if (_EventCamera == nullptr)
+			_EventCamera = INSTANCE(GameObjectManager)->FindObject("EventCamera");
+		return _EventCamera;
+	}
+
 protected:
 	
 
@@ -792,11 +796,11 @@ protected:
 
 	float _walkSpeed = 0.0f;		// 歩行速度。
 
-	short _damageMotionRandNum = 1;	// 怯む確率(攻撃時以外)。
+	short _damageMotionRandNum = 2;	// 怯む確率(攻撃時以外)。
 
 	bool _isDamageMotion = true;			// のけぞりモーションを再生するか。
 	bool _isDamageMotionRandom = true;		// のけぞりモーションをランダムで再生するか(ランダムにしない場合は必ずのけぞる)。
-	unsigned short _damageMotionProbability = 1;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
+	unsigned short _damageMotionProbability = 2;	// のけぞる確率(この変数に設定された回数に1回はのけぞる)。
 
 	EnemyAttack* _nowAttack = nullptr;
 
@@ -805,7 +809,6 @@ protected:
 	float _Probability[5 * 3];
 
 	Player* _Player = nullptr;			//プレイヤー
-
 	float _playerDist;
 private:
 	int _dropExp;	// 落とす経験値。
@@ -820,6 +823,9 @@ private:
 	Vector3 _BarPos = Vector3(0.0f, 2.0f, 0.0f);
 
 	bool _Bigflag = false;
+
+	//イベントカメラへのポインタ。
+	GameObject* _EventCamera = nullptr;
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };

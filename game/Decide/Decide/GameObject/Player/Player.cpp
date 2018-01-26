@@ -88,7 +88,7 @@ void Player::Awake()
 	// MPバー。
 	//_MPBar = AddComponent<ParameterBar>();
 	//高さ設定
-	_Height = 1.3f;
+	_Height = /*1.3f*/0.8f;
 	//半径設定
 	_Radius = 0.6f;
 	//カプセルコライダー作成
@@ -264,15 +264,20 @@ void Player::Awake()
 			_RespawnPos.x = player["RespawnPos_X"].get<double>();
 			_RespawnPos.y = player["RespawnPos_Y"].get<double>();
 			_RespawnPos.z = player["RespawnPos_Z"].get<double>();
+			_RespawnRot.x = player["RespawnRot_X"].get<double>();
+			_RespawnRot.y = player["RespawnRot_Y"].get<double>();
+			_RespawnRot.z = player["RespawnRot_Z"].get<double>();
+			_RespawnRot.w = player["RespawnRot_W"].get<double>();
 		}
 	}
 	else
 	{
-		SetRespawnPos(Vector3(-202.0f, 58.0f, -156.0f));
+		SetRespawnPos(Vector3(-198.475342,57.9678802,-144.642334),Quaternion(-0.000000000, -0.999639690, -0.000000000, 0.0268424246));
 	}
 
 	//ポジション
 	transform->SetLocalPosition(_RespawnPos);
+	transform->SetLocalRotation(_RespawnRot);
 
 }
 
@@ -389,8 +394,11 @@ void Player::Update()
 		//transform->UpdateTransform();
 
 	//NPCと話す
-	Speak();
-
+	if (_State != State::Death)
+	{
+		Speak();
+	}
+	
 	//char test[256];
 	//sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
 	//OutputDebugString(test);
@@ -553,7 +561,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		}
 		else
 		{
-			c = Color::blue;
+			//水色
+			c = { 0.0f,0.6f,1.0f,1.0f };
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
@@ -666,6 +675,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], float time) {
 	bool ret = false;
 	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::MAX; idx++) {
+		//魔法攻撃を無視。
+		if (idx == CharacterParameter::Param::MAT)
+			continue;
 		int value = effectValue[idx];
 		if (value > 0) {
 			// バフ。
@@ -861,21 +873,33 @@ void Player::Speak()
 	if (_NearNPC)
 	{
 		_NearNPCLen = (_NearNPC->transform->GetPosition() - transform->GetPosition()).Length();
+		float lenLimit = (strcmp(_NearNPC->GetName(), "LastBoss.X") == 0) ? 10.0f : 3.0f;
 		//会話可能
-		if (_NearNPCLen <= 3.0f && !eventflag)
+		if (_NearNPCLen <= lenLimit && !eventflag)
 		{
 			//地面についていれば話しかけれる
 			//ショップイベントでないとき。
 			if (_CharacterController->IsOnGround())
 			{
-				//会話のためHPバーなどを消す。
-				_HPBar->RenderDisable();
-				//_MPBar->RenderDisable();
-				//話すフラグセット
-				_NearNPC->SetIsSpeak(true);
-				//プレイヤー話すフラグ設定
-				//ジャンプしなくなる
-				_NoJump = true;
+				if (_NearNPC->GetActive()) {
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderDisable();
+					//_MPBar->RenderDisable();
+					//話すフラグセット
+					_NearNPC->SetIsSpeak(true);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_NoJump = true;
+				}
+				else {
+					//会話のためHPバーなどを消す。
+					_HPBar->RenderEnable();
+					//話すフラグセット
+					_NearNPC->SetIsSpeak(false);
+					//プレイヤー話すフラグ設定
+					//ジャンプしなくなる
+					_NoJump = false;
+				}
 			}
 		}
 		else

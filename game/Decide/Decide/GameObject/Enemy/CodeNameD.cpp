@@ -27,7 +27,7 @@ void BossD::_StartSubClass() {
 	//transform->SetPosition(_InitPos);
 
 	// 視野角生成。
-	_ViewAngle = 100.0f;
+	//_ViewAngle = 100.0f;
 	//_ViewRange = 30.0f;
 
 	// 歩行速度設定。
@@ -49,19 +49,23 @@ void BossD::_StartSubClass() {
 	//攻撃処理。
 	// 斬撃。
 	_singleAttack.reset(new EnemySingleAttack(this));
-	_singleAttack->Init(1.5f, static_cast<int>(AnimationBossD::Attack), 0.2f);
+	_singleAttack->Init(1.5f, static_cast<int>(AnimationBossD::Attack), 0.2f,1.5f);
 
 	// 蹴り。
 	_kick.reset(new EnemySingleAttack(this));
-	_kick->Init(1.5f, static_cast<int>(AnimationBossD::Kick), 0.2f);
+	_kick->Init(1.5f, static_cast<int>(AnimationBossD::Kick), 0.2f, 1.3f);
 
 	// 斬り上げ。
 	_kiriage.reset(new EnemySingleAttack(this));
-	_kiriage->Init(1.5f, static_cast<int>(AnimationBossD::Kiriage), 0.2f);
+	_kiriage->Init(1.5f, static_cast<int>(AnimationBossD::Kiriage), 0.2f, 1.5f);
 
 	// 回転斬り。
 	_360Attack.reset(new EnemySingleAttack(this));
-	_360Attack->Init(1.5f, static_cast<int>(AnimationBossD::Attack360), 0.2f);
+	_360Attack->Init(1.5f, static_cast<int>(AnimationBossD::Attack360), 0.2f, 1.5f);
+
+	// コンボ(アッパーからの回転)。
+	_combo.reset(new EnemySingleAttack(this));
+	_combo->Init(1.5f, static_cast<int>(AnimationBossD::Kiriage), 0.2f, 0.4f,1,1);
 
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -91,7 +95,7 @@ EnemyAttack* BossD::_AttackSelectSubClass() {
 	// ※プレイヤーとエネミーの位置関係とかで遷移先決定？。
 
 	 //※とりあえず暫定処理。
-	int rnd = rand() % 4;
+	int rnd = rand() % 5;
 	if (rnd == 0) {
 		return _singleAttack.get();
 	}
@@ -103,27 +107,55 @@ EnemyAttack* BossD::_AttackSelectSubClass() {
 	{
 		return _360Attack.get();
 	}
-	else {
+	else if(rnd == 3) {
 		return _kick.get();
+	}
+	else {
+		return _combo.get();
 	}
 }
 
 void BossD::AnimationEvent_Attack(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 5.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 70);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_Kick(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 70);
 	attack->RemoveParent();
 }
 void BossD::AnimationEvent_Kiriage(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 70);
 	attack->RemoveParent();
 }
+void BossD::AnimationEvent_KiriageTame() {
+	_MyComponent.Animation->SetAnimeSpeed(0.3f);
+
+}
+void BossD::AnimationEvent_KiriageTame2() {
+	_MyComponent.Animation->SetAnimeSpeed(1.75f);
+}
+
 void BossD::AnimationEvent_360Attack(){
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(2.0f, 3.0f, 2.0f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 80);
 	attack->RemoveParent();
 }
+
+void BossD::AnimationEventPlay360() {
+	//_combo->
+	_animationSpeed = 2.95f;
+	PlayAnimation_OriginIndex(static_cast<int>(BossD::AnimationBossD::Attack360), 0.2f, 1, 1);
+	//_MyComponent.Animation->
+}
+
+void BossD::AniamtionEvent_360AttackCombo() {
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(2.0f, 3.0f, 2.0f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 80);
+	attack->RemoveParent();
+}
+void BossD::AniamtionEvent_KiriageCombo() {
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(1.0f, 3.0f, 2.0f), 0.25f, transform,false,false,AttackCollision::ReactionType::Leans,90);
+	attack->RemoveParent();
+}
+
 void BossD::_EndNowStateCallback(State EndStateType) {
 
 	if (EndStateType == State::Wandering) {
@@ -242,6 +274,23 @@ void BossD::_ConfigAnimationEvent() {
 	{
 		float eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Attack360), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_360Attack));
+	}
+	// コンボ(アッパーからの回転)。
+	{
+		float eventFrame;
+
+		eventFrame = 0.4f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kiriage), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_KiriageTame), 1);
+		eventFrame = 0.5f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kiriage), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEvent_KiriageTame2), 1);
+
+		eventFrame = 0.9f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kiriage), eventFrame, static_cast<AnimationEvent>(&BossD::AniamtionEvent_KiriageCombo),1);
+		eventFrame = 1.4f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Kiriage), eventFrame, static_cast<AnimationEvent>(&BossD::AnimationEventPlay360), 1);
+
+		eventFrame = 1.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossD::Attack360), eventFrame, static_cast<AnimationEvent>(&BossD::AniamtionEvent_360AttackCombo), 1);
 	}
 }
 

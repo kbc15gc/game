@@ -28,14 +28,19 @@ sampler_state
 };
 
 float4 g_MapFlg;		//どんなマップを使うかのフラグ
-float4 g_EffectFlg;	//xは投影、yはスペキュラ
+float4 g_EffectFlg;	//xは投影、yはポイントライト,z:フレネル,w:リム.
 
+float4 g_FresnelParam;//xyz:フレネルカラー,w:フレネルPow.
 
+float4 g_LimParam;//xyz:リムカラー,w:リムPow.
 
 int g_LightNum;										//ライトの数
 float4	g_diffuseLightDirection[NUM_DIFFUSE_LIGHT];	//ディフューズライトの方向。
 float4	g_diffuseLightColor[NUM_DIFFUSE_LIGHT];		//ディフューズライトのカラー。
 float4	g_ambientLight;								//環境光。
+
+float4 g_PointLightParam;
+float4 g_PointLightPos;
 
 float4	g_cameraPos;	//!<カメラの座標。
 float3	g_cameraDir;	//!<カメラ方向。
@@ -243,15 +248,26 @@ float3 CalcCharaLight(float3 normal)
 /*!
  *@brief	リムライトを計算。
  */
-float3 CalcLimLight( float3 normal, float3 lightDir, float3 limColor)
+float3 CalcLimLight( float3 normal,float4 limColorPower)
 {
-	float lim = 0.0f;
-	float baselim = 1.0f - abs( dot(normal, g_cameraDir ) );
-	lim += baselim * max( 0.0f, -dot(g_cameraDir, lightDir));
-	lim = pow(lim, 1.5f);
-	return limColor * lim;
+	//法線とカメラの内積を計算.
+	float baselim = 1.0f - abs(dot(normal, g_cameraDir));
+	//逆光を計算.
+	float lim = baselim * max( 0.0f, -dot(g_cameraDir, g_diffuseLightDirection[0].xyz));
+	lim = pow(lim, limColorPower.w);
+	return limColorPower.xyz * lim;
 }
 
+/**
+* フレネル反射を計算.
+*/
+float3 CalcFresnel(float3 normal,float4 limColorPower)
+{
+	float lim = 1.0f - abs(dot(normal, g_cameraDir));	
+	lim = min( 1.0f, lim/0.8f);
+	lim = pow(lim, limColorPower.w);
+	return limColorPower.xyz * lim;
+}
 
 /*!
  *@brief	スペキュラライトを計算。
@@ -303,17 +319,19 @@ float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv)
 /*!
  * @brief	ポイントライトを計算。
  */
-//float3 PointLight( float3 normal, float3 worldPos, int lim )
-//{
-//	float3 lightDir = worldPos - g_light.pointLightPosition.xyz;
-//	float len = length(lightDir) / g_light.pointLightColor.w;
-//	lightDir = normalize(lightDir);
-//	float3 color = max( 0.0f, -dot(normal, lightDir)) * g_light.pointLightColor.xyz;
-//	//距離に反比例して減衰
-//	color /= max( 1.0f, (len*len) );
-//
-//	return color;
-//}
+float3 CalcPointLight( float3 normal, float3 worldPos)
+{
+	float3 color = 0.0;
+	float3 lightDir = worldPos - g_PointLightPos.xyz;
+	float len = length(lightDir) / g_PointLightParam.w;
+	lightDir = normalize(lightDir);
+	color = max(0.0f, -dot(normal, lightDir)) * g_PointLightParam.xyz;
+	
+	//距離に反比例して減衰
+	float attn = max(1.0 - len * len, 0.0);
+	color *= pow(attn, 6.0f);
+	return color;
+}
 /*!
  * @brief	アルファに埋め込む輝度を計算。
  */

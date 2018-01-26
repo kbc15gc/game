@@ -44,13 +44,13 @@ void HistoryMenu::Start()
 	_ReleaseLocation = (int)LocationCodeE::Common - 1;
 
 	//スプライトクラスを追加.
-	_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
+	/*_CursorSpriteL = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
 	_CursorSpriteL->SetTexture(LOADTEXTURE("UI/brackets.png"));
 	_CursorSpriteL->SetSize(_CursorSpriteL->GetSize() * 0.1f);
 	_CursorSpriteR = INSTANCE(GameObjectManager)->AddNew<ImageObject>("", 9);
 	_CursorSpriteR->SetTexture(LOADTEXTURE("UI/brackets.png"));
 	_CursorSpriteR->SetSize(_CursorSpriteR->GetSize() * 0.1f);
-	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);
+	_CursorSpriteR->transform->SetLocalAngle(0.0f, 0.0f, 180.0f);*/
 }
 
 /**
@@ -75,8 +75,8 @@ void HistoryMenu::Update()
 	{
 		//非表示.
 		_LocationNameRender->SetActive(false);
-		_CursorSpriteL->SetActive(false);
-		_CursorSpriteR->SetActive(false);
+		//_CursorSpriteL->SetActive(false);
+		//_CursorSpriteR->SetActive(false);
 		for (auto& list : _Chip2DList)
 		{
 			for (auto pChip : list)
@@ -178,7 +178,7 @@ void HistoryMenu::SetLocationCode(LocationCodeE code)
 	_NowSelectLocation = (int)code;
 	_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
 	_NowLookPage = 0;
-	_SelectCode = (int)SelectCodeE::Page;
+	//_SelectCode = (int)SelectCodeE::Page;
 }
 
 void HistoryMenu::SetIsOperation(bool value)
@@ -192,78 +192,78 @@ void HistoryMenu::SetIsOperation(bool value)
 */
 void HistoryMenu::EnableUpdate()
 {
-	Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
-	switch ((SelectCodeE)_SelectCode)
-	{
-		case SelectCodeE::Location:
-			//場所選択中の更新.
-			SelectLocationUpdate();
-			cursorPos.y = 90.0f;
-			break;
-		case SelectCodeE::Page:
-			//ページ選択中の更新.
-			SelectPageUpdate();
-			cursorPos.y = g_WindowSize.y / 2.0f;
-			break;
-	}
+	//Vector2 cursorPos = Vector2((g_WindowSize.x / 2.0f), 0.0f);
+	//switch ((SelectCodeE)_SelectCode)
+	//{
+	//	case SelectCodeE::Location:
+	//		//場所選択中の更新.
+	//		SelectLocationUpdate();
+	//		cursorPos.y = 90.0f;
+	//		break;
+	//	case SelectCodeE::Page:
+	//		//ページ選択中の更新.
+	//		SelectPageUpdate();
+	//		cursorPos.y = g_WindowSize.y / 2.0f;
+	//		break;
+	//}
 
 	//ページの初期化.
-	//SelectPageUpdate();
+	SelectPageUpdate();
 
 	if (_IsOperation)
 	{
 		SelectChipUpdate();
 	}
 
-	static float ChangeTime = 0.5f;
-	static float LocalTime = 0.0f;
-	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
-	LStick /= 32767.0f;
-	//if (LStick.y >= 0.2f && fabsf(LStick.x) <= 0.1f)
-	if(XboxInput(0)->IsPressAnalog(AnalogE::L_STICKU,true))
-	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
-		{
-			_SelectCode = max((int)SelectCodeE::Min, _SelectCode - 1);
-		}
-		LocalTime += Time::DeltaTime();
-		if (LocalTime >= ChangeTime)
-		{
-			_SelectCode = max((int)SelectCodeE::Min, _SelectCode - 1);
+	//static float ChangeTime = 0.5f;
+	//static float LocalTime = 0.0f;
+	////左スティックの情報.
+	//Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
+	//LStick /= 32767.0f;
+	////if (LStick.y >= 0.2f && fabsf(LStick.x) <= 0.1f)
+	//if(XboxInput(0)->IsPressAnalog(AnalogE::L_STICKU,true))
+	//{
+	//	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKU))
+	//	{
+	//		_SelectCode = max((int)SelectCodeE::Min, _SelectCode - 1);
+	//	}
+	//	LocalTime += Time::DeltaTime();
+	//	if (LocalTime >= ChangeTime)
+	//	{
+	//		_SelectCode = max((int)SelectCodeE::Min, _SelectCode - 1);
 
-			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
-		}
-	}
-	//else if (LStick.y <= -0.2f && fabsf(LStick.x) <= 0.1f)
-	else if(XboxInput(0)->IsPressAnalog(AnalogE::L_STICKD, true))
-	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
-		{
-			_SelectCode = min((int)SelectCodeE::Max, _SelectCode + 1);
-		}
-		LocalTime += Time::DeltaTime();
-		if (LocalTime >= ChangeTime)
-		{
-			_SelectCode = min((int)SelectCodeE::Max, _SelectCode + 1);
-			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
-		}
-	}
-	else
-	{
-		ChangeTime = 0.5f;
-		LocalTime = 0.0f;
-	}
+	//		LocalTime = 0.0f;
+	//		ChangeTime = 0.01f;
+	//	}
+	//}
+	////else if (LStick.y <= -0.2f && fabsf(LStick.x) <= 0.1f)
+	//else if(XboxInput(0)->IsPressAnalog(AnalogE::L_STICKD, true))
+	//{
+	//	if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKD))
+	//	{
+	//		_SelectCode = min((int)SelectCodeE::Max, _SelectCode + 1);
+	//	}
+	//	LocalTime += Time::DeltaTime();
+	//	if (LocalTime >= ChangeTime)
+	//	{
+	//		_SelectCode = min((int)SelectCodeE::Max, _SelectCode + 1);
+	//		LocalTime = 0.0f;
+	//		ChangeTime = 0.01f;
+	//	}
+	//}
+	//else
+	//{
+	//	ChangeTime = 0.5f;
+	//	LocalTime = 0.0f;
+	//}
 
-	_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
-	_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
+	//_CursorSpriteL->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(-450.0f, 0.0f, 0.0f));
+	//_CursorSpriteR->transform->SetPosition(Vector3(cursorPos.x, cursorPos.y, 0.0f) + Vector3(450.0f, 0.0f, 0.0f));
 
 	//表示.
 	_LocationNameRender->SetActive(true);
-	_CursorSpriteL->SetActive(true);
-	_CursorSpriteR->SetActive(true);
+	//_CursorSpriteL->SetActive(true);
+	//_CursorSpriteR->SetActive(true);
 
 	//場所名描画.
 	_LocationNameRender->SetText(LocationNameList[_NowSelectLocation].c_str());
@@ -272,89 +272,89 @@ void HistoryMenu::EnableUpdate()
 /**
 * 場所選択中の更新.
 */
-void HistoryMenu::SelectLocationUpdate()
-{
-
-	//前回の場所.
-	int beforeSelectLocation = _NowSelectLocation;
-
-	static float ChangeTime = 0.5f;
-	static float LocalTime = 0.0f;
-	//左スティックの情報.
-	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
-	LStick /= 32767.0f;
-	if (LStick.x >= 0.2f)
-	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
-		{
-			_NowSelectLocation = max(0, _NowSelectLocation - 1);
-		}
-		LocalTime += Time::DeltaTime();
-		if (LocalTime >= ChangeTime)
-		{
-			_NowSelectLocation = max(0, _NowSelectLocation - 1);
-			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
-		}
-	}
-	else if (LStick.x <= -0.2f)
-	{
-		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
-		{
-			_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
-		}
-		LocalTime += Time::DeltaTime();
-		if (LocalTime >= ChangeTime)
-		{
-			_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
-			LocalTime = 0.0f;
-			ChangeTime = 0.01f;
-		}
-	}
-	else
-	{
-		ChangeTime = 0.5f;
-		LocalTime = 0.0f;
-	}
-
-	if (beforeSelectLocation != _NowSelectLocation)
-	{
-		_NowLookPage = 0;
-		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
-		if (beforeSelectLocation < _NowSelectLocation)
-		{
-			//現在の場所が前回より大きい数値.
-			for (auto it : befPageList)
-			{
-				it->SetRotAngle(90.0f);
-				it->ChangeState(HistoryPage::StateCodeE::Turn);
-			}
-		}
-		else if (beforeSelectLocation > _NowSelectLocation)
-		{
-			for (auto it : befPageList)
-			{
-				it->SetRotAngle(-90.0f);
-				it->ChangeState(HistoryPage::StateCodeE::Turn);
-			}
-			auto& nowPageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
-			for (auto it : nowPageList)
-			{
-				it->SetRotAngle(-90.0f);
-				it->ChangeState(HistoryPage::StateCodeE::Turn);
-			}
-		}
-
-		_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
-
-		ChipMove();
-
-		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
-		se->Init("Asset/Sound/UI/Menu.wav");
-		se->SetDelete(true);
-		se->Play(false);
-	}
-}
+//void HistoryMenu::SelectLocationUpdate()
+//{
+//
+//	//前回の場所.
+//	int beforeSelectLocation = _NowSelectLocation;
+//
+//	static float ChangeTime = 0.5f;
+//	static float LocalTime = 0.0f;
+//	//左スティックの情報.
+//	Vector2 LStick = XboxInput(0)->GetAnalog(AnalogE::L_STICK);
+//	LStick /= 32767.0f;
+//	if (LStick.x >= 0.2f)
+//	{
+//		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKR))
+//		{
+//			_NowSelectLocation = max(0, _NowSelectLocation - 1);
+//		}
+//		LocalTime += Time::DeltaTime();
+//		if (LocalTime >= ChangeTime)
+//		{
+//			_NowSelectLocation = max(0, _NowSelectLocation - 1);
+//			LocalTime = 0.0f;
+//			ChangeTime = 0.01f;
+//		}
+//	}
+//	else if (LStick.x <= -0.2f)
+//	{
+//		if (XboxInput(0)->IsPushAnalog(AnalogE::L_STICKL))
+//		{
+//			_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+//		}
+//		LocalTime += Time::DeltaTime();
+//		if (LocalTime >= ChangeTime)
+//		{
+//			_NowSelectLocation = min(_ReleaseLocation, _NowSelectLocation + 1);
+//			LocalTime = 0.0f;
+//			ChangeTime = 0.01f;
+//		}
+//	}
+//	else
+//	{
+//		ChangeTime = 0.5f;
+//		LocalTime = 0.0f;
+//	}
+//
+//	if (beforeSelectLocation != _NowSelectLocation)
+//	{
+//		_NowLookPage = 0;
+//		auto& befPageList = _HistoryBook->GetLocationList((LocationCodeE)beforeSelectLocation);
+//		if (beforeSelectLocation < _NowSelectLocation)
+//		{
+//			//現在の場所が前回より大きい数値.
+//			for (auto it : befPageList)
+//			{
+//				it->SetRotAngle(90.0f);
+//				it->ChangeState(HistoryPage::StateCodeE::Turn);
+//			}
+//		}
+//		else if (beforeSelectLocation > _NowSelectLocation)
+//		{
+//			for (auto it : befPageList)
+//			{
+//				it->SetRotAngle(-90.0f);
+//				it->ChangeState(HistoryPage::StateCodeE::Turn);
+//			}
+//			auto& nowPageList = _HistoryBook->GetLocationList((LocationCodeE)_NowSelectLocation);
+//			for (auto it : nowPageList)
+//			{
+//				it->SetRotAngle(-90.0f);
+//				it->ChangeState(HistoryPage::StateCodeE::Turn);
+//			}
+//		}
+//
+//		_HistoryBook->SetLocationCode((LocationCodeE)_NowSelectLocation);
+//
+//		ChipMove();
+//
+//		SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
+//		se->Init("Asset/Sound/UI/Menu.wav");
+//		se->SetDelete(true);
+//		se->Play(false);
+//	}
+//}
 
 /**
 * ページ選択中の更新.

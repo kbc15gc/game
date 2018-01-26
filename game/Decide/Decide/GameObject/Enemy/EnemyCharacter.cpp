@@ -72,10 +72,11 @@ void EnemyCharacter::Start() {
 	_InitPos = transform->GetPosition();
 	_InitRptation = transform->GetRotation();
 
+	_MyComponent.Model->SetFresnelParam(true, Vector4(1.3f, 1.3f, 1.3f, 3.0f));
+
 	// 継承先により変わる処理。
 	_StartSubClass();
-
-
+	
 	// 継承先で初期位置が設定された可能性があるため更新。
 	//_MyComponent.CharacterController->Execute();
 	//_MyComponent.CharacterController->AddRigidBody();	// ワールドに登録した瞬間にバウンディングボックスが生成されるため、初期情報設定のためここで登録。
@@ -168,9 +169,14 @@ void EnemyCharacter::Update() {
 }
 
 void EnemyCharacter::LateUpdate() {
-	_playerDist = Vector3(_Player->transform->GetPosition() - transform->GetPosition()).LengthSq();
+	//現在イベント中であるか？
+	bool isEvent = INSTANCE(EventManager)->IsEvent();
+	//使うオブジェクトを切り替える。
+	GameObject* Target = (isEvent) ? GetEventCamera() : _Player;
+	float dist = (isEvent) ? 30000.0f : 10000.0f;
+	_playerDist = Vector3(Target->transform->GetPosition() - transform->GetPosition()).LengthSq();
 
-	if (_playerDist > 10000.0f && _MyComponent.CharacterController->IsOnGround()) {
+	if (_playerDist > dist && _MyComponent.CharacterController->IsOnGround()) {
 		// 遠方のエネミーは更新停止。
 
 		SetIsStopUpdate(true);
@@ -180,10 +186,11 @@ void EnemyCharacter::LateUpdate() {
 		SetIsStopUpdate(false);
 	}
 
-	if (INSTANCE(EventManager)->IsEvent())
+	if (isEvent)
 	{
-		//イベントが実行中なら更新停止.
-		SetIsStopUpdate(true);
+		//カメライベント以外なら停止。
+		if (INSTANCE(EventManager)->GetEventID() != Event::EventID::EventCameraF)
+			SetIsStopUpdate(true);
 	}
 	else
 	{
@@ -225,6 +232,14 @@ void EnemyCharacter::LateUpdate() {
 	nearEnemyInfo = NearEnemyInfo(FLT_MAX, nullptr);
 }
 
+void EnemyCharacter::OnDestroy(){
+	if (_NowState) {
+		_NowState->Exit(EnemyCharacter::State::None);
+	}
+	for (auto& data : _SoundData) {
+		data.reset(nullptr);
+	}
+}
 
 bool EnemyCharacter::IsOutsideDiscovery() {
 	Vector3 work = _InitPos - _Player->transform->GetPosition();
@@ -375,7 +390,6 @@ void EnemyCharacter::_BuildModelData() {
 	_MyComponent.Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 	_MyComponent.Model->SetModelEffect(ModelEffectE::DITHERING, true);
 	//_MyComponent.Model->SetIsLuminance(false);
-
 	_MyComponent.AnimationEventPlayer->Init(_MyComponent.Animation->GetNumAnimationSet());
 }
 

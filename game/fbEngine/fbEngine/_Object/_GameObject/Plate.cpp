@@ -51,3 +51,7 @@ void Plate::SetBlendColor(const Color & c)
 {
 	_Primitive->SetBlendColor(c);
 }
+
+const Color& Plate::GetBlendColor() const {
+	return _Primitive->GetBlendColor();
+}

@@ -81,12 +81,37 @@ public:
 		_AmbientLight = amb;
 	}
 
+	void SetPointLightPosition(const Vector3& pos)
+	{
+		_PointLightPos = pos;
+	}
+
+	void SetPointLightParam(const Vector4& param)
+	{
+		_PointLightParam = param;
+	}
+
+	const Vector3& GetPointLightPosition()
+	{
+		return _PointLightPos;
+	}
+
+	const Vector4& GetPointLightParam()
+	{
+		return _PointLightParam;
+	}
+
 private:
 	//ライトのポインタ達
 	vector<DirectionalLight*> _LightVec;
 	
 	/** 環境光. */
 	Vector3 _AmbientLight = Vector3(0.3f, 0.3f, 0.3f);
+
+	/** ポイントライトの色と強さ. */
+	Vector4 _PointLightParam = Vector4(0, 0, 0, 0);
+	/** ポイントライトの座標. */
+	Vector3 _PointLightPos = Vector3::zero;
 
 };
 

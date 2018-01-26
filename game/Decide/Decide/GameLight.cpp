@@ -4,8 +4,8 @@
 
 void GameLight::Awake()
 {
-	Light* light = AddComponent<Light>();
-	INSTANCE(GameObjectManager)->mainLight = light;
+	_Light = AddComponent<Light>();
+	INSTANCE(GameObjectManager)->mainLight = _Light;
 
 	int num = 4;
 	DirectionalLight* Dl[4];
@@ -26,8 +26,9 @@ void GameLight::Awake()
 
 	FOR(i, num)
 	{
-		light->AddLight(Dl[i]);
+		_Light->AddLight(Dl[i]);
 	}
+
 
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	shadow->SetNear(1.0f);
@@ -45,8 +46,18 @@ void GameLight::Start()
 	INSTANCE(SceneManager)->GetSky()->SetNightAmbientLight(Vector3(0.3f, 0.3f, 0.3f));
 }
 
+Vector4 pointLightColor = Vector4(1.0f, 1.0f, 1.0f, 6.0f);
+Vector3 pointLightOffset = Vector3(0, 1, 0);
 void GameLight::Update()
 {
+	pointLightColor.w = 50.0f;
+	if (!_IsPointLight)
+	{
+		pointLightColor.w = 0.0f;
+	}
+	_Light->SetPointLightParam(pointLightColor);
+	_Light->SetPointLightPosition(_Player->transform->GetPosition() + pointLightOffset);
+
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	
 	Vector3 lightPos = INSTANCE(SceneManager)->GetSky()->GetShadowLightPosition();

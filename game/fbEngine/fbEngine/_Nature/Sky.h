@@ -62,6 +62,13 @@ class Sky : public GameObject
 {
 public:
 
+	enum class SunMode
+	{
+		Move,
+		Stop,
+		Transition,
+	};
+
 	/**
 	* コンストラクタ
 	*/
@@ -144,6 +151,21 @@ public:
 		return _NightTexture;
 	}
 
+	/**
+	* モードを設定.
+	*
+	* param	mode	変化モード.
+	* param	next	変化後モード.
+	* param	angle	変化後アングル.
+	* param	speed	変化速度.
+	*/
+	void SetSunMode(SunMode mode,SunMode next,float angle = 0,float speed = 10);
+
+	// 月のインスタンス取得。
+	Plate* GetMoon() {
+		return _MoonPlate;
+	}
+
 private:
 
 	/** 空モデル. */
@@ -154,6 +176,13 @@ private:
 
 	/** 大気散乱用パラメータ. */
 	AtmosphericScatteringParamS _AtomosphereParam;
+
+	SunMode _SunMode = SunMode::Move;
+	SunMode _NextSunMode = SunMode::Move;
+	float _NextSunAngle = 0.0f;
+	float _BefSunAngle = 0.0f;
+	float _TransitionRate = 0.0f;
+	float _TransitionSpeed = 10.0f;
 
 	/** 太陽の座標. */
 	Vector3 _SunPosition = Vector3::zero;

@@ -73,6 +73,14 @@ public:
 	{
 		_GetTime = time;
 	}
+
+private:
+
+	/**
+	* 足元を地面に合わせる.
+	*/
+	void _FitGround();
+
 private:
 
 	/** チップID. */

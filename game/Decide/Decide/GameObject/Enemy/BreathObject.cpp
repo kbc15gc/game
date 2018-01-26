@@ -8,6 +8,7 @@ void BreathObject::LateUpdate() {
 		if (_enemyObject->GetNowStateIndex() == EnemyCharacter::State::Death) {
 			// エネミー死亡。
 			_enemyObject = nullptr;
+			BreathPlay();
 		}
 		else {
 			if (_enemyObject->GetIsStopUpdate() || !_enemyObject->GetActive()) {

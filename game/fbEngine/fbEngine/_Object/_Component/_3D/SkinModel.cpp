@@ -272,6 +272,11 @@ void SkinModel::DrawMeshContainer(
 		Vector3 ambient = INSTANCE(GameObjectManager)->mainLight->GetAmbientLight();
 		_Effect->SetVector("g_ambientLight", &D3DXVECTOR4(ambient.x, ambient.y, ambient.z, 1.0f));
 
+		Vector4 PLparam = INSTANCE(GameObjectManager)->mainLight->GetPointLightParam();
+		Vector3 PLpos = INSTANCE(GameObjectManager)->mainLight->GetPointLightPosition();
+		_Effect->SetVector("g_PointLightParam", (D3DXVECTOR4*)&PLparam);
+		_Effect->SetVector("g_PointLightPos", &D3DXVECTOR4(PLpos.x, PLpos.y, PLpos.z, 1.0f));
+
 		CharacterLight cl;
 		if (_CharaLight != nullptr)
 		{
@@ -285,7 +290,6 @@ void SkinModel::DrawMeshContainer(
 			}
 		}
 		_Effect->SetValue("g_CharaLight", &cl, sizeof(CharacterLight));
-
 
 		//カメラのポジションセット(スペキュラライト用)
 		Vector3 campos = INSTANCE(GameObjectManager)->mainCamera->transform->GetPosition();
@@ -332,9 +336,14 @@ void SkinModel::DrawMeshContainer(
 		//フラグ設定
 		Vector4 flg;
 		flg.x = (_ModelEffect & ModelEffectE::RECEIVE_SHADOW) > 0;
+		flg.y = (_ModelEffect & ModelEffectE::RECEIVE_POINTLIGHT) > 0;
+		flg.z = _IsFresnel;
 
 		_Effect->SetValue("g_EffectFlg", &flg, sizeof(Vector4));
 
+		//フレネル反射のパラメータを設定.
+		_Effect->SetVector("g_FresnelParam", (D3DXVECTOR4*)&_FresnelParam);
+		
 		//スペキュラフラグセット
 		//_Effect->SetInt("Spec", (_ModelEffect & ModelEffectE::SPECULAR) > 0);
 

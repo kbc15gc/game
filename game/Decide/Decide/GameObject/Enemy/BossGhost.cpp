@@ -23,7 +23,7 @@ BossGhost::~BossGhost()
 
 void BossGhost::CreateCollision() {
 	//攻撃コリジョン作成。
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction);
 	attack->RemoveParent();
 
 	// 攻撃音再生。
@@ -32,7 +32,7 @@ void BossGhost::CreateCollision() {
 
 void BossGhost::CreateCollision2() {
 	//攻撃コリジョン作成。
-	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction,85);
+	AttackCollision* attack = CreateAttack(Vector3(0.0f, 0.25f, 1.0f), Quaternion::Identity, Vector3(0.5f, 1.0f, 1.5f), 0.25f, transform, false, false, AttackCollision::ReactionType::NotAction);
 	attack->RemoveParent();
 
 	// 攻撃音再生。
@@ -42,7 +42,7 @@ void BossGhost::CreateCollision2() {
 void BossGhost::LaserStartSingle()
 {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 18.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,120);
+	laser->Create(this, Vector3::zero, 18.0f, 0.0025f, Vector3::axisY, 0.0f, "t1.png", Vector2(0.25f, 0.15f), 3.0f, Color::red,130);
 	_singleLaser->BreathStart(laser);
 
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);
@@ -54,7 +54,7 @@ void BossGhost::LaserEndSingle() {
 
 void BossGhost::LaserStart() {
 	LaserBreath* laser = INSTANCE(GameObjectManager)->AddNew<LaserBreath>("laser", 3);
-	laser->Create(this, Vector3::zero, 18.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,110);
+	laser->Create(this, Vector3::zero, 18.0f,0.0025f, Vector3::axisY,0.0f,"t1.png",Vector2(0.25f,0.15f),3.0f,Color::red,130);
 	static_cast<EnemyBreathAttack*>(static_cast<EnemyWarpAttack*>(_laserComboAttack->GetOneAttack())->GetAttack())->BreathStart(laser);
 
 	_MyComponent.Animation->SetAnimeSpeed(0.2f);
@@ -78,7 +78,7 @@ void BossGhost::_AwakeSubClass() {
 void BossGhost::_StartSubClass() {
 
 	// 視野角生成。
-	_ViewAngle = 120.0f;
+	//_ViewAngle = 120.0f;
 	//_ViewRange = 10.0f;
 
 
@@ -303,6 +303,7 @@ void BossGhost::_BuildAnimationSubClass(vector<double>& datas) {
 	{
 		// 待機状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossGhost::Wait));
+		//_ConfigAnimationType(EnemyCharacter::AnimationType::Idle, static_cast<unsigned int>(AnimationBossGhost::Dance));
 		// 歩行状態。
 		_ConfigAnimationType(EnemyCharacter::AnimationType::Walk, static_cast<unsigned int>(AnimationBossGhost::Walk));
 		// 走行状態。

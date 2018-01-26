@@ -27,7 +27,7 @@ void BossGolem::_StartSubClass() {
 	transform->SetPosition(_InitPos);*/
 
 	// 視野角生成。
-	_ViewAngle = 100.0f;
+	//_ViewAngle = 100.0f;
 	//_ViewRange = 30.0f;
 
 	// 歩行速度設定。
@@ -49,11 +49,11 @@ void BossGolem::_StartSubClass() {
 	{
 		// 頭突き。
 		_singleAttack.reset(new EnemySingleAttack(this));
-		_singleAttack->Init(1.5f, static_cast<int>(AnimationBossGolem::Hit), 0.0f,0.3f /*0.4f*/);
+		_singleAttack->Init(1.6f, static_cast<int>(AnimationBossGolem::Hit), 0.0f,0.5f /*0.4f*/);
 
 		// 拳。
 		_singleAttackSecondPattern.reset(new EnemySingleAttack(this));
-		_singleAttackSecondPattern->Init(1.5f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f, 0.3f);
+		_singleAttackSecondPattern->Init(1.6f, static_cast<int>(AnimationBossGolem::Hit2), 0.0f,0.65f/*, 0.4f*/);
 	}
 	// 初期ステートに移行。
 	// ※暫定処理。
@@ -92,12 +92,20 @@ EnemyAttack* BossGolem::_AttackSelectSubClass() {
 	}
 }
 
+void BossGolem::AnimationEvent_KobushiSpeed() {
+	_MyComponent.Animation->SetAnimeSpeed(0.05f);
+}
+
+void BossGolem::AnimationEvent_KobushiSpeed2() {
+	_MyComponent.Animation->SetAnimeSpeed(0.3f);
+}
+
 void BossGolem::AnimationEvent_Kobushi() {
 	Quaternion rot = Quaternion::Identity;
 	rot.SetRotation(Vector3::axisY, D3DXToRadian(-45.0f));
 	//_kobusi = CreateAttack(Vector3(-1.1f, 0.25f, 0.7f), rot, Vector3(1.0f, 3.0f, 2.0f), -1.0f, transform);
 	//attack->RemoveParent();
-	_kobusi = CreateAttack(Vector3(-1.1f, 0.25f, 0.5f), rot, Vector3(1.0f, 3.0f, 2.0f), -1.0f, transform);
+	_kobusi = CreateAttack(Vector3(-1.1f, 0.25f, 0.5f), rot, Vector3(1.0f, 3.0f, 2.0f), -1.0f, transform,false,false,AttackCollision::ReactionType::Leans,60);
 
 }
 
@@ -134,15 +142,19 @@ void BossGolem::AnimationEvent_Kobushi4() {
 
 
 void BossGolem::AnimationEvent_ZutukiSpeed() {
-	_MyComponent.Animation->SetAnimeSpeed(0.01f);
+	_MyComponent.Animation->SetAnimeSpeed(0.02f);
 }
 
 void BossGolem::AnimationEvent_ZutukiSpeed2() {
-	_MyComponent.Animation->SetAnimeSpeed(0.1f);
+	_MyComponent.Animation->SetAnimeSpeed(/*0.1f*/0.5f);
+}
+
+void BossGolem::AnimationEvent_ZutukiSpeed3() {
+	_MyComponent.Animation->SetAnimeSpeed(/*0.35f*/0.5f);
 }
 
 void BossGolem::AnimationEvent_Zutuki() {
-	_zutuki = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.35f), 0.25f, transform);
+	_zutuki = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.35f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 120);
 	//attack->RemoveParent();
 }
 
@@ -246,7 +258,14 @@ void BossGolem::_BuildAnimationSubClass(vector<double>& datas) {
 void BossGolem::_ConfigAnimationEvent() {
 	//拳
 	{
-		float eventFrame = 0.17f;
+		float eventFrame;
+		//float eventFrame = 0.1f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_KobushiSpeed));
+
+		//eventFrame = 0.15f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_KobushiSpeed2));
+
+		eventFrame = 0.17f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi));
 		eventFrame = 0.2f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit2), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Kobushi2));
@@ -260,8 +279,11 @@ void BossGolem::_ConfigAnimationEvent() {
 		float eventFrame = 0.19f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed));
 		
-		eventFrame = 0.2f;
+		eventFrame = 0.20f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed2));
+
+		eventFrame = 0.24f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed3));
 
 		eventFrame = 0.25f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Zutuki));

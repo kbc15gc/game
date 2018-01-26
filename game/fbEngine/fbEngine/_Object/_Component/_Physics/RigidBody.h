@@ -28,6 +28,8 @@ public:
 	void Awake()override;
 	void Update()override;
 	void LateUpdate()override;
+	void OnEnable()override;
+	void OnDisable()override;
 	void Release();
 	void Create(RigidBodyInfo& rbInfo, bool isAddWorld = true);
 	// ƒRƒŠƒWƒ‡ƒ“¶¬ŠÖ”B

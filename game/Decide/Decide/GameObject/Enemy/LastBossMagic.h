@@ -19,7 +19,9 @@ public:
 	//			ブレス発生位置(ローカル座標、親はキャラクターのTransform)。
 	//			ブレスをキャラクターの正面から回転させるクォータニオン。
 	//			ブレス速度。
-	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,const Quaternion& rot,const float speed);
+	//			炎ダメージ倍率(パーセント)。
+	//			爆発ダメージ倍率(パーセント)。
+	void Create(EnemyCharacter* obj, const Vector3& emitPosLocal,const Quaternion& rot,const float speed,int firePower = 100,int bombPower = 100);
 
 	void Awake()override;
 
@@ -55,4 +57,6 @@ private:
 	bool _isBomb = false;
 	float _margin = 1.0f;
 	Quaternion _rotation;
+	int _firePower;
+	int _bombPower;
 };

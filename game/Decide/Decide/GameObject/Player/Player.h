@@ -289,9 +289,10 @@ public:
 	/**
 	* リスポーン座標を設定.
 	*/
-	void SetRespawnPos(const Vector3& pos)
+	void SetRespawnPos(const Vector3& pos,const Quaternion& rot)
 	{
 		_RespawnPos = pos;
+		_RespawnRot = rot;
 		SaveRespawnPos();
 	}
 
@@ -301,6 +302,10 @@ public:
 		player["RespawnPos_X"] = (picojson::value)(double)_RespawnPos.x;
 		player["RespawnPos_Y"] = (picojson::value)(double)_RespawnPos.y;
 		player["RespawnPos_Z"] = (picojson::value)(double)_RespawnPos.z;
+		player["RespawnRot_X"] = (picojson::value)(double)_RespawnRot.x;
+		player["RespawnRot_Y"] = (picojson::value)(double)_RespawnRot.y;
+		player["RespawnRot_Z"] = (picojson::value)(double)_RespawnRot.z;
+		player["RespawnRot_W"] = (picojson::value)(double)_RespawnRot.w;
 		JsonData LevelData;
 		LevelData.SetDataObject("Player", player);
 		LevelData.Save("Player_Pos");
@@ -327,6 +332,15 @@ public:
 	{
 		return _NearNPCLen;
 	}
+
+	/**
+	* 足元と地面を密着！！！
+	*/
+	void FitGround()
+	{
+		_CharacterController->FitGround();
+	}
+
 private:
 
 	//アニメーションイベント
@@ -384,6 +398,7 @@ private:
 
 	/** リスポーン座標. */
 	Vector3 _RespawnPos = Vector3::zero;
+	Quaternion _RespawnRot = Quaternion::Identity;
 	
 	//コンポーネントとかアドレスの保持が必要なものたち
 	//モデル
