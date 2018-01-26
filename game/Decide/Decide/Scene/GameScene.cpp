@@ -206,6 +206,7 @@ void GameScene::Start()
 
 	//çƒê∂ópBGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
+	_BGM = BGM::NONE;
 	//#ifndef _NOBO_
 	//	_GameBGM->Play(true);
 	//#endif // !_NOBO_

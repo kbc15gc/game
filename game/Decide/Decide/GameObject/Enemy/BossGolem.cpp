@@ -279,7 +279,7 @@ void BossGolem::_ConfigAnimationEvent() {
 		float eventFrame = 0.19f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed));
 		
-		eventFrame = 0.2f;
+		eventFrame = 0.20f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_ZutukiSpeed2));
 
 		eventFrame = 0.24f;
