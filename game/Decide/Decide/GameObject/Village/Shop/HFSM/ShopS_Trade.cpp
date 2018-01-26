@@ -418,7 +418,7 @@ void ShopS_Trade::_SendItemInfo(HoldItemBase * item)
 			auto& val = info->effectValue;
 			
 			string tmp = "";
-			const char* p[] = { "HP: ","MP","ATK:","DEF:","MAT","MDE:","DEX:","CRT:","LV: " };
+			const char* p[] = { "HP: ","MP","ATK:","DEF:","MAT:","MDE:","DEX:","CRT:","LV: " };
 			auto max_idx = ARRAY_SIZE(p);
 			FOR(idx, max_idx)
 			{

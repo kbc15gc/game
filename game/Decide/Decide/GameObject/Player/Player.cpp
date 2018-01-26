@@ -729,7 +729,7 @@ void Player::EffectUpdate()
 {
 	bool isBuffEffect = false;
 	bool isDeBuffEffect = false;
-	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+	for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx <= CharacterParameter::Param::DEX; idx++) {
 
 		if (_PlayerParam->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
 		{

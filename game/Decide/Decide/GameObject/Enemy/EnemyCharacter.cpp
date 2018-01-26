@@ -114,7 +114,7 @@ void EnemyCharacter::Update() {
 	{
 		bool isBuffEffect = false;
 		bool isDeBuffEffect = false;
-		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx < CharacterParameter::Param::DEX; idx++) {
+		for (int idx = static_cast<int>(CharacterParameter::Param::ATK); idx <= CharacterParameter::Param::DEX; idx++) {
 
 			if (_MyComponent.Parameter->GetBuffParam_Percentage((CharacterParameter::Param)idx) > 0)
 			{
