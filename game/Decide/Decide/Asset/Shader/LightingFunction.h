@@ -263,11 +263,8 @@ float3 CalcLimLight( float3 normal,float4 limColorPower)
 */
 float3 CalcFresnel(float3 normal,float4 limColorPower)
 {
-	float lim = 1.0f - abs(dot(normal, g_cameraDir));
-	if(lim > 0.8f){
-		return limColorPower.xyz;
-	}
-	lim /= 0.8f;
+	float lim = 1.0f - abs(dot(normal, g_cameraDir));	
+	lim = min( 1.0f, lim/0.8f);
 	lim = pow(lim, limColorPower.w);
 	return limColorPower.xyz * lim;
 }
@@ -325,15 +322,14 @@ float3 CalcCharaSpecLight(float3 normal, float3 worldPos, float2 uv)
 float3 CalcPointLight( float3 normal, float3 worldPos)
 {
 	float3 color = 0.0;
-	if (g_EffectFlg.y)
-	{
-		float3 lightDir = worldPos - g_PointLightPos.xyz;
-		float len = length(lightDir) / g_PointLightParam.w;
-		lightDir = normalize(lightDir);
-		color = max(0.0f, -dot(normal, lightDir)) * g_PointLightParam.xyz;
-		//ãóó£Ç…îΩî‰ó·ÇµÇƒå∏êä
-		color /= max(1.0f, (len * len));
-	}
+	float3 lightDir = worldPos - g_PointLightPos.xyz;
+	float len = length(lightDir) / g_PointLightParam.w;
+	lightDir = normalize(lightDir);
+	color = max(0.0f, -dot(normal, lightDir)) * g_PointLightParam.xyz;
+	
+	//ãóó£Ç…îΩî‰ó·ÇµÇƒå∏êä
+	float attn = max(1.0 - len * len, 0.0);
+	color *= pow(attn, 6.0f);
 	return color;
 }
 /*!

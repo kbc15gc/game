@@ -46,15 +46,17 @@ void GameLight::Start()
 	INSTANCE(SceneManager)->GetSky()->SetNightAmbientLight(Vector3(0.3f, 0.3f, 0.3f));
 }
 
+Vector4 pointLightColor = Vector4(1.0f, 1.0f, 1.0f, 6.0f);
+Vector3 pointLightOffset = Vector3(0, 1, 0);
 void GameLight::Update()
 {
-	float pointLightLen = 1.0f;
+	pointLightColor.w = 50.0f;
 	if (!_IsPointLight)
 	{
-		pointLightLen = 0.0f;
+		pointLightColor.w = 0.0f;
 	}
-	_Light->SetPointLightParam(Vector4(1.0f, 1.0f, 1.0f, pointLightLen));
-	_Light->SetPointLightPosition(_Player->transform->GetPosition() + Vector3(0, 1, 0));
+	_Light->SetPointLightParam(pointLightColor);
+	_Light->SetPointLightPosition(_Player->transform->GetPosition() + pointLightOffset);
 
 	ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	

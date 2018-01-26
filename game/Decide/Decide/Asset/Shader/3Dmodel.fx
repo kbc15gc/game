@@ -207,6 +207,7 @@ PSOutput PSMain(VS_OUTPUT In)
 
 	//影.
 	float shadowPower = 1.0f;
+	
 	if (g_EffectFlg.x)
 	{
 		//影になっている.
@@ -214,8 +215,12 @@ PSOutput PSMain(VS_OUTPUT In)
 		shadowPower += (1.0f - abs(dot(g_atmosParam.v3LightDirection, float3(0.0f, 1.0f, 0.0f))));
 		light *= min(1.0f, shadowPower);
 	}
-
+	if(g_EffectFlg.y && g_PointLightParam.w > 0.0f){
+		//魔王城のスペシャルシェーダー。
+		light = 0.0f;
+	}
 	color.xyz += diff.xyz * light;
+	
 
 	if (g_atmosFlag == AtomosphereFuncObjectFromAtomosphere)
 	{
@@ -229,12 +234,24 @@ PSOutput PSMain(VS_OUTPUT In)
 	light += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
 	//ムーンライト.
 	light += CalcMoonLight(normal, In._World.xyz, In._UV) * shadowPower;
-	light += CalcPointLight(normal, In._World.xyz);
+	
+	if (g_EffectFlg.y && g_PointLightParam.w > 0.0f)
+	{
+		//魔王城のスペシャルシェーダー。
+		//ポイントライトは魔王城専用。
+		//ほかで使うな。
+		float3 pointLight = CalcPointLight(normal, In._World.xyz);
+		float t = min(1.0f, length(pointLight));
+		color.xyz += diff.xyz * pointLight;
+		color.xyz += diff.xyz * (g_ambientLight.xyz * 0.8f);
+	}else{
+		//通常ライト
+		color.xyz += diff.xyz * light;
+		//アンビエントライトを加算。
+    	color.xyz += diff.xyz * (g_ambientLight.xyz + g_CharaLight.Ambient.xyz);
+	}
 
-	color.xyz += diff.xyz * light;
 
-	//アンビエントライトを加算。
-    color.xyz += diff.xyz * (g_ambientLight.xyz + g_CharaLight.Ambient.xyz);
 
 	if (g_EffectFlg.z)
 	{
