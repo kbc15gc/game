@@ -105,7 +105,7 @@ void Chip::SetChipID(ChipID chipID)
 	transform->SetLocalPosition(pos[(int)_ChipID]);
 	transform->SetLocalScale(Vector3::one * 5.0f);
 
-	//_FitGround();
+	_FitGround();
 }
 
 void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
@@ -120,11 +120,17 @@ void Chip::SetDropChipID(ChipID chipID,const Vector3& pos)
 	_Material = modelData->FindMaterial("HuntingPage.png");
 	_Model->SetModelData(modelData);
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
+
+	_Model->SetFresnelParam(true, Vector4(5.0f, 5.0f, 5.0f, 3.0f));
+	_Model->SetIsLuminance(true);
+
 	//model->SetModelEffect(ModelEffectE::SPECULAR, true);
 	//model->SetAllBlend(Color::white * 13);
 	//Ý’è‚³‚ê‚½ID‚Ìƒ‚ƒfƒ‹‚ÌˆÊ’u‚Æ‘å‚«‚³‚ðÝ’èB
 	transform->SetLocalPosition(pos);
 	transform->SetLocalScale(Vector3::one * 5.0f);
+
+	_FitGround();
 }
 
 /**
@@ -168,7 +174,7 @@ void Chip::_FitGround()
 	if (callback.isHit)
 	{
 		pos = callback.hitPos;
-		pos.y += (startOffset + _Model->GetModelData()->GetAABBSize().y) * transform->GetScale().y;
+		pos.y += (_Model->GetModelData()->GetAABBSize().y) * transform->GetScale().y;
 		transform->SetLocalPosition(pos);
 	}
 }
