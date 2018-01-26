@@ -33,7 +33,7 @@ void TextBox::Awake()
 	//本体。
 	_BoxImage[1]->SetTexture(LOADTEXTURE("window.png"));
 	//Aボタン。
-	_AButton->SetTexture(LOADTEXTURE("UI/Button_A.png"));
+	_AButton->SetTexture(LOADTEXTURE("AButton.png"));
 	
 	_Text->Initialize(L"", 25.0f);
 	_Text->SetAnchor(fbText::TextAnchorE::UpperCenter);
