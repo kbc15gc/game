@@ -419,6 +419,7 @@ namespace fbPhysicsCallback
 		bool isHit = false;						//衝突フラグ。
 		Vector3 hitPos = Vector3::zero;		//衝突点。
 		Vector3 startPos = Vector3::zero;		//レイの始点。
+		Vector3 endPos = Vector3::zero;
 		float dist = FLT_MAX;					//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
 		Vector3 hitNormal = Vector3::zero;	//衝突点の法線。
 		GameObject* me = nullptr;		//自分自身。自分自身との衝突を除外するためのメンバ。

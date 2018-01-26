@@ -47,10 +47,13 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 
 	_Model->SetModelEffect(ModelEffectE::CAST_SHADOW, true);
 	_Model->SetModelEffect(ModelEffectE::RECEIVE_SHADOW, true);
+	_Model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, true);
+
 
 	if (string(filename) == "tree.X")
 	{
 		_Model->SetTree();
+		_Model->SetFresnelParam(true, Vector4(1.0f, 1.0f, 1.0f, 3.0f));
 	}
 	else if (string(filename) == "fence_a.X")
 	{

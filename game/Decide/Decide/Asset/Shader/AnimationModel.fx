@@ -195,6 +195,7 @@ PSOutput PSMain( VS_OUTPUT In )
 	light += CalcCharaLight(normal) * (float3(1.0f, 1.0f, 1.0f) - In._MieColor);
 	light += CalcCharaSpecLight(normal, In._World.xyz, In._UV);
 	light += CalcMoonLight(normal, (float3) In._World, In._UV) * shadowPower;
+	light += CalcPointLight(normal, In._World.xyz);
 	color.xyz += diff.xyz * light;
 
     //アンビエントライトを加算。

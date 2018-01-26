@@ -30,6 +30,8 @@ void Ground::Awake()
 	model->SetModelEffect(ModelEffectE::CAST_ENVIRONMENT,true);
 	//ƒJƒŠƒ“ƒOˆ—‚ð‚µ‚È‚¢‚æ‚¤‚É‚·‚éB
 	model->SetModelEffect(ModelEffectE::FRUSTUM_CULLING, false);
+	model->SetModelEffect(ModelEffectE::RECEIVE_POINTLIGHT, true);
+
 
 	model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
