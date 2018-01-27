@@ -42,6 +42,7 @@ void NPC::Start()
 {
 	//‘«Œ³‚ğ’n–Ê‚É‡‚í‚¹‚é.
 	_FitGround();
+	ContinentObject::Start();
 }
 
 void NPC::Update()

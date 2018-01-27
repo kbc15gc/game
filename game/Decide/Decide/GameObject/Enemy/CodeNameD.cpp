@@ -41,7 +41,7 @@ void BossD::_StartSubClass() {
 	//_discoveryRange = 30.0f;
 
 	// 何回に一回くらい怯むか設定。
-	_damageMotionRandNum = 30;
+	_damageMotionRandNum = 33;
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);

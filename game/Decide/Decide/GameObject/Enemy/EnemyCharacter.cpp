@@ -714,8 +714,9 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, Atta
 				if (_isDamageMotionRandom) {
 					// のけぞりモーションの再生をランダムにする。
 
-					if (rand() % _damageMotionProbability == 0) {
-						// のけぞり。
+					int probability = min(100,_damageMotionProbability);
+					if (rand() % 100 < probability) {
+						// 確率でのけぞり。
 
 						// ダメージ反応ステートに移行可能。
 						_ChangeState(State::Damage);
