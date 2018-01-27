@@ -88,7 +88,7 @@ void Player::Awake()
 	// MPバー。
 	//_MPBar = AddComponent<ParameterBar>();
 	//高さ設定
-	_Height = /*1.3f*/0.8f;
+	_Height = /*1.3f*/0.3f;
 	//半径設定
 	_Radius = 0.6f;
 	//カプセルコライダー作成
