@@ -60,7 +60,7 @@ public:
 	enum class AnimationType { None = -1,Idle = 0, Walk,BackStep, Dash, Threat, Fall,Damage, Death,Max };
 
 	// サウンドデータテーブルの添え字。
-	enum class SoundIndex{None = -1, Damage = 0, Buoon, AttackGolem, Threat, DamageGolem, StatusUp, StatusDown ,Death, AttackSord,Fire, Max};
+	enum class SoundIndex{None = -1, Damage = 0, Buoon, AttackGolem, Threat, DamageGolem, StatusUp, StatusDown ,Death, AttackSord,Fire,Dageki, Max};
 
 	// サウンドデータ構造体。
 	struct SoundData {
