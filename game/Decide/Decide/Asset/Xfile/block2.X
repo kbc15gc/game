@@ -314,7 +314,7 @@ Frame BB_2x8x1 {
     0.000000;0.000000;0.000000;;
 
     TextureFilename Diffuse {
-     "BB_Map_1A.png";
+     "BB_Map_1C.png";
     }
    }
   }
