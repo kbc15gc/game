@@ -106,6 +106,8 @@ private:
 	ImageObject* _Cursor;
 	//購入ウィンドウの画像。
 	ImageObject* _TradeWindow;
+	//LRボタンのイメージ画像。
+	ImageObject* _LRButton[2];
 	//合計金額。
 	TextObject* _ValueText;
 	//各項目の名称説明。
