@@ -25,6 +25,12 @@ void BossDrarian::_AwakeSubClass() {
 
 void BossDrarian::_StartSubClass() {
 
+	// このボス用の音追加。
+	{
+		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Voice), "DragonVoice.wav",1.0f,true);
+		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Dageki), "DragonAsioto.wav", 1.5f, true);
+	}
+
 	// 視野角生成。
 	//_ViewAngle = 360.0f;
 	//_ViewRange = 30.0f;
@@ -130,26 +136,37 @@ void BossDrarian::CreateAttackCollision_TailAttackSub1()
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.15f, transform,false,true,AttackCollision::ReactionType::NotAction,15);
 	attack->RemoveParent();
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Dageki);
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub2() 
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.15f, transform, false, true, AttackCollision::ReactionType::NotAction, 15);
 	attack->RemoveParent();
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Dageki));
+
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub3()
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.15f, transform, false, true, AttackCollision::ReactionType::NotAction, 15);
 	attack->RemoveParent();
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Dageki);
+
 }
 
 void BossDrarian::CreateAttackCollision_TailAttackSub4()
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.15f, transform, false, true, AttackCollision::ReactionType::NotAction, 15);
 	attack->RemoveParent();
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Dageki));
+
 }
 
+void BossDrarian::Voice() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Voice));
+
+}
 
 
 //void BossDrarian::CreateAttackCollision_TailAttack1() {
@@ -211,11 +228,15 @@ void BossDrarian::CreateAttackCollision_BreathAttackSub1()
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.25f, transform, false, true, AttackCollision::ReactionType::NotAction, 15);
 	attack->RemoveParent();
+	EnemyPlaySound(EnemyCharacter::SoundIndex::Dageki);
+
 }
 void BossDrarian::CreateAttackCollision_BreathAttackSub2() 
 {
 	AttackCollision* attack = CreateAttack(Vector3(0.0f, -1.5f, 2.0f), Quaternion::Identity, Vector3(3.0f, 1.0f, 3.0f), 0.25f, transform, false, true, AttackCollision::ReactionType::NotAction, 15);
 	attack->RemoveParent();
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Dageki));
+
 }
 
 void BossDrarian::_EndNowStateCallback(State EndStateType) {
@@ -410,6 +431,12 @@ void BossDrarian::_ConfigAnimationEvent() {
 
 		eventFrame = 5.3f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Breath), eventFrame, static_cast<AnimationEvent>(&BossDrarian::CreateAttackCollision_TailAttackSub2));
+	}
+
+	// 吠える。
+	{
+		float eventFrame = 0.6f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossDrarian::Barking), eventFrame, static_cast<AnimationEvent>(&BossDrarian::Voice));
 	}
 }
 
