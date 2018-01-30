@@ -84,7 +84,7 @@ void ItemWindow::Awake()
 	_EIconImage->SetActive(false, true);
 
 	ImageObject* rb = INSTANCE(GameObjectManager)->AddNew<ImageObject>("RB", StatusWindow::WindowBackPriorty + 3);
-	rb->SetTexture(LOADTEXTURE("Xbox 360/360_RB.png"));
+	rb->SetTexture(LOADTEXTURE("Xbox_360/360_RB.png"));
 	Vector2 size = rb->GetSize();
 	size *= 0.5f;
 	rb->SetSize(size);
@@ -92,7 +92,7 @@ void ItemWindow::Awake()
 	rb->transform->SetLocalPosition(Vector3(200.0f, 40.0f, 0.0f));
 	rb->SetActive(false, false);
 	ImageObject* lb = INSTANCE(GameObjectManager)->AddNew<ImageObject>("LB", StatusWindow::WindowBackPriorty + 3);
-	lb->SetTexture(LOADTEXTURE("Xbox 360/360_LB.png"));
+	lb->SetTexture(LOADTEXTURE("Xbox_360/360_LB.png"));
 	lb->SetSize(size);
 	lb->transform->SetParent(_WindowName->transform);
 	lb->transform->SetLocalPosition(Vector3(-200.0f, 40.0f, 0.0f));
