@@ -39,7 +39,7 @@ SceneManager::SceneManager():
 	_AntiAliasing.SetEnable(false);
 	_DepthofField.SetEnable(false);
 	_Bloom.SetEnable(true);
-	_SSAO.SetEnable(false);
+	//_SSAO.SetEnable(false);
 #else
 	_AntiAliasing.SetEnable(true);
 	_DepthofField.SetEnable(true);
