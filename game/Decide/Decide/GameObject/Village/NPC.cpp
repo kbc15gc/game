@@ -38,8 +38,6 @@ void NPC::Awake()
 */
 void NPC::Start()
 {
-	ContinentObject::Start();
-	
 	if (!strcmp(_Model->GetName(),"villager1.X"))
 	{
 		_Anim->SetAnimationEndTime((int)AnimationCodeE::Idol, -1.0f);
@@ -54,6 +52,8 @@ void NPC::Start()
 
 	//‘«Œ³‚ğ’n–Ê‚É‡‚í‚¹‚é.
 	_FitGround();
+
+	ContinentObject::Start();
 }
 
 void NPC::Update()
