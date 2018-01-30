@@ -76,7 +76,7 @@ namespace
 	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
 
 	//信仰の国の座標
-	Vector3 Sinkou = Vector3(-82.6f, 121.8f, 145.3f);
+	Vector3 Sinkou = Vector3(-145.6f, 121.8f, 131.6f);
 	//神殿の座標
 	Vector3 Sinden = Vector3(-145.6f, 188.5f, 239.24f);
 }
@@ -356,12 +356,12 @@ void GameScene::Update()
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
 						case BGM::MAOU1:
-							_Player->SetRespawnPos(Sinkou,Quaternion());
+							_Player->SetRespawnPos(Sinkou,Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
 							break;
 						case BGM::MAOU2:
 							break;
 						case BGM::MAOU3:
-							_Player->SetRespawnPos(Sinden,Quaternion());
+							_Player->SetRespawnPos(Sinden,Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
