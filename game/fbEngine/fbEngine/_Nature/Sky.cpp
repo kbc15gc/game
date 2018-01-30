@@ -43,11 +43,13 @@ void Sky::Awake()
 	// ŒŽì¬B
 	_MoonPlate = INSTANCE(GameObjectManager)->AddNew<Plate>("LightImage", 9);
 	_MoonPlate->SetTexture(LOADTEXTURE("moon0015.png"));
-	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white * 1.3f);
+	_MoonPlate->GetComponent<PlatePrimitive>()->SetBlendColor(Color::white);
 	Vector2 size = _MoonPlate->GetComponent<PlatePrimitive>()->GetSize();
 	_MoonPlate->SetSize(size * 0.5f);
 	_MoonPlate->SetBillboard(true);
 	_MoonPlate->SetActive(false);
+	_MoonPlate->GetComponent<PlatePrimitive>()->SetIsLuminance(true);
+	_MoonPlate->GetComponent<PlatePrimitive>()->SetLuminanceColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
 
 	_SunAngle = D3DXToRadian(80.0f);
 }

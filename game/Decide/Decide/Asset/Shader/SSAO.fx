@@ -55,11 +55,11 @@ sampler_state
 float2 g_TexSize;
 
 //const float totStrength = 1.38;
-const float totStrength = 2.00;
+const float totStrength = 1.00;
 //const float strength = 0.0007;	//深度差と比較する値.最高値.
-const float strength = 0.07;	//深度差と比較する値.最高値.
+const float strength = 0.0007;	//深度差と比較する値.最高値.
 //const float falloff = 0.000002;	//深度差と比較する値.最低値.
-const float falloff = 0.0002;	//深度差と比較する値.最低値.
+const float falloff = 0.000002;	//深度差と比較する値.最低値.
 //const float rad = 0.03;	//深度で割られてる.
 const float rad = 0.03;	//深度で割られてる.
 
