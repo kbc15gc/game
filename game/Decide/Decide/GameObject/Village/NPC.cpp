@@ -114,6 +114,11 @@ void NPC::_FitGround()
 	//開始位置と足元の差分.
 	float startOffset = 2;
 
+	//if (!strcmp(_Model->GetName(), "NPC_Otoko.X"))
+	//{
+	//	startOffset = 2.5f;
+	//}
+
 	Vector3 pos = transform->GetPosition();
 	Quaternion rot = transform->GetRotation();
 	//開始地点を設定.
@@ -133,7 +138,9 @@ void NPC::_FitGround()
 	if (callback.isHit)
 	{
 		pos = callback.hitPos; 
+
 		pos.y += (startOffset + _Model->GetModelData()->GetAABBSize().y) * transform->GetScale().y;
+		
 		transform->SetLocalPosition(pos);
 	}
 }
@@ -171,7 +178,6 @@ void NPC::_Speak()
 				_Player->SetSpeakFlag(true);
 				_State = State::Speak;
 				PlayAnimation(AnimationCodeE::Speak, 0.2f);
-				
 			}
 		}
 	}
