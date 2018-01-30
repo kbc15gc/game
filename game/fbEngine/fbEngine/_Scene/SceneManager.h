@@ -108,10 +108,10 @@ public:
 	/**
 	* SSAOクラスを取得.
 	*/
-	SSAO& GetSSAO()
+	/*SSAO& GetSSAO()
 	{
 		return _SSAO;
-	}
+	}*/
 
 	/**
 	* 環境マップクラスを取得.
@@ -160,7 +160,7 @@ private:
 	AntiAliasing _AntiAliasing;
 	DepthofField _DepthofField;
 	Bloom _Bloom;
-	SSAO _SSAO;
+	//SSAO _SSAO;
 	ShadowMap  _ShadowMap;
 
 	/** 環境マップ. */
