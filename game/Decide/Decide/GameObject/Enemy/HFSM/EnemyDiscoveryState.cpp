@@ -19,7 +19,7 @@ void EnemyDiscoveryState::_EntrySubClass() {
 
 void EnemyDiscoveryState::_StartSubClass() {
 	// ‚Ì‚¯‚¼‚èÝ’èB
-	_EnemyObject->ConfigDamageReaction(true, 3);
+	_EnemyObject->ConfigDamageReaction(true, _EnemyObject->GetDamageMotionRandNum());
 }
 
 void EnemyDiscoveryState::_UpdateSubClass() {

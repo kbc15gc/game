@@ -38,8 +38,7 @@ void NPC::Awake()
 */
 void NPC::Start()
 {
-	//‘«Œ³‚ğ’n–Ê‚É‡‚í‚¹‚é.
-	_FitGround();
+	ContinentObject::Start();
 	
 	if (!strcmp(_Model->GetName(),"villager1.X"))
 	{
@@ -52,6 +51,9 @@ void NPC::Start()
 		_Anim->SetAnimationEndTime((int)AnimationCodeE::Speak, -1.0f);
 	}
 	PlayAnimation(AnimationCodeE::Idol, 0.2f);
+
+	//‘«Œ³‚ğ’n–Ê‚É‡‚í‚¹‚é.
+	_FitGround();
 }
 
 void NPC::Update()

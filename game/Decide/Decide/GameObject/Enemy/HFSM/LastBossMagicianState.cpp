@@ -25,7 +25,7 @@ void LastBossMagicianState::_EntrySubClass() {
 void LastBossMagicianState::_StartSubClass() {
 	// ‚Ì‚¯‚¼‚èÝ’èB
 	//_EnemyObject->ConfigDamageReaction(true,30);
-	_EnemyObject->ConfigDamageReaction(true, 1);
+	_EnemyObject->ConfigDamageReaction(true, _EnemyObject->GetDamageMotionRandNum());
 }
 
 void LastBossMagicianState::_UpdateSubClass() {
@@ -60,5 +60,5 @@ void LastBossMagicianState::_EndNowLocalState_CallBack(EnemyCharacter::State End
 		_ChangeLocalState(EnemyCharacter::State::StartAttack);
 	}
 
-	_EnemyObject->ConfigDamageReaction(true, 1);
+	//_EnemyObject->ConfigDamageReaction(true, 1);
 }
