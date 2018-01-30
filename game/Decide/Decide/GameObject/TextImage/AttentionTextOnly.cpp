@@ -70,7 +70,7 @@ void AttentionTextOnly::Update() {
 			Color((*itr)->_Color.r,
 			(*itr)->_Color.g,
 				(*itr)->_Color.b,
-				(*itr)->_Color.a-= 0.5f * Time::DeltaTime()));
+				(*itr)->_Color.a-= 0.2f * Time::DeltaTime()));
 
 		//テキストが透明になりきるとリストから削除。
 		if ((*itr)->_Color.a < 0.0f) {
