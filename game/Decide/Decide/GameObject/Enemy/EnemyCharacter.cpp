@@ -643,6 +643,7 @@ void EnemyCharacter::_BuildSoundTable() {
 
 	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusUp, "Player/statusup.wav", 1.0f, true);
 	_ConfigSoundData(EnemyCharacter::SoundIndex::StatusDown, "Player/statusdown.wav", 1.0f, true);
+	_ConfigSoundData(EnemyCharacter::SoundIndex::Dageki, "DragonAsioto.wav", 1.5f, true);
 
 }
 

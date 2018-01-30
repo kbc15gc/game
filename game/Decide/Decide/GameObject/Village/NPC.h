@@ -50,6 +50,16 @@ public:
 		Num,
 	};
 
+	/**
+	* アニメーションコード.
+	*/
+	enum class AnimationCodeE
+	{
+		Idol,	//!< 待機.
+		Speak,	//!< 話す.
+		AnimationCount,
+	};
+
 	NPC(const char* name);
 	~NPC();
 	void Awake()override;
@@ -111,9 +121,9 @@ protected:
 	//話す
 	void _Speak();
 	//アニメーション再生
-	void PlayAnimation(State idx, const float interpolateTime, const int lnum = -1)
+	void PlayAnimation(AnimationCodeE code, const float interpolateTime, const int lnum = -1)
 	{
-		_Anim->PlayAnimation(_AnimationNo[static_cast<int>(idx)], interpolateTime, lnum);
+		_Anim->PlayAnimation((int)code, interpolateTime, lnum);
 	}
 protected:
 	//NPCの身長(モデルのサイズを計算してもいいかもしれない。)
@@ -138,6 +148,4 @@ private:
 	//アニメーション
 	State _State;
 	bool _IsAnimation = true;
-	int _AnimationNo[static_cast<int>(State::Num)];
-
 };
