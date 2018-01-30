@@ -400,8 +400,13 @@ void Player::Update()
 	}
 	
 	//char test[256];
-	//sprintf(test, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);
+
+	//char test2[256];
+	//sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test2);
+
 }
 
 void Player::ChangeState(State nextstate)
