@@ -20,10 +20,10 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 18,ようこそ。歴史を失った世界へ。,この道の先の村を訪ねてみてください。,20,-1,-1,Asset/Sound/NPC/NPC/konomiti.wav
 19,ようこそ。歴史を失った世界へ。,また、わたしの話を聞きたくなったら\nここへ来てください。,-1,-1,-1,Asset/Sound/NPC/NPC/npc1.wav
 20,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,1,3,Asset/Sound/NPC/NPC/npc2.wav
-21,a,a,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-22,a,a,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-23,a,a,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-24,a,a,-1,1,3,Asset/Sound/NPC/NPC/Mic1_16.wav
+21,ページを歴史書に挟んでください。,"街の中で""START""ボタンを押して、\n歴史書を開いてください。",22,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+22,ページを歴史書に挟んでください。,"開いた状態で""A”ボタンを押すと歴史ページを\n挟むことができます。",-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+23,横道からゴーレムが・・・。,魔王城からの援軍みたいです。,24,-1,-1,Asset/Sound/NPC/NPC/tasukete2.wav
+24,横道からゴーレムが・・・。,このままじゃ街が危険です！,-1,-1,-1,Asset/Sound/NPC/NPC/tasukete2.wav
 25,魔王,よくきたな。勇者よ。,26,-1,-1,Asset/Sound/MAOU/5.wav
 26,魔王,八つ裂きにしてやるぅぅぅぅぅ。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 27,ようこそ。,何もないけど、ゆっくりしていってね。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
