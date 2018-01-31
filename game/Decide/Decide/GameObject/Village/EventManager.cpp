@@ -25,6 +25,7 @@ void EventManager::ReSet()
 	_ActiveEvent = Event::EventID::None;
 
 	_Player = nullptr;
+	_PlayerParameterUI = nullptr;
 	_Pcamera = nullptr;
 }
 
