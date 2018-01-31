@@ -32,6 +32,7 @@ class ItemManager;
 class ParticleEffect;
 class BuffDebuffICon;
 class HistoryManager;
+class PlayerParameterUI;
 
 //@todo for RELEASEDEBUG
 //これ製品版の場合をこれをoffにしてください。
@@ -248,9 +249,9 @@ public:
 	}
 
 	//プレイヤーのHpBarを取得。
-	inline ParameterBar* GetPlayerHpBar() {
+	/*inline ParameterBar* GetPlayerHpBar() {
 		return _HPBar;
-	}
+	}*/
 
 	//プレイヤーのMpBarを取得。
 	/*inline ParameterBar* GetPlayerMpBar() {
@@ -444,9 +445,11 @@ private:
 	// 回転。
 	ObjectRotation* _Rotation = nullptr;
 	// HPバー。
-	ParameterBar* _HPBar = nullptr;
+	//ParameterBar* _HPBar = nullptr;
 	// MPバー。
 	//ParameterBar* _MPBar = nullptr;
+
+	PlayerParameterUI* _PlayerParameterUI = nullptr;
 #ifdef _DEBUG
 	// デバッグ用データ出力コンポーネント。
 	OutputData* _outputData = nullptr;

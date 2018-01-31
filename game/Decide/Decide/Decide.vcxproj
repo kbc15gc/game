@@ -448,6 +448,7 @@
     <ClCompile Include="GameObject\TextImage\AttentionTextOnly.cpp" />
     <ClCompile Include="GameObject\TextImage\BackWindowAndAttentionText.cpp" />
     <ClCompile Include="GameObject\TextImage\LevelUpImage.cpp" />
+    <ClCompile Include="GameObject\UI\PlayerParameterUI.cpp" />
     <ClCompile Include="GameObject\Village\ContinentObject.cpp" />
     <ClCompile Include="GameObject\Village\EventManager.cpp" />
     <ClCompile Include="GameObject\Village\MessageManager.cpp" />
@@ -489,6 +490,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Low|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="GameObject\UI\PlayerParameterUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
