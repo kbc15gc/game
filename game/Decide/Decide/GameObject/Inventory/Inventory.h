@@ -93,6 +93,7 @@ public:
 	void UseItem();
 
 	//所持数を減らす。
+	//[out] 所持数を減らせたかどうか？
 	bool SubHoldNum(HoldItemBase* item,int num);
 
 	//インベントリ内を整理(途中にnullを挟まない用に中身を詰めるだけ)。

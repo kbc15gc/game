@@ -8,6 +8,9 @@
 #include "GameObject\Village\Shop\Shop.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
+#include"../UI/PlayerParameterUI.h"
+
+#include "GameObject\WorldMap\WorldMap.h"
 
 EventManager*  EventManager::_Instance = nullptr;
 
@@ -40,7 +43,8 @@ bool EventManager::Execute(Event::EventID id, int idx)
 	try 
 	{
 		//止める。
-		GetPlayer()->GetPlayerHpBar()->RenderDisable();
+		GetPlayerParameterUI()->SetActive(false, true);
+		//GetPlayer()->GetPlayerHpBar()->RenderDisable();
 		//GetPlayer()->GetPlayerMpBar()->RenderDisable();
 		GetPlayer()->PlayerStopEnable();
 
@@ -69,7 +73,8 @@ void EventManager::NotifyEndEvent()
 {
 	if (_ActiveEvent != Event::EventID::None)
 	{
-		GetPlayer()->GetPlayerHpBar()->RenderEnable();
+		GetPlayerParameterUI()->SetActive(true, true);
+		//GetPlayer()->GetPlayerHpBar()->RenderEnable();
 		//GetPlayer()->GetPlayerMpBar()->RenderEnable();
 		GetPlayer()->PlayerStopDisable();
 		GetCamera()->SetIsMove(true);
@@ -88,6 +93,8 @@ void EventManager::AddEvent()
 	StatusWindow* status = (StatusWindow*)INSTANCE(GameObjectManager)->FindObject("StatusWindow");
 	HistoryBook* book = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 	
+	WorldMap* map = static_cast<WorldMap*>(INSTANCE(GameObjectManager)->FindObject("WorldMap"));
+
 	//関数を追加。
 
 	//ショップを開く処理。
@@ -107,5 +114,11 @@ void EventManager::AddEvent()
 	_ActionList.push_back([book]
 	{
 		book->SetActive(!book->GetActive(), true);
+	});
+
+	// ワールドマップを追加。
+	_ActionList.push_back([map]
+	{
+		map->Open();
 	});
 }

@@ -214,50 +214,45 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 
 //所持数を減らす。
 bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
-	int work = num;
-	bool isDeleteList = false;
+	if (num <= 0)
+		return false;
 
 	//装備しているなら減らさない。
 	if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor || item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
 		if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
-			return isDeleteList;
+			return false;
 		}
 	}
 
+	int work = num;
+
 	//配列サイズ分検索。
-	for (auto itr = _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].begin(); work > 0 && itr != _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)].end();)
+	for (auto inv : _InventoryItemList[static_cast<int>(item->GetInfo()->TypeID)])
 	{
 		//IDの一致。
-		if ((*itr) != nullptr&&item==(*itr)/*item->ID == (*itr)->GetInfo()->ID*/)
+		if (inv != nullptr && item == inv)
 		{
 			switch (item->GetInfo()->TypeID) {
 			case Item::ItemCodeE::Item:
 				//引数分所持品の数を更新。
-				work = static_cast<ConsumptionItem*>(*itr)->SubHoldNum(work);
+				work = static_cast<ConsumptionItem*>(inv)->SubHoldNum(work);
 				//更新した結果所持数が0になれば破棄。
-				if (static_cast<ConsumptionItem*>(*itr)->GetHoldNum() <= 0) {
+				if (static_cast<ConsumptionItem*>(inv)->GetHoldNum() <= 0) {
 					//リストから削除。
-					_DeleteFromList(*itr);
-					isDeleteList = true;
+					_DeleteFromList(inv);
+					//リストから削除されたので他のアイテムを詰める。
+					ArrangementInventory();
 				}
 				break;
 			case Item::ItemCodeE::Armor:
 			case Item::ItemCodeE::Weapon:
-				_DeleteFromList(*itr);
+				_DeleteFromList(inv);
 				work--;
-				isDeleteList = true;
-				break;
-			}
-
-			if (isDeleteList) {
 				//リストから削除されたので他のアイテムを詰める。
 				ArrangementInventory();
+				break;
 			}
-		}
-		//不一致。
-		else
-		{
-			itr++;
+			break;
 		}
 	}
 
@@ -266,7 +261,7 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 	//所持品の所持数書き出し。
 	_OutData(item->GetInfo()->TypeID);
 
-	return isDeleteList;
+	return true;
 }
 
 void Inventory::_LoadData() {

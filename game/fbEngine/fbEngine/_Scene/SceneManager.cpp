@@ -39,16 +39,16 @@ SceneManager::SceneManager():
 	_AntiAliasing.SetEnable(false);
 	_DepthofField.SetEnable(false);
 	_Bloom.SetEnable(true);
-	_SSAO.SetEnable(false);
+	//_SSAO.SetEnable(false);
 #else
 	_AntiAliasing.SetEnable(true);
 	_DepthofField.SetEnable(true);
 	_Bloom.SetEnable(true);
-	_SSAO.SetEnable(false);
+	//_SSAO.SetEnable(false);
 #endif
 
 	//SSAOの作成.
-	_SSAO.Create();
+	//_SSAO.Create();
 	//アンチエイリアスの作成.
 	_AntiAliasing.Create();
 	//被写界深度の作成
@@ -151,8 +151,8 @@ void SceneManager::DrawScene()
 	(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
 	(*graphicsDevice()).Clear(2, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
-	(*graphicsDevice()).SetRenderTarget(3, _SSAO.GetNormalRenderTarget()->buffer);
-	(*graphicsDevice()).Clear(3, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+	//(*graphicsDevice()).SetRenderTarget(3, _SSAO.GetNormalRenderTarget()->buffer);
+	//(*graphicsDevice()).Clear(3, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 	INSTANCE(GameObjectManager)->RenderObject();
 
@@ -161,7 +161,7 @@ void SceneManager::DrawScene()
 	(*graphicsDevice()).SetRenderTarget(3, nullptr);
 
 	//SSAOの描画.
-	_SSAO.Render();
+	//_SSAO.Render();
 
 	//ブルームの描画.
 	_Bloom.Render();

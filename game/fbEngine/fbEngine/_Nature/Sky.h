@@ -109,6 +109,12 @@ public:
 		_MoonPlate->SetActive(true);
 	}
 
+	void SetDisable() {
+		SetActive(false);
+		_SunPlate->SetActive(false);
+		_MoonPlate->SetActive(false);
+	}
+
 	/**
 	* ‘¾—z‚ÌÀ•W‚ğæ“¾.
 	*/

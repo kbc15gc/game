@@ -93,6 +93,13 @@ private:
 
 	//カメラリセット。
 	void CameraReset();
+
+	//バネの様に追跡。
+	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping, float time, float speed);
+
+	//カメラ移動の加速度。
+	Vector3 _Velocity;
+
 private:
 	//歴史書オブジェクト。
 	HistoryBook* _HistoryBook = nullptr;

@@ -31,8 +31,6 @@ void NPC::Awake()
 	_TextBox->SetTextSpeed(12.0f);
 	_IsSpeak = false;
 	_State = State::Idol;
-
-	PlayAnimation(State::Idol, 0.2f);
 }
 
 /**
@@ -40,8 +38,21 @@ void NPC::Awake()
 */
 void NPC::Start()
 {
+	if (!strcmp(_Model->GetName(),"villager1.X"))
+	{
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Idol, -1.0f);
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Speak, -1.0f);
+	}
+	else
+	{
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Idol, -1.0f);
+		_Anim->SetAnimationEndTime((int)AnimationCodeE::Speak, -1.0f);
+	}
+	PlayAnimation(AnimationCodeE::Idol, 0.2f);
+
 	//足元を地面に合わせる.
 	_FitGround();
+
 	ContinentObject::Start();
 }
 
@@ -105,6 +116,11 @@ void NPC::_FitGround()
 	//開始位置と足元の差分.
 	float startOffset = 2;
 
+	//if (!strcmp(_Model->GetName(), "NPC_Otoko.X"))
+	//{
+	//	startOffset = 2.5f;
+	//}
+
 	Vector3 pos = transform->GetPosition();
 	Quaternion rot = transform->GetRotation();
 	//開始地点を設定.
@@ -124,7 +140,9 @@ void NPC::_FitGround()
 	if (callback.isHit)
 	{
 		pos = callback.hitPos; 
+
 		pos.y += (startOffset + _Model->GetModelData()->GetAABBSize().y) * transform->GetScale().y;
+		
 		transform->SetLocalPosition(pos);
 	}
 }
@@ -161,8 +179,7 @@ void NPC::_Speak()
 			{
 				_Player->SetSpeakFlag(true);
 				_State = State::Speak;
-				PlayAnimation(State::Speak, 0.2f);
-				
+				PlayAnimation(AnimationCodeE::Speak, 0.2f);
 			}
 		}
 	}
@@ -181,7 +198,7 @@ void NPC::_Speak()
 		{
 			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
-			PlayAnimation(State::Idol, 0.2f);
+			PlayAnimation(AnimationCodeE::Idol, 0.2f);
 		}
 	}
 }

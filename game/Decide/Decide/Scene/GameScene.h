@@ -66,6 +66,11 @@ public:
 		}
 	}
 
+	SplitSpace* GetNowSplitSpace() {
+		return _nowSplitSpace;
+	}
+
+
 private:
 	// 月の色を補間しながら変更。
 	void _MoveMoonColor();
@@ -104,6 +109,9 @@ private:
 
 	SplitSpace* _splitWorld = nullptr;
 	SplitSpace* _splitMaouzyou = nullptr;
+
+	SplitSpace* _nowSplitSpace = nullptr;	// 現在有効になっている空間分割。
+
 	bool _isMaouzyou = false;	// 魔王城にいるか。
 	bool _isFirstFrame = true;
 

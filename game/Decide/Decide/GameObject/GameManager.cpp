@@ -27,6 +27,9 @@ void GameManager::Start()
 	{
 		_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
 	}
+	if (!_worldMap) {
+		_worldMap = (WorldMap*)INSTANCE(GameObjectManager)->FindObject("WorldMap");
+	}
 }
 
 /**
@@ -61,6 +64,15 @@ void GameManager::Update()
 		_HistoryBook->SetActive(active, true);*/
 		if (_Player->GetSpeakFlag() == false && (_Player->GetState() != Player::State::Death))
 			INSTANCE(EventManager)->Execute(Event::EventID::HistoryBookA);
+	}
+	else if (VPadInput->IsPush(fbEngine::VPad::ButtonSelect)
+		&& !_worldMap->GetActive()/*
+		&& INSTANCE(HistoryManager)->GetNowLocation() != -1*/)
+	{
+		/*bool active = !_HistoryBook->GetActive();
+		_HistoryBook->SetActive(active, true);*/
+		if (_Player->GetSpeakFlag() == false && (_Player->GetState() != Player::State::Death))
+			INSTANCE(EventManager)->Execute(Event::EventID::WorldMapOpen);
 	}
 
 	if (_Player->GetState() == Player::State::Death)
