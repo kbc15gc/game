@@ -9,6 +9,7 @@
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
+#include"ItemEffectUI.h"
 
 const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = {
 	"UI/gem.png",
@@ -217,6 +218,10 @@ void ItemWindow::ItemInit()
 	_WindowName->SetText(L"アイテム一覧");
 	// ステータス表示作成。
 	_CreateCIShowStatus();
+	
+	auto ieUI = INSTANCE(GameObjectManager)->AddNew<ItemEffectUI>("ItemEffectUI", this->GetPriorty());
+	ieUI->transform->SetParent(transform);
+
 }
 
 /**
