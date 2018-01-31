@@ -69,8 +69,8 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 67,新しい家……,これが。,-1,-1,-1,Asset/Sound/NPC/Villager3/Mic1_24.wav
 68,生活はよくなってきましたが……,やつにおびえる生活はまだ続いています。,-1,-1,-1,Asset/Sound/NPC/Villager3/Mic1_25.wav
 69,最近この辺に派遣されてきたあいつ……,魔王の手下の中でもやつは一番つよいらしい。,-1,-1,-1,Asset/Sound/NPC/Villager3/Mic1_26.wav
-70,お願いです！,やつを倒して、私たちをやつの脅威から救ってください。,71,-1,-1,Asset/Sound/NPC/Villager3/Mic1_27.wav
-71,お願いです！,やつは、魔王より授かったものを持っているようです。,-1,-1,-1,Asset/Sound/NPC/Villager3/Mic1_28.wav
+70,お願いです,やつを倒して、私たちをやつの脅威から救ってください。,71,-1,-1,Asset/Sound/NPC/Villager3/Mic1_27.wav
+71,お願いです,やつは、魔王より授かったものを持っているようです。,-1,-1,-1,Asset/Sound/NPC/Villager3/Mic1_28.wav
 72,魔王軍幹部『D』……,やつは、もともと人間でした。\nですが、力欲しさに魔王の手下となりました。,73,-1,-1,Asset/Sound/NPC/Villager3/Mic1_29.wav
 73,魔王軍幹部『D』……,今では魔王の手下で一番強くなるほどに。,74,-1,-1,Asset/Sound/NPC/Villager3/Mic1_30.wav
 74,魔王軍幹部『D』……,やつは、橋を渡った先の階段を上り\nそこから見える、岩に囲まれた場所に\n兵士をつれているようです。,75,-1,-1,Asset/Sound/NPC/Villager3/Mic1_31.wav
@@ -107,3 +107,4 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 105,魔王,貴様らのような矮小な生命に、この世界はもったいない。,106,-1,-1,Asset/Sound/MAOU/maou4.wav
 106,魔王,我こそが、この大地を支配しよう。,107,-1,-1,Asset/Sound/MAOU/maou2.wav
 107,魔王,さあ人間、貴様に望み通りの死を与えてやろう。,-1,-1,-1,Asset/Sound/MAOU/maou3.wav
+108,魔王軍が攻めてきた！,ここは危険だ！早く逃げろ！,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
