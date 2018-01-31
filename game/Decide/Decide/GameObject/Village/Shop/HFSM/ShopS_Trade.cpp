@@ -20,7 +20,7 @@ ShopS_Trade::ShopS_Trade(Shop * shop) :IShopState(shop)
 	_TradeWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("BuyWindouw", 8);
 	_TradeWindow->SetTexture(LOADTEXTURE("window.png"));
 	_TradeWindow->SetSize(Vector2(800, 420));
-	_TradeWindow->transform->SetPosition(Vector3(450, 50, 0));
+	_TradeWindow->transform->SetPosition(Vector3(450, 65, 0));
 	_TradeWindow->SetPivot(Vector2(0.5f, 0.0f));
 
 	_ParmWindow = INSTANCE(GameObjectManager)->AddNew<ImageObject>("ParmWindow", _TradeWindow->GetPriorty());
@@ -124,6 +124,8 @@ void ShopS_Trade::Update()
 
 void ShopS_Trade::EnterState()
 {
+	//ショップのステート保持。
+	_SaveState = _Shop->_State;
 	//ウィンドウをアクティブにする。
 	_TradeWindow->SetActive(true, true);
 	if (_SaveState == Shop::ShopStateE::Buy)
@@ -131,8 +133,6 @@ void ShopS_Trade::EnterState()
 		_LRButton[0]->SetActive(false, false);
 		_LRButton[1]->SetActive(false, false);
 	}
-	//ショップのステート保持。
-	_SaveState = _Shop->_State;
 
 	//メニューを作成。
 	_CreateMenu();
