@@ -280,6 +280,11 @@ void ItemWindow::LateUpdate()
 		}
 	}
 
+	if (_ItemCode == Item::ItemCodeE::Item)
+	{
+		_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
+	}
+
 	ArrowUpdate();
 
 	_ConfigParamRender();
@@ -333,10 +338,6 @@ void ItemWindow::Input()
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
-					if (_ItemCode == Item::ItemCodeE::Item)
-					{
-						_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
-					}
 				}
 				LocalTime += Time::DeltaTime();
 				if (LocalTime >= ChangeTime)
@@ -348,10 +349,6 @@ void ItemWindow::Input()
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
-					if (_ItemCode == Item::ItemCodeE::Item)
-					{
-						_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
-					}
 				}
 			}
 			else if (LStick.y <= -0.2f || XboxInput(0)->IsPressButton(XINPUT_GAMEPAD_DPAD_DOWN))
@@ -363,10 +360,6 @@ void ItemWindow::Input()
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
-					if (_ItemCode == Item::ItemCodeE::Item)
-					{
-						_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
-					}
 				}
 	
 				LocalTime += Time::DeltaTime();
@@ -379,10 +372,6 @@ void ItemWindow::Input()
 					_StartLoadCount = index.offset;
 					_Cursor->transform->SetParent(_Item2DList[_NowSelectItem]->transform);
 					_Cursor->transform->SetLocalPosition(Vector3(-230.0f, 0.0f, 0.0f));
-					if (_ItemCode == Item::ItemCodeE::Item)
-					{
-						_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
-					}
 				}
 			}
 			else
@@ -478,11 +467,7 @@ void ItemWindow::Input()
 					_NowSelectItem = max(0, index);
 				}
 
-				if (_ItemCode == Item::ItemCodeE::Item)
-				{
-					_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
-				}
-
+			
 				if (itemCount <= 0)
 				{
 					_Cursor->transform->SetParent(nullptr);
