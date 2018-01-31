@@ -34,7 +34,6 @@ SceneManager::SceneManager():
 	//16bitB
 	_DepthRT.Create(g_FrameSize, D3DFMT_R16F);
 
-
 #ifdef RELEASE_LOW
 	_AntiAliasing.SetEnable(false);
 	_DepthofField.SetEnable(false);
@@ -151,7 +150,7 @@ void SceneManager::DrawScene()
 	(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
 	(*graphicsDevice()).Clear(2, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
-	//(*graphicsDevice()).SetRenderTarget(3, _SSAO.GetNormalRenderTarget()->buffer);
+	//(*graphicsDevice()).SetRenderTarget(3, _NormalRT.buffer);
 	//(*graphicsDevice()).Clear(3, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
 	INSTANCE(GameObjectManager)->RenderObject();

@@ -430,9 +430,9 @@ void ItemWindow::Input()
 				{
 					ConsumptionItem* item = (ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData();
 					//アイテム使用が失敗したかどうかをチェック。
-			/*		if (item->UseItem() == false) {
+					if (item->UseItem() == false) {
 						
-					}*/
+					}
 					SoundSource* se = INSTANCE(GameObjectManager)->AddNew<SoundSource>("StartSE", 0);
 					se->Init("Asset/Sound/UI/drinking1.wav");
 					se->SetDelete(true);
