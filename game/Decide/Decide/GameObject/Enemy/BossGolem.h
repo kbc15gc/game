@@ -34,6 +34,8 @@ public:
 	BossGolem(const char* name);
 	~BossGolem();
 
+	void OnDestroy()override;
+
 	// アニメーションイベント関連。
 	void AnimationEvent_KobushiSpeed();
 	void AnimationEvent_KobushiSpeed2();
@@ -54,7 +56,6 @@ private:
 	void _StartSubClass()override;
 	void _UpdateSubClass()override;
 	void _LateUpdateSubClass()override;
-
 
 	EnemyAttack* _AttackSelectSubClass()override;
 
@@ -103,5 +104,4 @@ private:
 
 
 	AttackCollision* _kobusi = nullptr;
-	AttackCollision* _zutuki = nullptr;
 };

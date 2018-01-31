@@ -17,6 +17,14 @@ BossGolem::~BossGolem()
 {
 }
 
+void BossGolem::OnDestroy() {
+	if (_kobusi) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
+		_kobusi = nullptr;
+	}
+	EnemyCharacter::OnDestroy();
+}
+
 void BossGolem::_AwakeSubClass(){
 	SetFileName("Boss_Golem_idle.X");
 }
@@ -136,8 +144,10 @@ void BossGolem::AnimationEvent_Kobushi3(){
 }
 
 void BossGolem::AnimationEvent_Kobushi4() {
-	INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
-	_kobusi = nullptr;
+	if (_kobusi) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
+		_kobusi = nullptr;
+	}
 }
 
 
@@ -154,7 +164,7 @@ void BossGolem::AnimationEvent_ZutukiSpeed3() {
 }
 
 void BossGolem::AnimationEvent_Zutuki() {
-	_zutuki = CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.35f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 120);
+	CreateAttack(Vector3(0.0f, 0.25f, 2.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 2.35f), 0.25f, transform, false, false, AttackCollision::ReactionType::Leans, 120);
 	//attack->RemoveParent();
 }
 

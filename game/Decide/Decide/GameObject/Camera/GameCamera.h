@@ -38,6 +38,10 @@ public:
 		_NextCamera = next;
 	}
 
+	GameCamera* GetNextCamera() {
+		return _NextCamera;
+	}
+
 	//このカメラをメインカメラとして使用する。
 	void ActiveCamera();
 protected:
@@ -75,12 +79,6 @@ protected:
 private:
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {}
-protected:
-	//バネの様に追跡。
-	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping, float time, float speed);
-
-	//カメラ移動の加速度。
-	Vector3 _Velocity;
 protected:
 	//カメラコンポーネント。
 	Camera* _Camera = nullptr;

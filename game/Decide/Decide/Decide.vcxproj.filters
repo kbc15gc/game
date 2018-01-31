@@ -370,8 +370,8 @@
     <ClCompile Include="GameObject\Enemy\BreathObject.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\UI\PlayerParameterUI.cpp">
-      <Filter>GameObject\UI</Filter>
+    <ClCompile Include="GameObject\WorldMap\WorldMap.cpp">
+      <Filter>GameObject\WorldMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -759,6 +759,9 @@
       <Filter>GameObject\Enemy\HFSN</Filter>
     </ClInclude>
     <ClInclude Include="SupportData.h" />
+    <ClInclude Include="GameObject\WorldMap\WorldMap.h">
+      <Filter>GameObject\WorldMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -858,13 +861,8 @@
     <Filter Include="SaveData">
       <UniqueIdentifier>{1a4a70f4-e157-45f3-aedd-3b7302ce87c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\UI">
-      <UniqueIdentifier>{1e5c36d5-e117-4942-8ee7-edf40341fe72}</UniqueIdentifier>
+    <Filter Include="GameObject\WorldMap">
+      <UniqueIdentifier>{d5e32086-0585-408c-993c-906178fcb9d3}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="GameObject\UI\PlayerParameterUI.h">
-      <Filter>GameObject\UI</Filter>
-    </Text>
   </ItemGroup>
 </Project>

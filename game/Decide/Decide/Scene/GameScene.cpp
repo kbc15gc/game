@@ -61,6 +61,9 @@
 #include "GameObject\SplitSpace.h"
 #include "fbEngine\_Nature\Sky.h"
 
+#include "GameObject\WorldMap\WorldMap.h"
+
+
 ImageObject* g_depth;
 
 //#define _NKMT_
@@ -106,10 +109,12 @@ void GameScene::Start()
 	//プレイヤーカメラ生成
 	GameCamera* playerCamera = INSTANCE(GameObjectManager)->AddNew<PlayerCamera>("PlayerCamera", 8);
 	playerCamera->ActiveCamera();
+
 #ifdef _DEBUG
 
 	//ふかんカメラの生成。
 	GameCamera* thirdPersonCamera = INSTANCE(GameObjectManager)->AddNew<ThirdPersonCamera>("ThirdPersonCamera", 8);
+
 	//プレイヤーカメラの次のカメラはふかんカメラを指定。
 	playerCamera->SetNextCamera(thirdPersonCamera);
 
@@ -121,6 +126,7 @@ void GameScene::Start()
 	//フリーカメラの次のカメラはプレイヤーカメラを指定。
 	freeCamera->SetNextCamera(playerCamera);
 #endif
+
 
 	// 空間分割生成。
 	_splitWorld = INSTANCE(GameObjectManager)->AddNew<SplitSpace>("SplitSpace", System::MAX_PRIORITY);
@@ -168,6 +174,9 @@ void GameScene::Start()
 	_HistoryMenu = INSTANCE(GameObjectManager)->AddNew<HistoryMenu>("HistoryMenu", 9);
 	//歴史書
 	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
+
+	// ワールドマップ。
+	INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -452,6 +461,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 					_splitWorld->SetActive(false);
 					_splitMaouzyou->TargetLost();
 					_splitMaouzyou->SetActive(true);
+					_nowSplitSpace = _splitMaouzyou;
 					_isMaouzyou = true;
 				}
 			}
@@ -471,6 +481,8 @@ void GameScene::_ChangeBGM(BGM bgm)
 					_splitMaouzyou->SetActive(false);
 					_splitWorld->TargetLost();
 					_splitWorld->SetActive(true);
+					_nowSplitSpace = _splitWorld;
+
 					_isMaouzyou = false;
 				}
 			}
@@ -495,7 +507,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 			else if (bgm == BGM::MAOU3) {
 				// 魔王城用の空に変更。
 				INSTANCE(SceneManager)->GetSky()->SetSunMode(Sky::SunMode::Transition, Sky::SunMode::Stop, /*225.0f*/195.0f/*205.0f*/, 10.0f);
-				_StartMoveMoonColor(Color(2.4f, 1.0f, 1.0f), 0.5f);
+				//_StartMoveMoonColor(Color(2.4f, 1.0f, 1.0f), 0.5f);
+
+				_StartMoveMoonColor(Color(2.4f, 0.75f, 0.75f), 0.5f);
+
 				_GameLight->SetIsPointLight(true);
 				_Ground->SetIsDL(false);
 			}

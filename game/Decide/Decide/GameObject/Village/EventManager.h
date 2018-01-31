@@ -11,6 +11,7 @@ namespace Event
 
 		StatusWindowA = FunctionNum,
 		HistoryBookA,
+		WorldMapOpen,
 		ActionNum
 	};
 }
