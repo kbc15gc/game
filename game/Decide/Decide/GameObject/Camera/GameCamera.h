@@ -44,6 +44,10 @@ public:
 
 	//このカメラをメインカメラとして使用する。
 	void ActiveCamera();
+
+	Camera* GetCamera() {
+		return _Camera;
+	}
 protected:
 	// 継承先の更新処理。
 	virtual void _Move() = 0;

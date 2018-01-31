@@ -60,55 +60,111 @@ void Camera::ProjectionMatrixUpdate()
 
 Vector2 Camera::WorldToScreen(Vector3 wpos)
 {
-	//受け取ったワールド座標へのベクトル(XZ)
-	Vector3 ToW = wpos - transform->GetPosition();
-	Vector2 ToWXZ = Vector2(ToW.x, ToW.z);
-	ToWXZ.Normalize();
-	//向きベクトル
-	//Vector3 Dir = transform->Direction(Vector3::front);
-	Vector3 Dir = transform->GetForward();
-	Vector2 DirXZ = Vector2(Dir.x, Dir.z);
-	DirXZ.Normalize();
-	//内積　0～2の範囲が返るように調整
-	float dot = fabs(DirXZ.Dot(ToWXZ) - 1);
-	//θを角度に変換
-	float vangle = D3DXToDegree(dot);
+	// 元のコード。
+	{
+		////受け取ったワールド座標へのベクトル(XZ)
+		//Vector3 ToW = wpos - transform->GetPosition();
+		//Vector2 ToWXZ = Vector2(ToW.x, ToW.z);
+		//ToWXZ.Normalize();
+		////向きベクトル
+		////Vector3 Dir = transform->Direction(Vector3::front);
+		//Vector3 Dir = transform->GetForward();
+		//Vector2 DirXZ = Vector2(Dir.x, Dir.z);
+		//DirXZ.Normalize();
+		////内積　0～2の範囲が返るように調整
+		//float dot = min(2.0f, max(0.0f, fabs(DirXZ.Dot(ToWXZ) - 1.0f)));
+		////θを角度に変換
+		//float vangle = D3DXToDegree(dot);
 
-	//長さ
-	float len = ToW.Length();
+		////長さ
+		//float len = ToW.Length();
 
-	//カメラに写っているかどうか？
-	if ((_near < len && len < _far) &&	//near・farの範囲に収まっているか？
-		(vangle < _ViewAngle))			//画角の中に収まっているか？
+		////カメラに写っているかどうか？
+		//if ((_near < len && len < _far) &&	//near・farの範囲に収まっているか？
+		//	(vangle < _ViewAngle))			//画角の中に収まっているか？
+		//{
+		//	//ワールド座標
+		//	D3DXVECTOR4 v = { wpos.x,wpos.y,wpos.z,1 };
+		//	//ビュー変換
+		//	D3DXVec4Transform(&v, &v, &_View);
+		//	//プロジェクション変換
+		//	D3DXVec4Transform(&v, &v, &_Projection);
+		//	//各要素をwで割る
+		//	v.x /= v.w;
+		//	v.y /= v.w;
+		//	v.z /= v.w;
+		//	v.w /= v.w;
+		//	//ビューポート行列作成
+		//	D3DXMATRIX viewport;
+		//	D3DXMatrixIdentity(&viewport);
+		//	//スクリーンサイズの半分
+		//	viewport._11 = g_WindowSize.x / 2;
+		//	viewport._22 = -g_WindowSize.y / 2;
+		//	viewport._41 = g_WindowSize.x / 2;
+		//	viewport._42 = g_WindowSize.y / 2;
+		//	//ビューポート変換
+		//	D3DXVec4Transform(&v, &v, &viewport);
+
+		//	return Vector2(v.x, v.y);
+		//}
+		//else
+		//{
+		//	//絶対に映らないであろう位置を返す
+		//	return Vector2(-99999.0f, -99999.0f);
+		//}
+	}
+
 	{
 		//ワールド座標
-		D3DXVECTOR4 v = { wpos.x,wpos.y,wpos.z,1 };
+		D3DXVECTOR4 v = { wpos.x,wpos.y,wpos.z,1.0f };
 		//ビュー変換
 		D3DXVec4Transform(&v, &v, &_View);
-		//プロジェクション変換
-		D3DXVec4Transform(&v, &v, &_Projection);
-		//各要素をwで割る
-		v.x /= v.w;
-		v.y /= v.w;
-		v.z /= v.w;
-		v.w /= v.w;
-		//ビューポート行列作成
-		D3DXMATRIX viewport;
-		D3DXMatrixIdentity(&viewport);
-		//スクリーンサイズの半分
-		viewport._11 = g_WindowSize.x / 2;
-		viewport._22 = -g_WindowSize.y / 2;
-		viewport._41 = g_WindowSize.x / 2;
-		viewport._42 = g_WindowSize.y / 2;
-		//ビューポート変換
-		D3DXVec4Transform(&v, &v, &viewport);
 
-		return Vector2(v.x, v.y);
-	}
-	else
-	{
-		//絶対に映らないであろう位置を返す
-		return Vector2(-99999, -99999);
+		//受け取ったワールド座標へのベクトル(XZ)
+		Vector3 ToW(v.x, v.y, v.z);
+		Vector2 ToWXZ = Vector2(ToW.x, ToW.z);
+		ToWXZ.Normalize();
+		//向きベクトル
+		Vector3 Dir = Vector3::front;
+		Vector2 DirXZ = Vector2(Dir.x, Dir.z);
+		DirXZ.Normalize();
+		//内積　0～2の範囲が返るように調整
+		float rad = min(2.0f, max(0.0f, fabs(DirXZ.Dot(ToWXZ) - 1.0f)));
+		//ラジアンを角度に変換
+		float vangle = D3DXToDegree(rad);
+
+		//長さ
+		float len = ToW.Length();
+
+		//カメラに写っているかどうか？
+		if ((_near < len && len < _far) &&	//near・farの範囲に収まっているか？
+			(vangle <= (_ViewAngle/* * 0.5f*/)))			//画角の中に収まっているか？
+		{
+			//プロジェクション変換
+			D3DXVec4Transform(&v, &v, &_Projection);
+			//各要素をwで割る
+			v.x /= v.w;
+			v.y /= v.w;
+			v.z /= v.w;
+			v.w /= v.w;
+			//ビューポート行列作成
+			D3DXMATRIX viewport;
+			D3DXMatrixIdentity(&viewport);
+			//スクリーンサイズの半分
+			viewport._11 = g_WindowSize.x / 2;
+			viewport._22 = -g_WindowSize.y / 2;
+			viewport._41 = g_WindowSize.x / 2;
+			viewport._42 = g_WindowSize.y / 2;
+			//ビューポート変換
+			D3DXVec4Transform(&v, &v, &viewport);
+
+			return Vector2(v.x, v.y);
+		}
+		else
+		{
+			//絶対に映らないであろう位置を返す
+			return Vector2(-99999.0f, -99999.0f);
+		}
 	}
 }
 

@@ -10,6 +10,8 @@
 #include"fbEngine\_Object\_GameObject\ImageObject.h"
 #include "GameObject\Camera\ThirdPersonCamera.h"
 
+#include "GameObject\History\HistoryInfo.h"
+
 class SplitSpace;
 
 class MapLight :public GameObject{
@@ -37,7 +39,12 @@ private:
 */
 class WorldMap : public GameObject
 {
+private:
 
+	struct Location {
+		ImageObject* icon = nullptr;
+		TextObject* name = nullptr;
+	};
 public:
 
 	/**
@@ -59,6 +66,8 @@ public:
 	* 初期化.
 	*/
 	void Awake()override;
+
+	void Start()override;
 
 	void PreUpdate()override;
 
@@ -88,11 +97,14 @@ public:
 private:
 
 	/** プレイヤークラスのポインタ. */
-	Player* _Player = nullptr;
+	GameObject* _Player = nullptr;
 	ThirdPersonCamera* _camera = nullptr;	// マップ用の俯瞰カメラ。
 	MapLight* _mapLight = nullptr;
 	bool _isChangeFrame = false;	// ワールドマップの開閉状態が切り替わったフレームか。
 	Light* _saveLight = nullptr;
 	SplitSpace* _split = nullptr;
 	GameObject* _maouSiro = nullptr;
+
+	ImageObject* _playerPoint = nullptr;
+	vector<Location> _townPoint = vector<Location>(static_cast<int>(LocationCodeAll::DevilKingdom));
 };

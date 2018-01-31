@@ -25,6 +25,11 @@ public:
 	void SetEffectFlg(const fbSprite::SpriteEffectE& e,bool f);
 	//両面描画フラグセット
 	void SetDoubleSided(const bool& f);
+
+	void SetUV(const Vector4& uv)
+	{
+		_Sprite->SetUV(uv);
+	}
 private:
 	Sprite* _Sprite;
 };

@@ -8,6 +8,7 @@
 #include "GameObject\Village\Shop\Shop.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
+#include"../UI/PlayerParameterUI.h"
 
 #include "GameObject\WorldMap\WorldMap.h"
 
@@ -24,6 +25,7 @@ void EventManager::ReSet()
 	_ActiveEvent = Event::EventID::None;
 
 	_Player = nullptr;
+	_PlayerParameterUI = nullptr;
 	_Pcamera = nullptr;
 }
 
@@ -42,7 +44,8 @@ bool EventManager::Execute(Event::EventID id, int idx)
 	try 
 	{
 		//Ž~‚ß‚éB
-		GetPlayer()->GetPlayerHpBar()->RenderDisable();
+		GetPlayerParameterUI()->SetActive(false, true);
+		//GetPlayer()->GetPlayerHpBar()->RenderDisable();
 		//GetPlayer()->GetPlayerMpBar()->RenderDisable();
 		GetPlayer()->PlayerStopEnable();
 
@@ -71,7 +74,8 @@ void EventManager::NotifyEndEvent()
 {
 	if (_ActiveEvent != Event::EventID::None)
 	{
-		GetPlayer()->GetPlayerHpBar()->RenderEnable();
+		GetPlayerParameterUI()->SetActive(true, true);
+		//GetPlayer()->GetPlayerHpBar()->RenderEnable();
 		//GetPlayer()->GetPlayerMpBar()->RenderEnable();
 		GetPlayer()->PlayerStopDisable();
 		GetCamera()->SetIsMove(true);
