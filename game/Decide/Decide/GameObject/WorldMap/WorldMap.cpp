@@ -33,8 +33,8 @@ void MapLight::Awake()
 	//{
 	//	_Light->AddLight(Dl[i]);
 	//}
-
-	_Light->SetAmbientLight(Vector3(0.9f, 0.9f, 0.6f));
+	_defaultAmbient = Vector3(0.9f, 0.9f, 0.6f);
+	_Light->SetAmbientLight(_defaultAmbient);
 
 	//ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	//shadow->SetNear(1.0f);
@@ -104,6 +104,9 @@ void WorldMap::PreUpdate() {
 * 更新.
 */
 void WorldMap::Update() {
+	//_mapLight->DefaultAmbient();
+	//INSTANCE(GameObjectManager)->mainLight = _mapLight->GetLight();
+
 	if (VPadInput->IsPush(fbEngine::VPad::ButtonSelect) || VPadInput->IsPush(fbEngine::VPad::ButtonB)) {
 		Close();
 	}
@@ -149,8 +152,14 @@ void WorldMap::Open() {
 		//INSTANCE(SceneManager)->GetBloom().SetEnable(false);
 		//INSTANCE(SceneManager)->GetDepthofField().SetEnable(false);
 		_saveLight = INSTANCE(GameObjectManager)->mainLight;
+		_mapLight->DefaultAmbient();
 		INSTANCE(GameObjectManager)->mainLight = _mapLight->GetLight();
-		INSTANCE(GameObjectManager)->FindObject("Ground")->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+		GameObject* ground = INSTANCE(GameObjectManager)->FindObject("Ground");
+
+		ground->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+		ground->GetComponent<SkinModel>()->SetFogParam(FogFunc::FogFuncNone, 0.0f, 0.0f, Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+
+
 		_split = static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->GetNowSplitSpace();
 		if (_split) {
 			_split->TargetLost();
@@ -189,7 +198,8 @@ void WorldMap::Close() {
 		// 非アクティブにしたものを元通りに。
 		INSTANCE(SceneManager)->GetSky()->SetEnable();
 		//INSTANCE(GameObjectManager)->FindObject("Ocean")->SetActive(true);
-		INSTANCE(GameObjectManager)->FindObject("Ground")->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+		GameObject* ground = INSTANCE(GameObjectManager)->FindObject("Ground");
+		//ground->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
 		INSTANCE(GameObjectManager)->mainLight = _saveLight;
 

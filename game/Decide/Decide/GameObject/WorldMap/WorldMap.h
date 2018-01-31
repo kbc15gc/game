@@ -29,9 +29,14 @@ public:
 	Light* GetLight() {
 		return _Light;
 	}
+
+	void DefaultAmbient() {
+		_Light->SetAmbientLight(_defaultAmbient);
+	};
 private:
 	/** ƒ‰ƒCƒg. */
 	Light* _Light = nullptr;
+	Vector3 _defaultAmbient;
 };
 
 /**

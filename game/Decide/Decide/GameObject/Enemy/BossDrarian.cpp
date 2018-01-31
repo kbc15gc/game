@@ -27,7 +27,7 @@ void BossDrarian::_StartSubClass() {
 
 	// このボス用の音追加。
 	{
-		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Voice), "DragonVoice.wav",1.0f,true);
+		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Voice), "DragonVoice.wav",1.3f,true);
 		_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(DrarianSoundIndex::Dageki), "DragonAsioto.wav", 1.5f, true);
 	}
 
