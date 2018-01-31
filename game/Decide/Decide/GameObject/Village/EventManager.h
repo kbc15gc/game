@@ -17,6 +17,7 @@ namespace Event
 
 class Player;
 class PlayerCamera;
+class PlayerParameterUI;
 
 //イベントを管理するクラス
 class EventManager
@@ -70,6 +71,15 @@ private:
 		return _Player;
 	}
 
+	PlayerParameterUI* GetPlayerParameterUI()
+	{
+		if (_PlayerParameterUI == nullptr)
+		{
+			_PlayerParameterUI = (PlayerParameterUI*)INSTANCE(GameObjectManager)->FindObject("PlayerParameterUI");
+		}
+		return _PlayerParameterUI;
+	}
+
 	PlayerCamera* GetCamera()
 	{
 		if (!_Pcamera)
@@ -94,4 +104,5 @@ private:
 private:
 	Player* _Player;
 	PlayerCamera* _Pcamera;
+	PlayerParameterUI* _PlayerParameterUI = nullptr;
 };
