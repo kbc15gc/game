@@ -370,6 +370,9 @@
     <ClCompile Include="GameObject\Enemy\BreathObject.cpp">
       <Filter>GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\WorldMap\WorldMap.cpp">
+      <Filter>GameObject\WorldMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -756,6 +759,9 @@
       <Filter>GameObject\Enemy\HFSN</Filter>
     </ClInclude>
     <ClInclude Include="SupportData.h" />
+    <ClInclude Include="GameObject\WorldMap\WorldMap.h">
+      <Filter>GameObject\WorldMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -854,6 +860,9 @@
     </Filter>
     <Filter Include="SaveData">
       <UniqueIdentifier>{1a4a70f4-e157-45f3-aedd-3b7302ce87c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\WorldMap">
+      <UniqueIdentifier>{d5e32086-0585-408c-993c-906178fcb9d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

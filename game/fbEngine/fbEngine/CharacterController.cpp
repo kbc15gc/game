@@ -219,7 +219,10 @@ const Vector3& CCharacterController::Execute()
 					//endPos.y += addPos.y;
 
 					//上り坂を考慮して開始位置を高めにしているので、終了位置はその差分も加味する。
-					endPos.y += (addPos.y - startOffset);
+					//endPos.y += (addPos.y - startOffset);
+
+					endPos.y += (addPos.y - startOffset) * 0.5f;
+
 				}
 			}
 			else {

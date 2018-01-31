@@ -79,6 +79,5 @@ private:
 	/** 溢れ輝度を書き込むかフラグ. */
 	bool _IsLuminance = true;
 
-
 	static Vertex* _Vertex;	//頂点
 };

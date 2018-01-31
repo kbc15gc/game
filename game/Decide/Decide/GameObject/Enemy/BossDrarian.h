@@ -24,6 +24,8 @@ private:
 		Death,
 		Max
 	};
+
+	enum class DrarianSoundIndex{Voice = EnemyCharacter::SoundIndex::Max,Dageki};
 public:
 	BossDrarian(const char* name);
 	~BossDrarian();
@@ -45,6 +47,7 @@ public:
 	void AnimationEvent_BreathEnd();
 	void CreateAttackCollision_BreathAttackSub1();	// 足の動きで弱ダメージ。
 	void CreateAttackCollision_BreathAttackSub2();	// 足の動きで弱ダメージ。
+	void Voice();
 
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
