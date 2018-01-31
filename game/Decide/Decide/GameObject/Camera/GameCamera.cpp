@@ -34,6 +34,7 @@ void GameCamera::LateUpdate()
 
 void GameCamera::ChangeRequest()
 {
+#ifdef _Debug
 	if ((KeyBoardInput->isPush(DIK_C)))
 	{
 		if (_NextCamera) {
@@ -41,6 +42,7 @@ void GameCamera::ChangeRequest()
 			_NextCamera->ActiveCamera();
 		}
 	}
+#endif
 }
 
 void GameCamera::ActiveCamera()
@@ -53,20 +55,4 @@ void GameCamera::ActiveCamera()
 	//カメラが変わった時のアクション。
 	ChangeCameraReAction();
 	_isActivate = true;
-}
-
-Vector3 GameCamera::_SpringChaseMove(const Vector3 & now, const Vector3 & target, float spring, float damping, float time, float speed)
-{
-	//ワールド行列でのカメラの理想位置。
-	//auto vIdealPos = _DestinationPos;
-
-	//この理想位置へのバネによる加速度を計算。
-	auto vDisplace = now - target;
-	auto vSpringAccel = (-spring * vDisplace) - (damping * _Velocity);
-	//オイラー積分を使ってカメラの速度と位置を更新。
-	_Velocity += vSpringAccel * time * speed;
-	auto next = now + (_Velocity * time);
-	auto diff = next - target;
-
-	return next;
 }

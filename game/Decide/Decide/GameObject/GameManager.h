@@ -7,6 +7,7 @@
 #include"History\HistoryBook\HistoryBook.h"
 #include"Player\Player.h"
 #include"Camera\PlayerCamera.h"
+#include "GameObject\WorldMap\WorldMap.h"
 
 /**
 * ゲーム管理クラス.
@@ -52,4 +53,7 @@ private:
 	HistoryBook* _HistoryBook = nullptr;
 
 	PlayerCamera* _PlayerCamera = nullptr;
+
+	// マップ。
+	WorldMap* _worldMap = nullptr;
 };

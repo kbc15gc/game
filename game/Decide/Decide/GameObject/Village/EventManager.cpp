@@ -9,6 +9,8 @@
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\History\HistoryBook\HistoryBook.h"
 
+#include "GameObject\WorldMap\WorldMap.h"
+
 EventManager*  EventManager::_Instance = nullptr;
 
 EventManager::EventManager()
@@ -88,6 +90,8 @@ void EventManager::AddEvent()
 	StatusWindow* status = (StatusWindow*)INSTANCE(GameObjectManager)->FindObject("StatusWindow");
 	HistoryBook* book = (HistoryBook*)INSTANCE(GameObjectManager)->FindObject("HistoryBook");
 	
+	WorldMap* map = static_cast<WorldMap*>(INSTANCE(GameObjectManager)->FindObject("WorldMap"));
+
 	//関数を追加。
 
 	//ショップを開く処理。
@@ -107,5 +111,11 @@ void EventManager::AddEvent()
 	_ActionList.push_back([book]
 	{
 		book->SetActive(!book->GetActive(), true);
+	});
+
+	// ワールドマップを追加。
+	_ActionList.push_back([map]
+	{
+		map->Open();
 	});
 }

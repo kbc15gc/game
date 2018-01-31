@@ -2,7 +2,7 @@
 #include "GameCamera.h"
 #include "GameObject\Player\Player.h"
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 //ふかんカメラクラスの定義。
 class ThirdPersonCamera :	public GameCamera
 {
@@ -14,7 +14,8 @@ public:
 		Invalid = -1,
 		Low,
 		Middle,
-		Height
+		Height,
+		Max
 	};
 	//コンストラクタ。
 	ThirdPersonCamera(const char* name) :
@@ -93,11 +94,11 @@ private:
 private:
 	
 	Camera_Height _NowHeight = Camera_Height::Low;		//今の高さ。
-	const float _LowCameraSpeed = 9.0f;					//低い高さでの移動スピード。
-	const float _MiddleCameraSpeed = 25.0f;				//中の高さでの移動スピード。
-	const float _MiddleCameraDashSpeed = 100.0f;		//中の高さでのダッシュスピード。
+	const float _LowCameraSpeed = 270.0f;					//低い高さでの移動スピード。
+	const float _MiddleCameraSpeed = 750.0f;				//中の高さでの移動スピード。
+	const float _MiddleCameraDashSpeed = 3000.0f;		//中の高さでのダッシュスピード。
 	Vector3 _PrevCameraPos = Vector3::zero;				//切り替わる前のカメラの位置を保持。
-	Vector3 _HeightPos = Vector3(0.0f, 5000.0f, 0.0f);	//高の高さ。
+	Vector3 _HeightPos = Vector3(0.0f, 2000.0f, 0.0f);	//高の高さ。
 };
 
-#endif // _DEBUG
+//#endif // _DEBUG

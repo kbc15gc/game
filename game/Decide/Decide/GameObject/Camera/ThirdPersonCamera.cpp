@@ -3,7 +3,7 @@
 #include "fbEngine\_Object\_Component\_3D\Camera.h"
 #include "PlayerCamera.h"
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 //デストラクタ。
 ThirdPersonCamera::~ThirdPersonCamera()
 {
@@ -16,8 +16,9 @@ void ThirdPersonCamera::Awake()
 
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
-	_Camera->SetNear(0.01f);
-	_Camera->SetFar(10000.0f);
+	_Camera->SetNear(1.0f);
+	_Camera->SetFar(2100.0f);
+	_Camera->SetUseTarget(false);
 }
 
 void ThirdPersonCamera::Start()
@@ -25,10 +26,15 @@ void ThirdPersonCamera::Start()
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
 
-	//真下を向くように回転。
-	transform->SetRotation(Quaternion(0.75f, 0.0f, 0.0f, 1.0f));
+	transform->SetPosition(Vector3(_PlayerPos->x, 500.0f, _PlayerPos->z));
 
-	_Camera->SetTarget(Vector3(0,0,0));
+	//真下を向くように回転。
+	Quaternion rot;
+	rot = Quaternion::Identity;
+	rot.SetRotation(Vector3::axisX,D3DXToRadian(90.0f));
+	transform->SetRotation(rot);
+
+	//_Camera->SetTarget(transform->GetPosition() - Vector3(0.0f, 100.0f, 0.0f));
 
 	// 最初は更新しない。
 	UnActivateFlg();
@@ -50,6 +56,8 @@ void ThirdPersonCamera::UpdateSubClass()
 
 		//低い高さの移動スピードを設定。
 		SetCameraSpeed(_LowCameraSpeed);
+		//_Camera->SetNear(170.0f);
+		//_Camera->SetFar(190.0f);
 
 		_Move();
 		break;
@@ -59,16 +67,22 @@ void ThirdPersonCamera::UpdateSubClass()
 
 		//ダッシュのスピードと中の高さの移動スピードを設定。
 		DeicideCameraSpeed(_MiddleCameraDashSpeed, _MiddleCameraSpeed);
+		//_Camera->SetNear(400.0f);
+		//_Camera->SetFar(600.0f);
 
 		_Move();
 		break;
 		//高さ:高。
 	case ThirdPersonCamera::Camera_Height::Height:
 		transform->SetPosition(_HeightPos);
+		//_Camera->SetNear(1900.0f);
+		//_Camera->SetFar(2100.0f);
+
 		break;
 	default:
 		break;
 	}
+
 }
 
 void ThirdPersonCamera::_Move()
@@ -102,10 +116,12 @@ void ThirdPersonCamera::_Move()
 	{
 		Vector3 pos;
 		pos = transform->GetPosition();
-		pos.x += dir.x*_MoveSpeed;
-		pos.z += dir.z*_MoveSpeed;
+		pos.x += dir.x*_MoveSpeed * Time::DeltaTime();
+		pos.z += dir.z*_MoveSpeed * Time::DeltaTime();
 		transform->SetPosition(pos);
 	}
+
+	//_Camera->SetTarget(transform->GetPosition() - Vector3(0.0f, transform->GetPosition().y, 0.0f));
 }
 
 void ThirdPersonCamera::ChangeHeight()
@@ -114,18 +130,18 @@ void ThirdPersonCamera::ChangeHeight()
 	if ((KeyBoardInput->isPush(DIK_DOWN)))
 	{
 		_NowHeight = Add(_NowHeight);
-		if (_NowHeight != Camera_Height::Height) {
-			transform->SetPosition(transform->GetPosition().x, 0.0f, transform->GetPosition().z);
-		}
+		//if (_NowHeight < Camera_Height::Max) {
+		//	transform->SetPosition(transform->GetPosition().x, 0.0f, transform->GetPosition().z);
+		//}
 	}
 
 	//高さを下げていく。
 	if ((KeyBoardInput->isPush(DIK_UP)))
 	{
 		_NowHeight = Subtract(_NowHeight);
-		if (_NowHeight != Camera_Height::Height) {
-			transform->SetPosition(transform->GetPosition().x, 0.0f, transform->GetPosition().z);
-		}
+		//if (_NowHeight != Camera_Height::Height) {
+		//	transform->SetPosition(transform->GetPosition().x, 0.0f, transform->GetPosition().z);
+		//}
 	}
 }
 
@@ -140,4 +156,4 @@ void ThirdPersonCamera::Return()
 	}
 }
 
-#endif // _DEBUG
+//#endif // _DEBUG
