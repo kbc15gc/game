@@ -223,6 +223,9 @@ void Player::Awake()
 	//攻撃サウンド初期化
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
+	//足音サウンド初期化
+	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
+	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -1306,6 +1309,18 @@ void Player::AnimationEventControl()
 		float eventframe = 1.1f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
 	}
+
+	/*******************/
+	/*		足音	   */
+	/*******************/
+	float eventframe = 0.2f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.4f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.6f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.8f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
 }
 
 void Player::Attack1()
@@ -1376,4 +1391,10 @@ void Player::Attack5()
 		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
+}
+
+void Player::Asioto1()
+{
+	//足音のサウンド再生
+	_AsiotoSound->Play(false);
 }

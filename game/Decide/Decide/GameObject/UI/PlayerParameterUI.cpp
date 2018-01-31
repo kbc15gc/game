@@ -56,7 +56,7 @@ void PlayerParameterUI::LateUpdate()
 	_NextHpRate = (float)_Player->GetParam(CharacterParameter::Param::HP) / (float)_Player->GetMaxHP();
 	float Difference = _NextHpRate - _NowHpRate;
 
-	float time = Time::DeltaTime() * 0.2f;
+	float time = Time::DeltaTime() * 0.5f;
 
 	if (Difference >= time)
 	{
