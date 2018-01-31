@@ -373,6 +373,10 @@
     <ClCompile Include="GameObject\WorldMap\WorldMap.cpp">
       <Filter>GameObject\WorldMap</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\UI\PlayerParameterUI.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\ItemEffectUI.cpp">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -762,6 +766,9 @@
     <ClInclude Include="GameObject\WorldMap\WorldMap.h">
       <Filter>GameObject\WorldMap</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject\StatusWindow\ItemEffectUI.h">
+      <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Decide.rc" />
@@ -864,5 +871,8 @@
     <Filter Include="GameObject\WorldMap">
       <UniqueIdentifier>{d5e32086-0585-408c-993c-906178fcb9d3}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="GameObject\UI\PlayerParameterUI.h" />
   </ItemGroup>
 </Project>
