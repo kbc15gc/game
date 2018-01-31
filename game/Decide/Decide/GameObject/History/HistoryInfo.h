@@ -70,30 +70,80 @@ enum class LocationCodeE : int
 	Begin = 0,			//!< はじまりの集落.
 	Hunting,		//!< 狩猟の村.
 	Prosperity,		//!< 繁栄の街.
-	//DevilKingdom,	//!< 魔王の国.	
 	Common,			//!< 共通のNPC.
 	LocationNum,	//!< 場所の数.
 };
+
+// くそコード。
+// 歴史周りのコードにバグが出たらいけないので魔王城を含めた町の列挙はこちらに記載する。
+enum class LocationCodeAll : int
+{
+	None = -1,
+	Drarian = 0,
+	Gremrin,
+	BossD,
+	Begin,			//!< はじまりの集落.
+	Hunting,		//!< 狩猟の村.
+	Prosperity,		//!< 繁栄の街.
+	Kuni,			// 信仰の国。
+	Sinden,			// 心酔の神殿。
+	DevilKingdom,	//!< 崇拝の魔城.※ここ以降はマップに記されない。	
+	World,
+	Max
+};
+
+// くそコード。
+// 歴史周りのコードにバグが出たらいけないので魔王城を含めた町の名前はこちらに記載する。
+static const string AllLocationNameList[(int)LocationCodeAll::Max] =
+{
+	"ドラリアンの住処",
+	"グレムリンの洞窟",
+	"『Ｄ』",
+	"はじまりの集落",
+	"狩猟の村",
+	"繁栄の街",
+	"信仰の国",
+	"心酔の神殿",
+	"崇拝の魔城",
+	"",
+};
+
 
 /** 
 * 場所名. 
 */
 static const string LocationNameList[(int)LocationCodeE::Common] =
 {
-	"はじまりの集落",
-	"狩猟の村",
-	"繁栄の街",
-	//"魔王の国",
+	AllLocationNameList[(int)LocationCodeAll::Begin],
+	AllLocationNameList[(int)LocationCodeAll::Hunting],
+	AllLocationNameList[(int)LocationCodeAll::Prosperity],
 };
+
+// くそコード。
+// 歴史周りのコードにバグが出たらいけないので魔王城を含めた町の位置はこちらに記載する。
+static const Vector3 AllLocationPosition[(int)LocationCodeAll::Max] =
+{
+	Vector3(-683.3f,61.7f,63.2f),
+	Vector3(308.7f,55.4f,623.2f),
+	Vector3(456.7f,71.18f,75.7f),
+	Vector3(-387.3f,58.307f,-75.8f),
+	Vector3(-108.1f ,55.524f ,533.9f),
+	Vector3(218.88f, 65.793f, -0.92f),
+	Vector3(-145.6f, 121.8f, 131.6f),
+	Vector3(-145.6f, 188.5f, 239.24f),
+	Vector3(0.0f,0.0f,0.0f),
+	Vector3(0.0f,0.0f,0.0f),
+};
+
 
 /**
 * プレイヤーのリスポーン地点の座標.
 */
 static const Vector3 LocationPosition[(int)LocationCodeE::Common] =
 {
-	Vector3(-387.3f,58.307f,-75.8f),
-	Vector3(-108.1f ,55.524f ,533.9f),
-	Vector3(218.88f, 65.793f, -0.92f),
+	AllLocationPosition[(int)LocationCodeAll::Begin],
+	AllLocationPosition[(int)LocationCodeAll::Hunting],
+	AllLocationPosition[(int)LocationCodeAll::Prosperity],
 	//Vector3(-114.23f, 183.0f, 184.95f),
 };
 
