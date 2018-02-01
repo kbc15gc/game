@@ -9,6 +9,15 @@ void AttackValue2D::Awake()
 
 void AttackValue2D::Update()
 {
+	/*if (INSTANCE(EventManager)->IsEvent())
+	{
+		this->SetActive(false);
+	}
+	if (this->GetActive() && !INSTANCE(EventManager)->IsEvent())
+	{
+		this->SetActive(true);
+	}*/
+		
 	_Time += Time::DeltaTime();
 	//¶‘¶ŠÔˆÈ“à‚È‚ç
 	if (_Time < _LifeTime)

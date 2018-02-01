@@ -792,7 +792,7 @@ void LastBoss::Debug() {
 }
 #endif // _DEBUG
 
-void LastBoss::SetActive(const bool act, const bool children)
+void LastBoss::SetActive(const bool act, const bool children = false)
 {
 	if (!act) {
 		if (INSTANCE(EventManager)->GetEventID() != Event::EventID::WorldMapOpen) {

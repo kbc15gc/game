@@ -1,5 +1,6 @@
 #pragma once
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\Village\EventManager.h"
 
 class AttackValue2D : public GameObject
 {
