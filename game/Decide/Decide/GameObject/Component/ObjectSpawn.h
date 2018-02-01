@@ -87,7 +87,7 @@ public:
 			// GameObjectを削除(死亡)。
 			INSTANCE(GameObjectManager)->AddRemoveList(gameObject);
 			// リスポナーに登録(復活予告)。
-			_respawner = _CreateSpawner<T>(wait, pos, rot, scale, parent);
+			_respawner = _CreateSpawner<T>(const_cast<char*>(gameObject->GetName()), gameObject->GetPriorty(),wait, pos, rot, scale, parent);
 			GameObject* work = _respawner->GetSpawnObject();
 			if (reSpawn) {
 				*reSpawn = work;
@@ -99,6 +99,8 @@ public:
 	// オブジェクトを生成予告する関数。
 	// テンプレート引数：	発生させたいオブジェクトのクラス名。
 	// 引数：	生成予告したオブジェクトへのポインタが入る(Null以外の値の入ったポインタを入力すると上書きされ、もともと入っていたアドレス情報はロストするため注意、不要な場合は直接Nullを入力する)。
+	//			生成するオブジェクトの名前。
+	//			生成するオブジェクトの優先度。
 	//			何秒後に生成するか。
 	//			生成後の位置(ワールド座標)。
 	//			生成後の回転(ワールド座標)。
@@ -107,8 +109,8 @@ public:
 	// 戻り値：	生成予告したオブジェクトへのポインタ(第一引数と同じ)。
 	// ※生成予告したオブジェクトはGameObjectManagerに登録される。
 	template<class T>
-	T* ObjectSpawn::SpawnObject(GameObject** spawn, float wait, const Vector3& pos, const Quaternion& rot, const Vector3& scale, Transform* parent = nullptr) {
-		GameObject* work = _CreateSpawner<T>()->GetSpawnObject();
+	T* ObjectSpawn::SpawnObject(GameObject** spawn,char* name,unsigned int priorty, float wait, const Vector3& pos, const Quaternion& rot, const Vector3& scale, Transform* parent = nullptr) {
+		GameObject* work = _CreateSpawner<T>(name,priorty, wait, pos, rot, scale, parent)->GetSpawnObject();
 		if (spawn) {
 			*spawn = work;
 		}
@@ -121,7 +123,9 @@ public:
 private:
 	// オブジェクト発生装置を生成する関数。
 	// テンプレート引数：	発生させたいオブジェクトのクラス名。
-	// 引数：	何秒後に発生させるか。
+	// 引数：	生成するオブジェクトの名前。
+	//			生成するオブジェクトの優先度。
+	//			何秒後に発生させるか。
 	//			発生後の位置(ワールド座標)。
 	//			発生後の回転(ワールド座標)。
 	//			発生後の拡縮(ワールド座標)。
@@ -129,9 +133,9 @@ private:
 	// 戻り値：	生成した発生装置。
 	// ※発生させたオブジェクトはGameObjectManagerに登録される。
 	template<class T>
-	Spawner* ObjectSpawn::_CreateSpawner(float wait, const Vector3& pos, const Quaternion& rot, const Vector3& scale, Transform* parent) {
-		Spawner* spawner = INSTANCE(GameObjectManager)->AddNew<Spawner>("Spawner", gameObject->GetPriorty());
-		spawner->Create(INSTANCE(GameObjectManager)->AddNew<T>(const_cast<char*>(gameObject->GetName()), gameObject->GetPriorty()), wait, pos, rot, scale, parent);
+	Spawner* ObjectSpawn::_CreateSpawner(char* name,unsigned int priorty,float wait, const Vector3& pos, const Quaternion& rot, const Vector3& scale, Transform* parent) {
+		Spawner* spawner = INSTANCE(GameObjectManager)->AddNew<Spawner>("Spawner", priorty /*gameObject->GetPriorty()*/);
+		spawner->Create(INSTANCE(GameObjectManager)->AddNew<T>(name/*const_cast<char*>(gameObject->GetName())*/, priorty/*gameObject->GetPriorty()*/), wait, pos, rot, scale, parent);
 		_spawner.push_back(spawner);	// スポーンリストに追加。
 		return spawner;
 	}

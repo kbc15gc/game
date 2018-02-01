@@ -87,6 +87,10 @@ void WorldMap::Awake() {
 		_townPoint[idx].name->SetActive(false);
 	}
 
+	// セーブデータがない場合に警告文が出ないようにする。
+	//CSVからオブジェクトの情報読み込み。
+	Support::OutputCSV<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
+
 	//CSVからオブジェクトの情報読み込み。
 	Support::LoadCSVData<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
 
