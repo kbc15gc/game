@@ -35,8 +35,11 @@ public:
 	//タイトルを表示するかどうか？
 	void Title(bool show);
 	
-	//メッセージボックスを閉じる。
+	//メッセージを閉じる。
 	void CloseMessage();
+
+	//ボックスを閉じる。
+	void CloseBox();
 	
 	//テキスト表示スピード設定。
 	void SetTextSpeed(const float speed)
