@@ -11,6 +11,7 @@
 #include "GameObject\Enemy\EnemyCharacter.h"
 
 #include"../UI/PlayerParameterUI.h"
+#include "GameObject\WorldMap\WorldMap.h"
 
 namespace
 {
@@ -129,6 +130,7 @@ void Player::Awake()
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::PLAYER);	// 建物のコリジョン追加。
 	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
@@ -223,6 +225,14 @@ void Player::Awake()
 	//攻撃サウンド初期化
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
+	//足音サウンド初期化
+	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
+	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
+	_AsiotoSound->SetVolume(0.1f);
+	//着地サウンド初期化
+	_TyakutiSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TyakutiSE", 0);
+	_TyakutiSound->Init("Asset/Sound/Player/tyakuti.wav");
+	_TyakutiSound->SetVolume(1.0f);
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -345,6 +355,8 @@ void Player::Start()
 
 	//// 初期位置に移動。
 	//_CharacterController->Execute();
+
+	_AttentionText = static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"));
 }
 
 void Player::Update()
@@ -403,13 +415,20 @@ void Player::Update()
 		Speak();
 	}
 	
+	//着地
+	{
+		/*if (_CharacterController->IsOnGround())
+		{
+			_TyakutiSound->Play(false);
+		}*/
+	}
 	//char test[256];
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);
 
-	char test2[256];
-	sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	OutputDebugString(test2);
+	//char test2[256];
+	//sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test2);
 
 }
 
@@ -595,6 +614,40 @@ void Player::Releace()
 	}
 	_DeathSound = nullptr;
 	//_AnimationEventPlayer = nullptr;
+}
+
+void Player::TakeDrop(int dropexp, int money)
+{
+	_nowEXP += dropexp;
+	SaveLevel();
+	// お金はインベントリに格納。
+	INSTANCE(Inventory)->AddPlayerMoney(money);
+
+	wchar_t WText[256];
+	char	CText[256];
+
+	sprintf(CText, "+%d経験値", dropexp);
+	//chatrからwchra_tに変換。
+	mbstowcs(WText, CText, sizeof(CText));
+	_AttentionText->CreateText(
+		WText,
+		Vector3(580.0f, 460.0f, 0.0f),
+		33.0f,
+		Color::white,
+		AttentionTextOnly::MoveType::Up
+	);
+
+	sprintf(CText, "+%dダラー", money);
+	//chatrからwchra_tに変換。
+	mbstowcs(WText, CText, sizeof(CText));
+	_AttentionText->CreateText(
+		WText,
+		Vector3(580.0f, 460.0f, 0.0f),
+		33.0f,
+		Color::white,
+		AttentionTextOnly::MoveType::Up
+	);
+
 }
 
 /**
@@ -1306,6 +1359,18 @@ void Player::AnimationEventControl()
 		float eventframe = 1.1f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
 	}
+
+	/*******************/
+	/*		足音	   */
+	/*******************/
+	float eventframe = 0.2f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.4f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.6f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.8f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
 }
 
 void Player::Attack1()
@@ -1317,7 +1382,7 @@ void Player::Attack1()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1331,7 +1396,7 @@ void Player::Attack2()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1345,7 +1410,7 @@ void Player::Attack3()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1359,7 +1424,7 @@ void Player::Attack4()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1373,7 +1438,13 @@ void Player::Attack5()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
+}
+
+void Player::Asioto1()
+{
+	//足音のサウンド再生
+	_AsiotoSound->Play(false);
 }

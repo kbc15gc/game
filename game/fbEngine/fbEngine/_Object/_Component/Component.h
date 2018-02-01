@@ -38,12 +38,14 @@ public:
 	//[in] フラグ。
 	virtual void SetEnable(const bool flg)
 	{
-		//切り替わった時に呼び出す。。
-		if ((enable != flg) && flg)
-			OnEnable();
-		else
-			OnDisable();
-
+		//切り替わった時に呼び出す。
+		if (enable != flg)
+		{
+			if (flg)
+				OnEnable();
+			else
+				OnDisable();
+		}
 		enable = flg;
 	}
 

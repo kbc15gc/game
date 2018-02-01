@@ -54,6 +54,10 @@ void NPC::Start()
 	_FitGround();
 
 	ContinentObject::Start();
+
+	//リジッドボディにフラグを設定。
+	auto rigid = GetComponent<RigidBody>();
+	rigid->SetUserIndex((int)(fbCollisionAttributeE::CHARACTER));
 }
 
 void NPC::Update()
@@ -101,6 +105,16 @@ bool NPC::GetIsSpeakEnd()const {
 
 bool NPC::GetisSpeakEndLastMessage()const {
 	return _TextBox->IsLastMessageEnd();
+}
+
+void NPC::OnEnable()
+{
+	//_TextBox->CloseMessage();
+}
+
+void NPC::OnDisable()
+{
+	_TextBox->CloseBox();
 }
 
 /**
@@ -202,3 +216,4 @@ void NPC::_Speak()
 		}
 	}
 }
+

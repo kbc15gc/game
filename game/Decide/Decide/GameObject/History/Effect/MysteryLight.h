@@ -49,6 +49,8 @@ private:
 	/** ƒ‰ƒCƒg—p‰æ‘œ. */
 	ImageObject* _LightPlate = nullptr;
 
+	ImageObject* _FadeImage = nullptr;
+
 	PlayerCamera* _PlayerCamera = nullptr;
 
 	HistoryMenu* _HistoryMenu = nullptr;

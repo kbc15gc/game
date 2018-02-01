@@ -369,3 +369,30 @@ void BuffDebuffICon::Debug()
 
 
 #endif // DEBUG
+
+void BuffDebuffICon::OnEnable() {
+	if (_BuffDebuffList.size() > 0) {
+		for (auto buffDebuff : _BuffDebuffList) {
+			if (buffDebuff->_ArrowIconImage) {
+				buffDebuff->_ArrowIconImage->SetActive(true);
+			}
+			if (buffDebuff->_BuffDebuffTypeIconImage) {
+				buffDebuff->_BuffDebuffTypeIconImage->SetActive(true);
+			}
+		}
+	}
+};
+
+//[無効/非アクティブ]になった時に呼ばれる関数。
+void BuffDebuffICon::OnDisable() {
+	if (_BuffDebuffList.size() > 0) {
+		for (auto buffDebuff : _BuffDebuffList) {
+			if (buffDebuff->_ArrowIconImage) {
+				buffDebuff->_ArrowIconImage->SetActive(false);
+			}
+			if (buffDebuff->_BuffDebuffTypeIconImage) {
+				buffDebuff->_BuffDebuffTypeIconImage->SetActive(false);
+			}
+		}
+	}
+};

@@ -35,7 +35,8 @@ void ThirdPersonCamera::Start()
 	transform->SetRotation(rot);
 
 	//_Camera->SetTarget(transform->GetPosition() - Vector3(0.0f, 100.0f, 0.0f));
-
+	
+	_NowHeight = Camera_Height::Height;
 	// 最初は更新しない。
 	UnActivateFlg();
 	
@@ -43,24 +44,24 @@ void ThirdPersonCamera::Start()
 
 void ThirdPersonCamera::UpdateSubClass()
 {
-	ChangeHeight();
+	//ChangeHeight();
 
-	Return();
+	//Return();
 
 	//今の高さを調べ、それに応じた処理をする。
 	switch (_NowHeight)
 	{
 		//高さ:低。
-	case ThirdPersonCamera::Camera_Height::Low:
-		transform->SetPosition(transform->GetPosition().x, 180.0f, transform->GetPosition().z);
+	//case ThirdPersonCamera::Camera_Height::Low:
+		//transform->SetPosition(transform->GetPosition().x, 180.0f, transform->GetPosition().z);
 
-		//低い高さの移動スピードを設定。
-		SetCameraSpeed(_LowCameraSpeed);
-		//_Camera->SetNear(170.0f);
-		//_Camera->SetFar(190.0f);
+		////低い高さの移動スピードを設定。
+		//SetCameraSpeed(_LowCameraSpeed);
+		////_Camera->SetNear(170.0f);
+		////_Camera->SetFar(190.0f);
 
-		_Move();
-		break;
+		//_Move();
+		//break;
 		//高さ:中。
 	case ThirdPersonCamera::Camera_Height::Middle:
 		transform->SetPosition(transform->GetPosition().x, 500.0f, transform->GetPosition().z);

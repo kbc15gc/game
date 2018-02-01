@@ -11,6 +11,8 @@
 #include "GameObject\Enemy\LastBoss.h"
 #include "GameObject\Enemy\HFSM\EnemyAttackState.h"
 #include "Scene\GameScene.h"
+#include "GameObject\SplitSpace.h"
+#include "GameObject\Component\ObjectSpawn.h"
 
 //const int LastBossThroneState::_entourageNum = 2;
 
@@ -73,7 +75,11 @@ void LastBossThroneState::_EntrySubClass() {
 	float dir = 1.0f;
 	float startAttackOffset = 1.0f;	// 共同攻撃開始タイミングをずらす処理。
 	for (int idx = 0; idx < _entourageNum; idx++) {
-		_entourageEnemys.push_back(INSTANCE(GameObjectManager)->AddNew<BossGhost>("_entourageEnemy", 1));
+
+		Vector3 pos = _EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetRight() * 3.0f * dir);
+		pos -= Vector3(0.0f, 1.0f, 0.0f);
+
+		_entourageEnemys.push_back(_EnemyObject->GetMyComponent().Spawner->SpawnObject<BossGhost>(nullptr, "_entourageEnemy", 1, 0.1f, pos,Quaternion::Identity, Vector3::one,nullptr)/*INSTANCE(GameObjectManager)->AddNew<BossGhost>("_entourageEnemy", 1)*/);
 		vector<BarColor> color;
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);
@@ -99,8 +105,9 @@ void LastBossThroneState::_EntrySubClass() {
 		param[CharacterParameter::Param::CRT] = 10;
 
 		_entourageEnemys[idx]->SetParamAll(color, param);
-		Vector3 pos = _EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetForward() * 3.0f * dir);
-		_entourageEnemys[idx]->transform->SetPosition(pos - Vector3(0.0f,1.0f,0.0f));
+		//Vector3 pos = _EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetRight() * 3.0f * dir);
+		//_entourageEnemys[idx]->transform->SetPosition(pos - Vector3(0.0f,1.0f,0.0f));
+
 		_entourageEnemys[idx]->SetIntervalStartPairAttack(startAttackOffset);
 
 		// 視野の距離設定。

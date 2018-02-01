@@ -46,6 +46,15 @@ enum class FogFunc
 	FogFuncHeight,	// 高さフォグ.
 };
 
+// フォグ設定用構造体。
+struct FogInfo {
+	FogFunc fogFunc = FogFunc::FogFuncNone;	// フォグの種類。
+	float idx0 = 0.0f;	// フォグがかかり始める距離。
+	float idx1 = 0.0f;	// フォグ画かかりきる距離。
+	Vector4 color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);	// フォグカラー。
+	bool isNight = false;	// 夜か。
+};
+
 //モデルの描画を行うクラス
 class SkinModel:public Component{
 public:
@@ -199,11 +208,36 @@ public:
 	*/
 	void SetFogParam(FogFunc fogFunc, float idx0, float idx1, const Vector4& color, bool isNight = false)
 	{
+		_fogInfo.fogFunc = fogFunc;
+		_fogInfo.idx0 = idx0;
+		_fogInfo.idx1 = idx1;
+		_fogInfo.isNight = isNight;
+		_fogInfo.color = color;
+
 		_FogFunc = fogFunc;
 		_FogParam[0] = idx0;
 		_FogParam[1] = idx1;
 		_FogParam[3] = isNight;
 		_FogColor = color;
+	}
+
+	/**
+	* フォグパラメータを設定.
+	*
+	* @param info フォグパラメーター.
+	*/
+	void SetFogParam(const FogInfo& info)
+	{
+		_fogInfo = info;
+		_FogFunc = info.fogFunc;
+		_FogParam[0] = info.idx0;
+		_FogParam[1] = info.idx1;
+		_FogParam[3] = info.isNight;
+		_FogColor = info.color;
+	}
+
+	const FogInfo& GetFogParam()const {
+		return _fogInfo;
 	}
 
 	/**
@@ -286,6 +320,8 @@ private:
 
 	/** ディザ係数. */
 	float _DitherCoefficient = 0;
+
+	FogInfo _fogInfo;
 
 	/** フォグの種類. */
 	FogFunc _FogFunc = FogFunc::FogFuncNone;

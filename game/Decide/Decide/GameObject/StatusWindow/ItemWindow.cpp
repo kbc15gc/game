@@ -9,6 +9,7 @@
 #include"GameObject\ItemManager\HoldItem\ConsumptionItem.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
 #include "GameObject\TextImage\AttentionTextOnly.h"
+#include"ItemEffectUI.h"
 
 const char* ItemWindow::IconTextureNameList[static_cast<int>(IconIndex::MAX)] = {
 	"UI/gem.png",
@@ -194,6 +195,11 @@ void ItemWindow::OnEnable()
 		}
 	}
 
+	if (_ItemCode == Item::ItemCodeE::Item)
+	{
+		_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
+	}
+
 	if (_Dialog)
 	{
 		_Dialog->SetActive(false, true);
@@ -217,6 +223,10 @@ void ItemWindow::ItemInit()
 	_WindowName->SetText(L"アイテム一覧");
 	// ステータス表示作成。
 	_CreateCIShowStatus();
+	
+	_ItemEffectUI = INSTANCE(GameObjectManager)->AddNew<ItemEffectUI>("ItemEffectUI", this->GetPriorty());
+	_ItemEffectUI->transform->SetParent(transform);
+
 }
 
 /**
@@ -268,6 +278,11 @@ void ItemWindow::LateUpdate()
 		{
 			_Item2DList[i]->SetItemData(nullptr);
 		}
+	}
+
+	if (_ItemCode == Item::ItemCodeE::Item)
+	{
+		_ItemEffectUI->SetItemData((ConsumptionItem*)_Item2DList[_NowSelectItem]->GetItemData());
 	}
 
 	ArrowUpdate();
@@ -431,7 +446,6 @@ void ItemWindow::Input()
 			//リストが詰められた可能性があるため表示を更新.
 			if (isPack)
 			{
-
 				itemCount = 0;
 				for (auto item : itemList)
 				{
@@ -453,6 +467,7 @@ void ItemWindow::Input()
 					_NowSelectItem = max(0, index);
 				}
 
+			
 				if (itemCount <= 0)
 				{
 					_Cursor->transform->SetParent(nullptr);
@@ -465,8 +480,6 @@ void ItemWindow::Input()
 				}
 			}
 		}
-
-
 	}
 
 	_BefItemCount = itemCount;
