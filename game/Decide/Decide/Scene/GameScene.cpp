@@ -515,7 +515,9 @@ void GameScene::_ChangeBGM(BGM bgm)
 
 	if (_BGM != bgm)
 	{
-		_worldMap->OpenTownName(LocationMapCode[static_cast<int>(bgm)]);	// マップの地名を開放。
+		if (static_cast<int>(bgm) < ARRAYSIZE(LocationMapCode)) {
+			_worldMap->OpenTownName(LocationMapCode[static_cast<int>(bgm)]);	// マップの地名を開放。
+		}
 
 		if (_BGM < BGM::BOSS || bgm >= BGM::BOSS) {
 			// 魔王戦の時は外部から指示があるまで変更しない。
