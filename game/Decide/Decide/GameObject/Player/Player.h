@@ -357,6 +357,8 @@ private:
 	//攻撃5
 	void Attack5();
 
+	//足音再生
+	void Asioto1();
 private:
 	//プレイヤーがダメージを受ける処理
 	void _Damage();
@@ -487,6 +489,8 @@ private:
 	SoundSource* _DeathSound = nullptr;
 	//攻撃時のSE
 	SoundSource* _AttackSoound = nullptr;
+	//足音のSE
+	SoundSource* _AsiotoSound = nullptr;
 	//攻撃ボイス
 	SoundSource* _AttackBoiceSound[static_cast<int>(AttackBoice::Num)];
 	//攻撃ボイスENUM

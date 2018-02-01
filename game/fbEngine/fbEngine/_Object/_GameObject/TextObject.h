@@ -14,6 +14,7 @@ public:
 
 	void SetText(const wchar_t* ws);
 	void SetText(const char* s);
+
 	void SetFontSize(float size);
 	void SetFontStyle(const char* style);
 	void SetBlendColor(const Color& c);

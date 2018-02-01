@@ -309,6 +309,7 @@
     <ClInclude Include="GameObject\StatusWindow\Dialog.h" />
     <ClInclude Include="GameObject\StatusWindow\HoldItem2D.h" />
     <ClInclude Include="GameObject\StatusWindow\Item2D.h" />
+    <ClInclude Include="GameObject\StatusWindow\ItemEffectUI.h" />
     <ClInclude Include="GameObject\StatusWindow\ItemWindow.h" />
     <ClInclude Include="GameObject\StatusWindow\ParameterRender.h" />
     <ClInclude Include="GameObject\StatusWindow\StatusWindow.h" />
@@ -441,6 +442,7 @@
     <ClCompile Include="GameObject\StatusWindow\Dialog.cpp" />
     <ClCompile Include="GameObject\StatusWindow\HoldItem2D.cpp" />
     <ClCompile Include="GameObject\StatusWindow\Item2D.cpp" />
+    <ClCompile Include="GameObject\StatusWindow\ItemEffectUI.cpp" />
     <ClCompile Include="GameObject\StatusWindow\ItemWindow.cpp" />
     <ClCompile Include="GameObject\StatusWindow\ParameterRender.cpp" />
     <ClCompile Include="GameObject\StatusWindow\StatusWindow.cpp" />
