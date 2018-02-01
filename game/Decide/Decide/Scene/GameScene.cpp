@@ -172,7 +172,7 @@ void GameScene::Start()
 	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	// ワールドマップ。
-	INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
+	_worldMap = INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -371,6 +371,7 @@ void GameScene::Update()
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					_VillageName->Excute(i);
+					_worldMap->OpenTownName(LocationMapCode[i]);	// マップの地名を開放。
 					break;
 				}
 			}

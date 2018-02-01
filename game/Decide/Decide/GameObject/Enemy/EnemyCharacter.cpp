@@ -782,5 +782,14 @@ void EnemyCharacter::EffectUpdate() {
 	
 }
 
+void EnemyCharacter::SetActive(const bool act, const bool children) {
+	if (!act) {
+		_MyComponent.HPBar->RenderDisable();
+	}
+	if (_NowState) {
+		_NowState->SetActive(act);
+	}
+	GameObject::SetActive(act, children);
+}
 
 
