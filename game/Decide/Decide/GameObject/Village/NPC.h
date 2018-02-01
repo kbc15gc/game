@@ -110,6 +110,9 @@ public:
 		_Rot = q;
 	}
 
+	void OnEnable()override;
+	void OnDisable()override;
+
 private:
 
 	/**

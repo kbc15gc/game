@@ -103,6 +103,16 @@ bool NPC::GetisSpeakEndLastMessage()const {
 	return _TextBox->IsLastMessageEnd();
 }
 
+void NPC::OnEnable()
+{
+	//_TextBox->CloseMessage();
+}
+
+void NPC::OnDisable()
+{
+	_TextBox->CloseBox();
+}
+
 /**
 * ‘«Œ³‚ð’n–Ê‚É‡‚í‚¹‚é.
 */
