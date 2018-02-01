@@ -25,6 +25,8 @@
 
 #include"fbEngine\_Object\_Component\_3D\Light.h"
 
+#include "GameObject\TextImage\AttentionTextOnly.h"
+
 class SkinModel;
 class Animation;
 class ParameterBar;
@@ -174,13 +176,7 @@ public:
 	//プレイヤー解放
 	void Releace();
 	//敵が落とした物(経験値、お金)を受け取る。
-	void TakeDrop(int dropexp, int money)
-	{
-		_nowEXP += dropexp;
-		SaveLevel();
-		// お金はインベントリに格納。
-		INSTANCE(Inventory)->AddPlayerMoney(money);
-	}
+	void TakeDrop(int dropexp, int money);
 
 	inline void HeelHP() {
 
@@ -508,5 +504,7 @@ private:
 	NPC* _NearNPC = nullptr;
 	//近いNPCとの距離
 	float _NearNPCLen;
+
+	AttentionTextOnly* _AttentionText = nullptr;
 
 };

@@ -119,7 +119,6 @@ void TextBox::Title(bool show)
 			{
 				child->gameObject->SetActive(true, true);
 			}
-			_AButton->SetActive(false);
 			transform->SetScale(Vector3::one);
 		}
 	}

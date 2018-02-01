@@ -329,6 +329,10 @@ void LastBoss::Special() {
 	DebuffEvent();
 }
 
+void LastBoss::Danmatuma() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Danmatuma));
+}
+
 void LastBoss::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("LastBoss.X");
@@ -371,6 +375,8 @@ void LastBoss::_StartSubClass() {
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot2), "Fire.wav", 0.5f, true);
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Danmatuma), "MAOU/maou8.wav", 1.0f, true);
+
 	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.45f,false,true);
 	////_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
 	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 0.9f, false, true);
@@ -775,6 +781,13 @@ void LastBoss::_ConfigAnimationEvent() {
 	{
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::Special), 3);
+	}
+
+	// 死亡。
+	{
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Death), eventFrame, static_cast<AnimationEvent>(&LastBoss::Danmatuma));
+
 	}
 }
 

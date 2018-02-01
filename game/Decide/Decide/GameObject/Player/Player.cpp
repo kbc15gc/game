@@ -353,6 +353,8 @@ void Player::Start()
 
 	//// 初期位置に移動。
 	//_CharacterController->Execute();
+
+	_AttentionText = static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"));
 }
 
 void Player::Update()
@@ -610,6 +612,40 @@ void Player::Releace()
 	}
 	_DeathSound = nullptr;
 	//_AnimationEventPlayer = nullptr;
+}
+
+void Player::TakeDrop(int dropexp, int money)
+{
+	_nowEXP += dropexp;
+	SaveLevel();
+	// お金はインベントリに格納。
+	INSTANCE(Inventory)->AddPlayerMoney(money);
+
+	wchar_t WText[256];
+	char	CText[256];
+
+	sprintf(CText, "+%d経験値", dropexp);
+	//chatrからwchra_tに変換。
+	mbstowcs(WText, CText, sizeof(CText));
+	_AttentionText->CreateText(
+		WText,
+		Vector3(580.0f, 460.0f, 0.0f),
+		33.0f,
+		Color::white,
+		AttentionTextOnly::MoveType::Up
+	);
+
+	sprintf(CText, "+%dダラー", money);
+	//chatrからwchra_tに変換。
+	mbstowcs(WText, CText, sizeof(CText));
+	_AttentionText->CreateText(
+		WText,
+		Vector3(580.0f, 460.0f, 0.0f),
+		33.0f,
+		Color::white,
+		AttentionTextOnly::MoveType::Up
+	);
+
 }
 
 /**
