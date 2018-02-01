@@ -203,8 +203,3 @@ void NPC::_Speak()
 	}
 }
 
-void NPC::SetActive(const bool act, const bool children)
-{
-	_TextBox->SetActive(act);
-	ContinentObject::SetActive(act, children);
-}
