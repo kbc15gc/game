@@ -17,6 +17,12 @@ void MysteryLight::Awake()
 	_LightPlate->transform->SetParent(transform);
 	_LightPlate->transform->SetLocalScale(Vector3::zero);
 
+	_FadeImage = INSTANCE(GameObjectManager)->AddNew<ImageObject>("_FadeImage", 10);
+	_FadeImage->SetTexture(LOADTEXTURE("effect.png"));
+	_FadeImage->transform->SetParent(transform);
+	_FadeImage->SetBlendColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+	_FadeImage->SetSize({ WindowW, WindowH });
+
 	transform->SetLocalPosition(g_WindowSize / 2);
 
 	_PlayerCamera = (PlayerCamera*)INSTANCE(GameObjectManager)->FindObject("PlayerCamera");
@@ -39,16 +45,22 @@ void MysteryLight::Update()
 			SetActive(false, true);
 		}
 	}
+	else
+	{
+		_Alpha += Time::DeltaTime() / 2.0f;
+	}
 
-	_LightPlate->transform->SetLocalScale(Vector3::one * fminf(1.0f, _LocalTime) * 15.0f);
-	_LightPlate->SetBlendColor(Color(2.0f, 2.0f, 2.0f, _Alpha));
+	_FadeImage->SetBlendColor(Color(1.0f, 1.0f, 1.0f, _Alpha));
+
+	//_LightPlate->transform->SetLocalScale(Vector3::one * fminf(1.0f, _LocalTime) * 15.0f);
+	//_LightPlate->SetBlendColor(Color(2.0f, 2.0f, 2.0f, _Alpha));
 }
 
 void MysteryLight::SetActive(const bool act, const bool child)
 {
 	if (act)
 	{
-		_Alpha = 1.0f;
+		_Alpha = 0.0f;
 		_LocalTime = 0.0f;
 		/*Camera* camera = _PlayerCamera->GetComponent<Camera>();
 		Vector3 cameraFoward = camera->GetTarget() - _PlayerCamera->transform->GetPosition();
