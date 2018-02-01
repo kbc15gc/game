@@ -330,6 +330,7 @@ void LastBoss::Special() {
 }
 
 void LastBoss::Danmatuma() {
+	_MyComponent.Animation->SetAnimeSpeed(0.4f);
 	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Danmatuma));
 }
 

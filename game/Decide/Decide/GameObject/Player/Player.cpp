@@ -130,6 +130,7 @@ void Player::Awake()
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::PLAYER);	// 建物のコリジョン追加。
 	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
@@ -227,6 +228,11 @@ void Player::Awake()
 	//足音サウンド初期化
 	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
 	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
+	_AsiotoSound->SetVolume(0.1f);
+	//着地サウンド初期化
+	_TyakutiSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TyakutiSE", 0);
+	_TyakutiSound->Init("Asset/Sound/Player/tyakuti.wav");
+	_TyakutiSound->SetVolume(1.0f);
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -409,6 +415,13 @@ void Player::Update()
 		Speak();
 	}
 	
+	//着地
+	{
+		/*if (_CharacterController->IsOnGround())
+		{
+			_TyakutiSound->Play(false);
+		}*/
+	}
 	//char test[256];
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);

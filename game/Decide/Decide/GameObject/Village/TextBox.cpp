@@ -169,6 +169,19 @@ void TextBox::CloseMessage()
 	}
 }
 
+void TextBox::CloseBox()
+{
+	//最初のメッセージ取得
+	_Message = INSTANCE(MessageManager)->GetMess(_StartTextID);
+	_State = TextBoxStateE::CLOSE;
+	for each (Transform* child in transform->GetChildren())
+	{
+		child->gameObject->SetActive(false, true);
+	}
+	//ボイスを止める。
+	_Voice.Stop();
+}
+
 void TextBox::_NextMessage()
 {
 	//開いている時のみ
@@ -217,9 +230,10 @@ void TextBox::_SetText(const char * text)
 	float halfHeight = textSize.y / 2;
 	//カーソルの上にくるように移動。
 	_BoxImage[1]->transform->SetLocalPosition(Vector3(0, -(halfHeight + _BoxImage[0]->GetTexture()->Size.y), 0));
-	_AButton->transform->SetLocalPosition(Vector3(textSize.x / 2.0f, halfHeight+5, 0));
 
 	_Text->transform->SetLocalPosition(Vector3(0, -(textSize.y / 2 - space.y / 2), 0));
+
+	_AButton->transform->SetLocalPosition(Vector3(textSize.x / 2.0f, halfHeight + 5, 0));
 }
 
 bool TextBox::_SetMessage(const int & id)

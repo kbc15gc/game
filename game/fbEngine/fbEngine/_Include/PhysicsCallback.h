@@ -359,6 +359,9 @@ namespace fbPhysicsCallback
 				}
 			}
 
+			if (convexResult.m_hitCollisionObject->getUserIndex() == static_cast<int>(fbCollisionAttributeE::CHARACTER))
+				return 0.0f;
+
 			//衝突点の法線を引っ張ってくる。
 			Vector3 hitNormalTmp(convexResult.m_hitNormalLocal.x(), convexResult.m_hitNormalLocal.y(), convexResult.m_hitNormalLocal.z());
 			//// ワールド行列取得。
