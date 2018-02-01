@@ -48,6 +48,9 @@ public:
 	//眠るんじゃねぇぞ・・・
 	void NonSleep();
 
+	//仮。
+	void SetFilterMask_after(int mask);
+
 	// ワールドに登録。
 	void _AddWorldSubClass()override;
 	// ワールドから削除。

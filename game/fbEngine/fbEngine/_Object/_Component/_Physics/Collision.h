@@ -73,6 +73,12 @@ public:
 		return _Offset;
 	}
 
+	//
+	void SetUserIndex(int idx)
+	{
+		_CollisionObject.get()->setUserIndex(idx);
+	}
+
 	//Createより前に設定しといて。
 	// 全レイヤーマスクオフ。
 	// すべての衝突を無視。
