@@ -110,6 +110,8 @@ public:
 		_Rot = q;
 	}
 
+	void SetActive(const bool act, const bool children = false)override;
+
 private:
 
 	/**
