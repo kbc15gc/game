@@ -77,7 +77,7 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 		info.coll = mesh;
 		info.physicsType = RigidBody::PhysicsType::Kinematick;
 		//info.offset = _Model->GetModelData()->GetCenterPos();
-		info.id = Collision_ID::BUILDING;
+		info.id = (int)(Collision_ID::BUILDING);
 		info.rotation = transform->GetRotation();
 		rigid->Create(info, false);
 	}
