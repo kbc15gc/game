@@ -78,8 +78,9 @@ void LastBossThroneState::_EntrySubClass() {
 
 		Vector3 pos = _EnemyObject->transform->GetPosition() + (_EnemyObject->transform->GetRight() * 3.0f * dir);
 		pos -= Vector3(0.0f, 1.0f, 0.0f);
-
-		_entourageEnemys.push_back(_EnemyObject->GetMyComponent().Spawner->SpawnObject<BossGhost>(nullptr, "_entourageEnemy", 1, 0.1f, pos,Quaternion::Identity, Vector3::one,nullptr)/*INSTANCE(GameObjectManager)->AddNew<BossGhost>("_entourageEnemy", 1)*/);
+		Quaternion rot = Quaternion::Identity;
+		rot.SetRotation(Vector3::axisY, D3DXToRadian(180.0f));
+		_entourageEnemys.push_back(_EnemyObject->GetMyComponent().Spawner->SpawnObject<BossGhost>(nullptr, "_entourageEnemy", 1, 0.1f, pos,rot, Vector3::one,nullptr)/*INSTANCE(GameObjectManager)->AddNew<BossGhost>("_entourageEnemy", 1)*/);
 		vector<BarColor> color;
 		color.push_back(BarColor::Red);
 		vector<int> param = vector<int>(CharacterParameter::Param::MAX,0);

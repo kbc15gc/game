@@ -70,7 +70,7 @@ void WorldMap::Awake() {
 	_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
 	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
 	//_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
-	_playerPoint->SetBlendColor(Color(0.0f,0.0f,0.5f));
+	_playerPoint->SetBlendColor(Color(1.5f,3.0f,0.5f));
 	_playerPoint->SetActive(false);
 
 	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
@@ -79,7 +79,8 @@ void WorldMap::Awake() {
 		_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
 		_townPoint[idx].icon->SetActive(false);
 		//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
-		_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+		//_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+		_townPoint[idx].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
 
 		_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
 		_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
