@@ -20,6 +20,7 @@ class HistoryBook;
 class VillageName;
 class GameLight;
 class Ground;
+class WorldMap;
 
 class GameScene : public Scene
 {
@@ -100,6 +101,8 @@ private:
 
 	GameLight* _GameLight = nullptr;
 	Ground* _Ground = nullptr;
+
+	WorldMap* _worldMap = nullptr;
 
 	Player* _Player;
 	HistoryMenu* _HistoryMenu = nullptr;

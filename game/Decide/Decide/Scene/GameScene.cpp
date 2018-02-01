@@ -78,10 +78,6 @@ namespace
 
 	Vector3 PlayerScale = { 1.0f,1.0f,1.0f };
 
-	//信仰の国の座標
-	Vector3 Sinkou = Vector3(-145.6f, 121.8f, 131.6f);
-	//神殿の座標
-	Vector3 Sinden = Vector3(-145.6f, 188.5f, 239.24f);
 }
 
 
@@ -176,7 +172,7 @@ void GameScene::Start()
 	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	// ワールドマップ。
-	INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
+	_worldMap = INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -240,11 +236,11 @@ void GameScene::Start()
 	//エンディングフラグ
 	_IsEnding = false;
 
-	//g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
-	//g_depth->SetTexture(INSTANCE(SceneManager)->GetBloom().GetLuminanceRT()->texture);
-	//g_depth->SetPivot(Vector2(0, 0));
-	//g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
-	//g_depth->SetActive(true);
+	/*g_depth = INSTANCE(GameObjectManager)->AddNew<ImageObject>("debug", 4);
+	g_depth->SetTexture(INSTANCE(SceneManager)->GetNormalRT()->texture);
+	g_depth->SetPivot(Vector2(0, 0));
+	g_depth->SetSize(g_depth->GetTexture()->Size * 0.5);
+	g_depth->SetActive(true);*/
 
 	_isFirstFrame = true;	// 作業用。くそコード。
 
@@ -365,16 +361,17 @@ void GameScene::Update()
 								_HistoryMenu->SetLocationCode(LocationCodeE::Prosperity);
 							break;
 						case BGM::MAOU1:
-							_Player->SetRespawnPos(Sinkou,Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
+							_Player->SetRespawnPos(AllLocationPosition[static_cast<int>(LocationCodeAll::Kuni)],Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
 							break;
 						case BGM::MAOU2:
 							break;
 						case BGM::MAOU3:
-							_Player->SetRespawnPos(Sinden,Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
+							_Player->SetRespawnPos(AllLocationPosition[static_cast<int>(LocationCodeAll::Sinden)],Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
 					_VillageName->Excute(i);
+					_worldMap->OpenTownName(LocationMapCode[i]);	// マップの地名を開放。
 					break;
 				}
 			}

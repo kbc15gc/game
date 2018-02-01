@@ -80,6 +80,11 @@ public:
 	float GetPlaySpeed()const {
 		return _playSpeed;
 	}
+
+	virtual void SetActive(bool flg) {
+		_isActive = flg;
+	};
+
 protected:
 	// ローカルステート切り替え関数。
 	void _ChangeLocalState(EnemyCharacter::State next);
@@ -142,5 +147,7 @@ protected:
 private:
 
 	bool _IsFirstUpdate = true;	// ステートが切り替わってから最初の更新か。
+
+	bool _isActive = true;
 };
 

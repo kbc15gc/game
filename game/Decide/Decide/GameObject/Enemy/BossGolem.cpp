@@ -205,8 +205,8 @@ void BossGolem::_ConfigCollision() {
 		// コリジョンのサイズを決定。
 		// ※キャラクターコントローラーで使用するためのもの。
 		_collisionInfo.radius = 1.0f;
-		_collisionInfo.height = 1.5f;
-		_collisionInfo.offset = Vector3(0.0f, 1.0f, 0.0f);
+		_collisionInfo.height = 0.25f;
+		_collisionInfo.offset = Vector3(0.0f, 0.375f, 0.0f);
 		_collisionInfo.id = Collision_ID::BOSS;
 
 		// 重力設定。

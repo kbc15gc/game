@@ -10,6 +10,8 @@
 #include "GameObject\ItemManager\DropItem\DropItem.h"
 #include "GameObject\Enemy\EnemyCharacter.h"
 
+#include"../UI/PlayerParameterUI.h"
+
 namespace
 {
 	float SlowAnimationSpeed = 0.7f;
@@ -84,7 +86,7 @@ void Player::Awake()
 	//回転コンポーネント
 	_Rotation = AddComponent<ObjectRotation>();
 	// HPバー。
-	_HPBar = AddComponent<ParameterBar>();
+	//_HPBar = AddComponent<ParameterBar>();
 	// MPバー。
 	//_MPBar = AddComponent<ParameterBar>();
 	//高さ設定
@@ -187,7 +189,7 @@ void Player::Awake()
 	{
 		vector<BarColor> Colors;
 		Colors.push_back(BarColor::Green);
-		_HPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxHP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true, true, NULL);
+		//_HPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxHP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true, true, NULL);
 	}
 	// MPのバーを表示。
 	{
@@ -221,6 +223,9 @@ void Player::Awake()
 	//攻撃サウンド初期化
 	_AttackSoound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("SE", 0);
 	_AttackSoound->Init("Asset/Sound/Player/PlayerAttack_00.wav");
+	//足音サウンド初期化
+	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
+	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -236,10 +241,12 @@ void Player::Awake()
 
 	//パーティクルエフェクト。
 	_ParticleEffect = AddComponent<ParticleEffect>();
+	
+	_PlayerParameterUI = INSTANCE(GameObjectManager)->AddNew<PlayerParameterUI>("PlayerParameterUI", 9);
 
 	//バフデバフアイコン。
 	_BuffDebuffICon = AddComponent<BuffDebuffICon>();
-	_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
+	_BuffDebuffICon->SetHpBarTransform(_PlayerParameterUI->transform);
 
 	_Model->SetCharacterLight(&_CharaLight);
 
@@ -352,11 +359,11 @@ void Player::Update()
 		_CurrentState->Update();
 	}
 
-	if (_HPBar != nullptr)
-	{
-		//HPバーの更新
-		_HPBar->Update();
-	}
+	//if (_HPBar != nullptr)
+	//{
+	//	//HPバーの更新
+	//	_HPBar->Update();
+	//}
 
 	//if (_MPBar != nullptr)
 	//{
@@ -403,9 +410,9 @@ void Player::Update()
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);
 
-	//char test2[256];
-	//sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	//OutputDebugString(test2);
+	char test2[256];
+	sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	OutputDebugString(test2);
 
 }
 
@@ -555,7 +562,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 
 		// ダメージを与える処理
 		int damage = _PlayerParam->ReciveDamage(*hitCollision->GetDamageInfo(), _Equipment->armor);
-		_HPBar->SubValue(static_cast<float>(damage));
+		//_HPBar->SubValue(static_cast<float>(damage));
 		_DamageSound->Play(false);//ダメージを受けたときのSE
 		AttackValue2D* attackvalue = INSTANCE(GameObjectManager)->AddNew<AttackValue2D>("AttackValue2D", 5);
 		Color c;
@@ -583,7 +590,7 @@ void Player::Releace()
 	_Rotation = nullptr;
 	_PlayerParam = nullptr;
 	_CurrentState = nullptr;
-	_HPBar = nullptr;
+	//_HPBar = nullptr;
 	//_MPBar = nullptr;
 	for (auto& p : _AttackBoiceSound)
 	{
@@ -608,9 +615,9 @@ bool Player::ItemEffect(Item::ItemInfo* info)
 		{
 			_ParticleEffect->HeelHpEffect();
 		}
-		if (_HPBar) {
+		/*if (_HPBar) {
 			_HPBar->SetValue(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::Param::HP)));
-		}
+		}*/
 
 		_HeelSound->Play(false);
 		
@@ -697,7 +704,7 @@ bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], floa
 #endif //  _DEBUG
 
 			_PlayerParam->Buff(static_cast<CharacterParameter::Param>(idx), value, time);
-			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
+			_BuffDebuffICon->SetHpBarTransform(_PlayerParameterUI->transform);
 			_BuffDebuffICon->BuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 
 			_StatusUpSound->Play(false);
@@ -716,7 +723,7 @@ bool Player::BuffAndDebuff(int effectValue[CharacterParameter::Param::MAX], floa
 			}
 #endif //  _DEBUG
 			_PlayerParam->Debuff(static_cast<CharacterParameter::Param>(idx),abs(value), time);
-			_BuffDebuffICon->SetHpBarTransform(_HPBar->GetTransform());
+			_BuffDebuffICon->SetHpBarTransform(_PlayerParameterUI->transform);
 			_BuffDebuffICon->DebuffIconCreate(static_cast<CharacterParameter::Param>(idx));
 
 			_StatusDownSound->Play(false);
@@ -786,7 +793,8 @@ void Player::_Damage()
 		if(time >= 0.5f)
 		{
 			//最大HPの1割ずつ減る。
-			_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(static_cast<int>(_PlayerParam->GetMaxHP() * 0.1f)))));
+			_PlayerParam->ReciveDamageThrough(static_cast<int>(_PlayerParam->GetMaxHP() * 0.1f));
+			//_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(static_cast<int>(_PlayerParam->GetMaxHP() * 0.1f)))));
 			time = 0.0f;
 		}
 	}
@@ -820,7 +828,7 @@ void Player::_LevelUP()
 	_PlayerParam->ParamReset(_ParamTable[_PlayerParam->GetParam(CharacterParameter::Param::LV)]);
 
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
+	//_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
 	//_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 	//レベルアップ時のイメージ表示。
@@ -888,8 +896,9 @@ void Player::Speak()
 			{
 				if (_NearNPC->GetActive()) {
 					//会話のためHPバーなどを消す。
-					_HPBar->RenderDisable();
+					//_HPBar->RenderDisable();
 					//_MPBar->RenderDisable();
+					_PlayerParameterUI->SetActive(false, true);
 					//話すフラグセット
 					_NearNPC->SetIsSpeak(true);
 					//プレイヤー話すフラグ設定
@@ -898,7 +907,8 @@ void Player::Speak()
 				}
 				else {
 					//会話のためHPバーなどを消す。
-					_HPBar->RenderEnable();
+					//_HPBar->RenderEnable();
+					_PlayerParameterUI->SetActive(true, true);
 					//話すフラグセット
 					_NearNPC->SetIsSpeak(false);
 					//プレイヤー話すフラグ設定
@@ -914,10 +924,11 @@ void Player::Speak()
 			//話し終わると
 			if (_NoJump)
 			{
-				if (_HPBar/* && _MPBar*/)
+				//if (_HPBar/* && _MPBar*/)
 				{
-					_HPBar->RenderEnable();
+					//_HPBar->RenderEnable();
 					//_MPBar->RenderEnable();
+					_PlayerParameterUI->SetActive(true, true);
 					_NoJump = false;
 				}
 			}
@@ -1114,7 +1125,8 @@ void Player::_DebugPlayer()
 	//プレイヤー死亡
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_D))
 	{
-		_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP)))));
+		//_HPBar->SubValue(static_cast<float>((_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP)))));
+		_PlayerParam->ReciveDamageThrough(_PlayerParam->GetParam(CharacterParameter::HP));
 	}
 
 	//移動
@@ -1170,7 +1182,7 @@ void Player::_DebugLevel(int lv)
 	// 次のレベルのパラメータを設定。
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 	//HPが上がったのでHPバーのHP設定しなおす。
-	_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
+	//_HPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true);
 	//MPが上がったのでMPバーのMP設定しなおす。
 	//_MPBar->Reset(static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::MP)),true);
 }
@@ -1297,6 +1309,18 @@ void Player::AnimationEventControl()
 		float eventframe = 1.1f;
 		_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationAttack05, eventframe, static_cast<AnimationEvent>(&Player::Attack5));
 	}
+
+	/*******************/
+	/*		足音	   */
+	/*******************/
+	float eventframe = 0.2f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.4f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.6f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+	eventframe = 0.8f;
+	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
 }
 
 void Player::Attack1()
@@ -1308,7 +1332,7 @@ void Player::Attack1()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1322,7 +1346,7 @@ void Player::Attack2()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1336,7 +1360,7 @@ void Player::Attack3()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1350,7 +1374,7 @@ void Player::Attack4()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1364,7 +1388,13 @@ void Player::Attack5()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
+}
+
+void Player::Asioto1()
+{
+	//足音のサウンド再生
+	_AsiotoSound->Play(false);
 }

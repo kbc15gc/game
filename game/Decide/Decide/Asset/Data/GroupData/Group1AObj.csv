@@ -1,2 +1,2 @@
-name,pos,ang,sca,coll
+name,pos,ang,sca,hitCamera,coll
 Building_A.X,-108.81/56.8/559.3,-0.707107/0.000000/0.000000/0.707107,1/1/1,0,0

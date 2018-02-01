@@ -1,21 +1,9 @@
 #include "stdafx.h"
 #include "VillageName.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\History\HistoryInfo.h"
 
-static const string LocationNames[] =
-{
-	"ドラリアンの住処",
-	"グレムリンの洞窟",
-	"Ｄ",
-	"はじまりの集落",
-	"狩猟の村",
-	"繁栄の街",
-	"信仰の国",
-	"崇拝の魔城",
-	"心酔の神殿",
-	"",
-	"そと"
-};
+
 
 void VillageName::Awake()
 {

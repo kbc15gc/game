@@ -107,7 +107,7 @@ private:
 
 	void SetPlayerOffset() {
 		_IconOffSet = 60.0f;
-		_IconPosOffset = { -148.0f,85.0f, 0.0f };
+		_IconPosOffset = { 50.0f,120.0f, 0.0f };
 		_ArrowPosOffet = { 20.0f, 12.0f, 0.0f };
 	}
 

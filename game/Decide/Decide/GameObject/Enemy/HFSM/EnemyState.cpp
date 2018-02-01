@@ -27,28 +27,30 @@ bool EnemyState::Update() {
 	if (!_IsEndState) {
 		// このステートが終了していない。
 
-		if (_IsFirstUpdate) {
-			// ステートが切り替わってから最初の更新。	
-			Start();
-			_IsFirstUpdate = false;
-		}
+		if (_isActive) {
+			if (_IsFirstUpdate) {
+				// ステートが切り替わってから最初の更新。	
+				Start();
+				_IsFirstUpdate = false;
+			}
 
-		// 継承先によって異なる処理。
-		// ※純粋仮想関数。
-		_UpdateSubClass();
+			// 継承先によって異なる処理。
+			// ※純粋仮想関数。
+			_UpdateSubClass();
 
-		if (_NowLocalState) {
-			// 現在のローカルステートが設定されている。
-			if (_NowLocalState->Update()) {
-				// ローカルステートの更新処理が終了した。
+			if (_NowLocalState) {
+				// 現在のローカルステートが設定されている。
+				if (_NowLocalState->Update()) {
+					// ローカルステートの更新処理が終了した。
 
-				EnemyCharacter::State work = _NowLocalStateIdx;	// 終了したステートを保存。
-				// とりあえずステートを切り替えて必ず終了処理を呼ぶ。
-				_ChangeLocalState(EnemyCharacter::State::None);
+					EnemyCharacter::State work = _NowLocalStateIdx;	// 終了したステートを保存。
+					// とりあえずステートを切り替えて必ず終了処理を呼ぶ。
+					_ChangeLocalState(EnemyCharacter::State::None);
 
-				// コールバック呼び出し。
-				// ※関数の内部処理は継承先で実装。
-				_EndNowLocalState_CallBack(work);
+					// コールバック呼び出し。
+					// ※関数の内部処理は継承先で実装。
+					_EndNowLocalState_CallBack(work);
+				}
 			}
 		}
 	}

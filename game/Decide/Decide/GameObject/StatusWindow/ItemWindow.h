@@ -14,6 +14,8 @@
 
 #include"Dialog.h"
 
+class ItemEffectUI;
+
 /**
 * アイテム表示画面クラス.
 */
@@ -223,6 +225,8 @@ private:
 
 	/** 装備アイテムリスト. */
 	//vector<HoldItem2D*> _HoldItem2DList;
+
+	ItemEffectUI* _ItemEffectUI = nullptr;
 
 	/** ダイアログ. */
 	Dialog* _Dialog = nullptr;
