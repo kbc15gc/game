@@ -101,13 +101,7 @@ public:
 		}
 	}
 
-	void SetActive(const bool act, const bool children = false)override
-	{
-		if (!act) {
-			BattleEnd();
-		}
-		EnemyCharacter::SetActive(act,children);
-	}
+	void SetActive(const bool act, const bool children = false)override;
 
 	void SetIsStartBattle(bool flg) {
 		_isStartBattle = flg;

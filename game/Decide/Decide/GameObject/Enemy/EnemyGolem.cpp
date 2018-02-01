@@ -77,8 +77,8 @@ void EnemyGolem::_ConfigCollision()
 	// コリジョンのサイズを決定。
 	// ※キャラクターコントローラーで使用するためのもの。
 	_collisionInfo.radius = 0.6f;
-	_collisionInfo.height = 2.5f;
-	_collisionInfo.offset = Vector3(0.0f, 1.85f, 0.0f);
+	_collisionInfo.height = 0.5f;
+	_collisionInfo.offset = Vector3(0.0f, 0.85f, 0.0f);
 	_collisionInfo.id = Collision_ID::ENEMY;
 
 	//_Gravity = -0.54f;

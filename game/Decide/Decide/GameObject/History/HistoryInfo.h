@@ -108,6 +108,38 @@ static const string AllLocationNameList[(int)LocationCodeAll::Max] =
 	"",
 };
 
+// 街に入った時などに出す名前。
+static const string LocationNames[] =
+{
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Drarian)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Gremrin)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::BossD)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Begin)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Hunting)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Prosperity)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Kuni)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::DevilKingdom)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::Sinden)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::World)],
+	"そと"		// 未使用？。
+};
+
+// くそコード。
+// 街などに入った時などにマップの地名を開放するための配列。
+static const LocationCodeAll LocationMapCode[] =
+{
+	LocationCodeAll::Drarian,
+	LocationCodeAll::Gremrin,
+	LocationCodeAll::BossD,
+	LocationCodeAll::Begin,
+	LocationCodeAll::Hunting,
+	LocationCodeAll::Prosperity,
+	LocationCodeAll::Kuni,
+	LocationCodeAll::DevilKingdom,
+	LocationCodeAll::Sinden,
+	LocationCodeAll::World,
+	LocationCodeAll::Max		// 未使用？。
+};
 
 /** 
 * 場所名. 
