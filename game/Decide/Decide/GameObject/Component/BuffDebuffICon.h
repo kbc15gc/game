@@ -35,8 +35,8 @@ public:
 	//表示するアイコンの情報をまとめる用。
 	struct BuffDebuff
 	{
-		ImageObject*				_ArrowIconImage;			//BuffDebuffTypeIconに添える矢印アイコン。
-		ImageObject*				_BuffDebuffTypeIconImage;	//何のステータスが上がっているかを表すアイコン。
+		ImageObject*				_ArrowIconImage = nullptr;			//BuffDebuffTypeIconに添える矢印アイコン。
+		ImageObject*				_BuffDebuffTypeIconImage = nullptr;	//何のステータスが上がっているかを表すアイコン。
 		CharacterParameter::Param   _Param;						//どのパラメーターかを保持する用。
 		bool						_isBuff;					//バフかデバフかどうかのフラグ。
 	};
@@ -100,6 +100,12 @@ public:
 	void ArrowIconSize(const Vector2& size) {
 		_ArrowSize = size;
 	}
+
+	//[有効/アクティブ]になった時に呼ばれる関数。
+	void OnEnable()override;
+
+	//[無効/非アクティブ]になった時に呼ばれる関数。
+	void OnDisable()override;
 private:
 	//追加するパラメーターを追加していいのかをチェック、追加が可能ならtrue、追加出来ないならfalse。
 	//引数:パラメーター(Atk,Matk,Def,MDef,Dex)。
