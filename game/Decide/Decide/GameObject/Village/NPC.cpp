@@ -54,6 +54,10 @@ void NPC::Start()
 	_FitGround();
 
 	ContinentObject::Start();
+
+	//リジッドボディにフラグを設定。
+	auto rigid = GetComponent<RigidBody>();
+	rigid->SetUserIndex((int)(fbCollisionAttributeE::CHARACTER));
 }
 
 void NPC::Update()

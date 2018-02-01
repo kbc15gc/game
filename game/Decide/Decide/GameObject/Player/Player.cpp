@@ -129,6 +129,7 @@ void Player::Awake()
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::PLAYER);	// 建物のコリジョン追加。
 	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
