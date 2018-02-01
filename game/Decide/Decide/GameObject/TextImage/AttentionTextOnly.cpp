@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AttentionTextOnly.h"
 #include "fbEngine\_Object\_GameObject\TextObject.h"
+#include "GameObject\Village\EventManager.h"
 
 //コンストラクタ。
 AttentionTextOnly::AttentionTextOnly(const char* name) :
@@ -59,6 +60,15 @@ void AttentionTextOnly::CreateText(const wchar_t * string,
 void AttentionTextOnly::Update() {
 	for (auto itr = _TextList.begin(); itr != _TextList.end();)
 	{
+		if (INSTANCE(EventManager)->IsEvent())
+		{
+			(*itr)->_Text->SetActive(false);
+		}
+		else
+		{
+			(*itr)->_Text->SetActive(true);
+		}
+
 		//テキストの移動。
 		(*itr)->_Text->transform->SetLocalPosition(
 			(*itr)->_Text->transform->GetPosition().x + ((*itr)->_Dir.x/**_MoveSpeed*Time::DeltaTime()*/),

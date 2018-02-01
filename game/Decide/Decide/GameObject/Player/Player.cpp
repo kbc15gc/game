@@ -415,10 +415,10 @@ void Player::Update()
 	
 	//’…’n
 	{
-		if (_CharacterController->IsOnGround())
+		/*if (_CharacterController->IsOnGround())
 		{
 			_TyakutiSound->Play(false);
-		}
+		}*/
 	}
 	//char test[256];
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);

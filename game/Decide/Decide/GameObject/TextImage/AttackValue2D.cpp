@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include "AttackValue2D.h"
+#include "GameObject\Village\EventManager.h"
 
 void AttackValue2D::Awake()
 {
@@ -9,15 +10,18 @@ void AttackValue2D::Awake()
 
 void AttackValue2D::Update()
 {
-	/*if (INSTANCE(EventManager)->IsEvent())
+	if (this->GetActive() == true && INSTANCE(EventManager)->IsEvent())
 	{
-		this->SetActive(false);
+		_AttackText->SetActive(false);
 	}
-	if (this->GetActive() && !INSTANCE(EventManager)->IsEvent())
+	else
 	{
-		this->SetActive(true);
-	}*/
-		
+		_AttackText->SetActive(true);
+	}
+	if (!_AttackText->GetActive())
+	{
+		return;
+	}
 	_Time += Time::DeltaTime();
 	//¶‘¶ŠÔˆÈ“à‚È‚ç
 	if (_Time < _LifeTime)
