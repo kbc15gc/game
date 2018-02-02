@@ -119,6 +119,18 @@ public:
 					return;
 				}
 			}
+			_townPoint[static_cast<int>(code)].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
+			_townPoint[static_cast<int>(code)].icon->SetTexture(LOADTEXTURE("t1.png"));
+			_townPoint[static_cast<int>(code)].icon->SetSize(Vector2(30.0f, 30.0f));
+			_townPoint[static_cast<int>(code)].icon->SetActive(false);
+			//_townPoint[data->openLocation].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
+			_townPoint[static_cast<int>(code)].icon->SetBlendColor(Color(2.0f, 1.0f, 8.0f));
+			//_townPoint[data->openLocation].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
+
+			_townPoint[static_cast<int>(code)].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
+			_townPoint[static_cast<int>(code)].name->Initialize(L"[?????]", 25.0f);
+			_townPoint[static_cast<int>(code)].name->transform->SetParent(_townPoint[static_cast<int>(code)].icon->transform);
+			_townPoint[static_cast<int>(code)].name->SetActive(false);
 
 			char text[256];
 			sprintf(text, "[%s]", AllLocationNameList[static_cast<int>(code)].c_str());
