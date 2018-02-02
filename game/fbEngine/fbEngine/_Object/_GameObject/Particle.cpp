@@ -204,6 +204,7 @@ void Particle::Init(const ParticleParameter & param,Transform* parent)
 	}
 
 	_RotateZ = 3.1415 * 2.0f * (float)Random::RandDouble();
+
 }
 
 void Particle::SetParam(const ParticleParameter& param) {
