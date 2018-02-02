@@ -129,7 +129,7 @@ void Player::Awake()
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
-	_CharacterController->AddAttributeXZ(Collision_ID::PLAYER);	// 建物のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::NPC_Collision);		// 建物のコリジョン追加。
 	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
@@ -139,7 +139,8 @@ void Player::Awake()
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
-	_CharacterController->SubAttributeY(Collision_ID::SPACE);//空間コリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::SPACE);	//空間コリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::NPC_Collision);		//NPCを削除。
 
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
