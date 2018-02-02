@@ -67,10 +67,10 @@ void WorldMap::Awake() {
 	_isChangeFrame = false;
 
 	_playerPoint = INSTANCE(GameObjectManager)->AddNew<ImageObject>("playerMapIcon", 2);
-	_playerPoint->SetTexture(LOADTEXTURE("t1.png"));
+	_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
 	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
 	//_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
-	_playerPoint->SetBlendColor(Color(1.0f,0.5f,0.0f));
+	_playerPoint->SetBlendColor(Color(0.0f,0.0f,0.5f));
 	_playerPoint->SetActive(false);
 
 	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
@@ -87,10 +87,9 @@ void WorldMap::Awake() {
 		_townPoint[idx].name->SetActive(false);
 	}
 
-	// セーブデータがない場合に警告文が出ないようにする。
-	//CSVからオブジェクトの情報読み込み。
-	Support::OutputCSV<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
-
+	if (IS_CONTINUE == false) {
+		InitSaveData();
+	}
 	//CSVからオブジェクトの情報読み込み。
 	Support::LoadCSVData<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
 
@@ -134,18 +133,33 @@ void WorldMap::Update() {
 		Vector3 pos = _Player->transform->GetPosition();
 		Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
 		_playerPoint->transform->SetPosition(screenPos);
+		Quaternion rot = Quaternion::Identity;
+		Vector3 dir = _Player->transform->GetForward();
+		rot.SetRotation(Vector3::axisZ, atan2f(dir.x, dir.z));
+		//Quaternion rot2 = Quaternion::Identity;
+
+		//rot1.SetRotation(Vector3::axisX, D3DXToRadian(90.0f));
+		//rot2.CreateVector3ToVector3(_Player->transform->GetForward(), Vector3::front);
+		//rot1.Multiply(rot2);
+		//char test[256];
+		//sprintf(test, "rot = %f\n", rad);
+		//OutputDebugString(test);
+
+		_playerPoint->transform->SetRotation(rot);
+		//_playerPoint->Set
+
+		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
+			Vector3 pos = AllLocationPosition[idx];
+			Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
+			//if (screenPos.x >= -99999.0f) {
+			//	OutputDebugString("画面に映ってないらしいぜ！\n");
+			//}
+
+			_townPoint[idx].icon->transform->SetPosition(screenPos);
+			_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f, -48.0f, 0.0f));
+		}
 	}
 
-	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-		Vector3 pos = AllLocationPosition[idx];
-		Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
-		//if (screenPos.x >= -99999.0f) {
-		//	OutputDebugString("画面に映ってないらしいぜ！\n");
-		//}
-
-		_townPoint[idx].icon->transform->SetPosition(screenPos);
-		_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f,-60.0f,0.0f));
-	}
 
 }
 

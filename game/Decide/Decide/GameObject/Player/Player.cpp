@@ -11,6 +11,7 @@
 #include "GameObject\Enemy\EnemyCharacter.h"
 
 #include"../UI/PlayerParameterUI.h"
+#include "GameObject\WorldMap\WorldMap.h"
 
 namespace
 {
@@ -425,9 +426,9 @@ void Player::Update()
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);
 
-	char test2[256];
-	sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	OutputDebugString(test2);
+	//char test2[256];
+	//sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test2);
 
 }
 
