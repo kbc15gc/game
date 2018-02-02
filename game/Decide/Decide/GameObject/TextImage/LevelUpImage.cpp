@@ -1,6 +1,7 @@
 #include"stdafx.h"
 #include "LevelUpImage.h"
 #include "GameObject\StatusWindow\StatusWindow.h"
+#include "GameObject\Village\EventManager.h"
 
 namespace
 {
@@ -26,6 +27,16 @@ void LevelUpImage::Awake()
 
 void LevelUpImage::Update()
 {
+
+	if (INSTANCE(EventManager)->IsEvent())
+	{
+		_LevelUpImage->SetActive(false);
+	}
+	else
+	{
+		_LevelUpImage->SetActive(true);
+	}
+
 	_Time += Time::DeltaTime();
 	//§ŒÀŽžŠÔ‚ð’´‚¦‚é‚Æ
 	if (_Time >= _LifeTime)
