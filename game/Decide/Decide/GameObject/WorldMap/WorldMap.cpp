@@ -69,7 +69,10 @@ void WorldMap::Awake() {
 	_isChangeFrame = false;
 
 	_playerPoint = INSTANCE(GameObjectManager)->AddNew<ImageObject>("playerMapIcon", 2);
-	_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
+	//_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
+	_playerPoint->SetTexture(LOADTEXTURE("PlayerIcon.png"));
+	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
+
 	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
 	//_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
 	_playerPoint->SetBlendColor(Color(1.5f,3.0f,0.5f));
