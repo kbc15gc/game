@@ -27,6 +27,7 @@ void EventManager::ReSet()
 	_Player = nullptr;
 	_PlayerParameterUI = nullptr;
 	_Pcamera = nullptr;
+	_BloodEffect = nullptr;
 }
 
 bool EventManager::Execute(Event::EventID id, int idx)
@@ -48,7 +49,7 @@ bool EventManager::Execute(Event::EventID id, int idx)
 		//GetPlayer()->GetPlayerHpBar()->RenderDisable();
 		//GetPlayer()->GetPlayerMpBar()->RenderDisable();
 		GetPlayer()->PlayerStopEnable();
-
+		GetBloodEffect()->SetActive(false);
 		GetCamera()->SetIsMove(false);
 		//実行中のイベントの添え字保持。
 		_ActiveEvent = id;
@@ -79,6 +80,7 @@ void EventManager::NotifyEndEvent()
 		//GetPlayer()->GetPlayerMpBar()->RenderEnable();
 		GetPlayer()->PlayerStopDisable();
 		GetCamera()->SetIsMove(true);
+		GetBloodEffect()->SetActive(true);
 		_ActiveEvent = Event::EventID::None;
 	}
 }

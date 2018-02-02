@@ -143,6 +143,8 @@ private:
 	SplitSpace* _split = nullptr;
 	GameObject* _maouSiro = nullptr;
 
+	GameObject* _BloodEffect = nullptr;
+
 	FogInfo _saveFogInfo;
 
 	ImageObject* _playerPoint = nullptr;

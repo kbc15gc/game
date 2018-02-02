@@ -270,7 +270,7 @@ void Player::Awake()
 	
 	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 
-	_BloodEffect = INSTANCE(GameObjectManager)->AddNew<BloodEffect>("_BloodEffect", 9);
+	_BloodEffect = INSTANCE(GameObjectManager)->AddNew<BloodEffect>("BloodEffect", 0);
 
 	if (IS_CONTINUE)
 	{

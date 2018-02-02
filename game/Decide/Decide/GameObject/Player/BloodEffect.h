@@ -85,6 +85,19 @@ public:
 	*/
 	void Damage(int maxHp, int damage);
 
+	void OnDisable()override
+	{
+		AllOff();
+	}
+
+	void AllOff()
+	{
+		for (auto bi : _BloodImageList)
+		{
+			bi->SetActive(false);
+		}
+	}
+
 private:
 
 	static const int BIMaxSize = 20;
