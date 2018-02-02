@@ -252,6 +252,8 @@ void Player::Awake()
 	
 	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 
+	_BloodEffect = INSTANCE(GameObjectManager)->AddNew<BloodEffect>("_BloodEffect", 9);
+
 	if (IS_CONTINUE)
 	{
 		JsonData PlayerData;
@@ -556,6 +558,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			//水色
 			c = { 0.0f,0.6f,1.0f,1.0f };
+
+			_BloodEffect->Damage(_PlayerParam->GetMaxHP(), damage);
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
@@ -1034,19 +1038,19 @@ void Player::_DebugPlayer()
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_5)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,0, transform->GetPosition(), 2);
+		item->Create(rand() % 10,0, transform->GetPosition(), 20);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_6)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,1, transform->GetPosition(), 2);
+		item->Create(rand() % 20,1, transform->GetPosition(), 1);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,2, transform->GetPosition(), 2);
+		item->Create(rand() % 20,2, transform->GetPosition(), 1);
 	}
 
 	//プレイヤー死亡

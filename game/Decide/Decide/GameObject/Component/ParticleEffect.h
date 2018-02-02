@@ -41,6 +41,11 @@ public:
 
 	//レアドロップ用のエフェクト。
 	void RareDropEffect();
+
+	/**
+	* 血しぶきエフェクト発生.
+	*/
+	void BloodEffect();
 	
 	//Hp回復エフェクトを発生させるかどうかのフラグ。
 	//tureで発生。falseで発生させない。
@@ -117,5 +122,8 @@ private:
 	ParticleParameter	_LevelUPParticleParam;					//レベルアップ時のパーティクルパラメター。
 	bool				_IsLevelUPFlag;							//レベルアップエフェクトフラグ。
 	float				_TotalLevelUPEffectTime = 0.0f;			//レベルアップエフェクトが始まって何秒経ったかの合計。
+
+	ParticleEmitter*	_BloodEmitter = nullptr;				//血しぶきパーティクルの発生元。
+	ParticleParameter	_BloodParam;							//血しぶきパーティクルパラメーター。
 };
 

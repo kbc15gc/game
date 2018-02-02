@@ -377,6 +377,9 @@
     <ClCompile Include="GameObject\StatusWindow\ItemEffectUI.cpp">
       <Filter>GameObject\StatusWindow</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Player\BloodEffect.cpp">
+      <Filter>GameObject\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -768,6 +771,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\StatusWindow\ItemEffectUI.h">
       <Filter>GameObject\StatusWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Player\BloodEffect.h">
+      <Filter>GameObject\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
