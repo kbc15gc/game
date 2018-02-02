@@ -8,6 +8,8 @@
 #include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
 #include "GameObject\Enemy\EnemyAttack.h"
 
+#include"GameObject\Component\ParticleEffect.h"
+
 BossDrarian::BossDrarian(const char* name) : EnemyCharacter(name)
 {
 
@@ -54,6 +56,8 @@ void BossDrarian::_StartSubClass() {
 
 	//どらリアンのフレネル反射の計算ここ.
 	_MyComponent.Model->SetFresnelParam(true, Vector4(1.3f, 1.3f, 1.3f, 3.0f));
+
+	_MyComponent.ParticleEffect->SetBloodPositionRandomMargin(Vector3(0.5f, 0.5f, 0.5f));
 
 	// 攻撃処理を定義。
 	_singleAttack.reset(new EnemySingleAttack(this));

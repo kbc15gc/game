@@ -84,6 +84,8 @@ void EnemyCharacter::Start() {
 	//プレイヤー。
 	_Player = (Player*)INSTANCE(GameObjectManager)->FindObject("Player");
 
+	D3DXMATRIX* matrix = _Player->GetComponent<SkinModel>()->FindBoneMatrix("RightHand");
+	_MyComponent.ParticleEffect->SetBloodMatrix(matrix);
 }
 
 void EnemyCharacter::Update() {
@@ -701,6 +703,10 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, Atta
 		{
 			c = Color::red;
 
+			if (_MyComponent.ParticleEffect)
+			{
+				_MyComponent.ParticleEffect->BloodEffect();
+			}
 			if (!_DamageSound)
 			{
 				_DamageSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSound", 0);
