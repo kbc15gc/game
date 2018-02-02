@@ -30,6 +30,10 @@ void ParticleEffect::OnDestroy() {
 	if (_LevelUPParticleEmitter) {
 		INSTANCE(GameObjectManager)->AddRemoveList(_LevelUPParticleEmitter);
 	}
+	if (_BloodEmitter)
+	{
+		INSTANCE(GameObjectManager)->AddRemoveList(_BloodEmitter);
+	}
 }
 
 void ParticleEffect::Awake() {
@@ -43,6 +47,8 @@ void ParticleEffect::Awake() {
 	_LevelUPParticleEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("LevelUPEffect", 10);
 
 	_RareDropEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("RareDropEffect", 10);
+
+	_BloodEmitter = INSTANCE(GameObjectManager)->AddNew<ParticleEmitter>("_BloodEmitter", 10);
 
 	//回復エフェクトのアシストに使用するパーティクルパラメーターを設定。
 	_HeelParticleAssistParam.Init();
@@ -298,6 +304,36 @@ void ParticleEffect::RareDropEffect()
 	_RareDropEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.3f, 0.0f));
 	_RareDropEmitter->Init(_RareDropParam);
 	SetRareDropEffectFlag(true);
+}
+
+/**
+* 血しぶきエフェクト発生.
+*/
+void ParticleEffect::BloodEffect()
+{
+	_BloodParam.Init();
+	_BloodParam.texturePath = "blood.png";
+	_BloodParam.alphaBlendMode = 0;
+	_BloodParam.addVelocityRandomMargih = Vector3::zero;
+	_BloodParam.brightness = 1.0f;
+	_BloodParam.fadeTime = 0.5f;
+	_BloodParam.gravity = 0.0f;
+	_BloodParam.initAlpha = 1.0f;
+	_BloodParam.initPositionRandomMargin = Vector3(0.5f, 0.1f, 0.5f);
+	_BloodParam.initVelocity = Vector3::zero;
+	_BloodParam.initVelocityVelocityRandomMargin = Vector3(1.0f, 1.0f, 1.0f);
+	_BloodParam.intervalTime = 0.1f;
+	_BloodParam.isBillboard = true;
+	_BloodParam.isFade = true;
+	_BloodParam.life = 0.1f;
+	_BloodParam.size = Vector2(10.0f, 10.0f);
+	_BloodParam.mulColor = Color::white;
+	_BloodParam.isParent = true;
+
+	_BloodEmitter->transform->SetParent(transform);
+	_BloodEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.5f, 0.0f));
+	_BloodEmitter->Init(_BloodParam);
+	_BloodEmitter->SetEmitFlg(true);
 }
 
 

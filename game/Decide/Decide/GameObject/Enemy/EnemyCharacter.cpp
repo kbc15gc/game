@@ -700,6 +700,13 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, Atta
 		else
 		{
 			c = Color::red;
+
+			if (!_DamageSound)
+			{
+				_DamageSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("DamageSound", 0);
+				_DamageSound->Init("Asset/Sound/Enemy/damage_03.wav");
+			}
+			_DamageSound->Play(false);
 		}
 
 		attackvalue->Init(transform, _damage, info.isCritical, 1.5f, Vector3(0.0f, 1.0f, 0.0f), c);

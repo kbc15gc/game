@@ -27,6 +27,8 @@
 
 #include "GameObject\TextImage\AttentionTextOnly.h"
 
+#include"BloodEffect.h"
+
 class SkinModel;
 class Animation;
 class ParameterBar;
@@ -509,5 +511,7 @@ private:
 	float _NearNPCLen;
 
 	AttentionTextOnly* _AttentionText = nullptr;
+
+	BloodEffect* _BloodEffect = nullptr;
 
 };
