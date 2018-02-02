@@ -713,7 +713,10 @@ void LastBoss::_ConfigAnimationEvent() {
 	// Œ•UŒ‚(ƒ[ƒv)B
 	{
 		eventFrame = 0.0f;
-		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceWarau), 2);
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceWarau), 2);
+		
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceWarpSord), 2);
+
 		eventFrame = 0.5f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent4), 2);
 		eventFrame = 1.6f;

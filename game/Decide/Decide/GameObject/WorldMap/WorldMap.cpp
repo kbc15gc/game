@@ -78,20 +78,20 @@ void WorldMap::Awake() {
 	_playerPoint->SetBlendColor(Color(1.5f,3.0f,0.5f));
 	_playerPoint->SetActive(false);
 
-	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-		_townPoint[idx].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
-		_townPoint[idx].icon->SetTexture(LOADTEXTURE("t1.png"));
-		_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
-		_townPoint[idx].icon->SetActive(false);
-		//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
-		//_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
-		_townPoint[idx].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
+	//for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
+	//	_townPoint[idx].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
+	//	_townPoint[idx].icon->SetTexture(LOADTEXTURE("t1.png"));
+	//	_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
+	//	_townPoint[idx].icon->SetActive(false);
+	//	//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
+	//	_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+	//	//_townPoint[idx].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
 
-		_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
-		_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
-		_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
-		_townPoint[idx].name->SetActive(false);
-	}
+	//	_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
+	//	_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
+	//	_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
+	//	_townPoint[idx].name->SetActive(false);
+	//}
 
 	_mapFilter = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MapFilter", 0);
 	_mapFilter->SetTexture(LOADTEXTURE("WorldMapFilter.png"));
@@ -106,6 +106,19 @@ void WorldMap::Awake() {
 	Support::LoadCSVData<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
 
 	for (auto& data : _saveData) {
+		_townPoint[data->openLocation].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
+		_townPoint[data->openLocation].icon->SetTexture(LOADTEXTURE("t1.png"));
+		_townPoint[data->openLocation].icon->SetSize(Vector2(30.0f, 30.0f));
+		_townPoint[data->openLocation].icon->SetActive(false);
+		//_townPoint[data->openLocation].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
+		_townPoint[data->openLocation].icon->SetBlendColor(Color(2.0f, 1.0f, 8.0f));
+		//_townPoint[data->openLocation].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
+
+		_townPoint[data->openLocation].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
+		_townPoint[data->openLocation].name->Initialize(L"[?????]", 25.0f);
+		_townPoint[data->openLocation].name->transform->SetParent(_townPoint[data->openLocation].icon->transform);
+		_townPoint[data->openLocation].name->SetActive(false);
+
 		char text[256];
 		sprintf(text, "[%s]", AllLocationNameList[data->openLocation].c_str());
 		_townPoint[data->openLocation].name->SetText(text);
@@ -162,15 +175,22 @@ void WorldMap::Update() {
 		_playerPoint->transform->SetRotation(rot);
 		//_playerPoint->Set
 
-		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-			Vector3 pos = AllLocationPosition[idx];
-			Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
-			//if (screenPos.x >= -99999.0f) {
-			//	OutputDebugString("‰æ–Ê‚É‰f‚Á‚Ä‚È‚¢‚ç‚µ‚¢‚ºI\n");
-			//}
+		if (_townPoint.size() > 0) {
+			for (auto point : _townPoint) {
 
-			_townPoint[idx].icon->transform->SetPosition(screenPos);
-			_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f, -48.0f, 0.0f));
+			}
+		}
+		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
+			if (_townPoint[idx].icon) {
+				Vector3 pos = AllLocationPosition[idx];
+				Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
+				//if (screenPos.x >= -99999.0f) {
+				//	OutputDebugString("‰æ–Ê‚É‰f‚Á‚Ä‚È‚¢‚ç‚µ‚¢‚ºI\n");
+				//}
+
+				_townPoint[idx].icon->transform->SetPosition(screenPos);
+				_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f, -48.0f, 0.0f));
+			}
 		}
 	}
 
@@ -223,8 +243,10 @@ void WorldMap::Open() {
 		_playerPoint->SetActive(true);
 		_mapFilter->SetActive(true);
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-			_townPoint[idx].icon->SetActive(true);
-			_townPoint[idx].name->SetActive(true);
+			if (_townPoint[idx].icon) {
+				_townPoint[idx].icon->SetActive(true);
+				_townPoint[idx].name->SetActive(true);
+			}
 		}
 
 		_openSe->Play(false);
@@ -268,8 +290,10 @@ void WorldMap::Close() {
 		_mapFilter->SetActive(false);
 
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-			_townPoint[idx].icon->SetActive(false);
-			_townPoint[idx].name->SetActive(false);
+			if (_townPoint[idx].icon) {
+				_townPoint[idx].icon->SetActive(false);
+				_townPoint[idx].name->SetActive(false);
+			}
 		}
 
 
