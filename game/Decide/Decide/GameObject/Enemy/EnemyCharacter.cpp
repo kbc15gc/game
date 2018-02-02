@@ -793,6 +793,7 @@ void EnemyCharacter::SetActive(const bool act, const bool children) {
 	if (_NowState) {
 		_NowState->SetActive(act);
 	}
+	_MyComponent.BuffDebuffICon->SetEnable(act);
 	GameObject::SetActive(act, children);
 }
 

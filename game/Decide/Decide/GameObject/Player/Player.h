@@ -487,6 +487,8 @@ private:
 	SoundSource* _AttackSoound = nullptr;
 	//足音のSE
 	SoundSource* _AsiotoSound = nullptr;
+	//着地のSE
+	SoundSource* _TyakutiSound = nullptr;
 	//攻撃ボイス
 	SoundSource* _AttackBoiceSound[static_cast<int>(AttackBoice::Num)];
 	//攻撃ボイスENUM

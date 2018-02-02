@@ -436,14 +436,27 @@ public:
 		return out;
 	}
 
-	// 受け取ったベクトルとの角度を求める(ラジアン)。
-	float ToRadian(const Vector3& vec) {
-		Vector3 dir = Vector3(x, y, z);
-		dir.Normalize();
-		Vector3 work = vec;
-		work.Normalize();
-		return acosf(dir.Dot(work));
-	}
+	//// 受け取ったベクトルとの角度を求める(ラジアン)。
+	//float ToRadian(const Vector3& vec)const {
+	//	Vector3 dir = Vector3(x, y, z);
+	//	dir.Normalize();
+	//	Vector3 work = vec;
+	//	work.Normalize();
+	//	float rad = dir.Dot(work);
+	//	float radDir = 1.0f;
+	//	// 0.0から2.0の範囲にして角度の判定。
+	//	if (rad + 1.0f < 0.0f) {
+	//		// 符号が-。
+	//		radDir *= -1.0f;
+	//	}
+
+	//	rad = acosf(rad);
+	//	if (rad > D3DXToRadian(180.0f)) {
+	//		rad = (D3DXToRadian(360.0f) - rad) * -1.0f;
+	//	}
+	//	rad *= radDir;
+	//	return rad;
+	//}
 
 	// 受け取ったベクトルとの直交ベクトルを求める。
 	Vector3 ToCrossVec(const Vector3& vec) {

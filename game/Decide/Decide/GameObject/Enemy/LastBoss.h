@@ -14,7 +14,7 @@ class LastBoss :
 public:
 	enum class LastBossState { LastBossThrone = static_cast<int>(State::Death) + 1, LastBossMagician, LastBossHistory, LastBossDown };
 
-	enum class LastBossSoundIndex { Fire2 = static_cast<int>(EnemyCharacter::SoundIndex::Max),Fire3,Shot1, Shot2,Shot3/*,Battle1,Battle2*/};
+	enum class LastBossSoundIndex { Fire2 = static_cast<int>(EnemyCharacter::SoundIndex::Max),Fire3,Shot1, Shot2,Shot3,Danmatuma/*,Battle1,Battle2*/};
 
 	// エネミー(ラスボス)のアニメーション番号。
 	enum class AnimationLastBoss {
@@ -68,7 +68,7 @@ public:
 	void HighMagicAttackStart6();
 	void HighMagicAttackShot6();
 
-
+	void Danmatuma();
 
 	void BuffEvent();
 	void DebuffEvent();

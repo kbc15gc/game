@@ -35,7 +35,8 @@ void ThirdPersonCamera::Start()
 	transform->SetRotation(rot);
 
 	//_Camera->SetTarget(transform->GetPosition() - Vector3(0.0f, 100.0f, 0.0f));
-
+	
+	_NowHeight = Camera_Height::Height;
 	// 最初は更新しない。
 	UnActivateFlg();
 	
@@ -43,9 +44,9 @@ void ThirdPersonCamera::Start()
 
 void ThirdPersonCamera::UpdateSubClass()
 {
-	ChangeHeight();
+	//ChangeHeight();
 
-	Return();
+	//Return();
 
 	//今の高さを調べ、それに応じた処理をする。
 	switch (_NowHeight)
