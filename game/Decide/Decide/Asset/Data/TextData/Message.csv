@@ -17,8 +17,8 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 15,向こうの島に……,魔物が多くて困っています。\n助けてください。,-1,1,1,Asset/Sound/NPC/NPC/Mic1_78.wav
 16,この橋の先に……,魔王の手下がいます。\nいつこちらを襲いにくるか・・・。\n魔王の手下を倒して私たちを救ってください！,-1,1,2,Asset/Sound/NPC/NPC/Mic1_82.wav
 17,助かりました！,ゆっくりしていってください。,-1,-1,-1,Asset/Sound/NPC/NPC/tasukarimasita.wav
-18,ようこそ。歴史を失った世界へ。,この道の先の村を訪ねてみてください。,20,-1,-1,Asset/Sound/NPC/NPC/konomiti.wav
-19,ようこそ。歴史を失った世界へ。,また、わたしの話を聞きたくなったら\nここへ来てください。,-1,-1,-1,Asset/Sound/NPC/NPC/npc1.wav
+18,ようこそ。歴史を失った世界へ。,あなたに地図を渡しました。\n”BACK”ボタンで確認してみてください。,19,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+19,ようこそ。歴史を失った世界へ。,まずは、この道の先の村を訪ねてみてください。,20,-1,-1,Asset/Sound/NPC/NPC/konomiti.wav
 20,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,1,3,Asset/Sound/NPC/NPC/npc2.wav
 21,ページを歴史書に挟んでください。,"街の中で""START""ボタンを押して、\n歴史書を開いてください。",22,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 22,ページを歴史書に挟んでください。,"開いた状態で""A”ボタンを押すと歴史ページを\n挟むことができます。",-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav

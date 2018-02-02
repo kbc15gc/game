@@ -113,8 +113,8 @@ public:
 	// 町の名前判明処理。
 	void OpenTownName(LocationCodeAll code) {
 		if (code < LocationCodeAll::DevilKingdom) {
-			for (auto& data : _saveData) {
-				if (data->openLocation == static_cast<int>(code)) {
+			for (int idx = 0; idx < _saveData.size();idx++) {
+				if (_saveData[idx]->openLocation == static_cast<int>(code)) {
 					// すでに開放済み。
 					return;
 				}
@@ -127,6 +127,10 @@ public:
 			_saveData.push_back(unique_ptr<WorldMapSaveData>(new WorldMapSaveData(static_cast<int>(code))));
 			Support::OutputCSV<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
 		}
+	}
+
+	void InitSaveData() {
+		Support::OutputCSV<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
 	}
 private:
 

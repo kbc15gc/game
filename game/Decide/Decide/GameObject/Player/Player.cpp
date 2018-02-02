@@ -11,6 +11,7 @@
 #include "GameObject\Enemy\EnemyCharacter.h"
 
 #include"../UI/PlayerParameterUI.h"
+#include "GameObject\WorldMap\WorldMap.h"
 
 namespace
 {
@@ -228,11 +229,11 @@ void Player::Awake()
 	//足音サウンド初期化
 	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
 	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
-	_AsiotoSound->SetVolume(0.1f);
+	_AsiotoSound->SetVolume(0.5f);
 	//着地サウンド初期化
 	_TyakutiSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TyakutiSE", 0);
 	_TyakutiSound->Init("Asset/Sound/Player/tyakuti.wav");
-	_TyakutiSound->SetVolume(1.0f);
+	_TyakutiSound->SetVolume(0.8f);
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -416,19 +417,14 @@ void Player::Update()
 	}
 	
 	//着地
-	{
-		/*if (_CharacterController->IsOnGround())
-		{
-			_TyakutiSound->Play(false);
-		}*/
-	}
+	_Tyakuti();
 	//char test[256];
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);
 
-	char test2[256];
-	sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	OutputDebugString(test2);
+	//char test2[256];
+	//sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+	//OutputDebugString(test2);
 
 }
 
@@ -1054,6 +1050,19 @@ void Player::Speak()
 	//		break;
 	//	}
 	//}
+}
+
+void Player::_Tyakuti()
+{
+	if (_CharacterController->IsJump() && _IsTyakuti == true)
+	{
+		_IsTyakuti = false;
+	}
+	else if (_CharacterController->IsOnGround() && _IsTyakuti == false)
+	{
+		_TyakutiSound->Play(false);
+		_IsTyakuti = true;
+	}
 }
 
 #if defined(_DEBUG) || defined(RELEASEDEBUG)
