@@ -368,6 +368,9 @@ private:
 	//˜b‚·
 	void Speak();
 	bool _IsSpeak;
+	//’…’n
+	void _Tyakuti();
+	bool _IsTyakuti = true;
 
 	void SaveLevel()
 	{

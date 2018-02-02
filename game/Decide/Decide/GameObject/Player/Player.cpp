@@ -130,7 +130,7 @@ void Player::Awake()
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
-	_CharacterController->AddAttributeXZ(Collision_ID::PLAYER);	// 建物のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::NPC_Collision);		// 建物のコリジョン追加。
 	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
@@ -140,7 +140,8 @@ void Player::Awake()
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
-	_CharacterController->SubAttributeY(Collision_ID::SPACE);//空間コリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::SPACE);	//空間コリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::NPC_Collision);		//NPCを削除。
 
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
@@ -228,11 +229,11 @@ void Player::Awake()
 	//足音サウンド初期化
 	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
 	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
-	_AsiotoSound->SetVolume(0.1f);
+	_AsiotoSound->SetVolume(0.5f);
 	//着地サウンド初期化
 	_TyakutiSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TyakutiSE", 0);
 	_TyakutiSound->Init("Asset/Sound/Player/tyakuti.wav");
-	_TyakutiSound->SetVolume(1.0f);
+	_TyakutiSound->SetVolume(0.8f);
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -418,12 +419,7 @@ void Player::Update()
 	}
 	
 	//着地
-	{
-		/*if (_CharacterController->IsOnGround())
-		{
-			_TyakutiSound->Play(false);
-		}*/
-	}
+	_Tyakuti();
 	//char test[256];
 	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
 	//OutputDebugString(test);
@@ -1060,6 +1056,19 @@ void Player::Speak()
 	//}
 }
 
+void Player::_Tyakuti()
+{
+	if (_CharacterController->IsJump() && _IsTyakuti == true)
+	{
+		_IsTyakuti = false;
+	}
+	else if (_CharacterController->IsOnGround() && _IsTyakuti == false)
+	{
+		_TyakutiSound->Play(false);
+		_IsTyakuti = true;
+	}
+}
+
 #if defined(_DEBUG) || defined(RELEASEDEBUG)
 void Player::_DebugPlayer()
 {
@@ -1161,19 +1170,19 @@ void Player::_DebugPlayer()
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_5)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,0, transform->GetPosition(), 2);
+		item->Create(rand() % 10,0, transform->GetPosition(), 20);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_6)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,1, transform->GetPosition(), 2);
+		item->Create(rand() % 20,1, transform->GetPosition(), 1);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,2, transform->GetPosition(), 2);
+		item->Create(rand() % 20,2, transform->GetPosition(), 1);
 	}
 
 	//プレイヤー死亡

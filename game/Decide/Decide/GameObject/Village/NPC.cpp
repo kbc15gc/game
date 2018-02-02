@@ -54,10 +54,6 @@ void NPC::Start()
 	_FitGround();
 
 	ContinentObject::Start();
-
-	//リジッドボディにフラグを設定。
-	auto rigid = GetComponent<RigidBody>();
-	rigid->SetUserIndex((int)(fbCollisionAttributeE::CHARACTER));
 }
 
 void NPC::Update()
@@ -149,7 +145,7 @@ void NPC::_FitGround()
 	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 	callback._attribute = Collision_ID::GROUND | Collision_ID::BUILDING;
 
-	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)GetComponent<MeshCollider>()->GetBody(), start, end, callback);
+	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)GetComponent<RigidBody>()->GetCollisionObj()->getCollisionShape(), start, end, callback);
 
 	if (callback.isHit)
 	{
