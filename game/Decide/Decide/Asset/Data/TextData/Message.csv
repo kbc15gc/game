@@ -83,7 +83,7 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 81,路地裏の店……,結構な値段だった。,-1,-1,-1,Asset/Sound/NPC/NPC/n14.wav
 82,(*´σｰ｀)ｴﾍﾍ,えへへ,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_20.wav
 83,街だああ！,こんな街あこがれてたずら。,-1,-1,-1,Asset/Sound/NPC/NPC/zura.wav
-84,今日も1日、,がんばるぞい。,-1,-1,-1,Asset/Sound/NPC/NPC/zoi.wav
+84,噂ですが……,世界のどこかに、倒すと強くなれる魔物がいるらしいわ。,92,-1,-1,Asset/Sound/NPC/NPC/npc10.wav
 85,どこかの洞窟に……,珍しいモノを持った魔物がいるらしいぜ。,-1,-1,-1,Asset/Sound/NPC/NPC/n17.wav
 86,付近の魔物と色が違うやつ……,普通の魔物より強いらしいぜ。,87,-1,-1,Asset/Sound/NPC/NPC/n18.wav
 87,付近の魔物と色が違うやつ……,気い付けろよ。,-1,-1,-1,Asset/Sound/NPC/NPC/n16.wav
