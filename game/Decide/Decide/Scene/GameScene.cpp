@@ -366,7 +366,7 @@ void GameScene::Update()
 						case BGM::MAOU2:
 							break;
 						case BGM::MAOU3:
-							_Player->SetRespawnPos(AllLocationPosition[static_cast<int>(LocationCodeAll::Sinden)],Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
+							_Player->SetRespawnPos(AllLocationPosition[static_cast<int>(LocationCodeAll::Kuni)],Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
