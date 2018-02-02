@@ -11,6 +11,7 @@
 #include "GameObject\Enemy\EnemyCharacter.h"
 
 #include"../UI/PlayerParameterUI.h"
+#include "GameObject\WorldMap\WorldMap.h"
 
 namespace
 {
@@ -112,9 +113,6 @@ void Player::Awake()
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
-	//@todo for MOVIE
-	//_Model->SetEnable(false);
-
 	//アニメーションイベント追加
 	_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	_AnimationEventPlayer->Init((int)AnimationNo::AnimationNum);
@@ -129,6 +127,7 @@ void Player::Awake()
 	_CharacterController->AddAttributeXZ(Collision_ID::ENEMY);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BOSS);		// 敵のコリジョン追加。
 	_CharacterController->AddAttributeXZ(Collision_ID::BUILDING);	// 建物のコリジョン追加。
+	_CharacterController->AddAttributeXZ(Collision_ID::NPC_Collision);		// 建物のコリジョン追加。
 	
 	// 以下衝突を取りたい属性(縦方向)を指定。
 	_CharacterController->AttributeY_AllOn();	// 全衝突。
@@ -138,7 +137,8 @@ void Player::Awake()
 	_CharacterController->SubAttributeY(Collision_ID::ATTACK);	//攻撃コリジョン削除。
 	_CharacterController->SubAttributeY(Collision_ID::DROPITEM);//ドロップアイテムコリジョンを削除。
 	_CharacterController->SubAttributeY(Collision_ID::ITEMRANGE);//アイテムコリジョンを削除。
-	_CharacterController->SubAttributeY(Collision_ID::SPACE);//空間コリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::SPACE);	//空間コリジョンを削除。
+	_CharacterController->SubAttributeY(Collision_ID::NPC_Collision);		//NPCを削除。
 
 	//キャラクターコントローラーの重力設定
 	_CharacterController->SetGravity(_Gravity);
@@ -163,21 +163,6 @@ void Player::Awake()
 		}
 	}
 
-//#ifdef _DEBUG
-//#define Village1
-//#define Village2
-//#define Village3
-
-//#ifdef Village1
-//	int lv = 1;
-//#elif defined(Village2)
-//	int lv = 12;
-//#elif defined(Village3)
-//	int lv = 22;
-//#endif
-//#else
-//	int lv = 1;
-//#endif
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 
 	if (!IS_CONTINUE)
@@ -226,6 +211,11 @@ void Player::Awake()
 	//足音サウンド初期化
 	_AsiotoSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("AsiotoSE", 0);
 	_AsiotoSound->Init("Asset/Sound/Player/asioto.wav");
+	_AsiotoSound->SetVolume(0.5f);
+	//着地サウンド初期化
+	_TyakutiSound = INSTANCE(GameObjectManager)->AddNew<SoundSource>("TyakutiSE", 0);
+	_TyakutiSound->Init("Asset/Sound/Player/tyakuti.wav");
+	_TyakutiSound->SetVolume(0.8f);
 	//攻撃ボイス初期化
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack1)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack1", 0);
 	_AttackBoiceSound[static_cast<int>(AttackBoice::Attack2)] = INSTANCE(GameObjectManager)->AddNew<SoundSource>("Attack2", 0);
@@ -261,6 +251,8 @@ void Player::Awake()
 	_CharaLight.SetDiffuseLightColor(3, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	
 	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+
+	_BloodEffect = INSTANCE(GameObjectManager)->AddNew<BloodEffect>("BloodEffect", 0);
 
 	if (IS_CONTINUE)
 	{
@@ -348,6 +340,8 @@ void Player::Start()
 
 	//// 初期位置に移動。
 	//_CharacterController->Execute();
+
+	_AttentionText = static_cast<AttentionTextOnly*>(INSTANCE(GameObjectManager)->FindObject("AttentionTextOnly"));
 }
 
 void Player::Update()
@@ -394,26 +388,15 @@ void Player::Update()
 	
 	//アニメーションコントロール
 	AnimationControl();
-	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
-	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
-	// ※都合が悪いのでとりあえずコメントアウト。
-		////トランスフォーム更新
-		//transform->UpdateTransform();
-
+	
 	//NPCと話す
 	if (_State != State::Death)
 	{
 		Speak();
 	}
 	
-	//char test[256];
-	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
-	//OutputDebugString(test);
-
-	char test2[256];
-	sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	OutputDebugString(test2);
-
+	//着地
+	_Tyakuti();
 }
 
 void Player::ChangeState(State nextstate)
@@ -575,6 +558,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			//水色
 			c = { 0.0f,0.6f,1.0f,1.0f };
+
+			_BloodEffect->Damage(_PlayerParam->GetMaxHP(), damage);
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);
@@ -598,6 +583,40 @@ void Player::Releace()
 	}
 	_DeathSound = nullptr;
 	//_AnimationEventPlayer = nullptr;
+}
+
+void Player::TakeDrop(int dropexp, int money)
+{
+	_nowEXP += dropexp;
+	SaveLevel();
+	// お金はインベントリに格納。
+	INSTANCE(Inventory)->AddPlayerMoney(money);
+
+	wchar_t WText[256];
+	char	CText[256];
+
+	sprintf(CText, "+%d経験値", dropexp);
+	//chatrからwchra_tに変換。
+	mbstowcs(WText, CText, sizeof(CText));
+	_AttentionText->CreateText(
+		WText,
+		Vector3(580.0f, 460.0f, 0.0f),
+		33.0f,
+		Color::white,
+		AttentionTextOnly::MoveType::Up
+	);
+
+	sprintf(CText, "+%dダラー", money);
+	//chatrからwchra_tに変換。
+	mbstowcs(WText, CText, sizeof(CText));
+	_AttentionText->CreateText(
+		WText,
+		Vector3(580.0f, 460.0f, 0.0f),
+		33.0f,
+		Color::white,
+		AttentionTextOnly::MoveType::Up
+	);
+
 }
 
 /**
@@ -846,42 +865,6 @@ void Player::Speak()
 {
 	//ショップイベントフラグ取得。
 	bool eventflag = INSTANCE(EventManager)->IsEvent();
-	////NPCを取得
-	//vector<vector<NPC*>> npc;
-	//npc = INSTANCE(HistoryManager)->GetNPCList();
-	////NPC
-	//float len = FLT_MAX;
-	//
-	////一番近い村人を探す。
-	//for (auto village : npc)
-	//{
-	//	//サイズが0ならコンティニュー
-	//	if (village.size() == 0)
-	//	{
-	//		continue;
-	//	}
-	//	//NPC
-	//	for (auto npc : village)
-	//	{
-	//		if (npc == nullptr || !npc->GetActive())
-	//		{
-	//			continue;
-	//		}
-	//		//NPCからプレイヤーのベクトル
-	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-	//		//現在一番近いモノより近いので。
-	//		if (len > dir.Length())
-	//		{
-	//			//他に近い人がいるので、前の人とはばいばい。
-	//			if (nearnpc)
-	//			{
-	//				nearnpc->SetIsSpeak(false);
-	//			}
-	//			len = dir.Length();
-	//			nearnpc = npc;
-	//		}
-	//	}
-	//}
 	//近くのnpcがいる場合
 	if (_NearNPC)
 	{
@@ -939,71 +922,19 @@ void Player::Speak()
 	{
 		_NearNPCLen = FLT_MAX;
 	}
+}
 
-	//村
-	//for (auto village : npc)
-	//{
-	//	//サイズが0ならコンティニュー
-	//	if (village.size() == 0)
-	//	{
-	//		continue;
-	//	}
-	//	//NPC
-	//	for (auto npc : village)
-	//	{
-	//		if (npc == nullptr)
-	//		{
-	//			continue;
-	//		}
-	//		//NPCからプレイヤーのベクトル
-	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-	//		float len = dir.Length();
-	//		//範囲内かどうか
-	//		//ショップイベント中でないとき
-	//		if (npc->GetRadius() >= len && !eventflag)
-	//		{
-	//			if (_CharacterController == nullptr)
-	//			{
-	//				return;
-	//			}
-	//			//地面についていれば話しかけれる
-	//			//ショップイベントでないとき。
-	//			if (_CharacterController->IsOnGround())
-	//			{
-	//				//会話のためHPバーなどを消す。
-	//				_HPBar->RenderDisable();
-	//				//_MPBar->RenderDisable();
-	//				//話すフラグセット
-	//				npc->SetIsSpeak(true);
-	//				//プレイヤー話すフラグ設定
-	//				//ジャンプしなくなる
-	//				_NoJump = true;
-	//				//これ以上処理は続けない
-	//				break;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			//話すNPCがいないので
-	//			npc->SetIsSpeak(false);
-	//			//話し終わると
-	//			if (_NoJump)
-	//			{
-	//				if (_HPBar/* && _MPBar*/)
-	//				{
-	//					_HPBar->RenderEnable();
-	//					//_MPBar->RenderEnable();
-	//					_NoJump = false;
-	//				}
-	//			}
-	//		}
-	//	}
-	//	//話す状態ならもう回さない。
-	//	if (_NoJump)
-	//	{
-	//		break;
-	//	}
-	//}
+void Player::_Tyakuti()
+{
+	if (_CharacterController->IsJump() && _IsTyakuti == true)
+	{
+		_IsTyakuti = false;
+	}
+	else if (_CharacterController->IsOnGround() && _IsTyakuti == false)
+	{
+		_TyakutiSound->Play(false);
+		_IsTyakuti = true;
+	}
 }
 
 #if defined(_DEBUG) || defined(RELEASEDEBUG)
@@ -1107,19 +1038,19 @@ void Player::_DebugPlayer()
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_5)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,0, transform->GetPosition(), 2);
+		item->Create(rand() % 10,0, transform->GetPosition(), 20);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_6)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,1, transform->GetPosition(), 2);
+		item->Create(rand() % 20,1, transform->GetPosition(), 1);
 	}
 
 	//ドロップアイテムを出す。
 	if (KeyBoardInput->isPressed(DIK_P) && KeyBoardInput->isPush(DIK_7)) {
 		DropItem* item = INSTANCE(GameObjectManager)->AddNew<DropItem>("DropItem", 9);
-		item->Create(0,2, transform->GetPosition(), 2);
+		item->Create(rand() % 20,2, transform->GetPosition(), 1);
 	}
 
 	//プレイヤー死亡
@@ -1315,12 +1246,11 @@ void Player::AnimationEventControl()
 	/*******************/
 	float eventframe = 0.2f;
 	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
-	eventframe = 0.4f;
-	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
 	eventframe = 0.6f;
 	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
-	eventframe = 0.8f;
+	eventframe = 1.0f;
 	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+
 }
 
 void Player::Attack1()
@@ -1332,7 +1262,7 @@ void Player::Attack1()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack01", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1346,7 +1276,7 @@ void Player::Attack2()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack02", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1360,7 +1290,7 @@ void Player::Attack3()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack03", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 120)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1374,7 +1304,7 @@ void Player::Attack4()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack04", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 100)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(1.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }
@@ -1388,7 +1318,7 @@ void Player::Attack5()
 	//攻撃コリジョン作成
 	AttackCollision* attack = INSTANCE(GameObjectManager)->AddNew<AttackCollision>("attack05", 1);
 	if (_Equipment) {
-		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 2.5f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
+		attack->Create(move(_PlayerParam->GiveDamageMass(false, false, _Equipment->weapon, 200)), Vector3(0.0f, 1.0f, 1.5f), Quaternion::Identity, Vector3(2.5f, 1.0f, 2.5f), AttackCollision::CollisionMaster::Player, 0.2f, AttackCollision::ReactionType::Leans, transform);
 		attack->RemoveParent();
 	}
 }

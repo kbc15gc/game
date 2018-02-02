@@ -103,6 +103,16 @@ bool NPC::GetisSpeakEndLastMessage()const {
 	return _TextBox->IsLastMessageEnd();
 }
 
+void NPC::OnEnable()
+{
+	//_TextBox->CloseMessage();
+}
+
+void NPC::OnDisable()
+{
+	_TextBox->CloseBox();
+}
+
 /**
 * ‘«Œ³‚ð’n–Ê‚É‡‚í‚¹‚é.
 */
@@ -135,7 +145,7 @@ void NPC::_FitGround()
 	callback.startPos.Set(start.getOrigin().x(), start.getOrigin().y(), start.getOrigin().z());
 	callback._attribute = Collision_ID::GROUND | Collision_ID::BUILDING;
 
-	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)GetComponent<MeshCollider>()->GetBody(), start, end, callback);
+	INSTANCE(PhysicsWorld)->ConvexSweepTest((const btConvexShape*)GetComponent<RigidBody>()->GetCollisionObj()->getCollisionShape(), start, end, callback);
 
 	if (callback.isHit)
 	{
@@ -202,3 +212,4 @@ void NPC::_Speak()
 		}
 	}
 }
+

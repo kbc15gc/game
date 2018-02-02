@@ -92,9 +92,16 @@ public:
 	//アイテムを使う。
 	void UseItem();
 
+	enum class SubHoldReturnValueE
+	{
+		Error = -1,
+		Sub = 0,
+		Delete = 1,
+	};
+
 	//所持数を減らす。
 	//[out] 所持数を減らせたかどうか？
-	bool SubHoldNum(HoldItemBase* item,int num);
+	SubHoldReturnValueE SubHoldNum(HoldItemBase* item,int num);
 
 	//インベントリ内を整理(途中にnullを挟まない用に中身を詰めるだけ)。
 	void ArrangementInventory();

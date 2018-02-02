@@ -12,7 +12,7 @@ public:
 	enum class Camera_Height
 	{
 		Invalid = -1,
-		Low,
+		//Low,
 		Middle,
 		Height,
 		Max
@@ -64,7 +64,7 @@ private:
 		//計算された値が一番下の高さ以下なら一番下の高さに修正。
 		if (height == Camera_Height::Invalid)
 		{
-			height = Camera_Height::Low;
+			height = Camera_Height::Middle;
 			return height;
 		}
 
@@ -93,7 +93,7 @@ private:
 	void Return();
 private:
 	
-	Camera_Height _NowHeight = Camera_Height::Low;		//今の高さ。
+	Camera_Height _NowHeight = Camera_Height::Middle;		//今の高さ。
 	const float _LowCameraSpeed = 270.0f;					//低い高さでの移動スピード。
 	const float _MiddleCameraSpeed = 750.0f;				//中の高さでの移動スピード。
 	const float _MiddleCameraDashSpeed = 3000.0f;		//中の高さでのダッシュスピード。

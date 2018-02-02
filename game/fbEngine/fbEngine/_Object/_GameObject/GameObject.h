@@ -83,12 +83,14 @@ public:
 			}
 		}
 
-		//切り替わった時に呼び出す。。
-		if ((_Active != act) && act)
-			OnEnable();
-		else
-			OnDisable();
-
+		//切り替わった時に呼び出す。
+		if (_Active != act)
+		{
+			if (act)
+				OnEnable();
+			else
+				OnDisable();
+		}
 		_Active = act;
 	}
 

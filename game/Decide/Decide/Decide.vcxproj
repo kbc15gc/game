@@ -295,6 +295,7 @@
     <ClInclude Include="GameObject\MeshObject\MeshObjectChipManager.h" />
     <ClInclude Include="GameObject\Nature\Ocean\Ocean.h" />
     <ClInclude Include="GameObject\ParticleParamTable.h" />
+    <ClInclude Include="GameObject\Player\BloodEffect.h" />
     <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="GameObject\Player\PlayerState\PlayerStateAttack.h" />
@@ -429,6 +430,7 @@
     <ClCompile Include="GameObject\MeshObject\MeshObjectChip.cpp" />
     <ClCompile Include="GameObject\MeshObject\MeshObjectChipManager.cpp" />
     <ClCompile Include="GameObject\Nature\Ocean\Ocean.cpp" />
+    <ClCompile Include="GameObject\Player\BloodEffect.cpp" />
     <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="GameObject\Player\PlayerState\PlayerStateDeath.cpp" />

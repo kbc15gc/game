@@ -33,8 +33,8 @@ void MapLight::Awake()
 	//{
 	//	_Light->AddLight(Dl[i]);
 	//}
-
-	_Light->SetAmbientLight(Vector3(0.9f, 0.9f, 0.6f));
+	_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	_Light->SetAmbientLight(_defaultAmbient);
 
 	//ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
 	//shadow->SetNear(1.0f);
@@ -67,10 +67,10 @@ void WorldMap::Awake() {
 	_isChangeFrame = false;
 
 	_playerPoint = INSTANCE(GameObjectManager)->AddNew<ImageObject>("playerMapIcon", 2);
-	_playerPoint->SetTexture(LOADTEXTURE("t1.png"));
+	_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
 	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
-	_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
-	_playerPoint->SetBlendColor(Color(0.0f,0.0f,1.0f));
+	//_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
+	_playerPoint->SetBlendColor(Color(0.0f,0.0f,0.5f));
 	_playerPoint->SetActive(false);
 
 	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
@@ -79,13 +79,34 @@ void WorldMap::Awake() {
 		_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
 		_townPoint[idx].icon->SetActive(false);
 		//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
-		_townPoint[idx].icon->SetBlendColor(Color(0.7f,0.7f,5.0f));
+		_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
 
 		_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
-		_townPoint[idx].name->Initialize(L"[?????]", 30.0f);
+		_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
 		_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
 		_townPoint[idx].name->SetActive(false);
 	}
+
+	if (IS_CONTINUE == false) {
+		InitSaveData();
+	}
+	//CSVからオブジェクトの情報読み込み。
+	Support::LoadCSVData<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
+
+	for (auto& data : _saveData) {
+		char text[256];
+		sprintf(text, "[%s]", AllLocationNameList[data->openLocation].c_str());
+		_townPoint[data->openLocation].name->SetText(text);
+	}
+
+	_openSe = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldMapSE", 0);
+	_closeSe = INSTANCE(GameObjectManager)->AddNew<SoundSource>("WorldMapSE", 0);
+
+	//開いたときと閉じた時で異なる音。
+	_openSe->Init("Asset/Sound/UI/Menu.wav");
+	_closeSe->Init("Asset/Sound/UI/Menu.wav");
+
+	_BloodEffect = INSTANCE(GameObjectManager)->FindObject("BloodEffect");
 }
 
 void WorldMap::Start() {
@@ -104,6 +125,9 @@ void WorldMap::PreUpdate() {
 * 更新.
 */
 void WorldMap::Update() {
+	//_mapLight->DefaultAmbient();
+	//INSTANCE(GameObjectManager)->mainLight = _mapLight->GetLight();
+
 	if (VPadInput->IsPush(fbEngine::VPad::ButtonSelect) || VPadInput->IsPush(fbEngine::VPad::ButtonB)) {
 		Close();
 	}
@@ -111,21 +135,33 @@ void WorldMap::Update() {
 		Vector3 pos = _Player->transform->GetPosition();
 		Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
 		_playerPoint->transform->SetPosition(screenPos);
+		Quaternion rot = Quaternion::Identity;
+		Vector3 dir = _Player->transform->GetForward();
+		rot.SetRotation(Vector3::axisZ, atan2f(dir.x, dir.z));
+		//Quaternion rot2 = Quaternion::Identity;
+
+		//rot1.SetRotation(Vector3::axisX, D3DXToRadian(90.0f));
+		//rot2.CreateVector3ToVector3(_Player->transform->GetForward(), Vector3::front);
+		//rot1.Multiply(rot2);
+		//char test[256];
+		//sprintf(test, "rot = %f\n", rad);
+		//OutputDebugString(test);
+
+		_playerPoint->transform->SetRotation(rot);
+		//_playerPoint->Set
+
+		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
+			Vector3 pos = AllLocationPosition[idx];
+			Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
+			//if (screenPos.x >= -99999.0f) {
+			//	OutputDebugString("画面に映ってないらしいぜ！\n");
+			//}
+
+			_townPoint[idx].icon->transform->SetPosition(screenPos);
+			_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f, -48.0f, 0.0f));
+		}
 	}
 
-	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-		Vector3 pos = AllLocationPosition[idx];
-		Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
-		//if (screenPos.x >= -99999.0f) {
-		//	OutputDebugString("画面に映ってないらしいぜ！\n");
-		//}
-		char text[256];
-		sprintf(text, "[%s]", AllLocationNameList[idx].c_str());
-		_townPoint[idx].name->SetText(text);
-
-		_townPoint[idx].icon->transform->SetPosition(screenPos);
-		_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f,-60.0f,0.0f));
-	}
 
 }
 
@@ -144,13 +180,21 @@ void WorldMap::Open() {
 		_camera->ActiveCamera();
 
 		// いらないものをいろいろ非アクティブにしていく。
+		_BloodEffect->SetActive(false);
 		INSTANCE(SceneManager)->GetSky()->SetDisable();
 		//INSTANCE(GameObjectManager)->FindObject("Ocean")->SetActive(false);
 		//INSTANCE(SceneManager)->GetBloom().SetEnable(false);
 		//INSTANCE(SceneManager)->GetDepthofField().SetEnable(false);
 		_saveLight = INSTANCE(GameObjectManager)->mainLight;
+		_mapLight->DefaultAmbient();
 		INSTANCE(GameObjectManager)->mainLight = _mapLight->GetLight();
-		INSTANCE(GameObjectManager)->FindObject("Ground")->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+		GameObject* ground = INSTANCE(GameObjectManager)->FindObject("Ground");
+
+		ground->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncNone);
+		_saveFogInfo = ground->GetComponent<SkinModel>()->GetFogParam();
+		ground->GetComponent<SkinModel>()->SetFogParam(FogFunc::FogFuncNone, 0.0f, 0.0f, Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+
+
 		_split = static_cast<GameScene*>(INSTANCE(SceneManager)->GetNowScene())->GetNowSplitSpace();
 		if (_split) {
 			_split->TargetLost();
@@ -171,6 +215,8 @@ void WorldMap::Open() {
 			_townPoint[idx].name->SetActive(true);
 		}
 
+		_openSe->Play(false);
+
 		_isChangeFrame = true;
 	//}
 }
@@ -187,9 +233,12 @@ void WorldMap::Close() {
 		}
 
 		// 非アクティブにしたものを元通りに。
+		_BloodEffect->SetActive(true);
 		INSTANCE(SceneManager)->GetSky()->SetEnable();
 		//INSTANCE(GameObjectManager)->FindObject("Ocean")->SetActive(true);
-		INSTANCE(GameObjectManager)->FindObject("Ground")->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+		GameObject* ground = INSTANCE(GameObjectManager)->FindObject("Ground");
+		ground->GetComponent<SkinModel>()->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
+		ground->GetComponent<SkinModel>()->SetFogParam(_saveFogInfo);
 
 		INSTANCE(GameObjectManager)->mainLight = _saveLight;
 
@@ -213,6 +262,8 @@ void WorldMap::Close() {
 
 		// ワールドマップモードを終了したことをイベントマネージャーに通知。
 		INSTANCE(EventManager)->NotifyEndEvent();
+
+		_closeSe->Play(false);
 
 		_isChangeFrame = true;
 	}

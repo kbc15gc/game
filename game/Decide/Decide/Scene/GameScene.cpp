@@ -172,7 +172,7 @@ void GameScene::Start()
 	_HistoryBook = INSTANCE(GameObjectManager)->AddNew<HistoryBook>("HistoryBook", 9);
 
 	// ワールドマップ。
-	INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
+	_worldMap = INSTANCE(GameObjectManager)->AddNew<WorldMap>("WorldMap", StatusWindow::WindowBackPriorty);
 
 	INSTANCE(GameObjectManager)->AddNew<AttentionTextOnly>("AttentionTextOnly", 10);
 
@@ -515,16 +515,10 @@ void GameScene::_ChangeBGM(BGM bgm)
 
 	if (_BGM != bgm)
 	{
-		//if (_BGM != BGM::MAOU1 && _BGM != BGM::MAOU2 && _BGM != BGM::MAOU3) {
-		//	if (bgm == BGM::MAOU1 || bgm == BGM::MAOU2 || bgm == BGM::MAOU3) {
-		//		// 魔王城に侵入。
-		//		_splitWorld->DisableAll();
-		//		_splitWorld->SetActive(false);
-		//		_splitMaouzyou->SetActive(true);
-		//	}
-		//}
-		//else {
-		//}
+		if (static_cast<int>(bgm) < ARRAYSIZE(LocationMapCode)) {
+			_worldMap->OpenTownName(LocationMapCode[static_cast<int>(bgm)]);	// マップの地名を開放。
+		}
+
 		if (_BGM < BGM::BOSS || bgm >= BGM::BOSS) {
 			// 魔王戦の時は外部から指示があるまで変更しない。
 			// ただし死亡時や別のボスBGMの場合は変更する。

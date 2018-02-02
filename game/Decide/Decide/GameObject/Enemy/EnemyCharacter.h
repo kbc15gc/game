@@ -614,12 +614,7 @@ public:
 		_discoveryRange = range;
 	}
 
-	void SetActive(const bool act, const bool children = false)override {
-		if (!act) {
-			_MyComponent.HPBar->RenderDisable();
-		}
-		GameObject::SetActive(act, children);
-	}
+	void SetActive(const bool act, const bool children = false)override;
 
 protected:
 	// ステート切り替え関数。
@@ -826,6 +821,9 @@ private:
 
 	//イベントカメラへのポインタ。
 	GameObject* _EventCamera = nullptr;
+
+	SoundSource* _DamageSound = nullptr;
+
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };

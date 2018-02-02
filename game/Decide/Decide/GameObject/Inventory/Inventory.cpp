@@ -213,14 +213,17 @@ void Inventory::_DeleteFromList(HoldItemBase* item) {
 }
 
 //所持数を減らす。
-bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
+Inventory::SubHoldReturnValueE Inventory::SubHoldNum(HoldItemBase* item, int num) {
+	//戻り値。
+	SubHoldReturnValueE ret = SubHoldReturnValueE::Error;
+
 	if (num <= 0)
-		return false;
+		return ret;
 
 	//装備しているなら減らさない。
 	if (item->GetInfo()->TypeID == Item::ItemCodeE::Armor || item->GetInfo()->TypeID == Item::ItemCodeE::Weapon) {
 		if (static_cast<HoldEquipment*>(item)->GetIsEquip() == true) {
-			return false;
+			return ret;
 		}
 	}
 
@@ -232,6 +235,7 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 		//IDの一致。
 		if (inv != nullptr && item == inv)
 		{
+			ret = SubHoldReturnValueE::Sub;
 			switch (item->GetInfo()->TypeID) {
 			case Item::ItemCodeE::Item:
 				//引数分所持品の数を更新。
@@ -242,6 +246,7 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 					_DeleteFromList(inv);
 					//リストから削除されたので他のアイテムを詰める。
 					ArrangementInventory();
+					ret = SubHoldReturnValueE::Delete;
 				}
 				break;
 			case Item::ItemCodeE::Armor:
@@ -250,6 +255,7 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 				work--;
 				//リストから削除されたので他のアイテムを詰める。
 				ArrangementInventory();
+				ret = SubHoldReturnValueE::Delete;
 				break;
 			}
 			break;
@@ -261,7 +267,7 @@ bool Inventory::SubHoldNum(HoldItemBase* item, int num) {
 	//所持品の所持数書き出し。
 	_OutData(item->GetInfo()->TypeID);
 
-	return true;
+	return ret;
 }
 
 void Inventory::_LoadData() {

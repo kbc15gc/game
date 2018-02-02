@@ -3,20 +3,7 @@
 #include "fbEngine\_Object\_GameObject\TextObject.h"
 #include "GameObject\History\HistoryInfo.h"
 
-static const string LocationNames[] =
-{
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Drarian)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Gremrin)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::BossD)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Begin)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Hunting)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Prosperity)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Kuni)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::DevilKingdom)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::Sinden)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::World)],
-	"そと"		// 未使用？。
-};
+
 
 void VillageName::Awake()
 {

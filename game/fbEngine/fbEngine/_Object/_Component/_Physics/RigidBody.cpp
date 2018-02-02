@@ -140,6 +140,15 @@ void RigidBody::NonSleep()
 	static_cast<btRigidBody*>(_CollisionObject.get())->setSleepingThresholds(0, 0);
 }
 
+void RigidBody::SetFilterMask_after(int mask)
+{
+	//一度ワールドから消す？
+	INSTANCE(PhysicsWorld)->RemoveRigidBody(this);
+	//マスクを変更して再度追加。
+	_FilterMask = mask;
+	INSTANCE(PhysicsWorld)->AddRigidBody(this, _FilterGroup, _FilterMask);
+}
+
 void RigidBody::_AddWorldSubClass() {
 	INSTANCE(PhysicsWorld)->AddRigidBody(this);
 }

@@ -25,6 +25,10 @@
 
 #include"fbEngine\_Object\_Component\_3D\Light.h"
 
+#include "GameObject\TextImage\AttentionTextOnly.h"
+
+#include"BloodEffect.h"
+
 class SkinModel;
 class Animation;
 class ParameterBar;
@@ -174,13 +178,7 @@ public:
 	//プレイヤー解放
 	void Releace();
 	//敵が落とした物(経験値、お金)を受け取る。
-	void TakeDrop(int dropexp, int money)
-	{
-		_nowEXP += dropexp;
-		SaveLevel();
-		// お金はインベントリに格納。
-		INSTANCE(Inventory)->AddPlayerMoney(money);
-	}
+	void TakeDrop(int dropexp, int money);
 
 	inline void HeelHP() {
 
@@ -370,6 +368,9 @@ private:
 	//話す
 	void Speak();
 	bool _IsSpeak;
+	//着地
+	void _Tyakuti();
+	bool _IsTyakuti = true;
 
 	void SaveLevel()
 	{
@@ -491,6 +492,8 @@ private:
 	SoundSource* _AttackSoound = nullptr;
 	//足音のSE
 	SoundSource* _AsiotoSound = nullptr;
+	//着地のSE
+	SoundSource* _TyakutiSound = nullptr;
 	//攻撃ボイス
 	SoundSource* _AttackBoiceSound[static_cast<int>(AttackBoice::Num)];
 	//攻撃ボイスENUM
@@ -506,5 +509,9 @@ private:
 	NPC* _NearNPC = nullptr;
 	//近いNPCとの距離
 	float _NearNPCLen;
+
+	AttentionTextOnly* _AttentionText = nullptr;
+
+	BloodEffect* _BloodEffect = nullptr;
 
 };

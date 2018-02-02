@@ -7,6 +7,13 @@ class EnemySpeakState :public EnemyState {
 public:
 	EnemySpeakState(EnemyCharacter* Object);
 	~EnemySpeakState();
+
+	void SetActive(bool flg)override {
+		if (_speakObject) {
+			_speakObject->SetActive(flg);
+		}
+		EnemyState::SetActive(flg);
+	};
 private:
 	void _EntrySubClass()override;
 

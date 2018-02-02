@@ -65,21 +65,36 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 	{
 		//当たり判定追加。
 		RigidBody* rigid = AddComponent<RigidBody>();
-		MeshCollider* mesh = AddComponent<MeshCollider>();
-		mesh->GetBody();
 
-		//メッシュコライダー生成。
-		mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
-		auto sca = transform->GetLocalScale();
-		mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
-		RigidBodyInfo info;
-		info.mass = 0.0f;
-		info.coll = mesh;
-		info.physicsType = RigidBody::PhysicsType::Kinematick;
-		//info.offset = _Model->GetModelData()->GetCenterPos();
-		info.id = Collision_ID::BUILDING;
-		info.rotation = transform->GetRotation();
-		rigid->Create(info, false);
+		if (string(filename) == "villager1.X" ||
+			string(filename) == "NPC_Otoko.X")
+		{
+			CCapsuleCollider* capsule = AddComponent<CCapsuleCollider>();
+			capsule->Create(0.18f, 0.5f);
+			RigidBodyInfo info;
+			info.mass = 0.0f;
+			info.coll = capsule;
+			info.physicsType = RigidBody::PhysicsType::Kinematick;
+			info.id = Collision_ID::NPC_Collision | Collision_ID::NOTHITCAMERA;
+			info.rotation = transform->GetRotation();
+			rigid->Create(info, false);
+		}
+		else
+		{
+			//メッシュコライダー生成。
+			MeshCollider* mesh = AddComponent<MeshCollider>();
+			mesh->Copy(*MeshColliderManager::CloneMeshCollider(filename));
+			auto sca = transform->GetLocalScale();
+			mesh->GetBody()->setLocalScaling(btVector3(sca.x, sca.y, sca.z));
+			RigidBodyInfo info;
+			info.mass = 0.0f;
+			info.coll = mesh;
+			info.physicsType = RigidBody::PhysicsType::Kinematick;
+			//info.offset = _Model->GetModelData()->GetCenterPos();
+			info.id = (int)(Collision_ID::BUILDING);
+			info.rotation = transform->GetRotation();
+			rigid->Create(info, false);
+		}
 	}
 
 }
