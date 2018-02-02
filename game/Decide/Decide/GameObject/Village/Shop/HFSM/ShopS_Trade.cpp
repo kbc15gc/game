@@ -632,16 +632,18 @@ void ShopS_Trade::SellItem()
 		auto info = item->GetInfo();
 
 		int value = (int)(item->GetValue() * SELL_RATE);
+		//インベントリから排除。
+		auto ret = INSTANCE(Inventory)->SubHoldNum(item, _TradeNum[idx]);
+
 		//暫定処理、良い処理が思いついたら変更して。
 		if (info->TypeID==Item::ItemCodeE::Item) {
-			//インベントリから排除。
-			if (INSTANCE(Inventory)->SubHoldNum(item, _TradeNum[now]) == true)
+			if (ret >= Inventory::SubHoldReturnValueE::Sub)
 			{
 				//アイテムの値段分お金を貰う。
-				_Shop->Pay(-value * _TradeNum[now]);
+				_Shop->Pay(-value * _TradeNum[idx]);
 				//アイテムを買い取ったときのメッセージ。
 				_Shop->SpeakMess(4);
-				if (INSTANCE(Inventory)->GetHoldNum(info->TypeID, info->ID) == 0)
+				if (ret == Inventory::SubHoldReturnValueE::Delete)
 				{
 					erase = true;
 					//アイテムが消えたのでずらす。
@@ -651,14 +653,13 @@ void ShopS_Trade::SellItem()
 		}
 		else
 		{
-			//インベントリから排除。
-			if (INSTANCE(Inventory)->SubHoldNum(item, _TradeNum[now]) == true)
+			if (ret >= Inventory::SubHoldReturnValueE::Sub)
 			{
 				//アイテムの値段分お金を貰う。
 				_Shop->Pay(-value);
 				//アイテムを買い取ったときのメッセージ。
 				_Shop->SpeakMess(4);
-				if (INSTANCE(Inventory)->GetHoldNum(info->TypeID, info->ID) == 0)
+				if (ret == Inventory::SubHoldReturnValueE::Delete)
 				{
 					erase = true;
 					//アイテムが消えたのでずらす。
