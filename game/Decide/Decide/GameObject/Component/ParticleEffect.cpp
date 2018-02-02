@@ -317,10 +317,10 @@ void ParticleEffect::BloodEffect()
 	_BloodParam.addVelocityRandomMargih = Vector3(0.1f, 0.1f, 0.1f);
 	_BloodParam.brightness = 0.0f;
 	_BloodParam.fadeTime = 0.5f;
-	_BloodParam.gravity = 0.0f;
+	_BloodParam.gravity = -1.0f;
 	_BloodParam.initAlpha = 1.0f;
 	//_BloodParam.initPositionRandomMargin = _BloodPositionRandomMargin;
-	_BloodParam.initPositionRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
+	_BloodParam.initPositionRandomMargin = Vector3(0.12f, 0.12f, 0.12f);
 	_BloodParam.initVelocity = Vector3::zero;
 	_BloodParam.initVelocityVelocityRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
 	_BloodParam.intervalTime = 0.03f;
