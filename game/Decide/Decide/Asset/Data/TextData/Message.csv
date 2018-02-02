@@ -24,8 +24,8 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 22,ページを歴史書に挟んでください。,"開いた状態で""A”ボタンを押すと歴史ページを\n挟むことができます。",-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
 23,横道からゴーレムが・・・。,魔王城からの援軍みたいです。,24,-1,-1,Asset/Sound/NPC/NPC/tasukete2.wav
 24,横道からゴーレムが・・・。,このままじゃ街が危険です！,-1,-1,-1,Asset/Sound/NPC/NPC/tasukete2.wav
-25,魔王,わざわざこのような場所までやってきたか。\n我の歴史を奪うコソ泥よ。,26,-1,-1,Asset/Sound/MAOU/maou6.wav
-26,魔王,まさか自分の手で、この魔王の邪魔をできているとでも思っていたか？,103,-1,-1,Asset/Sound/MAOU/maou5.wav
+25,魔王,わざわざこのような場所までやってきたか。\n我の歴史を奪うコソ泥よ。,26,-1,-1,Asset/Sound/MAOU/maou6r.wav
+26,魔王,まさか自分の手で、この魔王の邪魔をできているとでも思っていたか？,103,-1,-1,Asset/Sound/MAOU/maou5r.wav
 27,ようこそ。,何もないけど、ゆっくりしていってね。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
 28,いってらっしゃい,たまには休んでいってね。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_84.wav
 29,……。,やあ、ここも昔は活気があったんだけどね……。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_117.wav
@@ -103,8 +103,8 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 101,魔王の城へ……,魔王を倒してください。,-1,1,13,Asset/Sound/NPC/NPC/n19.wav
 102,魔王の城へ……,魔王を倒してください。,-1,1,14,Asset/Sound/NPC/NPC/n19.wav
 103,魔王,まさか、貴様ら人間の見苦しい悪あがきが、\nこの魔王に打撃を与えているとでも思っていたか？,104,-1,-1,Asset/Sound/MAOU/maou7.wav
-104,魔王,やはり人間とは愚かなものだ……。,105,-1,-1,Asset/Sound/MAOU/maou.wav
-105,魔王,貴様らのような矮小な生命に、この世界はもったいない。,106,-1,-1,Asset/Sound/MAOU/maou4.wav
-106,魔王,我こそが、この大地を支配しよう。,107,-1,-1,Asset/Sound/MAOU/maou2.wav
-107,魔王,さあ人間、貴様に望み通りの死を与えてやろう。,-1,-1,-1,Asset/Sound/MAOU/maou3.wav
+104,魔王,やはり人間とは愚かなものだ……。,105,-1,-1,Asset/Sound/MAOU/maou1r.wav
+105,魔王,貴様らのような矮小な生命に、この世界はもったいない。,106,-1,-1,Asset/Sound/MAOU/maou4r.wav
+106,魔王,我こそが、この大地を支配しよう。,107,-1,-1,Asset/Sound/MAOU/maou2r.wav
+107,魔王,さあ人間、貴様に望み通りの死を与えてやろう。,-1,-1,-1,Asset/Sound/MAOU/maou3r.wav
 108,魔王軍が攻めてきた！,ここは危険だ！早く逃げろ！,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav

@@ -33,7 +33,9 @@ void MapLight::Awake()
 	//{
 	//	_Light->AddLight(Dl[i]);
 	//}
-	_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	//_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	_defaultAmbient = Vector3(1.0f, 1.0f, 1.0f);
+
 	_Light->SetAmbientLight(_defaultAmbient);
 
 	//ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
@@ -67,10 +69,13 @@ void WorldMap::Awake() {
 	_isChangeFrame = false;
 
 	_playerPoint = INSTANCE(GameObjectManager)->AddNew<ImageObject>("playerMapIcon", 2);
-	_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
+	//_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
+	_playerPoint->SetTexture(LOADTEXTURE("PlayerIcon.png"));
+	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
+
 	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
 	//_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
-	_playerPoint->SetBlendColor(Color(0.0f,0.0f,0.5f));
+	_playerPoint->SetBlendColor(Color(1.5f,3.0f,0.5f));
 	_playerPoint->SetActive(false);
 
 	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
@@ -79,13 +84,20 @@ void WorldMap::Awake() {
 		_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
 		_townPoint[idx].icon->SetActive(false);
 		//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
-		_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+		//_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+		_townPoint[idx].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
 
 		_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
 		_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
 		_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
 		_townPoint[idx].name->SetActive(false);
 	}
+
+	_mapFilter = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MapFilter", 0);
+	_mapFilter->SetTexture(LOADTEXTURE("WorldMapFilter.png"));
+	_mapFilter->SetSize(Vector2(WindowW, WindowH));
+	_mapFilter->SetActive(false);
+	_mapFilter->transform->SetPosition(Vector3(WindowW * 0.5f, WindowH * 0.5f, 0.0f));
 
 	if (IS_CONTINUE == false) {
 		InitSaveData();
@@ -209,7 +221,7 @@ void WorldMap::Open() {
 
 		// マップアイコンとかをアクティブ化。
 		_playerPoint->SetActive(true);
-
+		_mapFilter->SetActive(true);
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
 			_townPoint[idx].icon->SetActive(true);
 			_townPoint[idx].name->SetActive(true);
@@ -253,6 +265,7 @@ void WorldMap::Close() {
 
 		// マップアイコンとかを非アクティブに。
 		_playerPoint->SetActive(false);
+		_mapFilter->SetActive(false);
 
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
 			_townPoint[idx].icon->SetActive(false);

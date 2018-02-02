@@ -148,6 +148,7 @@ private:
 	FogInfo _saveFogInfo;
 
 	ImageObject* _playerPoint = nullptr;
+	ImageObject* _mapFilter = nullptr;
 	vector<Location> _townPoint = vector<Location>(static_cast<int>(LocationCodeAll::DevilKingdom));
 
 	vector<unique_ptr<WorldMapSaveData>> _saveData;

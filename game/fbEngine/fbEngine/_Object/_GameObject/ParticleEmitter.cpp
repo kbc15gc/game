@@ -159,3 +159,12 @@ void ParticleEmitter::Emit()
 		}
 	}
 }
+
+void ParticleEmitter::SetActive(const bool act, const bool children){
+	if (_ParticleList.size() > 0) {
+		for (auto particle : _ParticleList) {
+			particle->SetActive(act);
+		}
+	}
+	GameObject::SetActive(act, children);
+}
