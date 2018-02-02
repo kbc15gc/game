@@ -57,7 +57,7 @@ VS_PUTPUT PSMainTrans( VS_OUTPUT In )
 	float4 tex = tex2D(g_textureSampler, In.uv);
 	tex *= g_mulColor;
 
-	Out.Color.xyz = tex.xyz * g_brightness;
+	Out.Color.xyz = tex.xyz * (1.0f + g_brightness);
 	Out.Color.w = g_alpha  * tex.a;
 	Out.Luminance = g_brightness;
 

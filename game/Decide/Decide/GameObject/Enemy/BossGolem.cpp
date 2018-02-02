@@ -8,6 +8,9 @@
 #include "fbEngine\_Object\_Component\_Physics\CapsuleColliderZ.h"
 #include "GameObject\Enemy\EnemyAttack.h"
 
+#include"GameObject\Component\ParticleEffect.h"
+
+
 BossGolem::BossGolem(const char* name) : EnemyCharacter(name)
 {
 
@@ -50,6 +53,8 @@ void BossGolem::_StartSubClass() {
 
 	// 何回に一回くらい怯むか設定。
 	_damageMotionRandNum = 33;
+
+	_MyComponent.ParticleEffect->SetBloodPositionRandomMargin(Vector3(1.0f, 1.0f, 1.0f));
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);

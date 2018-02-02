@@ -28,6 +28,10 @@ Inventory::~Inventory(){
 void Inventory::Initialize() {
 	_InventoryItemList.clear();
 	_InventoryItemList = vector<vector<HoldItemBase*>>(static_cast<int>(Item::ItemCodeE::Max), vector<HoldItemBase*>(INVENTORYLISTNUM, nullptr));
+	
+	if (_HoldNumList.size() > 0) {
+		_HoldNumList.clear();
+	}
 
 	for (int idx = 0; idx < static_cast<int>(Item::ItemCodeE::Max); idx++) {
 		// コードごとの最大ID数分配列確保。
@@ -262,7 +266,7 @@ Inventory::SubHoldReturnValueE Inventory::SubHoldNum(HoldItemBase* item, int num
 		}
 	}
 
-	_HoldNumList[static_cast<int>(item->GetInfo()->TypeID)][item->GetInfo()->ID] -= (num - work);	// 新しく追加した数だけ所持数合計に加算。
+	_HoldNumList[static_cast<int>(item->GetInfo()->TypeID)][item->GetInfo()->ID] -= (num - work);	// 減らした数だけ所持数合計を減算。
 
 	//所持品の所持数書き出し。
 	_OutData(item->GetInfo()->TypeID);

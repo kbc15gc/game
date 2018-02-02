@@ -782,6 +782,7 @@
   <ItemGroup>
     <Image Include="Decide.ico" />
     <Image Include="small.ico" />
+    <Image Include="cursor.ico" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GameObject">
