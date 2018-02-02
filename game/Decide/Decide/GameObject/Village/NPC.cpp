@@ -210,9 +210,9 @@ void NPC::_Speak()
 		{
 			transform->SetRotation(_Rot);
 		}
+		_Player->SetSpeakFlag(false);
 		if (_State != State::Idol && _IsAnimation)
 		{
-			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
 			PlayAnimation(AnimationCodeE::Idol, 0.2f);
 		}
