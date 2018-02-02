@@ -80,6 +80,8 @@ private:
 
 	bool _isParent;	// エミッターと親子関係を組むか。
 
+	bool _isZTest = true;
+
 	Transform* _parent = nullptr;	// エミッターのTransform(親子関係を組む組まないにかかわらず、エミッターの座標系での向きなどを使ってパーティクルの位置を更新するので必要)。
 
 	bool _isAutoDelete = true;	// パーティクルが自発的に削除されるか。
