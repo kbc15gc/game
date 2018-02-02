@@ -113,9 +113,6 @@ void Player::Awake()
 
 	_Model->SetAtomosphereFunc(AtmosphereFunc::enAtomosphereFuncObjectFromAtomosphere);
 
-	//@todo for MOVIE
-	//_Model->SetEnable(false);
-
 	//アニメーションイベント追加
 	_AnimationEventPlayer = AddComponent<AnimationEventPlayer>();
 	_AnimationEventPlayer->Init((int)AnimationNo::AnimationNum);
@@ -166,21 +163,6 @@ void Player::Awake()
 		}
 	}
 
-//#ifdef _DEBUG
-//#define Village1
-//#define Village2
-//#define Village3
-
-//#ifdef Village1
-//	int lv = 1;
-//#elif defined(Village2)
-//	int lv = 12;
-//#elif defined(Village3)
-//	int lv = 22;
-//#endif
-//#else
-//	int lv = 1;
-//#endif
 	_PlayerParam->ParamReset(_ParamTable[lv]);
 
 	if (!IS_CONTINUE)
@@ -404,12 +386,7 @@ void Player::Update()
 	
 	//アニメーションコントロール
 	AnimationControl();
-	// ※トランスフォームを更新すると内部でオイラー角からクォータニオンを作成する処理が呼ばれる。
-	// ※オイラー角を使用せず直接クォータニオンを触る場合はこの処理を呼ぶとオイラー角の値で作成されたクォータニオンで上書きされる。
-	// ※都合が悪いのでとりあえずコメントアウト。
-		////トランスフォーム更新
-		//transform->UpdateTransform();
-
+	
 	//NPCと話す
 	if (_State != State::Death)
 	{
@@ -418,14 +395,6 @@ void Player::Update()
 	
 	//着地
 	_Tyakuti();
-	//char test[256];
-	//sprintf(test, "rot = %f,%f,%f,%f\n", transform->GetRotation().x, transform->GetRotation().y, transform->GetRotation().z, transform->GetRotation().w);
-	//OutputDebugString(test);
-
-	//char test2[256];
-	//sprintf(test2, "pos = %f,%f,%f\n", transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-	//OutputDebugString(test2);
-
 }
 
 void Player::ChangeState(State nextstate)
@@ -892,42 +861,6 @@ void Player::Speak()
 {
 	//ショップイベントフラグ取得。
 	bool eventflag = INSTANCE(EventManager)->IsEvent();
-	////NPCを取得
-	//vector<vector<NPC*>> npc;
-	//npc = INSTANCE(HistoryManager)->GetNPCList();
-	////NPC
-	//float len = FLT_MAX;
-	//
-	////一番近い村人を探す。
-	//for (auto village : npc)
-	//{
-	//	//サイズが0ならコンティニュー
-	//	if (village.size() == 0)
-	//	{
-	//		continue;
-	//	}
-	//	//NPC
-	//	for (auto npc : village)
-	//	{
-	//		if (npc == nullptr || !npc->GetActive())
-	//		{
-	//			continue;
-	//		}
-	//		//NPCからプレイヤーのベクトル
-	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-	//		//現在一番近いモノより近いので。
-	//		if (len > dir.Length())
-	//		{
-	//			//他に近い人がいるので、前の人とはばいばい。
-	//			if (nearnpc)
-	//			{
-	//				nearnpc->SetIsSpeak(false);
-	//			}
-	//			len = dir.Length();
-	//			nearnpc = npc;
-	//		}
-	//	}
-	//}
 	//近くのnpcがいる場合
 	if (_NearNPC)
 	{
@@ -985,71 +918,6 @@ void Player::Speak()
 	{
 		_NearNPCLen = FLT_MAX;
 	}
-
-	//村
-	//for (auto village : npc)
-	//{
-	//	//サイズが0ならコンティニュー
-	//	if (village.size() == 0)
-	//	{
-	//		continue;
-	//	}
-	//	//NPC
-	//	for (auto npc : village)
-	//	{
-	//		if (npc == nullptr)
-	//		{
-	//			continue;
-	//		}
-	//		//NPCからプレイヤーのベクトル
-	//		Vector3 dir = npc->transform->GetPosition() - transform->GetPosition();
-	//		float len = dir.Length();
-	//		//範囲内かどうか
-	//		//ショップイベント中でないとき
-	//		if (npc->GetRadius() >= len && !eventflag)
-	//		{
-	//			if (_CharacterController == nullptr)
-	//			{
-	//				return;
-	//			}
-	//			//地面についていれば話しかけれる
-	//			//ショップイベントでないとき。
-	//			if (_CharacterController->IsOnGround())
-	//			{
-	//				//会話のためHPバーなどを消す。
-	//				_HPBar->RenderDisable();
-	//				//_MPBar->RenderDisable();
-	//				//話すフラグセット
-	//				npc->SetIsSpeak(true);
-	//				//プレイヤー話すフラグ設定
-	//				//ジャンプしなくなる
-	//				_NoJump = true;
-	//				//これ以上処理は続けない
-	//				break;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			//話すNPCがいないので
-	//			npc->SetIsSpeak(false);
-	//			//話し終わると
-	//			if (_NoJump)
-	//			{
-	//				if (_HPBar/* && _MPBar*/)
-	//				{
-	//					_HPBar->RenderEnable();
-	//					//_MPBar->RenderEnable();
-	//					_NoJump = false;
-	//				}
-	//			}
-	//		}
-	//	}
-	//	//話す状態ならもう回さない。
-	//	if (_NoJump)
-	//	{
-	//		break;
-	//	}
-	//}
 }
 
 void Player::_Tyakuti()
@@ -1374,12 +1242,11 @@ void Player::AnimationEventControl()
 	/*******************/
 	float eventframe = 0.2f;
 	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
-	eventframe = 0.4f;
-	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
 	eventframe = 0.6f;
 	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
-	eventframe = 0.8f;
+	eventframe = 1.0f;
 	_AnimationEventPlayer->AddAnimationEvent((int)Player::AnimationNo::AnimationRun, eventframe, static_cast<AnimationEvent>(&Player::Asioto1));
+
 }
 
 void Player::Attack1()
