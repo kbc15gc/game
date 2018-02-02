@@ -269,6 +269,8 @@ void Player::Awake()
 	
 	_CharaLight.SetAmbientLight(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 
+	_BloodEffect = INSTANCE(GameObjectManager)->AddNew<BloodEffect>("_BloodEffect", 9);
+
 	if (IS_CONTINUE)
 	{
 		JsonData PlayerData;
@@ -591,6 +593,8 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 		{
 			//水色
 			c = { 0.0f,0.6f,1.0f,1.0f };
+
+			_BloodEffect->Damage(_PlayerParam->GetMaxHP(), damage);
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);

@@ -821,6 +821,9 @@ private:
 
 	//イベントカメラへのポインタ。
 	GameObject* _EventCamera = nullptr;
+
+	SoundSource* _DamageSound = nullptr;
+
 public:
 	static NearEnemyInfo nearEnemyInfo;
 };
