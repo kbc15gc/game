@@ -3,6 +3,8 @@
 #include "fbEngine\CharacterController.h"
 #include "GameObject\Enemy\EnemyAttack.h"
 
+#include"GameObject\Component\ParticleEffect.h"
+
 EnemyGolem::EnemyGolem(const char* name) : EnemyCharacter(name)
 {
 }
@@ -34,6 +36,8 @@ void EnemyGolem::_StartSubClass() {
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
 
 	_MyComponent.Model->SetModelEffect(ModelEffectE::SPECULAR, true);
+
+	_MyComponent.ParticleEffect->SetBloodPositionRandomMargin(Vector3(0.6f, 0.6f, 0.6f));
 
 	// UŒ‚ˆ—‚ğ’è‹`B
 	_SingleAttack.reset(new EnemySingleAttack(this));
