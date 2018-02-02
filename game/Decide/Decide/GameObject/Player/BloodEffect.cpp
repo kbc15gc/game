@@ -63,7 +63,7 @@ void BloodEffect::Awake()
 {
 	for (int i = 0; i < BIMaxSize; i++)
 	{
-		BloodImage* bi = INSTANCE(GameObjectManager)->AddNew<BloodImage>("BloodImage", 9);
+		BloodImage* bi = INSTANCE(GameObjectManager)->AddNew<BloodImage>("BloodImage", 0);
 		bi->SetActive(false);
 		_BloodImageList[i] = bi;
 	}

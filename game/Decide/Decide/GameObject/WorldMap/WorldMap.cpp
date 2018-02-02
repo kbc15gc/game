@@ -117,6 +117,8 @@ void WorldMap::Awake() {
 	//開いたときと閉じた時で異なる音。
 	_openSe->Init("Asset/Sound/UI/Menu.wav");
 	_closeSe->Init("Asset/Sound/UI/Menu.wav");
+
+	_BloodEffect = INSTANCE(GameObjectManager)->FindObject("BloodEffect");
 }
 
 void WorldMap::Start() {
@@ -190,6 +192,7 @@ void WorldMap::Open() {
 		_camera->ActiveCamera();
 
 		// いらないものをいろいろ非アクティブにしていく。
+		_BloodEffect->SetActive(false);
 		INSTANCE(SceneManager)->GetSky()->SetDisable();
 		//INSTANCE(GameObjectManager)->FindObject("Ocean")->SetActive(false);
 		//INSTANCE(SceneManager)->GetBloom().SetEnable(false);
@@ -242,6 +245,7 @@ void WorldMap::Close() {
 		}
 
 		// 非アクティブにしたものを元通りに。
+		_BloodEffect->SetActive(true);
 		INSTANCE(SceneManager)->GetSky()->SetEnable();
 		//INSTANCE(GameObjectManager)->FindObject("Ocean")->SetActive(true);
 		GameObject* ground = INSTANCE(GameObjectManager)->FindObject("Ground");
