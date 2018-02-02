@@ -366,7 +366,7 @@ void GameScene::Update()
 						case BGM::MAOU2:
 							break;
 						case BGM::MAOU3:
-							_Player->SetRespawnPos(AllLocationPosition[static_cast<int>(LocationCodeAll::Sinden)],Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
+							_Player->SetRespawnPos(AllLocationPosition[static_cast<int>(LocationCodeAll::Kuni)],Quaternion(/*0.0f, 0.0f, 0.0f, 1.0f*/-0.0f, -1.0f, -0.0f, 0.0f));
 							break;
 					}
 					_ChangeBGM(static_cast<BGM>(i));
@@ -462,7 +462,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 				}
 			}
 			else {
-				if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
+				if (bgm != BGM::DEAD && bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
 					// ñÇâ§èÈÇ©ÇÁÇ≈ÇΩÅB
 
 					if (_BefBGM == BGM::MAOU1 || _BefBGM == BGM::MAOU2 || _BefBGM == BGM::MAOU3)

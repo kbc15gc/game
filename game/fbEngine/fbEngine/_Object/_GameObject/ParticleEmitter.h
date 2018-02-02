@@ -108,6 +108,9 @@ public:
 	void ReleaseParticleAll();
 	//パーティクル生成
 	void Emit();
+
+	void SetActive(const bool act, const bool children = false)override;
+
 private:
 	bool	emit;//生成フラグ
 	float					_Timer;			//!<タイマー

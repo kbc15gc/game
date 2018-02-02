@@ -17,8 +17,9 @@ void ThirdPersonCamera::Awake()
 	//カメラコンポーネント
 	_Camera = AddComponent<Camera>();
 	_Camera->SetNear(1.0f);
-	_Camera->SetFar(2100.0f);
+	_Camera->SetFar(2500.0f);
 	_Camera->SetUseTarget(false);
+	//_Camera->SetViewAngle(60.0f);
 }
 
 void ThirdPersonCamera::Start()

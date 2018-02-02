@@ -33,7 +33,9 @@ void MapLight::Awake()
 	//{
 	//	_Light->AddLight(Dl[i]);
 	//}
-	_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	//_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	_defaultAmbient = Vector3(1.0f, 1.0f, 1.0f);
+
 	_Light->SetAmbientLight(_defaultAmbient);
 
 	//ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
@@ -67,25 +69,35 @@ void WorldMap::Awake() {
 	_isChangeFrame = false;
 
 	_playerPoint = INSTANCE(GameObjectManager)->AddNew<ImageObject>("playerMapIcon", 2);
-	_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
+	//_playerPoint->SetTexture(LOADTEXTURE("Blue_Arrow.png"));
+	_playerPoint->SetTexture(LOADTEXTURE("PlayerIcon.png"));
+	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
+
 	_playerPoint->SetSize(Vector2(40.0f, 40.0f));
 	//_playerPoint->SetClipColor(Color(1.0f, 1.0f, 0.0f));
-	_playerPoint->SetBlendColor(Color(0.0f,0.0f,0.5f));
+	_playerPoint->SetBlendColor(Color(1.5f,3.0f,0.5f));
 	_playerPoint->SetActive(false);
 
-	for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-		_townPoint[idx].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
-		_townPoint[idx].icon->SetTexture(LOADTEXTURE("t1.png"));
-		_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
-		_townPoint[idx].icon->SetActive(false);
-		//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
-		_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+	//for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
+	//	_townPoint[idx].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
+	//	_townPoint[idx].icon->SetTexture(LOADTEXTURE("t1.png"));
+	//	_townPoint[idx].icon->SetSize(Vector2(30.0f, 30.0f));
+	//	_townPoint[idx].icon->SetActive(false);
+	//	//_townPoint[idx].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
+	//	_townPoint[idx].icon->SetBlendColor(Color(2.0f,1.0f,8.0f));
+	//	//_townPoint[idx].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
 
-		_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
-		_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
-		_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
-		_townPoint[idx].name->SetActive(false);
-	}
+	//	_townPoint[idx].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
+	//	_townPoint[idx].name->Initialize(L"[?????]", 25.0f);
+	//	_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
+	//	_townPoint[idx].name->SetActive(false);
+	//}
+
+	_mapFilter = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MapFilter", 0);
+	_mapFilter->SetTexture(LOADTEXTURE("WorldMapFilter.png"));
+	_mapFilter->SetSize(Vector2(WindowW, WindowH));
+	_mapFilter->SetActive(false);
+	_mapFilter->transform->SetPosition(Vector3(WindowW * 0.5f, WindowH * 0.5f, 0.0f));
 
 	if (IS_CONTINUE == false) {
 		InitSaveData();
@@ -94,6 +106,19 @@ void WorldMap::Awake() {
 	Support::LoadCSVData<WorldMapSaveData>(filePath, WorldMapSaveDataDecl, ARRAY_SIZE(WorldMapSaveDataDecl), _saveData);
 
 	for (auto& data : _saveData) {
+		_townPoint[data->openLocation].icon = INSTANCE(GameObjectManager)->AddNew<ImageObject>("townMapIcon", 1);
+		_townPoint[data->openLocation].icon->SetTexture(LOADTEXTURE("t1.png"));
+		_townPoint[data->openLocation].icon->SetSize(Vector2(30.0f, 30.0f));
+		_townPoint[data->openLocation].icon->SetActive(false);
+		//_townPoint[data->openLocation].icon->SetClipColor(Color(0.0f, 0.0f, 0.0f));
+		_townPoint[data->openLocation].icon->SetBlendColor(Color(2.0f, 1.0f, 8.0f));
+		//_townPoint[data->openLocation].icon->SetBlendColor(Color(0.6f, 0.7f, 2.3f));
+
+		_townPoint[data->openLocation].name = INSTANCE(GameObjectManager)->AddNew<TextObject>("townMapName", 1);
+		_townPoint[data->openLocation].name->Initialize(L"[?????]", 25.0f);
+		_townPoint[data->openLocation].name->transform->SetParent(_townPoint[data->openLocation].icon->transform);
+		_townPoint[data->openLocation].name->SetActive(false);
+
 		char text[256];
 		sprintf(text, "[%s]", AllLocationNameList[data->openLocation].c_str());
 		_townPoint[data->openLocation].name->SetText(text);
@@ -150,15 +175,22 @@ void WorldMap::Update() {
 		_playerPoint->transform->SetRotation(rot);
 		//_playerPoint->Set
 
-		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-			Vector3 pos = AllLocationPosition[idx];
-			Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
-			//if (screenPos.x >= -99999.0f) {
-			//	OutputDebugString("画面に映ってないらしいぜ！\n");
-			//}
+		if (_townPoint.size() > 0) {
+			for (auto point : _townPoint) {
 
-			_townPoint[idx].icon->transform->SetPosition(screenPos);
-			_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f, -48.0f, 0.0f));
+			}
+		}
+		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
+			if (_townPoint[idx].icon) {
+				Vector3 pos = AllLocationPosition[idx];
+				Vector2 screenPos = _camera->GetCamera()->WorldToScreen(pos);
+				//if (screenPos.x >= -99999.0f) {
+				//	OutputDebugString("画面に映ってないらしいぜ！\n");
+				//}
+
+				_townPoint[idx].icon->transform->SetPosition(screenPos);
+				_townPoint[idx].name->transform->SetLocalPosition(Vector3(0.0f, -48.0f, 0.0f));
+			}
 		}
 	}
 
@@ -209,10 +241,12 @@ void WorldMap::Open() {
 
 		// マップアイコンとかをアクティブ化。
 		_playerPoint->SetActive(true);
-
+		_mapFilter->SetActive(true);
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-			_townPoint[idx].icon->SetActive(true);
-			_townPoint[idx].name->SetActive(true);
+			if (_townPoint[idx].icon) {
+				_townPoint[idx].icon->SetActive(true);
+				_townPoint[idx].name->SetActive(true);
+			}
 		}
 
 		_openSe->Play(false);
@@ -253,10 +287,13 @@ void WorldMap::Close() {
 
 		// マップアイコンとかを非アクティブに。
 		_playerPoint->SetActive(false);
+		_mapFilter->SetActive(false);
 
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
-			_townPoint[idx].icon->SetActive(false);
-			_townPoint[idx].name->SetActive(false);
+			if (_townPoint[idx].icon) {
+				_townPoint[idx].icon->SetActive(false);
+				_townPoint[idx].name->SetActive(false);
+			}
 		}
 
 

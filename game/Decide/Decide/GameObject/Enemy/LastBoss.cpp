@@ -336,6 +336,36 @@ void LastBoss::Danmatuma() {
 	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Danmatuma));
 }
 
+
+void LastBoss::PlayVoiceCyouhatu() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Cyouhatu));
+
+}
+void LastBoss::PlayVoiceMagicStart() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::MagicianStart));
+
+}
+void LastBoss::PlayVoiceWarau() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Warau));
+
+}
+void LastBoss::PlayVoiceChargeSord() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::ChargeSord));
+
+}
+void LastBoss::PlayVoiceWarpSord() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::WarpSord));
+
+}
+void LastBoss::PlayVoiceChargeFire() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::ChargeFire));
+
+}
+void LastBoss::PlayVoiceDamage() {
+	EnemyPlaySound(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Damage));
+
+}
+
 void LastBoss::_AwakeSubClass() {
 	// 使用するモデルファイルのパスを設定。
 	SetFileName("LastBoss.X");
@@ -381,6 +411,14 @@ void LastBoss::_StartSubClass() {
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Shot3), "Fire.wav", 0.5f, true);
 	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Danmatuma), "MAOU/maou8.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Cyouhatu), "MAOU/maou2-4.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::MagicianStart), "MAOU/maou2-5.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Warau), "MAOU/maou2-6.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::ChargeSord), "MAOU/maou2-1.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::WarpSord), "MAOU/maou2-2.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::ChargeFire), "MAOU/maou2-3.wav", 1.0f, true);
+	_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Damage), "MAOU/maou2-7.wav", 1.0f, true);
+
 
 	//_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle1), "LastBattle1.wav", 0.45f,false,true);
 	////_ConfigSoundData(static_cast<EnemyCharacter::SoundIndex>(LastBossSoundIndex::Battle2), "LastBattle2.wav", 1.0f,false,true);
@@ -649,6 +687,9 @@ void LastBoss::_ConfigAnimationEvent() {
 
 	// 剣攻撃。
 	{
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceChargeSord));
+
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::ChargeSordSpeed));
 
@@ -675,6 +716,11 @@ void LastBoss::_ConfigAnimationEvent() {
 
 	// 剣攻撃(ワープ)。
 	{
+		eventFrame = 0.0f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceWarau), 2);
+		
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceWarpSord), 2);
+
 		eventFrame = 0.5f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::SordAttack), eventFrame, static_cast<AnimationEvent>(&LastBoss::SordAttackEvent4), 2);
 		eventFrame = 1.6f;
@@ -687,6 +733,9 @@ void LastBoss::_ConfigAnimationEvent() {
 
 	// 魔法攻撃。
 	{
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceChargeFire));
+
 		eventFrame = 0.65f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackSpeed1));
 
@@ -712,6 +761,9 @@ void LastBoss::_ConfigAnimationEvent() {
 	{
 		eventFrame = 0.65f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::MagicAttackSpeed1));
+
+		//eventFrame = 0.0f;
+		//_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::), 1);
 
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Magic), eventFrame, static_cast<AnimationEvent>(&LastBoss::HighMagicAttackStart1),1);
@@ -762,6 +814,9 @@ void LastBoss::_ConfigAnimationEvent() {
 	{
 		eventFrame = 0.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Damage), eventFrame, static_cast<AnimationEvent>(&LastBoss::BuffEvent));
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Damage), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceDamage));
+
 	}
 
 	// デバフ。
@@ -778,12 +833,18 @@ void LastBoss::_ConfigAnimationEvent() {
 
 	// 側近バフ。
 	{
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceWarpSord), 2);
+
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::EncourageBuff), 2);
 	}
 
 	// プレイヤーへのデバフと側近へのバフ。
 	{
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceCyouhatu), 3);
+
 		eventFrame = 1.0f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::MagicThrone), eventFrame, static_cast<AnimationEvent>(&LastBoss::Special), 3);
 	}
@@ -794,6 +855,14 @@ void LastBoss::_ConfigAnimationEvent() {
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::Death), eventFrame, static_cast<AnimationEvent>(&LastBoss::Danmatuma));
 
 	}
+
+	// 側近戦終了。
+	{
+		eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationLastBoss::ThroneEnd), eventFrame, static_cast<AnimationEvent>(&LastBoss::PlayVoiceMagicStart));
+
+	}
+
 }
 
 #ifdef _DEBUG
