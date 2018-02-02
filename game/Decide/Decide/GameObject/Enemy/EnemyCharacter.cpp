@@ -700,6 +700,10 @@ void EnemyCharacter::GiveDamage(const CharacterParameter::DamageInfo& info, Atta
 		else
 		{
 			c = Color::red;
+			if (_MyComponent.ParticleEffect)
+			{
+				//_MyComponent.ParticleEffect->BloodEffect();
+			}
 		}
 
 		attackvalue->Init(transform, _damage, info.isCritical, 1.5f, Vector3(0.0f, 1.0f, 0.0f), c);
