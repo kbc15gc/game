@@ -462,7 +462,7 @@ void GameScene::_ChangeBGM(BGM bgm)
 				}
 			}
 			else {
-				if (bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
+				if (bgm != BGM::DEAD && bgm != BGM::MAOU1 && bgm != BGM::MAOU2 && bgm != BGM::MAOU3) {
 					// ñÇâ§èÈÇ©ÇÁÇ≈ÇΩÅB
 
 					if (_BefBGM == BGM::MAOU1 || _BefBGM == BGM::MAOU2 || _BefBGM == BGM::MAOU3)
