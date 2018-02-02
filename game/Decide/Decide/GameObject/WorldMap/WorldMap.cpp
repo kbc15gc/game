@@ -33,7 +33,9 @@ void MapLight::Awake()
 	//{
 	//	_Light->AddLight(Dl[i]);
 	//}
-	_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	//_defaultAmbient = Vector3(0.9f, 0.9f, 0.65f);
+	_defaultAmbient = Vector3(1.0f, 1.0f, 1.0f);
+
 	_Light->SetAmbientLight(_defaultAmbient);
 
 	//ShadowMap* shadow = INSTANCE(SceneManager)->GetShadowMap();
@@ -87,6 +89,12 @@ void WorldMap::Awake() {
 		_townPoint[idx].name->transform->SetParent(_townPoint[idx].icon->transform);
 		_townPoint[idx].name->SetActive(false);
 	}
+
+	_mapFilter = INSTANCE(GameObjectManager)->AddNew<ImageObject>("MapFilter", 0);
+	_mapFilter->SetTexture(LOADTEXTURE("WorldMapFilter.png"));
+	_mapFilter->SetSize(Vector2(WindowW, WindowH));
+	_mapFilter->SetActive(false);
+	_mapFilter->transform->SetPosition(Vector3(WindowW * 0.5f, WindowH * 0.5f, 0.0f));
 
 	if (IS_CONTINUE == false) {
 		InitSaveData();
@@ -207,7 +215,7 @@ void WorldMap::Open() {
 
 		// マップアイコンとかをアクティブ化。
 		_playerPoint->SetActive(true);
-
+		_mapFilter->SetActive(true);
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
 			_townPoint[idx].icon->SetActive(true);
 			_townPoint[idx].name->SetActive(true);
@@ -250,6 +258,7 @@ void WorldMap::Close() {
 
 		// マップアイコンとかを非アクティブに。
 		_playerPoint->SetActive(false);
+		_mapFilter->SetActive(false);
 
 		for (int idx = 0; idx < static_cast<int>(LocationCodeAll::DevilKingdom); idx++) {
 			_townPoint[idx].icon->SetActive(false);
