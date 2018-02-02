@@ -189,9 +189,10 @@ void NPC::_Speak()
 
 			_TextBox->Speak();
 			_Rotation->RotationToObject_XZ(_Player);
+			_Player->SetSpeakFlag(true);
+
 			if (_State != State::Speak && _IsAnimation)
 			{
-				_Player->SetSpeakFlag(true);
 				_State = State::Speak;
 				PlayAnimation(AnimationCodeE::Speak, 0.2f);
 			}
