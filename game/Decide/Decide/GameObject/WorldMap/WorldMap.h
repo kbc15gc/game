@@ -143,9 +143,12 @@ private:
 	SplitSpace* _split = nullptr;
 	GameObject* _maouSiro = nullptr;
 
+	GameObject* _BloodEffect = nullptr;
+
 	FogInfo _saveFogInfo;
 
 	ImageObject* _playerPoint = nullptr;
+	ImageObject* _mapFilter = nullptr;
 	vector<Location> _townPoint = vector<Location>(static_cast<int>(LocationCodeAll::DevilKingdom));
 
 	vector<unique_ptr<WorldMapSaveData>> _saveData;

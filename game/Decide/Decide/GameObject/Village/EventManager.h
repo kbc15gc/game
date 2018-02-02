@@ -89,6 +89,14 @@ private:
 		}
 		return _Pcamera;
 	}
+	GameObject* GetBloodEffect()
+	{
+		if (!_BloodEffect)
+		{
+			_BloodEffect = INSTANCE(GameObjectManager)->FindObject("BloodEffect");
+		}
+		return _BloodEffect;
+	}
 	//最初にイベントを追加する処理。
 	void AddEvent();
 private:
@@ -106,4 +114,5 @@ private:
 	Player* _Player;
 	PlayerCamera* _Pcamera;
 	PlayerParameterUI* _PlayerParameterUI = nullptr;
+	GameObject* _BloodEffect = nullptr;
 };
