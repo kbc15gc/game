@@ -483,6 +483,7 @@
     <ResourceCompile Include="Decide.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="cursor.ico" />
     <Image Include="Decide.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

@@ -11,8 +11,8 @@ Vector2 g_StartWindowSize;
 bool IS_CONTINUE;
 
 // グローバル変数:
-WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
-WCHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
+CHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
+CHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
 
 // このコード モジュールに含まれる関数の宣言を転送します:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -30,10 +30,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// TODO: ここにコードを挿入してください。
 
 	// グローバル文字列を初期化しています。
-	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadStringW(hInstance, IDC_DECIDE, szWindowClass, MAX_LOADSTRING);
+	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadString(hInstance, IDC_DECIDE, szWindowClass, MAX_LOADSTRING);
 
-	MyRegisterClass(hInstance,
+	WNDCLASSEXA wcex;
+
+	wcex.cbSize = sizeof(WNDCLASSEX);
+
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DECIDE));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDC_DECIDE);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
+	RegisterClassEx(&wcex);
+
+	g_MainWindow = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, WindowW, WindowH, nullptr, nullptr, hInstance, nullptr);
+
+	/*MyRegisterClass(hInstance,
 		CS_HREDRAW | CS_VREDRAW,
 		WndProc,
 		0,
@@ -47,7 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	);
 
 	g_MainWindow = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, WindowW, WindowH, nullptr, nullptr, hInstance, nullptr);
+		CW_USEDEFAULT, 0, WindowW, WindowH, nullptr, nullptr, hInstance, nullptr);*/
 
 	D3DXVECTOR2 WindowSize, ClientSize, Diff;
 	RECT window, client;
