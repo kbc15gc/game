@@ -70,12 +70,12 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 			string(filename) == "NPC_Otoko.X")
 		{
 			CCapsuleCollider* capsule = AddComponent<CCapsuleCollider>();
-			capsule->Create(1.0f, 0.5f);
+			capsule->Create(0.18f, 0.5f);
 			RigidBodyInfo info;
 			info.mass = 0.0f;
 			info.coll = capsule;
 			info.physicsType = RigidBody::PhysicsType::Kinematick;
-			info.id = (int)(Collision_ID::NPC_Collision);
+			info.id = Collision_ID::NPC_Collision | Collision_ID::NOTHITCAMERA;
 			info.rotation = transform->GetRotation();
 			rigid->Create(info, false);
 		}
