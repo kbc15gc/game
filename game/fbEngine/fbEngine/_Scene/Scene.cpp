@@ -6,6 +6,7 @@ using namespace fbScene;
 
 Vertex* Scene::_Vertex = nullptr;
 Effect* Scene::_Effect = nullptr;
+TEXTURE* Scene::_Texture = nullptr;
 float Scene::_FadeAlpha = 0.0f;
 float Scene::_AddPerSecA = 0.0f;
 FadeStateE Scene::_FadeState = FadeStateE::End;
@@ -112,6 +113,16 @@ void Scene::_DrawFade()
 	_Effect->SetValue("g_FadeColor", &Color::black, sizeof(Color));
 	//α値
 	_Effect->SetFloat("g_Alpha", _FadeAlpha);
+	
+	//テクスチャがあるか？
+	if (_Texture)
+	{
+		//テクスチャ
+		_Effect->SetBool("g_UseTexture", _Texture != nullptr);
+		//テクスチャ
+		_Effect->SetTexture("g_Texture", _Texture->pTexture);
+	}
+
 
 	//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
 	_Effect->CommitChanges();

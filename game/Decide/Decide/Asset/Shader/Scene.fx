@@ -8,6 +8,22 @@ float4 g_FadeColor;
 //消えるライン
 float g_Alpha;
 
+//テクスチャを使用するかどうか？
+bool g_UseTexture;
+
+//テクスチャ。
+texture g_Texture;
+sampler g_TextureSampler =
+sampler_state
+{
+	Texture = <g_Texture>;
+	MipFilter = NONE;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
 struct VS_INPUT
 {
 	float4 pos		: POSITION;
@@ -37,7 +53,12 @@ VS_OUTPUT vs_main(VS_INPUT In)
 */
 float4 ps_main(VS_OUTPUT In) : COLOR0
 {
-	float4 color = g_FadeColor;
+	//テクスチャからカラー取得
+	float4 color = float4(1,1,1,1);
+	if (g_UseTexture)
+		color = tex2D(g_TextureSampler, In.uv);
+	else
+		color = g_FadeColor;
 	//アルファ変更
 	color.a = g_Alpha;
 

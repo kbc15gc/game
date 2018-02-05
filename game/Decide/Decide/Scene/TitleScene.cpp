@@ -6,6 +6,7 @@
 
 void TitleScene::Start()
 {
+	Scene::SetFadeTexture(TextureManager::LoadTexture("Load.png"));
 	//ƒ^ƒCƒgƒ‹‰æ‘œ
 	ImageObject* title = INSTANCE(GameObjectManager)->AddNew<ImageObject>("title",0);
 	title->SetTexture(LOADTEXTURE("Title.png"));

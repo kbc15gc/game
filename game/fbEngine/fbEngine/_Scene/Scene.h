@@ -65,6 +65,11 @@ public:
 		return _FadeState;
 	}
 
+	static void SetFadeTexture(TEXTURE* tex)
+	{
+		_Texture = tex;
+	}
+
 private:
 	//フェード描画
 	void _DrawFade();
@@ -74,6 +79,8 @@ private:
 	static Vertex *_Vertex;
 	//シェーダ
 	static Effect *_Effect;
+	//テクスチャ
+	static TEXTURE* _Texture;
 	//フェードのα
 	static float _FadeAlpha;
 	//1秒間あたりに加算されるα値
