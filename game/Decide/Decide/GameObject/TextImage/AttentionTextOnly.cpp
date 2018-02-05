@@ -75,12 +75,13 @@ void AttentionTextOnly::Update() {
 			(*itr)->_Text->transform->GetPosition().y + ((*itr)->_Dir.y/**_MoveSpeed*Time::DeltaTime()*/),
 			(*itr)->_Text->transform->GetPosition().z + ((*itr)->_Dir.z/**_MoveSpeed*Time::DeltaTime()*/));
 
+		float speed = 0.4f;
 		//各テキストが少しずつ透明にしていく。
 		(*itr)->_Text->SetBlendColor(
 			Color((*itr)->_Color.r,
 			(*itr)->_Color.g,
 				(*itr)->_Color.b,
-				(*itr)->_Color.a-= 0.2f * Time::DeltaTime()));
+				(*itr)->_Color.a-= speed * Time::DeltaTime()));
 
 		//テキストが透明になりきるとリストから削除。
 		if ((*itr)->_Color.a < 0.0f) {
