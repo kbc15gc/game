@@ -148,10 +148,19 @@ void Particle::Render()
 		_Effect->SetTechnique("ColorTexPrimAdd");
 		break;
 	}
-	//Zバッファ
-	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, _isZTest);
-	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
+	if (_isZTest)
+	{
+		//Zバッファ
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	}
+	else
+	{
+		//Zバッファ
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	}
 	_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 	_Effect->BeginPass(0);
 	

@@ -34,7 +34,7 @@ struct ParticleParameter {
 	int			alphaBlendMode;						//!<0半透明合成、1加算合成。
 	Color		mulColor;							//!<乗算カラー。
 	bool		isParent;							//!<エミッターと親子関係を組むか。
-	bool isZTest;
+	bool		isZTest;
 };
 
 
