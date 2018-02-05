@@ -149,12 +149,21 @@ void Particle::Render()
 		break;
 	}
 
+	if (_isZTest)
+	{
+		//Zバッファ
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	}
+	else
+	{
+		//Zバッファ
+		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, FALSE);
+		(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	}
 	_Effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 	_Effect->BeginPass(0);
-	//Zバッファ
-	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
-	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
+	
 	_Effect->SetMatrix("g_mWVP", &wvp);
 	_Effect->SetTexture("g_texture", _Texture->pTexture);
 	_Effect->SetFloat("g_alpha", _Alpha);
@@ -204,6 +213,7 @@ void Particle::Init(const ParticleParameter & param,Transform* parent)
 	}
 
 	_RotateZ = 3.1415 * 2.0f * (float)Random::RandDouble();
+
 }
 
 void Particle::SetParam(const ParticleParameter& param) {
@@ -231,6 +241,6 @@ void Particle::SetParam(const ParticleParameter& param) {
 	_Brightness = param.brightness;
 	_AlphaBlendMode = param.alphaBlendMode;
 	_MulColor = param.mulColor;
-
+	_isZTest = param.isZTest;
 	_isParent = param.isParent;
 }

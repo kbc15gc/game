@@ -96,6 +96,17 @@ public:
 	void SetRareDropEffectFlag(bool flag) {
 		_RareDropEmitter->SetEmitFlg(flag);
 	}
+
+	void SetBloodMatrix(D3DXMATRIX* matrix)
+	{
+		_BloodMatrix = matrix;
+	}
+
+	void SetBloodPositionRandomMargin(const Vector3& pos)
+	{
+		_BloodPositionRandomMargin = pos;
+	}
+
 private:
 	ParticleEmitter*	_BuffParticleEmitter		= nullptr;	//バフパーティクル発生元。
 	ParticleParameter	_BuffParticleParam;						//バフパーティクルパラメーター。
@@ -125,5 +136,9 @@ private:
 
 	ParticleEmitter*	_BloodEmitter = nullptr;				//血しぶきパーティクルの発生元。
 	ParticleParameter	_BloodParam;							//血しぶきパーティクルパラメーター。
+	D3DXMATRIX* _BloodMatrix = nullptr;
+	float _BloodTime = 0.1f;
+	float _BloodLocalTime = 0.0f;
+	Vector3 _BloodPositionRandomMargin = Vector3(0.3, 0.3, 0.3);
 };
 

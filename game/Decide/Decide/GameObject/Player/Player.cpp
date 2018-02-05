@@ -91,7 +91,7 @@ void Player::Awake()
 	// MPバー。
 	//_MPBar = AddComponent<ParameterBar>();
 	//高さ設定
-	_Height = /*1.3f*/0.8f;
+	_Height = 0.3f;
 	//半径設定
 	_Radius = 0.6f;
 	//カプセルコライダー作成
@@ -559,7 +559,7 @@ void Player:: HitAttackCollisionEnter(AttackCollision* hitCollision)
 			//水色
 			c = { 0.0f,0.6f,1.0f,1.0f };
 
-			_BloodEffect->Damage(_PlayerParam->GetMaxHP(), damage);
+			//_BloodEffect->Damage(_PlayerParam->GetMaxHP(), damage);
 		}
 		//ダメージ量を表示する。
 		attackvalue->Init(transform, damage, hitCollision->GetDamageInfo()->isCritical, 1.5f, Vector3(0.0f, _Height, 0.0f),c);

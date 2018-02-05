@@ -312,28 +312,36 @@ void ParticleEffect::RareDropEffect()
 void ParticleEffect::BloodEffect()
 {
 	_BloodParam.Init();
-	_BloodParam.texturePath = "blood.png";
+	_BloodParam.texturePath = "Effect/blood_0.png";
 	_BloodParam.alphaBlendMode = 0;
-	_BloodParam.addVelocityRandomMargih = Vector3::zero;
-	_BloodParam.brightness = 1.0f;
+	_BloodParam.addVelocityRandomMargih = Vector3(0.1f, 0.1f, 0.1f);
+	_BloodParam.brightness = 0.0f;
 	_BloodParam.fadeTime = 0.5f;
-	_BloodParam.gravity = 0.0f;
+	_BloodParam.gravity = { 0.0f, -0.8f, 0.0f };
 	_BloodParam.initAlpha = 1.0f;
-	_BloodParam.initPositionRandomMargin = Vector3(0.5f, 0.1f, 0.5f);
+	//_BloodParam.initPositionRandomMargin = _BloodPositionRandomMargin;
+	_BloodParam.initPositionRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
 	_BloodParam.initVelocity = Vector3::zero;
-	_BloodParam.initVelocityVelocityRandomMargin = Vector3(1.0f, 1.0f, 1.0f);
-	_BloodParam.intervalTime = 0.1f;
+	_BloodParam.initVelocityVelocityRandomMargin = Vector3(0.1f, 0.1f, 0.1f);
+	_BloodParam.intervalTime = 0.03f;
 	_BloodParam.isBillboard = true;
 	_BloodParam.isFade = true;
 	_BloodParam.life = 0.1f;
-	_BloodParam.size = Vector2(10.0f, 10.0f);
+	_BloodParam.size = Vector2(0.2f, 0.2f);
 	_BloodParam.mulColor = Color::white;
-	_BloodParam.isParent = true;
+	_BloodParam.isZTest = false;
+	//_BloodParam.isParent = true;
 
-	_BloodEmitter->transform->SetParent(transform);
-	_BloodEmitter->transform->SetLocalPosition(Vector3(0.0f, 0.5f, 0.0f));
+	//_BloodEmitter->transform->SetParent();
+	Vector3 pos = transform->GetPosition();
+	pos.y = _BloodMatrix->m[3][1];
+
+	//pos = Vector3(_BloodMatrix->m[3][0], _BloodMatrix->m[3][1], _BloodMatrix->m[3][2]);
+	_BloodEmitter->transform->SetLocalPosition(pos);
 	_BloodEmitter->Init(_BloodParam);
 	_BloodEmitter->SetEmitFlg(true);
+
+	_BloodLocalTime = 0.0f;
 }
 
 
@@ -364,5 +372,11 @@ void ParticleEffect::Update() {
 			SetLevelUPEffectFlag(false);
 			_TotalLevelUPEffectTime = 0.0f;
 		}
+	}
+
+	_BloodLocalTime += Time::DeltaTime();
+	if (_BloodLocalTime >= _BloodTime)
+	{
+		_BloodEmitter->SetEmitFlg(false);
 	}
 }

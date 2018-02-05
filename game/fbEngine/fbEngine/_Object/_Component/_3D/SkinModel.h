@@ -116,6 +116,12 @@ public:
 	//	_TextureBlend = c;
 	//}
 
+	D3DXMATRIX* FindBoneMatrix(char* name)
+	{
+		D3DXFRAME_DERIVED* frame = (D3DXFRAME_DERIVED*)D3DXFrameFind(GetFrameRoot(), name);
+		return (D3DXMATRIX*)&frame->CombinedTransformationMatrix;
+	}
+
 	// モデルに乗算するカラー情報を設定。
 	void SetAllBlend(const Color& c)
 	{

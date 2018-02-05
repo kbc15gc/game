@@ -15,6 +15,8 @@
 #include "GameObject\Enemy\SordShock.h"
 #include "GameObject\Village\EventManager.h"
 
+#include"GameObject\Component\ParticleEffect.h"
+
 //EnemySingleAttack Enemy::_singleAttack = EnemySingleAttack(_AnimationData[EnemyCharacter::AnimationType::Attack],);
 
 LastBoss::LastBoss(const char* name) : EnemyCharacter(name)
@@ -397,6 +399,8 @@ void LastBoss::_StartSubClass() {
 
 	//モデルにライト設定。
 	_MyComponent.Model->SetLight(INSTANCE(GameObjectManager)->mainLight);
+
+	_MyComponent.ParticleEffect->SetBloodPositionRandomMargin(Vector3(1.5f, 1.5f, 1.5f));
 
 	// クラス特有の音設定。
 	// 重ねて鳴らしたい音は別のデータで作成。
