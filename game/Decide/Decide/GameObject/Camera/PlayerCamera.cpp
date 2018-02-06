@@ -106,13 +106,13 @@ void PlayerCamera::_StandardBehavior()
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_RotateHorizon(CAMERA_SPEED * Time::DeltaTime());
+		_RotateHorizon(CAMERA_SPEED*10.0f * Time::DeltaTime());
 		input = true;
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_RotateHorizon(-CAMERA_SPEED * Time::DeltaTime());
+		_RotateHorizon(-CAMERA_SPEED*10.0f * Time::DeltaTime());
 		input = true;
 	}
 	//上
@@ -148,28 +148,10 @@ void PlayerCamera::_StandardBehavior()
 		}
 	}
 
-	//if (input || _Reset)
-	//{
-	//	auto target = _GetPlayerPos();
-	//	_DestinationPos = _ClosetRay(target, target + _ToCameraDir*_Dist);
-	//	_PurposeTarget = target;
-	//}
-	//else
-	//{
-	//	float tmpY = _ToCameraDir.y;
-	//	_ToCameraDir = _DestinationPos - _PurposeTarget;
-	//	_ToCameraDir.Normalize();
-	//	_ToCameraDir.y = tmpY;
-	//	//追尾カメラ.
-	//	_Tracking();
-	//}
-
 	//追尾カメラ.
 	_Tracking();
 	
 	//カメラを移動させる。
-	/*static float sp = 70.0f;
-	static float dp = 1.0f;*/
 	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, _MoveV, Time::DeltaTime(), speed));
 	//ターゲットを追いかける。
 	_LookAtTarget();
@@ -177,10 +159,6 @@ void PlayerCamera::_StandardBehavior()
 
 void PlayerCamera::_LookAtTarget()
 {
-	////バネの伸び具合。
-	//static float spring = 10.0f;
-	////バネの縮まる強さ。
-	//static float damping = 1.0f;
 	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, _LookV, Time::DeltaTime(), speed);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
