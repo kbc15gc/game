@@ -17,13 +17,13 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 15,向こうの島に……,魔物が多くて困っています。\n助けてください。,-1,1,1,Asset/Sound/NPC/NPC/Mic1_78.wav
 16,この橋の先に……,魔王の手下がいます。\nいつこちらを襲いにくるか・・・。\n魔王の手下を倒して私たちを救ってください！,-1,1,2,Asset/Sound/NPC/NPC/Mic1_82.wav
 17,助かりました！,ゆっくりしていってください。,-1,-1,-1,Asset/Sound/NPC/NPC/tasukarimasita.wav
-18,あなたに地図を渡しました。,”BACK”ボタンで確認してみてください。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
+18,あなたに地図を渡しました。,”BACK”ボタンで確認してみてください。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_06.wav
 19,ようこそ。歴史を失った世界へ。,まずは、この道の先の村を訪ねてみてください。,20,-1,-1,Asset/Sound/NPC/NPC/konomiti.wav
 20,ようこそ。歴史を失った世界へ。,新たな冒険の始まりです。\nご武運を。,-1,1,3,Asset/Sound/NPC/NPC/npc2.wav
-21,ページを歴史書に挟んでください。,"街の中で""START""ボタンを押して、\n歴史書を開いてください。",22,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-22,ページを歴史書に挟んでください。,"開いた状態で""A”ボタンを押すと歴史ページを\n挟むことができます。",-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_16.wav
-23,横道からゴーレムが・・・。,魔王城からの援軍みたいです。,24,-1,-1,Asset/Sound/NPC/NPC/tasukete2.wav
-24,横道からゴーレムが・・・。,このままじゃ街が危険です！,-1,-1,-1,Asset/Sound/NPC/NPC/tasukete2.wav
+21,ページを歴史書に挟んでください。,"街の中で""START""ボタンを押して、\n歴史書を開いてください。",22,-1,-1,Asset/Sound/NPC/NPC/Mic4_07.wav
+22,ページを歴史書に挟んでください。,"開いた状態で""A”ボタンを押すと歴史ページを\n挟むことができます。",-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_11.wav
+23,横道からゴーレムが・・・。,魔王城からの援軍みたいだ。,24,-1,-1,Asset/Sound/NPC/NPC/Mic4_12.wav
+24,横道からゴーレムが・・・。,このままじゃ街が危険だ！,-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_10.wav
 25,魔王,わざわざこのような場所までやってきたか。\n我の歴史を奪うコソ泥よ。,26,-1,-1,Asset/Sound/MAOU/maou6r.wav
 26,魔王,まさか自分の手で、この魔王の邪魔をできているとでも思っていたか？,103,-1,-1,Asset/Sound/MAOU/maou5r.wav
 27,ようこそ。,何もないけど、ゆっくりしていってね。,-1,-1,-1,Asset/Sound/NPC/NPC/Mic1_72.wav
@@ -107,4 +107,4 @@ MessageID,Title,Text,NextID,EventID,EventNo,VoicePath
 105,魔王,貴様らのような矮小な生命に、この世界はもったいない。,106,-1,-1,Asset/Sound/MAOU/maou4r.wav
 106,魔王,我こそが、この大地を支配しよう。,107,-1,-1,Asset/Sound/MAOU/maou2r.wav
 107,魔王,さあ人間、貴様に望み通りの死を与えてやろう。,-1,-1,-1,Asset/Sound/MAOU/maou3r.wav
-108,魔王軍が攻めてきた！,ここは危険だ！早く逃げろ！,-1,-1,-1,Asset/Sound/NPC/NPC/Mic4_11.wav
+108,魔王軍が攻めてきた！,ここは危険だ！早く逃げろ！,-1,-1,-1,Asset/Sound/NPC/NPC/kokohakikenn.wav
