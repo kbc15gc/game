@@ -84,13 +84,13 @@ namespace
 void GameScene::Start()
 {
 	//最初からならオープニング再生するよー。
-	if (IS_CONTINUE == false)
-	{
-		//オープニング動画。
-		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
-		movie->LoadVideo(L"op.wmv");
-		movie->Play();
-	}
+	//if (IS_CONTINUE == false)
+	//{
+	//	//オープニング動画。
+	//	auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+	//	movie->LoadVideo(L"op.wmv");
+	//	movie->Play();
+	//}
 
 	INSTANCE(EventManager)->ReSet();
 
