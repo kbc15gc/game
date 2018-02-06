@@ -106,13 +106,13 @@ void PlayerCamera::_StandardBehavior()
 	//‰E‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_RotateHorizon(CAMERA_SPEED*10.0f * Time::DeltaTime());
+		_RotateHorizon(CAMERA_SPEED*15.0f * Time::DeltaTime());
 		input = true;
 	}
 	//¶‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_RotateHorizon(-CAMERA_SPEED*10.0f * Time::DeltaTime());
+		_RotateHorizon(-CAMERA_SPEED*15.0f * Time::DeltaTime());
 		input = true;
 	}
 	//ã
