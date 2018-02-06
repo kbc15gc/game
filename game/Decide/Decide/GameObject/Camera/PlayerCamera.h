@@ -43,14 +43,17 @@ public:
 		_Camera->Update();
 
 		_ToCameraDir = (_Player->transform->GetForward());
+		height = _ToCameraDir.y*_Dist;
 	}
 	//プレイヤーの方向を向く。
 	void LookAtTarget()
 	{
 		auto next = _GetPlayerPos();
-		_Camera->SetTarget(next);
-		_DestinationPos = _ClosetRay();
+
+		_Tracking();
 		transform->SetPosition(_DestinationPos);
+
+		_Camera->SetTarget(next);
 		transform->LockAt(next);
 	}
 
@@ -71,11 +74,8 @@ private:
 	//カメラ距離の伸縮。
 	void _UpdateDist();
 
-	//カメラ補助。
-	void _CameraSupport();
-
 	//レイを飛ばして、カメラの移動先を確認。
-	Vector3 _ClosetRay();
+	Vector3 _ClosetRay(Vector3 from, Vector3 to);
 
 	//カメラを移動させる処理。
 	void _Move()override;
@@ -100,6 +100,15 @@ private:
 	//カメラ移動の加速度。
 	Vector3 _Velocity;
 
+
+	 float sp = 30.0f;
+	 float dp = 10.0f;
+	//バネの伸び具合。
+	 float spring = 30.0f;
+	//バネの縮まる強さ。
+	 float damping = 5.0f;
+
+	 float speed = 5.0f;
 private:
 	//歴史書オブジェクト。
 	HistoryBook* _HistoryBook = nullptr;
@@ -118,6 +127,8 @@ private:
 
 	//ターゲットからカメラへの向きベクトル。
 	Vector3 _ToCameraDir = Vector3::zero;
+	float height;
+	float rl = 5.0f;
 	//プレイヤー向いている方向。
 	const Vector3* _PForward = nullptr;
 
@@ -126,7 +137,6 @@ private:
 	float _Timer = 0.0f;
 	Vector3 tmp = Vector3::zero;
 
-	Vector3 _PurposePos = Vector3::zero;
-	Vector3 _PurposeTarget = Vector3::zero;
 
+	Vector3 _PurposeTarget = Vector3::zero;
 };

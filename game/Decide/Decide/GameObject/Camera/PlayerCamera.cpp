@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 1.5f;
+	const float CAMERA_SPEED = 2.0f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -93,18 +93,26 @@ Vector3 PlayerCamera::_GetPlayerPos()
 */
 void PlayerCamera::_StandardBehavior()
 {
-	//入力されたかどうか？
+	float tmpY = _ToCameraDir.y;
+	_ToCameraDir = _DestinationPos - _PurposeTarget;
+	_ToCameraDir.Normalize();
+	_ToCameraDir.y = tmpY;
+
+#ifdef _DEBUG
+	//カメラ距離の伸縮
+	_UpdateDist();
+#endif	//_DEBUG
 	bool input = false;
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_RotateHorizon(CAMERA_SPEED * Time::DeltaTime());
+		_RotateHorizon(CAMERA_SPEED*rl * Time::DeltaTime());
 		input = true;
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_RotateHorizon(-CAMERA_SPEED * Time::DeltaTime());
+		_RotateHorizon(-CAMERA_SPEED*rl * Time::DeltaTime());
 		input = true;
 	}
 	//上
@@ -120,9 +128,6 @@ void PlayerCamera::_StandardBehavior()
 		input = true;
 	}
 
-	//補正カメラ。
-	//_CameraSupport();
-
 	//カメラリセット。
 	if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
 	{
@@ -134,7 +139,8 @@ void PlayerCamera::_StandardBehavior()
 		_Timer = min(_Timer, 1.0f);
 
 		auto dir = *_PForward * -1;
-		_ToCameraDir = Vector3::Lerp(tmp, dir, _Timer);
+		_ToCameraDir = dir; 
+		Vector3::Lerp(tmp, dir, _Timer);
 
 		if (_Timer == 1.0f)
 		{
@@ -142,37 +148,40 @@ void PlayerCamera::_StandardBehavior()
 		}
 	}
 
-	//カメラ距離の伸縮
-	_UpdateDist();
-
-	//移動先ポジションを取得。
-	_DestinationPos = _ClosetRay();
+	//if (input || _Reset)
+	//{
+	//	auto target = _GetPlayerPos();
+	//	_DestinationPos = _ClosetRay(target, target + _ToCameraDir*_Dist);
+	//	_PurposeTarget = target;
+	//}
+	//else
+	//{
+	//	float tmpY = _ToCameraDir.y;
+	//	_ToCameraDir = _DestinationPos - _PurposeTarget;
+	//	_ToCameraDir.Normalize();
+	//	_ToCameraDir.y = tmpY;
+	//	//追尾カメラ.
+	//	_Tracking();
+	//}
 
 	//追尾カメラ.
-	//_Tracking();
-
-	_PurposePos = _DestinationPos;
-	_PurposeTarget = _GetPlayerPos();
-
+	_Tracking();
+	
 	//カメラを移動させる。
-	static float sp = 70.0f;
-	static float dp = 1.0f;
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _PurposePos, sp, dp, Time::DeltaTime(),CAMERA_SPEED));
+	/*static float sp = 70.0f;
+	static float dp = 1.0f;*/
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime(), speed));
 	//ターゲットを追いかける。
 	_LookAtTarget();
-
-	/*auto pos = transform->GetPosition();
-	pos.Lerp(_DestinationPos, 0.8f);
-	transform->SetPosition(pos);*/
 }
 
 void PlayerCamera::_LookAtTarget()
 {
-	//バネの伸び具合。
-	static float spring = 85.0f;
-	//バネの縮まる強さ。
-	static float damping = 20.0f;
-	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, Time::DeltaTime(),CAMERA_SPEED);
+	////バネの伸び具合。
+	//static float spring = 10.0f;
+	////バネの縮まる強さ。
+	//static float damping = 1.0f;
+	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, Time::DeltaTime(), speed);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
 }
@@ -225,6 +234,7 @@ void PlayerCamera::_RotateVertical(float rotx)
 	if (notlimit)
 	{
 		_ToCameraDir = v;
+		height = _ToCameraDir.y*_Dist;
 	}
 }
 
@@ -236,30 +246,11 @@ void PlayerCamera::_UpdateDist()
 		_Dist += -vir.y;
 		//3.0~10.0の間に収める。
 		_Dist = min(15.0f, max(_Dist, 2.0f));
-		//_Player->PlayerStopEnable();
-	}
-	else
-	{
-		//_Player->PlayerStopDisable();
 	}
 }
 
-void PlayerCamera::_CameraSupport()
+Vector3 PlayerCamera::_ClosetRay(Vector3 from, Vector3 to)
 {
-	//カメラの方向とプレイヤーの方向の内積をとる。
-	auto dot = _PForward->Dot(_ToCameraDir);
-}
-
-Vector3 PlayerCamera::_ClosetRay()
-{
-	//プレイヤーとカメラの距離
-	Vector3 dist = (Vector3)(_ToCameraDir * _Dist);
-	Vector3 from, to;
-	//注視点
-	from = _Camera->GetTarget();
-	//カメラの移動先
-	to = from + dist;
-
 	// 衝突を無視する属性を設定。
 	int attri = (Collision_ID::ATTACK) | (Collision_ID::PLAYER) | (Collision_ID::ENEMY) | (Collision_ID::BOSS) | (Collision_ID::DRARIAN) | (Collision_ID::NOTHITCAMERA) | (Collision_ID::CHARACTER_GHOST);
 	//レイを飛ばす
@@ -281,10 +272,7 @@ Vector3 PlayerCamera::_ClosetRay()
 	}
 }
 
-void PlayerCamera::_Move()
-{
-	
-}
+void PlayerCamera::_Move(){}
 
 /**
 * 追尾カメラ.
@@ -292,9 +280,9 @@ void PlayerCamera::_Move()
 void PlayerCamera::_Tracking()
 {
 	//注視点から視点までのベクトル
-	Vector3 toCameraPosXZ = _DestinationPos - _Camera->GetTarget();
+	Vector3 toCameraPosXZ = _ToCameraDir * _Dist;
 	//視点へのY方向の高さ.
-	float height = toCameraPosXZ.y;
+	//float height = toCameraPosXZ.y;
 	//XZ平面にするので、Yは0にする.
 	toCameraPosXZ.y = 0.0f;
 	//XZ平面上での視点と注視点の距離を求める.
@@ -306,7 +294,7 @@ void PlayerCamera::_Tracking()
 	Vector3 target = _GetPlayerPos();
 
 	//新しい注視点からカメラの始点へ向かうベクトルを求める.
-	Vector3 toNewCameraPos = _DestinationPos - target;
+	Vector3 toNewCameraPos = transform->GetPosition() - target;
 	//XZ平面にするので、Yは0にする.
 	toNewCameraPos.y = 0.0f;
 	//正規化.
@@ -319,10 +307,8 @@ void PlayerCamera::_Tracking()
 	toNewCameraPos.Normalize();
 	toNewCameraPos.Scale(toCameraPosXZLen);
 	toNewCameraPos.y = height;
-
-	Vector3 pos = target + toNewCameraPos;
-
-	_PurposePos = pos;
+	
+	_DestinationPos = _ClosetRay(target, target + toNewCameraPos);
 	_PurposeTarget = target;
 }
 
