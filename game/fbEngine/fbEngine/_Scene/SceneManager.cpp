@@ -73,7 +73,7 @@ void SceneManager::Add(Scene* pAdd)
 void SceneManager::StartScene()
 {
 //#ifdef _DEBUG
-	FPS* fps = INSTANCE(GameObjectManager)->AddNew<FPS>("fps", System::MAX_PRIORITY);
+	//FPS* fps = INSTANCE(GameObjectManager)->AddNew<FPS>("fps", System::MAX_PRIORITY);
 	//fps->transform->SetLocalPosition(Vector3(0, 30, 0));
 //#endif // DEBUG
 

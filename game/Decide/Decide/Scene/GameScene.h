@@ -38,6 +38,8 @@ public:
 		MAOU1,			//–‚‰¤é1‘w
 		MAOU2,			//–‚‰¤é2‘w
 		MAOU3,			//–‚‰¤é3‘w
+		URADORARIAN,	//— ƒhƒ‰ƒŠƒAƒ“
+		URABOSSD,		//— ‚c
 		WORLD,			//¢ŠE	
 		DEAD,			//Ž€–S
 		BOSS,			//H

@@ -87,7 +87,9 @@ enum class LocationCodeAll : int
 	Prosperity,		//!< 繁栄の街.
 	Kuni,			// 信仰の国。
 	Sinden,			// 心酔の神殿。
-	DevilKingdom,	//!< 崇拝の魔城.※ここ以降はマップに記されない。	
+	DevilKingdom,	//!< 崇拝の魔城.※ここ以降はマップに記されない。
+	UraDorarian,
+	UraBossD,
 	World,
 	Max
 };
@@ -105,6 +107,8 @@ static const string AllLocationNameList[(int)LocationCodeAll::Max] =
 	"信仰の国",
 	"心酔の神殿",
 	"崇拝の魔城",
+	"裏ドラリアン",
+	"裏『Ｄ』の領地",
 	"",
 };
 
@@ -120,6 +124,8 @@ static const string LocationNames[] =
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Kuni)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::DevilKingdom)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Sinden)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraDorarian)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraBossD)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::World)],
 	"そと"		// 未使用？。
 };
@@ -137,6 +143,8 @@ static const LocationCodeAll LocationMapCode[] =
 	LocationCodeAll::Kuni,
 	LocationCodeAll::DevilKingdom,
 	LocationCodeAll::Sinden,
+	LocationCodeAll::UraDorarian,
+	LocationCodeAll::UraBossD,
 	LocationCodeAll::World,
 	LocationCodeAll::Max		// 未使用？。
 };

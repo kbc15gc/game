@@ -172,8 +172,8 @@ void Player::Awake()
 
 	// HPのバーを表示。
 	{
-		vector<BarColor> Colors;
-		Colors.push_back(BarColor::Green);
+		/*vector<BarColor> Colors;
+		Colors.push_back(BarColor::Green);*/
 		//_HPBar->Create(Colors, static_cast<float>(_PlayerParam->GetMaxHP()), static_cast<float>(_PlayerParam->GetParam(CharacterParameter::HP)),true, true, NULL);
 	}
 	// MPのバーを表示。

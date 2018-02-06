@@ -471,7 +471,7 @@ private:
 	//バフデバフアイコン。
 	BuffDebuffICon* _BuffDebuffICon = nullptr;
 	//レベルアップイメージ
-	LevelUpImage* _LevelUpImage;
+	LevelUpImage* _LevelUpImage = nullptr;
 	//歴史書
 	HistoryManager* _HistoryManager = nullptr;
 	//ジャンプしないため
