@@ -82,14 +82,15 @@ enum class LocationCodeAll : int
 	Drarian = 0,
 	Gremrin,
 	BossD,
+	UraDorarian,
+	UraBossD,
+	UraGuremurin,
 	Begin,			//!< はじまりの集落.
 	Hunting,		//!< 狩猟の村.
 	Prosperity,		//!< 繁栄の街.
 	Kuni,			// 信仰の国。
 	Sinden,			// 心酔の神殿。
 	DevilKingdom,	//!< 崇拝の魔城.※ここ以降はマップに記されない。
-	UraDorarian,
-	UraBossD,
 	World,
 	Max
 };
@@ -101,14 +102,15 @@ static const string AllLocationNameList[(int)LocationCodeAll::Max] =
 	"ドラリアンの住処",
 	"グレムリンの洞窟",
 	"『Ｄ』",
+	"裏ドラリアン",
+	"裏『Ｄ』の領地",
+	"裏グレムリンの岩場",
 	"はじまりの集落",
 	"狩猟の村",
 	"繁栄の街",
 	"信仰の国",
 	"心酔の神殿",
 	"崇拝の魔城",
-	"裏ドラリアン",
-	"裏『Ｄ』の領地",
 	"",
 };
 
@@ -118,14 +120,15 @@ static const string LocationNames[] =
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Drarian)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Gremrin)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::BossD)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraDorarian)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraBossD)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraGuremurin)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Begin)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Hunting)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Prosperity)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Kuni)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::DevilKingdom)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Sinden)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::UraDorarian)],
-	AllLocationNameList[static_cast<int>(LocationCodeAll::UraBossD)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::World)],
 	"そと"		// 未使用？。
 };
@@ -137,14 +140,15 @@ static const LocationCodeAll LocationMapCode[] =
 	LocationCodeAll::Drarian,
 	LocationCodeAll::Gremrin,
 	LocationCodeAll::BossD,
+	LocationCodeAll::UraDorarian,
+	LocationCodeAll::UraBossD,
+	LocationCodeAll::UraGuremurin,
 	LocationCodeAll::Begin,
 	LocationCodeAll::Hunting,
 	LocationCodeAll::Prosperity,
 	LocationCodeAll::Kuni,
 	LocationCodeAll::DevilKingdom,
 	LocationCodeAll::Sinden,
-	LocationCodeAll::UraDorarian,
-	LocationCodeAll::UraBossD,
 	LocationCodeAll::World,
 	LocationCodeAll::Max		// 未使用？。
 };
@@ -166,6 +170,9 @@ static const Vector3 AllLocationPosition[(int)LocationCodeAll::Max] =
 	Vector3(-683.3f,61.7f,63.2f),
 	Vector3(308.7f,55.4f,623.2f),
 	Vector3(456.7f,71.18f,75.7f),
+	Vector3(-651.6f,79.0f,554.23f),
+	Vector3(-636.1f,57.7f,-658.5f),
+	Vector3(367.17f,87.71f,-390.67f),
 	Vector3(-387.3f,58.307f,-75.8f),
 	Vector3(-108.1f ,55.524f ,533.9f),
 	Vector3(218.88f, 65.793f, -0.92f),

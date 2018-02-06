@@ -211,6 +211,7 @@ void GameScene::Start()
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	InitBGM(BGM::BOSS, "Asset/Sound/LastBattle1.wav", 0.5f);
 	InitBGM(BGM::LASTBOSS, "Asset/Sound/LastBattle2.wav", 1.0f);
+	InitBGM(BGM::URAGUREMURIN, "Asset/Sound/LastBattle2.wav", 1.0f);
 
 	//çƒê∂ópBGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
