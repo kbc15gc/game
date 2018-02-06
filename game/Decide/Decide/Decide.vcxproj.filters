@@ -380,6 +380,9 @@
     <ClCompile Include="GameObject\Player\BloodEffect.cpp">
       <Filter>GameObject\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\OpeningScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Decide.h" />
@@ -774,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\Player\BloodEffect.h">
       <Filter>GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\OpeningScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

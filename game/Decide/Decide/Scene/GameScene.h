@@ -32,6 +32,9 @@ public:
 		BOSS1 = 0,		//ドラリアン
 		BOSS2,			//ボスゴーレム
 		BOSS3,			//コードネームD
+		URADORARIAN,	//裏ドラリアン
+		URABOSSD,		//裏Ｄ
+		URAGUREMURIN,	//裏ｸﾞﾚﾑﾘﾝ
 		MATI1,			//始まりの村
 		MATI2,			//狩猟の村
 		MATI3,			//発展の街	

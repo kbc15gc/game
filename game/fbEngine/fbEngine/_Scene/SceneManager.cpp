@@ -73,7 +73,7 @@ void SceneManager::Add(Scene* pAdd)
 void SceneManager::StartScene()
 {
 //#ifdef _DEBUG
-	FPS* fps = INSTANCE(GameObjectManager)->AddNew<FPS>("fps", System::MAX_PRIORITY);
+	//FPS* fps = INSTANCE(GameObjectManager)->AddNew<FPS>("fps", System::MAX_PRIORITY);
 	//fps->transform->SetLocalPosition(Vector3(0, 30, 0));
 //#endif // DEBUG
 
@@ -116,77 +116,86 @@ void SceneManager::UpdateScene()
 
 void SceneManager::DrawScene()
 {
-	//事前描画(影とか深度とか輝度とか)
-	INSTANCE(GameObjectManager)->PreRenderObject();
+	//if (_isMovieEnd) {
+	//	// ムービー切り替え直後は描画しない。
 
-	//シャドウマップの描画.
-	if (_Scenes[_NowScene]->GetIsShadowMap())
-	{
-		_ShadowMap.Render();
-	}
-	//環境マップの描画.
-	if (_Scenes[_NowScene]->GetIsEnvironmentMap())
-	{
-		_EnvironmentMap.Render();
-	}
+	//	
+	//	_Scenes[_NowScene]->SetFadeTexture();
 
-	//0番目に設定(オフスクリーンレンダリング用)
-	INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
-	(*graphicsDevice()).Clear(
-		0,
-		NULL,
-		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_RGBA(0, 0, 0, 1),
-		1.0f,
-		0);
-	(*graphicsDevice()).SetRenderTarget(1, _DepthRT.buffer);
-	(*graphicsDevice()).Clear(
-		1,
-		NULL,
-		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_RGBA(0, 0,0,1),
-		1.0f,
-		0);
-	(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
-	(*graphicsDevice()).Clear(2, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+	//	_isMovieEnd = false;
+	//}else{
+		//事前描画(影とか深度とか輝度とか)
+		INSTANCE(GameObjectManager)->PreRenderObject();
 
-	//(*graphicsDevice()).SetRenderTarget(3, _NormalRT.buffer);
-	//(*graphicsDevice()).Clear(3, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
+		//シャドウマップの描画.
+		if (_Scenes[_NowScene]->GetIsShadowMap())
+		{
+			_ShadowMap.Render();
+		}
+		//環境マップの描画.
+		if (_Scenes[_NowScene]->GetIsEnvironmentMap())
+		{
+			_EnvironmentMap.Render();
+		}
 
-	INSTANCE(GameObjectManager)->RenderObject();
+		//0番目に設定(オフスクリーンレンダリング用)
+		INSTANCE(RenderTargetManager)->ReSetRT(0, _MainRT[CurrentMainRT_]);
+		(*graphicsDevice()).Clear(
+			0,
+			NULL,
+			D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+			D3DCOLOR_RGBA(0, 0, 0, 1),
+			1.0f,
+			0);
+		(*graphicsDevice()).SetRenderTarget(1, _DepthRT.buffer);
+		(*graphicsDevice()).Clear(
+			1,
+			NULL,
+			D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+			D3DCOLOR_RGBA(0, 0, 0, 1),
+			1.0f,
+			0);
+		(*graphicsDevice()).SetRenderTarget(2, _Bloom.GetLuminanceRT()->buffer);
+		(*graphicsDevice()).Clear(2, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
-	(*graphicsDevice()).SetRenderTarget(1, nullptr);
-	(*graphicsDevice()).SetRenderTarget(2, nullptr);
-	(*graphicsDevice()).SetRenderTarget(3, nullptr);
+		//(*graphicsDevice()).SetRenderTarget(3, _NormalRT.buffer);
+		//(*graphicsDevice()).Clear(3, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 1), 1.0f, 0);
 
-	//SSAOの描画.
-	//_SSAO.Render();
+		INSTANCE(GameObjectManager)->RenderObject();
 
-	//ブルームの描画.
-	_Bloom.Render();
+		(*graphicsDevice()).SetRenderTarget(1, nullptr);
+		(*graphicsDevice()).SetRenderTarget(2, nullptr);
+		(*graphicsDevice()).SetRenderTarget(3, nullptr);
 
-	//被写界深度の描画.
-	_DepthofField.Render();
-	
-	//アンチエイリアスの描画.
-	_AntiAliasing.Render();
+		//SSAOの描画.
+		//_SSAO.Render();
 
-	//レンダーターゲットを元に戻す
-	INSTANCE(RenderTargetManager)->BeforeRT();
+		//ブルームの描画.
+		_Bloom.Render();
 
-	//オフスクリーンのやつ描画
-	_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
-	_Sprite->SetSize(g_WindowSize);
-	_Sprite->ImageRender();
-	
-	INSTANCE(GameObjectManager)->PostRenderObject();
-	
-	//2Dとか？
-	INSTANCE(GameObjectManager)->ImageRenderObject();
+		//被写界深度の描画.
+		_DepthofField.Render();
 
-	//シーンのフェードのやつ
-	//最前面に来るように最後に描画
-	_Scenes[_NowScene]->Fade();
+		//アンチエイリアスの描画.
+		_AntiAliasing.Render();
+
+		//レンダーターゲットを元に戻す
+		INSTANCE(RenderTargetManager)->BeforeRT();
+
+		//オフスクリーンのやつ描画
+		_Sprite->SetTexture(_MainRT[CurrentMainRT_]->texture);
+		_Sprite->SetSize(g_WindowSize);
+		_Sprite->ImageRender();
+
+		INSTANCE(GameObjectManager)->PostRenderObject();
+
+		//2Dとか？
+		INSTANCE(GameObjectManager)->ImageRenderObject();
+
+		//シーンのフェードのやつ
+		//最前面に来るように最後に描画
+		_Scenes[_NowScene]->Fade();
+	//}
 }
 
 Scene* SceneManager::ChangeScene(int key, bool fade)

@@ -82,12 +82,15 @@ enum class LocationCodeAll : int
 	Drarian = 0,
 	Gremrin,
 	BossD,
+	UraDorarian,
+	UraBossD,
+	UraGuremurin,
 	Begin,			//!< ‚Í‚¶‚Ü‚è‚ÌW—Ž.
 	Hunting,		//!< Žë—Â‚Ì‘º.
 	Prosperity,		//!< ”É‰h‚ÌŠX.
 	Kuni,			// M‹Â‚Ì‘B
 	Sinden,			// SŒ‚Ì_“aB
-	DevilKingdom,	//!< ’”q‚Ì–‚é.¦‚±‚±ˆÈ~‚Íƒ}ƒbƒv‚É‹L‚³‚ê‚È‚¢B	
+	DevilKingdom,	//!< ’”q‚Ì–‚é.¦‚±‚±ˆÈ~‚Íƒ}ƒbƒv‚É‹L‚³‚ê‚È‚¢B
 	World,
 	Max
 };
@@ -99,6 +102,9 @@ static const string AllLocationNameList[(int)LocationCodeAll::Max] =
 	"ƒhƒ‰ƒŠƒAƒ“‚ÌZˆ",
 	"ƒOƒŒƒ€ƒŠƒ“‚Ì“´ŒA",
 	"w‚cx",
+	"— ƒhƒ‰ƒŠƒAƒ“",
+	"— w‚cx‚Ì—Ì’n",
+	"— ƒOƒŒƒ€ƒŠƒ“‚ÌŠâê",
 	"‚Í‚¶‚Ü‚è‚ÌW—Ž",
 	"Žë—Â‚Ì‘º",
 	"”É‰h‚ÌŠX",
@@ -114,6 +120,9 @@ static const string LocationNames[] =
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Drarian)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Gremrin)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::BossD)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraDorarian)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraBossD)],
+	AllLocationNameList[static_cast<int>(LocationCodeAll::UraGuremurin)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Begin)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Hunting)],
 	AllLocationNameList[static_cast<int>(LocationCodeAll::Prosperity)],
@@ -131,6 +140,9 @@ static const LocationCodeAll LocationMapCode[] =
 	LocationCodeAll::Drarian,
 	LocationCodeAll::Gremrin,
 	LocationCodeAll::BossD,
+	LocationCodeAll::UraDorarian,
+	LocationCodeAll::UraBossD,
+	LocationCodeAll::UraGuremurin,
 	LocationCodeAll::Begin,
 	LocationCodeAll::Hunting,
 	LocationCodeAll::Prosperity,
@@ -158,6 +170,9 @@ static const Vector3 AllLocationPosition[(int)LocationCodeAll::Max] =
 	Vector3(-683.3f,61.7f,63.2f),
 	Vector3(308.7f,55.4f,623.2f),
 	Vector3(456.7f,71.18f,75.7f),
+	Vector3(-651.6f,79.0f,554.23f),
+	Vector3(-636.1f,57.7f,-658.5f),
+	Vector3(367.17f,87.71f,-390.67f),
 	Vector3(-387.3f,58.307f,-75.8f),
 	Vector3(-108.1f ,55.524f ,533.9f),
 	Vector3(218.88f, 65.793f, -0.92f),

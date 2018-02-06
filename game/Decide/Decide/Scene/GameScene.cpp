@@ -84,13 +84,13 @@ namespace
 void GameScene::Start()
 {
 	//最初からならオープニング再生するよー。
-	if (IS_CONTINUE == false)
-	{
-		//オープニング動画。
-		auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
-		movie->LoadVideo(L"op.wmv");
-		movie->Play();
-	}
+	//if (IS_CONTINUE == false)
+	//{
+	//	//オープニング動画。
+	//	auto movie = INSTANCE(GameObjectManager)->AddNew<Movie>("movie", 10);
+	//	movie->LoadVideo(L"op.wmv");
+	//	movie->Play();
+	//}
 
 	INSTANCE(EventManager)->ReSet();
 
@@ -200,6 +200,8 @@ void GameScene::Start()
 	InitBGM(BGM::BOSS1, "Asset/Sound/boss1.wav", 0.2f);
 	InitBGM(BGM::BOSS2, "Asset/Sound/boss1.wav", 0.2f);
 	InitBGM(BGM::BOSS3, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::URADORARIAN, "Asset/Sound/boss1.wav", 0.2f);
+	InitBGM(BGM::URABOSSD, "Asset/Sound/boss1.wav", 0.2f);
 	InitBGM(BGM::MATI1, "Asset/Sound/mati1.wav", 0.2f);
 	InitBGM(BGM::MATI2, "Asset/Sound/mati2.wav", 0.2f);
 	InitBGM(BGM::MATI3, "Asset/Sound/mati3.wav", 0.2f);
@@ -209,6 +211,7 @@ void GameScene::Start()
 	InitBGM(BGM::DEAD, "Asset/Sound/dead.wav", 0.2f);
 	InitBGM(BGM::BOSS, "Asset/Sound/LastBattle1.wav", 0.5f);
 	InitBGM(BGM::LASTBOSS, "Asset/Sound/LastBattle2.wav", 1.0f);
+	InitBGM(BGM::URAGUREMURIN, "Asset/Sound/LastBattle2.wav", 1.0f);
 
 	//再生用BGM
 	_GameBGM = _SoundBGM[static_cast<int>(BGM::WORLD)];
