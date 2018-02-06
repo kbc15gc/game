@@ -133,15 +133,17 @@ void TitleScene::Update()
 				{
 					return;
 				}
+				INSTANCE(SceneManager)->ChangeScene("GameScene", true);
 				IS_CONTINUE = true;
 			}
 			else
 			{
+				INSTANCE(SceneManager)->ChangeScene("OpeningScene", true);
 				IS_CONTINUE = false;
 			}
 			//ゲームシーンへ移行
 			_StartSE->Play(false);
-			INSTANCE(SceneManager)->ChangeScene("GameScene",true);
+			//INSTANCE(SceneManager)->ChangeScene("GameScene",true);
 			_AnyButton = false;
 		}
 	}

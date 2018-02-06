@@ -138,6 +138,10 @@ public:
 	Scene* GetNowScene() {
 		return _Scenes[_NowScene];
 	}
+
+	void SetIsMovieEnd(bool flg) {
+		_isMovieEnd = flg;
+	}
 private:
 	//シーン切り替え。
 	void _ChangeScene();
@@ -171,4 +175,5 @@ private:
 	//次のシーン
 	int _NextScene;
 
+	bool _isMovieEnd = false;	// ムービー再生直後か。
 };

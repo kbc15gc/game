@@ -337,6 +337,7 @@
     <ClInclude Include="Scene\EndingScene.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\LastBossTestScene.h" />
+    <ClInclude Include="Scene\OpeningScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SupportData.h" />
@@ -469,6 +470,7 @@
     <ClCompile Include="Scene\EndingScene.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\LastBossTestScene.cpp" />
+    <ClCompile Include="Scene\OpeningScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

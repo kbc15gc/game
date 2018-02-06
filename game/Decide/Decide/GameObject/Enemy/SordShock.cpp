@@ -56,7 +56,9 @@ void SordShock::Update() {
 			_shockParticleEmitter->ResetParameterAlreadyCreated(_initShockParticleParam);
 			// 光の柱のコリジョン作成。
 			INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
-			_attack[0] = _enemyObject->CreateAttack(Vector3(0.0f, 2.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 4.0f, 1.0f), -1.0f, _shockParticleEmitter->transform, false, true, AttackCollision::ReactionType::NotAction);
+			if (_enemyObject) {
+				_attack[0] = _enemyObject->CreateAttack(Vector3(0.0f, 2.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 4.0f, 1.0f), -1.0f, _shockParticleEmitter->transform, false, true, AttackCollision::ReactionType::NotAction);
+			}
 		}
 		else if (_attack[0]->GetIsHit()) {
 			// 何かと衝突。
@@ -66,9 +68,10 @@ void SordShock::Update() {
 			_initShockParticleParam = ParticleParamTable::Params[ParticleParamTable::Type::BombViolet];
 			_shockParticleEmitter->SetParam(_initShockParticleParam);
 			INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
-
-			//攻撃コリジョン作成。
-			_enemyObject->CreateAttack(Vector3(0.0f, 1.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _shockParticleEmitter->transform, false, false, AttackCollision::ReactionType::Blown)->RemoveParent();
+			if (_enemyObject) {
+				//攻撃コリジョン作成。
+				_enemyObject->CreateAttack(Vector3(0.0f, 1.0f, 0.0f), Quaternion::Identity, Vector3(2.0f, 2.0f, 2.0f), 0.2f, _shockParticleEmitter->transform, false, false, AttackCollision::ReactionType::Blown)->RemoveParent();
+			}
 		}
 	}
 	else {
@@ -80,7 +83,9 @@ void SordShock::Update() {
 
 			// 光の柱のコリジョン作成。
 			//INSTANCE(GameObjectManager)->AddRemoveList(_attack[0]);
-			_attack[0] = _enemyObject->CreateAttack(Vector3(0.0f, 2.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 4.0f, 1.0f), -1.0f, _shockParticleEmitter->transform, false, true, AttackCollision::ReactionType::NotAction,10);
+			if (_enemyObject) {
+				_attack[0] = _enemyObject->CreateAttack(Vector3(0.0f, 2.0f, 0.0f), Quaternion::Identity, Vector3(1.0f, 4.0f, 1.0f), -1.0f, _shockParticleEmitter->transform, false, true, AttackCollision::ReactionType::NotAction, 10);
+			}
 		}
 
 		if (_timeCounter >= (_interval + 10.0f)) {
@@ -91,8 +96,10 @@ void SordShock::Update() {
 			// ちろちろは柱より先に消す。
 			INSTANCE(GameObjectManager)->AddRemoveList(_tirotiroEmitter);
 			_tirotiroEmitter = nullptr;
-			INSTANCE(GameObjectManager)->AddRemoveList(_attack[1]);
-			_attack[1] = nullptr;
+			if (_attack[1]) {
+				INSTANCE(GameObjectManager)->AddRemoveList(_attack[1]);
+				_attack[1] = nullptr;
+			}
 		}
 		_timeCounter += Time::DeltaTime();
 	}
@@ -113,12 +120,13 @@ void SordShock::_BreathStartSubClass() {
 	_tirotiroEmitter->SetEmitFlg(true);
 
 	//衝撃波の攻撃コリジョン作成。
-	AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.5f, 0.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), -1.0f, _shockParticleEmitter->transform);
-	_attack.push_back(attack);
-
-	//ちろちろの攻撃コリジョン作成。
-	attack = _enemyObject->CreateAttack(Vector3(0.0f,0.0f,0.0f), Quaternion::Identity, Vector3(0.5f, 0.5f, 0.0f), -1.0f, _tirotiroEmitter->transform,false,true,AttackCollision::ReactionType::NotAction,25);
-	_attack.push_back(attack);
+	if (_enemyObject) {
+		AttackCollision* attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.5f, 0.0f), Quaternion::Identity, Vector3(1.0f, 2.0f, 1.0f), -1.0f, _shockParticleEmitter->transform);
+		_attack.push_back(attack);
+		//ちろちろの攻撃コリジョン作成。
+		attack = _enemyObject->CreateAttack(Vector3(0.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3(0.5f, 0.5f, 0.0f), -1.0f, _tirotiroEmitter->transform, false, true, AttackCollision::ReactionType::NotAction, 25);
+		_attack.push_back(attack);
+	}
 
 	_isShot = true;
 
