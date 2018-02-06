@@ -106,13 +106,13 @@ void PlayerCamera::_StandardBehavior()
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_RotateHorizon(CAMERA_SPEED*rl * Time::DeltaTime());
+		_RotateHorizon(CAMERA_SPEED * Time::DeltaTime());
 		input = true;
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_RotateHorizon(-CAMERA_SPEED*rl * Time::DeltaTime());
+		_RotateHorizon(-CAMERA_SPEED * Time::DeltaTime());
 		input = true;
 	}
 	//上
@@ -170,7 +170,7 @@ void PlayerCamera::_StandardBehavior()
 	//カメラを移動させる。
 	/*static float sp = 70.0f;
 	static float dp = 1.0f;*/
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, Time::DeltaTime(), speed));
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, _MoveV, Time::DeltaTime(), speed));
 	//ターゲットを追いかける。
 	_LookAtTarget();
 }
@@ -181,7 +181,7 @@ void PlayerCamera::_LookAtTarget()
 	//static float spring = 10.0f;
 	////バネの縮まる強さ。
 	//static float damping = 1.0f;
-	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, Time::DeltaTime(), speed);
+	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, _LookV, Time::DeltaTime(), speed);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
 }
@@ -322,17 +322,17 @@ void PlayerCamera::CameraReset()
 	}
 }
 
-Vector3 PlayerCamera::_SpringChaseMove(const Vector3 & now, const Vector3 & target, float spring, float damping, float time, float speed)
+Vector3 PlayerCamera::_SpringChaseMove(const Vector3 & now, const Vector3 & target, float spring, float damping, Vector3 &velocity, float time, float speed)
 {
 	//ワールド行列でのカメラの理想位置。
 	//auto vIdealPos = _DestinationPos;
 
 	//この理想位置へのバネによる加速度を計算。
 	auto vDisplace = now - target;
-	auto vSpringAccel = (-spring * vDisplace) - (damping * _Velocity);
+	auto vSpringAccel = (-spring * vDisplace) - (damping * velocity);
 	//オイラー積分を使ってカメラの速度と位置を更新。
-	_Velocity += vSpringAccel * time * speed;
-	auto next = now + (_Velocity * time);
+	velocity += vSpringAccel * time * speed;
+	auto next = now + (velocity * time);
 	auto diff = next - target;
 
 	return next;

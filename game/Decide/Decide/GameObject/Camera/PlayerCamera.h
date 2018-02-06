@@ -95,10 +95,10 @@ private:
 	void CameraReset();
 
 	//バネの様に追跡。
-	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping, float time, float speed);
+	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping, Vector3 &velocity, float time, float speed);
 
 	//カメラ移動の加速度。
-	Vector3 _Velocity;
+	Vector3 _MoveV,_LookV;
 
 
 	 float sp = 30.0f;
@@ -127,8 +127,7 @@ private:
 
 	//ターゲットからカメラへの向きベクトル。
 	Vector3 _ToCameraDir = Vector3::zero;
-	float height;
-	float rl = 5.0f;
+	float height = 0.0f;
 	//プレイヤー向いている方向。
 	const Vector3* _PForward = nullptr;
 
