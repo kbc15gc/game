@@ -164,6 +164,7 @@ void NPC::_Speak()
 	{
 		return;
 	}
+
 	//プレイヤーとの距離を計算。
 	float len = (transform->GetPosition() - _Player->transform->GetPosition()).Length();
 	if (_Player->GetNearNPCLen() > len)
@@ -185,10 +186,16 @@ void NPC::_Speak()
 
 			_TextBox->Speak();
 			_Rotation->RotationToObject_XZ(_Player);
-			_Player->SetSpeakFlag(true);
 
+			if (strcmp(this->GetName(), "LastBoss.X") == 0)
+			{
+				_Player->SetSpeakFlag(true);
+
+			}
 			if (_State != State::Speak && _IsAnimation)
 			{
+				_Player->SetSpeakFlag(true);
+
 				_State = State::Speak;
 				PlayAnimation(AnimationCodeE::Speak, 0.2f);
 			}
@@ -205,9 +212,15 @@ void NPC::_Speak()
 		{
 			transform->SetRotation(_Rot);
 		}
-		_Player->SetSpeakFlag(false);
+
+		if (strcmp(this->GetName(),"LastBoss.X") == 0)
+		{
+			_Player->SetSpeakFlag(false);
+
+		}
 		if (_State != State::Idol && _IsAnimation)
 		{
+			_Player->SetSpeakFlag(false);
 			_State = State::Idol;
 			PlayAnimation(AnimationCodeE::Idol, 0.2f);
 		}
