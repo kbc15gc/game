@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	const float CAMERA_SPEED = 2.0f;
+	//const float CAMERA_SPEED = 2.0f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -50,7 +50,6 @@ void PlayerCamera::Start()
 {
 	//プレイヤーのポジションへの参照を取得
 	_PlayerPos = &_Player->transform->GetPosition();
-	_PForward = &_Player->transform->GetForward();
 	// 初期値設定のため処理を呼ぶ。
 	// ※消すな。
 	Init();
@@ -83,9 +82,31 @@ void PlayerCamera::UpdateSubClass()
 	INSTANCE(SceneManager)->GetDepthofField().SetFocalLength(24.0f);
 }
 
+void PlayerCamera::LookAtTarget()
+{
+	auto next = _GetPlayerPos();
+
+	_AutoSupport();
+	transform->SetPosition(_FuturePos);
+
+	_Camera->SetTarget(next);
+	transform->LockAt(next);
+}
+
 Vector3 PlayerCamera::_GetPlayerPos()
 {
 	return (*_PlayerPos) + PLAYER_HEIGHT;
+}
+
+void PlayerCamera::_UpdateDist()
+{
+	if (VPadInput->IsPress(fbEngine::VPad::ButtonRB3))
+	{
+		auto vir = (VPadInput->GetAnalog(AnalogE::L_STICK) / 32767.0f) * 10.0f * Time::DeltaTime();
+		_Dist += -vir.y;
+		//3.0~10.0の間に収める。
+		_Dist = min(15.0f, max(_Dist, 2.0f));
+	}
 }
 
 /**
@@ -93,77 +114,80 @@ Vector3 PlayerCamera::_GetPlayerPos()
 */
 void PlayerCamera::_StandardBehavior()
 {
-	float tmpY = _ToCameraDir.y;
-	_ToCameraDir = _DestinationPos - _PurposeTarget;
-	_ToCameraDir.Normalize();
-	_ToCameraDir.y = tmpY;
-
 #ifdef _DEBUG
 	//カメラ距離の伸縮
 	_UpdateDist();
 #endif	//_DEBUG
-	bool input = false;
+
+	//追尾カメラ.
+	_AutoSupport();
+
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_RotateHorizon(CAMERA_SPEED*15.0f * Time::DeltaTime());
-		input = true;
+		_RotateHorizon(CAMERA_SPEED * Time::DeltaTime());
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_RotateHorizon(-CAMERA_SPEED*15.0f * Time::DeltaTime());
-		input = true;
+		_RotateHorizon(-CAMERA_SPEED * Time::DeltaTime());
 	}
 	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) > 0.1f)
 	{
-		_RotateVertical(CAMERA_SPEED * Time::DeltaTime());
-		input = true;
+		_RotateVertical(CAMERA_SPEED/2 * Time::DeltaTime());
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
 	{
-		_RotateVertical(-CAMERA_SPEED * Time::DeltaTime());
-		input = true;
+		_RotateVertical(-CAMERA_SPEED/2 * Time::DeltaTime());
 	}
 
-	//カメラリセット。
-	if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
-	{
-		CameraReset();
-	}
-
-	if (_Reset) {
-		_Timer += Time::DeltaTime()*9.5f;
-		_Timer = min(_Timer, 1.0f);
-
-		auto dir = *_PForward * -1;
-		_ToCameraDir = dir; 
-		Vector3::Lerp(tmp, dir, _Timer);
-
-		if (_Timer == 1.0f)
-		{
-			_Reset = false;
-		}
-	}
-
-	//追尾カメラ.
-	_Tracking();
+	//レイを飛ばしてカメラのあたり判定をとり、
+	//最終的な座標を確立させる。
+	_FuturePos = _ClosetRay(_FutureTarget, _FutureTarget + _ToCameraDir);
 	
 	//カメラを移動させる。
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _DestinationPos, sp, dp, _MoveV, Time::DeltaTime(), speed));
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _FuturePos, spring, damping, _MoveV, Time::DeltaTime(), speed));
 	//ターゲットを追いかける。
 	_LookAtTarget();
 }
 
-void PlayerCamera::_LookAtTarget()
+void PlayerCamera::_AutoSupport()
 {
-	auto next = _SpringChaseMove(_Camera->GetTarget(), _PurposeTarget, spring, damping, _LookV, Time::DeltaTime(), speed);
-	_Camera->SetTarget(next);
-	transform->LockAt(next);
+	//注視点から視点までのベクトル
+	Vector3 toCameraPosXZ = transform->GetPosition() - _Camera->GetTarget();
+	//視点へのY方向の高さ.
+	//float height = toCameraPosXZ.y;
+	//XZ平面にするので、Yは0にする.
+	toCameraPosXZ.y = 0.0f;
+	//XZ平面上での視点と注視点の距離を求める.
+	float toCameraPosXZLen = toCameraPosXZ.Length();
+	//正規化.
+	toCameraPosXZ.Normalize();
+
+	//新しい注視点をアクターの座標から決める.
+	Vector3 target = _GetPlayerPos();
+
+	//新しい注視点からカメラの始点へ向かうベクトルを求める.
+	Vector3 toNewCameraPos = transform->GetPosition() - target;
+	//XZ平面にするので、Yは0にする.
+	toNewCameraPos.y = 0.0f;
+	//正規化.
+	toNewCameraPos.Normalize();
+
+	//このウェイトの値は0.0～1.0の値をとる。1.0に近づくほど追尾が強くなる.
+	float weight = 0.7f;
+
+	_ToCameraDir = toNewCameraPos * weight + toCameraPosXZ * (1.0f - weight);
+	_ToCameraDir.Normalize();
+	_ToCameraDir.Scale(_Dist);
+	_ToCameraDir.y = _Height;
+
+	_FutureTarget = target;
 }
 
+//横回転。
 void PlayerCamera::_RotateHorizon(float roty)
 {
 	D3DXQUATERNION mAxisY;
@@ -179,6 +203,7 @@ void PlayerCamera::_RotateHorizon(float roty)
 	_ToCameraDir = v;
 }
 
+//縦回転。
 void PlayerCamera::_RotateVertical(float rotx)
 {
 	D3DXVECTOR3 Cross;
@@ -212,18 +237,7 @@ void PlayerCamera::_RotateVertical(float rotx)
 	if (notlimit)
 	{
 		_ToCameraDir = v;
-		height = _ToCameraDir.y*_Dist;
-	}
-}
-
-void PlayerCamera::_UpdateDist()
-{
-	if (VPadInput->IsPress(fbEngine::VPad::ButtonRB3))
-	{
-		auto vir = (VPadInput->GetAnalog(AnalogE::L_STICK) / 32767.0f) * 10.0f * Time::DeltaTime();
-		_Dist += -vir.y;
-		//3.0~10.0の間に収める。
-		_Dist = min(15.0f, max(_Dist, 2.0f));
+		_Height = _ToCameraDir.y;
 	}
 }
 
@@ -250,60 +264,10 @@ Vector3 PlayerCamera::_ClosetRay(Vector3 from, Vector3 to)
 	}
 }
 
-void PlayerCamera::_Move(){}
-
-/**
-* 追尾カメラ.
-*/
-void PlayerCamera::_Tracking()
-{
-	//注視点から視点までのベクトル
-	Vector3 toCameraPosXZ = _ToCameraDir * _Dist;
-	//視点へのY方向の高さ.
-	//float height = toCameraPosXZ.y;
-	//XZ平面にするので、Yは0にする.
-	toCameraPosXZ.y = 0.0f;
-	//XZ平面上での視点と注視点の距離を求める.
-	float toCameraPosXZLen = toCameraPosXZ.Length();
-	//正規化.
-	toCameraPosXZ.Normalize();
-
-	//新しい注視点をアクターの座標から決める.
-	Vector3 target = _GetPlayerPos();
-
-	//新しい注視点からカメラの始点へ向かうベクトルを求める.
-	Vector3 toNewCameraPos = transform->GetPosition() - target;
-	//XZ平面にするので、Yは0にする.
-	toNewCameraPos.y = 0.0f;
-	//正規化.
-	toNewCameraPos.Normalize();
-
-	//このウェイトの値は0.0～1.0の値をとる。1.0に近づくほど追尾が強くなる.
-	float weight = 0.7f;
-
-	toNewCameraPos = toNewCameraPos * weight + toCameraPosXZ * (1.0f - weight);
-	toNewCameraPos.Normalize();
-	toNewCameraPos.Scale(toCameraPosXZLen);
-	toNewCameraPos.y = height;
-	
-	_DestinationPos = _ClosetRay(target, target + toNewCameraPos);
-	_PurposeTarget = target;
-}
-
-void PlayerCamera::CameraReset()
-{
-	if (_Reset == false)
-	{
-		_Reset = true;
-		_Timer = 0.0f;
-		tmp = _ToCameraDir;
-	}
-}
-
 Vector3 PlayerCamera::_SpringChaseMove(const Vector3 & now, const Vector3 & target, float spring, float damping, Vector3 &velocity, float time, float speed)
 {
 	//ワールド行列でのカメラの理想位置。
-	//auto vIdealPos = _DestinationPos;
+	//auto vIdealPos = _FuturePos;
 
 	//この理想位置へのバネによる加速度を計算。
 	auto vDisplace = now - target;
@@ -314,4 +278,11 @@ Vector3 PlayerCamera::_SpringChaseMove(const Vector3 & now, const Vector3 & targ
 	auto diff = next - target;
 
 	return next;
+}
+
+void PlayerCamera::_LookAtTarget()
+{
+	auto next = _SpringChaseMove(_Camera->GetTarget(), _FutureTarget, spring, damping, _LookV, Time::DeltaTime(), speed);
+	_Camera->SetTarget(next);
+	transform->LockAt(next);
 }
