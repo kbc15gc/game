@@ -135,12 +135,37 @@ void PlayerCamera::_StandardBehavior()
 	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) > 0.1f)
 	{
-		_RotateVertical(CAMERA_SPEED/2 * Time::DeltaTime());
+		_RotateVertical(CAMERA_SPEED / 4.0f * Time::DeltaTime());
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
 	{
-		_RotateVertical(-CAMERA_SPEED/2 * Time::DeltaTime());
+		_RotateVertical(-CAMERA_SPEED / 4.0f * Time::DeltaTime());
+	}
+
+	//カメラリセット。
+	if (VPadInput->IsPush(fbEngine::VPad::ButtonLB1))
+	{
+		if (_Reset == false)
+		{
+			_Reset = true;
+			_ResetDir = _Player->transform->GetForward() * _Dist * -1;;
+		}
+	}
+
+	if (_Reset) {
+		_ToCameraDir = _ResetDir;
+
+		auto tmpdir = _ToCameraDir;
+		auto nowdir = transform->GetPosition() - _GetPlayerPos();
+		auto len = nowdir.Length();
+		tmpdir.Normalize();
+		nowdir.Normalize();
+		float dot = tmpdir.Dot(nowdir);
+		if (dot > 0.99f)
+		{
+			_Reset = false;
+		}
 	}
 
 	//レイを飛ばしてカメラのあたり判定をとり、

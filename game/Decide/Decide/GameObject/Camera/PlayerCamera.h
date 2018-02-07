@@ -108,6 +108,10 @@ private:
 	//カメラ移動の加速度。
 	Vector3 _MoveV, _LookV;
 
+	//リセットフラグ。
+	bool _Reset;
+	Vector3 _ResetDir;
+
 
 	float sp = 20.0f;
 	float dp = 3.0f;
@@ -117,5 +121,5 @@ private:
 	float damping = 2.0f;
 
 	float speed = 5.0f;
-	float CAMERA_SPEED = 10.0f;
+	float CAMERA_SPEED = 7.5f;
 };
