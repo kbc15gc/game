@@ -38,29 +38,28 @@ public:
 	inline void Init()
 	{
 		_Camera->SetTarget(_GetPlayerPos());
-		_DestinationPos = _GetPlayerPos() + (_Player->transform->GetForward() * _Dist);
-		transform->SetPosition(_DestinationPos);
+		_FuturePos = _GetPlayerPos() + (_Player->transform->GetForward() * _Dist);
+		transform->SetPosition(_FuturePos);
 		_Camera->Update();
 
 		_ToCameraDir = (_Player->transform->GetForward());
+		_Height = _ToCameraDir.y * _Dist;
 	}
 	//プレイヤーの方向を向く。
-	void LookAtTarget()
-	{
-		auto next = _GetPlayerPos();
-		_Camera->SetTarget(next);
-		_DestinationPos = _ClosetRay();
-		transform->SetPosition(_DestinationPos);
-		transform->LockAt(next);
-	}
+	void LookAtTarget();
 
 private:
+	//プレイヤーの座標を取得。
 	Vector3 _GetPlayerPos();
+
+	//カメラ距離の伸縮。
+	void _UpdateDist();
+
 	//通常時のカメラ挙動
 	void _StandardBehavior();
 
-	//プレイヤーの方向を向く。
-	void _LookAtTarget();
+	//カメラ補助。
+	void _AutoSupport();
 
 	//カメラをY軸に回転(横)。
 	void _RotateHorizon(float roty);
@@ -68,38 +67,24 @@ private:
 	//カメラをX軸に回転(縦)。
 	void _RotateVertical(float rotx);
 
-	//カメラ距離の伸縮。
-	void _UpdateDist();
-
-	//カメラ補助。
-	void _CameraSupport();
-
 	//レイを飛ばして、カメラの移動先を確認。
-	Vector3 _ClosetRay();
+	Vector3 _ClosetRay(Vector3 from, Vector3 to);
+
+	//バネの様に追跡。
+	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping,
+		Vector3 &velocity, float time, float speed);
+
+	//プレイヤーの方向を向く。
+	void _LookAtTarget();
 
 	//カメラを移動させる処理。
-	void _Move()override;
+	void _Move()override {};
 
-	/**
-	* 追尾カメラ.
-	*/
-	void _Tracking();
-	
 	// このカメラに切り替わった時に呼ばれるコールバック。
 	virtual void ChangeCameraReAction() {
 		//プレイヤーの更新を止める。
 		_Player->SetIsStopUpdate(false);
 	}
-
-	//カメラリセット。
-	void CameraReset();
-
-	//バネの様に追跡。
-	Vector3 _SpringChaseMove(const Vector3& now, const Vector3& target, float spring, float damping, float time, float speed);
-
-	//カメラ移動の加速度。
-	Vector3 _Velocity;
-
 private:
 	//歴史書オブジェクト。
 	HistoryBook* _HistoryBook = nullptr;
@@ -113,20 +98,24 @@ private:
 	//当たり判定の半径
 	float _Radius = 0.0f;
 
-	//カメラが最終的に到達する目標座標。
-	Vector3 _DestinationPos = Vector3::zero;
+	//最終的に到達する座標。
+	Vector3 _FuturePos = Vector3::zero, _FutureTarget = Vector3::zero;
 
 	//ターゲットからカメラへの向きベクトル。
 	Vector3 _ToCameraDir = Vector3::zero;
-	//プレイヤー向いている方向。
-	const Vector3* _PForward = nullptr;
+	//カメラの高さ。
+	float _Height = 0.0f;
+	//カメラ移動の加速度。
+	Vector3 _MoveV, _LookV;
 
-	//カメラリセットフラグ。
-	bool _Reset = false;
-	float _Timer = 0.0f;
-	Vector3 tmp = Vector3::zero;
 
-	Vector3 _PurposePos = Vector3::zero;
-	Vector3 _PurposeTarget = Vector3::zero;
+	float sp = 20.0f;
+	float dp = 3.0f;
+	//バネの伸び具合。
+	float spring = 20.0f;
+	//バネの縮まる強さ。
+	float damping = 2.0f;
 
+	float speed = 5.0f;
+	float CAMERA_SPEED = 10.0f;
 };

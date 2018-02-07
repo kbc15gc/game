@@ -54,21 +54,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	g_MainWindow = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, WindowW, WindowH, nullptr, nullptr, hInstance, nullptr);
 
-	/*auto hdc = GetDC(g_MainWindow);
-	int R, G, B;
-	auto color = GetSysColor(COLOR_ACTIVECAPTION);
-	R = GetRValue(color);
-	G = GetGValue(color);
-	B = GetBValue(color);
-	int elements[] = { COLOR_ACTIVECAPTION };
-	COLORREF colors[] = { RGB(255,0,0) };
-	SetSysColors(COLOR_ACTIVECAPTION, elements, colors);
-
-	color = GetSysColor(COLOR_ACTIVECAPTION);
-	R = GetRValue(color);
-	G = GetGValue(color);
-	B = GetBValue(color);*/
-
 	/*MyRegisterClass(hInstance,
 		CS_HREDRAW | CS_VREDRAW,
 		WndProc,
@@ -214,22 +199,3 @@ void InitializeGame()
 
 	INSTANCE(SceneManager)->ChangeScene("TitleScene");
 }
-
-//void OnNcPaint()
-//{
-//	int cyCaption = 4;//GetSystemMetrics(SM_CYCAPTION);//タイトルバーの高さを取得
-//	int cxFrame = GetSystemMetrics(SM_CXFRAME);//　フレームの幅
-//	int cyFrame = GetSystemMetrics(SM_CYFRAME);//　フレームの高さ
-//	COLORREF crCaption = RGB(250, 250, 0);//　塗りつぶす色
-//
-//	RECT rcWnd;
-//	GetWindowRect(g_MainWindow,&rcWnd);
-//
-//	//auto hdc = GetDC(g_MainWindow);
-//	//hdc->FillSolidRect(0, 0, rcWnd.Width(), cyCaption, crCaption);//フレーム上部
-//	//hdc->FillSolidRect(0, cyFrame, 4, rcWnd.Height(), crCaption);//左
-//	//hdc->FillSolidRect(rcWnd.Width() - cxFrame, cyFrame - cxFrame, 4, rcWnd.Height(), crCaption);//右
-//	//hdc->FillSolidRect(0, rcWnd.Height() - 4, rcWnd.Width(), 4, crCaption);//フレーム下部
-//
-//	//ReleaseDC(pDC);
-//}
