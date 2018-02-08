@@ -114,11 +114,11 @@ private:
 
 
 	//バネの伸び具合。
-	float _SpringM = 20.0f, _SpringL = 20.0f;
+	float _SpringM = 20.0f, _SpringL = 30.0f;
 	//バネの縮まる強さ。
-	float _DampingM = 3.0f, _DampingL = 2.0f;
+	float _DampingM = 3.0f, _DampingL = 4.0f;
 	//バネ移動の速度。
 	float _SMoveSpeedM = 5.0f, _SMoveSpeedL = 5.0f;
 	//カメラの回転速度
-	float CAMERA_ROTSPEED = 7.5f;
+	float CAMERA_ROTSPEED = 3.5f;
 };

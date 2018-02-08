@@ -119,28 +119,34 @@ void PlayerCamera::_StandardBehavior()
 	_UpdateDist();
 #endif	//_DEBUG
 
+	auto beforeDir = _ToCameraDir;
+
 	//追尾カメラ.
 	_AutoSupport();
 
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
+		_ToCameraDir = beforeDir;
 		_RotateHorizon(CAMERA_ROTSPEED * Time::DeltaTime());
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
+		_ToCameraDir = beforeDir;
 		_RotateHorizon(-CAMERA_ROTSPEED * Time::DeltaTime());
 	}
 	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) > 0.1f)
 	{
-		_RotateVertical(CAMERA_ROTSPEED / 4.0f * Time::DeltaTime());
+		_ToCameraDir = beforeDir;
+		_RotateVertical(CAMERA_ROTSPEED  * Time::DeltaTime());
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
 	{
-		_RotateVertical(-CAMERA_ROTSPEED / 4.0f * Time::DeltaTime());
+		_ToCameraDir = beforeDir;
+		_RotateVertical(-CAMERA_ROTSPEED  * Time::DeltaTime());
 	}
 
 	//カメラリセット。

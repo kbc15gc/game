@@ -1,6 +1,7 @@
 #include"stdafx.h"
 #include "ContinentObject.h"
 #include "GameObject\SplitSpace.h"
+#include "NPC.h"
 
 ContinentObject::ContinentObject(const char * name):
 	GameObject(name)
@@ -66,8 +67,7 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 		//ìñÇΩÇËîªíËí«â¡ÅB
 		RigidBody* rigid = AddComponent<RigidBody>();
 
-		if (string(filename) == "villager1.X" ||
-			string(filename) == "NPC_Otoko.X")
+		if (GetComponent<NPC>() != nullptr)
 		{
 			CCapsuleCollider* capsule = AddComponent<CCapsuleCollider>();
 			capsule->Create(0.18f, 0.5f);
