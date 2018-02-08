@@ -21,10 +21,10 @@ BossGolem::~BossGolem()
 }
 
 void BossGolem::OnDestroy() {
-	if (_kobusi) {
-		INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
-		_kobusi = nullptr;
-	}
+	//if (_kobusi) {
+	//	INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
+	//	_kobusi = nullptr;
+	//}
 	EnemyCharacter::OnDestroy();
 }
 
@@ -173,6 +173,14 @@ void BossGolem::AnimationEvent_Zutuki() {
 	//attack->RemoveParent();
 }
 
+void BossGolem::AnimationEventDeath() {
+	if (_kobusi) {
+		INSTANCE(GameObjectManager)->AddRemoveList(_kobusi);
+		_kobusi = nullptr;
+	}
+}
+
+
 void BossGolem::_EndNowStateCallback(State EndStateType) {
 
 	if (EndStateType == State::Wandering) {
@@ -302,6 +310,12 @@ void BossGolem::_ConfigAnimationEvent() {
 
 		eventFrame = 0.25f;
 		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Hit), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEvent_Zutuki));
+	}
+
+	// Ž€–SB
+	{
+		float eventFrame = 0.0f;
+		_MyComponent.AnimationEventPlayer->AddAnimationEvent(static_cast<int>(AnimationBossGolem::Die), eventFrame, static_cast<AnimationEvent>(&BossGolem::AnimationEventDeath));
 	}
 }
 

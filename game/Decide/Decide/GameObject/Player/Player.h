@@ -39,7 +39,7 @@ class HistoryManager;
 class PlayerParameterUI;
 
 //@todo for RELEASEDEBUG
-//これ製品版の場合をこれをoffにしてください。
+//製品版の場合これをoffにしてください。
 #define RELEASEDEBUG
 
 namespace

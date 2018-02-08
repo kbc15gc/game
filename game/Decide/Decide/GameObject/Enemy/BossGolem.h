@@ -48,6 +48,9 @@ public:
 	void AnimationEvent_ZutukiSpeed2();
 	void AnimationEvent_ZutukiSpeed3();
 	void AnimationEvent_Zutuki();
+
+	void AnimationEventDeath();
+
 protected:
 	void _EndNowStateCallback(State EndStateType)override;
 
