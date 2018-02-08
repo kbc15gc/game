@@ -67,7 +67,7 @@ void ContinentObject::LoadModel(const char * filename, bool coll)
 		//ìñÇΩÇËîªíËí«â¡ÅB
 		RigidBody* rigid = AddComponent<RigidBody>();
 
-		if (GetComponent<NPC>() != nullptr)
+		if (GetComponent<ObjectRotation>() != nullptr)
 		{
 			CCapsuleCollider* capsule = AddComponent<CCapsuleCollider>();
 			capsule->Create(0.18f, 0.5f);

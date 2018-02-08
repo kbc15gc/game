@@ -118,7 +118,7 @@ void PlayerCamera::_StandardBehavior()
 	//ƒJƒƒ‰‹——£‚ÌLk
 	_UpdateDist();
 #endif	//_DEBUG
-
+	bool before = false;
 	auto beforeDir = _ToCameraDir;
 
 	//’Ç”öƒJƒƒ‰.
@@ -127,25 +127,41 @@ void PlayerCamera::_StandardBehavior()
 	//‰E‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_ToCameraDir = beforeDir;
+		if (before == false)
+		{
+			_ToCameraDir = beforeDir;
+			before = true;
+		}
 		_RotateHorizon(CAMERA_ROTSPEED * Time::DeltaTime());
 	}
 	//¶‰ñ“]
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_ToCameraDir = beforeDir;
+		if (before == false)
+		{
+			_ToCameraDir = beforeDir;
+			before = true;
+		}
 		_RotateHorizon(-CAMERA_ROTSPEED * Time::DeltaTime());
 	}
 	//ã
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) > 0.1f)
 	{
-		_ToCameraDir = beforeDir;
+		if (before == false)
+		{
+			_ToCameraDir = beforeDir;
+			before = true;
+		}
 		_RotateVertical(CAMERA_ROTSPEED  * Time::DeltaTime());
 	}
 	//‰º
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
 	{
-		_ToCameraDir = beforeDir;
+		if (before == false)
+		{
+			_ToCameraDir = beforeDir;
+			before = true;
+		}
 		_RotateVertical(-CAMERA_ROTSPEED  * Time::DeltaTime());
 	}
 
