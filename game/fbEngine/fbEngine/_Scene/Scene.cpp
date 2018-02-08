@@ -82,6 +82,8 @@ void Scene::Fade()
 		{
 			_FadeState = _FadeState - FadeStateE::Fade;
 			_FadeState = _FadeState | FadeStateE::End;
+			if ((_FadeState & FadeStateE::Out) == FadeStateE::Out)
+				Scene::SetFadeTexture(nullptr);
 		}
 	}
 
@@ -114,11 +116,12 @@ void Scene::_DrawFade()
 	//α値
 	_Effect->SetFloat("g_Alpha", _FadeAlpha);
 	
+	//テクスチャ
+	_Effect->SetBool("g_UseTexture", (_Texture != nullptr));
+
 	//テクスチャがあるか？
 	if (_Texture)
 	{
-		//テクスチャ
-		_Effect->SetBool("g_UseTexture", _Texture != nullptr);
 		//テクスチャ
 		_Effect->SetTexture("g_Texture", _Texture->pTexture);
 	}
