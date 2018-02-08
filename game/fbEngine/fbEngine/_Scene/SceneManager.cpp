@@ -201,8 +201,11 @@ void SceneManager::DrawScene()
 Scene* SceneManager::ChangeScene(int key, bool fade)
 {
 	if (fade)
+	{
+		Scene::SetFadeTexture(TextureManager::LoadTexture("Load.png"));
 		//フェードが入る。
 		Scene::StartFade(true);
+	}
 	//次のシーンを
 	_NextScene = key;
 	return _Scenes[_NextScene];
@@ -243,5 +246,6 @@ void SceneManager::_ChangeScene()
 	//初期化する
 	SceneManager::StartScene();
 	//初期化が終わったなら、フェードが明ける
+	Scene::SetFadeTexture(TextureManager::LoadTexture("Load.png"));
 	Scene::StartFade(false);
 }
