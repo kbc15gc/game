@@ -113,13 +113,12 @@ private:
 	Vector3 _ResetDir;
 
 
-	float sp = 20.0f;
-	float dp = 3.0f;
 	//バネの伸び具合。
-	float spring = 20.0f;
+	float _SpringM = 20.0f, _SpringL = 20.0f;
 	//バネの縮まる強さ。
-	float damping = 2.0f;
-
-	float speed = 5.0f;
-	float CAMERA_SPEED = 7.5f;
+	float _DampingM = 3.0f, _DampingL = 2.0f;
+	//バネ移動の速度。
+	float _SMoveSpeedM = 5.0f, _SMoveSpeedL = 5.0f;
+	//カメラの回転速度
+	float CAMERA_ROTSPEED = 7.5f;
 };

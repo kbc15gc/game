@@ -10,7 +10,7 @@ namespace
 	/** プレイヤーの高さ. */
 	const Vector3 PLAYER_HEIGHT(0.0f, 1.5f, 0.0f);
 	/** 回転速度. */
-	//const float CAMERA_SPEED = 2.0f;
+	//const float CAMERA_ROTSPEED = 2.0f;
 }
 
 PlayerCamera::PlayerCamera(const char * name) :
@@ -125,22 +125,22 @@ void PlayerCamera::_StandardBehavior()
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
 	{
-		_RotateHorizon(CAMERA_SPEED * Time::DeltaTime());
+		_RotateHorizon(CAMERA_ROTSPEED * Time::DeltaTime());
 	}
 	//左回転
 	if (KeyBoardInput->isPressed(DIK_LEFT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) < -0.1f)
 	{
-		_RotateHorizon(-CAMERA_SPEED * Time::DeltaTime());
+		_RotateHorizon(-CAMERA_ROTSPEED * Time::DeltaTime());
 	}
 	//上
 	if (KeyBoardInput->isPressed(DIK_UP) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) > 0.1f)
 	{
-		_RotateVertical(CAMERA_SPEED / 4.0f * Time::DeltaTime());
+		_RotateVertical(CAMERA_ROTSPEED / 4.0f * Time::DeltaTime());
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
 	{
-		_RotateVertical(-CAMERA_SPEED / 4.0f * Time::DeltaTime());
+		_RotateVertical(-CAMERA_ROTSPEED / 4.0f * Time::DeltaTime());
 	}
 
 	//カメラリセット。
@@ -173,7 +173,7 @@ void PlayerCamera::_StandardBehavior()
 	_FuturePos = _ClosetRay(_FutureTarget, _FutureTarget + _ToCameraDir);
 	
 	//カメラを移動させる。
-	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _FuturePos, spring, damping, _MoveV, Time::DeltaTime(), speed));
+	transform->SetPosition(_SpringChaseMove(transform->GetPosition(), _FuturePos, _SpringM, _DampingM, _MoveV, Time::DeltaTime(), _SMoveSpeedM));
 	//ターゲットを追いかける。
 	_LookAtTarget();
 }
@@ -307,7 +307,7 @@ Vector3 PlayerCamera::_SpringChaseMove(const Vector3 & now, const Vector3 & targ
 
 void PlayerCamera::_LookAtTarget()
 {
-	auto next = _SpringChaseMove(_Camera->GetTarget(), _FutureTarget, spring, damping, _LookV, Time::DeltaTime(), speed);
+	auto next = _SpringChaseMove(_Camera->GetTarget(), _FutureTarget, _SpringL, _DampingL, _LookV, Time::DeltaTime(), _SMoveSpeedL);
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
 }
