@@ -48,6 +48,10 @@ public:
 	//プレイヤーの方向を向く。
 	void LookAtTarget();
 
+	void SetCameraSupport(bool f)
+	{
+		_CameraSupport = f;
+	}
 private:
 	//プレイヤーの座標を取得。
 	Vector3 _GetPlayerPos();
@@ -112,6 +116,8 @@ private:
 	bool _Reset;
 	Vector3 _ResetDir;
 
+	//カメラの追尾をオフ。
+	bool _CameraSupport = true;
 
 	//バネの伸び具合。
 	float _SpringM = 20.0f, _SpringL = 30.0f;

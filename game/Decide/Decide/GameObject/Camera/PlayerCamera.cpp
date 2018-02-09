@@ -86,8 +86,8 @@ void PlayerCamera::LookAtTarget()
 {
 	auto next = _GetPlayerPos();
 
-	_AutoSupport();
-	transform->SetPosition(_FuturePos);
+	auto pos = _ClosetRay(next, next + _ToCameraDir);
+	transform->SetPosition(pos);
 
 	_Camera->SetTarget(next);
 	transform->LockAt(next);
@@ -121,8 +121,9 @@ void PlayerCamera::_StandardBehavior()
 	bool before = false;
 	auto beforeDir = _ToCameraDir;
 
-	//追尾カメラ.
-	_AutoSupport();
+	if (_CameraSupport)
+		//追尾カメラ.
+		_AutoSupport();
 
 	//右回転
 	if (KeyBoardInput->isPressed(DIK_RIGHT) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).x / 32767.0f) > 0.1f)
@@ -205,7 +206,7 @@ void PlayerCamera::_AutoSupport()
 	//注視点から視点までのベクトル
 	Vector3 toCameraPosXZ = transform->GetPosition() - _Camera->GetTarget();
 	//視点へのY方向の高さ.
-	//float height = toCameraPosXZ.y;
+	//height = toCameraPosXZ.y;
 	//XZ平面にするので、Yは0にする.
 	toCameraPosXZ.y = 0.0f;
 	//XZ平面上での視点と注視点の距離を求める.
