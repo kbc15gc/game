@@ -28,3 +28,4 @@ private:
 private:
   int _HitPoint; //HP
 }
+hoge
