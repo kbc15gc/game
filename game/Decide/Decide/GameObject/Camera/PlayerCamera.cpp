@@ -153,7 +153,7 @@ void PlayerCamera::_StandardBehavior()
 			_ToCameraDir = beforeDir;
 			before = true;
 		}
-		_RotateVertical(CAMERA_ROTSPEED  * Time::DeltaTime());
+		_RotateVertical(CAMERA_ROTSPEED / 2.0f  * Time::DeltaTime());
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
@@ -163,7 +163,7 @@ void PlayerCamera::_StandardBehavior()
 			_ToCameraDir = beforeDir;
 			before = true;
 		}
-		_RotateVertical(-CAMERA_ROTSPEED  * Time::DeltaTime());
+		_RotateVertical(-CAMERA_ROTSPEED / 2.0f  * Time::DeltaTime());
 	}
 
 	//カメラリセット。
@@ -172,7 +172,7 @@ void PlayerCamera::_StandardBehavior()
 		if (_Reset == false)
 		{
 			_Reset = true;
-			_ResetDir = _Player->transform->GetForward() * _Dist * -1;;
+			_ResetDir = _Player->transform->GetForward() * _Dist * -1;
 		}
 	}
 
@@ -181,6 +181,7 @@ void PlayerCamera::_StandardBehavior()
 
 		auto tmpdir = _ToCameraDir;
 		auto nowdir = transform->GetPosition() - _GetPlayerPos();
+		_Height = nowdir.y;
 		auto len = nowdir.Length();
 		tmpdir.Normalize();
 		nowdir.Normalize();
