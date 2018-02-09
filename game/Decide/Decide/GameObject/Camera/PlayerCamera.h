@@ -127,4 +127,6 @@ private:
 	float _SMoveSpeedM = 5.0f, _SMoveSpeedL = 5.0f;
 	//ƒJƒƒ‰‚Ì‰ñ“]‘¬“x
 	float CAMERA_ROTSPEED = 3.5f;
+	//
+	float _VerticalRot = 1.75f;
 };

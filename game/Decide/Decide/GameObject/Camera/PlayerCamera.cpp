@@ -153,7 +153,7 @@ void PlayerCamera::_StandardBehavior()
 			_ToCameraDir = beforeDir;
 			before = true;
 		}
-		_RotateVertical(CAMERA_ROTSPEED / 2.0f  * Time::DeltaTime());
+		_RotateVertical(CAMERA_ROTSPEED / _VerticalRot  * Time::DeltaTime());
 	}
 	//下
 	if (KeyBoardInput->isPressed(DIK_DOWN) || (XboxInput(0)->GetAnalog(AnalogE::R_STICK).y / 32767.0f) < -0.1f)
@@ -163,7 +163,7 @@ void PlayerCamera::_StandardBehavior()
 			_ToCameraDir = beforeDir;
 			before = true;
 		}
-		_RotateVertical(-CAMERA_ROTSPEED / 2.0f  * Time::DeltaTime());
+		_RotateVertical(-CAMERA_ROTSPEED / _VerticalRot  * Time::DeltaTime());
 	}
 
 	//カメラリセット。
@@ -286,6 +286,8 @@ void PlayerCamera::_RotateVertical(float rotx)
 	if (notlimit)
 	{
 		_ToCameraDir = v;
+		_ToCameraDir.Normalize();
+		_ToCameraDir.Scale(_Dist);
 		_Height = _ToCameraDir.y;
 	}
 }
