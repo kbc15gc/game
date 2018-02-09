@@ -225,7 +225,7 @@ void PlayerCamera::_AutoSupport()
 	toNewCameraPos.Normalize();
 
 	//このウェイトの値は0.0～1.0の値をとる。1.0に近づくほど追尾が強くなる.
-	float weight = 0.7f;
+	float weight = 0.16f;
 
 	_ToCameraDir = toNewCameraPos * weight + toCameraPosXZ * (1.0f - weight);
 	_ToCameraDir.Normalize();
