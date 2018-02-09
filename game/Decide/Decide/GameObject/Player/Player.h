@@ -40,7 +40,7 @@ class PlayerParameterUI;
 
 //@todo for RELEASEDEBUG
 //»•i”Å‚Ìê‡‚±‚ê‚ğoff‚É‚µ‚Ä‚­‚¾‚³‚¢B
-#define RELEASEDEBUG
+//#define RELEASEDEBUG
 
 namespace
 {
